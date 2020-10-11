@@ -56,7 +56,7 @@ namespace Zsharp.AST
         public AstNumeric? Numeric { get; }
         public AstVariableReference? VariableReference { get; }
         private AstTypeReference? _typeRef;
-        public AstTypeReference? TypeReference { get; }
+        public AstTypeReference? TypeReference => _typeRef;
         public bool SetTypeReference(AstTypeReference typeRef)
         {
             return Ast.SafeSet(ref _typeRef, typeRef);

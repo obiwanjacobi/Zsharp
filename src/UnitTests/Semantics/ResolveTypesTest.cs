@@ -22,8 +22,7 @@ namespace UnitTests.Semantics
 
             var v = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
             v.TypeReference.Should().NotBeNull();
-            var sym = file.CodeBlock.Symbols.GetEntry(v.TypeReference.Identifier.Name, AstSymbolKind.Variable);
-            sym.Definition.Should().NotBeNull();
+            v.TypeReference.TypeDefinition.Should().NotBeNull();
         }
 
         [TestMethod]
@@ -41,13 +40,13 @@ namespace UnitTests.Semantics
             var a = file.CodeBlock.ItemAt<AstAssignment>(0);
             var v = a.Variable as AstVariableDefinition;
             v.TypeReference.Should().NotBeNull();
-            v.Parent.Should().BeSameAs(v.TypeReference.Parent);
+            v.TypeReference.Parent.Should().Be(v);
             v.TypeReference.Identifier.Name.Should().Be("U8");
 
             var sym = file.CodeBlock.Symbols.GetEntry(v.Identifier.Name, AstSymbolKind.Variable);
             sym.Definition.Should().NotBeNull();
             v.TypeReference.TypeDefinition.Identifier.Parent
-                .Should().BeSameAs(v.TypeReference.TypeDefinition.Parent);
+                .Should().Be(v.TypeReference.TypeDefinition);
         }
     }
 }

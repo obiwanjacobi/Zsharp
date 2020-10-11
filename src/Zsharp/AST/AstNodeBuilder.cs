@@ -338,7 +338,7 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
+            symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
 
             return any;
         }
@@ -364,7 +364,7 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
+            symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
 
             return any;
         }
@@ -398,7 +398,7 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
+            symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
 
             return any;
         }

@@ -43,8 +43,10 @@ namespace Zsharp.AST
 
         public static AstTypeDefinition Create(Type_defContext ctx)
         {
-            var typeDef = new AstTypeDefinition(ctx);
-            typeDef.BaseType = AstTypeReference.Create(ctx.type_ref_use());
+            var typeDef = new AstTypeDefinition(ctx)
+            {
+                BaseType = AstTypeReference.Create(ctx.type_ref_use())
+            };
 
             var identifier = new AstIdentifier(ctx.identifier_type());
             typeDef.SetIdentifier(identifier);
@@ -92,8 +94,6 @@ namespace Zsharp.AST
             return null;
         }
     }
-
-
 
     public abstract class AstType : AstNode, IAstIdentifierSite
     {
@@ -256,14 +256,12 @@ namespace Zsharp.AST
         public bool IsOptional { get; }
         public bool IsError { get; }
 
-
-        public override bool IsEqual(AstType that)
+        public override bool IsEqual(AstType type)
         {
-            if (!base.IsEqual(that))
+            if (!base.IsEqual(type))
                 return false;
 
-            var typedThat = that as AstTypeReference;
-            if (typedThat == null)
+            if (!(type is AstTypeReference typedThat))
                 return false;
 
             var typeDef = TypeDefinition;
@@ -322,7 +320,7 @@ namespace Zsharp.AST
             success = typeRef.SetTypeDefinition(typeDef);
             Ast.Guard(success, "AstTypeReference.Create SetTypeDefinition failed.");
 
-            success = typeRef.SetTypeSource((AstNode)typeSource);
+            success = typeRef.SetTypeSource(typeSource);
             Ast.Guard(success, "AstTypeReference.Create SetTypeSource failed.");
 
             return typeRef;
