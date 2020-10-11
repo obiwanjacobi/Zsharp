@@ -82,6 +82,11 @@ namespace Zsharp.AST
             return site?.CodeBlock;
         }
 
+        internal void AddError(ParserRuleContext ctx, object syntaxError)
+        {
+            throw new NotImplementedException();
+        }
+
         public AstCodeBlock GetCodeBlock(UInt32 indent)
         {
             AstCodeBlock? p = null;

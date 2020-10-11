@@ -37,7 +37,7 @@ namespace UnitTests.AST
             builder.BuildFile("", Parser.ParseFile(code));
             builder.HasErrors.Should().BeTrue();
             var err = builder.Errors.Single();
-            err.Text.Should().Be(AstError.EmptyCodeBlock);
+            err.Text.Should().Be(AstError.SyntaxError);
         }
 
         [TestMethod]

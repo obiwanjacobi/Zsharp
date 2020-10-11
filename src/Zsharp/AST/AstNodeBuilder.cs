@@ -1,4 +1,5 @@
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
 using static ZsharpParser;
@@ -54,13 +55,25 @@ namespace Zsharp.AST
             return nextResult;
         }
 
+        // use as generic error handler
+        protected override bool ShouldVisitNextChild(IRuleNode node, object? currentResult)
+        {
+            if (node is ParserRuleContext ctx &&
+                ctx.exception != null)
+            {
+                _builderCtx.AddError(ctx, AstError.SyntaxError);
+                // usually pointless to continue
+                return false;
+            }
+            return true;
+        }
+
         public override object? VisitFile(FileContext ctx)
         {
             var file = new AstFile(_namespace, _builderCtx.IntrinsicSymbols, ctx);
+
             _builderCtx.SetCurrent(file);
-
-            var any = base.VisitChildren(ctx);
-
+            base.VisitChildren(ctx);
             _builderCtx.RevertCurrent();
             //guard(!hasCurrent());
 
