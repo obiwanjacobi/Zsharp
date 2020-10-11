@@ -1,0 +1,12 @@
+ALPHA=1
+PARENopen=2
+PARENclose=3
+COLON=4
+COMMA=5
+SP=6
+EOL=7
+'('=2
+')'=3
+':'=4
+','=5
+' '=6

@@ -1,0 +1,21 @@
+{
+    "antlr4.atn.maxLabelCount": 4,
+    "antlr4.generation": {
+        "mode": "external",
+        "outputDir": "Parser",
+        "language": "CSharp",
+        "listeners": false,
+        "visitors": true
+    },
+    "cSpell.ignoreWords": [
+        "antlr",
+        "zsharp",
+        "zlang"
+    ],
+    "cSpell.words": [
+        "GREQ",
+        "MULT",
+        "ROLR",
+        "SMEQ"
+    ],
+}

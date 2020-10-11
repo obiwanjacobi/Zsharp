@@ -1,0 +1,27 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+        {
+            "name": "Zsharp.NET",
+            "type": "antlr-debug",
+            "request": "launch",
+            "input": "./Zlang.NET//antlr.debug.zs",
+            "grammar": "./Zlang.NET/Zsharp.g4",
+            "startRule": "file",
+            "printParseTree": false,
+            "visualParseTree": true,
+            "internalConsoleOptions": "neverOpen"
+        },
+        {
+            "name": "Test",
+            "type": "antlr-debug",
+            "request": "launch",
+            "input": "./Zlang.NET//antlr.debug.zs",
+            "grammar": "./Zlang.NET/test.g4",
+            "startRule": "run",
+            "printParseTree": false,
+            "visualParseTree": true,
+            "internalConsoleOptions": "neverOpen"
+        }
+    ]
+}
