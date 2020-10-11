@@ -59,12 +59,13 @@ namespace Zsharp.AST
 
         public static AstTypeDefinition? SelectKnownTypeDefinition(Known_typesContext ctx)
         {
-            if (ctx == null) return null;
+            if (ctx == null)
+                return null;
             //if (ctx.type_Bit()) return TypeBit;
             //if (ctx.type_Ptr()) return TypePtr;
 
             if (ctx.BOOL() != null)
-                return  AstTypeIntrinsic.Bool;
+                return AstTypeIntrinsic.Bool;
             if (ctx.STR() != null)
                 return AstTypeIntrinsic.Str;
             if (ctx.F16() != null)
@@ -121,9 +122,12 @@ namespace Zsharp.AST
 
         public virtual bool IsEqual(AstType type)
         {
-            if (type == null) return false;
-            if (Identifier == null) return false;
-            if (type.Identifier == null) return false;
+            if (type == null)
+                return false;
+            if (Identifier == null)
+                return false;
+            if (type.Identifier == null)
+                return false;
 
             return Identifier.IsEqual(type.Identifier);
         }
@@ -151,7 +155,8 @@ namespace Zsharp.AST
 
         private static AstIdentifier? SelectKnownIdentifier(Known_typesContext ctx)
         {
-            if (ctx == null) return null;
+            if (ctx == null)
+                return null;
             //if (ctx.type_Bit()) return Bit;
             //if (ctx.type_Ptr()) return Ptr;
 
@@ -197,7 +202,11 @@ namespace Zsharp.AST
     {
         protected AstTypeReference(Type_ref_useContext ctx)
             : base(ctx.type_ref().type_name())
-        { }
+        {
+            var typeRef = ctx.type_ref();
+            IsOptional = typeRef.QUESTION() != null;
+            IsError = typeRef.ERROR() != null;
+        }
 
         public AstTypeReference(AstTypeReference inferredFrom)
             : base(inferredFrom.Context!)
@@ -250,10 +259,12 @@ namespace Zsharp.AST
 
         public override bool IsEqual(AstType that)
         {
-            if (!base.IsEqual(that)) return false;
+            if (!base.IsEqual(that))
+                return false;
 
             var typedThat = that as AstTypeReference;
-            if (typedThat == null) return false;
+            if (typedThat == null)
+                return false;
 
             var typeDef = TypeDefinition;
             var thatTypeDef = typedThat.TypeDefinition;
@@ -322,7 +333,7 @@ namespace Zsharp.AST
     {
         public AstTypeIntrinsic(AstIdentifier identifier)
             : base(identifier)
-        {}
+        { }
 
         public static readonly AstTypeIntrinsic U8 = new AstTypeIntrinsic(AstIdentifierIntrinsic.U8);
         public static readonly AstTypeIntrinsic U16 = new AstTypeIntrinsic(AstIdentifierIntrinsic.U16);
@@ -339,7 +350,8 @@ namespace Zsharp.AST
 
         private static void AddIntrinsicSymbol(AstSymbolTable symbols, AstTypeIntrinsic type)
         {
-            if (type?.Identifier == null) throw new ArgumentNullException(nameof(type));
+            if (type?.Identifier == null)
+                throw new ArgumentNullException(nameof(type));
             symbols.AddSymbol(type.Identifier.Name, AstSymbolKind.Type, type);
         }
 

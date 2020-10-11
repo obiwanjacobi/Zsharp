@@ -8,21 +8,21 @@ namespace Zsharp.AST
 {
     public class AstNodeBuilder : ZsharpBaseVisitor<object?>
     {
-        private readonly AstBuilderContext _builderCtx;
+        private readonly AstBuilderContext _buildercontext;
         private readonly string _namespace;
 
         public AstNodeBuilder(AstBuilderContext context, string ns)
         {
-            _builderCtx = context;
+            _buildercontext = context;
             _namespace = ns;
         }
 
-        public IEnumerable<AstError> Errors => _builderCtx.Errors;
-        public bool HasErrors => _builderCtx.HasErrors;
+        public IEnumerable<AstError> Errors => _buildercontext.Errors;
+        public bool HasErrors => _buildercontext.HasErrors;
 
-        private static bool IsEmpty(ParserRuleContext ctx)
+        private static bool IsEmpty(ParserRuleContext context)
         {
-            return ctx.children.Count == 0;
+            return context.children.Count == 0;
         }
 
         public object? VisitChildrenExcept(ParserRuleContext node, ParserRuleContext except)
@@ -58,393 +58,393 @@ namespace Zsharp.AST
         // use as generic error handler
         protected override bool ShouldVisitNextChild(IRuleNode node, object? currentResult)
         {
-            if (node is ParserRuleContext ctx &&
-                ctx.exception != null)
+            if (node is ParserRuleContext context &&
+                context.exception != null)
             {
-                _builderCtx.AddError(ctx, AstError.SyntaxError);
+                _buildercontext.AddError(context, AstError.SyntaxError);
                 // usually pointless to continue
                 return false;
             }
             return true;
         }
 
-        public override object? VisitFile(FileContext ctx)
+        public override object? VisitFile(FileContext context)
         {
-            var file = new AstFile(_namespace, _builderCtx.IntrinsicSymbols, ctx);
+            var file = new AstFile(_namespace, _buildercontext.IntrinsicSymbols, context);
 
-            _builderCtx.SetCurrent(file);
-            base.VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(file);
+            base.VisitChildren(context);
+            _buildercontext.RevertCurrent();
             //guard(!hasCurrent());
 
             return file;
         }
 
-        public override object? VisitStatement_import(Statement_importContext ctx)
+        public override object? VisitStatement_import(Statement_importContext context)
         {
-            var file = _builderCtx.GetCurrent<AstFile>();
-            file.AddImport(ctx);
+            var file = _buildercontext.GetCurrent<AstFile>();
+            file.AddImport(context);
 
-            var entry = file.Symbols.AddSymbol(ctx.module_name().GetText(), AstSymbolKind.NotSet, null);
+            var entry = file.Symbols.AddSymbol(context.module_name().GetText(), AstSymbolKind.NotSet, null);
             entry.SymbolLocality = AstSymbolLocality.Imported;
 
             return null;
         }
 
-        public override object? VisitStatement_export(Statement_exportContext ctx)
+        public override object? VisitStatement_export(Statement_exportContext context)
         {
-            var file = _builderCtx.GetCurrent<AstFile>();
-            file.AddExport(ctx);
+            var file = _buildercontext.GetCurrent<AstFile>();
+            file.AddExport(context);
 
-            var entry = file.Symbols.AddSymbol(ctx.identifier_func().GetText(), AstSymbolKind.NotSet, null);
+            var entry = file.Symbols.AddSymbol(context.identifier_func().GetText(), AstSymbolKind.NotSet, null);
             entry.SymbolLocality = AstSymbolLocality.Exported;
 
             return null;
         }
 
-        public override object? VisitFunction_def(Function_defContext ctx)
+        public override object? VisitFunction_def(Function_defContext context)
         {
-            var file = _builderCtx.GetCurrent<AstFile>();
-            var function = new AstFunction(ctx);
+            var file = _buildercontext.GetCurrent<AstFile>();
+            var function = new AstFunction(context);
 
             bool success = file.AddFunction(function);
             Ast.Guard(success, "AddFunction() failed");
 
-            _builderCtx.SetCurrent(function);
+            _buildercontext.SetCurrent(function);
 
             // process identifier first (needed for symbol)
-            var identifier = ctx.identifier_func();
+            var identifier = context.identifier_func();
             VisitIdentifier_func(identifier);
             Ast.Guard(function.Identifier, "Function Identifier is not set.");
 
-            var symbolTable = _builderCtx.GetCurrent<IAstSymbolTableSite>();
+            var symbolTable = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbolTable.AddSymbol(function.Identifier!.Name, AstSymbolKind.Function, function);
 
-            if (ctx.Parent is Function_def_exportContext)
+            if (context.Parent is Function_def_exportContext)
             {
                 entry.SymbolLocality = AstSymbolLocality.Exported;
             }
 
-            var any = VisitChildrenExcept(ctx, identifier);
-            _builderCtx.RevertCurrent();
+            var any = VisitChildrenExcept(context, identifier);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
-        public override object? VisitCodeblock(CodeblockContext ctx)
+        public override object? VisitCodeblock(CodeblockContext context)
         {
-            if (IsEmpty(ctx))
+            if (IsEmpty(context))
             {
-                _builderCtx.AddError(ctx, AstError.EmptyCodeBlock);
+                _buildercontext.AddError(context, AstError.EmptyCodeBlock);
                 return null;
             }
 
-            var stSite = _builderCtx.GetCurrent<IAstSymbolTableSite>();
+            var stSite = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var symbols = stSite.Symbols;
             string scopeName = symbols.Namespace;
 
-            var cbSite = _builderCtx.GetCurrent<IAstCodeBlockSite>();
+            var cbSite = _buildercontext.GetCurrent<IAstCodeBlockSite>();
             var parent = cbSite as AstFunction;
             if (parent?.Identifier != null)
             {
                 scopeName = parent.Identifier.Name;
             }
 
-            var codeBlock = new AstCodeBlock(scopeName, symbols, ctx);
+            var codeBlock = new AstCodeBlock(scopeName, symbols, context);
             bool success = cbSite.SetCodeBlock(codeBlock);
             Ast.Guard(success, "SetCodeBlock() failed");
 
-            _builderCtx.SetCurrent(codeBlock);
-            var any = base.VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(codeBlock);
+            var any = base.VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
-        public override object? VisitStatement_if(Statement_ifContext ctx)
+        public override object? VisitStatement_if(Statement_ifContext context)
         {
-            var indent = _builderCtx.CheckIndent(ctx, ctx.indent());
-            var codeBlock = _builderCtx.GetCodeBlock(indent);
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
 
-            var branch = new AstBranchConditional(ctx);
+            var branch = new AstBranchConditional(context);
             bool success = codeBlock.AddItem(branch);
             Ast.Guard(success, "AstCodeBlock.AddItem() failed");
 
-            _builderCtx.SetCurrent(branch);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(branch);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
-        public override object? VisitStatement_else(Statement_elseContext ctx)
+        public override object? VisitStatement_else(Statement_elseContext context)
         {
-            var indent = _builderCtx.CheckIndent(ctx, ctx.indent());
-            var branch = _builderCtx.GetCurrent<AstBranchConditional>();
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var branch = _buildercontext.GetCurrent<AstBranchConditional>();
             Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
 
-            var subBr = new AstBranchConditional(ctx);
+            var subBr = new AstBranchConditional(context);
             bool success = branch.AddSubBranch(subBr);
             Ast.Guard(success, "AddSubBranch() failed");
 
-            _builderCtx.SetCurrent(subBr);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(subBr);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
-        public override object? VisitStatement_elseif(Statement_elseifContext ctx)
+        public override object? VisitStatement_elseif(Statement_elseifContext context)
         {
-            var indent = _builderCtx.CheckIndent(ctx, ctx.indent());
-            var branch = _builderCtx.GetCurrent<AstBranchConditional>();
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var branch = _buildercontext.GetCurrent<AstBranchConditional>();
             Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
 
-            var subBr = new AstBranchConditional(ctx);
+            var subBr = new AstBranchConditional(context);
             bool success = branch.AddSubBranch(subBr);
             Ast.Guard(success, "AddSubBranch() failed");
 
-            _builderCtx.SetCurrent(subBr);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(subBr);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
-        public override object? VisitStatement_return(Statement_returnContext ctx)
+        public override object? VisitStatement_return(Statement_returnContext context)
         {
-            var indent = _builderCtx.CheckIndent(ctx, ctx.indent());
-            var codeBlock = _builderCtx.GetCodeBlock(indent);
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
 
-            var branch = new AstBranchExpression(ctx);
+            var branch = new AstBranchExpression(context);
             bool success = codeBlock.AddItem(branch);
             Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
 
-            _builderCtx.SetCurrent(branch);
-            var any = base.VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(branch);
+            var any = base.VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
-        public override object? VisitStatement_break(Statement_breakContext ctx)
+        public override object? VisitStatement_break(Statement_breakContext context)
         {
-            var indent = _builderCtx.CheckIndent(ctx, ctx.indent());
-            var codeBlock = _builderCtx.GetCodeBlock(indent);
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
 
-            var branch = new AstBranch(ctx);
+            var branch = new AstBranch(context);
             bool success = codeBlock.AddItem(branch);
             Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
 
-            return VisitChildren(ctx);
+            return VisitChildren(context);
         }
 
-        public override object? VisitStatement_continue(Statement_continueContext ctx)
+        public override object? VisitStatement_continue(Statement_continueContext context)
         {
-            var indent = _builderCtx.CheckIndent(ctx, ctx.indent());
-            var codeBlock = _builderCtx.GetCodeBlock(indent);
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
 
-            var branch = new AstBranch(ctx);
+            var branch = new AstBranch(context);
             bool success = codeBlock.AddItem(branch);
             Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
 
-            return VisitChildren(ctx);
+            return VisitChildren(context);
         }
 
-        public override object? VisitIdentifier_type(Identifier_typeContext ctx)
+        public override object? VisitIdentifier_type(Identifier_typeContext context)
         {
-            bool success = _builderCtx.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(Type) failed");
             return null;
         }
 
-        public override object? VisitIdentifier_var(Identifier_varContext ctx)
+        public override object? VisitIdentifier_var(Identifier_varContext context)
         {
-            bool success = _builderCtx.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(Variable) failed");
             return null;
         }
 
-        public override object? VisitIdentifier_param(Identifier_paramContext ctx)
+        public override object? VisitIdentifier_param(Identifier_paramContext context)
         {
-            bool success = _builderCtx.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(Parameter) failed");
             return null;
         }
 
-        public override object? VisitIdentifier_func(Identifier_funcContext ctx)
+        public override object? VisitIdentifier_func(Identifier_funcContext context)
         {
-            bool success = _builderCtx.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(Function) failed");
             return null;
         }
 
-        public override object? VisitIdentifier_field(Identifier_fieldContext ctx)
+        public override object? VisitIdentifier_field(Identifier_fieldContext context)
         {
-            bool success = _builderCtx.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(Field) failed");
             return null;
         }
 
-        public override object? VisitIdentifier_enumoption(Identifier_enumoptionContext ctx)
+        public override object? VisitIdentifier_enumoption(Identifier_enumoptionContext context)
         {
-            bool success = _builderCtx.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(EnumOption) failed");
             return null;
         }
 
-        public override object? VisitFunction_parameter(Function_parameterContext ctx)
+        public override object? VisitFunction_parameter(Function_parameterContext context)
         {
-            var funcParam = new AstFunctionParameter(ctx);
-            var function = _builderCtx.GetCurrent<AstFunction>();
+            var funcParam = new AstFunctionParameter(context);
+            var function = _buildercontext.GetCurrent<AstFunction>();
             function.AddParameter(funcParam);
 
-            _builderCtx.SetCurrent(funcParam);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(funcParam);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
-        public override object? VisitFunction_parameter_self(Function_parameter_selfContext ctx)
+        public override object? VisitFunction_parameter_self(Function_parameter_selfContext context)
         {
-            var function = _builderCtx.GetCurrent<AstFunction>();
-            var funcParam = new AstFunctionParameter(ctx);
+            var function = _buildercontext.GetCurrent<AstFunction>();
+            var funcParam = new AstFunctionParameter(context);
             // Todo: make self static and clone
             funcParam.SetIdentifier(new AstIdentifierIntrinsic("self", AstIdentifierType.Parameter));
             function.AddParameter(funcParam);
 
-            _builderCtx.SetCurrent(funcParam);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(funcParam);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
-        public override object? VisitVariable_def(Variable_defContext ctx)
+        public override object? VisitVariable_def(Variable_defContext context)
         {
-            var indent = _builderCtx.CheckIndent(ctx, ctx.indent());
-            var codeBlock = _builderCtx.GetCodeBlock(indent);
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
 
-            _builderCtx.SetCurrent(codeBlock);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(codeBlock);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
-        public override object? VisitVariable_def_typed(Variable_def_typedContext ctx)
+        public override object? VisitVariable_def_typed(Variable_def_typedContext context)
         {
-            var variable = new AstVariableDefinition(ctx);
-            var codeBlock = _builderCtx.GetCodeBlock();
+            var variable = new AstVariableDefinition(context);
+            var codeBlock = _buildercontext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
             bool success = codeBlock!.AddItem(variable);
             Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
 
-            _builderCtx.SetCurrent(variable);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(variable);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
 
-            var symbols = _builderCtx.GetCurrent<IAstSymbolTableSite>();
+            var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
 
             return any;
         }
 
-        public override object? VisitVariable_def_typed_init(Variable_def_typed_initContext ctx)
+        public override object? VisitVariable_def_typed_init(Variable_def_typed_initContext context)
         {
-            var assign = new AstAssignment(ctx);
-            var codeBlock = _builderCtx.GetCodeBlock();
+            var assign = new AstAssignment(context);
+            var codeBlock = _buildercontext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
             bool success = codeBlock!.AddItem(assign);
             Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
 
-            _builderCtx.SetCurrent(assign);
+            _buildercontext.SetCurrent(assign);
 
-            var variable = new AstVariableDefinition(ctx);
+            var variable = new AstVariableDefinition(context);
             success = assign.SetVariable(variable);
             Ast.Guard(success, "SetVariable() failed");
 
-            _builderCtx.SetCurrent(variable);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(variable);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
+            _buildercontext.RevertCurrent();
 
-            var symbols = _builderCtx.GetCurrent<IAstSymbolTableSite>();
+            var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
 
             return any;
         }
 
-        public override object? VisitVariable_assign_auto(Variable_assign_autoContext ctx)
+        public override object? VisitVariable_assign_auto(Variable_assign_autoContext context)
         {
-            var assign = new AstAssignment(ctx);
-            var codeBlock = _builderCtx.GetCodeBlock();
+            var assign = new AstAssignment(context);
+            var codeBlock = _buildercontext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
             bool success = codeBlock!.AddItem(assign);
             Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
-            _builderCtx.SetCurrent(assign);
+            _buildercontext.SetCurrent(assign);
 
             AstVariable variable;
-            if (ctx.Parent is Variable_assignContext)
+            if (context.Parent is Variable_assignContext)
             {
-                variable = new AstVariableReference(ctx);
+                variable = new AstVariableReference(context);
             }
             else
             {
-                variable = new AstVariableDefinition(ctx);
+                variable = new AstVariableDefinition(context);
             }
 
             success = assign.SetVariable(variable);
             Ast.Guard(success, "SetVariable() failed");
 
-            _builderCtx.SetCurrent(variable);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(variable);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
+            _buildercontext.RevertCurrent();
 
-            var symbols = _builderCtx.GetCurrent<IAstSymbolTableSite>();
+            var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
 
             return any;
         }
 
-        public override object? VisitVariable_assign(Variable_assignContext ctx)
+        public override object? VisitVariable_assign(Variable_assignContext context)
         {
-            var indent = _builderCtx.CheckIndent(ctx, ctx.indent());
-            var codeBlock = _builderCtx.GetCodeBlock(indent);
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
 
-            _builderCtx.SetCurrent(codeBlock);
-            var any = VisitChildren(ctx);
-            _builderCtx.RevertCurrent();
+            _buildercontext.SetCurrent(codeBlock);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
 
-        public override object? VisitExpression_value(Expression_valueContext ctx)
+        public override object? VisitExpression_value(Expression_valueContext context)
         {
-            var builder = new AstExpressionBuilder(_builderCtx);
-            var expr = builder.Build(ctx);
+            var builder = new AstExpressionBuilder(_buildercontext);
+            var expr = builder.Build(context);
             if (expr != null)
             {
-                var site = _builderCtx.GetCurrent<IAstExpressionSite>();
+                var site = _buildercontext.GetCurrent<IAstExpressionSite>();
                 bool success = site.SetExpression(expr);
                 Ast.Guard(success, "SetExpression() failed");
             }
             return null;
         }
 
-        public override object? VisitExpression_logic(Expression_logicContext ctx)
+        public override object? VisitExpression_logic(Expression_logicContext context)
         {
-            var builder = new AstExpressionBuilder(_builderCtx);
-            var expr = builder.Build(ctx);
+            var builder = new AstExpressionBuilder(_buildercontext);
+            var expr = builder.Build(context);
             if (expr != null)
             {
-                var site = _builderCtx.GetCurrent<IAstExpressionSite>();
+                var site = _buildercontext.GetCurrent<IAstExpressionSite>();
                 bool success = site.SetExpression(expr);
                 Ast.Guard(success, "SetExpression() failed");
             }
             return null;
         }
 
-        public override object? VisitType_ref_use(Type_ref_useContext ctx)
+        public override object? VisitType_ref_use(Type_ref_useContext context)
         {
-            var type = AstTypeReference.Create(ctx);
-            var trSite = _builderCtx.GetCurrent<IAstTypeReferenceSite>();
+            var type = AstTypeReference.Create(context);
+            var trSite = _buildercontext.GetCurrent<IAstTypeReferenceSite>();
             trSite.SetTypeReference(type);
             return null;
         }
