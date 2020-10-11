@@ -170,7 +170,7 @@ msg = "Error in '{@file()}' at line {@line()}: {@name()} is invalid."
 ---
 
 Hints to the compiler how to compile code...
-
+Syntax?
 ```csharp
 #inline     // pragma (hint)
 @inline()   // compiler function

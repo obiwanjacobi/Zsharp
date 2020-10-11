@@ -33,8 +33,6 @@
 
 > Compiler as profiler?
 
-> Compiler as a CPU emulator?
-
 > Compiler as build-system? Use REPL/VM to execute zs-script using build-task lib...?
 
 > Semantic compiler rules available as functions to code (traits?).
@@ -43,7 +41,7 @@
 
 > Literal strings can add up. How to optimize? (interning?, string-builder for efficient construction?)
 
-> entry function (main?)? no command line parameters? => CP/M? Code Attribute? Environment/command line etc. as singleton object?
+> entry function (main?)? no command line parameters? Code Attribute? Environment/command line etc. as singleton object?
 
 > build in extra grammar/semantics for verifying correctness of the compiler. Inline unit tests.
 
