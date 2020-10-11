@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using System;
-using Zlang.NET.AST;
+using Zsharp.AST;
 
 namespace UnitTests
 {

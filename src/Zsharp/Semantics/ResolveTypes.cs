@@ -1,7 +1,7 @@
 ﻿using System;
-using Zlang.NET.AST;
+using Zsharp.AST;
 
-namespace Zlang.NET.Semantics
+namespace Zsharp.Semantics
 {
     public class ResolveTypes : AstVisitor
     {

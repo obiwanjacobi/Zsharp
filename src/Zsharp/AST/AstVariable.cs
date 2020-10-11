@@ -1,6 +1,6 @@
 using static ZsharpParser;
 
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     public abstract class AstVariable : AstCodeBlockItem, IAstIdentifierSite
     {

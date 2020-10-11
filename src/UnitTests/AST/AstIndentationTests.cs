@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using Zlang.NET.AST;
+using Zsharp.AST;
 
 namespace UnitTests.AST
 {

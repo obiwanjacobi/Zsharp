@@ -1,4 +1,4 @@
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     public enum AstNodeType
     {

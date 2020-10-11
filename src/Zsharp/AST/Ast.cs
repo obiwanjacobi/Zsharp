@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     public static class Ast
     {

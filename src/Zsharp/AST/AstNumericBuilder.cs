@@ -4,7 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using static ZsharpParser;
 
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     public class AstNumericBuilder : ZsharpBaseVisitor<UInt64>
     {

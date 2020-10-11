@@ -1,7 +1,7 @@
 using Antlr4.Runtime;
 using static ZsharpParser;
 
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     public class AstExpressionOperand : AstNode, IAstTypeReferenceSite
     {

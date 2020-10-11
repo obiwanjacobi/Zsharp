@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Zlang.NET.AST;
+using Zsharp.AST;
 
 namespace UnitTests.AST
 {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from c:\Users\marc\Documents\MyProjects\Zalt\Zlang.NET\Zlang.NET\test.g4_ by ANTLR 4.8
+// Generated from c:\Users\marc\Documents\MyProjects\Zalt\Zsharp\Zsharp\test.g4_ by ANTLR 4.8
 
 // Unreachable code detected
 #pragma warning disable 0162

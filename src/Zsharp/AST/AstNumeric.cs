@@ -1,7 +1,7 @@
 using System;
 using static ZsharpParser;
 
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     public enum AstNumericSign
     {

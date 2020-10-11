@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     [Flags]
     public enum AstExpressionOperator

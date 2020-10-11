@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Zlang.NET\Zlang.NET.csproj" />
+    <ProjectReference Include="..\Zsharp\Zsharp.csproj" />
   </ItemGroup>
 
 </Project>

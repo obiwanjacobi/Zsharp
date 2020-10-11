@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using static ZsharpParser;
 
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     public class AstModule : AstNode
     {

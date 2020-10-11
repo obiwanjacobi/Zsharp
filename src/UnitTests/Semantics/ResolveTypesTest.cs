@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Zlang.NET.AST;
-using Zlang.NET.Semantics;
+using Zsharp.AST;
+using Zsharp.Semantics;
 
 namespace UnitTests.Semantics
 {

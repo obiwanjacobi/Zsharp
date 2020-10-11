@@ -3,7 +3,7 @@ using Antlr4.Runtime.Tree;
 using System.Collections.Generic;
 using static ZsharpParser;
 
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     public class AstExpressionBuilder : ZsharpBaseVisitor<object?>
     {

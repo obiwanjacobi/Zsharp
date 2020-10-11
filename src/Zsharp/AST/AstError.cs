@@ -1,7 +1,7 @@
 using System;
 using Antlr4.Runtime;
 
-namespace Zlang.NET.AST
+namespace Zsharp.AST
 {
     public class AstError
     {
