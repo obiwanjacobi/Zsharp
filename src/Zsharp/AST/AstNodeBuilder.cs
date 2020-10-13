@@ -18,6 +18,7 @@ namespace Zsharp.AST
         }
 
         public IEnumerable<AstError> Errors => _buildercontext.Errors;
+
         public bool HasErrors => _buildercontext.HasErrors;
 
         private static bool IsEmpty(ParserRuleContext context)

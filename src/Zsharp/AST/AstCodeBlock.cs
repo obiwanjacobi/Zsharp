@@ -3,26 +3,6 @@ using static ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public interface IAstCodeBlockSite
-    {
-        AstCodeBlock? CodeBlock { get; }
-        bool SetCodeBlock(AstCodeBlock codeBlock);
-    }
-
-    public abstract class AstCodeBlockItem : AstNode
-    {
-        protected AstCodeBlockItem(AstNodeType nodeType)
-            : base(nodeType)
-        { }
-
-        public int Indent { get; set; }
-
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitCodeBlockItem(this);
-        }
-    }
-
     public class AstCodeBlock : AstNode, IAstSymbolTableSite
     {
         private readonly List<AstCodeBlockItem> _items = new List<AstCodeBlockItem>();
@@ -43,7 +23,7 @@ namespace Zsharp.AST
             get { return _items; }
         }
 
-        public AstSymbolTable Symbols {get;}
+        public AstSymbolTable Symbols { get; }
 
         public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode node)
         {

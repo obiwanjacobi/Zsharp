@@ -3,13 +3,6 @@ using static ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public enum AstNumericSign
-    {
-        NotSet,
-        Unsigned,
-        Signed,
-    }
-
     public class AstNumeric : AstNode
     {
         public AstNumeric(NumberContext ctx)
@@ -21,6 +14,7 @@ namespace Zsharp.AST
         public NumberContext Context { get; }
 
         public UInt64 Value { get; set; }
+
         public AstNumericSign Sign { get; }
 
         public UInt64 AsUnsigned() => Value;

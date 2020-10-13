@@ -1,11 +1,10 @@
 using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
 using System.Collections.Generic;
 using static ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstExpressionBuilder : ZsharpBaseVisitor<object?>
+    public partial class AstExpressionBuilder : ZsharpBaseVisitor<object?>
     {
         private readonly Stack<AstExpressionOperand> _values = new Stack<AstExpressionOperand>();
         private readonly Stack<AstExpression> _operators = new Stack<AstExpression>();
@@ -41,7 +40,6 @@ namespace Zsharp.AST
             return result as AstExpression;
         }
 
-
         private object? ProcessExpression(IExpressionContextWrapper ctx)
         {
             if (ctx.HasOpenParam)
@@ -68,7 +66,7 @@ namespace Zsharp.AST
                         return retVal;
                     }
 
-                    if (op != AstExpressionOperator.NotSet)
+                    if (op != AstExpressionOperator.None)
                     {
                         var expr = ctx.NewExpression();
                         expr.Operator = op;
@@ -133,7 +131,7 @@ namespace Zsharp.AST
             }
 
             if (expr.LHS == null &&
-                expr.Operator == AstExpressionOperator.NotSet &&
+                expr.Operator == AstExpressionOperator.None &&
                 expr.RHS?.Numeric != null)
             {
                 // expression used as a number wrapper
@@ -258,14 +256,14 @@ namespace Zsharp.AST
                 return AstExpressionOperator.Plus;
             if (ctx.POW() != null)
                 return AstExpressionOperator.Power;
-            return AstExpressionOperator.NotSet;
+            return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_arithmetic_unary(Operator_arithmetic_unaryContext ctx)
         {
             if (ctx.MINUS_NEG() != null)
                 return AstExpressionOperator.Negate;
-            return AstExpressionOperator.NotSet;
+            return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_logic(Operator_logicContext ctx)
@@ -274,14 +272,14 @@ namespace Zsharp.AST
                 return AstExpressionOperator.And;
             if (ctx.OR() != null)
                 return AstExpressionOperator.Or;
-            return AstExpressionOperator.NotSet;
+            return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_logic_unary(Operator_logic_unaryContext ctx)
         {
             if (ctx.NOT() != null)
                 return AstExpressionOperator.Not;
-            return AstExpressionOperator.NotSet;
+            return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_comparison(Operator_comparisonContext ctx)
@@ -298,7 +296,7 @@ namespace Zsharp.AST
                 return AstExpressionOperator.Smaller;
             if (ctx.SMEQ() != null)
                 return AstExpressionOperator.SmallerEqual;
-            return AstExpressionOperator.NotSet;
+            return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_bits(Operator_bitsContext ctx)
@@ -317,14 +315,14 @@ namespace Zsharp.AST
                 return AstExpressionOperator.BitShiftRight;
             if (ctx.BIT_XOR_IMM() != null)
                 return AstExpressionOperator.BitXor;
-            return AstExpressionOperator.NotSet;
+            return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_bits_unary(Operator_bits_unaryContext ctx)
         {
             if (ctx.BIT_NOT() != null)
                 return AstExpressionOperator.BitNegate;
-            return AstExpressionOperator.NotSet;
+            return AstExpressionOperator.None;
         }
 
         public override object? VisitIdentifier_type(Identifier_typeContext ctx)
@@ -353,87 +351,6 @@ namespace Zsharp.AST
             bool success = _builderContext.AddIdentifier(new AstIdentifier(ctx));
             Ast.Guard(success, "AddIdentifier(Function) failed");
             return null;
-        }
-
-        // stuff to make grammar rule context object polymorphic
-        private interface IExpressionContextWrapper
-        {
-            bool HasOpenParam { get; }
-            bool HasCloseParam { get; }
-            bool IsOperand { get; }
-            IEnumerable<IParseTree> Children { get; }
-
-            AstExpression NewExpression();
-        }
-
-        private class ArithmeticContextWrapper : IExpressionContextWrapper
-        {
-            private readonly Expression_arithmeticContext _context;
-
-            public ArithmeticContextWrapper(Expression_arithmeticContext ctx)
-            {
-                _context = ctx;
-            }
-
-            public bool HasOpenParam => _context.PARENopen() != null;
-
-            public bool HasCloseParam => _context.PARENclose() != null;
-
-            public bool IsOperand => _context.arithmetic_operand() != null;
-
-            public IEnumerable<IParseTree> Children => _context.children;
-
-            public AstExpression NewExpression()
-            {
-                return new AstExpression(_context);
-            }
-        }
-
-
-        private class LogicContextWrapper : IExpressionContextWrapper
-        {
-            private readonly Expression_logicContext _context;
-
-            public LogicContextWrapper(Expression_logicContext ctx)
-            {
-                _context = ctx;
-            }
-
-            public bool HasOpenParam => _context.PARENopen() != null;
-
-            public bool HasCloseParam => _context.PARENclose() != null;
-
-            public bool IsOperand => _context.logic_operand() != null;
-
-            public IEnumerable<IParseTree> Children => _context.children;
-
-            public AstExpression NewExpression()
-            {
-                return new AstExpression(_context);
-            }
-        }
-
-        private class ComparisonContextWrapper : IExpressionContextWrapper
-        {
-            private readonly Expression_comparisonContext _context;
-
-            public ComparisonContextWrapper(Expression_comparisonContext ctx)
-            {
-                _context = ctx;
-            }
-
-            public bool HasOpenParam => _context.PARENopen() != null;
-
-            public bool HasCloseParam => _context.PARENclose() != null;
-
-            public bool IsOperand => _context.comparison_operand() != null;
-
-            public IEnumerable<IParseTree> Children => _context.children;
-
-            public AstExpression NewExpression()
-            {
-                return new AstExpression(_context);
-            }
         }
     }
 }

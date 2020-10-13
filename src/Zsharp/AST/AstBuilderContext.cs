@@ -1,7 +1,7 @@
+using Antlr4.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Antlr4.Runtime;
 using static ZsharpParser;
 
 namespace Zsharp.AST
@@ -82,11 +82,6 @@ namespace Zsharp.AST
             return site?.CodeBlock;
         }
 
-        internal void AddError(ParserRuleContext ctx, object syntaxError)
-        {
-            throw new NotImplementedException();
-        }
-
         public AstCodeBlock GetCodeBlock(UInt32 indent)
         {
             AstCodeBlock? p = null;
@@ -130,9 +125,9 @@ namespace Zsharp.AST
             return error;
         }
 
-        public AstSymbolTable IntrinsicSymbols {get;}
+        public AstSymbolTable IntrinsicSymbols { get; }
 
-        AstSymbolTable CreateIntrinsicSymbols()
+        private AstSymbolTable CreateIntrinsicSymbols()
         {
             var symbols = new AstSymbolTable();
             AstTypeIntrinsic.AddAll(symbols);

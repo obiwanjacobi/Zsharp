@@ -1,19 +1,17 @@
-using System;
-using System.Globalization;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
+using System;
 using static ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstNumericBuilder : ZsharpBaseVisitor<UInt64>
     {
-        // TODO: See if we can set the return type to UInt64 and have the AstNumeric object as a class member
-
-        private AstNode? _parent;
+        private readonly AstNode? _parent;
 
         public AstNumericBuilder()
-        {}
+        { }
+
         public AstNumericBuilder(AstNode parent)
         {
             _parent = parent;
@@ -45,7 +43,8 @@ namespace Zsharp.AST
         {
             _numeric = new AstNumeric(context);
             _numeric.SetParent(_parent);
-            _numeric.Value = (UInt64)VisitChildren(context);;
+            _numeric.Value = VisitChildren(context);
+            ;
             return _numeric.Value;
         }
 

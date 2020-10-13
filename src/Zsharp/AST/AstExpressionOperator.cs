@@ -5,7 +5,7 @@ namespace Zsharp.AST
     [Flags]
     public enum AstExpressionOperator
     {
-        NotSet = 0x0000,
+        None = 0x0000,
 
         // to pass through a number
         Number = 0x0101,

@@ -7,6 +7,7 @@ namespace Zsharp.AST
         public AstAssignment(Variable_assign_autoContext ctx)
             : base(AstNodeType.Assignment)
         { }
+
         public AstAssignment(Variable_def_typed_initContext ctx)
             : base(AstNodeType.Assignment)
         { }

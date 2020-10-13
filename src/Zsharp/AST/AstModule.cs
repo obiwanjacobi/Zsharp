@@ -6,6 +6,8 @@ namespace Zsharp.AST
 {
     public class AstModule : AstNode
     {
+        private readonly List<Statement_moduleContext> _contexts = new List<Statement_moduleContext>();
+
         public AstModule()
             : base(AstNodeType.Module)
         {
@@ -16,7 +18,7 @@ namespace Zsharp.AST
         {
             visitor.VisitModule(this);
         }
-        
+
         public override void VisitChildren(AstVisitor visitor)
         {
             foreach (var file in _files)
@@ -29,8 +31,6 @@ namespace Zsharp.AST
 
         private readonly List<AstFile> _files = new List<AstFile>();
         public IEnumerable<AstFile> Files => _files;
-
-        private readonly List<Statement_moduleContext> _contexts = new List<Statement_moduleContext>();
 
         public void AddModule(Statement_moduleContext moduleCtx)
         {

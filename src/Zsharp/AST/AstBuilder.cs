@@ -9,7 +9,9 @@ namespace Zsharp.AST
         private readonly List<AstModule> _modules = new List<AstModule>();
 
         public IEnumerable<AstModule> Modules => _modules;
+
         public bool HasErrors => _context.HasErrors;
+
         public IEnumerable<AstError> Errors => _context.Errors;
 
         public AstModule AddModule(Statement_moduleContext moduleCtx)

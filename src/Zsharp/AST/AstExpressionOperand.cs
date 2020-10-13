@@ -5,8 +5,8 @@ namespace Zsharp.AST
 {
     public class AstExpressionOperand : AstNode, IAstTypeReferenceSite
     {
-        private Literal_boolContext? _litBoolCtx;
-        private Function_callContext? _callCtx;
+        private readonly Literal_boolContext? _litBoolCtx;
+        private readonly Function_callContext? _callCtx;
 
         public AstExpressionOperand(AstExpression expr)
             : base(AstNodeType.Operand)
@@ -15,6 +15,7 @@ namespace Zsharp.AST
             bool success = expr.SetParent(this);
             Ast.Guard(success, "SetParent failed.");
         }
+
         public AstExpressionOperand(AstNumeric num)
             : base(AstNodeType.Operand)
         {
@@ -22,6 +23,7 @@ namespace Zsharp.AST
             bool success = num.SetParent(this);
             Ast.Guard(success, "SetParent failed.");
         }
+
         public AstExpressionOperand(AstVariableReference variable)
             : base(AstNodeType.Operand)
         {
@@ -29,11 +31,13 @@ namespace Zsharp.AST
             bool success = variable.SetParent(this);
             Ast.Guard(success, "SetParent failed.");
         }
+
         public AstExpressionOperand(Literal_boolContext ctx)
             : base(AstNodeType.Operand)
         {
             _litBoolCtx = ctx;
         }
+
         public AstExpressionOperand(Function_callContext ctx)
             : base(AstNodeType.Operand)
         {
@@ -53,10 +57,14 @@ namespace Zsharp.AST
         }
 
         public AstExpression? Expression { get; }
+
         public AstNumeric? Numeric { get; }
+
         public AstVariableReference? VariableReference { get; }
+
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
+
         public bool SetTypeReference(AstTypeReference typeRef)
         {
             return Ast.SafeSet(ref _typeRef, typeRef);
@@ -69,18 +77,9 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            if (Expression != null)
-            {
-                Expression.Accept(visitor);
-            }
-            if (Numeric != null)
-            {
-                Numeric.Accept(visitor);
-            }
-            if (VariableReference != null)
-            {
-                VariableReference.Accept(visitor);
-            }
+            Expression?.Accept(visitor);
+            Numeric?.Accept(visitor);
+            VariableReference?.Accept(visitor);
         }
     }
 }

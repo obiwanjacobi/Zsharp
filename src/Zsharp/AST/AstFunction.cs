@@ -4,47 +4,9 @@ using static ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstFunctionParameter : AstNode, IAstIdentifierSite, IAstTypeReferenceSite
-    {
-        private readonly Function_parameterContext? _paramCtx;
-        private readonly Function_parameter_selfContext? _selfCtx;
-
-        public AstFunctionParameter()
-            : base(AstNodeType.FunctionParameter)
-        { }
-        public AstFunctionParameter(Function_parameterContext ctx)
-            : base(AstNodeType.FunctionParameter)
-        {
-            _paramCtx = ctx;
-        }
-        public AstFunctionParameter(Function_parameter_selfContext ctx)
-            : base(AstNodeType.FunctionParameter)
-        {
-            _selfCtx = ctx;
-        }
-
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitFunctionParameter(this);
-        }
-
-        private AstIdentifier? _identifier;
-        public AstIdentifier? Identifier => _identifier;
-        public bool SetIdentifier(AstIdentifier identifier)
-        {
-            return this.SafeSetParent(ref _identifier, identifier);
-        }
-
-        private AstTypeReference? _typeRef;
-        public AstTypeReference? TypeReference => _typeRef;
-        public bool SetTypeReference(AstTypeReference typeRef)
-        {
-            return Ast.SafeSet(ref _typeRef, typeRef);
-        }
-    }
-
     public class AstFunction : AstCodeBlockItem,
-        IAstCodeBlockSite, IAstIdentifierSite, IAstSymbolTableSite, IAstTypeReferenceSite, IAstSymbolEntrySite
+        IAstCodeBlockSite, IAstIdentifierSite, IAstSymbolTableSite,
+        IAstTypeReferenceSite, IAstSymbolEntrySite
     {
         private readonly List<AstFunctionParameter> _parameters = new List<AstFunctionParameter>();
 
@@ -60,6 +22,7 @@ namespace Zsharp.AST
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
+
         public bool SetIdentifier(AstIdentifier identifier)
         {
             return this.SafeSetParent(ref _identifier, identifier);
@@ -67,6 +30,7 @@ namespace Zsharp.AST
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
+
         public bool SetTypeReference(AstTypeReference typeRef)
         {
             return Ast.SafeSet(ref _typeRef, typeRef);
@@ -88,6 +52,7 @@ namespace Zsharp.AST
 
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
+
         public bool SetSymbol(AstSymbolEntry symbolEntry)
         {
             return Ast.SafeSet(ref _symbol, symbolEntry);
@@ -129,24 +94,12 @@ namespace Zsharp.AST
             return false;
         }
 
-        private void AddFunctionSymbols()
-        {
-            // deferred registration of function parameter symbols in the codeblock's symbol table
-            foreach (var param in _parameters)
-            {
-                var identifier = param.Identifier;
-                if (identifier != null)
-                {
-                    identifier.AddSymbol();
-                }
-            }
-        }
-
         public override void Accept(AstVisitor visitor)
         {
             base.Accept(visitor);
             visitor.VisitFunction(this);
         }
+
         public override void VisitChildren(AstVisitor visitor)
         {
             if (Identifier != null)
@@ -162,6 +115,19 @@ namespace Zsharp.AST
             if (CodeBlock != null)
             {
                 CodeBlock.Accept(visitor);
+            }
+        }
+
+        private void AddFunctionSymbols()
+        {
+            // deferred registration of function parameter symbols in the codeblock's symbol table
+            foreach (var param in _parameters)
+            {
+                var identifier = param.Identifier;
+                if (identifier != null)
+                {
+                    identifier.AddSymbol();
+                }
             }
         }
     }

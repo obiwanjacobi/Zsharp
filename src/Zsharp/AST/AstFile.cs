@@ -17,8 +17,11 @@ namespace Zsharp.AST
         }
 
         public FileContext Context { get; }
+
         public IEnumerable<Statement_importContext> Imports => _imports;
+
         public IEnumerable<Statement_exportContext> Exports => _exports;
+
         public IEnumerable<AstFunction> Functions => _functions;
 
         public AstSymbolTable Symbols => CodeBlock!.Symbols;
@@ -35,6 +38,7 @@ namespace Zsharp.AST
         {
             visitor.VisitFile(this);
         }
+
         public override void VisitChildren(AstVisitor visitor)
         {
             foreach (var ci in CodeBlock!.Items)

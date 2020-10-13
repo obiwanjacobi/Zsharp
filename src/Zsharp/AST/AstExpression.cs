@@ -3,34 +3,31 @@ using static ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public interface IAstExpressionSite
-    {
-        AstExpression? Expression { get; }
-        bool SetExpression(AstExpression expression);
-    }
-
     public class AstExpression : AstNode, IAstTypeReferenceSite
     {
-        private Expression_arithmeticContext? _arithmeticCtx;
-        private Expression_logicContext? _logicCtx;
-        private Expression_comparisonContext? _comparisonCtx;
-        private Expression_valueContext? _valueCtx;
+        private readonly Expression_arithmeticContext? _arithmeticCtx;
+        private readonly Expression_logicContext? _logicCtx;
+        private readonly Expression_comparisonContext? _comparisonCtx;
+        private readonly Expression_valueContext? _valueCtx;
 
         public AstExpression(Expression_arithmeticContext ctx)
             : base(AstNodeType.Expression)
         {
             _arithmeticCtx = ctx;
         }
+
         public AstExpression(Expression_logicContext ctx)
             : base(AstNodeType.Expression)
         {
             _logicCtx = ctx;
         }
+
         public AstExpression(Expression_comparisonContext ctx)
             : base(AstNodeType.Expression)
         {
             _comparisonCtx = ctx;
         }
+
         public AstExpression(Expression_valueContext ctx)
             : base(AstNodeType.Expression)
         {
@@ -41,6 +38,7 @@ namespace Zsharp.AST
         {
             visitor.VisitExpression(this);
         }
+
         public override void VisitChildren(AstVisitor visitor)
         {
             if (_rhs != null)
@@ -60,10 +58,12 @@ namespace Zsharp.AST
         public AstExpressionOperand? RHS => _rhs;
 
         public AstExpressionOperator Operator { get; set; }
+
         public int Precedence
         {
             get { return (int)(Operator & AstExpressionOperator.MaskPrecedence) >> 4; }
         }
+
         public bool IsOperator(AstExpressionOperator op)
         {
             return (Operator & op) > 0;
