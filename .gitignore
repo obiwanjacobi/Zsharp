@@ -244,5 +244,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-# Z80 zmac output
-zout/
+# Antlr
+.antlr

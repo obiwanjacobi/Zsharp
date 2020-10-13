@@ -2,7 +2,7 @@ using static ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public abstract class AstVariable : AstCodeBlockItem, IAstIdentifierSite
+    public abstract class AstVariable : AstCodeBlockItem, IAstIdentifierSite, IAstSymbolEntrySite
     {
         protected AstVariable()
             : base(AstNodeType.Variable)
@@ -15,13 +15,20 @@ namespace Zsharp.AST
         {
             return this.SafeSetParent(ref _identifier, identifier);
         }
+
+        private AstSymbolEntry? _symbol;
+        public AstSymbolEntry? Symbol => _symbol;
+        public bool SetSymbol(AstSymbolEntry symbolEntry)
+        {
+            return Ast.SafeSet(ref _symbol, symbolEntry);
+        }
     }
 
     public class AstVariableDefinition : AstVariable, IAstTypeReferenceSite
     {
-        private Variable_def_typedContext? _typedCtx;
-        private Variable_def_typed_initContext? _typedInitCtx;
-        private Variable_assign_autoContext? _assignCtx;
+        private readonly Variable_def_typedContext? _typedCtx;
+        private readonly Variable_def_typed_initContext? _typedInitCtx;
+        private readonly Variable_assign_autoContext? _assignCtx;
 
         public AstVariableDefinition(Variable_def_typedContext ctx)
         {
@@ -62,8 +69,8 @@ namespace Zsharp.AST
 
     public class AstVariableReference : AstVariable
     {
-        private Variable_refContext? _refCtx;
-        private Variable_assign_autoContext? _assignCtx;
+        private readonly Variable_refContext? _refCtx;
+        private readonly Variable_assign_autoContext? _assignCtx;
 
         public AstVariableReference(Variable_refContext ctx)
         {

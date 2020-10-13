@@ -749,3 +749,7 @@ tag interrupt service routines (for analysis - volatile) as a simplified interfa
 functions that do not return?
 
 intrinsic functions (operator implementations) - extensions?
+
+top-level function calls/one-time initialization at first access of module.
+
+declarative code: see if we can find a syntax that could would make it easy to call lts of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.

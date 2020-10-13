@@ -4,18 +4,17 @@
         "mode": "external",
         "outputDir": "Parser",
         "language": "CSharp",
+        "package": "Zsharp.Parser",
         "listeners": false,
         "visitors": true
     },
+    "antlr4.rrd.saveDir": "../docs/diagrams/railroad",
     "cSpell.ignoreWords": [
         "antlr",
         "zsharp",
-        "zlang"
-    ],
-    "cSpell.words": [
         "GREQ",
         "MULT",
         "ROLR",
         "SMEQ"
-    ],
+    ]
 }

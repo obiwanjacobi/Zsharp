@@ -528,6 +528,31 @@ MyType: (p: U8): MyType!
 t = try MyType(42)
 ```
 
+> TBD: Find a different constructor function prototype that does not require copying the returned instance from the constructor function to the call site. For larger structs that is a performance hit.
+
+```csharp
+// a call-site created empty instance will be passed by ptr.
+// errors can still be returned
+MyType(self: Ptr<MyType>, p: U8): Void!
+
+// calling syntax remain the same?
+t = MyType(42)
+t.MyType(42)        // bounded type syntax?
+
+// which results in this code
+t: MyType   // default init-ed struct
+[t]         // capture scope for isolation
+    x: MyType   // 'x': name guaranteed not to clash
+    // pass in the temp instance
+    try MyType(x.Ptr(), 42)     // try => error handling
+    t <= x      // transfer identity (no copying)
+
+// normal code resumes
+t.fld1 ...
+```
+
+> Need to make sure no half initialized instances are the result of a constructor function erroring-out half way through its function.
+
 ### Type Constructor Overloading
 
 A Type Constructor function can be overloaded - normal functions can only be overloaded based on the self parameter.

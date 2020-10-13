@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using static ZsharpParser;
 
@@ -16,11 +17,29 @@ namespace UnitTests
 
     internal static class Parser
     {
-        public static ZsharpParser Create(string sourceCode)
+        public enum ErrorMode
         {
-            var charStream = CharStreams.fromstring(sourceCode);
-            var tokenStream = new CommonTokenStream(new ZsharpLexer(charStream));
-            return new ZsharpParser(tokenStream);
+            Passive,
+            Active
+        }
+
+        public static ZsharpParser Create(string sourceCode,
+            ErrorMode errorMode = ErrorMode.Active)
+        {
+            var stream = new AntlrInputStream(sourceCode);
+            var lexer = new ZsharpLexer(stream);
+            var tokenStream = new CommonTokenStream(lexer);
+            var parser = new ZsharpParser(tokenStream);
+
+            if (errorMode == ErrorMode.Active)
+            {
+                lexer.RemoveErrorListeners();
+                lexer.AddErrorListener(new ThrowingErrorListener<int>());
+                parser.RemoveErrorListeners();
+                parser.AddErrorListener(new ThrowingErrorListener<IToken>());
+            }
+
+            return parser;
         }
 
         public static FileContext ParseFile(string sourceCode)
@@ -29,9 +48,9 @@ namespace UnitTests
             return parser.file();
         }
 
-        public static string? ParseForError(string sourceCode)
+        public static string ParseForError(string sourceCode)
         {
-            var parser = Create(sourceCode);
+            var parser = Create(sourceCode, ErrorMode.Passive);
             var file = parser.file();
 
             var errs = file.Errors().Select(e => e.Message);
@@ -58,6 +77,16 @@ namespace UnitTests
                 }
             }
             return errors;
+        }
+    }
+
+    internal class ThrowingErrorListener<TSymbol> : IAntlrErrorListener<TSymbol>
+    {
+        public void SyntaxError(TextWriter output, IRecognizer recognizer,
+            TSymbol offendingSymbol, int line, int charPositionInLine, string msg,
+                RecognitionException e)
+        {
+            throw new Exception($"Syntax Error: {msg} ({line}:{charPositionInLine}).", e);
         }
     }
 }

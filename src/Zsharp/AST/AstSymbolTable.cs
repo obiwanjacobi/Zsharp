@@ -23,6 +23,12 @@ namespace Zsharp.AST
         Imported,
     };
 
+    public interface IAstSymbolEntrySite
+    {
+        AstSymbolEntry? Symbol { get; }
+        bool SetSymbol(AstSymbolEntry symbolEntry);
+    }
+
     public interface IAstSymbolTableSite
     {
         AstSymbolTable Symbols { get; }

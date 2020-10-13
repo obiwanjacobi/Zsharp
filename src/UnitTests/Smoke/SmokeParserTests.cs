@@ -21,7 +21,9 @@ namespace UnitTests.Smoke
         [TestMethod]
         public void File_Module()
         {
-            const string code = "module mymodule";
+            const string code = "module mymodule"
+                 + Tokens.NewLine
+                ;
 
             var file = Parser.ParseFile(code);
 
@@ -34,7 +36,8 @@ namespace UnitTests.Smoke
         public void File_Function_Empty()
         {
             const string code = "fn: ()" + Tokens.NewLine +
-                Tokens.Indent1 + "return";
+                Tokens.Indent1 + "return" + Tokens.NewLine
+                ;
 
             var file = Parser.ParseFile(code);
 

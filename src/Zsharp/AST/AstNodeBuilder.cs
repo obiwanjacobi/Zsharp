@@ -119,6 +119,8 @@ namespace Zsharp.AST
 
             var symbolTable = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbolTable.AddSymbol(function.Identifier!.Name, AstSymbolKind.Function, function);
+            success = function.SetSymbol(entry);
+            Ast.Guard(success, "SetSymbol() failed");
 
             if (context.Parent is Function_def_exportContext)
             {
@@ -338,7 +340,9 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
+            var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
+            success = variable.SetSymbol(entry);
+            Ast.Guard(success, "SetSymbol() failed");
 
             return any;
         }
@@ -364,7 +368,9 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
+            var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
+            success = variable.SetSymbol(entry);
+            Ast.Guard(success, "SetSymbol() failed");
 
             return any;
         }
@@ -398,7 +404,9 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
+            var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
+            success = variable.SetSymbol(entry);
+            Ast.Guard(success, "SetSymbol() failed");
 
             return any;
         }
@@ -445,7 +453,8 @@ namespace Zsharp.AST
         {
             var type = AstTypeReference.Create(context);
             var trSite = _buildercontext.GetCurrent<IAstTypeReferenceSite>();
-            trSite.SetTypeReference(type);
+            bool success = trSite.SetTypeReference(type);
+            Ast.Guard(success, "SetTypeReference() failed");
             return null;
         }
     }
