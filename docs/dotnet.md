@@ -1,11 +1,14 @@
-﻿# Z\# Code Generation
+# .NET
 
-Translation from Z# to .NET:
+## Z# to .NET
+
+How are the various Z# language constructs represented in .NET.
 
 Z# | .NET (C#) | Parent
 --|--|--
 project [name] | namespace [name] | Assembly [name]
-module [name] | public class [name] | namespace
+module [name] | public static class [name] | namespace
+\<module w/o exports> | private static class [name] | namespace
 export function [name] | public static [name] | module class
 function [name] | private static [name] | module class
 export struct [name] | public struct [name] | module class
@@ -19,12 +22,14 @@ module variable [name] | private static {Type} [name] | module class
 function variable [name] | local {Type} [name] | static method
 function self parameter | this parameter | static method
 
+> For a Console application the Main function will be implemented by a compiler-generated `Main` function that calls the entry point of the program.
+
 ---
 
 ## TODO
 
 - expressions
-- error handling (exceptions)
+- error handling (exceptions/Error/Err<T>)
 - defer
 - arrays
 - Imm\<T>
@@ -34,8 +39,16 @@ function self parameter | this parameter | static method
 - name/identifier matching (case insensitive)
 - Memory Heap Allocation. Could be as simple as a wrapper `class HeapAlloc<T> where T : struct` to get a struct on the heap. Look into Boxing.
 
-.NET features not directly supported by Z# but needed for interop.
-- delegates/events
-- classes/derive from classes
-- implement interfaces
--
+---
+---
+
+## .NET to Z#
+
+How are referenced (imported) .NET code constructs translated to the Z# language constructs.
+
+- Type management (identifier matching)
+- Classes/objects and inheritance (calling and implementing)
+- Interfaces (querying, calling and implementing)
+- delegates and events
+- Lambdas
+- Expressions (Linq)

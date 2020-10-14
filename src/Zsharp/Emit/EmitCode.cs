@@ -1,23 +1,56 @@
 ﻿using Mono.Cecil;
 using Zsharp.AST;
 
-namespace Zsharp.Generation
+namespace Zsharp.Emit
 {
     public class EmitCode : AstVisitor
     {
-        public EmitContext Context { get; } = new EmitContext();
+        public EmitCode()
+        { }
+
+        public EmitCode(string assemblyName)
+        {
+            Context = EmitContext.Create(assemblyName);
+        }
+
+        public EmitContext? Context { get; private set; }
+
+        public override void VisitModule(AstModule module)
+        {
+            if (Context == null)
+            {
+                Context = EmitContext.Create(module.Name);
+            }
+
+            using var scope = Context.AddModuleClass(module);
+
+            VisitChildren(module);
+        }
 
         public override void VisitFunction(AstFunction function)
         {
+            var fn = new MethodDefinition(
+                function.Identifier.Name,
+                ToMethodAttibutes(function),
+                ToTypeReference(function.TypeReference)
+            );
 
-            var fn = new MethodDefinition(function.Identifier.Name,
-                ToMethodAttibutes(function), ToTypeReference(function.TypeReference));
+            using var scope = Context.Add(fn);
+
+            VisitChildren(function);
         }
 
         private TypeReference ToTypeReference(AstTypeReference typeReference)
         {
-            // TODO:
-            IMetadataScope metadataScope = null;
+            if (typeReference == null)
+            {
+                // TODO: Replace for Zsharp.Void
+                return Context!.Module.TypeSystem.Void;
+            }
+
+            // TODO: what does this do?
+            IMetadataScope? metadataScope = null;
+
             var typeRef = new TypeReference("Todo",
                 typeReference.TypeDefinition.Identifier.Name,
                 Context.Module,

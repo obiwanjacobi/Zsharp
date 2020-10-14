@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static ZsharpParser;
 
 namespace Zsharp.AST
@@ -31,6 +32,11 @@ namespace Zsharp.AST
 
         private readonly List<AstFile> _files = new List<AstFile>();
         public IEnumerable<AstFile> Files => _files;
+
+        public bool HasExports
+        {
+            get { return _files.Any(f => f.Exports.Any()); }
+        }
 
         public void AddModule(Statement_moduleContext moduleCtx)
         {

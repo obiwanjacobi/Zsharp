@@ -394,12 +394,26 @@ s = h.Seconds()     // s = 7200
 
 Some built-in (decorator) types are use so often, it makes sense to provide a shorter version in the form of an operator.
 
-Type | Operator | Position
---|--|--
-`Err<T>` | ! | Post
-`Opt<T>` | ? | Post
-`Ptr<T>` | * | Pre
-`Imm<T>` | ^ | Pre
+Type | Operator
+--|--
+`Err<T>` | !
+`Opt<T>` | ?
+`Ptr<T>` | *
+`Imm<T>` | ^
+
+These operators are always used directly _after_ the type (post-fix)
+
+```csharp
+// optionaL parameter and optional or error return
+fn: (p: U8?): U8!?
+```
+
+The precedence can be set according to the order (left to right) the operators appear in the code. Closest to the type is inner: `U8?*` => `Ptr<Opt<U8>>`.
+
+```csharp
+o: U8?^     // Imm<Opt<U8>>
+p: U8!*     // Ptr<Err<U8>>
+```
 
 The optional and error types can be thought of as constrained variant types.
 
@@ -430,7 +444,7 @@ o: U8?      // optional U8
 e: U8!      // U8 or error
 x: U8!?     // optional U8 or Error
 p: *U8?     // optional pointer to an U8
-i: ^*U8?    // optional immutable pointer to an U8
+i: ^*U8?    // pointer to an optional immutable U8
 ```
 
 `Err<T>` is typically (only) used on function return values.
