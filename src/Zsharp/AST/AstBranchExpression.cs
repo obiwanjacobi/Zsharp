@@ -1,11 +1,11 @@
-﻿using static ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstBranchExpression : AstBranch, IAstExpressionSite
     {
-        public AstBranchExpression(Statement_returnContext ctx)
-            : base(ctx)
+        public AstBranchExpression(Statement_returnContext context)
+            : base(context)
         { }
 
         protected AstBranchExpression(AstBranchType branchType)

@@ -1,4 +1,4 @@
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -8,24 +8,24 @@ namespace Zsharp.AST
         private readonly Statement_breakContext? _breakCtx;
         private readonly Statement_continueContext? _continueCtx;
 
-        public AstBranch(Statement_returnContext ctx)
+        public AstBranch(Statement_returnContext context)
             : base(AstNodeType.Branch)
         {
-            _returnCtx = ctx;
+            _returnCtx = context;
             BranchType = AstBranchType.ExitFunction;
         }
 
-        public AstBranch(Statement_breakContext ctx)
+        public AstBranch(Statement_breakContext context)
             : base(AstNodeType.Branch)
         {
-            _breakCtx = ctx;
+            _breakCtx = context;
             BranchType = AstBranchType.ExitLoop;
         }
 
-        public AstBranch(Statement_continueContext ctx)
+        public AstBranch(Statement_continueContext context)
             : base(AstNodeType.Branch)
         {
-            _continueCtx = ctx;
+            _continueCtx = context;
             BranchType = AstBranchType.ExitIteration;
         }
 

@@ -1,4 +1,4 @@
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -7,13 +7,13 @@ namespace Zsharp.AST
     {
         public static readonly AstIdentifierIntrinsic U8 = new AstIdentifierIntrinsic("U8", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic U16 = new AstIdentifierIntrinsic("U16", AstIdentifierType.Type);
-        public static readonly AstIdentifierIntrinsic U24 = new AstIdentifierIntrinsic("U24", AstIdentifierType.Type);
+        public static readonly AstIdentifierIntrinsic U64 = new AstIdentifierIntrinsic("U64", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic U32 = new AstIdentifierIntrinsic("U32", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic I8 = new AstIdentifierIntrinsic("I8", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic I16 = new AstIdentifierIntrinsic("I16", AstIdentifierType.Type);
-        public static readonly AstIdentifierIntrinsic I24 = new AstIdentifierIntrinsic("I24", AstIdentifierType.Type);
+        public static readonly AstIdentifierIntrinsic I64 = new AstIdentifierIntrinsic("I64", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic I32 = new AstIdentifierIntrinsic("I32", AstIdentifierType.Type);
-        public static readonly AstIdentifierIntrinsic F16 = new AstIdentifierIntrinsic("F16", AstIdentifierType.Type);
+        public static readonly AstIdentifierIntrinsic F64 = new AstIdentifierIntrinsic("F64", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic F32 = new AstIdentifierIntrinsic("F32", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic Str = new AstIdentifierIntrinsic("Str", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic Bool = new AstIdentifierIntrinsic("Bool", AstIdentifierType.Type);
@@ -24,10 +24,10 @@ namespace Zsharp.AST
         protected AstType()
             : base(AstNodeType.Type)
         { }
-        protected AstType(Type_nameContext ctx)
+        protected AstType(Type_nameContext context)
             : base(AstNodeType.Type)
         {
-            Context = ctx;
+            Context = context;
         }
         protected AstType(AstIdentifier identifier)
             : base(AstNodeType.Type)
@@ -56,19 +56,19 @@ namespace Zsharp.AST
             return Identifier.IsEqual(type.Identifier);
         }
 
-        public static void Construct(AstType instance, Type_nameContext ctx)
+        public static void Construct(AstType instance, Type_nameContext context)
         {
             AstIdentifier? identifier;
 
-            var idCtx = ctx.identifier_type();
+            var idCtx = context.identifier_type();
             if (idCtx != null)
             {
                 identifier = new AstIdentifier(idCtx);
-                // TODO: type parameters ctx.type_param_list()
+                // TODO: type parameters context.type_param_list()
             }
             else
             {
-                var knownCtx = ctx.known_types();
+                var knownCtx = context.known_types();
                 identifier = SelectKnownIdentifier(knownCtx);
             }
 
@@ -77,38 +77,38 @@ namespace Zsharp.AST
             Ast.Guard(success, "SetIdentifier() failed");
         }
 
-        private static AstIdentifier? SelectKnownIdentifier(Known_typesContext ctx)
+        private static AstIdentifier? SelectKnownIdentifier(Known_typesContext context)
         {
-            if (ctx == null)
+            if (context == null)
                 return null;
-            //if (ctx.type_Bit()) return Bit;
-            //if (ctx.type_Ptr()) return Ptr;
+            //if (context.type_Bit()) return Bit;
+            //if (context.type_Ptr()) return Ptr;
 
             AstIdentifier? identifier = null;
 
-            if (ctx.BOOL() != null)
+            if (context.BOOL() != null)
                 identifier = AstIdentifierIntrinsic.Bool;
-            if (ctx.STR() != null)
+            if (context.STR() != null)
                 identifier = AstIdentifierIntrinsic.Str;
-            if (ctx.F16() != null)
-                identifier = AstIdentifierIntrinsic.F16;
-            if (ctx.F32() != null)
+            if (context.F64() != null)
+                identifier = AstIdentifierIntrinsic.F64;
+            if (context.F32() != null)
                 identifier = AstIdentifierIntrinsic.F32;
-            if (ctx.I8() != null)
+            if (context.I8() != null)
                 identifier = AstIdentifierIntrinsic.I8;
-            if (ctx.I16() != null)
+            if (context.I16() != null)
                 identifier = AstIdentifierIntrinsic.I16;
-            // if (ctx.I24() != null)
+            // if (context.I24() != null)
             //     identifier = AstIdentifierIntrinsic.I24;
-            if (ctx.I32() != null)
+            if (context.I32() != null)
                 identifier = AstIdentifierIntrinsic.I32;
-            if (ctx.U8() != null)
+            if (context.U8() != null)
                 identifier = AstIdentifierIntrinsic.U8;
-            if (ctx.U16() != null)
+            if (context.U16() != null)
                 identifier = AstIdentifierIntrinsic.U16;
-            // if (ctx.U24() != null)
+            // if (context.U24() != null)
             //     identifier = AstIdentifierIntrinsic.U24;
-            if (ctx.U32() != null)
+            if (context.U32() != null)
                 identifier = AstIdentifierIntrinsic.U32;
 
             if (identifier != null)

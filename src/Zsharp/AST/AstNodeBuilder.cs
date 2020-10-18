@@ -2,7 +2,8 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
-using static ZsharpParser;
+using Zsharp.Parser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {

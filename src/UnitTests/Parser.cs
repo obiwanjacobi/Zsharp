@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using static ZsharpParser;
+using Zsharp.Parser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace UnitTests
 {

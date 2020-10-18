@@ -23,6 +23,7 @@ namespace UnitTests.Semantics
             var v = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
             v.TypeReference.Should().NotBeNull();
             v.TypeReference.TypeDefinition.Should().NotBeNull();
+            v.TypeReference.TypeDefinition.IsIntrinsic.Should().BeTrue();
         }
 
         [TestMethod]

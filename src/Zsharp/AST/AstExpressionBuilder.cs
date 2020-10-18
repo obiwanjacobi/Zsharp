@@ -1,6 +1,7 @@
 using Antlr4.Runtime;
 using System.Collections.Generic;
-using static ZsharpParser;
+using Zsharp.Parser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -27,9 +28,9 @@ namespace Zsharp.AST
             return Cast(val);
         }
 
-        public AstExpression? Test(ParserRuleContext ctx)
+        public AstExpression? Test(ParserRuleContext context)
         {
-            var val = Visit(ctx);
+            var val = Visit(context);
             return Cast(val);
         }
 
@@ -40,18 +41,18 @@ namespace Zsharp.AST
             return result as AstExpression;
         }
 
-        private object? ProcessExpression(IExpressionContextWrapper ctx)
+        private object? ProcessExpression(IExpressionContextWrapper context)
         {
-            if (ctx.HasOpenParen)
+            if (context.HasOpenParen)
             {
-                var expr = ctx.NewExpression();
+                var expr = context.NewExpression();
                 expr.Operator = AstExpressionOperator.Open;
                 _operators.Push(expr);
             }
 
             var operatorPosition = _operators.Count;
 
-            foreach (var child in ctx.Children)
+            foreach (var child in context.Children)
             {
                 var retVal = child.Accept(this);
 
@@ -61,14 +62,14 @@ namespace Zsharp.AST
                 {
                     // there is an extra expression node with just the operand.
                     // return its value and be done.
-                    if (ctx.IsOperand)
+                    if (context.IsOperand)
                     {
                         return retVal;
                     }
 
                     if (op != AstExpressionOperator.None)
                     {
-                        var expr = ctx.NewExpression();
+                        var expr = context.NewExpression();
                         expr.Operator = op;
 
                         if (_operators.Count > 0)
@@ -93,7 +94,7 @@ namespace Zsharp.AST
                 }
             }
 
-            if (ctx.HasCloseParen)
+            if (context.HasCloseParen)
             {
                 var expr = BuildExpression(operatorPosition);
                 Ast.Guard(expr, "BuildExpression did not produce an instance.");
@@ -167,188 +168,188 @@ namespace Zsharp.AST
             return nextResult;
         }
 
-        public override object? VisitExpression_value(Expression_valueContext ctx)
+        public override object? VisitExpression_value(Expression_valueContext context)
         {
-            var number = ctx.number();
+            var number = context.number();
             if (number != null)
             {
                 var nr = VisitNumber(number);
                 Ast.Guard<AstExpressionOperand>(nr);
                 _values.Push((AstExpressionOperand)nr!);
 
-                var expr = new AstExpression(ctx);
+                var expr = new AstExpression(context);
                 _operators.Push(expr);
                 return null;
             }
 
-            if (ctx.expression_bool() != null)
+            if (context.expression_bool() != null)
             {
-                var operand = VisitChildren(ctx);
+                var operand = VisitChildren(context);
                 Ast.Guard<AstExpressionOperand>(operand);
                 _values.Push((AstExpressionOperand)operand!);
 
-                var expr = new AstExpression(ctx);
+                var expr = new AstExpression(context);
                 _operators.Push(expr);
                 return null;
             }
 
-            return base.VisitChildren(ctx);
+            return base.VisitChildren(context);
         }
 
-        public override object? VisitExpression_arithmetic(Expression_arithmeticContext ctx)
+        public override object? VisitExpression_arithmetic(Expression_arithmeticContext context)
         {
-            return ProcessExpression(new ArithmeticContextWrapper(ctx));
+            return ProcessExpression(new ArithmeticContextWrapper(context));
         }
 
-        public override object? VisitExpression_logic(Expression_logicContext ctx)
+        public override object? VisitExpression_logic(Expression_logicContext context)
         {
-            return ProcessExpression(new LogicContextWrapper(ctx));
+            return ProcessExpression(new LogicContextWrapper(context));
         }
 
-        public override object? VisitExpression_comparison(Expression_comparisonContext ctx)
+        public override object? VisitExpression_comparison(Expression_comparisonContext context)
         {
-            return ProcessExpression(new ComparisonContextWrapper(ctx));
+            return ProcessExpression(new ComparisonContextWrapper(context));
         }
 
-        public override object? VisitLiteral_bool(Literal_boolContext ctx)
+        public override object? VisitLiteral_bool(Literal_boolContext context)
         {
-            return new AstExpressionOperand(ctx);
+            return new AstExpressionOperand(context);
         }
 
-        public override object? VisitFunction_call(Function_callContext ctx)
+        public override object? VisitFunction_call(Function_callContext context)
         {
-            return new AstExpressionOperand(ctx);
+            return new AstExpressionOperand(context);
         }
 
-        public override object? VisitVariable_ref(Variable_refContext ctx)
+        public override object? VisitVariable_ref(Variable_refContext context)
         {
-            var varRef = new AstVariableReference(ctx);
+            var varRef = new AstVariableReference(context);
 
             _builderContext.SetCurrent(varRef);
 
-            VisitChildren(ctx);
+            VisitChildren(context);
 
             _builderContext.RevertCurrent();
 
             return new AstExpressionOperand(varRef);
         }
 
-        public override object? VisitNumber(NumberContext ctx)
+        public override object? VisitNumber(NumberContext context)
         {
             var builder = new AstNumericBuilder();
-            var numeric = builder.Build(ctx);
+            var numeric = builder.Build(context);
             Ast.Guard(numeric, "AstNumericBuilder did not produce instance.");
             var operand = new AstExpressionOperand(numeric!);
             return operand;
         }
 
-        public override object? VisitOperator_arithmetic(Operator_arithmeticContext ctx)
+        public override object? VisitOperator_arithmetic(Operator_arithmeticContext context)
         {
-            if (ctx.DIV() != null)
+            if (context.DIV() != null)
                 return AstExpressionOperator.Divide;
-            if (ctx.MINUS_NEG() != null)
+            if (context.MINUS_NEG() != null)
                 return AstExpressionOperator.Minus;
-            if (ctx.MOD() != null)
+            if (context.MOD() != null)
                 return AstExpressionOperator.Modulo;
-            if (ctx.MULT_PTR() != null)
+            if (context.MULT_PTR() != null)
                 return AstExpressionOperator.Multiply;
-            if (ctx.PLUS() != null)
+            if (context.PLUS() != null)
                 return AstExpressionOperator.Plus;
-            if (ctx.POW() != null)
+            if (context.POW() != null)
                 return AstExpressionOperator.Power;
             return AstExpressionOperator.None;
         }
 
-        public override object? VisitOperator_arithmetic_unary(Operator_arithmetic_unaryContext ctx)
+        public override object? VisitOperator_arithmetic_unary(Operator_arithmetic_unaryContext context)
         {
-            if (ctx.MINUS_NEG() != null)
+            if (context.MINUS_NEG() != null)
                 return AstExpressionOperator.Negate;
             return AstExpressionOperator.None;
         }
 
-        public override object? VisitOperator_logic(Operator_logicContext ctx)
+        public override object? VisitOperator_logic(Operator_logicContext context)
         {
-            if (ctx.AND() != null)
+            if (context.AND() != null)
                 return AstExpressionOperator.And;
-            if (ctx.OR() != null)
+            if (context.OR() != null)
                 return AstExpressionOperator.Or;
             return AstExpressionOperator.None;
         }
 
-        public override object? VisitOperator_logic_unary(Operator_logic_unaryContext ctx)
+        public override object? VisitOperator_logic_unary(Operator_logic_unaryContext context)
         {
-            if (ctx.NOT() != null)
+            if (context.NOT() != null)
                 return AstExpressionOperator.Not;
             return AstExpressionOperator.None;
         }
 
-        public override object? VisitOperator_comparison(Operator_comparisonContext ctx)
+        public override object? VisitOperator_comparison(Operator_comparisonContext context)
         {
-            if (ctx.EQ_ASSIGN() != null)
+            if (context.EQ_ASSIGN() != null)
                 return AstExpressionOperator.Equal;
-            if (ctx.GREAT_ANGLEclose() != null)
+            if (context.GREAT_ANGLEclose() != null)
                 return AstExpressionOperator.Greater;
-            if (ctx.GREQ() != null)
+            if (context.GREQ() != null)
                 return AstExpressionOperator.GreaterEqual;
-            if (ctx.NEQ() != null)
+            if (context.NEQ() != null)
                 return AstExpressionOperator.NotEqual;
-            if (ctx.SMALL_ANGLEopen() != null)
+            if (context.SMALL_ANGLEopen() != null)
                 return AstExpressionOperator.Smaller;
-            if (ctx.SMEQ() != null)
+            if (context.SMEQ() != null)
                 return AstExpressionOperator.SmallerEqual;
             return AstExpressionOperator.None;
         }
 
-        public override object? VisitOperator_bits(Operator_bitsContext ctx)
+        public override object? VisitOperator_bits(Operator_bitsContext context)
         {
-            if (ctx.BIT_AND() != null)
+            if (context.BIT_AND() != null)
                 return AstExpressionOperator.BitAnd;
-            if (ctx.BIT_OR() != null)
+            if (context.BIT_OR() != null)
                 return AstExpressionOperator.BitOr;
-            if (ctx.BIT_ROLL() != null)
+            if (context.BIT_ROLL() != null)
                 return AstExpressionOperator.BitRollLeft;
-            if (ctx.BIT_ROLR() != null)
+            if (context.BIT_ROLR() != null)
                 return AstExpressionOperator.BitRollRight;
-            if (ctx.BIT_SHL() != null)
+            if (context.BIT_SHL() != null)
                 return AstExpressionOperator.BitShiftLeft;
-            if (ctx.BIT_SHR() != null)
+            if (context.BIT_SHR() != null)
                 return AstExpressionOperator.BitShiftRight;
-            if (ctx.BIT_XOR_IMM() != null)
+            if (context.BIT_XOR_IMM() != null)
                 return AstExpressionOperator.BitXor;
             return AstExpressionOperator.None;
         }
 
-        public override object? VisitOperator_bits_unary(Operator_bits_unaryContext ctx)
+        public override object? VisitOperator_bits_unary(Operator_bits_unaryContext context)
         {
-            if (ctx.BIT_NOT() != null)
+            if (context.BIT_NOT() != null)
                 return AstExpressionOperator.BitNegate;
             return AstExpressionOperator.None;
         }
 
-        public override object? VisitIdentifier_type(Identifier_typeContext ctx)
+        public override object? VisitIdentifier_type(Identifier_typeContext context)
         {
-            bool success = _builderContext.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _builderContext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(Type) failed");
             return null;
         }
 
-        public override object? VisitIdentifier_var(Identifier_varContext ctx)
+        public override object? VisitIdentifier_var(Identifier_varContext context)
         {
-            bool success = _builderContext.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _builderContext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(Variable) failed");
             return null;
         }
 
-        public override object? VisitIdentifier_param(Identifier_paramContext ctx)
+        public override object? VisitIdentifier_param(Identifier_paramContext context)
         {
-            bool success = _builderContext.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _builderContext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(Parameter) failed");
             return null;
         }
 
-        public override object? VisitIdentifier_func(Identifier_funcContext ctx)
+        public override object? VisitIdentifier_func(Identifier_funcContext context)
         {
-            bool success = _builderContext.AddIdentifier(new AstIdentifier(ctx));
+            bool success = _builderContext.AddIdentifier(new AstIdentifier(context));
             Ast.Guard(success, "AddIdentifier(Function) failed");
             return null;
         }

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -9,10 +9,10 @@ namespace Zsharp.AST
         private readonly List<Statement_exportContext> _exports = new List<Statement_exportContext>();
         private readonly List<AstFunction> _functions = new List<AstFunction>();
 
-        public AstFile(string scopeName, AstSymbolTable parentTable, FileContext ctx)
+        public AstFile(string scopeName, AstSymbolTable parentTable, FileContext context)
             : base(AstNodeType.File)
         {
-            Context = ctx;
+            Context = context;
             SetCodeBlock(new AstCodeBlock(scopeName, parentTable, null));
         }
 

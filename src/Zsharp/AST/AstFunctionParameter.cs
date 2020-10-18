@@ -1,4 +1,4 @@
-﻿using static ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -11,16 +11,16 @@ namespace Zsharp.AST
             : base(AstNodeType.FunctionParameter)
         { }
 
-        public AstFunctionParameter(Function_parameterContext ctx)
+        public AstFunctionParameter(Function_parameterContext context)
             : base(AstNodeType.FunctionParameter)
         {
-            _paramCtx = ctx;
+            _paramCtx = context;
         }
 
-        public AstFunctionParameter(Function_parameter_selfContext ctx)
+        public AstFunctionParameter(Function_parameter_selfContext context)
             : base(AstNodeType.FunctionParameter)
         {
-            _selfCtx = ctx;
+            _selfCtx = context;
         }
 
         public override void Accept(AstVisitor visitor)

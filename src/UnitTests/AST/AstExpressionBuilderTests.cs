@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Zsharp.AST;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace UnitTests.AST
 {

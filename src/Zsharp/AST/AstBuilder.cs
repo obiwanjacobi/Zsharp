@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {

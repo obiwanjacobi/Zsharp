@@ -1,5 +1,5 @@
 using Antlr4.Runtime;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -10,28 +10,28 @@ namespace Zsharp.AST
         private readonly Expression_comparisonContext? _comparisonCtx;
         private readonly Expression_valueContext? _valueCtx;
 
-        public AstExpression(Expression_arithmeticContext ctx)
+        public AstExpression(Expression_arithmeticContext context)
             : base(AstNodeType.Expression)
         {
-            _arithmeticCtx = ctx;
+            _arithmeticCtx = context;
         }
 
-        public AstExpression(Expression_logicContext ctx)
+        public AstExpression(Expression_logicContext context)
             : base(AstNodeType.Expression)
         {
-            _logicCtx = ctx;
+            _logicCtx = context;
         }
 
-        public AstExpression(Expression_comparisonContext ctx)
+        public AstExpression(Expression_comparisonContext context)
             : base(AstNodeType.Expression)
         {
-            _comparisonCtx = ctx;
+            _comparisonCtx = context;
         }
 
-        public AstExpression(Expression_valueContext ctx)
+        public AstExpression(Expression_valueContext context)
             : base(AstNodeType.Expression)
         {
-            _valueCtx = ctx;
+            _valueCtx = context;
         }
 
         public override void Accept(AstVisitor visitor)

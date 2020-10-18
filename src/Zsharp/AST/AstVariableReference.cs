@@ -1,4 +1,4 @@
-﻿using static ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -7,13 +7,13 @@ namespace Zsharp.AST
         private readonly Variable_refContext? _refCtx;
         private readonly Variable_assign_autoContext? _assignCtx;
 
-        public AstVariableReference(Variable_refContext ctx)
+        public AstVariableReference(Variable_refContext context)
         {
-            _refCtx = ctx;
+            _refCtx = context;
         }
-        public AstVariableReference(Variable_assign_autoContext ctx)
+        public AstVariableReference(Variable_assign_autoContext context)
         {
-            _assignCtx = ctx;
+            _assignCtx = context;
         }
 
         public override void Accept(AstVisitor visitor)

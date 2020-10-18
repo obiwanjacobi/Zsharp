@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -7,11 +8,11 @@ namespace Zsharp.AST
     {
         private readonly List<AstCodeBlockItem> _items = new List<AstCodeBlockItem>();
 
-        public AstCodeBlock(string scopeName, AstSymbolTable parentTable, CodeblockContext? ctx)
+        public AstCodeBlock(string scopeName, AstSymbolTable parentTable, CodeblockContext? context)
             : base(AstNodeType.CodeBlock)
         {
             Symbols = new AstSymbolTable(scopeName, parentTable);
-            Context = ctx;
+            Context = context;
         }
 
         public int Indent { get; set; }

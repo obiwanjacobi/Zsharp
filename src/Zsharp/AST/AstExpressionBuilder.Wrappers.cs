@@ -1,6 +1,6 @@
 ﻿using Antlr4.Runtime.Tree;
 using System.Collections.Generic;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -21,9 +21,9 @@ namespace Zsharp.AST
         {
             private readonly Expression_arithmeticContext _context;
 
-            public ArithmeticContextWrapper(Expression_arithmeticContext ctx)
+            public ArithmeticContextWrapper(Expression_arithmeticContext context)
             {
-                _context = ctx;
+                _context = context;
             }
 
             public bool HasOpenParen => _context.PARENopen() != null;
@@ -44,9 +44,9 @@ namespace Zsharp.AST
         {
             private readonly Expression_logicContext _context;
 
-            public LogicContextWrapper(Expression_logicContext ctx)
+            public LogicContextWrapper(Expression_logicContext context)
             {
-                _context = ctx;
+                _context = context;
             }
 
             public bool HasOpenParen => _context.PARENopen() != null;
@@ -67,9 +67,9 @@ namespace Zsharp.AST
         {
             private readonly Expression_comparisonContext _context;
 
-            public ComparisonContextWrapper(Expression_comparisonContext ctx)
+            public ComparisonContextWrapper(Expression_comparisonContext context)
             {
-                _context = ctx;
+                _context = context;
             }
 
             public bool HasOpenParen => _context.PARENopen() != null;

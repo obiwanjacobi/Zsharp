@@ -1,4 +1,4 @@
-﻿using static ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -8,19 +8,19 @@ namespace Zsharp.AST
         private readonly Variable_def_typed_initContext? _typedInitCtx;
         private readonly Variable_assign_autoContext? _assignCtx;
 
-        public AstVariableDefinition(Variable_def_typedContext ctx)
+        public AstVariableDefinition(Variable_def_typedContext context)
         {
-            _typedCtx = ctx;
+            _typedCtx = context;
         }
 
-        public AstVariableDefinition(Variable_def_typed_initContext ctx)
+        public AstVariableDefinition(Variable_def_typed_initContext context)
         {
-            _typedInitCtx = ctx;
+            _typedInitCtx = context;
         }
 
-        public AstVariableDefinition(Variable_assign_autoContext ctx)
+        public AstVariableDefinition(Variable_assign_autoContext context)
         {
-            _assignCtx = ctx;
+            _assignCtx = context;
         }
 
         private AstTypeReference? _typeRef;

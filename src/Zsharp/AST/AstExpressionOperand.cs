@@ -1,5 +1,5 @@
 using Antlr4.Runtime;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -32,16 +32,16 @@ namespace Zsharp.AST
             Ast.Guard(success, "SetParent failed.");
         }
 
-        public AstExpressionOperand(Literal_boolContext ctx)
+        public AstExpressionOperand(Literal_boolContext context)
             : base(AstNodeType.Operand)
         {
-            _litBoolCtx = ctx;
+            _litBoolCtx = context;
         }
 
-        public AstExpressionOperand(Function_callContext ctx)
+        public AstExpressionOperand(Function_callContext context)
             : base(AstNodeType.Operand)
         {
-            _callCtx = ctx;
+            _callCtx = context;
         }
 
         public ParserRuleContext? Context

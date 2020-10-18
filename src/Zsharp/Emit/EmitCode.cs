@@ -38,14 +38,17 @@ namespace Zsharp.Emit
             VisitChildren(function);
         }
 
-        public override void VisitBranch(AstBranch branch)
+        public override void VisitBranchExpression(AstBranchExpression branch)
         {
             if (branch.BranchType == AstBranchType.ExitFunction)
             {
+                if (branch.HasExpression)
+                {
+                    VisitChildren(branch);
+                    // TODO: ld expression result
+                }
                 Context.ILProcessor.Append(Context.ILProcessor.Create(OpCodes.Ret));
             }
-
-            VisitChildren(branch);
         }
 
         private TypeReference ToTypeReference(AstTypeReference typeReference)
@@ -54,6 +57,13 @@ namespace Zsharp.Emit
             {
                 // TODO: Replace with Zsharp.Void
                 return Context.Module.TypeSystem.Void;
+            }
+
+            if (typeReference.TypeDefinition.IsIntrinsic)
+            {
+                // Map intrinsic data types to .NET data types
+                var type = ((AstTypeIntrinsic)typeReference.TypeDefinition).SystemType;
+                return Context.Module.ImportReference(type);
             }
 
             // TODO: what does this do?

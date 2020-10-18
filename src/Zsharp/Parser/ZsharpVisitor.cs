@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from c:\Users\marc\Documents\MyProjects\Zalt\Zsharp\Zsharp\Zsharp.g4 by ANTLR 4.8
+// Generated from c:\Users\marc\Documents\MyProjects\Zsharp\src\Zsharp\Zsharp.g4 by ANTLR 4.8
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,6 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
+namespace Zsharp.Parser {
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IToken = Antlr4.Runtime.IToken;
@@ -626,3 +627,4 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitIndent([NotNull] ZsharpParser.IndentContext context);
 }
+} // namespace Zsharp.Parser

@@ -1,4 +1,4 @@
-﻿using static ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -8,20 +8,20 @@ namespace Zsharp.AST
         private readonly Statement_elseContext? _elseCtx;
         private readonly Statement_elseifContext? _elseifCtx;
 
-        public AstBranchConditional(Statement_ifContext ctx)
+        public AstBranchConditional(Statement_ifContext context)
             : base(AstBranchType.Conditional)
         {
-            _ifCtx = ctx;
+            _ifCtx = context;
         }
-        public AstBranchConditional(Statement_elseContext ctx)
+        public AstBranchConditional(Statement_elseContext context)
             : base(AstBranchType.Conditional)
         {
-            _elseCtx = ctx;
+            _elseCtx = context;
         }
-        public AstBranchConditional(Statement_elseifContext ctx)
+        public AstBranchConditional(Statement_elseifContext context)
             : base(AstBranchType.Conditional)
         {
-            _elseifCtx = ctx;
+            _elseifCtx = context;
         }
 
         private AstCodeBlock? _codeBlock;

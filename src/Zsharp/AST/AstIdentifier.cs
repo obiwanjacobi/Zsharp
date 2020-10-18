@@ -1,5 +1,5 @@
 using System;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -12,40 +12,40 @@ namespace Zsharp.AST
         private Identifier_fieldContext? _fieldCtx;
         private Identifier_enumoptionContext? _enumOptCtx;
 
-        public AstIdentifier(Identifier_typeContext ctx)
+        public AstIdentifier(Identifier_typeContext context)
         : base(AstNodeType.Identifier)
         {
-            _typeCtx = ctx;
+            _typeCtx = context;
         }
 
-        public AstIdentifier(Identifier_varContext ctx)
+        public AstIdentifier(Identifier_varContext context)
             : base(AstNodeType.Identifier)
         {
-            _varCtx = ctx;
+            _varCtx = context;
         }
 
-        public AstIdentifier(Identifier_paramContext ctx)
+        public AstIdentifier(Identifier_paramContext context)
             : base(AstNodeType.Identifier)
         {
-            _paramCtx = ctx;
+            _paramCtx = context;
         }
 
-        public AstIdentifier(Identifier_funcContext ctx)
+        public AstIdentifier(Identifier_funcContext context)
             : base(AstNodeType.Identifier)
         {
-            _funcCtx = ctx;
+            _funcCtx = context;
         }
 
-        public AstIdentifier(Identifier_fieldContext ctx)
+        public AstIdentifier(Identifier_fieldContext context)
             : base(AstNodeType.Identifier)
         {
-            _fieldCtx = ctx;
+            _fieldCtx = context;
         }
 
-        public AstIdentifier(Identifier_enumoptionContext ctx)
+        public AstIdentifier(Identifier_enumoptionContext context)
             : base(AstNodeType.Identifier)
         {
-            _enumOptCtx = ctx;
+            _enumOptCtx = context;
         }
 
         protected AstIdentifier()

@@ -93,7 +93,7 @@ enum_option_def: indent identifier_enumoption enum_option_value?;
 enum_option_value: SP EQ_ASSIGN SP comptime_expression_value;
 enum_base_type: type_Bit 
     | STR
-    | F16 | F32 
+    | F64 | F32 
     | I16 | I64 | I32 | I8
     | U16 | U64 | U32 | U8;
 
@@ -107,7 +107,7 @@ type_name: known_types | identifier_type template_param_list?;
 known_types:
     type_Bit | type_Ptr
     | BOOL | STR
-    | F16 | F32 
+    | F64 | F32 
     | I16 | I64 | I32 | I8  
     | U16 | U64 | U32 | U8;
 
@@ -175,7 +175,6 @@ I8: 'I8';
 I16: 'I16';
 I32: 'I32';
 I64: 'I64';
-F16: 'F16';
 F32: 'F32';
 F64: 'F64';
 STR: 'Str';

@@ -1,14 +1,14 @@
 using System;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstNumeric : AstNode
     {
-        public AstNumeric(NumberContext ctx)
+        public AstNumeric(NumberContext context)
             : base(AstNodeType.Numeric)
         {
-            Context = ctx;
+            Context = context;
         }
 
         public NumberContext Context { get; }

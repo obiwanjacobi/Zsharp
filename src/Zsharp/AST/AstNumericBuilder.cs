@@ -1,7 +1,8 @@
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;
-using static ZsharpParser;
+using Zsharp.Parser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -24,9 +25,9 @@ namespace Zsharp.AST
             return _numeric;
         }
 
-        public AstNumeric? Test(ParserRuleContext ctx)
+        public AstNumeric? Test(ParserRuleContext context)
         {
-            Visit(ctx);
+            Visit(context);
             return _numeric;
         }
 

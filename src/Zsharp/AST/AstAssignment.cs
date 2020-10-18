@@ -1,14 +1,14 @@
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstAssignment : AstCodeBlockItem, IAstExpressionSite
     {
-        public AstAssignment(Variable_assign_autoContext ctx)
+        public AstAssignment(Variable_assign_autoContext context)
             : base(AstNodeType.Assignment)
         { }
 
-        public AstAssignment(Variable_def_typed_initContext ctx)
+        public AstAssignment(Variable_def_typed_initContext context)
             : base(AstNodeType.Assignment)
         { }
 

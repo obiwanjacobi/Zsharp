@@ -1,13 +1,13 @@
-﻿using static ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstTypeReference : AstType
     {
-        protected AstTypeReference(Type_ref_useContext ctx)
-            : base(ctx.type_ref().type_name())
+        protected AstTypeReference(Type_ref_useContext context)
+            : base(context.type_ref().type_name())
         {
-            var typeRef = ctx.type_ref();
+            var typeRef = context.type_ref();
             IsOptional = typeRef.QUESTION() != null;
             IsError = typeRef.ERROR() != null;
         }
@@ -40,6 +40,10 @@ namespace Zsharp.AST
         }
 
         private AstTypeReference? _inferredFrom;
+        /// <summary>
+        /// Reference to the type that was used to determine this instance.
+        /// Mainly for linking source references.
+        /// </summary>
         public AstTypeReference? InferredFrom => _inferredFrom;
 
         public bool SetInferredFrom(AstTypeReference type)
@@ -54,6 +58,9 @@ namespace Zsharp.AST
         }
 
         private AstNode? _typeSource;
+        /// <summary>
+        /// A reference to a source node that helped determine the type.
+        /// </summary>
         public AstNode? TypeSource => _typeSource;
 
         public bool SetTypeSource(AstNode typeSource)
@@ -98,11 +105,11 @@ namespace Zsharp.AST
                 Identifier.Accept(visitor);
         }
 
-        public static AstTypeReference Create(Type_ref_useContext ctx)
+        public static AstTypeReference Create(Type_ref_useContext context)
         {
-            Ast.Guard(ctx, "AstTypeReference.Create is passed a null");
-            var typeRef = new AstTypeReference(ctx);
-            AstType.Construct(typeRef, ctx.type_ref().type_name());
+            Ast.Guard(context, "AstTypeReference.Create is passed a null");
+            var typeRef = new AstTypeReference(context);
+            AstType.Construct(typeRef, context.type_ref().type_name());
             return typeRef;
         }
 

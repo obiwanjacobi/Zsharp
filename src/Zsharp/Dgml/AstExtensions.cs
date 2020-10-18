@@ -72,9 +72,9 @@ namespace Zsharp.Dgml
             if (num != null)
             { return AsString(num); }
 
-            var ctx = operand.Context;
-            if (ctx != null)
-            { return ctx.GetText(); }
+            var context = operand.Context;
+            if (context != null)
+            { return context.GetText(); }
 
             return String.Empty;
         }

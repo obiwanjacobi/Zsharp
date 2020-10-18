@@ -2,7 +2,7 @@ using Antlr4.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using static ZsharpParser;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -18,7 +18,7 @@ namespace Zsharp.AST
 
         public UInt32 Indent { get; private set; }
 
-        public UInt32 CheckIndent(ParserRuleContext ctx, IndentContext indentCtx)
+        public UInt32 CheckIndent(ParserRuleContext context, IndentContext indentCtx)
         {
             var indent = (UInt32)indentCtx.GetText().Length;
             Debug.Assert(indent < Int32.MaxValue);
@@ -30,7 +30,7 @@ namespace Zsharp.AST
 
             if (indent % Indent > 0)
             {
-                AddError(ctx, AstError.IndentationInvalid);
+                AddError(context, AstError.IndentationInvalid);
                 // guess where it should go
                 return (UInt32)Math.Round((double)indent / Indent);
             }
@@ -115,9 +115,9 @@ namespace Zsharp.AST
 
         public bool HasErrors => _errors.Count > 0;
 
-        public AstError AddError(ParserRuleContext ctx, string text)
+        public AstError AddError(ParserRuleContext context, string text)
         {
-            var error = new AstError(ctx)
+            var error = new AstError(context)
             {
                 Text = text
             };
