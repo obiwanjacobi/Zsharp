@@ -96,7 +96,6 @@ namespace Zsharp.AST
 
         public override void Accept(AstVisitor visitor)
         {
-            base.Accept(visitor);
             visitor.VisitFunction(this);
         }
 

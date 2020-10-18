@@ -1,13 +1,11 @@
 ﻿using Mono.Cecil;
+using Mono.Cecil.Cil;
 using Zsharp.AST;
 
 namespace Zsharp.Emit
 {
     public class EmitCode : AstVisitor
     {
-        public EmitCode()
-        { }
-
         public EmitCode(string assemblyName)
         {
             Context = EmitContext.Create(assemblyName);
@@ -40,12 +38,22 @@ namespace Zsharp.Emit
             VisitChildren(function);
         }
 
+        public override void VisitBranch(AstBranch branch)
+        {
+            if (branch.BranchType == AstBranchType.ExitFunction)
+            {
+                Context.ILProcessor.Append(Context.ILProcessor.Create(OpCodes.Ret));
+            }
+
+            VisitChildren(branch);
+        }
+
         private TypeReference ToTypeReference(AstTypeReference typeReference)
         {
             if (typeReference == null)
             {
-                // TODO: Replace for Zsharp.Void
-                return Context!.Module.TypeSystem.Void;
+                // TODO: Replace with Zsharp.Void
+                return Context.Module.TypeSystem.Void;
             }
 
             // TODO: what does this do?

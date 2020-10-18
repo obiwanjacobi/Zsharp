@@ -58,7 +58,9 @@ namespace UnitTests.Emit
             var emit = CreateEmitCode(code);
 
             var moduleClass = emit.Context.Module.Types.Find("test");
-            moduleClass.Methods.Select(md => md.Name).Should().OnlyContain(name => name == "fn");
+            var fn = moduleClass.Methods.First();
+            fn.Name.Should().Be("fn");
+            fn.Body.Instructions.Should().HaveCount(1);
         }
     }
 }
