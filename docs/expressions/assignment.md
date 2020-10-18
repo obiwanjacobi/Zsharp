@@ -184,7 +184,7 @@ a: &U8 = 42
 
 - `[]` says arrays
 - `{}` says objects/structs
-- `()` used for functions but otherwise ok
+- `()` used for functions but otherwise ok `<=`
 
 > This is not the same as a tuple!
 
@@ -208,7 +208,7 @@ sum = add(x)    // (a, b) = x
 sum = add(...x) // (a, b) = x
 ```
 
-deconstructing an array
+Deconstructing an array
 
 ```C#
 // spread operator ...
@@ -246,14 +246,13 @@ MyStruct
 s = MyStruct
     ...
 
-[field1, field3] = s
 (field1, field3) = s
 // field1: U8 = <value of s.field1>
 // field3: U8 = <value of s.field3>
 // <value of s.field2> is not used
 
-[a, b] = s      // error! field names must match (case insensitive)
-(a, b) = s
+(a, b) = s      // error! field names must match (case insensitive)
+// or do we allow in-order?
 ```
 
 Swap scalar variables (unlike structs)
@@ -262,8 +261,7 @@ Swap scalar variables (unlike structs)
 x = 42
 y = 101
 
-[x, y] = [y, x]
-(x, y) = (y, x)
+(x, y) = {y, x}
 
 // x = 101
 // y = 42

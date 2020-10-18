@@ -35,6 +35,23 @@ a = 42
 s = a.Text(alloc)                // function that needs memory
 ```
 
+Perhaps we need some syntactical sugar to make passing allocators a bit friendlier.
+
+The `use` keyword (reserved) could be made to register an instance of any type within a certain scope - for instance inside a function (indents are no scopes, but captures are).
+
+```csharp
+// use registers this type in this scope
+use getHeapAllocator()
+
+// conversion function
+Text: (self: U8, alloc: Allocator): Text
+    ...
+
+a = 42
+s = a.Text()    // passed in the heap allocator
+
+```
+
 ### Allocation Strategies
 
 - Heap: traditional (global) memory allocation where a reserved chunk of memory is used to satisfy memory allocation requests.
@@ -61,33 +78,3 @@ s = a.Text(alloc)                // function that needs memory
 > How to deal with memory mapped hardware (IO)? Read, Modify, Write bits.
 
 See also [Assignment Expression](../expressions/assignment.md) (need to organize that better).
-
-## Code Layout
-
-Assign code to memory sections (Page0) to fit hardware targets.
-Hardware description language? Linker Scripts?
-
-## Memory Banks
-
-Every system has its own way of extending memory. Wide range of mechanisms and different rules.
-Need to provide an interface that can be implemented (inline assembly) to facility integration into the language.
-
-### Bank Windows
-
-A range in memory that is swapped/replaced by switching banks.
-
-Multiple windows may exist.
-
-Bank size == Bank Window size
-
-### Data in Memory Banks
-
-The active bank window is locked until operation is done with data.
-
-Data must be self-contained.
-
-### Code in Memory Banks
-
-Code blocks can be switched in and out recursively if necessary.
-
-When function call is done, previous bank needs to be restored.

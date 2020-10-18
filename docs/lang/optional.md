@@ -39,6 +39,7 @@ Optional function parameters:
 ```C#
 hasParam: (p: U8?): Bool
     return p ? true : false
+    return p?       // syntax support
 ```
 
 There is no implicit conversions in Z#. So p cannot be implicitly converted to a Bool value and therefor `return p` is invalid.

@@ -233,7 +233,7 @@ y = a.Fld2  // Str
 
 // deconstruct - creates new vars
 (fld1, fld2) = a
-// build tuple from vars
+// build new tuple from vars
 b = { fld1, fld2 }
 ```
 
@@ -251,7 +251,7 @@ x.Item1 // Error: Item1 does not exist
 // s = "42" (Str)
 ```
 
-> We want to line up the syntax (and semantics) with the parameters of a function call. Adopting a global rule that 'field-lists' (tuples, function params, deconstructs etc) can be build in-order or named or a combination (see function parameters).
+> We want to line up the syntax (and semantics) with the parameters of a function call. Adopting a global rule that 'field-lists' (tuples, function params, deconstructs etc) can be build in-order or named or a combination (see function parameters). Array initialization too? `arr = (1, 2, 3, 4)`
 
 > TBD: What is the syntax (type) for an anonymous structure?
 
@@ -261,7 +261,23 @@ anoStructFn: (s: Any)   // suggest passing a Str is valid
 anoStructFn: (s: Dyn)   // indicates the runtime aspect of discovering fields
 anoStructFn: (s: Struct)    // must be a struct
 anoStructFn: (s: Record)    // other name for struct?
+
+// this is most correct, albeit somewhat verbose
 anoStructFn: (s: {U8, Str}) // tuple like
+```
+
+---
+
+This is more a template thing...
+
+```csharp
+// template function
+PropGetFn: <S>(self: S): Str
+    return self.Name
+
+// anonymous struct
+s = { Name = "MyName" }
+p = PropGetFn(s)
 ```
 
 ## Mapping

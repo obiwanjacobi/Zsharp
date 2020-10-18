@@ -95,6 +95,22 @@ You can use the `return` keyword in a function to exit its execution of course.
 
 ---
 
+## Error Scopes
+
+For .NET Interop, we need a way to use the `try` and `catch` keywords for a block of code. Perhaps we could pin this to [Captures](./functions.md#Captures)? Although both the capture and the `catch` keyword introduce an indent.
+
+```csharp
+fn: (): U8!     // can return Error
+    a = 42
+    try [a]     // any Error out of this block is forwarded
+        // code here inside capture
+    
+    try [a]
+        // capture code
+    catch(err)
+        // capture error code
+```
+
 ## Error Handlers
 
 Use `catch` with a handler function instead of an inline handler? Function Interface needed for the error-handler function.
@@ -144,6 +160,8 @@ v = match errorFn(42)
     myErr: MyError => ...
     _ => ...
 ```
+
+> We may need to capture local variables for the error handler to access. How will that work?
 
 ---
 

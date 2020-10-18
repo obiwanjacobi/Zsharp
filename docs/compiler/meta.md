@@ -22,9 +22,9 @@ A special operator is used to access them: `#`
 | `#mask` | Mask for retrieving a bit field value.
 | `#offset` | Byte offset from the start of a structure to a field.
 
-> `#typeid` is a U16 hash value over (part of) the module name and type name.
+- `#typeid` is a U16 hash value over (part of) the module name and type name.
 
-> `#type` is only available in a compile-time function that is tagged with a `#!`.
+- `#type` is only available in a compile-time function that is tagged with a `#!`.
 
 Not all types support all attributes. The compiler will give an error when the code accesses an attribute that is not supported by the type in question.
 

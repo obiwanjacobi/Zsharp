@@ -496,6 +496,12 @@ MyType = OtherType<Complex<U8>, Str>
 
 During compilation all references to type aliases are replaced with their original types. Compiler-issues _are_ reported using the original type alias name.
 
+## Anonymous Types
+
+Only Structure Types can be implemented as a nameless type.
+
+See also [Anonymous Structures](structures.md#Anonymous-Structures).
+
 ## Type Constructors
 
 > Any function can be a factory (function). Type constructors are checked specifically by the compiler to make sure they return new instances of a type.
@@ -551,7 +557,7 @@ MyType(self: Ptr<MyType>, p: U8): Void!
 
 // calling syntax remain the same?
 t = MyType(42)
-t.MyType(42)        // bounded type syntax?
+t.MyType(42)        // bounded type syntax? (not clear)
 
 // which results in this code
 t: MyType   // default init-ed struct
@@ -565,7 +571,28 @@ t: MyType   // default init-ed struct
 t.fld1 ...
 ```
 
-> Need to make sure no half initialized instances are the result of a constructor function erroring-out half way through its function.
+> Need to make sure no half initialized instances are the result of a constructor function erroring-out half way through its function. That is why we use a capture.
+
+> This (using an explicit `self` parameter) would also solve the problem of calling base-constructor functions when types are derived.
+
+```csharp
+BaseType        // type definition
+    ...
+BaseType: (self: BaseType)  // constructor function
+    ...
+
+MyType: BaseType    // derived type definition
+
+MyType: (self: MyType)  // derived type constructor fn
+    // call base constructor function explicitly
+    BaseType(self)      // syntax #1
+    self.BaseType()     // syntax #2
+
+// use: construct a new MyType instance
+t = MyType()
+```
+
+Must the base class constructor function call be first?
 
 ### Type Constructor Overloading
 

@@ -1,5 +1,9 @@
 # Range
 
+A Range encapsulates a range of indices and optionally a step value.
+
+## Syntax
+
 > Note: Range's stop or end term is exclusive!
 
 ```C#
@@ -15,7 +19,7 @@
 rng = Rng(1, 6)     // ??
 ```
 
-## Step
+### Step
 
 A third optional parameter for a range is the step the value takes on each iteration.
 
@@ -31,58 +35,84 @@ A third optional parameter for a range is the step the value takes on each itera
 
 If no step is specified it is always 1. This means that ranges with start > end, will not iterate - a behavior that is most useful/common/expected I think.
 
-## Static
+### Static
 
 ```C#
 [1..10]
 ```
 
-## Dynamic
+### Dynamic
 
 ```C#
 i = 42
 [0..i]
 ```
 
-Iterators
+## Range Type
+
+Keeps track of the indices that define a range.
+
+```csharp
+Range
+    begin: U32
+    end: U32?
+    step: U32 = 1
+```
+
+Ranges convert to Slices when paired with an array or list.
+
+```csharp
+a: Array<U8> = [ 1, 2, 3, 4, 5 ]
+r = [0..]
+s = Slice(a, r)
+i = GetIter(s)
+```
+
+## Iterators
 
 - Array
 - List
 - Range
 - Slice
 
-Usually not a type you would create directly.
-
 ```csharp
-Iter<T>
-    Next: (self): Bool _
-    Current: (self): T _
+Iter<S, T>      // interface
+    Next: (self: S): Bool _
+    Current: (self: S): T _
 ```
 
-Usually not function you would call directly.
-
 ```csharp
-GetIter: <T>(self: Array<T>): Iter<T>
-GetIter: <T>(self: List<T>): Iter<T>
-GetIter: <T>(self: Range<T>): Iter<T>
+GetIter: <T>(self: Array<T>, rng: Range?): Iter<T>
+GetIter: <T>(self: List<T>, rng: Range?): Iter<T>
 GetIter: <T>(self: Slice<T>): Iter<T>
 ```
 
 ```csharp
 ArrIter<T>
-    arr: Array<T>
+    arr: Ptr<Array<T>>
     i: U8
 
 Next: <T>(self: ArrIter<T>)
-    if self.arr#Count > self.i
+    if self.arr()#Count > self.i
         i = i + 1
         return true
     return false
 
 Current: <T>(self: ArrIter<T>)
-    return self.arr[self.i]
+    return self.arr()[self.i]
 ```
 
 ## Slices
 
 > A pointer and a length
+
+```csharp
+Slice<T>
+    ptr: Ptr<T>
+    length: U32
+
+Slice<T>
+    ptr: Ptr<T>
+    offset: U32
+    length: U32
+```

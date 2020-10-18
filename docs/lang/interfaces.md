@@ -66,7 +66,7 @@ CompanionInterface<S: TemplateInterface>
 // The interface can only be implemented on types that also implement TemplateInterface (with any T).
 ```
 
-How to implement an interface:
+### Implement an interface
 
 ```C#
 MyInterface<S>
@@ -95,11 +95,40 @@ The interface implementation functions are matched based on the function name, t
 
 A compile time error is generated when the compiler detects that an interface is not fully implemented for a specific type of `self`.
 
----
+### Test for Interface Implementation
 
-> How to determine at runtime if an 'object' implements a specific interface?
+How to test dynamically (at runtime) if an object implements an interface?
+
+```csharp
+// interface definition
+MyInterface<S>
+    fn1: (self: S, p: U16): U8 _
+
+// struct definition
+MyStruct
+    ...
+
+// interface implementation on MyStruct
+fn1: (self: MyStruct, p: U16): U8
+    ...
+
+// MyStruct instance initialization
+s = MyStruct
+    ...
+
+// non-optional interface type will Error if not implemented
+i: MyInterface = s
+// optional interface type will be 'Nothing' is not implemented
+o: MyInterface? = s
+
+// test before use
+if o
+    a = o.fn1(42)
+```
 
 The compiler has to check if the specified `self` type has implementation for all the functions of the interface.
+
+Here are the options:
 
 ```csharp
 MyInterface<S>
@@ -108,36 +137,15 @@ MyInterface<S>
 s: Struct
     ...
 
-// use interface type name as cast/convert? (retval: Opt<T>)
-i = s.MyInterface<Struct>() // s => self AND <T> (Struct) !
-i = s.MyInterface()         // s => self (infer T=Struct)
+// non-optional => Error if not exists
+i: MyInterface = s
+// optional => 'Nothing' if not exists
+o: MyInterface? = s
 
-// use builtin functions?
+// use builtin functions for runtime checking
 b = s.Is<MyInterface<Struct>>()     // retval: Bool
 i = s.As<MyInterface<Struct>>()     // cast/convert (Opt<T>)
 
-// use some kind of operator as cast/convert?
-i = s &= MyInterface<Struct>
-b = s ?= MyInterface<Struct>    // retval: Bool
-
-// use some kind of intrinsic/pragma?
+// use intrinsic/pragma for compile time checking
 b = s?#MyInterface<Struct>  // similar to check if field exists
 ```
-
----
-
-> TBD: Anonymous interface implementations?
-
-This is more a template thing than an interface problem...
-
-```csharp
-// interface
-PropGetFn: <S>(self: S): Str
-    return self.Name
-
-// anonymous struct
-s = { Name = "MyName" }
-p = PropGetFn(s)
-```
-
-See also [Anonymous Structures](structures.md#Anonymous-Structures).

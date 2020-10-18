@@ -402,6 +402,8 @@ s.fn1()     // normal function call
 
 If return type is not `Void`, the actual return type is used. See also Fluent Functions (below).
 
+### Overriding Self Bound Functions
+
 ---
 
 ## Local Functions
