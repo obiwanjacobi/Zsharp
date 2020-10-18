@@ -9,8 +9,8 @@ namespace Zsharp.AST
         // stuff to make grammar rule context object polymorphic
         private interface IExpressionContextWrapper
         {
-            bool HasOpenParam { get; }
-            bool HasCloseParam { get; }
+            bool HasOpenParen { get; }
+            bool HasCloseParen { get; }
             bool IsOperand { get; }
             IEnumerable<IParseTree> Children { get; }
 
@@ -26,9 +26,9 @@ namespace Zsharp.AST
                 _context = ctx;
             }
 
-            public bool HasOpenParam => _context.PARENopen() != null;
+            public bool HasOpenParen => _context.PARENopen() != null;
 
-            public bool HasCloseParam => _context.PARENclose() != null;
+            public bool HasCloseParen => _context.PARENclose() != null;
 
             public bool IsOperand => _context.arithmetic_operand() != null;
 
@@ -49,9 +49,9 @@ namespace Zsharp.AST
                 _context = ctx;
             }
 
-            public bool HasOpenParam => _context.PARENopen() != null;
+            public bool HasOpenParen => _context.PARENopen() != null;
 
-            public bool HasCloseParam => _context.PARENclose() != null;
+            public bool HasCloseParen => _context.PARENclose() != null;
 
             public bool IsOperand => _context.logic_operand() != null;
 
@@ -72,9 +72,9 @@ namespace Zsharp.AST
                 _context = ctx;
             }
 
-            public bool HasOpenParam => _context.PARENopen() != null;
+            public bool HasOpenParen => _context.PARENopen() != null;
 
-            public bool HasCloseParam => _context.PARENclose() != null;
+            public bool HasCloseParen => _context.PARENclose() != null;
 
             public bool IsOperand => _context.comparison_operand() != null;
 

@@ -42,7 +42,7 @@ namespace Zsharp.AST
 
         private object? ProcessExpression(IExpressionContextWrapper ctx)
         {
-            if (ctx.HasOpenParam)
+            if (ctx.HasOpenParen)
             {
                 var expr = ctx.NewExpression();
                 expr.Operator = AstExpressionOperator.Open;
@@ -93,7 +93,7 @@ namespace Zsharp.AST
                 }
             }
 
-            if (ctx.HasCloseParam)
+            if (ctx.HasCloseParen)
             {
                 var expr = BuildExpression(operatorPosition);
                 Ast.Guard(expr, "BuildExpression did not produce an instance.");
