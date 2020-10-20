@@ -62,5 +62,21 @@ namespace UnitTests.Emit
             fn.Name.Should().Be("fn");
             fn.Body.Instructions.Should().HaveCount(1);
         }
+
+        [TestMethod]
+        public void VariableAssignment_Constant()
+        {
+            const string code =
+                "module test" + Tokens.NewLine +
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "a = 42" + Tokens.NewLine
+                ;
+
+            var emit = CreateEmitCode(code);
+
+            var moduleClass = emit.Context.Module.Types.Find("test");
+            var body = moduleClass.Methods.First().Body;
+            body.Instructions.Should().HaveCount(1);
+        }
     }
 }

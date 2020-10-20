@@ -41,14 +41,8 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            if (_rhs != null)
-            {
-                _rhs.Accept(visitor);
-            }
-            if (_lhs != null)
-            {
-                _lhs.Accept(visitor);
-            }
+            _rhs?.Accept(visitor);
+            _lhs?.Accept(visitor);
         }
 
         private AstExpressionOperand? _lhs;
@@ -71,6 +65,11 @@ namespace Zsharp.AST
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
+
+        public bool SetTypeReference(AstTypeReference typeReference)
+        {
+            return this.SafeSetParent(ref _typeRef, typeReference);
+        }
 
         public ParserRuleContext? getContext()
         {
@@ -105,11 +104,6 @@ namespace Zsharp.AST
             }
 
             return false;
-        }
-
-        public bool SetTypeReference(AstTypeReference typeRef)
-        {
-            return this.SafeSetParent(ref _typeRef, typeRef);
         }
     }
 }

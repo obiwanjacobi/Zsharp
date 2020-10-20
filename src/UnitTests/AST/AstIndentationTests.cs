@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 using Zsharp.AST;
 
 namespace UnitTests.AST
@@ -23,21 +22,6 @@ namespace UnitTests.AST
             ag.Should().NotBeNull();
             var br = fn.CodeBlock.ItemAt<AstBranch>(1);
             br.Should().NotBeNull();
-        }
-
-        [TestMethod]
-        public void FunctionBody_Empty()
-        {
-            const string code =
-                "fn: (p: U8)" + Tokens.NewLine +
-                "v = 42" + Tokens.NewLine
-                ;
-
-            var builder = new AstBuilder();
-            builder.BuildFile("", Parser.ParseFile(code));
-            builder.HasErrors.Should().BeTrue();
-            var err = builder.Errors.Single();
-            err.Text.Should().Be(AstError.SyntaxError);
         }
 
         [TestMethod]

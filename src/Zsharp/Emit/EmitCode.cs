@@ -51,6 +51,12 @@ namespace Zsharp.Emit
             }
         }
 
+        public override void VisitExpression(AstExpression expression)
+        {
+            var emitExpr = new EmitExpression(Context);
+            emitExpr.VisitExpression(expression);
+        }
+
         private TypeReference ToTypeReference(AstTypeReference typeReference)
         {
             if (typeReference == null)

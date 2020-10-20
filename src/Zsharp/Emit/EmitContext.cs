@@ -35,6 +35,7 @@ namespace Zsharp.Emit
 
             var moduleClass = CreateModuleClass(module);
             _moduleClasses.Push(moduleClass);
+
             return new ModuleScope(this, moduleClass);
         }
 
