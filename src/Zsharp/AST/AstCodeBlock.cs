@@ -22,9 +22,6 @@ namespace Zsharp.AST
 
         public AstSymbolTable Symbols { get; }
 
-        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode node)
-            => Symbols.AddSymbol(symbolName, kind, node);
-
         public T? ItemAt<T>(int index) where T : AstCodeBlockItem
             => _items[index] as T;
 

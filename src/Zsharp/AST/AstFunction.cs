@@ -59,7 +59,9 @@ namespace Zsharp.AST
                     return codeBlock.Symbols;
                 }
 
-                return GetParent<IAstSymbolTableSite>()!.Symbols;
+                var site = GetParent<IAstSymbolTableSite>() ??
+                    throw new InvalidOperationException("Parent not a SymbolTable Site.");
+                return site.Symbols;
             }
         }
 
@@ -89,25 +91,21 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            if (Identifier != null)
-            {
-                Identifier.Accept(visitor);
-            }
+            Identifier?.Accept(visitor);
 
             foreach (var param in _parameters)
             {
                 param.Accept(visitor);
             }
 
-            if (CodeBlock != null)
-            {
-                CodeBlock.Accept(visitor);
-            }
+            CodeBlock?.Accept(visitor);
         }
 
+        /// <summary>
+        /// Deferred registration of function parameter symbols in the codeblock's symbol table.
+        /// </summary>
         private void AddFunctionSymbols()
         {
-            // deferred registration of function parameter symbols in the codeblock's symbol table
             foreach (var param in _parameters)
             {
                 var identifier = param.Identifier;

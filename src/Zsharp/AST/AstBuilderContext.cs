@@ -61,7 +61,7 @@ namespace Zsharp.AST
 
         public void RevertCurrent() => _current.Pop();
 
-        public AstCodeBlock? GetCodeBlock()
+        public AstCodeBlock GetCodeBlock()
         {
             foreach (var c in _current)
             {
@@ -72,7 +72,8 @@ namespace Zsharp.AST
             }
 
             var site = GetCurrent<IAstCodeBlockSite>();
-            return site?.CodeBlock;
+            site.ThrowIfCodeBlockNotSet();
+            return site?.CodeBlock!;
         }
 
         public AstCodeBlock GetCodeBlock(UInt32 indent)
