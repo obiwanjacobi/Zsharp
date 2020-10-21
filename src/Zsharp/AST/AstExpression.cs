@@ -53,23 +53,15 @@ namespace Zsharp.AST
 
         public AstExpressionOperator Operator { get; set; }
 
-        public int Precedence
-        {
-            get { return (int)(Operator & AstExpressionOperator.MaskPrecedence) >> 4; }
-        }
+        public int Precedence => (int)(Operator & AstExpressionOperator.MaskPrecedence) >> 4;
 
-        public bool IsOperator(AstExpressionOperator op)
-        {
-            return (Operator & op) > 0;
-        }
+        public bool IsOperator(AstExpressionOperator op) => (Operator & op) > 0;
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
         public bool SetTypeReference(AstTypeReference typeReference)
-        {
-            return this.SafeSetParent(ref _typeRef, typeReference);
-        }
+            => this.SafeSetParent(ref _typeRef, typeReference);
 
         public ParserRuleContext? getContext()
         {

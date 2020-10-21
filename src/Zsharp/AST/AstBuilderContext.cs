@@ -56,23 +56,16 @@ namespace Zsharp.AST
             return p!;
         }
 
-        public void SetCurrent<T>(T current)
-            where T : AstNode
-        {
-            _current.Push(current);
-        }
+        public void SetCurrent<T>(T current) where T : AstNode
+            => _current.Push(current);
 
-        public void RevertCurrent()
-        {
-            _current.Pop();
-        }
+        public void RevertCurrent() => _current.Pop();
 
         public AstCodeBlock? GetCodeBlock()
         {
             foreach (var c in _current)
             {
-                var p = c as AstCodeBlock;
-                if (p != null)
+                if (c is AstCodeBlock p)
                 {
                     return p;
                 }

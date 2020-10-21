@@ -18,23 +18,15 @@ namespace Zsharp.AST
 
         public CodeblockContext? Context { get; }
 
-        public IEnumerable<AstCodeBlockItem> Items
-        {
-            get { return _items; }
-        }
+        public IEnumerable<AstCodeBlockItem> Items => _items;
 
         public AstSymbolTable Symbols { get; }
 
         public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode node)
-        {
-            return Symbols.AddSymbol(symbolName, kind, node);
-        }
+            => Symbols.AddSymbol(symbolName, kind, node);
 
-        public T? ItemAt<T>(int index)
-            where T : AstCodeBlockItem
-        {
-            return _items[index] as T;
-        }
+        public T? ItemAt<T>(int index) where T : AstCodeBlockItem
+            => _items[index] as T;
 
         public bool AddItem(AstCodeBlockItem item)
         {
@@ -48,10 +40,7 @@ namespace Zsharp.AST
             return true;
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitCodeBlock(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitCodeBlock(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

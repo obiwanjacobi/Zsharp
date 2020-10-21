@@ -22,10 +22,7 @@ namespace Zsharp.AST
         // TODO: Numeric does not know about the negate-operator yet.
         public Int64 AsSigned() => (Int64)Value;
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitNumeric(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitNumeric(this);
 
         public UInt32 GetBitCount()
         {

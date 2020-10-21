@@ -33,10 +33,7 @@ namespace Zsharp.AST
             return typeDef;
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitTypeDefinition(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitTypeDefinition(this);
 
         public static AstTypeDefinition? SelectKnownTypeDefinition(Known_typesContext context)
         {

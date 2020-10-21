@@ -23,25 +23,16 @@ namespace Zsharp.AST
             _selfCtx = context;
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitFunctionParameter(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionParameter(this);
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool SetIdentifier(AstIdentifier identifier)
-        {
-            return this.SafeSetParent(ref _identifier, identifier);
-        }
+        public bool SetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool SetTypeReference(AstTypeReference typeRef)
-        {
-            return Ast.SafeSet(ref _typeRef, typeRef);
-        }
+        public bool SetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
     }
 }

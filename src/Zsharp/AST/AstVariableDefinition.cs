@@ -20,15 +20,14 @@ namespace Zsharp.AST
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool SetTypeReference(AstTypeReference typeReference)
-        {
-            return this.SafeSetParent(ref _typeRef, typeReference);
-        }
+        public bool SetTypeReference(AstTypeReference typeReference) => this.SafeSetParent(ref _typeRef, typeReference);
 
         public override void Accept(AstVisitor visitor)
         {
             if (GetParent<AstCodeBlock>() != null)
+            {
                 base.Accept(visitor);
+            }
             visitor.VisitVariableDefinition(this);
         }
 

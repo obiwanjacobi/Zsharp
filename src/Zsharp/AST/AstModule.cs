@@ -33,10 +33,7 @@ namespace Zsharp.AST
         private readonly List<AstFile> _files = new List<AstFile>();
         public IEnumerable<AstFile> Files => _files;
 
-        public bool HasExports
-        {
-            get { return _files.Any(f => f.Exports.Any()); }
-        }
+        public bool HasExports => _files.Any(f => f.Exports.Any());
 
         public void AddModule(Statement_moduleContext moduleCtx)
         {

@@ -29,15 +29,9 @@ namespace Zsharp.AST
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
 
-        public bool SetCodeBlock(AstCodeBlock codeBlock)
-        {
-            return this.SafeSetParent(ref _codeBlock, codeBlock);
-        }
+        public bool SetCodeBlock(AstCodeBlock codeBlock) => this.SafeSetParent(ref _codeBlock, codeBlock);
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitFile(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitFile(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

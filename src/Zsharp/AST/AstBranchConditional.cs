@@ -25,7 +25,7 @@ namespace Zsharp.AST
         }
 
         private AstCodeBlock? _codeBlock;
-        public AstCodeBlock? CodeBlock { get { return _codeBlock; } }
+        public AstCodeBlock? CodeBlock => _codeBlock;
 
         public bool SetCodeBlock(AstCodeBlock codeBlock)
         {
@@ -38,9 +38,9 @@ namespace Zsharp.AST
         }
 
         private AstBranchConditional? _subBranch;
-        public AstBranchConditional? SubBranch { get { return _subBranch; } }
+        public AstBranchConditional? SubBranch => _subBranch;
 
-        public bool HasSubBranch { get { return _subBranch != null; } }
+        public bool HasSubBranch => _subBranch != null;
 
         public bool AddSubBranch(AstBranchConditional subBranch)
         {
@@ -52,10 +52,7 @@ namespace Zsharp.AST
             return false;
         }
 
-        public AstBranchConditional LastSubBranch()
-        {
-            return HasSubBranch ? _subBranch!.LastSubBranch() : this;
-        }
+        public AstBranchConditional LastSubBranch() => HasSubBranch ? _subBranch!.LastSubBranch() : this;
 
         public override void Accept(AstVisitor visitor)
         {

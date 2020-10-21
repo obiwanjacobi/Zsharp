@@ -34,10 +34,7 @@ namespace Zsharp.AST
 
             public IEnumerable<IParseTree> Children => _context.children;
 
-            public AstExpression NewExpression()
-            {
-                return new AstExpression(_context);
-            }
+            public AstExpression NewExpression() => new AstExpression(_context);
         }
 
         private class LogicContextWrapper : IExpressionContextWrapper
@@ -57,10 +54,7 @@ namespace Zsharp.AST
 
             public IEnumerable<IParseTree> Children => _context.children;
 
-            public AstExpression NewExpression()
-            {
-                return new AstExpression(_context);
-            }
+            public AstExpression NewExpression() => new AstExpression(_context);
         }
 
         private class ComparisonContextWrapper : IExpressionContextWrapper
@@ -80,10 +74,7 @@ namespace Zsharp.AST
 
             public IEnumerable<IParseTree> Children => _context.children;
 
-            public AstExpression NewExpression()
-            {
-                return new AstExpression(_context);
-            }
+            public AstExpression NewExpression() => new AstExpression(_context);
         }
     }
 }

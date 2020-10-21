@@ -37,34 +37,16 @@ namespace Zsharp.AST
 
         public AstBranchType BranchType { get; }
 
-        public bool IsExpression
-        {
-            get { return BranchType == AstBranchType.ExitFunction || IsConditional; }
-        }
+        public bool IsExpression => BranchType == AstBranchType.ExitFunction || IsConditional;
 
-        public AstBranchExpression? ToExpression()
-        {
-            return IsExpression ? (AstBranchExpression)this : null;
-        }
+        public AstBranchExpression? ToExpression() => IsExpression ? (AstBranchExpression)this : null;
 
-        public bool HasCode
-        {
-            get { return BranchType == AstBranchType.Conditional; }
-        }
+        public bool HasCode => BranchType == AstBranchType.Conditional;
 
-        public bool IsConditional
-        {
-            get { return BranchType == AstBranchType.Conditional; }
-        }
+        public bool IsConditional => BranchType == AstBranchType.Conditional;
 
-        public AstBranchConditional? ToConditional()
-        {
-            return IsConditional ? (AstBranchConditional)this : null;
-        }
+        public AstBranchConditional? ToConditional() => IsConditional ? (AstBranchConditional)this : null;
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitBranch(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitBranch(this);
     }
 }

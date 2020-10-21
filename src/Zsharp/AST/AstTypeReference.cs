@@ -63,10 +63,7 @@ namespace Zsharp.AST
         /// </summary>
         public AstNode? TypeSource => _typeSource;
 
-        public bool SetTypeSource(AstNode typeSource)
-        {
-            return Ast.SafeSet(ref _typeSource, typeSource);
-        }
+        public bool SetTypeSource(AstNode typeSource) => Ast.SafeSet(ref _typeSource, typeSource);
 
         public bool IsOptional { get; }
 
@@ -94,16 +91,9 @@ namespace Zsharp.AST
             return false;
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitTypeReference(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitTypeReference(this);
 
-        public override void VisitChildren(AstVisitor visitor)
-        {
-            if (Identifier != null)
-                Identifier.Accept(visitor);
-        }
+        public override void VisitChildren(AstVisitor visitor) => Identifier?.Accept(visitor);
 
         public static AstTypeReference Create(Type_ref_useContext context)
         {

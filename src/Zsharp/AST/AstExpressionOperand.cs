@@ -65,15 +65,9 @@ namespace Zsharp.AST
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool SetTypeReference(AstTypeReference typeReference)
-        {
-            return Ast.SafeSet(ref _typeRef, typeReference);
-        }
+        public bool SetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitExpressionOperand(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitExpressionOperand(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

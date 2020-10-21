@@ -14,7 +14,8 @@ namespace Zsharp.AST
         }
 
         public IEnumerable<AstNode> References => _references;
-        public IEnumerable<T> ReferencesOf<T>() where T : AstNode => _references.OfType<T>();
+        public IEnumerable<T> ReferencesOf<T>() where T : AstNode
+            => _references.OfType<T>();
 
         public string Key => MakeKey(SymbolName, SymbolKind);
         public string SymbolName { get; }
@@ -23,11 +24,8 @@ namespace Zsharp.AST
 
         private AstNode? _definition;
         public AstNode? Definition => _definition;
-        public T? GetDefinition<T>()
-            where T : AstNode
-        {
-            return _definition as T;
-        }
+        public T? GetDefinition<T>() where T : AstNode
+            => _definition as T;
 
         public void AddNode(AstNode node)
         {

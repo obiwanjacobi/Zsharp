@@ -22,10 +22,7 @@ namespace Zsharp.AST
 
         public bool HasErrors => _buildercontext.HasErrors;
 
-        private static bool IsEmpty(ParserRuleContext context)
-        {
-            return context.children.Count == 0;
-        }
+        private static bool IsEmpty(ParserRuleContext context) => context.children.Count == 0;
 
         public object? VisitChildrenExcept(ParserRuleContext node, ParserRuleContext except)
         {

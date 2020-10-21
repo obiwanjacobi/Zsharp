@@ -11,21 +11,12 @@ namespace Zsharp.AST
         public AstNodeType NodeType { get; }
 
         private AstNode? _parent;
-        public AstNode? Parent
-        {
-            get { return _parent; }
-        }
+        public AstNode? Parent => _parent;
 
-        public bool SetParent(AstNode? parent)
-        {
-            return Ast.SafeSet(ref _parent, parent);
-        }
+        public bool SetParent(AstNode? parent) => Ast.SafeSet(ref _parent, parent);
 
-        public T? GetParent<T>()
-            where T : class
-        {
-            return _parent as T;
-        }
+        public T? GetParent<T>() where T : class
+            => _parent as T;
 
         public T? GetParentRecursive<T>()
             where T : class

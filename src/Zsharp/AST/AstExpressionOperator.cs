@@ -1,5 +1,8 @@
-﻿namespace Zsharp.AST
+﻿using System;
+
+namespace Zsharp.AST
 {
+    [Flags]
     public enum AstExpressionOperator
     {
         None = 0x0000,

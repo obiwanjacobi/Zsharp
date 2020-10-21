@@ -92,10 +92,7 @@ namespace Zsharp.AST
             }
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitIdentifier(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitIdentifier(this);
 
         public bool IsEqual(AstIdentifier that)
         {

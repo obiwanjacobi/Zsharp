@@ -197,29 +197,19 @@ namespace Zsharp.AST
         }
 
         public override object? VisitExpression_arithmetic(Expression_arithmeticContext context)
-        {
-            return ProcessExpression(new ArithmeticContextWrapper(context));
-        }
+            => ProcessExpression(new ArithmeticContextWrapper(context));
 
         public override object? VisitExpression_logic(Expression_logicContext context)
-        {
-            return ProcessExpression(new LogicContextWrapper(context));
-        }
+            => ProcessExpression(new LogicContextWrapper(context));
 
         public override object? VisitExpression_comparison(Expression_comparisonContext context)
-        {
-            return ProcessExpression(new ComparisonContextWrapper(context));
-        }
+            => ProcessExpression(new ComparisonContextWrapper(context));
 
         public override object? VisitLiteral_bool(Literal_boolContext context)
-        {
-            return new AstExpressionOperand(context);
-        }
+            => new AstExpressionOperand(context);
 
         public override object? VisitFunction_call(Function_callContext context)
-        {
-            return new AstExpressionOperand(context);
-        }
+            => new AstExpressionOperand(context);
 
         public override object? VisitVariable_ref(Variable_refContext context)
         {

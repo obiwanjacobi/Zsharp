@@ -8,9 +8,6 @@
 
         public int Indent { get; set; }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitCodeBlockItem(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitCodeBlockItem(this);
     }
 }

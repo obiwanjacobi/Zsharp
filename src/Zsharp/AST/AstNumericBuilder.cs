@@ -91,8 +91,6 @@ namespace Zsharp.AST
         }
 
         private static UInt64 ParseNumber(int offset, int radix, string text)
-        {
-            return Convert.ToUInt64(text.Substring(offset).Replace("_", null), radix);
-        }
+            => Convert.ToUInt64(text.Substring(offset).Replace("_", null), radix);
     }
 }

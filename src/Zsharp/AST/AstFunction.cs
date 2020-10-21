@@ -23,21 +23,15 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool SetIdentifier(AstIdentifier identifier)
-        {
-            return this.SafeSetParent(ref _identifier, identifier);
-        }
+        public bool SetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool SetTypeReference(AstTypeReference typeRef)
-        {
-            return Ast.SafeSet(ref _typeRef, typeRef);
-        }
+        public bool SetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
 
         private AstCodeBlock? _codeBlock;
-        public AstCodeBlock? CodeBlock { get { return _codeBlock; } }
+        public AstCodeBlock? CodeBlock => _codeBlock;
 
         public bool SetCodeBlock(AstCodeBlock codeBlock)
         {
@@ -53,10 +47,7 @@ namespace Zsharp.AST
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
 
-        public bool SetSymbol(AstSymbolEntry symbolEntry)
-        {
-            return Ast.SafeSet(ref _symbol, symbolEntry);
-        }
+        public bool SetSymbol(AstSymbolEntry symbolEntry) => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public AstSymbolTable Symbols
         {
@@ -94,10 +85,7 @@ namespace Zsharp.AST
             return false;
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitFunction(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitFunction(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {
