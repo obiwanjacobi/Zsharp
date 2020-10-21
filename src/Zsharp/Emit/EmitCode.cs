@@ -38,6 +38,17 @@ namespace Zsharp.Emit
             VisitChildren(function);
         }
 
+        public override void VisitVariableDefinition(AstVariableDefinition variable)
+        {
+            var typeRef = ToTypeReference(variable.TypeReference);
+            Context.AddVariableStorage(variable.Identifier.Name, typeRef);
+        }
+
+        public override void VisitAssignment(AstAssignment assign)
+        {
+            base.VisitAssignment(assign);
+        }
+
         public override void VisitBranchExpression(AstBranchExpression branch)
         {
             if (branch.BranchType == AstBranchType.ExitFunction)

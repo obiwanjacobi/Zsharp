@@ -19,7 +19,6 @@ namespace Zsharp.Emit
 
         public static EmitContext Create(string assemblyName, Version? version = null)
         {
-
             return new EmitContext(
                 AssemblyDefinition.CreateAssembly(
                     new AssemblyNameDefinition(assemblyName,
@@ -37,6 +36,25 @@ namespace Zsharp.Emit
             _moduleClasses.Push(moduleClass);
 
             return new ModuleScope(this, moduleClass);
+        }
+
+        public void AddVariableStorage(string name, TypeReference typeReference)
+        {
+            if (_ilProcessors.Count == 0)
+            {
+                if (_moduleClasses.Count == 0)
+                    throw new InvalidOperationException("No ModuleClass or Function body available.");
+
+                // module level field
+
+                var moduleClass = _moduleClasses.Peek();
+                var fieldAttrs = FieldAttributes.Private | FieldAttributes.Static;
+                moduleClass.Fields.Add(new FieldDefinition(name, fieldAttrs, typeReference));
+            }
+            else
+            {
+                // local function variable
+            }
         }
 
         public AssemblyDefinition Assembly { get; private set; }

@@ -15,9 +15,9 @@ namespace Zsharp.AST
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public bool SetExpression(AstExpression expr)
+        public bool SetExpression(AstExpression expression)
         {
-            return this.SafeSetParent(ref _expression, expr);
+            return this.SafeSetParent(ref _expression, expression);
         }
 
         private AstVariable? _variable;
@@ -25,7 +25,12 @@ namespace Zsharp.AST
 
         public bool SetVariable(AstVariable variable)
         {
-            return this.SafeSetParent(ref _variable, variable);
+            if (this.SafeSetParent(ref _variable, variable))
+            {
+                variable.Indent = Indent;
+                return true;
+            }
+            return false;
         }
 
         public override void Accept(AstVisitor visitor)
