@@ -39,8 +39,7 @@ namespace UnitTests.AST
 
             var v = symbols.GetEntry("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
-            var def = v.GetDefinition<AstVariableDefinition>();
-            def.TypeReference.Should().BeNull();
+            v.References.First().Should().NotBeNull();
         }
 
         [TestMethod]

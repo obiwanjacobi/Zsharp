@@ -74,7 +74,7 @@ function_return_type: type_ref_use;
 // variables
 variable_ref: identifier_var;
 variable_def_top: (variable_def_typed | variable_def_typed_init | variable_assign_auto) newline;
-variable_def: indent (variable_def_typed | variable_def_typed_init | variable_assign_auto) newline;
+variable_def: indent (variable_def_typed | variable_def_typed_init) newline;
 variable_def_typed: identifier_var type_ref_use;
 variable_def_typed_init: identifier_var type_ref_use SP EQ_ASSIGN SP expression_value;
 variable_assign_auto: identifier_var SP EQ_ASSIGN SP expression_value;

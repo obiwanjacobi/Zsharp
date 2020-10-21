@@ -6,7 +6,6 @@ namespace Zsharp.AST
     {
         private readonly Variable_def_typedContext? _typedCtx;
         private readonly Variable_def_typed_initContext? _typedInitCtx;
-        private readonly Variable_assign_autoContext? _assignCtx;
 
         public AstVariableDefinition(Variable_def_typedContext context)
         {
@@ -16,11 +15,6 @@ namespace Zsharp.AST
         public AstVariableDefinition(Variable_def_typed_initContext context)
         {
             _typedInitCtx = context;
-        }
-
-        public AstVariableDefinition(Variable_assign_autoContext context)
-        {
-            _assignCtx = context;
         }
 
         private AstTypeReference? _typeRef;

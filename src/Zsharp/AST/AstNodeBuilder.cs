@@ -387,16 +387,7 @@ namespace Zsharp.AST
             Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
             _buildercontext.SetCurrent(assign);
 
-            AstVariable variable;
-            if (context.Parent is Variable_assignContext)
-            {
-                variable = new AstVariableReference(context);
-            }
-            else
-            {
-                variable = new AstVariableDefinition(context);
-            }
-
+            var variable = new AstVariableReference(context);
             success = assign.SetVariable(variable);
             Ast.Guard(success, "SetVariable() failed");
 

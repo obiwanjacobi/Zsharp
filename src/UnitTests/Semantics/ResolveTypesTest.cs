@@ -39,15 +39,13 @@ namespace UnitTests.Semantics
             resolver.Apply(file);
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(0);
-            var v = a.Variable as AstVariableDefinition;
-            v.TypeReference.Should().NotBeNull();
-            v.TypeReference.Parent.Should().Be(v);
-            v.TypeReference.Identifier.Name.Should().Be("U8");
+            var v = a.Variable as AstVariableReference;
+            v.Should().NotBeNull();
+            v.Parent.Should().Be(a);
+            v.VariableDefinition.Should().BeNull();
 
             var sym = file.CodeBlock.Symbols.GetEntry(v.Identifier.Name, AstSymbolKind.Variable);
-            sym.Definition.Should().NotBeNull();
-            v.TypeReference.TypeDefinition.Identifier.Parent
-                .Should().Be(v.TypeReference.TypeDefinition);
+            sym.Definition.Should().BeNull();
         }
     }
 }

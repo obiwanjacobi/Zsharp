@@ -16,6 +16,20 @@ namespace Zsharp.AST
             _assignCtx = context;
         }
 
+        private AstVariableDefinition? _varDef;
+        public AstVariableDefinition? VariableDefinition => _varDef;
+
+        public bool SetVariableDefinition(AstVariableDefinition variableDefinition)
+        {
+            if (Ast.SafeSet(ref _varDef, variableDefinition))
+            {
+                // auto/inferred definitions are owned by the first reference.
+                variableDefinition.SetParent(this);
+                return true;
+            }
+            return false;
+        }
+
         public override void Accept(AstVisitor visitor)
         {
             visitor.VisitVariableReference(this);

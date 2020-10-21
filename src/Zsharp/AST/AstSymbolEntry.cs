@@ -16,7 +16,7 @@ namespace Zsharp.AST
         public IEnumerable<AstNode> References => _references;
         public IEnumerable<T> ReferencesOf<T>() where T : AstNode => _references.OfType<T>();
 
-        public string Key { get { return MakeKey(SymbolName, SymbolKind); } }
+        public string Key => MakeKey(SymbolName, SymbolKind);
         public string SymbolName { get; }
         public AstSymbolKind SymbolKind { get; }
         public AstSymbolLocality SymbolLocality { get; set; }
