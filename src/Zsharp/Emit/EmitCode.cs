@@ -1,6 +1,4 @@
-﻿using Mono.Cecil;
-using Mono.Cecil.Cil;
-using Zsharp.AST;
+﻿using Zsharp.AST;
 
 namespace Zsharp.Emit
 {
@@ -20,28 +18,21 @@ namespace Zsharp.Emit
                 Context = EmitContext.Create(module.Name);
             }
 
-            using var scope = Context.AddModuleClass(module);
+            using var scope = Context.AddModule(module);
 
             VisitChildren(module);
         }
 
         public override void VisitFunction(AstFunction function)
         {
-            var fn = new MethodDefinition(
-                function.Identifier.Name,
-                ToMethodAttibutes(function),
-                ToTypeReference(function.TypeReference)
-            );
-
-            using var scope = Context.Add(fn);
+            using var scope = Context.AddFunction(function);
 
             VisitChildren(function);
         }
 
         public override void VisitVariableDefinition(AstVariableDefinition variable)
         {
-            var typeRef = ToTypeReference(variable.TypeReference);
-            Context.AddVariableStorage(variable.Identifier.Name, typeRef);
+            Context.AddVariable(variable);
         }
 
         public override void VisitAssignment(AstAssignment assign)
@@ -57,8 +48,11 @@ namespace Zsharp.Emit
                 {
                     VisitChildren(branch);
                     // TODO: ld expression result
+                    return;
                 }
-                Context.ILProcessor.Append(Context.ILProcessor.Create(OpCodes.Ret));
+
+                var instruction = Context.InstructionFactory.Return();
+                Context.CodeBuilder.CodeBlock.Add(instruction);
             }
         }
 
@@ -66,42 +60,6 @@ namespace Zsharp.Emit
         {
             var emitExpr = new EmitExpression(Context);
             emitExpr.VisitExpression(expression);
-        }
-
-        private TypeReference ToTypeReference(AstTypeReference typeReference)
-        {
-            if (typeReference == null)
-            {
-                // TODO: Replace with Zsharp.Void
-                return Context.Module.TypeSystem.Void;
-            }
-
-            if (typeReference.TypeDefinition.IsIntrinsic)
-            {
-                // Map intrinsic data types to .NET data types
-                var type = ((AstTypeIntrinsic)typeReference.TypeDefinition).SystemType;
-                return Context.Module.ImportReference(type);
-            }
-
-            // TODO: what does this do?
-            IMetadataScope? metadataScope = null;
-
-            var typeRef = new TypeReference("Todo",
-                typeReference.TypeDefinition.Identifier.Name,
-                Context.Module,
-                metadataScope, true);
-
-            return typeRef;
-        }
-
-        private MethodAttributes ToMethodAttibutes(AstFunction function)
-        {
-            var attrs = MethodAttributes.Static | MethodAttributes.HideBySig;
-
-            attrs |= (function.Symbol.SymbolLocality == AstSymbolLocality.Exported)
-                ? MethodAttributes.Public : MethodAttributes.Private;
-
-            return attrs;
         }
     }
 }

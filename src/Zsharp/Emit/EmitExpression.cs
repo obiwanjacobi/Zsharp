@@ -1,5 +1,4 @@
-﻿using Mono.Cecil.Cil;
-using System;
+﻿using System;
 using Zsharp.AST;
 
 namespace Zsharp.Emit
@@ -42,64 +41,44 @@ namespace Zsharp.Emit
         private void EmitArithmeticExcperession(AstExpression expression)
         {
             var errTxt = $"Arithmetic Expression Operator {expression.Operator} is not implemented yet.";
-            var il = _context.ILProcessor;
+            var il = _context.InstructionFactory;
 
-            switch (expression.Operator)
+            var instruction = expression.Operator switch
             {
-                case AstExpressionOperator.Plus:
-                    il.Append(il.Create(OpCodes.Add));
-                    break;
-                case AstExpressionOperator.Minus:
-                    il.Append(il.Create(OpCodes.Sub));
-                    break;
-                case AstExpressionOperator.Divide:
-                    il.Append(il.Create(OpCodes.Div));
-                    break;
-                case AstExpressionOperator.Multiply:
-                    il.Append(il.Create(OpCodes.Mul));
-                    break;
-                case AstExpressionOperator.Modulo:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.Power:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.Negate:
-                    throw new NotImplementedException(errTxt);
-                default:
-                    throw new InvalidOperationException(
-                        $"Unrecognized Arithmetic Expression Operator {expression.Operator}");
-            }
+                AstExpressionOperator.Plus => il.ArithmeticAdd(),
+                AstExpressionOperator.Minus => il.ArithmeticSubtract(),
+                AstExpressionOperator.Divide => il.ArithmeticDivide(),
+                AstExpressionOperator.Multiply => il.ArithmeticMultiple(),
+                AstExpressionOperator.Modulo => throw new NotImplementedException(errTxt),
+                AstExpressionOperator.Power => throw new NotImplementedException(errTxt),
+                AstExpressionOperator.Negate => throw new NotImplementedException(errTxt),
+                _ => throw new InvalidOperationException(
+                    $"Unrecognized Arithmetic Expression Operator {expression.Operator}"),
+            };
+
+            _context.CodeBuilder.CodeBlock.Add(instruction);
         }
 
         private void EmitBitwiseExpression(AstExpression expression)
         {
             var errTxt = $"Bitwise Expression Operator {expression.Operator} is not implemented yet.";
-            var il = _context.ILProcessor;
+            var il = _context.InstructionFactory;
 
-            switch (expression.Operator)
+            var instruction = expression.Operator switch
             {
-                case AstExpressionOperator.BitAnd:
-                    il.Append(il.Create(OpCodes.And));
-                    break;
-                case AstExpressionOperator.BitOr:
-                    il.Append(il.Create(OpCodes.Or));
-                    break;
-                case AstExpressionOperator.BitXor:
-                    il.Append(il.Create(OpCodes.Xor));
-                    break;
-                case AstExpressionOperator.BitShiftLeft:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.BitShiftRight:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.BitRollLeft:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.BitRollRight:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.BitNegate:
-                    throw new NotImplementedException(errTxt);
-                default:
-                    throw new InvalidOperationException(
-                        $"Unrecognized Bitwise Expression Operator {expression.Operator}");
-            }
+                AstExpressionOperator.BitAnd => il.BitwiseAnd(),
+                AstExpressionOperator.BitOr => il.BitwiseOr(),
+                AstExpressionOperator.BitXor => il.BitwiseXor(),
+                AstExpressionOperator.BitShiftLeft => throw new NotImplementedException(errTxt),
+                AstExpressionOperator.BitShiftRight => throw new NotImplementedException(errTxt),
+                AstExpressionOperator.BitRollLeft => throw new NotImplementedException(errTxt),
+                AstExpressionOperator.BitRollRight => throw new NotImplementedException(errTxt),
+                AstExpressionOperator.BitNegate => throw new NotImplementedException(errTxt),
+                _ => throw new InvalidOperationException(
+                    $"Unrecognized Bitwise Expression Operator {expression.Operator}"),
+            };
+
+            _context.CodeBuilder.CodeBlock.Add(instruction);
         }
 
         private void EmitComparisonExpression(AstExpression expression)
@@ -146,8 +125,9 @@ namespace Zsharp.Emit
 
         public override void VisitNumeric(AstNumeric numeric)
         {
-            var il = _context.ILProcessor;
-            il.Append(il.Create(OpCodes.Ldc_I4, (Int32)numeric.AsSigned()));
+            var il = _context.InstructionFactory;
+            var instruction = il.LoadConstant((Int32)numeric.AsSigned());
+            _context.CodeBuilder.CodeBlock.Add(instruction);
         }
     }
 }

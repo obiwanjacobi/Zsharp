@@ -1,5 +1,4 @@
 ﻿using Mono.Cecil;
-using Mono.Cecil.Cil;
 using System;
 using System.Collections.Generic;
 using Zsharp.AST;
@@ -8,9 +7,6 @@ namespace Zsharp.Emit
 {
     public sealed partial class EmitContext
     {
-        private readonly Stack<TypeDefinition> _moduleClasses = new Stack<TypeDefinition>();
-        private readonly Stack<ILProcessor> _ilProcessors = new Stack<ILProcessor>();
-
         private EmitContext(AssemblyDefinition assembly)
         {
             Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
@@ -27,84 +23,95 @@ namespace Zsharp.Emit
             );
         }
 
-        public IDisposable AddModuleClass(AstModule module)
-        {
-            if (Module.Types.Find(module.Name) != null)
-                throw new ArgumentException($"ModuleClass for {module.Name} already exists.");
-
-            var moduleClass = CreateModuleClass(module);
-            _moduleClasses.Push(moduleClass);
-
-            return new ModuleScope(this, moduleClass);
-        }
-
-        public void AddVariableStorage(string name, TypeReference typeReference)
-        {
-            if (_ilProcessors.Count == 0)
-            {
-                if (_moduleClasses.Count == 0)
-                    throw new InvalidOperationException("No ModuleClass or Function body available.");
-
-                // module level field
-
-                var moduleClass = _moduleClasses.Peek();
-                var fieldAttrs = FieldAttributes.Private | FieldAttributes.Static;
-                moduleClass.Fields.Add(new FieldDefinition(name, fieldAttrs, typeReference));
-            }
-            else
-            {
-                // local function variable
-            }
-        }
-
         public AssemblyDefinition Assembly { get; private set; }
 
         public ModuleDefinition Module { get; private set; }
 
-        public TypeDefinition ModuleClass => _moduleClasses.Peek();
+        internal Stack<Scope> Scopes { get; } = new Stack<Scope>();
 
-        public ILProcessor ILProcessor => _ilProcessors.Peek();
-
-        public IDisposable Add(MethodDefinition function)
+        internal ModuleScope ModuleScope
         {
-            ModuleClass.Methods.Add(function);
-            var ilProcessor = function.Body.GetILProcessor();
-            _ilProcessors.Push(ilProcessor);
-            return new CodeScope(this, ilProcessor);
+            get
+            {
+                if (Scopes.Peek() is ModuleScope moduleScope)
+                {
+                    return moduleScope;
+                }
+                throw new InvalidOperationException($"No current active Module Class Scope.");
+            }
         }
 
-        public TypeDefinition GetModuleClassFor(AstNode node)
+        internal FunctionScope FunctionScope
         {
-            var module = node.GetParentRecursive<AstModule>();
-            if (module != null)
+            get
             {
-                var modClass = Module.Types.Find(module.Name);
-
-                if (modClass == null)
+                if (Scopes.Peek() is FunctionScope functionScope)
                 {
-                    throw new ArgumentException($"ModuleClass {module.Name} is not found for Node of {node.NodeType}.");
+                    return functionScope;
                 }
+                throw new InvalidOperationException($"No current active Function Scope.");
+            }
+        }
 
-                return modClass;
+        public ClassBuilder ModuleClass => ModuleScope.ClassBuilder;
+
+        public InstructionFactory InstructionFactory => FunctionScope.InstructionFactory;
+
+        public CodeBuilder CodeBuilder => FunctionScope.CodeBuilder;
+
+        public IDisposable AddModule(AstModule module)
+        {
+            if (Module.Types.Find(module.Name) != null)
+                throw new ArgumentException($"ModuleClass for {module.Name} already exists.");
+
+            var classBuilder = ClassBuilder.Create(this, module);
+            var scope = new ModuleScope(this, classBuilder);
+            Scopes.Push(scope);
+            return scope;
+        }
+
+        public IDisposable AddFunction(AstFunction function)
+        {
+            var classBuilder = ModuleClass ??
+                throw new InvalidOperationException("There is no module class to add a function to.");
+
+            var func = classBuilder.AddFunction(function);
+            var scope = new FunctionScope(this, func);
+            Scopes.Push(scope);
+            return scope;
+        }
+
+        public void AddVariable(AstVariableDefinition variable)
+        {
+            var provider = (ILocalStorageProvider)Scopes.Peek();
+
+            provider.CreateSlot(variable.Identifier.Name, ToTypeReference(variable.TypeReference));
+        }
+
+        internal TypeReference ToTypeReference(AstTypeReference typeReference)
+        {
+            if (typeReference == null)
+            {
+                // TODO: Replace with Zsharp.Void
+                return Module.TypeSystem.Void;
             }
 
-            throw new InvalidOperationException($"Node {node.NodeType} has no Module Parent.");
+            if (typeReference.TypeDefinition.IsIntrinsic)
+            {
+                // Map intrinsic data types to .NET data types
+                var type = ((AstTypeIntrinsic)typeReference.TypeDefinition).SystemType;
+                return Module.ImportReference(type);
+            }
+
+            // TODO: what does this do?
+            IMetadataScope? metadataScope = null;
+
+            var typeRef = new TypeReference("Todo",
+                typeReference.TypeDefinition.Identifier.Name,
+                Module,
+                metadataScope, true);
+
+            return typeRef;
         }
-
-        private TypeDefinition CreateModuleClass(AstModule module)
-        {
-            var modClass = new TypeDefinition(Module.Name, module.Name, ToTypeAttributes(module));
-            Module.Types.Add(modClass);
-            return modClass;
-        }
-
-        private static TypeAttributes ToTypeAttributes(AstModule module)
-        {
-            var attrs = TypeAttributes.Class;
-            attrs |= module.HasExports ? TypeAttributes.Public : TypeAttributes.NotPublic;
-            return attrs;
-        }
-
-
     }
 }
