@@ -8,5 +8,21 @@ namespace Zsharp.Semantics
     /// <remarks>See AstSymbolTable.</remarks>
     public class ResolveSymbols : AstVisitor
     {
+        public void Apply(AstFile file) => VisitFile(file);
+
+        public override void VisitVariableReference(AstVariableReference variable)
+        {
+            if (variable.VariableDefinition == null)
+            {
+                var entry = variable.Symbol;
+                var varDef = entry.GetDefinition<AstVariableDefinition>();
+                if (varDef == null)
+                {
+                    varDef = new AstVariableDefinition(variable.TypeReference);
+                    entry.PromoteToDefinition(variable);
+                }
+                variable.SetVariableDefinition(varDef);
+            }
+        }
     }
 }

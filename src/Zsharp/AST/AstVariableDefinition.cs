@@ -2,7 +2,7 @@
 
 namespace Zsharp.AST
 {
-    public class AstVariableDefinition : AstVariable, IAstTypeReferenceSite
+    public class AstVariableDefinition : AstVariable
     {
         private readonly Variable_def_typedContext? _typedCtx;
         private readonly Variable_def_typed_initContext? _typedInitCtx;
@@ -17,10 +17,9 @@ namespace Zsharp.AST
             _typedInitCtx = context;
         }
 
-        private AstTypeReference? _typeRef;
-        public AstTypeReference? TypeReference => _typeRef;
-
-        public bool SetTypeReference(AstTypeReference typeReference) => this.SafeSetParent(ref _typeRef, typeReference);
+        public AstVariableDefinition(AstTypeReference typeReference)
+            : base(typeReference)
+        { }
 
         public override void Accept(AstVisitor visitor)
         {

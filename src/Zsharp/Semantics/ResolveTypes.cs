@@ -5,18 +5,12 @@ namespace Zsharp.Semantics
 {
     public class ResolveTypes : AstVisitor
     {
-        private AstSymbolTable _globalSymbols;
-        private AstSymbolTable _symbolTable;
+        private AstSymbolTable? _globalSymbols;
+        private AstSymbolTable? _symbolTable;
 
-        public void Apply(AstModule module)
-        {
-            VisitModule(module);
-        }
+        public void Apply(AstModule module) => VisitModule(module);
 
-        public void Apply(AstFile file)
-        {
-            VisitFile(file);
-        }
+        public void Apply(AstFile file) => VisitFile(file);
 
         public override void VisitTypeReference(AstTypeReference type)
         {
@@ -118,8 +112,7 @@ namespace Zsharp.Semantics
             Ast.Guard(_symbolTable, "ResolveTypes has no SymbolTable.");
             VisitChildren(assign);
 
-            if (assign.Variable is AstVariableDefinition varDef &&
-                varDef.TypeReference == null)
+            if (assign.Variable.TypeReference == null)
             {
                 // typeless assign of var (x = 42)
                 var expr = assign.Expression;
@@ -133,7 +126,7 @@ namespace Zsharp.Semantics
                     var def = entry.GetDefinition<AstTypeDefinition>();
                     Ast.Guard(def, "AstTypeDefinition not set on AstSymbolEntry.");
                     typeRef = AstTypeReference.Create(expr, def!);
-                    varDef.SetTypeReference(typeRef);
+                    assign.Variable.SetTypeReference(typeRef);
                 }
             }
         }
@@ -153,19 +146,28 @@ namespace Zsharp.Semantics
 
             switch (index)
             {
+                case 0:
+                case 1:
+                    typeDef = FindType(_globalSymbols, typeName + "8");
+                    break;
                 case 2:
                     typeDef = FindType(_globalSymbols, typeName + "16");
                     break;
                 case 3:
-                    typeDef = FindType(_globalSymbols, typeName + "24");
-                    break;
                 case 4:
                     typeDef = FindType(_globalSymbols, typeName + "32");
                     break;
-                default:
-                    typeDef = FindType(_globalSymbols, typeName + "8");
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    typeDef = FindType(_globalSymbols, typeName + "64");
                     break;
+                default:
+                    throw new NotSupportedException(
+                        $"The '{typeName}{index}' Type is not supported.");
             }
+
             return typeDef;
         }
 
