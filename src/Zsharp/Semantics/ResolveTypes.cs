@@ -109,10 +109,10 @@ namespace Zsharp.Semantics
 
         public override void VisitAssignment(AstAssignment assign)
         {
-            Ast.Guard(_symbolTable, "ResolveTypes has no SymbolTable.");
+            Ast.Guard(assign.Variable, "AstVariable not set on assign.");
             VisitChildren(assign);
 
-            if (assign.Variable.TypeReference == null)
+            if (assign.Variable!.TypeReference == null)
             {
                 // typeless assign of var (x = 42)
                 var expr = assign.Expression;
@@ -120,13 +120,17 @@ namespace Zsharp.Semantics
                 var typeRef = expr!.TypeReference;
                 Ast.Guard(typeRef, "AstTypeReference not set on AstExpression.");
                 Ast.Guard(typeRef!.Identifier, "AstIdentifier not set on AstTypeReference.");
-                var entry = _symbolTable.GetEntry(typeRef!.Identifier!.Name, AstSymbolKind.Type);
-                if (entry != null)
+                var entry = assign.Variable.Symbol;
+                Ast.Guard(entry, "AstSymbolEntry was not set on Variable.");
+                var def = entry!.GetDefinition<AstTypeDefinition>();
+                if (def != null)
                 {
-                    var def = entry.GetDefinition<AstTypeDefinition>();
-                    Ast.Guard(def, "AstTypeDefinition not set on AstSymbolEntry.");
-                    typeRef = AstTypeReference.Create(expr, def!);
+                    typeRef = AstTypeReference.Create(expr, def);
                     assign.Variable.SetTypeReference(typeRef);
+                }
+                else
+                {
+                    assign.Variable.SetTypeReference(AstTypeReference.Create(typeRef));
                 }
             }
         }
