@@ -103,7 +103,7 @@ type_alias: identifier_type template_param_list? SP EQ_ASSIGN SP type_ref newlin
 type_ref_use: COLON SP type_ref;
 type_ref: type_name ERROR? QUESTION?;
 
-type_name: known_types | identifier_type template_param_list?;
+type_name: known_types | identifier_type template_param_list_use?;
 known_types:
     type_Bit | type_Ptr
     | BOOL | STR
@@ -118,10 +118,13 @@ type_Err: ERR template_param_type;
 type_Imm: IMM template_param_type;
 
 // templates
-template_param_list: SMALL_ANGLEopen template_param_any (COMMA SP template_param_any)* GREAT_ANGLEclose;
+template_param_list_use: SMALL_ANGLEopen template_param_any_use (COMMA SP template_param_any_use)* GREAT_ANGLEclose;
+template_param_any_use: type_name | literal | literal_bool;
 template_param_number: SMALL_ANGLEopen number GREAT_ANGLEclose;
 template_param_type: SMALL_ANGLEopen type_name GREAT_ANGLEclose;
-template_param_any: type_name | number;
+template_param_list: SMALL_ANGLEopen template_param_any (COMMA SP template_param_any)* GREAT_ANGLEclose;
+template_param_var: identifier_param type_ref_use;
+template_param_any: template_param_var | type_name | literal | literal_bool;
 
 // identifiers
 identifier_type: IDENTIFIERupper;
