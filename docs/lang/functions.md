@@ -755,6 +755,8 @@ intrinsic functions (operator implementations) - extensions?
 top-level function calls/one-time initialization at first access of module.
 
 declarative code: see if we can find a syntax that could would make it easy to call lts of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
+https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md
+
 
 How to define the entry point of a program? (Main)
 Decorator? Fixed Name?

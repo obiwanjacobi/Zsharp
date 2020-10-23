@@ -91,25 +91,16 @@ a ??= 101
 
 ## Atomic Assignment
 
-protect from (non-maskable) interrupts.
+Protect from interrupts / thread context switches.
 
-> TBD: A way to ensure an assignment operation is uninterrupted.
+A way to ensure an assignment operation is uninterrupted.
 
 - unconditional
 - conditional (exchange-if)
 
-Atomic as an operator
+### Atomic Type
 
-```csharp
-a = 42
-// special operator?
-b := a              // atomic assignment
-b :=: a             // atomic exchange
-b :=: a ? a = 42    // conditional1
-b :=: a ?? a = 42   // conditional2
-```
-
-Atomic as a type
+A wrapper type that indicates the instance is accessed atomically.
 
 ```csharp
 // assignment is easy because Atom
@@ -172,7 +163,7 @@ a: Soft<U8> = 42
 a: &U8 = 42
 ```
 
-> Memory Fences are not supported. No need because the simple 8-bit CPUs execute in order.
+> TBD: Memory Fences!
 
 ---
 

@@ -266,3 +266,4 @@ Events are a standardized delegate signature (sender, args) and a 'property' mec
 - Linq / Expressions
 - Threading/Tasks/async/await
 - Arrays (build a custom stack array? do the array IL instructions still work?)
+- Pointers (normal Ptr, strong/weak, ref-counted, garbage collected...)

@@ -73,7 +73,7 @@ s = a.Text()    // passed in the heap allocator
 
 > Construct individual structs into a pre-allocated memory space. For instance to layout an array or variable-length types.
 
-## Volatile ??
+## Volatile
 
 > How to deal with memory mapped hardware (IO)? Read, Modify, Write bits.
 

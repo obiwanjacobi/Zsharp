@@ -287,3 +287,13 @@ ptr = Ptr.to(42)    // ptr to literal is immutable
 ```
 
 > How would a function know its a literal value?
+
+---
+
+> TBD
+
+Reference Counted Pointer
+
+Weak Pointer
+
+Garbage Collected Pointer

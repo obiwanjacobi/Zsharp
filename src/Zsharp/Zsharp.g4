@@ -31,9 +31,8 @@ definition_top: function_def_export | function_def | enum_def | struct_def
 definition: function_def | variable_def;
 
 // expressions
-expression_value: number | string | expression_bool
-    | expression_arithmetic | expression_logic
-    | function_call;
+expression_value: number | string | expression_bool | function_call
+    | expression_arithmetic | expression_logic;
 comptime_expression_value: number | string | expression_bool;
 
 expression_arithmetic: 
@@ -50,35 +49,35 @@ expression_logic:
     | PARENopen expression_logic PARENclose
     | operator_logic_unary SP expression_logic
     | logic_operand;
-logic_operand: expression_comparison | expression_bool;
+logic_operand: expression_bool | expression_comparison;
 
 expression_comparison: 
       expression_comparison SP operator_comparison SP expression_comparison
     | PARENopen expression_comparison PARENclose
     | comparison_operand;
-comparison_operand: expression_arithmetic | function_call | variable_ref | literal;
+comparison_operand: function_call | variable_ref | literal | expression_arithmetic;
 
-expression_bool: literal_bool | variable_ref;
+expression_bool: literal_bool | variable_ref | function_call;
 
 // functions
-function_call: indent identifier_func PARENopen function_parameter_uselist? PARENclose newline;
+function_call: identifier_func PARENopen function_parameter_uselist? PARENclose newline?;
+function_parameter_uselist: function_param_use (COMMA SP function_param_use)*;
+function_param_use: expression_value;
 function_def: identifier_func COLON SP PARENopen function_parameter_list? PARENclose function_return_type? newline codeblock;
 function_def_export: EXPORT SP function_def;
 function_parameter_list: (function_parameter | function_parameter_self) (COMMA SP function_parameter)*;
 function_parameter: identifier_param type_ref_use;
 function_parameter_self: SELF type_ref_use;
-function_parameter_uselist: function_param_use (COMMA SP function_param_use)*;
-function_param_use: expression_value (COMMA SP expression_value)*;
 function_return_type: type_ref_use;
 
 // variables
-variable_ref: identifier_var;
 variable_def_top: (variable_def_typed | variable_def_typed_init | variable_assign_auto) newline;
 variable_def: indent (variable_def_typed | variable_def_typed_init) newline;
 variable_def_typed: identifier_var type_ref_use;
 variable_def_typed_init: identifier_var type_ref_use SP EQ_ASSIGN SP expression_value;
 variable_assign_auto: identifier_var SP EQ_ASSIGN SP expression_value;
 variable_assign: indent variable_assign_auto;
+variable_ref: identifier_var;
 
 // structs
 struct_def: identifier_type template_param_list? (type_ref_use)? (newline struct_field_def_list);
