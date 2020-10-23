@@ -8,6 +8,8 @@
             IdentifierType = identifierType;
         }
 
+        public static readonly AstIdentifierIntrinsic Self = new AstIdentifierIntrinsic("self", AstIdentifierType.Parameter);
+
         public override string Name { get; }
         public override AstIdentifierType IdentifierType { get; }
 

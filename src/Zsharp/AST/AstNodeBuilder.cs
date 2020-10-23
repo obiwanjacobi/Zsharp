@@ -304,8 +304,7 @@ namespace Zsharp.AST
         {
             var function = _buildercontext.GetCurrent<AstFunction>();
             var funcParam = new AstFunctionParameter(context);
-            // Todo: make self static and clone
-            funcParam.SetIdentifier(new AstIdentifierIntrinsic("self", AstIdentifierType.Parameter));
+            funcParam.SetIdentifier(AstIdentifierIntrinsic.Self.Clone());
             function.AddParameter(funcParam);
 
             _buildercontext.SetCurrent(funcParam);
