@@ -60,15 +60,15 @@ comparison_operand: function_call | variable_ref | literal | expression_arithmet
 expression_bool: literal_bool | variable_ref | function_call;
 
 // functions
-function_call: identifier_func PARENopen function_parameter_uselist? PARENclose newline?;
-function_parameter_uselist: function_param_use (COMMA SP function_param_use)*;
-function_param_use: expression_value;
 function_def: identifier_func COLON SP PARENopen function_parameter_list? PARENclose function_return_type? newline codeblock;
 function_def_export: EXPORT SP function_def;
 function_parameter_list: (function_parameter | function_parameter_self) (COMMA SP function_parameter)*;
 function_parameter: identifier_param type_ref_use;
 function_parameter_self: SELF type_ref_use;
 function_return_type: type_ref_use;
+function_call: indent? identifier_func PARENopen function_parameter_uselist? PARENclose newline?;
+function_parameter_uselist: function_param_use (COMMA SP function_param_use)*;
+function_param_use: expression_value;
 
 // variables
 variable_def_top: (variable_def_typed | variable_def_typed_init | variable_assign_auto) newline;

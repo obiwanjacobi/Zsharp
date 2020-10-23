@@ -207,24 +207,6 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpression_bool([NotNull] ZsharpParser.Expression_boolContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.function_call"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitFunction_call([NotNull] ZsharpParser.Function_callContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.function_parameter_uselist"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitFunction_parameter_uselist([NotNull] ZsharpParser.Function_parameter_uselistContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.function_param_use"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitFunction_param_use([NotNull] ZsharpParser.Function_param_useContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.function_def"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -260,6 +242,24 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitFunction_return_type([NotNull] ZsharpParser.Function_return_typeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.function_call"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_call([NotNull] ZsharpParser.Function_callContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.function_parameter_uselist"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_parameter_uselist([NotNull] ZsharpParser.Function_parameter_uselistContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.function_param_use"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_param_use([NotNull] ZsharpParser.Function_param_useContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_def_top"/>.
 	/// </summary>
