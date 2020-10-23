@@ -74,7 +74,6 @@ namespace Zsharp.AST
             _buildercontext.SetCurrent(file);
             base.VisitChildren(context);
             _buildercontext.RevertCurrent();
-            //guard(!hasCurrent());
 
             return file;
         }

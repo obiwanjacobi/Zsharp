@@ -44,50 +44,51 @@ namespace Zsharp.AST
         {
             _numeric = new AstNumeric(context);
             _numeric.SetParent(_parent);
-            _numeric.Value = VisitChildren(context);
+            _numeric.Value = GetNumberValue(context);
             ;
             return _numeric.Value;
         }
 
-        public override UInt64 VisitNumber_bin([NotNull] Number_binContext context)
+        private static ulong GetNumberValue(NumberContext context)
         {
-            var txt = context.NUMBERbin().GetText();
-            return ParseNumber(2, 2, txt);
-        }
-
-        public override UInt64 VisitNumber_oct([NotNull] Number_octContext context)
-        {
-            var txt = context.NUMBERoct().GetText();
-            return ParseNumber(2, 8, txt);
-        }
-
-        public override UInt64 VisitNumber_dec([NotNull] Number_decContext context)
-        {
-            var dec = context.NUMBERdec();
-            if (dec != null)
+            string txt;
+            if (context.NUMBERbin() != null)
             {
-                var txt = dec.GetText();
+                txt = context.NUMBERbin().GetText();
+                return ParseNumber(2, 2, txt);
+            }
+
+            if (context.NUMBERoct() != null)
+            {
+                txt = context.NUMBERoct().GetText();
+                return ParseNumber(2, 8, txt);
+            }
+
+            if (context.NUMBERdec() != null)
+            {
+                txt = context.NUMBERdec().GetText();
                 return ParseNumber(0, 10, txt);
             }
-            var dec_pre = context.NUMBERdec_prefix();
-            if (dec_pre != null)
+
+            if (context.NUMBERdec_prefix() != null)
             {
-                var txt = dec_pre.GetText();
+                txt = context.NUMBERdec_prefix().GetText();
                 return ParseNumber(2, 10, txt);
             }
+
+            if (context.NUMBERhex() != null)
+            {
+                txt = context.NUMBERhex().GetText();
+                return ParseNumber(2, 16, txt);
+            }
+
+            if (context.CHARACTER() != null)
+            {
+                txt = context.CHARACTER().GetText();
+                return (UInt64)txt[0];
+            }
+
             return 0;
-        }
-
-        public override UInt64 VisitNumber_hex([NotNull] Number_hexContext context)
-        {
-            var txt = context.NUMBERhex().GetText();
-            return ParseNumber(2, 16, txt);
-        }
-
-        public override UInt64 VisitNumber_char([NotNull] Number_charContext context)
-        {
-            var txt = context.character().CHARACTER().GetText();
-            return (UInt64)txt[0];
         }
 
         private static UInt64 ParseNumber(int offset, int radix, string text)

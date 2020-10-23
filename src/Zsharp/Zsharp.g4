@@ -136,12 +136,11 @@ literal_bool: TRUE | FALSE;
 literal: number | string;
 
 // numbers
-number: number_bin | number_oct | number_dec | number_hex | number_char;
-number_bin: NUMBERbin;
-number_oct: NUMBERoct;
-number_dec: NUMBERdec | NUMBERdec_prefix;
-number_hex: NUMBERhex;
-number_char: character;
+number: NUMBERbin 
+    | NUMBERoct 
+    | NUMBERdec | NUMBERdec_prefix 
+    | NUMBERhex
+    | CHARACTER;
 
 // operators
 operator_arithmetic: PLUS | MINUS_NEG | DIV | MOD | MULT_PTR | POW;
@@ -157,7 +156,6 @@ empty_line: INDENT? EOL+;
 newline: INDENT? COMMENT? EOL;
 comment: INDENT? COMMENT EOL;
 string: STRING;
-character: CHARACTER;
 
 indent: INDENT;
 

@@ -513,36 +513,6 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitNumber([NotNull] ZsharpParser.NumberContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.number_bin"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitNumber_bin([NotNull] ZsharpParser.Number_binContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.number_oct"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitNumber_oct([NotNull] ZsharpParser.Number_octContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.number_dec"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitNumber_dec([NotNull] ZsharpParser.Number_decContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.number_hex"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitNumber_hex([NotNull] ZsharpParser.Number_hexContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.number_char"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitNumber_char([NotNull] ZsharpParser.Number_charContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.operator_arithmetic"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -614,12 +584,6 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitString([NotNull] ZsharpParser.StringContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.character"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitCharacter([NotNull] ZsharpParser.CharacterContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.indent"/>.
 	/// </summary>
