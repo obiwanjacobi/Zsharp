@@ -45,7 +45,6 @@ namespace Zsharp.AST
             _numeric = new AstNumeric(context);
             _numeric.SetParent(_parent);
             _numeric.Value = GetNumberValue(context);
-            ;
             return _numeric.Value;
         }
 
