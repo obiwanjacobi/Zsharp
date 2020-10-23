@@ -435,23 +435,23 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTemplate_param_list_use([NotNull] ZsharpParser.Template_param_list_useContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.template_param_any_use"/>.
+	/// Visit a parse tree produced by <see cref="ZsharpParser.template_param_use"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTemplate_param_any_use([NotNull] ZsharpParser.Template_param_any_useContext context);
+	Result VisitTemplate_param_use([NotNull] ZsharpParser.Template_param_useContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.template_param_number"/>.
+	/// Visit a parse tree produced by <see cref="ZsharpParser.template_param_list_use_number"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTemplate_param_number([NotNull] ZsharpParser.Template_param_numberContext context);
+	Result VisitTemplate_param_list_use_number([NotNull] ZsharpParser.Template_param_list_use_numberContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.template_param_type"/>.
+	/// Visit a parse tree produced by <see cref="ZsharpParser.template_param_list_use_type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTemplate_param_type([NotNull] ZsharpParser.Template_param_typeContext context);
+	Result VisitTemplate_param_list_use_type([NotNull] ZsharpParser.Template_param_list_use_typeContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.template_param_list"/>.
 	/// </summary>

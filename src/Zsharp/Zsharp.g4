@@ -111,20 +111,20 @@ known_types:
     | I16 | I64 | I32 | I8  
     | U16 | U64 | U32 | U8;
 
-type_Bit: BIT template_param_number;
-type_Ptr: PTR template_param_type;
-type_Opt: OPT template_param_type;
-type_Err: ERR template_param_type;
-type_Imm: IMM template_param_type;
+type_Bit: BIT template_param_list_use_number;
+type_Ptr: PTR template_param_list_use_type;
+type_Opt: OPT template_param_list_use_type;
+type_Err: ERR template_param_list_use_type;
+type_Imm: IMM template_param_list_use_type;
 
 // templates
-template_param_list_use: SMALL_ANGLEopen template_param_any_use (COMMA SP template_param_any_use)* GREAT_ANGLEclose;
-template_param_any_use: type_name | literal | literal_bool;
-template_param_number: SMALL_ANGLEopen number GREAT_ANGLEclose;
-template_param_type: SMALL_ANGLEopen type_name GREAT_ANGLEclose;
+template_param_list_use: SMALL_ANGLEopen template_param_use (COMMA SP template_param_use)* GREAT_ANGLEclose;
+template_param_use: type_ref | literal | literal_bool;
+template_param_list_use_number: SMALL_ANGLEopen number GREAT_ANGLEclose;
+template_param_list_use_type: SMALL_ANGLEopen type_ref GREAT_ANGLEclose;
 template_param_list: SMALL_ANGLEopen template_param_any (COMMA SP template_param_any)* GREAT_ANGLEclose;
 template_param_var: identifier_param type_ref_use;
-template_param_any: template_param_var | type_name | literal | literal_bool;
+template_param_any: template_param_var | type_name;
 
 // identifiers
 identifier_type: IDENTIFIERupper;
