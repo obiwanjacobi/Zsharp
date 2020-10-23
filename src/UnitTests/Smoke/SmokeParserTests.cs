@@ -27,7 +27,7 @@ namespace UnitTests.Smoke
 
             var file = Parser.ParseFile(code);
 
-            file.source().First()
+            file.header().First()
                 .module_statement()
                 .statement_module().Should().NotBeNull();
         }

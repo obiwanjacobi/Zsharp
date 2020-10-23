@@ -39,6 +39,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFile([NotNull] ZsharpParser.FileContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.header"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitHeader([NotNull] ZsharpParser.HeaderContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.source"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

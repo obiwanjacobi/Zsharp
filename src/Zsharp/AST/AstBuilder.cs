@@ -45,9 +45,9 @@ namespace Zsharp.AST
         {
             public static Module_statementContext? ToModuleStatement(FileContext fileCtx)
             {
-                foreach (SourceContext src in fileCtx.source())
+                foreach (var ctx in fileCtx.header())
                 {
-                    var modStat = src.module_statement();
+                    var modStat = ctx.module_statement();
                     if (modStat != null)
                     {
                         return modStat;

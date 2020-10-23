@@ -1,8 +1,9 @@
 grammar Zsharp;
 
 // entry point
-file : source* EOF;
-source: (module_statement | definition_top | comment | empty_line);
+file : header* source* EOF;
+header: module_statement | comment | empty_line;
+source: definition_top | comment | empty_line;
 codeblock: (flow_statement | variable_assign | function_call | definition | comment | empty_line)+;
 
 // modules
