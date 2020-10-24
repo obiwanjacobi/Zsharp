@@ -60,7 +60,7 @@ namespace Zsharp.AST
                 }
 
                 var site = GetParent<IAstSymbolTableSite>() ??
-                    throw new InvalidOperationException("Parent not a SymbolTable Site.");
+                    throw new InvalidOperationException("Function Parent not a SymbolTable Site.");
                 return site.Symbols;
             }
         }
@@ -69,7 +69,7 @@ namespace Zsharp.AST
         {
             if (Symbols == null)
             {
-                throw new InvalidOperationException("SymbolTable not attached.");
+                throw new InvalidOperationException("SymbolTable not set.");
             }
 
             return Symbols.AddSymbol(symbolName, kind, node);

@@ -116,9 +116,7 @@ namespace Zsharp.AST
             Ast.Guard(function.Identifier, "Function Identifier is not set.");
 
             var symbolTable = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbolTable.AddSymbol(function.Identifier!.Name, AstSymbolKind.Function, function);
-            success = function.SetSymbol(entry);
-            Ast.Guard(success, "SetSymbol() failed");
+            var entry = symbolTable.Symbols.Add(function);
 
             if (context.Parent is Function_def_exportContext)
             {
@@ -329,9 +327,7 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
-            success = variable.SetSymbol(entry);
-            Ast.Guard(success, "SetSymbol() failed");
+            symbols.Symbols.Add(variable);
 
             return any;
         }
@@ -357,9 +353,7 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
-            success = variable.SetSymbol(entry);
-            Ast.Guard(success, "SetSymbol failed");
+            symbols.Symbols.Add(variable);
 
             return any;
         }
@@ -384,9 +378,7 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
-            success = variable.SetSymbol(entry);
-            Ast.Guard(success, "SetSymbol failed");
+            symbols.Symbols.Add(variable);
 
             return any;
         }
