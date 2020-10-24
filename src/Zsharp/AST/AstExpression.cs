@@ -1,4 +1,5 @@
 using Antlr4.Runtime;
+using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -64,7 +65,11 @@ namespace Zsharp.AST
             => this.SafeSetParent(ref _typeRef, typeReference);
 
         public void SetTypeReference(AstTypeReference typeReference)
-            => ((IAstTypeReferenceSite)this).SetTypeReference(typeReference);
+        {
+            if (!TrySetTypeReference(typeReference))
+                throw new InvalidOperationException(
+                    "TypeReference is already set or null.");
+        }
 
         public ParserRuleContext? getContext()
         {

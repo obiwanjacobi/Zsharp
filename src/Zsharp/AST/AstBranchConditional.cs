@@ -38,6 +38,13 @@ namespace Zsharp.AST
             return false;
         }
 
+        public void SetCodeBlock(AstCodeBlock codeBlock)
+        {
+            if (!TrySetCodeBlock(codeBlock))
+                throw new InvalidOperationException(
+                    "CodeBlock is already set or null.");
+        }
+
         private AstBranchConditional? _subBranch;
         public AstBranchConditional? SubBranch => _subBranch;
 

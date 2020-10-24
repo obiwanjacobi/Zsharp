@@ -32,6 +32,13 @@ namespace Zsharp.AST
 
         public bool TrySetCodeBlock(AstCodeBlock codeBlock) => this.SafeSetParent(ref _codeBlock, codeBlock);
 
+        public void SetCodeBlock(AstCodeBlock codeBlock)
+        {
+            if (!TrySetCodeBlock(codeBlock))
+                throw new InvalidOperationException(
+                    "CodeBlock is already set or null.");
+        }
+
         public override void Accept(AstVisitor visitor) => visitor.VisitFile(this);
 
         public override void VisitChildren(AstVisitor visitor)

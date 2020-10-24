@@ -1,4 +1,5 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using System;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -31,11 +32,22 @@ namespace Zsharp.AST
         public bool TrySetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
-            => ((IAstIdentifierSite)this).SetIdentifier(identifier);
+        {
+            if (!TrySetIdentifier(identifier))
+                throw new InvalidOperationException(
+                    "Identifier is already set or null.");
+        }
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
         public bool TrySetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
+
+        public void SetTypeReference(AstTypeReference typeReference)
+        {
+            if (!TrySetTypeReference(typeReference))
+                throw new InvalidOperationException(
+                    "TypeReference is already set or null.");
+        }
     }
 }

@@ -21,6 +21,13 @@ namespace Zsharp.AST
             return this.SafeSetParent(ref _expression, expression);
         }
 
+        public void SetExpression(AstExpression expression)
+        {
+            if (!TrySetExpression(expression))
+                throw new InvalidOperationException(
+                    "Expression is already set or null.");
+        }
+
         private AstVariable? _variable;
         public AstVariable? Variable => _variable;
 

@@ -1,3 +1,5 @@
+using System;
+
 namespace Zsharp.AST
 {
     public abstract class AstVariable : AstCodeBlockItem,
@@ -15,7 +17,11 @@ namespace Zsharp.AST
         public bool TrySetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
-            => ((IAstIdentifierSite)this).SetIdentifier(identifier);
+        {
+            if (!TrySetIdentifier(identifier))
+                throw new InvalidOperationException(
+                    "Identifier is already set or null.");
+        }
 
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
@@ -23,7 +29,11 @@ namespace Zsharp.AST
         public bool TrySetSymbol(AstSymbolEntry symbolEntry) => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public void SetSymbol(AstSymbolEntry symbolEntry)
-            => ((IAstSymbolEntrySite)this).SetSymbol(symbolEntry);
+        {
+            if (!TrySetSymbol(symbolEntry))
+                throw new InvalidOperationException(
+                    "SymbolEntry is already set or null.");
+        }
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
@@ -31,6 +41,10 @@ namespace Zsharp.AST
         public bool TrySetTypeReference(AstTypeReference typeReference) => this.SafeSetParent(ref _typeRef, typeReference);
 
         public void SetTypeReference(AstTypeReference typeReference)
-            => ((IAstTypeReferenceSite)this).SetTypeReference(typeReference);
+        {
+            if (!TrySetTypeReference(typeReference))
+                throw new InvalidOperationException(
+                    "TypeReference is already set or null.");
+        }
     }
 }

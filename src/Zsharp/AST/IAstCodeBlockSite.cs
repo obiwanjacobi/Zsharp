@@ -6,13 +6,7 @@ namespace Zsharp.AST
     {
         AstCodeBlock? CodeBlock { get; }
         bool TrySetCodeBlock(AstCodeBlock codeBlock);
-
-        public void SetCodeBlock(AstCodeBlock codeBlock)
-        {
-            if (!TrySetCodeBlock(codeBlock))
-                throw new InvalidOperationException(
-                    "CodeBlock is already set or null.");
-        }
+        void SetCodeBlock(AstCodeBlock codeBlock);
 
         public void ThrowIfCodeBlockNotSet()
             => _ = CodeBlock ?? throw new InvalidOperationException("CodeBlock is not set.");

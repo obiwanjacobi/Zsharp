@@ -6,13 +6,7 @@ namespace Zsharp.AST
     {
         AstTypeReference? TypeReference { get; }
         bool TrySetTypeReference(AstTypeReference typeReference);
-
-        public void SetTypeReference(AstTypeReference typeReference)
-        {
-            if (!TrySetTypeReference(typeReference))
-                throw new InvalidOperationException(
-                    "TypeReference is already set or null.");
-        }
+        void SetTypeReference(AstTypeReference typeReference);
 
         public void ThrowIfTypeReferenceNotSet()
             => _ = TypeReference ?? throw new InvalidOperationException("TypeReference is not set.");

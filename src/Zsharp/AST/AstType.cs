@@ -1,3 +1,4 @@
+using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -44,7 +45,11 @@ namespace Zsharp.AST
             => this.SafeSetParent(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
-            => ((IAstIdentifierSite)this).SetIdentifier(identifier);
+        {
+            if (!TrySetIdentifier(identifier))
+                throw new InvalidOperationException(
+                    "Identifier is already set or null.");
+        }
 
         public virtual bool IsEqual(AstType type)
         {
