@@ -2,15 +2,14 @@
 
 ## TODO
 
-- Refactor bool SetXxxxx() methods into bool TrySetXxxx and void SetXxxx() (throws) to reduce the number of Ast.Guard calls.
-- Promote AstVariableDefinition into AstAssignment.Variable when type is inferred. The AstVaraibleReference is discarded.
-- Dont let connection objects own their TypeReferences. 
+- Dont let connection objects own their TypeReferences.
+    The TypeReference is owned by the most logical source code reference (context).
     AstExpressionOperand should not own (a copy of) the TypeReference of the actual operand.
     AstAssignment should not have a TypeReference ?
     AstExpression should not own its TypeReference
 - What about Identity?
     Lots of duplication. Perhaps let the Symbol own the Identity and all reference from it?
-    Does VisitIdentity requere access to its parent? (Idedntiy Extension AddSymbol does)
+    Does VisitIdentity requere access to its parent? (Identity Extension AddSymbol does)
     Or let all definition objects (function, parameter, variable, type) own (parent) the identifiers.
 - SymbolTable extensions
     Add(AstVariable) =>
@@ -27,4 +26,3 @@ Operand (^ TypeReference)
 Expression (LHS/RHS ^ TypeReference)
 Assignment (^ Expression) / (Variable)
 Assignment.Variable => VariableReference / VariableDefinition ??
-
