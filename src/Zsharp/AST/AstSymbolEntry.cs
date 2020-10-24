@@ -28,21 +28,21 @@ namespace Zsharp.AST
         public T? DefinitionAs<T>() where T : class
             => _definition as T;
 
-        public bool PromoteToDefinition(AstNode definitionNode, AstNode referenceNode)
+        public void PromoteToDefinition(AstNode definitionNode, AstNode referenceNode)
         {
-            if (_definition == null)
+            if (_definition != null)
             {
-                if (_references.IndexOf(referenceNode) == -1)
-                {
-                    throw new ArgumentException(
-                        $"Specified reference Node was not found in the References.", nameof(referenceNode));
-                }
-
-                _references.Remove(referenceNode);
-                _definition = definitionNode;
-                return true;
+                throw new InvalidOperationException("Symbol already has a definition.");
             }
-            return false;
+
+            if (_references.IndexOf(referenceNode) == -1)
+            {
+                throw new ArgumentException(
+                    "Specified reference Node was not found in the References.", nameof(referenceNode));
+            }
+
+            _references.Remove(referenceNode);
+            _definition = definitionNode;
         }
 
         public void AddNode(AstNode node)

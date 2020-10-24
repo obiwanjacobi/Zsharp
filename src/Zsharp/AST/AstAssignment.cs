@@ -51,7 +51,7 @@ namespace Zsharp.AST
         // override variable reference with definition
         public void SetVariableDefinition(AstVariableDefinition variableDefinition)
         {
-            Ast.Guard(_variable is AstVariableReference, "Unexpected Variable on Assign.");
+            Ast.Guard(_variable is AstVariableReference, "Unexpected Variable Type on Assign.");
 
             _variable = null;
             if (!this.SafeSetParent(ref _variable, variableDefinition))

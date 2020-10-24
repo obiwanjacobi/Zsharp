@@ -25,7 +25,7 @@ namespace Zsharp.Semantics
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
-            if (variable.VariableDefinition == null)
+            if (!variable.HasDefinition)
             {
                 AstVariableDefinition? varDef = null;
 
@@ -53,19 +53,20 @@ namespace Zsharp.Semantics
                         varDef = new AstVariableDefinition(variable.TypeReference);
                         varDef.SetIdentifier(variable.Identifier.Clone());
                         varDef.SetSymbol(entry);
-                        bool success = entry.PromoteToDefinition(varDef, variable);
-                        Ast.Guard(success, "SymbolEntry.PromoteToDefinition has failed.");
+                        entry.PromoteToDefinition(varDef, variable);
                     }
-                    variable.TrySetVariableDefinition(varDef);
+                    variable.SetVariableDefinition(varDef);
                 }
                 else    // parameter
                 {
                     entry = SymbolTable.FindEntry(variable.Identifier.Name, AstSymbolKind.Parameter);
                     // TODO: syntax error
                     Ast.Guard(entry, "No Symbol found for variable reference name.");
+
                     var paramDef = entry!.DefinitionAs<AstFunctionParameter>();
-                    Ast.Guard(paramDef, "No Parameter found for variable reference.");
-                    variable.TrySetVariableDefinition(paramDef!);
+                    Ast.Guard(paramDef, "No Parameter Definition found for variable reference.");
+
+                    variable.SetVariableDefinition(paramDef!);
                     entry.AddNode(variable);
                 }
             }

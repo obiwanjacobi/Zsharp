@@ -17,6 +17,8 @@ namespace Zsharp.AST
             _assignCtx = context;
         }
 
+        public bool HasDefinition => _varDef != null || _paramDef != null;
+
         private AstVariableDefinition? _varDef;
         public AstVariableDefinition? VariableDefinition => _varDef;
 
@@ -25,9 +27,20 @@ namespace Zsharp.AST
 
         public bool TrySetVariableDefinition(AstVariableDefinition variableDefinition) => Ast.SafeSet(ref _varDef, variableDefinition);
 
-        public bool TrySetVariableDefinition(AstFunctionParameter paramDefinition)
+        public bool TrySetVariableDefinition(AstFunctionParameter paramDefinition) => Ast.SafeSet(ref _paramDef, paramDefinition);
+
+        public void SetVariableDefinition(AstVariableDefinition variableDefinition)
         {
-            return Ast.SafeSet(ref _paramDef, paramDefinition);
+            if (!TrySetVariableDefinition(variableDefinition))
+                throw new InvalidOperationException(
+                    "VariableDefinition was already set or null.");
+        }
+
+        public void SetVariableDefinition(AstFunctionParameter paramDefinition)
+        {
+            if (!TrySetVariableDefinition(paramDefinition))
+                throw new InvalidOperationException(
+                    "FunctionParameter definition was already set or null.");
         }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitVariableReference(this);
