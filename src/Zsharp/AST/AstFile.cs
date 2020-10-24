@@ -13,7 +13,7 @@ namespace Zsharp.AST
             : base(AstNodeType.File)
         {
             Context = context;
-            SetCodeBlock(new AstCodeBlock(scopeName, parentTable, null));
+            TrySetCodeBlock(new AstCodeBlock(scopeName, parentTable, null));
         }
 
         public FileContext Context { get; }
@@ -29,7 +29,7 @@ namespace Zsharp.AST
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
 
-        public bool SetCodeBlock(AstCodeBlock codeBlock) => this.SafeSetParent(ref _codeBlock, codeBlock);
+        public bool TrySetCodeBlock(AstCodeBlock codeBlock) => this.SafeSetParent(ref _codeBlock, codeBlock);
 
         public override void Accept(AstVisitor visitor) => visitor.VisitFile(this);
 

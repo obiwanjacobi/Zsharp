@@ -27,7 +27,7 @@ namespace Zsharp.AST
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
 
-        public bool SetCodeBlock(AstCodeBlock codeBlock)
+        public bool TrySetCodeBlock(AstCodeBlock codeBlock)
         {
             if (this.SafeSetParent(ref _codeBlock, codeBlock))
             {

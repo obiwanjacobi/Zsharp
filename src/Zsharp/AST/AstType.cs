@@ -1,3 +1,4 @@
+using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -32,7 +33,7 @@ namespace Zsharp.AST
         protected AstType(AstIdentifier identifier)
             : base(AstNodeType.Type)
         {
-            SetIdentifier(identifier);
+            TrySetIdentifier(identifier);
         }
 
         public Type_nameContext? Context { get; }
@@ -40,9 +41,16 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool SetIdentifier(AstIdentifier identifier)
+        public bool TrySetIdentifier(AstIdentifier identifier)
         {
             return this.SafeSetParent(ref _identifier, identifier);
+        }
+
+        public void SetIdentifier(AstIdentifier identifier)
+        {
+            if (!TrySetIdentifier(identifier))
+                throw new InvalidOperationException(
+                    "Identifier is already set or null.");
         }
 
         public virtual bool IsEqual(AstType type)
@@ -74,8 +82,7 @@ namespace Zsharp.AST
             }
 
             Ast.Guard(identifier, "Identifier failed.");
-            bool success = instance.SetIdentifier(identifier!);
-            Ast.Guard(success, "SetIdentifier() failed");
+            instance.SetIdentifier(identifier!);
         }
 
         private static AstIdentifier? SelectKnownIdentifier(Known_typesContext context)

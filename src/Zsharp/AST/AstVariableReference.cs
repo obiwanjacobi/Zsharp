@@ -1,4 +1,5 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using System;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {

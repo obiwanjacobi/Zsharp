@@ -23,17 +23,17 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool SetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
+        public bool TrySetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool SetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
+        public bool TrySetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
 
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
 
-        public bool SetCodeBlock(AstCodeBlock codeBlock)
+        public bool TrySetCodeBlock(AstCodeBlock codeBlock)
         {
             if (this.SafeSetParent(ref _codeBlock, codeBlock))
             {
@@ -47,7 +47,7 @@ namespace Zsharp.AST
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
 
-        public bool SetSymbol(AstSymbolEntry symbolEntry) => Ast.SafeSet(ref _symbol, symbolEntry);
+        public bool TrySetSymbol(AstSymbolEntry symbolEntry) => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public AstSymbolTable Symbols
         {

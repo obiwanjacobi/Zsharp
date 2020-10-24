@@ -28,11 +28,14 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool SetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
+        public bool TrySetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
+
+        public void SetIdentifier(AstIdentifier identifier)
+            => ((IAstIdentifierSite)this).SetIdentifier(identifier);
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool SetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
+        public bool TrySetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
     }
 }

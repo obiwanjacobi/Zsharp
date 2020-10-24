@@ -33,11 +33,9 @@ namespace Zsharp.AST
 
             var entry = symbolTable.AddSymbol(name, symbolKind, node);
 
-            if (node is IAstSymbolEntrySite symbolSite &&
-                !symbolSite.SetSymbol(entry))
+            if (node is IAstSymbolEntrySite symbolSite)
             {
-                throw new InvalidOperationException(
-                    "Add Symbol failed because the Symbol was set on the Function.");
+                symbolSite.SetSymbol(entry);
             }
             return entry;
         }

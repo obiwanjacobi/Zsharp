@@ -20,7 +20,7 @@ namespace Zsharp.AST
             get { return _expression != null; }
         }
 
-        public bool SetExpression(AstExpression expression) => this.SafeSetParent(ref _expression, expression);
+        public bool TrySetExpression(AstExpression expression) => this.SafeSetParent(ref _expression, expression);
 
         public override void Accept(AstVisitor visitor)
         {

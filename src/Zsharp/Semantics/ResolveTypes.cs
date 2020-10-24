@@ -63,15 +63,12 @@ namespace Zsharp.Semantics
             if (operand.TypeReference != null)
                 return;
 
-            bool success;
-
             var expr = operand.Expression;
             if (expr != null)
             {
                 Ast.Guard(expr.TypeReference, "AstExpression.TypeReference is null.");
                 var typeRef = AstTypeReference.Create(expr.TypeReference!);
-                success = operand.SetTypeReference(typeRef);
-                Ast.Guard(success, "SetTypeReference failed.");
+                operand.SetTypeReference(typeRef);
                 return;
             }
 
@@ -81,8 +78,7 @@ namespace Zsharp.Semantics
                 var typeDef = FindTypeByBitCount(numeric.GetBitCount(), numeric.Sign);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found by bit count.");
                 var typeRef = AstTypeReference.Create(numeric, typeDef!);
-                success = operand.SetTypeReference(typeRef);
-                Ast.Guard(success, "SetTypeReference failed.");
+                operand.SetTypeReference(typeRef);
                 return;
             }
 
@@ -105,8 +101,7 @@ namespace Zsharp.Semantics
                     var.SetTypeReference(AstTypeReference.Create(def.TypeReference));
                 }
                 var typeRef = AstTypeReference.Create(var.TypeReference!);
-                success = operand.SetTypeReference(typeRef);
-                Ast.Guard(success, "SetTypeReference failed.");
+                operand.SetTypeReference(typeRef);
             }
         }
 

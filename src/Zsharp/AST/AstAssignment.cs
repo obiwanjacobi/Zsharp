@@ -16,7 +16,7 @@ namespace Zsharp.AST
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public bool SetExpression(AstExpression expression)
+        public bool TrySetExpression(AstExpression expression)
         {
             return this.SafeSetParent(ref _expression, expression);
         }

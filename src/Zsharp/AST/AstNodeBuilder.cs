@@ -148,8 +148,7 @@ namespace Zsharp.AST
             }
 
             var codeBlock = new AstCodeBlock(scopeName, symbols, context);
-            bool success = cbSite.SetCodeBlock(codeBlock);
-            Ast.Guard(success, "SetCodeBlock() failed");
+            cbSite.SetCodeBlock(codeBlock);
 
             _buildercontext.SetCurrent(codeBlock);
             var any = base.VisitChildren(context);
@@ -413,8 +412,7 @@ namespace Zsharp.AST
             if (expr != null)
             {
                 var site = _buildercontext.GetCurrent<IAstExpressionSite>();
-                bool success = site.SetExpression(expr);
-                Ast.Guard(success, "SetExpression failed");
+                site.SetExpression(expr);
             }
             return null;
         }
@@ -426,8 +424,7 @@ namespace Zsharp.AST
             if (expr != null)
             {
                 var site = _buildercontext.GetCurrent<IAstExpressionSite>();
-                bool success = site.SetExpression(expr);
-                Ast.Guard(success, "SetExpression failed");
+                site.SetExpression(expr);
             }
             return null;
         }
@@ -436,16 +433,14 @@ namespace Zsharp.AST
         {
             var typeRef = AstTypeReference.Create(context);
             var trSite = _buildercontext.GetCurrent<IAstTypeReferenceSite>();
-            bool success = trSite.SetTypeReference(typeRef);
-            Ast.Guard(success, "SetTypeReference failed");
+            trSite.SetTypeReference(typeRef);
 
             var symbolsSite = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbolsSite.Symbols.FindEntry(typeRef.Identifier.Name, AstSymbolKind.Type);
             var typeDef = entry?.DefinitionAs<AstTypeDefinition>();
             if (typeDef != null)
             {
-                success = typeRef.SetTypeDefinition(typeDef);
-                Ast.Guard(success, "SetTypeDefinition failed.");
+                typeRef.SetTypeDefinition(typeDef);
             }
 
             return null;

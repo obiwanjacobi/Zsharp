@@ -1,4 +1,5 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using System;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -28,7 +29,7 @@ namespace Zsharp.AST
         private AstTypeDefinition? _typeDefinition;
         public AstTypeDefinition? TypeDefinition => _typeDefinition;
 
-        public bool SetTypeDefinition(AstTypeDefinition typeDefinition)
+        public bool TrySetTypeDefinition(AstTypeDefinition typeDefinition)
         {
             if (Ast.SafeSet(ref _typeDefinition, typeDefinition))
             {
@@ -37,6 +38,13 @@ namespace Zsharp.AST
                 return true;
             }
             return false;
+        }
+
+        public void SetTypeDefinition(AstTypeDefinition typeDefinition)
+        {
+            if (!TrySetTypeDefinition(typeDefinition))
+                throw new InvalidOperationException(
+                    "TypeDefinition is already set or null.");
         }
 
         private AstTypeReference? _inferredFrom;
@@ -109,8 +117,7 @@ namespace Zsharp.AST
             var typeRef = new AstTypeReference(inferredFrom);
             var identifier = inferredFrom.Identifier!.Clone();
             typeRef.SetIdentifier(identifier);
-            bool success = typeRef.SetTypeDefinition(inferredFrom.TypeDefinition!);
-            Ast.Guard(success, "AstTypeReference.Create SetTypeDefinition (inferred) failed.");
+            typeRef.SetTypeDefinition(inferredFrom.TypeDefinition!);
 
             return typeRef;
         }
@@ -123,15 +130,9 @@ namespace Zsharp.AST
             var typeRef = new AstTypeReference();
             var identifier = typeDef!.Identifier!.Clone();
 
-            bool success = typeRef.SetIdentifier(identifier);
-            Ast.Guard(success, "AstTypeReference.Create SetIdentifier failed.");
-
-            success = typeRef.SetTypeDefinition(typeDef);
-            Ast.Guard(success, "AstTypeReference.Create SetTypeDefinition failed.");
-
-            success = typeRef.SetTypeSource(typeSource);
-            Ast.Guard(success, "AstTypeReference.Create SetTypeSource failed.");
-
+            typeRef.SetIdentifier(identifier);
+            typeRef.SetTypeDefinition(typeDef);
+            typeRef.SetTypeSource(typeSource);
             return typeRef;
         }
     }
