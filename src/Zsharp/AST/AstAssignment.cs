@@ -24,7 +24,7 @@ namespace Zsharp.AST
         private AstVariable? _variable;
         public AstVariable? Variable => _variable;
 
-        public bool SetVariable(AstVariable variable)
+        public bool TrySetVariable(AstVariable variable)
         {
             if (this.SafeSetParent(ref _variable, variable))
             {
@@ -32,6 +32,13 @@ namespace Zsharp.AST
                 return true;
             }
             return false;
+        }
+
+        public void SetVariable(AstVariable variable)
+        {
+            if (!TrySetVariable(variable))
+                throw new InvalidOperationException(
+                    "Variable is already set or null.");
         }
 
         // override variable reference with definition

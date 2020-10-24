@@ -16,7 +16,7 @@ namespace Zsharp.AST
         public AstTypeReference(AstTypeReference inferredFrom)
             : base(inferredFrom.Context!)
         {
-            var success = SetInferredFrom(inferredFrom);
+            var success = TrySetInferredFrom(inferredFrom);
             Ast.Guard(success, "InferredFrom Type could not be set.");
 
             IsOptional = inferredFrom.IsOptional;
@@ -34,7 +34,7 @@ namespace Zsharp.AST
             if (Ast.SafeSet(ref _typeDefinition, typeDefinition))
             {
                 // usually fails - just catches dangling definitions
-                typeDefinition.SetParent(this);
+                typeDefinition.TrySetParent(this);
                 return true;
             }
             return false;
@@ -54,12 +54,12 @@ namespace Zsharp.AST
         /// </summary>
         public AstTypeReference? InferredFrom => _inferredFrom;
 
-        public bool SetInferredFrom(AstTypeReference type)
+        public bool TrySetInferredFrom(AstTypeReference type)
         {
             if (Ast.SafeSet(ref _inferredFrom, type))
             {
                 // can fail if referring to an existing type ref
-                type.SetParent(this);
+                type.TrySetParent(this);
                 return true;
             }
             return false;
@@ -71,7 +71,7 @@ namespace Zsharp.AST
         /// </summary>
         public AstNode? TypeSource => _typeSource;
 
-        public bool SetTypeSource(AstNode typeSource) => Ast.SafeSet(ref _typeSource, typeSource);
+        public bool TrySetTypeSource(AstNode typeSource) => Ast.SafeSet(ref _typeSource, typeSource);
 
         public bool IsOptional { get; }
 
@@ -132,7 +132,7 @@ namespace Zsharp.AST
 
             typeRef.SetIdentifier(identifier);
             typeRef.SetTypeDefinition(typeDef);
-            typeRef.SetTypeSource(typeSource);
+            typeRef.TrySetTypeSource(typeSource);
             return typeRef;
         }
     }

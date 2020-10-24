@@ -1,3 +1,5 @@
+using System;
+
 namespace Zsharp.AST
 {
 
@@ -13,22 +15,29 @@ namespace Zsharp.AST
         private AstNode? _parent;
         public AstNode? Parent => _parent;
 
-        public bool SetParent(AstNode? parent) => Ast.SafeSet(ref _parent, parent);
+        public bool TrySetParent(AstNode? parent) => Ast.SafeSet(ref _parent, parent);
 
-        public T? GetParent<T>() where T : class
+        public void SetParent(AstNode parent)
+        {
+            if (!TrySetParent(parent))
+                throw new InvalidOperationException(
+                    "Parent Node is already set or null.");
+        }
+
+        public T? ParentAs<T>() where T : class
             => _parent as T;
 
-        public T? GetParentRecursive<T>()
+        public T? ParentRecursiveAs<T>()
             where T : class
         {
             var parent = _parent;
             if (parent != null)
             {
-                var typedParent = GetParent<T>();
+                var typedParent = ParentAs<T>();
                 if (typedParent != null)
                     return typedParent;
 
-                return parent.GetParentRecursive<T>();
+                return parent.ParentRecursiveAs<T>();
             }
 
             return null;

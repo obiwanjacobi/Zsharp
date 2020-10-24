@@ -56,7 +56,7 @@ namespace Zsharp.Semantics
                         bool success = entry.PromoteToDefinition(varDef, variable);
                         Ast.Guard(success, "SymbolEntry.PromoteToDefinition has failed.");
                     }
-                    variable.SetVariableDefinition(varDef);
+                    variable.TrySetVariableDefinition(varDef);
                 }
                 else    // parameter
                 {
@@ -65,7 +65,7 @@ namespace Zsharp.Semantics
                     Ast.Guard(entry, "No Symbol found for variable reference name.");
                     var paramDef = entry!.DefinitionAs<AstFunctionParameter>();
                     Ast.Guard(paramDef, "No Parameter found for variable reference.");
-                    variable.SetVariableDefinition(paramDef!);
+                    variable.TrySetVariableDefinition(paramDef!);
                     entry.AddNode(variable);
                 }
             }

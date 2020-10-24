@@ -105,9 +105,7 @@ namespace Zsharp.AST
             var file = _buildercontext.GetCurrent<AstFile>();
             var function = new AstFunction(context);
 
-            bool success = file.AddFunction(function);
-            Ast.Guard(success, "AddFunction() failed");
-
+            file.AddFunction(function);
             _buildercontext.SetCurrent(function);
 
             // process identifier first (needed for symbol)
@@ -162,8 +160,7 @@ namespace Zsharp.AST
             var codeBlock = _buildercontext.GetCodeBlock(indent);
 
             var branch = new AstBranchConditional(context);
-            bool success = codeBlock.AddItem(branch);
-            Ast.Guard(success, "AstCodeBlock.AddItem() failed");
+            codeBlock.AddItem(branch);
 
             _buildercontext.SetCurrent(branch);
             var any = VisitChildren(context);
@@ -178,8 +175,7 @@ namespace Zsharp.AST
             Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
 
             var subBr = new AstBranchConditional(context);
-            bool success = branch.AddSubBranch(subBr);
-            Ast.Guard(success, "AddSubBranch() failed");
+            branch.AddSubBranch(subBr);
 
             _buildercontext.SetCurrent(subBr);
             var any = VisitChildren(context);
@@ -194,8 +190,7 @@ namespace Zsharp.AST
             Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
 
             var subBr = new AstBranchConditional(context);
-            bool success = branch.AddSubBranch(subBr);
-            Ast.Guard(success, "AddSubBranch() failed");
+            branch.AddSubBranch(subBr);
 
             _buildercontext.SetCurrent(subBr);
             var any = VisitChildren(context);
@@ -209,8 +204,7 @@ namespace Zsharp.AST
             var codeBlock = _buildercontext.GetCodeBlock(indent);
 
             var branch = new AstBranchExpression(context);
-            bool success = codeBlock.AddItem(branch);
-            Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
+            codeBlock.AddItem(branch);
 
             _buildercontext.SetCurrent(branch);
             var any = base.VisitChildren(context);
@@ -224,8 +218,7 @@ namespace Zsharp.AST
             var codeBlock = _buildercontext.GetCodeBlock(indent);
 
             var branch = new AstBranch(context);
-            bool success = codeBlock.AddItem(branch);
-            Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
+            codeBlock.AddItem(branch);
 
             return VisitChildren(context);
         }
@@ -236,51 +229,44 @@ namespace Zsharp.AST
             var codeBlock = _buildercontext.GetCodeBlock(indent);
 
             var branch = new AstBranch(context);
-            bool success = codeBlock.AddItem(branch);
-            Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
+            codeBlock.AddItem(branch);
 
             return VisitChildren(context);
         }
 
         public override object? VisitIdentifier_type(Identifier_typeContext context)
         {
-            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(Type) failed");
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_var(Identifier_varContext context)
         {
-            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(Variable) failed");
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_param(Identifier_paramContext context)
         {
-            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(Parameter) failed");
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_func(Identifier_funcContext context)
         {
-            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(Function) failed");
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_field(Identifier_fieldContext context)
         {
-            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(Field) failed");
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_enumoption(Identifier_enumoptionContext context)
         {
-            bool success = _buildercontext.AddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(EnumOption) failed");
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
 
@@ -288,7 +274,7 @@ namespace Zsharp.AST
         {
             var funcParam = new AstFunctionParameter(context);
             var function = _buildercontext.GetCurrent<AstFunction>();
-            function.AddParameter(funcParam);
+            function.TryAddParameter(funcParam);
 
             _buildercontext.SetCurrent(funcParam);
             var any = VisitChildren(context);
@@ -302,7 +288,7 @@ namespace Zsharp.AST
             var function = _buildercontext.GetCurrent<AstFunction>();
             var funcParam = new AstFunctionParameter(context);
             funcParam.SetIdentifier(AstIdentifierIntrinsic.Self.Clone());
-            function.AddParameter(funcParam);
+            function.TryAddParameter(funcParam);
 
             _buildercontext.SetCurrent(funcParam);
             var any = VisitChildren(context);
@@ -318,8 +304,7 @@ namespace Zsharp.AST
             var codeBlock = _buildercontext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
-            bool success = codeBlock!.AddItem(variable);
-            Ast.Guard(success, "AstCodeBlock.AddItem failed.");
+            codeBlock!.AddItem(variable);
 
             _buildercontext.SetCurrent(variable);
             var any = VisitChildren(context);
@@ -337,14 +322,11 @@ namespace Zsharp.AST
             var codeBlock = _buildercontext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
-            bool success = codeBlock.AddItem(assign);
-            Ast.Guard(success, "AstCodeBlock.AddItem failed.");
-
+            codeBlock.AddItem(assign);
             _buildercontext.SetCurrent(assign);
 
             var variable = new AstVariableDefinition(context);
-            success = assign.SetVariable(variable);
-            Ast.Guard(success, "SetVariable failed");
+            assign.SetVariable(variable);
 
             _buildercontext.SetCurrent(variable);
             var any = VisitChildren(context);
@@ -363,13 +345,11 @@ namespace Zsharp.AST
             var codeBlock = _buildercontext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
-            bool success = codeBlock!.AddItem(assign);
-            Ast.Guard(success, "AstCodeBlock.AddItem failed.");
+            codeBlock!.AddItem(assign);
             _buildercontext.SetCurrent(assign);
 
             var variable = new AstVariableReference(context);
-            success = assign.SetVariable(variable);
-            Ast.Guard(success, "SetVariable failed");
+            assign.SetVariable(variable);
 
             _buildercontext.SetCurrent(variable);
             var any = VisitChildren(context);

@@ -43,7 +43,7 @@ namespace Zsharp.AST
         public override UInt64 VisitNumber([NotNull] NumberContext context)
         {
             _numeric = new AstNumeric(context);
-            _numeric.SetParent(_parent);
+            _numeric.TrySetParent(_parent);
             _numeric.Value = GetNumberValue(context);
             return _numeric.Value;
         }

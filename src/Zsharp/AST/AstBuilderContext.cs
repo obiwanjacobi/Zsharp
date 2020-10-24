@@ -94,7 +94,7 @@ namespace Zsharp.AST
             return p!;
         }
 
-        public bool AddIdentifier(AstIdentifier identifier)
+        public bool TryAddIdentifier(AstIdentifier identifier)
         {
             var namedObj = GetCurrent<IAstIdentifierSite>();
             if (namedObj != null)
@@ -102,6 +102,13 @@ namespace Zsharp.AST
                 return namedObj.TrySetIdentifier(identifier);
             }
             return false;
+        }
+
+        public void AddIdentifier(AstIdentifier identifier)
+        {
+            if (!TryAddIdentifier(identifier))
+                throw new InvalidOperationException(
+                    "Identifier is already set, null or no Site could be found.");
         }
 
         private readonly List<AstError> _errors = new List<AstError>();

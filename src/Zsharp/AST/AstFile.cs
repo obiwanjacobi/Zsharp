@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -41,34 +42,30 @@ namespace Zsharp.AST
             }
         }
 
-        public bool AddImport(Statement_importContext importCtx)
+        public void AddImport(Statement_importContext importCtx)
         {
-            if (importCtx != null)
+            if (importCtx == null)
             {
-                _imports.Add(importCtx);
-                return true;
+                throw new ArgumentNullException(nameof(importCtx));
             }
-            return false;
+
+            _imports.Add(importCtx);
         }
 
-        public bool AddExport(Statement_exportContext exportCtx)
+        public void AddExport(Statement_exportContext exportCtx)
         {
-            if (exportCtx != null)
+            if (exportCtx == null)
             {
-                _exports.Add(exportCtx);
-                return true;
+                throw new ArgumentNullException(nameof(exportCtx));
             }
-            return false;
+
+            _exports.Add(exportCtx);
         }
 
-        public bool AddFunction(AstFunction function)
+        public void AddFunction(AstFunction function)
         {
-            if (CodeBlock!.AddItem(function))
-            {
-                _functions.Add(function);
-                return true;
-            }
-            return false;
+            CodeBlock!.AddItem(function);
+            _functions.Add(function);
         }
     }
 }

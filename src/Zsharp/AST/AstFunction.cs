@@ -59,7 +59,7 @@ namespace Zsharp.AST
                     return codeBlock.Symbols;
                 }
 
-                var site = GetParent<IAstSymbolTableSite>() ??
+                var site = ParentAs<IAstSymbolTableSite>() ??
                     throw new InvalidOperationException("Function Parent not a SymbolTable Site.");
                 return site.Symbols;
             }
@@ -75,12 +75,11 @@ namespace Zsharp.AST
             return Symbols.AddSymbol(symbolName, kind, node);
         }
 
-        public bool AddParameter(AstFunctionParameter param)
+        public bool TryAddParameter(AstFunctionParameter param)
         {
-            if (param != null)
+            if (param != null &&
+                param.TrySetParent(this))
             {
-                bool success = param.SetParent(this);
-                Ast.Guard(success, "SetParent failed.");
                 _parameters.Add(param);
                 return true;
             }

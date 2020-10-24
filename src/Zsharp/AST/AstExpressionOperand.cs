@@ -1,5 +1,4 @@
 using Antlr4.Runtime;
-using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -13,7 +12,7 @@ namespace Zsharp.AST
             : base(AstNodeType.Operand)
         {
             Expression = expr;
-            bool success = expr.SetParent(this);
+            bool success = expr.TrySetParent(this);
             Ast.Guard(success, "SetParent failed.");
         }
 
@@ -21,7 +20,7 @@ namespace Zsharp.AST
             : base(AstNodeType.Operand)
         {
             Numeric = num;
-            bool success = num.SetParent(this);
+            bool success = num.TrySetParent(this);
             Ast.Guard(success, "SetParent failed.");
         }
 
@@ -29,7 +28,7 @@ namespace Zsharp.AST
             : base(AstNodeType.Operand)
         {
             VariableReference = variable;
-            bool success = variable.SetParent(this);
+            bool success = variable.TrySetParent(this);
             Ast.Guard(success, "SetParent failed.");
         }
 
@@ -69,11 +68,7 @@ namespace Zsharp.AST
         public bool TrySetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
 
         public void SetTypeReference(AstTypeReference typeReference)
-        {
-            if (!TrySetTypeReference(typeReference))
-                throw new InvalidOperationException(
-                    "TypeReference is already set or null.");
-        }
+            => ((IAstTypeReferenceSite)this).SetTypeReference(typeReference);
 
         public override void Accept(AstVisitor visitor) => visitor.VisitExpressionOperand(this);
 

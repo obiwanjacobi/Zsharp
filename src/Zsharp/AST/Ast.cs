@@ -23,7 +23,7 @@ namespace Zsharp.AST
         {
             if (SafeSet<T>(ref storage, value))
             {
-                var success = storage!.SetParent(parent);
+                var success = storage!.TrySetParent(parent);
                 Ast.Guard(success, "SetParent failed.");
                 return success;
             }

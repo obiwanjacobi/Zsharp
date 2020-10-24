@@ -25,16 +25,11 @@ namespace Zsharp.AST
         public T? ItemAt<T>(int index) where T : AstCodeBlockItem
             => _items[index] as T;
 
-        public bool AddItem(AstCodeBlockItem item)
+        public void AddItem(AstCodeBlockItem item)
         {
-            if (item == null)
-                return false;
-
             _items.Add(item);
             item.Indent = Indent;
-            var success = item.SetParent(this);
-            Ast.Guard(success, "SetParent failed.");
-            return true;
+            item.SetParent(this);
         }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitCodeBlock(this);

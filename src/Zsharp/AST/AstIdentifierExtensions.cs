@@ -6,7 +6,7 @@ namespace Zsharp.AST
     {
         public static AstSymbolEntry AddSymbol(this AstIdentifier identifier)
         {
-            var symbols = identifier.GetParentRecursive<IAstSymbolTableSite>() ??
+            var symbols = identifier.ParentRecursiveAs<IAstSymbolTableSite>() ??
                 throw new InvalidOperationException("No SymbolTable Site could be found.");
 
             return symbols.AddSymbol(identifier.Name,

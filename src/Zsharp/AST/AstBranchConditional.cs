@@ -1,4 +1,5 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using System;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -42,7 +43,7 @@ namespace Zsharp.AST
 
         public bool HasSubBranch => _subBranch != null;
 
-        public bool AddSubBranch(AstBranchConditional subBranch)
+        public bool TryAddSubBranch(AstBranchConditional subBranch)
         {
             if (this.SafeSetParent(ref _subBranch, subBranch))
             {
@@ -50,6 +51,13 @@ namespace Zsharp.AST
                 return true;
             }
             return false;
+        }
+
+        public void AddSubBranch(AstBranchConditional subBranch)
+        {
+            if (!TryAddSubBranch(subBranch))
+                throw new InvalidOperationException(
+                    "SubBranch is already set or null.");
         }
 
         public AstBranchConditional LastSubBranch() => HasSubBranch ? _subBranch!.LastSubBranch() : this;

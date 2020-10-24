@@ -23,9 +23,9 @@ namespace Zsharp.AST
         private AstFunctionParameter? _paramDef;
         public AstFunctionParameter? ParameterDefinition => _paramDef;
 
-        public bool SetVariableDefinition(AstVariableDefinition variableDefinition) => Ast.SafeSet(ref _varDef, variableDefinition);
+        public bool TrySetVariableDefinition(AstVariableDefinition variableDefinition) => Ast.SafeSet(ref _varDef, variableDefinition);
 
-        public bool SetVariableDefinition(AstFunctionParameter paramDefinition)
+        public bool TrySetVariableDefinition(AstFunctionParameter paramDefinition)
         {
             return Ast.SafeSet(ref _paramDef, paramDefinition);
         }
