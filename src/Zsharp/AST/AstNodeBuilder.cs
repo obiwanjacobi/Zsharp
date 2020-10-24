@@ -296,6 +296,7 @@ namespace Zsharp.AST
             _buildercontext.SetCurrent(funcParam);
             var any = VisitChildren(context);
             _buildercontext.RevertCurrent();
+
             return any;
         }
 
@@ -312,16 +313,7 @@ namespace Zsharp.AST
             return any;
         }
 
-        public override object? VisitVariable_def(Variable_defContext context)
-        {
-            var indent = _buildercontext.CheckIndent(context, context.indent());
-            var codeBlock = _buildercontext.GetCodeBlock(indent);
 
-            _buildercontext.SetCurrent(codeBlock);
-            var any = VisitChildren(context);
-            _buildercontext.RevertCurrent();
-            return any;
-        }
 
         public override object? VisitVariable_def_typed(Variable_def_typedContext context)
         {
@@ -330,7 +322,7 @@ namespace Zsharp.AST
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
             bool success = codeBlock!.AddItem(variable);
-            Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
+            Ast.Guard(success, "AstCodeBlock.AddItem failed.");
 
             _buildercontext.SetCurrent(variable);
             var any = VisitChildren(context);
@@ -350,14 +342,14 @@ namespace Zsharp.AST
             var codeBlock = _buildercontext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
-            bool success = codeBlock!.AddItem(assign);
-            Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
+            bool success = codeBlock.AddItem(assign);
+            Ast.Guard(success, "AstCodeBlock.AddItem failed.");
 
             _buildercontext.SetCurrent(assign);
 
             var variable = new AstVariableDefinition(context);
             success = assign.SetVariable(variable);
-            Ast.Guard(success, "SetVariable() failed");
+            Ast.Guard(success, "SetVariable failed");
 
             _buildercontext.SetCurrent(variable);
             var any = VisitChildren(context);
@@ -367,7 +359,7 @@ namespace Zsharp.AST
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
             success = variable.SetSymbol(entry);
-            Ast.Guard(success, "SetSymbol() failed");
+            Ast.Guard(success, "SetSymbol failed");
 
             return any;
         }
@@ -379,12 +371,12 @@ namespace Zsharp.AST
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
             bool success = codeBlock!.AddItem(assign);
-            Ast.Guard(success, "AstCodeBlock.AddItem() failed.");
+            Ast.Guard(success, "AstCodeBlock.AddItem failed.");
             _buildercontext.SetCurrent(assign);
 
             var variable = new AstVariableReference(context);
             success = assign.SetVariable(variable);
-            Ast.Guard(success, "SetVariable() failed");
+            Ast.Guard(success, "SetVariable failed");
 
             _buildercontext.SetCurrent(variable);
             var any = VisitChildren(context);
@@ -394,8 +386,19 @@ namespace Zsharp.AST
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);
             success = variable.SetSymbol(entry);
-            Ast.Guard(success, "SetSymbol() failed");
+            Ast.Guard(success, "SetSymbol failed");
 
+            return any;
+        }
+
+        public override object? VisitVariable_def(Variable_defContext context)
+        {
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
+
+            _buildercontext.SetCurrent(codeBlock);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
             return any;
         }
 
@@ -419,7 +422,7 @@ namespace Zsharp.AST
             {
                 var site = _buildercontext.GetCurrent<IAstExpressionSite>();
                 bool success = site.SetExpression(expr);
-                Ast.Guard(success, "SetExpression() failed");
+                Ast.Guard(success, "SetExpression failed");
             }
             return null;
         }
@@ -432,17 +435,27 @@ namespace Zsharp.AST
             {
                 var site = _buildercontext.GetCurrent<IAstExpressionSite>();
                 bool success = site.SetExpression(expr);
-                Ast.Guard(success, "SetExpression() failed");
+                Ast.Guard(success, "SetExpression failed");
             }
             return null;
         }
 
         public override object? VisitType_ref_use(Type_ref_useContext context)
         {
-            var type = AstTypeReference.Create(context);
+            var typeRef = AstTypeReference.Create(context);
             var trSite = _buildercontext.GetCurrent<IAstTypeReferenceSite>();
-            bool success = trSite.SetTypeReference(type);
-            Ast.Guard(success, "SetTypeReference() failed");
+            bool success = trSite.SetTypeReference(typeRef);
+            Ast.Guard(success, "SetTypeReference failed");
+
+            var symbolsSite = _buildercontext.GetCurrent<IAstSymbolTableSite>();
+            var entry = symbolsSite.Symbols.FindEntry(typeRef.Identifier.Name, AstSymbolKind.Type);
+            var typeDef = entry?.DefinitionAs<AstTypeDefinition>();
+            if (typeDef != null)
+            {
+                success = typeRef.SetTypeDefinition(typeDef);
+                Ast.Guard(success, "SetTypeDefinition failed.");
+            }
+
             return null;
         }
     }

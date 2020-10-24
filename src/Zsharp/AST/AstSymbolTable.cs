@@ -35,10 +35,17 @@ namespace Zsharp.AST
 
         public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node)
         {
-            var entry = GetEntry(symbolName, kind);
+            var exported = FindEntry(symbolName, AstSymbolKind.NotSet);
+            var entry = FindEntry(symbolName, kind);
+
             if (entry == null)
             {
                 entry = new AstSymbolEntry(symbolName, kind);
+                if (exported != null)
+                {
+                    _table.Remove(exported.Key);
+                    entry.SymbolLocality = AstSymbolLocality.Exported;
+                }
                 _table[entry.Key] = entry;
             }
 
@@ -49,7 +56,7 @@ namespace Zsharp.AST
             return entry;
         }
 
-        public AstSymbolEntry? GetEntry(string name, AstSymbolKind kind)
+        public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind)
         {
             if (name.Contains('.'))
             {
@@ -63,7 +70,7 @@ namespace Zsharp.AST
             }
             if (ParentTable != null)
             {
-                return ParentTable.GetEntry(name, kind);
+                return ParentTable.FindEntry(name, kind);
             }
             return null;
         }

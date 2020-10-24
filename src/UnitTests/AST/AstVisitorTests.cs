@@ -14,7 +14,7 @@ namespace UnitTests.AST
             "MyFunction: (p: U8): Bool" + Tokens.NewLine +
             Tokens.Indent1 + "if p = 42" + Tokens.NewLine +
             Tokens.Indent2 + "return true" + Tokens.NewLine +
-            Tokens.Indent1 + "return a <> 0" + Tokens.NewLine
+            Tokens.Indent1 + "return p <> 0" + Tokens.NewLine
             ;
 
         [TestMethod]
@@ -41,8 +41,11 @@ namespace UnitTests.AST
             var file = Build.File(code);
             file.Should().NotBeNull();
 
-            var resolver = new ResolveTypes();
-            resolver.Apply(file);
+            var symbolResolver = new ResolveSymbols();
+            symbolResolver.Apply(file);
+
+            var typeResolver = new ResolveTypes();
+            typeResolver.Apply(file);
 
             var checker = new AstTypeChecker();
             checker.Visit(file);

@@ -11,8 +11,6 @@ namespace UnitTests.Semantics
         private static AstFile ParseFile(string code)
         {
             var file = Build.File(code);
-            var resolveTypes = new ResolveTypes();
-            resolveTypes.Apply(file);
             var resolveSymbols = new ResolveSymbols();
             resolveSymbols.Apply(file);
             return file;
@@ -31,10 +29,9 @@ namespace UnitTests.Semantics
             var v = a.Variable as AstVariableReference;
             v.Should().NotBeNull();
             v.Parent.Should().Be(a);
-            v.TypeReference.Should().NotBeNull();
             v.VariableDefinition.Should().NotBeNull();
 
-            var sym = file.CodeBlock.Symbols.GetEntry(v.Identifier.Name, AstSymbolKind.Variable);
+            var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.Name, AstSymbolKind.Variable);
             sym.Definition.Should().NotBeNull();
         }
     }

@@ -10,7 +10,7 @@ namespace Zsharp.AST
                 throw new InvalidOperationException("No SymbolTable Site could be found.");
 
             return symbols.AddSymbol(identifier.Name,
-                ToSymbolKind(identifier.IdentifierType), identifier);
+                ToSymbolKind(identifier.IdentifierType), identifier.Parent!);
         }
 
         private static AstSymbolKind ToSymbolKind(AstIdentifierType idType)

@@ -11,6 +11,8 @@ namespace UnitTests.Semantics
         private static AstFile ParseFile(string code)
         {
             var file = Build.File(code);
+            var resolveSymbols = new ResolveSymbols();
+            resolveSymbols.Apply(file);
             var resolver = new ResolveTypes();
             resolver.Apply(file);
             return file;
@@ -30,7 +32,7 @@ namespace UnitTests.Semantics
             v.TypeReference.TypeDefinition.Should().NotBeNull();
             v.TypeReference.TypeDefinition.IsIntrinsic.Should().BeTrue();
 
-            var sym = file.CodeBlock.Symbols.GetEntry(v.Identifier.Name, AstSymbolKind.Variable);
+            var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.Name, AstSymbolKind.Variable);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -50,7 +52,7 @@ namespace UnitTests.Semantics
             v.TypeReference.TypeDefinition.Should().NotBeNull();
             v.TypeReference.TypeDefinition.IsIntrinsic.Should().BeTrue();
 
-            var sym = file.CodeBlock.Symbols.GetEntry(v.Identifier.Name, AstSymbolKind.Variable);
+            var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.Name, AstSymbolKind.Variable);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -68,10 +70,29 @@ namespace UnitTests.Semantics
             v.Should().NotBeNull();
             v.Parent.Should().Be(a);
             v.TypeReference.Should().NotBeNull();
-            v.VariableDefinition.Should().BeNull();
 
-            var sym = file.CodeBlock.Symbols.GetEntry(v.Identifier.Name, AstSymbolKind.Variable);
-            sym.Definition.Should().BeNull();
+            var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.Name, AstSymbolKind.Variable);
+            sym.Definition.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void TopVariableReference()
+        {
+            const string code =
+                "v = 42" + Tokens.NewLine +
+                "x = v" + Tokens.NewLine
+                ;
+
+            var file = ParseFile(code);
+
+            var a = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var v = a.Variable as AstVariableDefinition;
+            v.Should().NotBeNull();
+            v.Parent.Should().Be(a);
+            v.TypeReference.Should().NotBeNull();
+
+            var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.Name, AstSymbolKind.Variable);
+            sym.Definition.Should().NotBeNull();
         }
     }
 }

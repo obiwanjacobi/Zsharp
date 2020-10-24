@@ -25,19 +25,21 @@ namespace Zsharp.AST
 
         private AstNode? _definition;
         public AstNode? Definition => _definition;
-        public T? GetDefinition<T>() where T : AstNode
+        public T? DefinitionAs<T>() where T : class
             => _definition as T;
-        public bool PromoteToDefinition(AstNode referenceNode)
+
+        public bool PromoteToDefinition(AstNode definitionNode, AstNode referenceNode)
         {
             if (_definition == null)
             {
                 if (_references.IndexOf(referenceNode) == -1)
                 {
-                    throw new ArgumentException($"Specified node was not found in the References.", nameof(referenceNode));
+                    throw new ArgumentException(
+                        $"Specified reference Node was not found in the References.", nameof(referenceNode));
                 }
 
                 _references.Remove(referenceNode);
-                _definition = referenceNode;
+                _definition = definitionNode;
                 return true;
             }
             return false;

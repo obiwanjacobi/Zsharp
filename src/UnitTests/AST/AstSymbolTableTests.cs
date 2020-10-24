@@ -19,9 +19,9 @@ namespace UnitTests.AST
             var symbols = file.Symbols;
             symbols.Entries.Any(e => e == null).Should().BeFalse();
 
-            var v = symbols.GetEntry("v", AstSymbolKind.Variable);
+            var v = symbols.FindEntry("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
-            var def = v.GetDefinition<AstVariableDefinition>();
+            var def = v.DefinitionAs<AstVariableDefinition>();
             def.TypeReference.Identifier.Name.Should().Be("U8");
         }
 
@@ -37,9 +37,30 @@ namespace UnitTests.AST
             var symbols = file.Symbols;
             symbols.Entries.Any(e => e == null).Should().BeFalse();
 
-            var v = symbols.GetEntry("v", AstSymbolKind.Variable);
+            var v = symbols.FindEntry("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
             v.References.First().Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void ExportFunctionName()
+        {
+            const string code =
+                "export fn" + Tokens.NewLine +
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "v = 42" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var symbols = file.Symbols;
+            symbols.Entries.Any(e => e == null).Should().BeFalse();
+
+            var fn = symbols.FindEntry("fn", AstSymbolKind.Function);
+            fn.SymbolKind.Should().Be(AstSymbolKind.Function);
+
+            // the export entry is removed
+            fn = symbols.FindEntry("fn", AstSymbolKind.NotSet);
+            fn.Should().BeNull();
         }
 
         [TestMethod]
@@ -54,7 +75,7 @@ namespace UnitTests.AST
             var symbols = file.Symbols;
             symbols.Entries.Any(e => e == null).Should().BeFalse();
 
-            var fn = symbols.GetEntry("fn", AstSymbolKind.Function);
+            var fn = symbols.FindEntry("fn", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
         }
 
@@ -71,8 +92,9 @@ namespace UnitTests.AST
             var symbols = fn.CodeBlock.Symbols;
             symbols.Entries.Any(e => e == null).Should().BeFalse();
 
-            var p = symbols.GetEntry("p", AstSymbolKind.Parameter);
+            var p = symbols.FindEntry("p", AstSymbolKind.Parameter);
             p.SymbolKind.Should().Be(AstSymbolKind.Parameter);
+            p.Definition.Should().NotBeNull();
         }
 
         [TestMethod]
@@ -106,8 +128,8 @@ namespace UnitTests.AST
             var symbols = fn.CodeBlock.Symbols;
             symbols.Entries.Any(e => e == null).Should().BeFalse();
 
-            symbols.GetEntry("p", AstSymbolKind.Parameter).Should().NotBeNull();
-            symbols.GetEntry("p", AstSymbolKind.Variable).Should().NotBeNull();
+            symbols.FindEntry("p", AstSymbolKind.Parameter).Should().NotBeNull();
+            symbols.FindEntry("p", AstSymbolKind.Variable).Should().NotBeNull();
         }
 
         [TestMethod]
@@ -123,7 +145,7 @@ namespace UnitTests.AST
             var symbols = fn.CodeBlock.Symbols;
             symbols.Entries.Any(e => e == null).Should().BeFalse();
 
-            var v = symbols.GetEntry("v", AstSymbolKind.Variable);
+            var v = symbols.FindEntry("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
         }
 
@@ -141,9 +163,9 @@ namespace UnitTests.AST
             var symbols = fn.CodeBlock.Symbols;
             symbols.Entries.Any(e => e == null).Should().BeFalse();
 
-            var v = symbols.GetEntry("v", AstSymbolKind.Variable);
+            var v = symbols.FindEntry("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
-            v.GetDefinition<AstVariable>().Identifier.IdentifierType
+            v.DefinitionAs<AstVariable>().Identifier.IdentifierType
                 .Should().Be(AstIdentifierType.Variable);
             v.ReferencesOf<AstVariableReference>().First().Identifier.IdentifierType
                 .Should().Be(AstIdentifierType.Variable);

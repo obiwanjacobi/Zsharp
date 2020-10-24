@@ -1,3 +1,4 @@
+using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -31,6 +32,19 @@ namespace Zsharp.AST
                 return true;
             }
             return false;
+        }
+
+        // override variable reference with definition
+        public void SetVariableDefinition(AstVariableDefinition variableDefinition)
+        {
+            Ast.Guard(_variable is AstVariableReference, "Unexpected Variable on Assign.");
+
+            _variable = null;
+            if (!this.SafeSetParent(ref _variable, variableDefinition))
+            {
+                throw new InvalidOperationException(
+                    "SetParent failed in AstAssignment.SetVariableDefinition.");
+            }
         }
 
         public override void Accept(AstVisitor visitor)

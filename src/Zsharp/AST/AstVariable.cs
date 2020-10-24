@@ -23,6 +23,5 @@ namespace Zsharp.AST
         public AstTypeReference? TypeReference => _typeRef;
 
         public bool SetTypeReference(AstTypeReference typeReference) => this.SafeSetParent(ref _typeRef, typeReference);
-
     }
 }

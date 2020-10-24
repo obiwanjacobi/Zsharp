@@ -3,11 +3,8 @@ using Zsharp.AST;
 
 namespace Zsharp.Semantics
 {
-    public class ResolveTypes : AstVisitor
+    public class ResolveTypes : AstVisitorWithSymbols
     {
-        private AstSymbolTable? _globalSymbols;
-        private AstSymbolTable? _symbolTable;
-
         public void Apply(AstModule module) => VisitModule(module);
 
         public void Apply(AstFile file) => VisitFile(file);
@@ -17,32 +14,18 @@ namespace Zsharp.Semantics
             if (type.TypeDefinition != null)
                 return;
 
-            Ast.Guard(_symbolTable, "ResolveTypes has no SymbolTable.");
+            Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
             Ast.Guard(type?.Identifier, "AstTypeReference or AstIdentifier is null.");
 
-            var entry = _symbolTable.GetEntry(type!.Identifier!.Name, AstSymbolKind.Type);
+            var entry = SymbolTable.FindEntry(type!.Identifier!.Name, AstSymbolKind.Type);
             if (entry != null)
             {
-                var def = entry.GetDefinition<AstTypeDefinition>();
+                var def = entry.DefinitionAs<AstTypeDefinition>();
                 Ast.Guard(def, "Type Symbol Entry has no AstTypeDefinition.");
                 type.SetTypeDefinition(def!);
             }
 
             VisitChildren(type);
-        }
-
-        public override void VisitCodeBlock(AstCodeBlock codeBlock)
-        {
-            var symbols = SetSymbolTable(codeBlock.Symbols);
-            VisitChildren(codeBlock);
-            SetSymbolTable(symbols);
-        }
-
-        public override void VisitFile(AstFile file)
-        {
-            var symbols = SetSymbolTable(file.Symbols);
-            VisitChildren(file);
-            SetSymbolTable(symbols);
         }
 
         public override void VisitExpression(AstExpression expression)
@@ -71,7 +54,6 @@ namespace Zsharp.Semantics
                 Ast.Guard(typeRef, "Expression yielded no Type.");
                 expression.SetTypeReference(typeRef!);
             }
-
         }
 
         public override void VisitExpressionOperand(AstExpressionOperand operand)
@@ -81,12 +63,15 @@ namespace Zsharp.Semantics
             if (operand.TypeReference != null)
                 return;
 
+            bool success;
+
             var expr = operand.Expression;
             if (expr != null)
             {
                 Ast.Guard(expr.TypeReference, "AstExpression.TypeReference is null.");
                 var typeRef = AstTypeReference.Create(expr.TypeReference!);
-                operand.SetTypeReference(typeRef);
+                success = operand.SetTypeReference(typeRef);
+                Ast.Guard(success, "SetTypeReference failed.");
                 return;
             }
 
@@ -96,14 +81,32 @@ namespace Zsharp.Semantics
                 var typeDef = FindTypeByBitCount(numeric.GetBitCount(), numeric.Sign);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found by bit count.");
                 var typeRef = AstTypeReference.Create(numeric, typeDef!);
-                operand.SetTypeReference(typeRef);
+                success = operand.SetTypeReference(typeRef);
+                Ast.Guard(success, "SetTypeReference failed.");
                 return;
             }
 
             var var = operand.VariableReference;
             if (var != null)
             {
-                // TODO
+                if (var.TypeReference == null)
+                {
+                    var def = (IAstTypeReferenceSite?)var.VariableDefinition
+                        ?? (IAstTypeReferenceSite?)var.ParameterDefinition;
+
+                    if (def.TypeReference == null)
+                    {
+                        var varDef = SymbolTable.FindDefinition<IAstTypeReferenceSite>(var.Identifier.Name, AstSymbolKind.Variable);
+
+                        var tr = varDef.TypeReference;
+                        //def.SetTypeReference(typeRef);
+                    }
+
+                    var.SetTypeReference(AstTypeReference.Create(def.TypeReference));
+                }
+                var typeRef = AstTypeReference.Create(var.TypeReference!);
+                success = operand.SetTypeReference(typeRef);
+                Ast.Guard(success, "SetTypeReference failed.");
             }
         }
 
@@ -122,7 +125,7 @@ namespace Zsharp.Semantics
                 Ast.Guard(typeRef!.Identifier, "AstIdentifier not set on AstTypeReference.");
                 var entry = assign.Variable.Symbol;
                 Ast.Guard(entry, "AstSymbolEntry was not set on Variable.");
-                var def = entry!.GetDefinition<AstTypeDefinition>();
+                var def = entry!.DefinitionAs<AstTypeDefinition>();
                 if (def != null)
                 {
                     typeRef = AstTypeReference.Create(expr, def);
@@ -137,7 +140,7 @@ namespace Zsharp.Semantics
 
         private AstTypeDefinition? FindTypeByBitCount(UInt32 bitCount, AstNumericSign sign)
         {
-            Ast.Guard(_globalSymbols, "ResolveTypes has no Global SymbolTable.");
+            Ast.Guard(GlobalSymbols, "ResolveTypes has no Global SymbolTable.");
 
             var index = bitCount / 8;
             if (bitCount % 8 > 0)
@@ -152,20 +155,20 @@ namespace Zsharp.Semantics
             {
                 case 0:
                 case 1:
-                    typeDef = FindType(_globalSymbols, typeName + "8");
+                    typeDef = FindTypeDefinition(GlobalSymbols!, typeName + "8");
                     break;
                 case 2:
-                    typeDef = FindType(_globalSymbols, typeName + "16");
+                    typeDef = FindTypeDefinition(GlobalSymbols!, typeName + "16");
                     break;
                 case 3:
                 case 4:
-                    typeDef = FindType(_globalSymbols, typeName + "32");
+                    typeDef = FindTypeDefinition(GlobalSymbols!, typeName + "32");
                     break;
                 case 5:
                 case 6:
                 case 7:
                 case 8:
-                    typeDef = FindType(_globalSymbols, typeName + "64");
+                    typeDef = FindTypeDefinition(GlobalSymbols!, typeName + "64");
                     break;
                 default:
                     throw new NotSupportedException(
@@ -175,26 +178,14 @@ namespace Zsharp.Semantics
             return typeDef;
         }
 
-        private AstTypeDefinition? FindType(AstSymbolTable symbols, string typeName)
+        private static AstTypeDefinition? FindTypeDefinition(AstSymbolTable symbols, string typeName)
         {
-            var entry = symbols.GetEntry(typeName, AstSymbolKind.Type);
+            var entry = symbols.FindEntry(typeName, AstSymbolKind.Type);
             if (entry != null)
             {
-                return entry.GetDefinition<AstTypeDefinition>();
+                return entry.DefinitionAs<AstTypeDefinition>();
             }
             return null;
-        }
-
-        private AstSymbolTable SetSymbolTable(AstSymbolTable symbolTable)
-        {
-            if (_globalSymbols == null)
-            {
-                _globalSymbols = symbolTable;
-            }
-
-            var symbols = _symbolTable;
-            _symbolTable = symbolTable;
-            return symbols;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Zsharp.AST
             _typedInitCtx = context;
         }
 
-        public AstVariableDefinition(AstTypeReference typeReference)
+        public AstVariableDefinition(AstTypeReference? typeReference)
             : base(typeReference)
         { }
 

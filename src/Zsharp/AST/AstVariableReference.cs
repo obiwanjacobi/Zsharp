@@ -19,15 +19,14 @@ namespace Zsharp.AST
         private AstVariableDefinition? _varDef;
         public AstVariableDefinition? VariableDefinition => _varDef;
 
-        public bool SetVariableDefinition(AstVariableDefinition variableDefinition)
+        private AstFunctionParameter? _paramDef;
+        public AstFunctionParameter? ParameterDefinition => _paramDef;
+
+        public bool SetVariableDefinition(AstVariableDefinition variableDefinition) => Ast.SafeSet(ref _varDef, variableDefinition);
+
+        public bool SetVariableDefinition(AstFunctionParameter paramDefinition)
         {
-            if (Ast.SafeSet(ref _varDef, variableDefinition))
-            {
-                // auto/inferred definitions are owned by the first reference.
-                variableDefinition.SetParent(this);
-                return true;
-            }
-            return false;
+            return Ast.SafeSet(ref _paramDef, paramDefinition);
         }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitVariableReference(this);

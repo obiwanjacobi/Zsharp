@@ -105,11 +105,11 @@ namespace Zsharp.AST
 
         public static AstTypeReference Create(AstTypeReference inferredFrom)
         {
-            Ast.Guard(inferredFrom?.Identifier, "AstTypeReference.Create on AstTypeReference is passed a null");
-            var typeRef = new AstTypeReference(inferredFrom!);
-            var identifier = inferredFrom!.Identifier!.Clone();
+            Ast.Guard(inferredFrom.Identifier, "AstTypeReference.Create on AstTypeReference is passed a null");
+            var typeRef = new AstTypeReference(inferredFrom);
+            var identifier = inferredFrom.Identifier!.Clone();
             typeRef.SetIdentifier(identifier);
-            bool success = typeRef.SetTypeDefinition(inferredFrom!.TypeDefinition!);
+            bool success = typeRef.SetTypeDefinition(inferredFrom.TypeDefinition!);
             Ast.Guard(success, "AstTypeReference.Create SetTypeDefinition (inferred) failed.");
 
             return typeRef;
