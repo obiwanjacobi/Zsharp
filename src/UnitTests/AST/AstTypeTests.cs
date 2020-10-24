@@ -101,7 +101,7 @@ namespace UnitTests.AST
             t.IsOptional.Should().BeFalse();
             t.IsError.Should().BeFalse();
             t.Identifier.Name.Should().Be("U8");
-            t.TypeDefinition.Should().BeNull(); // set during resolving types
+            t.TypeDefinition.Should().NotBeNull();
         }
     }
 }

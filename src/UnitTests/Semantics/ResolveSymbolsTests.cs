@@ -26,10 +26,9 @@ namespace UnitTests.Semantics
             var file = ParseFile(code);
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(0);
-            var v = a.Variable as AstVariableReference;
+            var v = a.Variable as AstVariableDefinition;
             v.Should().NotBeNull();
             v.Parent.Should().Be(a);
-            v.VariableDefinition.Should().NotBeNull();
 
             var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.Name, AstSymbolKind.Variable);
             sym.Definition.Should().NotBeNull();
