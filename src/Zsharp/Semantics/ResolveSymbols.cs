@@ -51,7 +51,7 @@ namespace Zsharp.Semantics
                         // variable.TypeReference can be null
                         // VariableDefinition should get its type references from ResolveTypes.
                         varDef = new AstVariableDefinition(variable.TypeReference);
-                        varDef.SetIdentifier(variable.Identifier.Clone());
+                        varDef.SetIdentifier(variable.Identifier);
                         varDef.SetSymbol(entry);
                         entry.PromoteToDefinition(varDef, variable);
                     }

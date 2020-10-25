@@ -14,7 +14,7 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool TrySetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
+        public bool TrySetIdentifier(AstIdentifier identifier) => Ast.SafeSet(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
         {

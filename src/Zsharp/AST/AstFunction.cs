@@ -23,7 +23,7 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool TrySetIdentifier(AstIdentifier identifier) => this.SafeSetParent(ref _identifier, identifier);
+        public bool TrySetIdentifier(AstIdentifier identifier) => Ast.SafeSet(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
         {
@@ -118,8 +118,6 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            Identifier?.Accept(visitor);
-
             foreach (var param in _parameters)
             {
                 param.Accept(visitor);
@@ -135,11 +133,7 @@ namespace Zsharp.AST
         {
             foreach (var param in _parameters)
             {
-                var identifier = param.Identifier;
-                if (identifier != null)
-                {
-                    identifier.AddSymbol();
-                }
+                Symbols.AddSymbol(param.Identifier.Name, AstSymbolKind.Parameter, param);
             }
         }
     }

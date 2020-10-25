@@ -101,8 +101,6 @@ namespace Zsharp.AST
 
         public override void Accept(AstVisitor visitor) => visitor.VisitTypeReference(this);
 
-        public override void VisitChildren(AstVisitor visitor) => Identifier?.Accept(visitor);
-
         public static AstTypeReference Create(Type_ref_useContext context)
         {
             Ast.Guard(context, "AstTypeReference.Create is passed a null");
@@ -115,8 +113,7 @@ namespace Zsharp.AST
         {
             Ast.Guard(inferredFrom.Identifier, "AstTypeReference.Create on AstTypeReference is passed a null");
             var typeRef = new AstTypeReference(inferredFrom);
-            var identifier = inferredFrom.Identifier!.Clone();
-            typeRef.SetIdentifier(identifier);
+            typeRef.SetIdentifier(inferredFrom.Identifier);
             typeRef.SetTypeDefinition(inferredFrom.TypeDefinition!);
 
             return typeRef;
@@ -128,9 +125,7 @@ namespace Zsharp.AST
             Ast.Guard(typeDef!.Identifier != null, "AstTypeReference.Create is passed an AstTypeDefinition that has no Identifier.");
 
             var typeRef = new AstTypeReference();
-            var identifier = typeDef!.Identifier!.Clone();
-
-            typeRef.SetIdentifier(identifier);
+            typeRef.SetIdentifier(typeDef.Identifier!);
             typeRef.SetTypeDefinition(typeDef);
             typeRef.TrySetTypeSource(typeSource);
             return typeRef;

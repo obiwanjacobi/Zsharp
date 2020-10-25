@@ -63,11 +63,6 @@ namespace UnitTests.AST
                 parameter.Parent.Should().NotBeNull();
                 VisitChildren(parameter);
             }
-            public override void VisitIdentifier(AstIdentifier identifier)
-            {
-                identifier.Parent.Should().NotBeNull();
-                VisitChildren(identifier);
-            }
             public override void VisitModule(AstModule module)
             {
                 module.Parent.Should().NotBeNull();

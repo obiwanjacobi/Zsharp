@@ -32,7 +32,6 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            Identifier?.Accept(visitor);
             TypeReference?.Accept(visitor);
         }
     }

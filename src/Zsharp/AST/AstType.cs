@@ -42,7 +42,7 @@ namespace Zsharp.AST
         public AstIdentifier? Identifier => _identifier;
 
         public bool TrySetIdentifier(AstIdentifier identifier)
-            => this.SafeSetParent(ref _identifier, identifier);
+            => Ast.SafeSet(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
         {
@@ -104,25 +104,20 @@ namespace Zsharp.AST
                 identifier = AstIdentifierIntrinsic.I8;
             if (context.I16() != null)
                 identifier = AstIdentifierIntrinsic.I16;
-            // if (context.I24() != null)
-            //     identifier = AstIdentifierIntrinsic.I24;
+            if (context.I64() != null)
+                identifier = AstIdentifierIntrinsic.I64;
             if (context.I32() != null)
                 identifier = AstIdentifierIntrinsic.I32;
             if (context.U8() != null)
                 identifier = AstIdentifierIntrinsic.U8;
             if (context.U16() != null)
                 identifier = AstIdentifierIntrinsic.U16;
-            // if (context.U24() != null)
-            //     identifier = AstIdentifierIntrinsic.U24;
+            if (context.U64() != null)
+                identifier = AstIdentifierIntrinsic.U64;
             if (context.U32() != null)
                 identifier = AstIdentifierIntrinsic.U32;
 
-            if (identifier != null)
-            {
-                return identifier.Clone();
-            }
-
-            return null;
+            return identifier;
         }
     }
 }

@@ -287,7 +287,7 @@ namespace Zsharp.AST
         {
             var function = _buildercontext.GetCurrent<AstFunction>();
             var funcParam = new AstFunctionParameter(context);
-            funcParam.SetIdentifier(AstIdentifierIntrinsic.Self.Clone());
+            funcParam.SetIdentifier(AstIdentifierIntrinsic.Self);
             function.TryAddParameter(funcParam);
 
             _buildercontext.SetCurrent(funcParam);

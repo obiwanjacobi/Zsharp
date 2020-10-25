@@ -3,53 +3,46 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstIdentifier : AstNode
+    public class AstIdentifier
     {
-        private Identifier_typeContext? _typeCtx;
-        private Identifier_varContext? _varCtx;
-        private Identifier_paramContext? _paramCtx;
-        private Identifier_funcContext? _funcCtx;
-        private Identifier_fieldContext? _fieldCtx;
-        private Identifier_enumoptionContext? _enumOptCtx;
+        private readonly Identifier_typeContext? _typeCtx;
+        private readonly Identifier_varContext? _varCtx;
+        private readonly Identifier_paramContext? _paramCtx;
+        private readonly Identifier_funcContext? _funcCtx;
+        private readonly Identifier_fieldContext? _fieldCtx;
+        private readonly Identifier_enumoptionContext? _enumOptCtx;
 
         public AstIdentifier(Identifier_typeContext context)
-        : base(AstNodeType.Identifier)
         {
             _typeCtx = context;
         }
 
         public AstIdentifier(Identifier_varContext context)
-            : base(AstNodeType.Identifier)
         {
             _varCtx = context;
         }
 
         public AstIdentifier(Identifier_paramContext context)
-            : base(AstNodeType.Identifier)
         {
             _paramCtx = context;
         }
 
         public AstIdentifier(Identifier_funcContext context)
-            : base(AstNodeType.Identifier)
         {
             _funcCtx = context;
         }
 
         public AstIdentifier(Identifier_fieldContext context)
-            : base(AstNodeType.Identifier)
         {
             _fieldCtx = context;
         }
 
         public AstIdentifier(Identifier_enumoptionContext context)
-            : base(AstNodeType.Identifier)
         {
             _enumOptCtx = context;
         }
 
         protected AstIdentifier()
-            : base(AstNodeType.Identifier)
         { }
 
         public virtual string Name
@@ -92,31 +85,13 @@ namespace Zsharp.AST
             }
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitIdentifier(this);
-
-        public bool IsEqual(AstIdentifier that)
+        public bool IsEqual(AstIdentifier? that)
         {
             if (that == null)
                 return false;
+
             return Name == that.Name &&
                 IdentifierType == that.IdentifierType;
-        }
-
-        public virtual AstIdentifier Clone()
-        {
-            var identifier = new AstIdentifier();
-            CopyTo(identifier);
-            return identifier;
-        }
-
-        protected void CopyTo(AstIdentifier target)
-        {
-            target._enumOptCtx = _enumOptCtx;
-            target._fieldCtx = _fieldCtx;
-            target._funcCtx = _funcCtx;
-            target._paramCtx = _paramCtx;
-            target._typeCtx = _typeCtx;
-            target._varCtx = _varCtx;
         }
     }
 }

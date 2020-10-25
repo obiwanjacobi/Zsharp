@@ -2,15 +2,6 @@
 
 ## TODO
 
-- Dont let connection objects own their TypeReferences.
-    The TypeReference is owned by the most logical source code reference (context).
-    AstExpressionOperand should not own (a copy of) the TypeReference of the actual operand.
-    AstAssignment should not have a TypeReference ?
-    AstExpression should not own its TypeReference
-- What about Identity?
-    Lots of duplication. Perhaps let the Symbol own the Identity and all reference from it?
-    Does VisitIdentity requere access to its parent? (Identity Extension AddSymbol does)
-    Or let all definition objects (function, parameter, variable, type) own (parent) the identifiers.
 - SymbolTable extensions
     Add(AstVariable) =>
         var entry = symbols.AddSymbol(variable, AstSymbolKind.Variable, variable);

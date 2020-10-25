@@ -12,7 +12,5 @@
 
         public override string Name { get; }
         public override AstIdentifierType IdentifierType { get; }
-
-        public override AstIdentifier Clone() => new AstIdentifierIntrinsic(Name, IdentifierType);
     }
 }

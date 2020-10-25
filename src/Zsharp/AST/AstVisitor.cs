@@ -62,11 +62,6 @@ namespace Zsharp.AST
             VisitChildren(parameter);
         }
 
-        public virtual void VisitIdentifier(AstIdentifier identifier)
-        {
-            VisitChildren(identifier);
-        }
-
         public virtual void VisitModule(AstModule module)
         {
             VisitChildren(module);

@@ -39,6 +39,7 @@ namespace Zsharp.Semantics
 
                 if (leftTypeRef != null && rightTypeRef != null)
                 {
+                    // TODO: implicit conversion compiler error
                     Ast.Guard(leftTypeRef.IsEqual(rightTypeRef), "AstExpression has non-equal Types References.");
                 }
 

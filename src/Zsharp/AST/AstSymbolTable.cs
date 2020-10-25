@@ -35,16 +35,16 @@ namespace Zsharp.AST
 
         public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node)
         {
-            var exported = FindEntry(symbolName, AstSymbolKind.NotSet);
+            var exOrImported = FindEntry(symbolName, AstSymbolKind.NotSet);
             var entry = FindEntry(symbolName, kind);
 
             if (entry == null)
             {
                 entry = new AstSymbolEntry(symbolName, kind);
-                if (exported != null)
+                if (exOrImported != null)
                 {
-                    _table.Remove(exported.Key);
-                    entry.SymbolLocality = AstSymbolLocality.Exported;
+                    _table.Remove(exOrImported.Key);
+                    entry.SymbolLocality = exOrImported.SymbolLocality;
                 }
                 _table[entry.Key] = entry;
             }

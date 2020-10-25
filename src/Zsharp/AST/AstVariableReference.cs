@@ -44,7 +44,5 @@ namespace Zsharp.AST
         }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitVariableReference(this);
-
-        public override void VisitChildren(AstVisitor visitor) => Identifier?.Accept(visitor);
     }
 }
