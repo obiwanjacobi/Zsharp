@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
+    [DebuggerDisplay("{Name}")]
     public class AstIdentifier
     {
         private readonly Identifier_typeContext? _typeCtx;

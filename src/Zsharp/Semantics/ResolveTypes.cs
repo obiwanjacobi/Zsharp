@@ -17,15 +17,16 @@ namespace Zsharp.Semantics
             Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
             Ast.Guard(type?.Identifier, "AstTypeReference or AstIdentifier is null.");
 
-            var entry = SymbolTable.Find(type);
+            var entry = SymbolTable!.Find(type!);
+            // will not be found if external
             if (entry != null)
             {
                 var def = entry.DefinitionAs<AstTypeDefinition>();
                 Ast.Guard(def, "Type Symbol Entry has no AstTypeDefinition.");
-                type.SetTypeDefinition(def!);
+                type!.SetTypeDefinition(def!);
             }
 
-            VisitChildren(type);
+            VisitChildren(type!);
         }
 
         public override void VisitExpression(AstExpression expression)
@@ -52,6 +53,7 @@ namespace Zsharp.Semantics
                 {
                     typeRef = rightTypeRef;
                 }
+
                 Ast.Guard(typeRef, "Expression yielded no Type.");
                 expression.SetTypeReference(typeRef!);
             }
@@ -67,9 +69,8 @@ namespace Zsharp.Semantics
             var expr = operand.Expression;
             if (expr != null)
             {
-                Ast.Guard(expr.TypeReference, "AstExpression.TypeReference is null.");
-                var typeRef = AstTypeReference.Create(expr.TypeReference!);
-                operand.SetTypeReference(typeRef);
+                Ast.Guard(expr.TypeReference, "AstExpression.TypeReference not set.");
+                operand.SetTypeReference(expr.TypeReference!);
                 return;
             }
 
@@ -86,23 +87,19 @@ namespace Zsharp.Semantics
             var var = operand.VariableReference;
             if (var != null)
             {
+                Ast.Guard(SymbolTable, "No SymbolTable was set.");
+                Ast.Guard(var.Identifier, "Variable has no Identifier");
+
                 if (var.TypeReference == null)
                 {
                     var def = (IAstTypeReferenceSite?)var.VariableDefinition
                         ?? (IAstTypeReferenceSite?)var.ParameterDefinition;
 
-                    if (def.TypeReference == null)
-                    {
-                        var varDef = SymbolTable.FindDefinition<IAstTypeReferenceSite>(var.Identifier.Name, AstSymbolKind.Variable);
-
-                        var tr = varDef.TypeReference;
-                        //def.SetTypeReference(typeRef);
-                    }
-
-                    var.SetTypeReference(AstTypeReference.Create(def.TypeReference));
+                    Ast.Guard(def, "No VariableDefinition or ParameterDefintion was set.");
+                    var.SetTypeReference(new AstTypeReference(def!.TypeReference!));
                 }
-                var typeRef = AstTypeReference.Create(var.TypeReference!);
-                operand.SetTypeReference(typeRef);
+
+                operand.SetTypeReference(var.TypeReference!);
             }
         }
 
@@ -116,11 +113,14 @@ namespace Zsharp.Semantics
                 // typeless assign of var (x = 42)
                 var expr = assign.Expression;
                 Ast.Guard(expr, "AstExpression not set on AstAssignement.");
+
                 var typeRef = expr!.TypeReference;
                 Ast.Guard(typeRef, "AstTypeReference not set on AstExpression.");
                 Ast.Guard(typeRef!.Identifier, "AstIdentifier not set on AstTypeReference.");
+
                 var entry = assign.Variable.Symbol;
                 Ast.Guard(entry, "AstSymbolEntry was not set on Variable.");
+
                 var def = entry!.DefinitionAs<AstTypeDefinition>();
                 if (def != null)
                 {
@@ -129,7 +129,7 @@ namespace Zsharp.Semantics
                 }
                 else
                 {
-                    assign.Variable.SetTypeReference(AstTypeReference.Create(typeRef));
+                    assign.Variable.SetTypeReference(new AstTypeReference(typeRef));
                 }
             }
         }
@@ -175,13 +175,6 @@ namespace Zsharp.Semantics
         }
 
         private static AstTypeDefinition? FindTypeDefinition(AstSymbolTable symbols, string typeName)
-        {
-            var entry = symbols.FindEntry(typeName, AstSymbolKind.Type);
-            if (entry != null)
-            {
-                return entry.DefinitionAs<AstTypeDefinition>();
-            }
-            return null;
-        }
+            => symbols.FindDefinition<AstTypeDefinition>(typeName, AstSymbolKind.Type);
     }
 }

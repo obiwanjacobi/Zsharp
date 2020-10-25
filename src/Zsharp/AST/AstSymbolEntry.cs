@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Zsharp.AST
 {
+    [DebuggerDisplay("{SymbolName} ({SymbolKind})")]
     public class AstSymbolEntry
     {
         private readonly List<AstNode> _references = new List<AstNode>();

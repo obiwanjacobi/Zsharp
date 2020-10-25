@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
+    [DebuggerDisplay("{Identifier}")]
     public class AstTypeReference : AstType
     {
         protected AstTypeReference(Type_ref_useContext context)
@@ -16,14 +18,12 @@ namespace Zsharp.AST
         public AstTypeReference(AstTypeReference inferredFrom)
             : base(inferredFrom.Context!)
         {
-            var success = TrySetInferredFrom(inferredFrom);
-            Ast.Guard(success, "InferredFrom Type could not be set.");
-
-            IsOptional = inferredFrom.IsOptional;
-            IsError = inferredFrom.IsError;
+            SetIdentifier(inferredFrom.Identifier!);
+            SetTypeDefinition(inferredFrom.TypeDefinition!);
+            _typeSource = inferredFrom.TypeSource;
         }
 
-        public AstTypeReference()
+        protected AstTypeReference()
         { }
 
         private AstTypeDefinition? _typeDefinition;
@@ -45,24 +45,6 @@ namespace Zsharp.AST
             if (!TrySetTypeDefinition(typeDefinition))
                 throw new InvalidOperationException(
                     "TypeDefinition is already set or null.");
-        }
-
-        private AstTypeReference? _inferredFrom;
-        /// <summary>
-        /// Reference to the type that was used to determine this instance.
-        /// Mainly for linking source references.
-        /// </summary>
-        public AstTypeReference? InferredFrom => _inferredFrom;
-
-        public bool TrySetInferredFrom(AstTypeReference type)
-        {
-            if (Ast.SafeSet(ref _inferredFrom, type))
-            {
-                // can fail if referring to an existing type ref
-                type.TrySetParent(this);
-                return true;
-            }
-            return false;
         }
 
         private AstNode? _typeSource;
@@ -109,20 +91,10 @@ namespace Zsharp.AST
             return typeRef;
         }
 
-        public static AstTypeReference Create(AstTypeReference inferredFrom)
-        {
-            Ast.Guard(inferredFrom.Identifier, "AstTypeReference.Create on AstTypeReference is passed a null");
-            var typeRef = new AstTypeReference(inferredFrom);
-            typeRef.SetIdentifier(inferredFrom.Identifier);
-            typeRef.SetTypeDefinition(inferredFrom.TypeDefinition!);
-
-            return typeRef;
-        }
-
         public static AstTypeReference Create(AstNode typeSource, AstTypeDefinition typeDef)
         {
-            Ast.Guard(typeDef != null, "AstTypeReference.Create is passed a null for the AstTypeDefinition.");
-            Ast.Guard(typeDef!.Identifier != null, "AstTypeReference.Create is passed an AstTypeDefinition that has no Identifier.");
+            Ast.Guard(typeDef != null, "TypeDefinition is null.");
+            Ast.Guard(typeDef!.Identifier != null, "TypeDefinition has no Identifier.");
 
             var typeRef = new AstTypeReference();
             typeRef.SetIdentifier(typeDef.Identifier!);

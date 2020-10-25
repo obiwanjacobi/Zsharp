@@ -12,19 +12,10 @@ namespace Zsharp.AST
             Name = String.Empty;
         }
 
-        public AstSymbolTable(string name)
-        {
-            Name = name;
-        }
-
-        public AstSymbolTable(AstSymbolTable parentTable)
-        {
-            Name = String.Empty;
-            ParentTable = parentTable;
-        }
-
         public AstSymbolTable(string name, AstSymbolTable parentTable)
         {
+            Ast.Guard(parentTable, "Parent SymbolTable is null.");
+
             Name = name;
             ParentTable = parentTable;
         }
@@ -82,7 +73,8 @@ namespace Zsharp.AST
 
         public AstSymbolEntry? FindEntry(IAstIdentifierSite identifierSite, AstSymbolKind kind)
         {
-            return FindEntry(identifierSite.Identifier.Name, kind);
+            identifierSite.ThrowIfIdentifierNotSet();
+            return FindEntry(identifierSite.Identifier!.Name, kind);
         }
 
         public IEnumerable<AstSymbolEntry> Entries => _table.Values;

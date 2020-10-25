@@ -25,18 +25,19 @@ namespace Zsharp.Semantics
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
+            Ast.Guard(variable.Identifier, "Variable has no identifier.");
+
             if (!variable.HasDefinition)
             {
+                Ast.Guard(SymbolTable, "No SymbolTable set.");
+
                 AstVariableDefinition? varDef = null;
 
                 var entry = variable.Symbol;
                 if (entry == null)
                 {
-                    entry = SymbolTable.Find(variable);
-                    if (entry != null)
-                    {
-                        varDef = entry!.DefinitionAs<AstVariableDefinition>();
-                    }
+                    entry = SymbolTable!.Find(variable);
+                    varDef = entry?.DefinitionAs<AstVariableDefinition>();
                 }
                 else
                 {
@@ -51,22 +52,23 @@ namespace Zsharp.Semantics
                         // variable.TypeReference can be null
                         // VariableDefinition should get its type references from ResolveTypes.
                         varDef = new AstVariableDefinition(variable.TypeReference);
-                        varDef.SetIdentifier(variable.Identifier);
+                        varDef.SetIdentifier(variable.Identifier!);
                         varDef.SetSymbol(entry);
                         entry.PromoteToDefinition(varDef, variable);
                     }
+
                     variable.SetVariableDefinition(varDef);
                 }
                 else    // parameter
                 {
-                    entry = SymbolTable.FindEntry(variable, AstSymbolKind.Parameter);
+                    entry = SymbolTable!.FindEntry(variable, AstSymbolKind.Parameter);
                     // TODO: syntax error
                     Ast.Guard(entry, "No Symbol found for variable reference name.");
 
                     var paramDef = entry!.DefinitionAs<AstFunctionParameter>();
                     Ast.Guard(paramDef, "No Parameter Definition found for variable reference.");
 
-                    variable.SetVariableDefinition(paramDef!);
+                    variable.SetParameterDefinition(paramDef!);
                     entry.AddNode(variable);
                 }
             }

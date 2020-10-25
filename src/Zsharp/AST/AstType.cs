@@ -63,7 +63,7 @@ namespace Zsharp.AST
             return Identifier.IsEqual(type.Identifier);
         }
 
-        public static void Construct(AstType instance, Type_nameContext context)
+        internal static void Construct(AstType instance, Type_nameContext context)
         {
             AstIdentifier? identifier;
 

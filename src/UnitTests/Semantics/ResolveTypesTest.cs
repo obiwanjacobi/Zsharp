@@ -94,5 +94,23 @@ namespace UnitTests.Semantics
             var sym = file.CodeBlock.Symbols.Find(v);
             sym.Definition.Should().NotBeNull();
         }
+
+        [TestMethod]
+        public void FunctionParameterReference()
+        {
+            const string code =
+                "fn: (p: U8)" + Tokens.NewLine +
+                Tokens.Indent1 + "x = p" + Tokens.NewLine
+                ;
+
+            var file = ParseFile(code);
+
+            var fn = file.CodeBlock.ItemAt<AstFunction>(0);
+            var a = fn.CodeBlock.ItemAt<AstAssignment>(0);
+            var v = a.Variable as AstVariableDefinition;
+            var p = a.Expression.RHS.VariableReference.ParameterDefinition;
+            p.Should().NotBeNull();
+            v.TypeReference.Identifier.Name.Should().Be(p.TypeReference.Identifier.Name);
+        }
     }
 }

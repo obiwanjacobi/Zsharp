@@ -22,12 +22,7 @@ namespace Zsharp.AST
         private AstVariableDefinition? _varDef;
         public AstVariableDefinition? VariableDefinition => _varDef;
 
-        private AstFunctionParameter? _paramDef;
-        public AstFunctionParameter? ParameterDefinition => _paramDef;
-
         public bool TrySetVariableDefinition(AstVariableDefinition variableDefinition) => Ast.SafeSet(ref _varDef, variableDefinition);
-
-        public bool TrySetVariableDefinition(AstFunctionParameter paramDefinition) => Ast.SafeSet(ref _paramDef, paramDefinition);
 
         public void SetVariableDefinition(AstVariableDefinition variableDefinition)
         {
@@ -36,9 +31,14 @@ namespace Zsharp.AST
                     "VariableDefinition was already set or null.");
         }
 
-        public void SetVariableDefinition(AstFunctionParameter paramDefinition)
+        private AstFunctionParameter? _paramDef;
+        public AstFunctionParameter? ParameterDefinition => _paramDef;
+
+        public bool TrySetParameterDefinition(AstFunctionParameter paramDefinition) => Ast.SafeSet(ref _paramDef, paramDefinition);
+
+        public void SetParameterDefinition(AstFunctionParameter paramDefinition)
         {
-            if (!TrySetVariableDefinition(paramDefinition))
+            if (!TrySetParameterDefinition(paramDefinition))
                 throw new InvalidOperationException(
                     "FunctionParameter definition was already set or null.");
         }
