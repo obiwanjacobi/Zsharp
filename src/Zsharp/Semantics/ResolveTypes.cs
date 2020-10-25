@@ -45,11 +45,11 @@ namespace Zsharp.Semantics
                 AstTypeReference? typeRef = null;
                 if (leftTypeRef != null)
                 {
-                    typeRef = AstTypeReference.Create(leftTypeRef);
+                    typeRef = leftTypeRef;
                 }
                 else if (rightTypeRef != null)
                 {
-                    typeRef = AstTypeReference.Create(rightTypeRef);
+                    typeRef = rightTypeRef;
                 }
                 Ast.Guard(typeRef, "Expression yielded no Type.");
                 expression.SetTypeReference(typeRef!);
