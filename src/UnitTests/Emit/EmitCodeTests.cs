@@ -13,8 +13,11 @@ namespace UnitTests.Emit
         {
             var module = Build.Module(code);
 
-            var resolver = new ResolveTypes();
-            resolver.Apply(module);
+            var symbolResolver = new ResolveSymbols();
+            symbolResolver.Apply(module);
+
+            var typeResolver = new ResolveTypes();
+            typeResolver.Apply(module);
 
             var emit = new EmitCode("UnitTest");
             emit.Visit(module);
@@ -76,7 +79,7 @@ namespace UnitTests.Emit
 
             var moduleClass = emit.Context.Module.Types.Find("test");
             var body = moduleClass.Methods.First().Body;
-            body.Instructions.Should().HaveCount(1);
+            body.Instructions.Should().HaveCount(2);
         }
     }
 }

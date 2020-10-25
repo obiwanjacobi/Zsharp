@@ -68,8 +68,8 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            Variable?.Accept(visitor);
             Expression?.Accept(visitor);
+            Variable?.Accept(visitor);
         }
     }
 }

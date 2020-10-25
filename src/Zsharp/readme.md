@@ -8,3 +8,4 @@
 - rethink ResolveSymbols/ResolveTypes. Do these need to be separate or integrated?
 - Create AstErrors during Semantic processing.
 - A pipeline to sequence the steps necessary for a full compile?
+- TypeReference resolution scope? We cannot handle reference to external types yet.

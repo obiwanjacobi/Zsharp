@@ -8,6 +8,8 @@ namespace Zsharp.Semantics
     /// <remarks>See AstSymbolTable.</remarks>
     public class ResolveSymbols : AstVisitorWithSymbols
     {
+        public void Apply(AstModule module) => VisitModule(module);
+
         public void Apply(AstFile file) => VisitFile(file);
 
         public override void VisitAssignment(AstAssignment assign)

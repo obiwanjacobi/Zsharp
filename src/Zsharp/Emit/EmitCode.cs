@@ -38,6 +38,10 @@ namespace Zsharp.Emit
         public override void VisitAssignment(AstAssignment assign)
         {
             base.VisitAssignment(assign);
+
+            var varDef = Context.CodeBuilder.GetVariable(assign.Variable.Identifier.Name);
+            var store = Context.InstructionFactory.StoreVariable(varDef);
+            Context.CodeBuilder.CodeBlock.Add(store);
         }
 
         public override void VisitBranchExpression(AstBranchExpression branch)

@@ -7,7 +7,7 @@ namespace Zsharp.Emit
     {
         private readonly InstructionFactory _instructionFactory;
         private readonly List<CodeBlock> _blocks = new List<CodeBlock>();
-        private readonly Dictionary<string, VariableDefinition> _varaibles = new Dictionary<string, VariableDefinition>();
+        private readonly Dictionary<string, VariableDefinition> _variables = new Dictionary<string, VariableDefinition>();
 
         public CodeBuilder(InstructionFactory instructionFactory)
         {
@@ -24,7 +24,9 @@ namespace Zsharp.Emit
             return block;
         }
 
-        public void AddVariable(string name, VariableDefinition varDef) => _varaibles.Add(name, varDef);
+        public void AddVariable(string name, VariableDefinition varDef) => _variables.Add(name, varDef);
+
+        public VariableDefinition GetVariable(string name) => _variables[name];
 
         public void Apply(ILProcessor iLProcessor)
         {
