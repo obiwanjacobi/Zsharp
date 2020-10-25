@@ -21,11 +21,10 @@ namespace Zsharp.AST
             where T : AstNode
             where P : AstNode
         {
-            if (SafeSet<T>(ref storage, value))
+            if (SafeSet<T>(ref storage, value) &&
+                storage!.TrySetParent(parent))
             {
-                var success = storage!.TrySetParent(parent);
-                Ast.Guard(success, "SetParent failed.");
-                return success;
+                return true;
             }
             return false;
         }
@@ -35,7 +34,7 @@ namespace Zsharp.AST
             where T : class
         {
             if (instance == null)
-                throw new ArgumentNullException(typeof(T).Name, 
+                throw new ArgumentNullException(typeof(T).Name,
                     $"Object not of the expected type ({typeof(T).Name}) because it was null.");
             if (!(instance is T))
                 throw new ArgumentException($"Object not of the expected type: {typeof(T).Name}");

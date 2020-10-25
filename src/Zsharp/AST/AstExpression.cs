@@ -88,8 +88,7 @@ namespace Zsharp.AST
         {
             if (_rhs == null)
             {
-                bool success = op.TrySetParent(this);
-                Ast.Guard(success, "SetParent failed.");
+                op.SetParent(this);
                 _rhs = op;
                 return true;
             }
@@ -97,8 +96,7 @@ namespace Zsharp.AST
             if (_lhs == null &&
                 !IsOperator(AstExpressionOperator.MaskUnary))
             {
-                bool success = op.TrySetParent(this);
-                Ast.Guard(success, "SetParent failed.");
+                op.SetParent(this);
                 _lhs = op;
                 return true;
             }

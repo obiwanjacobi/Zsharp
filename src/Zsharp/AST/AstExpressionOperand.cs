@@ -13,24 +13,21 @@ namespace Zsharp.AST
             : base(AstNodeType.Operand)
         {
             Expression = expr;
-            bool success = expr.TrySetParent(this);
-            Ast.Guard(success, "SetParent failed.");
+            expr.SetParent(this);
         }
 
         public AstExpressionOperand(AstNumeric num)
             : base(AstNodeType.Operand)
         {
             Numeric = num;
-            bool success = num.TrySetParent(this);
-            Ast.Guard(success, "SetParent failed.");
+            num.SetParent(this);
         }
 
         public AstExpressionOperand(AstVariableReference variable)
             : base(AstNodeType.Operand)
         {
             VariableReference = variable;
-            bool success = variable.TrySetParent(this);
-            Ast.Guard(success, "SetParent failed.");
+            variable.SetParent(this);
         }
 
         public AstExpressionOperand(Literal_boolContext context)

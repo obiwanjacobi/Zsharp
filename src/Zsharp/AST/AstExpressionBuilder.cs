@@ -318,29 +318,25 @@ namespace Zsharp.AST
 
         public override object? VisitIdentifier_type(Identifier_typeContext context)
         {
-            bool success = _builderContext.TryAddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(Type) failed");
+            _builderContext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_var(Identifier_varContext context)
         {
-            bool success = _builderContext.TryAddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(Variable) failed");
+            _builderContext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_param(Identifier_paramContext context)
         {
-            bool success = _builderContext.TryAddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(Parameter) failed");
+            _builderContext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_func(Identifier_funcContext context)
         {
-            bool success = _builderContext.TryAddIdentifier(new AstIdentifier(context));
-            Ast.Guard(success, "AddIdentifier(Function) failed");
+            _builderContext.AddIdentifier(new AstIdentifier(context));
             return null;
         }
     }
