@@ -62,7 +62,7 @@ namespace Zsharp.AST
         public AstTypeReference? TypeReference => _typeRef;
 
         public bool TrySetTypeReference(AstTypeReference typeReference)
-            => this.SafeSet(ref _typeRef, typeReference);
+            => Ast.SafeSet(ref _typeRef, typeReference);
 
         public void SetTypeReference(AstTypeReference typeReference)
         {
