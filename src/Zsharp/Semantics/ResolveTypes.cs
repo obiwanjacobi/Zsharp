@@ -17,7 +17,7 @@ namespace Zsharp.Semantics
             Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
             Ast.Guard(type?.Identifier, "AstTypeReference or AstIdentifier is null.");
 
-            var entry = SymbolTable.FindEntry(type!.Identifier!.Name, AstSymbolKind.Type);
+            var entry = SymbolTable.Find(type);
             if (entry != null)
             {
                 var def = entry.DefinitionAs<AstTypeDefinition>();

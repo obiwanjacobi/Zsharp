@@ -75,6 +75,16 @@ namespace Zsharp.AST
             return null;
         }
 
+        public AstSymbolEntry? FindEntry(AstIdentifier identifier, AstSymbolKind kind)
+        {
+            return FindEntry(identifier.Name, kind);
+        }
+
+        public AstSymbolEntry? FindEntry(IAstIdentifierSite identifierSite, AstSymbolKind kind)
+        {
+            return FindEntry(identifierSite.Identifier.Name, kind);
+        }
+
         public IEnumerable<AstSymbolEntry> Entries => _table.Values;
 
         public string Namespace

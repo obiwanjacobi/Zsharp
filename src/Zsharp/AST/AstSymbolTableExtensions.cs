@@ -15,6 +15,16 @@ namespace Zsharp.AST
             return null;
         }
 
+        public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, AstType type)
+        {
+            return symbolTable.FindEntry(type, AstSymbolKind.Type);
+        }
+
+        public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, AstVariable variable)
+        {
+            return symbolTable.FindEntry(variable, AstSymbolKind.Variable);
+        }
+
         public static AstSymbolEntry Add(this AstSymbolTable symbolTable, AstVariable variable)
         {
             return AddSymbol(symbolTable, variable, AstSymbolKind.Variable, variable);

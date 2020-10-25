@@ -32,7 +32,7 @@ namespace Zsharp.Semantics
                 var entry = variable.Symbol;
                 if (entry == null)
                 {
-                    entry = SymbolTable.FindEntry(variable.Identifier.Name, AstSymbolKind.Variable);
+                    entry = SymbolTable.Find(variable);
                     if (entry != null)
                     {
                         varDef = entry!.DefinitionAs<AstVariableDefinition>();
@@ -59,7 +59,7 @@ namespace Zsharp.Semantics
                 }
                 else    // parameter
                 {
-                    entry = SymbolTable.FindEntry(variable.Identifier.Name, AstSymbolKind.Parameter);
+                    entry = SymbolTable.FindEntry(variable, AstSymbolKind.Parameter);
                     // TODO: syntax error
                     Ast.Guard(entry, "No Symbol found for variable reference name.");
 

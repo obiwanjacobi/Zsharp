@@ -416,7 +416,7 @@ namespace Zsharp.AST
             trSite.SetTypeReference(typeRef);
 
             var symbolsSite = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbolsSite.Symbols.FindEntry(typeRef.Identifier.Name, AstSymbolKind.Type);
+            var entry = symbolsSite.Symbols.Find(typeRef);
             var typeDef = entry?.DefinitionAs<AstTypeDefinition>();
             if (typeDef != null)
             {

@@ -30,7 +30,7 @@ namespace UnitTests.Semantics
             v.Should().NotBeNull();
             v.Parent.Should().Be(a);
 
-            var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.Name, AstSymbolKind.Variable);
+            var sym = file.CodeBlock.Symbols.Find(v);
             sym.Definition.Should().NotBeNull();
         }
     }
