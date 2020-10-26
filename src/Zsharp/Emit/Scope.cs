@@ -1,6 +1,7 @@
 ﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
+using System.Linq;
 
 namespace Zsharp.Emit
 {
@@ -61,6 +62,7 @@ namespace Zsharp.Emit
         protected override void Dispose(bool disposing)
         {
             CodeBuilder.Apply(_methodDefinition.Body.GetILProcessor());
+            _methodDefinition.Body.InitLocals = CodeBuilder.Variables.Any();
             base.Dispose(disposing);
         }
     }

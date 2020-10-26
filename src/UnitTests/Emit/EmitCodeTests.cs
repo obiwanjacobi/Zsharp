@@ -79,7 +79,8 @@ namespace UnitTests.Emit
 
             var moduleClass = emit.Context.Module.Types.Find("test");
             var body = moduleClass.Methods.First().Body;
-            body.Instructions.Should().HaveCount(2);
+            // ldc 42, stloc 'a', ret
+            body.Instructions.Should().HaveCount(3);
         }
     }
 }

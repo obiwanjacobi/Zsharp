@@ -55,15 +55,13 @@ namespace Zsharp.Emit
                     return;
                 }
 
-                var instruction = Context.InstructionFactory.Return();
-                Context.CodeBuilder.CodeBlock.Add(instruction);
+                Context.CodeBuilder.Return();
             }
         }
 
         public override void VisitExpression(AstExpression expression)
-        {
-            var emitExpr = new EmitExpression(Context);
-            emitExpr.VisitExpression(expression);
-        }
+            => new EmitExpression(Context).VisitExpression(expression);
+
+        public void SaveAs(string filePath) => Context.Assembly.Write(filePath);
     }
 }
