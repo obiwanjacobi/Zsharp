@@ -32,7 +32,10 @@ namespace Zsharp.Emit
 
         public override void VisitVariableDefinition(AstVariableDefinition variable)
         {
-            Context.AddVariable(variable);
+            if (!Context.HasVariable(variable.Identifier.Name))
+            {
+                Context.AddVariable(variable);
+            }
         }
 
         public override void VisitAssignment(AstAssignment assign)

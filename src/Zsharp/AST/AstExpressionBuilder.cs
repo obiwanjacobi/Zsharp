@@ -216,10 +216,11 @@ namespace Zsharp.AST
             var varRef = new AstVariableReference(context);
 
             _builderContext.SetCurrent(varRef);
-
             VisitChildren(context);
-
             _builderContext.RevertCurrent();
+
+            var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            symbols.Symbols.Add(varRef);
 
             return new AstExpressionOperand(varRef);
         }

@@ -96,7 +96,14 @@ namespace Zsharp.Semantics
                         ?? (IAstTypeReferenceSite?)var.ParameterDefinition;
 
                     Ast.Guard(def, "No VariableDefinition or ParameterDefintion was set.");
-                    var.SetTypeReference(new AstTypeReference(def!.TypeReference!));
+
+                    var typeRef = def?.TypeReference
+                        ?? FindTypeReference(var);
+
+                    if (typeRef != null)
+                    {
+                        var.SetTypeReference(new AstTypeReference(typeRef));
+                    }
                 }
 
                 operand.SetTypeReference(var.TypeReference!);
@@ -132,6 +139,42 @@ namespace Zsharp.Semantics
                     assign.Variable.SetTypeReference(new AstTypeReference(typeRef));
                 }
             }
+        }
+
+        private AstTypeReference? FindTypeReference(AstNode? node)
+        {
+            if (node == null)
+                return null;
+
+            if (node is AstTypeReference typeRefNode)
+                return typeRefNode;
+
+            AstTypeReference? typeRef = null;
+
+            // down into expression
+            if (node is AstExpression expression)
+            {
+                typeRef = expression.TypeReference
+                    ?? expression.RHS?.TypeReference
+                    ?? expression.LHS?.TypeReference
+                    ?? FindTypeReference(expression.RHS?.Expression)
+                    ?? FindTypeReference(expression.LHS?.Expression)
+                    ;
+            }
+            else if (node is IAstTypeReferenceSite typeRefSite)
+            {
+                typeRef = typeRefSite.TypeReference;
+            }
+
+            // up to parent
+            var parent = node.Parent;
+
+            if (parent != null && typeRef == null)
+            {
+                typeRef = FindTypeReference(parent);
+            }
+
+            return typeRef;
         }
 
         private AstTypeDefinition? FindTypeByBitCount(UInt32 bitCount, AstNumericSign sign)

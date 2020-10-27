@@ -1,4 +1,5 @@
 ﻿using Mono.Cecil;
+using System.Linq;
 using Zsharp.AST;
 
 namespace Zsharp.Emit
@@ -28,6 +29,11 @@ namespace Zsharp.Emit
             var fieldDef = new FieldDefinition(name, fieldAttrs, typeReference);
             _typeDefinition.Fields.Add(fieldDef);
             return fieldDef;
+        }
+
+        public bool HasField(string name)
+        {
+            return _typeDefinition.Fields.Any(f => f.Name == name);
         }
 
         public MethodDefinition AddFunction(AstFunction function)

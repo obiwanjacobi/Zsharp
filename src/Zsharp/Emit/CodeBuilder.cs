@@ -82,6 +82,18 @@ namespace Zsharp.Emit
 
         public VariableDefinition GetVariable(string name) => _variables[name];
 
+        public bool HasVariable(string name) => _variables.ContainsKey(name);
+
+        public VariableDefinition GetOrAddVariable(string name, Func<string, VariableDefinition> createVariableDefinition)
+        {
+            if (_variables.ContainsKey(name))
+                return _variables[name];
+
+            var varDef = createVariableDefinition(name);
+            _variables[name] = varDef;
+            return varDef;
+        }
+
         public void Apply(ILProcessor iLProcessor)
         {
             foreach (var codeBlock in _blocks.Values)

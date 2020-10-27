@@ -128,8 +128,15 @@ namespace Zsharp.Emit
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
+            var name = variable.Identifier.Name;
             var il = _context.InstructionFactory;
-            var varDef = _context.CodeBuilder.GetVariable(variable.Identifier.Name);
+
+            if (!_context.HasVariable(name))
+            {
+                // TODO: ParameterDefinition
+                _context.AddVariable(variable.VariableDefinition);
+            }
+            var varDef = _context.CodeBuilder.GetVariable(name);
             var instruction = il.LoadVariable(varDef);
             _context.CodeBuilder.CodeBlock.Add(instruction);
         }

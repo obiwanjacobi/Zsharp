@@ -81,6 +81,21 @@ namespace Zsharp.Emit
             return scope;
         }
 
+        public bool HasVariable(string name)
+        {
+            var scope = Scopes.Peek();
+
+            if (scope is ModuleScope moduleScope)
+            {
+                return moduleScope.ClassBuilder.HasField(name);
+            }
+            if (scope is FunctionScope functionScope)
+            {
+                return functionScope.CodeBuilder.HasVariable(name);
+            }
+            return false;
+        }
+
         public void AddVariable(AstVariableDefinition variable)
         {
             var provider = (ILocalStorageProvider)Scopes.Peek();

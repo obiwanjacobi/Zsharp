@@ -215,5 +215,21 @@ namespace UnitTests.AST
             exp.LHS.Should().BeNull();
             exp.RHS.Expression.Operator.Should().Be(AstExpressionOperator.Greater);
         }
+
+        [TestMethod]
+        public void VariableReference()
+        {
+            const string code =
+                "b = b + 1" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var exp = assign.Expression;
+
+            exp.Should().NotBeNull();
+            exp.LHS.VariableReference.Should().NotBeNull();
+            exp.LHS.VariableReference.Symbol.Should().NotBeNull();
+        }
     }
 }
