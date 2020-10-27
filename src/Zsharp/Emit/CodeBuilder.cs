@@ -7,13 +7,11 @@ namespace Zsharp.Emit
 {
     public class CodeBuilder
     {
-        private readonly InstructionFactory _instructionFactory;
         private readonly Dictionary<string, CodeBlock> _blocks = new Dictionary<string, CodeBlock>();
         private readonly Dictionary<string, VariableDefinition> _variables = new Dictionary<string, VariableDefinition>();
 
-        public CodeBuilder(InstructionFactory instructionFactory)
+        public CodeBuilder()
         {
-            _instructionFactory = instructionFactory;
             CodeBlock = AddBlock("__entry");
         }
 

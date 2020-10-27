@@ -14,31 +14,27 @@ namespace Zsharp.Emit
 
         public override void VisitExpression(AstExpression expression)
         {
+            base.VisitExpression(expression);
+
             if (expression.IsOperator(AstExpressionOperator.MaskArithmetic))
             {
-                EmitArithmeticExcperession(expression);
-                return;
+                EmitArithmeticOperation(expression);
             }
             else if (expression.IsOperator(AstExpressionOperator.MaskBitwise))
             {
-                EmitBitwiseExpression(expression);
-                return;
+                EmitBitwiseOperation(expression);
             }
             else if (expression.IsOperator(AstExpressionOperator.MaskComparison))
             {
-                EmitComparisonExpression(expression);
-                return;
+                EmitComparisonOperation(expression);
             }
             else if (expression.IsOperator(AstExpressionOperator.MaskLogic))
             {
-                EmitLogicExpression(expression);
-                return;
+                EmitLogicOperation(expression);
             }
-
-            base.VisitExpression(expression);
         }
 
-        private void EmitArithmeticExcperession(AstExpression expression)
+        private void EmitArithmeticOperation(AstExpression expression)
         {
             var errTxt = $"Arithmetic Expression Operator {expression.Operator} is not implemented yet.";
             var il = _context.InstructionFactory;
@@ -59,7 +55,7 @@ namespace Zsharp.Emit
             _context.CodeBuilder.CodeBlock.Add(instruction);
         }
 
-        private void EmitBitwiseExpression(AstExpression expression)
+        private void EmitBitwiseOperation(AstExpression expression)
         {
             var errTxt = $"Bitwise Expression Operator {expression.Operator} is not implemented yet.";
             var il = _context.InstructionFactory;
@@ -81,7 +77,7 @@ namespace Zsharp.Emit
             _context.CodeBuilder.CodeBlock.Add(instruction);
         }
 
-        private void EmitComparisonExpression(AstExpression expression)
+        private void EmitComparisonOperation(AstExpression expression)
         {
             var errTxt = $"Comparison Expression Operator {expression.Operator} is not implemented yet.";
 
@@ -105,7 +101,7 @@ namespace Zsharp.Emit
             }
         }
 
-        private void EmitLogicExpression(AstExpression expression)
+        private void EmitLogicOperation(AstExpression expression)
         {
             var errTxt = $"Logic Expression Operator {expression.Operator} is not implemented yet.";
 
@@ -127,6 +123,14 @@ namespace Zsharp.Emit
         {
             var il = _context.InstructionFactory;
             var instruction = il.LoadConstant((Int32)numeric.AsSigned());
+            _context.CodeBuilder.CodeBlock.Add(instruction);
+        }
+
+        public override void VisitVariableReference(AstVariableReference variable)
+        {
+            var il = _context.InstructionFactory;
+            var varDef = _context.CodeBuilder.GetVariable(variable.Identifier.Name);
+            var instruction = il.LoadVariable(varDef);
             _context.CodeBuilder.CodeBlock.Add(instruction);
         }
     }

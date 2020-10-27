@@ -45,7 +45,7 @@ namespace Zsharp.Emit
         {
             _methodDefinition = methodDefinition;
             InstructionFactory = new InstructionFactory(methodDefinition.Body.GetILProcessor());
-            CodeBuilder = new CodeBuilder(InstructionFactory);
+            CodeBuilder = new CodeBuilder();
         }
 
         public InstructionFactory InstructionFactory { get; }
