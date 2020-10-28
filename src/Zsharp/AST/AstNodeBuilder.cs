@@ -22,8 +22,6 @@ namespace Zsharp.AST
 
         public bool HasErrors => _buildercontext.HasErrors;
 
-        private static bool IsEmpty(ParserRuleContext context) => context.children.Count == 0;
-
         public object? VisitChildrenExcept(ParserRuleContext node, ParserRuleContext except)
         {
             var result = DefaultResult;
@@ -60,7 +58,7 @@ namespace Zsharp.AST
             if (node is ParserRuleContext context &&
                 context.exception != null)
             {
-                _buildercontext.AddError(context, AstError.SyntaxError);
+                _buildercontext.CompilerContext.AddError(context, AstError.SyntaxError);
                 // usually pointless to continue
                 return false;
             }
@@ -69,7 +67,7 @@ namespace Zsharp.AST
 
         public override object? VisitFile(FileContext context)
         {
-            var file = new AstFile(_namespace, _buildercontext.IntrinsicSymbols, context);
+            var file = new AstFile(_namespace, _buildercontext.CompilerContext.IntrinsicSymbols, context);
 
             _buildercontext.SetCurrent(file);
             base.VisitChildren(context);

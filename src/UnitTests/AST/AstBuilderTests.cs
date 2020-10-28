@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using Zsharp;
 using Zsharp.AST;
 
 namespace UnitTests.AST
@@ -37,7 +38,7 @@ namespace UnitTests.AST
                 "module mymod" + Tokens.NewLine
                 ;
 
-            var builder = new AstBuilder();
+            var builder = new AstBuilder(new CompilerContext());
             builder.Build(Parser.ParseFile(code));
             var mod = builder.Modules.FirstOrDefault();
             mod.Should().NotBeNull();

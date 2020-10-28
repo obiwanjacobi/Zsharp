@@ -9,15 +9,16 @@ namespace Zsharp
 {
     public class Compiler
     {
-        private readonly AstBuilder _astBuilder = new AstBuilder();
+        private readonly CompilerContext _context = new CompilerContext();
+        private readonly AstBuilder _astBuilder;
         private readonly ResolveSymbols _resolveSymbols;
         private readonly ResolveTypes _resolveTypes;
-        private readonly AstErrorSite _errors = new AstErrorSite();
 
         public Compiler()
         {
-            _resolveSymbols = new ResolveSymbols(_errors);
-            _resolveTypes = new ResolveTypes(_errors);
+            _astBuilder = new AstBuilder(_context);
+            _resolveSymbols = new ResolveSymbols(_context);
+            _resolveTypes = new ResolveTypes(_context);
         }
 
         public IEnumerable<AstError> Compile(string filePath, string defaultModuleName, string code)
@@ -40,7 +41,7 @@ namespace Zsharp
 
             ApplySemantics(astFile);
 
-            return _errors.Errors;
+            return _context.Errors;
         }
 
         private void ApplySemantics(AstFile file)

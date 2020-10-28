@@ -12,4 +12,3 @@
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16).
 - ResolveTypes/Symbols: Remove support for `b = b + 1`. Invalid var reference.
 - AstBuilder: refactor - remove specific Module handling (node builder will pick that up) Register files in AstModule.
-- AstBuilderContext: split global data (global symbol table etc) from building context. Global data in compiler.

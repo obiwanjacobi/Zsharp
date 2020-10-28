@@ -6,15 +6,20 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstBuilderContext : AstErrorSite
+    public class AstBuilderContext
     {
         private readonly Stack<AstNode> _current = new Stack<AstNode>();
 
-        public AstBuilderContext(UInt32 indent = 0)
+        public AstBuilderContext(CompilerContext compilerContext, UInt32 indent = 0)
         {
+            CompilerContext = compilerContext;
             Indent = indent;
-            IntrinsicSymbols = CreateIntrinsicSymbols();
         }
+
+        public CompilerContext CompilerContext { get; }
+
+        public IEnumerable<AstError> Errors => CompilerContext.Errors;
+        public bool HasErrors => CompilerContext.HasErrors;
 
         public UInt32 Indent { get; private set; }
 
@@ -30,7 +35,7 @@ namespace Zsharp.AST
 
             if (indent % Indent > 0)
             {
-                AddError(context, AstError.IndentationInvalid);
+                CompilerContext.AddError(context, AstError.IndentationInvalid);
                 // guess where it should go
                 return (UInt32)Math.Round((double)indent / Indent);
             }
@@ -109,15 +114,6 @@ namespace Zsharp.AST
             if (!TryAddIdentifier(identifier))
                 throw new InvalidOperationException(
                     "Identifier is already set, null or no Site could be found.");
-        }
-
-        public AstSymbolTable IntrinsicSymbols { get; }
-
-        private AstSymbolTable CreateIntrinsicSymbols()
-        {
-            var symbols = new AstSymbolTable();
-            AstTypeIntrinsic.AddAll(symbols);
-            return symbols;
         }
     }
 }

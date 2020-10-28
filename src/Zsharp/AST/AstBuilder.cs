@@ -8,9 +8,9 @@ namespace Zsharp.AST
         private readonly AstBuilderContext _context;
         private readonly List<AstModule> _modules = new List<AstModule>();
 
-        public AstBuilder()
+        public AstBuilder(CompilerContext compilerContext)
         {
-            _context = new AstBuilderContext();
+            _context = new AstBuilderContext(compilerContext);
         }
 
         public IEnumerable<AstModule> Modules => _modules;

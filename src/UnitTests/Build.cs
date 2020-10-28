@@ -14,7 +14,7 @@ namespace UnitTests
             var errors = file.Errors();
             errors.Should().BeEmpty();
 
-            var builder = new AstBuilder();
+            var builder = new AstBuilder(new CompilerContext());
             builder.Build(file);
             builder.HasErrors.Should().BeFalse();
             return builder.Modules.First();
@@ -26,7 +26,7 @@ namespace UnitTests
             var errors = file.Errors();
             errors.Should().BeEmpty();
 
-            var builder = new AstBuilder();
+            var builder = new AstBuilder(new CompilerContext());
             var astFile = builder.BuildFile(String.Empty, file);
             builder.HasErrors.Should().BeFalse();
             return astFile;
