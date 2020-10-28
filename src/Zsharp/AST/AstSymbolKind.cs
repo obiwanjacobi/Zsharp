@@ -7,7 +7,6 @@
         Struct,
         Enum,
         Type,
-        Parameter,
         Variable,
         Field,
     };

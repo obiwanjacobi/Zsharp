@@ -93,8 +93,8 @@ namespace UnitTests.AST
             var symbols = fn.CodeBlock.Symbols;
             symbols.Entries.Should().HaveCount(2);
 
-            var p = symbols.FindEntry("p", AstSymbolKind.Parameter);
-            p.SymbolKind.Should().Be(AstSymbolKind.Parameter);
+            var p = symbols.FindEntry("p", AstSymbolKind.Variable);
+            p.SymbolKind.Should().Be(AstSymbolKind.Variable);
             p.Definition.Should().NotBeNull();
         }
 
@@ -111,7 +111,7 @@ namespace UnitTests.AST
             var symbols = fn.CodeBlock.Symbols;
             symbols.Entries.Should().HaveCount(2);
 
-            var p = symbols.FindEntry("self", AstSymbolKind.Parameter);
+            var p = symbols.FindEntry("self", AstSymbolKind.Variable);
             p.DefinitionAs<AstFunctionParameter>().Identifier.Name.Should().Be("self");
         }
 
@@ -126,9 +126,8 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunction>(0);
             var symbols = fn.CodeBlock.Symbols;
-            symbols.Entries.Should().HaveCount(2);
+            symbols.Entries.Should().HaveCount(1);
 
-            symbols.FindEntry("p", AstSymbolKind.Parameter).Should().NotBeNull();
             symbols.FindEntry("p", AstSymbolKind.Variable).Should().NotBeNull();
         }
 

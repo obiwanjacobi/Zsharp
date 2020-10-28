@@ -20,61 +20,40 @@ namespace Zsharp.Semantics
             base.VisitAssignment(assign);
 
             if (assign.Variable is AstVariableReference varRef &&
-                varRef.VariableDefinition != null &&
-                varRef.VariableDefinition.Parent == null)
+                varRef.VariableDefinition == null)
             {
-                // catch newly created inferred definition
-                assign.SetVariableDefinition(varRef.VariableDefinition);
+                var entry = varRef.Symbol;
+
+                // variable.TypeReference can be null
+                // VariableDefinition should get its type references from ResolveTypes.
+                var varDef = new AstVariableDefinition(varRef.TypeReference);
+                varDef.SetIdentifier(varRef.Identifier!);
+                varDef.SetSymbol(entry!);
+                entry!.PromoteToDefinition(varDef, varRef);
+
+                assign.SetVariableDefinition(varDef);
             }
         }
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
-            Ast.Guard(variable.Identifier, "Variable has no identifier.");
-
             if (!variable.HasDefinition)
             {
-                Ast.Guard(SymbolTable, "No SymbolTable set.");
-
-                AstVariableDefinition? varDef = null;
-
                 var entry = variable.Symbol;
-                if (entry == null)
+                Ast.Guard(entry, "Variable has no Symbol.");
+
+                var varDef = entry!.DefinitionAs<AstVariableDefinition>();
+                if (varDef == null)
                 {
-                    entry = SymbolTable!.Find(variable);
-                    varDef = entry?.DefinitionAs<AstVariableDefinition>();
+                    var paramDef = entry.DefinitionAs<AstFunctionParameter>();
+                    if (paramDef != null)
+                    {
+                        variable.SetParameterDefinition(paramDef);
+                    }
                 }
                 else
                 {
-                    varDef = entry.DefinitionAs<AstVariableDefinition>();
-                }
-
-                // variable
-                if (entry != null)
-                {
-                    if (varDef == null)
-                    {
-                        // variable.TypeReference can be null
-                        // VariableDefinition should get its type references from ResolveTypes.
-                        varDef = new AstVariableDefinition(variable.TypeReference);
-                        varDef.SetIdentifier(variable.Identifier!);
-                        varDef.SetSymbol(entry);
-                        entry.PromoteToDefinition(varDef, variable);
-                    }
-
                     variable.SetVariableDefinition(varDef);
-                }
-                else    // parameter
-                {
-                    entry = SymbolTable!.FindEntry(variable, AstSymbolKind.Parameter);
-                    // TODO: syntax error
-                    Ast.Guard(entry, "No Symbol found for variable reference name.");
-
-                    var paramDef = entry!.DefinitionAs<AstFunctionParameter>();
-                    Ast.Guard(paramDef, "No Parameter Definition found for variable reference.");
-
-                    variable.SetParameterDefinition(paramDef!);
-                    entry.AddNode(variable);
                 }
             }
         }

@@ -42,18 +42,21 @@ namespace UnitTests.Semantics
         public void TopVariableReference()
         {
             const string code =
-                "v = v + 1" + Tokens.NewLine
+                "x: U8" + Tokens.NewLine +
+                "v = x + 1" + Tokens.NewLine
                 ;
 
             var file = ParseFile(code);
 
-            var a = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var x = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
+            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
             var vd = a.Variable as AstVariableDefinition;
             vd.Should().NotBeNull();
             var vr = a.Expression.LHS.VariableReference;
             vr.Should().NotBeNull();
-            vr.VariableDefinition.Should().Be(vd);
-            vr.Symbol.Should().Be(vd.Symbol);
+
+            vr.VariableDefinition.Should().Be(x);
+            vr.Symbol.Should().Be(x.Symbol);
         }
     }
 }

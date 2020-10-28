@@ -133,7 +133,8 @@ namespace Zsharp.AST
         {
             foreach (var param in _parameters)
             {
-                Symbols.AddSymbol(param.Identifier.Name, AstSymbolKind.Parameter, param);
+                // function parameters are registered as variables
+                Symbols.AddSymbol(param.Identifier.Name, AstSymbolKind.Variable, param);
             }
         }
     }
