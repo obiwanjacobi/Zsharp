@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using Zsharp.AST;
 using Zsharp.Emit;
 using Zsharp.Semantics;
 
@@ -13,11 +14,15 @@ namespace UnitTests.Emit
         {
             var module = Build.Module(code);
 
-            var symbolResolver = new ResolveSymbols();
-            symbolResolver.Apply(module);
+            var errors = new AstErrorSite();
 
-            var typeResolver = new ResolveTypes();
-            typeResolver.Apply(module);
+            var symbolResolver = new ResolveSymbols(errors);
+            symbolResolver.Visit(module);
+
+            var typeResolver = new ResolveTypes(errors);
+            typeResolver.Visit(module);
+
+            errors.HasErrors.Should().BeFalse();
 
             var emit = new EmitCode("UnitTest");
             emit.Visit(module);

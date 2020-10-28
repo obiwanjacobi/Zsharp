@@ -10,13 +10,16 @@ namespace Zsharp.AST
         public const string IndentationInvalid = "Number of Indentation character is invalid.";
         public const string SyntaxError = "The Syntax is invalid.";
 
-        public AstError(ParserRuleContext context)
+        public AstError(ParserRuleContext context, AstNode? node = null)
         {
+            Node = node;
             Context = context;
             Text = String.Empty;
         }
 
         public ParserRuleContext Context { get; }
+
+        public AstNode? Node { get; }
 
         public string Text { get; set; }
 

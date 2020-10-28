@@ -5,8 +5,13 @@ namespace Zsharp.AST
 {
     public class AstBuilder
     {
-        private readonly AstBuilderContext _context = new AstBuilderContext(0);
+        private readonly AstBuilderContext _context;
         private readonly List<AstModule> _modules = new List<AstModule>();
+
+        public AstBuilder()
+        {
+            _context = new AstBuilderContext();
+        }
 
         public IEnumerable<AstModule> Modules => _modules;
 

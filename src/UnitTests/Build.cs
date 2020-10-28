@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using System;
 using System.Linq;
+using Zsharp;
 using Zsharp.AST;
 
 namespace UnitTests

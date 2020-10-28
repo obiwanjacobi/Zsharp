@@ -5,9 +5,12 @@ namespace Zsharp.Semantics
 {
     public class ResolveTypes : AstVisitorWithSymbols
     {
-        public void Apply(AstModule module) => VisitModule(module);
+        private readonly AstErrorSite _errorSite;
 
-        public void Apply(AstFile file) => VisitFile(file);
+        public ResolveTypes(AstErrorSite errorSite)
+        {
+            _errorSite = errorSite;
+        }
 
         public override void VisitTypeReference(AstTypeReference type)
         {
@@ -106,7 +109,10 @@ namespace Zsharp.Semantics
                     }
                 }
 
-                operand.SetTypeReference(var.TypeReference!);
+                if (var.TypeReference != null)
+                {
+                    operand.SetTypeReference(var.TypeReference);
+                }
             }
         }
 

@@ -10,11 +10,15 @@ namespace UnitTests.Semantics
     {
         private static AstFile ParseFile(string code)
         {
+            var errors = new AstErrorSite();
+
             var file = Build.File(code);
-            var resolveSymbols = new ResolveSymbols();
-            resolveSymbols.Apply(file);
-            var resolver = new ResolveTypes();
-            resolver.Apply(file);
+            var resolveSymbols = new ResolveSymbols(errors);
+            resolveSymbols.Visit(file);
+            var resolver = new ResolveTypes(errors);
+            resolver.Visit(file);
+
+            errors.HasErrors.Should().BeFalse();
             return file;
         }
 

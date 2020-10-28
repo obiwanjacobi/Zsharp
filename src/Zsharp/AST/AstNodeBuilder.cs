@@ -128,12 +128,6 @@ namespace Zsharp.AST
 
         public override object? VisitCodeblock(CodeblockContext context)
         {
-            if (IsEmpty(context))
-            {
-                _buildercontext.AddError(context, AstError.EmptyCodeBlock);
-                return null;
-            }
-
             var stSite = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var symbols = stSite.Symbols;
             string scopeName = symbols.Namespace;

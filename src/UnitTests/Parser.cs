@@ -1,8 +1,8 @@
 ﻿using Antlr4.Runtime;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Zsharp;
 using Zsharp.Parser;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -54,30 +54,10 @@ namespace UnitTests
             var parser = Create(sourceCode, ErrorMode.Passive);
             var file = parser.file();
 
-            var errs = file.Errors().Select(e => e.Message);
+            var errs = file.Errors().Select(e => e.Error.Message);
             if (errs.Any())
                 return String.Join(Environment.NewLine, errs);
             return null;
-        }
-
-        public static IEnumerable<Exception> Errors(this ParserRuleContext ctx)
-        {
-            var errors = new List<Exception>();
-
-            if (ctx.exception != null)
-                errors.Add(ctx.exception);
-
-            if (ctx.children != null)
-            {
-                foreach (var c in ctx.children
-                    .OfType<ParserRuleContext>())
-                {
-                    var childErrs = c.Errors();
-                    if (childErrs.Any())
-                        errors.AddRange(childErrs);
-                }
-            }
-            return errors;
         }
     }
 

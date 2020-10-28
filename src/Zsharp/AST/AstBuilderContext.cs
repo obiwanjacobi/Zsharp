@@ -6,11 +6,11 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstBuilderContext
+    public class AstBuilderContext : AstErrorSite
     {
         private readonly Stack<AstNode> _current = new Stack<AstNode>();
 
-        public AstBuilderContext(UInt32 indent)
+        public AstBuilderContext(UInt32 indent = 0)
         {
             Indent = indent;
             IntrinsicSymbols = CreateIntrinsicSymbols();
@@ -109,21 +109,6 @@ namespace Zsharp.AST
             if (!TryAddIdentifier(identifier))
                 throw new InvalidOperationException(
                     "Identifier is already set, null or no Site could be found.");
-        }
-
-        private readonly List<AstError> _errors = new List<AstError>();
-        public IEnumerable<AstError> Errors => _errors;
-
-        public bool HasErrors => _errors.Count > 0;
-
-        public AstError AddError(ParserRuleContext context, string text)
-        {
-            var error = new AstError(context)
-            {
-                Text = text
-            };
-            _errors.Add(error);
-            return error;
         }
 
         public AstSymbolTable IntrinsicSymbols { get; }
