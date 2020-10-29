@@ -6,8 +6,6 @@ namespace Zsharp.AST
 {
     public class AstFile : AstNode, IAstSymbolTableSite, IAstCodeBlockSite
     {
-        private readonly List<Statement_importContext> _imports = new List<Statement_importContext>();
-        private readonly List<Statement_exportContext> _exports = new List<Statement_exportContext>();
         private readonly List<AstFunction> _functions = new List<AstFunction>();
 
         public AstFile(string scopeName, AstSymbolTable parentTable, FileContext context)
@@ -18,10 +16,6 @@ namespace Zsharp.AST
         }
 
         public FileContext Context { get; }
-
-        public IEnumerable<Statement_importContext> Imports => _imports;
-
-        public IEnumerable<Statement_exportContext> Exports => _exports;
 
         public IEnumerable<AstFunction> Functions => _functions;
 
@@ -47,26 +41,6 @@ namespace Zsharp.AST
             {
                 ci.Accept(visitor);
             }
-        }
-
-        public void AddImport(Statement_importContext importCtx)
-        {
-            if (importCtx == null)
-            {
-                throw new ArgumentNullException(nameof(importCtx));
-            }
-
-            _imports.Add(importCtx);
-        }
-
-        public void AddExport(Statement_exportContext exportCtx)
-        {
-            if (exportCtx == null)
-            {
-                throw new ArgumentNullException(nameof(exportCtx));
-            }
-
-            _exports.Add(exportCtx);
         }
 
         public void AddFunction(AstFunction function)

@@ -1,12 +1,21 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
+    public enum ModuleLocality
+    {
+        Public,
+        External
+    }
+
     public class AstModule : AstNode
     {
         private readonly List<Statement_moduleContext> _contexts = new List<Statement_moduleContext>();
+        private readonly List<Statement_importContext> _imports = new List<Statement_importContext>();
+        private readonly List<Statement_exportContext> _exports = new List<Statement_exportContext>();
 
         public AstModule(string modName)
             : base(AstNodeType.Module)
@@ -27,12 +36,18 @@ namespace Zsharp.AST
             }
         }
 
+        public ModuleLocality Locality { get; set; }
+
         public string Name { get; private set; }
 
         private readonly List<AstFile> _files = new List<AstFile>();
         public IEnumerable<AstFile> Files => _files;
 
-        public bool HasExports => _files.Any(f => f.Exports.Any());
+        public IEnumerable<Statement_importContext> Imports => _imports;
+
+        public IEnumerable<Statement_exportContext> Exports => _exports;
+
+        public bool HasExports => _exports.Any();
 
         public void AddModule(Statement_moduleContext moduleCtx)
         {
@@ -43,12 +58,29 @@ namespace Zsharp.AST
             }
         }
 
+        public void AddImport(Statement_importContext importCtx, AstModule externalModule)
+        {
+            // TODO: externalModule
+            if (importCtx == null)
+                throw new ArgumentNullException(nameof(importCtx));
+
+            _imports.Add(importCtx);
+        }
+
+        public void AddExport(Statement_exportContext exportCtx)
+        {
+            if (exportCtx == null)
+                throw new ArgumentNullException(nameof(exportCtx));
+
+            _exports.Add(exportCtx);
+        }
+
         public void AddFile(AstFile file)
         {
-            if (file != null)
-            {
-                _files.Add(file);
-            }
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            _files.Add(file);
         }
     }
 }

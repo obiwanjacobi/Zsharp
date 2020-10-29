@@ -12,7 +12,7 @@ namespace Zsharp.AST
         public AstModule AddModule(Statement_moduleContext moduleCtx)
         {
             Ast.Guard(moduleCtx, "Context is null.");
-            var moduleName = moduleCtx.module_name().identifier_module().GetText();
+            var moduleName = moduleCtx.module_name().GetText();
 
             if (!_modules.TryGetValue(moduleName, out AstModule? module))
             {
@@ -24,7 +24,7 @@ namespace Zsharp.AST
             return module;
         }
 
-        public AstModule AddModule(string moduleName)
+        public AstModule GetOrAddModule(string moduleName)
         {
             if (!_modules.TryGetValue(moduleName, out AstModule? module))
             {
@@ -38,6 +38,14 @@ namespace Zsharp.AST
         public AstModule? FindModule(string moduleName)
         {
             _modules.TryGetValue(moduleName, out AstModule? module);
+            return module;
+        }
+
+        // TODO: this needs to trigger external lookup/loading of module metadata
+        public AstModule Import(Statement_importContext importCtx)
+        {
+            var moduleName = importCtx.module_name().GetText();
+            var module = GetOrAddModule(moduleName);
             return module;
         }
     }

@@ -3,6 +3,7 @@
     public enum AstSymbolKind
     {
         NotSet,
+        Module,
         Function,
         Struct,
         Enum,

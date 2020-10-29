@@ -86,10 +86,12 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_import(Statement_importContext context)
         {
-            var file = _buildercontext.GetCurrent<AstFile>();
-            file.AddImport(context);
+            var externalModule = _buildercontext.CompilerContext.Modules.Import(context);
+            var module = _buildercontext.GetCurrent<AstModule>();
+            module.AddImport(context, externalModule);
 
-            var entry = file.Symbols.AddSymbol(context.module_name().GetText(), AstSymbolKind.NotSet, null);
+            var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
+            var entry = symbols.Symbols.AddSymbol(context.module_name().GetText(), AstSymbolKind.Module, null);
             entry.SymbolLocality = AstSymbolLocality.Imported;
 
             return null;
@@ -97,10 +99,11 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_export(Statement_exportContext context)
         {
-            var file = _buildercontext.GetCurrent<AstFile>();
-            file.AddExport(context);
+            var module = _buildercontext.GetCurrent<AstModule>();
+            module.AddExport(context);
 
-            var entry = file.Symbols.AddSymbol(context.identifier_func().GetText(), AstSymbolKind.NotSet, null);
+            var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
+            var entry = symbols.Symbols.AddSymbol(context.identifier_func().GetText(), AstSymbolKind.NotSet, null);
             entry.SymbolLocality = AstSymbolLocality.Exported;
 
             return null;

@@ -32,7 +32,6 @@ namespace Zsharp
                 return parseErrors;
             }
 
-            // TODO: file/module handling
             var astFile = _astBuilder.Build(file, defaultModuleName);
             if (_astBuilder.HasErrors)
             {

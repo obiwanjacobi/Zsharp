@@ -68,3 +68,9 @@ Because a module can be made up of multiple files, can any new file declare itse
 # module this_is_my_module
 globalVar: U8 = 42  // accessible by all files in module?
 ```
+
+---
+
+> TBD
+
+- private modules?

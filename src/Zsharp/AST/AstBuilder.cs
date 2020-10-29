@@ -27,10 +27,17 @@ namespace Zsharp.AST
             }
             else
             {
-                _context.CompilerContext.Modules.AddModule(moduleName);
+                var mod = _context.CompilerContext.Modules.GetOrAddModule(moduleName);
+                _context.SetCurrent(mod);
             }
 
             var file = BuildFile(moduleName, fileCtx);
+
+            if (modCtx == null)
+            {
+                // remove the AstModule we added.
+                _context.RevertCurrent();
+            }
 
             var module = _context.CompilerContext.Modules.FindModule(file.Symbols.Name);
             module!.AddFile(file!);

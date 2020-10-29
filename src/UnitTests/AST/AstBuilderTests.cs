@@ -41,8 +41,7 @@ namespace UnitTests.AST
             var context = new CompilerContext();
             var builder = new AstBuilder(context);
             builder.Build(Parser.ParseFile(code), "UnitTests");
-            var mod = context.Modules.Modules.FirstOrDefault();
-            mod.Should().NotBeNull();
+            var mod = context.Modules.Modules.First();
             mod.Name.Should().Be("mymod");
         }
 
@@ -53,9 +52,8 @@ namespace UnitTests.AST
                 "import mymod" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code);
-            var import = file.Imports.FirstOrDefault();
-            import.Should().NotBeNull();
+            var module = Build.Module(code);
+            var import = module.Imports.First();
             import.module_name().GetText().Should().Be("mymod");
         }
 
@@ -67,9 +65,8 @@ namespace UnitTests.AST
                 "import mymod2" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code);
-            var import = file.Imports.Skip(1).FirstOrDefault();
-            import.Should().NotBeNull();
+            var module = Build.Module(code);
+            var import = module.Imports.Skip(1).First();
             import.module_name().GetText().Should().Be("mymod2");
         }
 
@@ -80,9 +77,8 @@ namespace UnitTests.AST
                 "export myfn" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code);
-            var export = file.Exports.FirstOrDefault();
-            export.Should().NotBeNull();
+            var module = Build.Module(code);
+            var export = module.Exports.First();
             export.identifier_func().GetText().Should().Be("myfn");
         }
 
@@ -94,9 +90,8 @@ namespace UnitTests.AST
                 "export myfn2" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code);
-            var export = file.Exports.Skip(1).FirstOrDefault();
-            export.Should().NotBeNull();
+            var module = Build.Module(code);
+            var export = module.Exports.Skip(1).First();
             export.identifier_func().GetText().Should().Be("myfn2");
         }
 
@@ -109,8 +104,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var func = file.Functions.FirstOrDefault();
-            func.Should().NotBeNull();
+            var func = file.Functions.First();
             func.Identifier.Name.Should().Be("fn");
             func.CodeBlock.Should().NotBeNull();
         }
@@ -124,8 +118,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var func = file.Functions.FirstOrDefault();
-            func.Should().NotBeNull();
+            var func = file.Functions.First();
             func.Identifier.Name.Should().Be("fn");
             func.CodeBlock.ItemAt<AstAssignment>(0)
                 .Should().NotBeNull();
