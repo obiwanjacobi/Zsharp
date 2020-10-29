@@ -59,7 +59,7 @@ namespace Zsharp.Emit
 
         public CodeBuilder CodeBuilder => FunctionScope.CodeBuilder;
 
-        public IDisposable AddModule(AstModule module)
+        public IDisposable AddModule(AstModulePublic module)
         {
             if (Module.Types.Find(module.Name) != null)
                 throw new ArgumentException($"ModuleClass for {module.Name} already exists.");

@@ -12,7 +12,7 @@ namespace UnitTests.Emit
     {
         private static EmitCode CreateEmitCode(string code)
         {
-            var compiler = new Compiler();
+            var compiler = new Compiler(new ModuleLoader());
             var errors = compiler.Compile("UnitTests", "EmitCodeTests", code);
             errors.Should().BeEmpty();
 

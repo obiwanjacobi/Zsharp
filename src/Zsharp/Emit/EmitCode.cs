@@ -1,4 +1,5 @@
-﻿using Zsharp.AST;
+﻿using System;
+using Zsharp.AST;
 
 namespace Zsharp.Emit
 {
@@ -13,14 +14,26 @@ namespace Zsharp.Emit
 
         public override void VisitModule(AstModule module)
         {
-            if (Context == null)
+            IDisposable? scope = null;
+            if (module is AstModulePublic publicModule)
             {
-                Context = EmitContext.Create(module.Name);
+                if (Context == null)
+                {
+                    Context = EmitContext.Create(module.Name);
+                }
+
+                scope = Context.AddModule(publicModule);
             }
 
-            using var scope = Context.AddModule(module);
-
-            VisitChildren(module);
+            try
+            {
+                VisitChildren(module);
+            }
+            finally
+            {
+                if (scope != null)
+                    scope.Dispose();
+            }
         }
 
         public override void VisitFunction(AstFunction function)

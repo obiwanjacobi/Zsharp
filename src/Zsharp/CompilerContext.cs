@@ -4,10 +4,10 @@ namespace Zsharp
 {
     public class CompilerContext : AstErrorSite
     {
-        public CompilerContext()
+        public CompilerContext(IAstModuleLoader moduleLoader)
         {
             IntrinsicSymbols = CreateIntrinsicSymbols();
-            Modules = new AstModuleManager();
+            Modules = new AstModuleManager(moduleLoader);
         }
 
         public AstModuleManager Modules { get; }

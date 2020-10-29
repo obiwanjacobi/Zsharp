@@ -38,7 +38,7 @@ namespace UnitTests.AST
                 "module mymod" + Tokens.NewLine
                 ;
 
-            var context = new CompilerContext();
+            var context = new CompilerContext(new ModuleLoader());
             var builder = new AstBuilder(context);
             builder.Build(Parser.ParseFile(code), "UnitTests");
             var mod = context.Modules.Modules.First();

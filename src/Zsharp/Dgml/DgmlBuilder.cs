@@ -243,7 +243,7 @@ namespace Zsharp.Dgml
             return category;
         }
 
-        private Link? FindLink(string sourceId, string targetId)
+        private Link FindLink(string sourceId, string targetId)
         {
             foreach (var l in _graph.Links)
             {

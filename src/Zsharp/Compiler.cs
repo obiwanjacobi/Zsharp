@@ -13,9 +13,9 @@ namespace Zsharp
         private readonly ResolveSymbols _resolveSymbols;
         private readonly ResolveTypes _resolveTypes;
 
-        public Compiler()
+        public Compiler(IAstModuleLoader moduleLoader)
         {
-            Context = new CompilerContext();
+            Context = new CompilerContext(moduleLoader);
             _astBuilder = new AstBuilder(Context);
             _resolveSymbols = new ResolveSymbols(Context);
             _resolveTypes = new ResolveTypes(Context);

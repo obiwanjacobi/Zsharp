@@ -39,7 +39,7 @@ namespace Zsharp.AST
                 _context.RevertCurrent();
             }
 
-            var module = _context.CompilerContext.Modules.FindModule(file.Symbols.Name);
+            var module = _context.CompilerContext.Modules.FindModule<AstModulePublic>(file.Symbols.Name);
             module!.AddFile(file!);
             return file;
         }

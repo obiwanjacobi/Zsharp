@@ -6,17 +6,24 @@ namespace Zsharp.AST
     public class AstModuleManager
     {
         private readonly Dictionary<string, AstModule> _modules = new Dictionary<string, AstModule>();
+        private readonly IAstModuleLoader _moduleLoader;
+
+        public AstModuleManager(IAstModuleLoader moduleLoader)
+        {
+            _moduleLoader = moduleLoader;
+        }
 
         public IEnumerable<AstModule> Modules => _modules.Values;
 
-        public AstModule AddModule(Statement_moduleContext moduleCtx)
+        public AstModulePublic AddModule(Statement_moduleContext moduleCtx)
         {
             Ast.Guard(moduleCtx, "Context is null.");
             var moduleName = moduleCtx.module_name().GetText();
 
-            if (!_modules.TryGetValue(moduleName, out AstModule? module))
+            var module = FindModule<AstModulePublic>(moduleName);
+            if (module == null)
             {
-                module = new AstModule(moduleName);
+                module = new AstModulePublic(moduleName);
                 _modules.Add(moduleName, module);
             }
 
@@ -28,24 +35,29 @@ namespace Zsharp.AST
         {
             if (!_modules.TryGetValue(moduleName, out AstModule? module))
             {
-                module = new AstModule(moduleName);
+                module = new AstModulePublic(moduleName);
                 _modules.Add(moduleName, module);
             }
 
             return module;
         }
 
-        public AstModule? FindModule(string moduleName)
+        public T? FindModule<T>(string moduleName)
+            where T : AstModule
         {
             _modules.TryGetValue(moduleName, out AstModule? module);
-            return module;
+            return module as T;
         }
 
-        // TODO: this needs to trigger external lookup/loading of module metadata
-        public AstModule Import(Statement_importContext importCtx)
+        public AstModuleExternal Import(Statement_importContext importCtx)
         {
             var moduleName = importCtx.module_name().GetText();
-            var module = GetOrAddModule(moduleName);
+            var module = FindModule<AstModuleExternal>(moduleName);
+            if (module == null)
+            {
+                module = _moduleLoader.LoadExternal(moduleName);
+                _modules.Add(moduleName, module);
+            }
             return module;
         }
     }

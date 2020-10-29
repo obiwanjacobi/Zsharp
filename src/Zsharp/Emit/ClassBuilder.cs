@@ -15,7 +15,7 @@ namespace Zsharp.Emit
             _typeDefinition = typeDefinition;
         }
 
-        public static ClassBuilder Create(EmitContext context, AstModule module)
+        public static ClassBuilder Create(EmitContext context, AstModulePublic module)
         {
             var moduleDefinition = context.Module;
             var typeDef = new TypeDefinition(moduleDefinition.Name, module.Name, ToTypeAttributes(module));
@@ -47,7 +47,7 @@ namespace Zsharp.Emit
             return methodDef;
         }
 
-        private static TypeAttributes ToTypeAttributes(AstModule module)
+        private static TypeAttributes ToTypeAttributes(AstModulePublic module)
         {
             var attrs = TypeAttributes.Class;
             attrs |= module.HasExports ? TypeAttributes.Public : TypeAttributes.NotPublic;

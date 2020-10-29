@@ -11,11 +11,11 @@ namespace UnitTests.Semantics
     {
         private static AstFile ParseFile(string code)
         {
-            var compiler = new Compiler();
+            var compiler = new Compiler(new ModuleLoader());
             var errors = compiler.Compile("UnitTests", "ResolveTypeTests", code);
             errors.Should().BeEmpty();
 
-            return compiler.Context.Modules.Modules.First().Files.First();
+            return ((AstModulePublic)compiler.Context.Modules.Modules.First()).Files.First();
         }
 
         [TestMethod]
