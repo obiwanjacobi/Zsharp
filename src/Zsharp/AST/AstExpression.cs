@@ -71,17 +71,20 @@ namespace Zsharp.AST
                     "TypeReference is already set or null.");
         }
 
-        public ParserRuleContext? getContext()
+        public ParserRuleContext? Context
         {
-            if (_arithmeticCtx != null)
-                return _arithmeticCtx;
-            if (_logicCtx != null)
-                return _logicCtx;
-            if (_comparisonCtx != null)
-                return _comparisonCtx;
-            if (_valueCtx != null)
-                return _valueCtx;
-            return null;
+            get
+            {
+                if (_arithmeticCtx != null)
+                    return _arithmeticCtx;
+                if (_logicCtx != null)
+                    return _logicCtx;
+                if (_comparisonCtx != null)
+                    return _comparisonCtx;
+                if (_valueCtx != null)
+                    return _valueCtx;
+                return null;
+            }
         }
 
         public bool Add(AstExpressionOperand op)

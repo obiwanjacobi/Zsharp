@@ -41,10 +41,11 @@ namespace Zsharp.Semantics
                 AstTypeReference? leftTypeRef = expression.LHS?.TypeReference;
                 AstTypeReference? rightTypeRef = expression.RHS?.TypeReference;
 
-                if (leftTypeRef != null && rightTypeRef != null)
+                if (leftTypeRef != null && rightTypeRef != null &&
+                    !leftTypeRef.IsEqual(rightTypeRef))
                 {
-                    // TODO: implicit conversion compiler error
-                    Ast.Guard(leftTypeRef.IsEqual(rightTypeRef), "AstExpression has non-equal Types References.");
+                    _errorSite.AddError(expression, expression.Context,
+                        "Different Types on both sides of the operator.");
                 }
 
                 AstTypeReference? typeRef = null;
@@ -58,6 +59,7 @@ namespace Zsharp.Semantics
                 }
 
                 Ast.Guard(typeRef, "Expression yielded no Type.");
+                // TODO: depending on the operator the type may need to be enlarged.
                 expression.SetTypeReference(typeRef!);
             }
         }
