@@ -38,9 +38,10 @@ namespace UnitTests.AST
                 "module mymod" + Tokens.NewLine
                 ;
 
-            var builder = new AstBuilder(new CompilerContext());
-            builder.Build(Parser.ParseFile(code));
-            var mod = builder.Modules.FirstOrDefault();
+            var context = new CompilerContext();
+            var builder = new AstBuilder(context);
+            builder.Build(Parser.ParseFile(code), "UnitTests");
+            var mod = context.Modules.Modules.FirstOrDefault();
             mod.Should().NotBeNull();
             mod.Name.Should().Be("mymod");
         }

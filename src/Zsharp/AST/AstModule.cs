@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
@@ -9,10 +8,10 @@ namespace Zsharp.AST
     {
         private readonly List<Statement_moduleContext> _contexts = new List<Statement_moduleContext>();
 
-        public AstModule()
+        public AstModule(string modName)
             : base(AstNodeType.Module)
         {
-            Name = String.Empty;
+            Name = modName;
         }
 
         public override void Accept(AstVisitor visitor)
@@ -39,15 +38,7 @@ namespace Zsharp.AST
         {
             if (moduleCtx != null)
             {
-                if (_contexts.Count == 0)
-                {
-                    Name = moduleCtx.module_name().GetText();
-                }
-                else
-                {
-                    // TODO: check they all represent the same module
-                }
-
+                Ast.Guard(Name == moduleCtx.module_name().GetText(), "Not the same module.");
                 _contexts.Add(moduleCtx);
             }
         }

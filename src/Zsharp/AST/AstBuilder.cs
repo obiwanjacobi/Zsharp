@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -6,73 +7,49 @@ namespace Zsharp.AST
     public class AstBuilder
     {
         private readonly AstBuilderContext _context;
-        private readonly List<AstModule> _modules = new List<AstModule>();
 
         public AstBuilder(CompilerContext compilerContext)
         {
             _context = new AstBuilderContext(compilerContext);
         }
 
-        public IEnumerable<AstModule> Modules => _modules;
-
         public bool HasErrors => _context.HasErrors;
 
         public IEnumerable<AstError> Errors => _context.Errors;
 
-        public AstModule AddModule(Statement_moduleContext moduleCtx)
+        public AstFile Build(FileContext fileCtx, string moduleName)
         {
-            Ast.Guard(moduleCtx, "Context is null.");
-            var mod = new AstModule();
-            mod.AddModule(moduleCtx);
+            // look ahead
+            var modCtx = ToStatementModule(fileCtx);
+            if (modCtx != null)
+            {
+                moduleName = modCtx.module_name().identifier_module().GetText();
+            }
+            else
+            {
+                _context.CompilerContext.Modules.AddModule(moduleName);
+            }
 
-            _modules.Add(mod);
-            return mod;
+            var file = BuildFile(moduleName, fileCtx);
+
+            var module = _context.CompilerContext.Modules.FindModule(file.Symbols.Name);
+            module!.AddFile(file!);
+            return file;
         }
 
-        public void Build(FileContext fileCtx)
-        {
-            var modCtx = ParseTreeNavigator.ToStatementModule(fileCtx);
-            Ast.Guard(modCtx, "Module could not be found.");
-
-            var module = AddModule(modCtx!);
-            var file = BuildFile(module.Name, fileCtx);
-            module.AddFile(file!);
-        }
-
-        public AstFile? BuildFile(string moduleName, FileContext fileCtx)
+        private AstFile BuildFile(string moduleName, FileContext fileCtx)
         {
             var builder = new AstNodeBuilder(_context, moduleName);
             var file = builder.VisitFile(fileCtx);
-            return file as AstFile;
+            return (AstFile)file!;
         }
 
-        private static class ParseTreeNavigator
-        {
-            public static Module_statementContext? ToModuleStatement(FileContext fileCtx)
-            {
-                foreach (var ctx in fileCtx.header())
-                {
-                    var modStat = ctx.module_statement();
-                    if (modStat != null)
-                    {
-                        return modStat;
-                    }
-                }
-
-                return null;
-            }
-
-            public static Statement_moduleContext? ToStatementModule(FileContext fileCtx)
-            {
-                var moduleStatement = ToModuleStatement(fileCtx);
-
-                if (moduleStatement != null)
-                {
-                    return moduleStatement.statement_module();
-                }
-
-                return null;
-            }
-        }
+        private static Statement_moduleContext? ToStatementModule(FileContext fileCtx)
+            => fileCtx.header()
+                .Select(h => h.module_statement())
+                .Where(m => m?.statement_module() != null)
+                .Select(m => m.statement_module())
+                .SingleOrDefault()
+                ;
     }
 }

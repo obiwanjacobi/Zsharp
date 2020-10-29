@@ -12,3 +12,5 @@
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16).
 - ResolveTypes/Symbols: Remove support for `b = b + 1`. Invalid var reference.
 - AstBuilder: refactor - remove specific Module handling (node builder will pick that up) Register files in AstModule.
+- Register file names with source context in parse/ast tree (partial extension?)
+- grammar: fix how the dot works in module_name.

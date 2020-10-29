@@ -7,7 +7,10 @@ namespace Zsharp
         public CompilerContext()
         {
             IntrinsicSymbols = CreateIntrinsicSymbols();
+            Modules = new AstModuleManager();
         }
+
+        public AstModuleManager Modules { get; }
 
         public AstSymbolTable IntrinsicSymbols { get; }
 

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using System;
 using System.Linq;
 using Zsharp;
 using Zsharp.AST;
@@ -14,10 +13,11 @@ namespace UnitTests
             var errors = file.Errors();
             errors.Should().BeEmpty();
 
-            var builder = new AstBuilder(new CompilerContext());
-            builder.Build(file);
+            var context = new CompilerContext();
+            var builder = new AstBuilder(context);
+            builder.Build(file, "UnitTests");
             builder.HasErrors.Should().BeFalse();
-            return builder.Modules.First();
+            return context.Modules.Modules.First();
         }
 
         public static AstFile File(string code)
@@ -27,7 +27,7 @@ namespace UnitTests
             errors.Should().BeEmpty();
 
             var builder = new AstBuilder(new CompilerContext());
-            var astFile = builder.BuildFile(String.Empty, file);
+            var astFile = builder.Build(file, "UnitTests");
             builder.HasErrors.Should().BeFalse();
             return astFile;
         }

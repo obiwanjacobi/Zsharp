@@ -1,4 +1,5 @@
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,13 @@ namespace Zsharp.AST
             _buildercontext.RevertCurrent();
 
             return file;
+        }
+
+        public override object? VisitStatement_module([NotNull] Statement_moduleContext context)
+        {
+            _buildercontext.CompilerContext.Modules.AddModule(context);
+
+            return base.VisitStatement_module(context);
         }
 
         public override object? VisitStatement_import(Statement_importContext context)

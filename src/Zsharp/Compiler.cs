@@ -33,7 +33,7 @@ namespace Zsharp
             }
 
             // TODO: file/module handling
-            var astFile = _astBuilder.BuildFile(defaultModuleName, file);
+            var astFile = _astBuilder.Build(file, defaultModuleName);
             if (_astBuilder.HasErrors)
             {
                 return _astBuilder.Errors;
