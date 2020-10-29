@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using Zsharp;
 using Zsharp.AST;
 using Zsharp.Emit;
-using Zsharp.Semantics;
 
 namespace UnitTests.Emit
 {
@@ -12,19 +12,12 @@ namespace UnitTests.Emit
     {
         private static EmitCode CreateEmitCode(string code)
         {
-            var module = Build.Module(code);
+            var compiler = new Compiler();
+            var errors = compiler.Compile("UnitTests", "EmitCodeTests", code);
+            errors.Should().BeEmpty();
 
-            var errors = new AstErrorSite();
-
-            var symbolResolver = new ResolveSymbols(errors);
-            symbolResolver.Visit(module);
-
-            var typeResolver = new ResolveTypes(errors);
-            typeResolver.Visit(module);
-
-            errors.HasErrors.Should().BeFalse();
-
-            var emit = new EmitCode("UnitTest");
+            var module = compiler.Context.Modules.Modules.First();
+            var emit = new EmitCode("EmitCodeTest");
             emit.Visit(module);
             return emit;
         }

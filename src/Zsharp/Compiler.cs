@@ -9,21 +9,23 @@ namespace Zsharp
 {
     public class Compiler
     {
-        private readonly CompilerContext _context = new CompilerContext();
         private readonly AstBuilder _astBuilder;
         private readonly ResolveSymbols _resolveSymbols;
         private readonly ResolveTypes _resolveTypes;
 
         public Compiler()
         {
-            _astBuilder = new AstBuilder(_context);
-            _resolveSymbols = new ResolveSymbols(_context);
-            _resolveTypes = new ResolveTypes(_context);
+            Context = new CompilerContext();
+            _astBuilder = new AstBuilder(Context);
+            _resolveSymbols = new ResolveSymbols(Context);
+            _resolveTypes = new ResolveTypes(Context);
         }
+
+        public CompilerContext Context { get; }
 
         public IEnumerable<AstError> Compile(string filePath, string defaultModuleName, string code)
         {
-            var parser = CreateParser(code);
+            var parser = CreateParser(filePath, code);
             var file = parser.file();
             var parseErrors = file.Errors();
 
@@ -40,7 +42,7 @@ namespace Zsharp
 
             ApplySemantics(astFile);
 
-            return _context.Errors;
+            return Context.Errors;
         }
 
         private void ApplySemantics(AstFile file)
@@ -50,9 +52,12 @@ namespace Zsharp
             _resolveTypes.Visit(file);
         }
 
-        private static ZsharpParser CreateParser(string code)
+        private static ZsharpParser CreateParser(string sourceName, string code)
         {
-            var stream = new AntlrInputStream(code);
+            var stream = new AntlrInputStream(code)
+            {
+                name = sourceName
+            };
             var lexer = new ZsharpLexer(stream);
             var tokenStream = new CommonTokenStream(lexer);
             var parser = new ZsharpParser(tokenStream);

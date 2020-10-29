@@ -7,7 +7,7 @@ namespace Zsharp.AST
     {
         public const string EmptyCodeBlock = "Empty Code Block (indicates a parse error).";
         public const string IndentationMismatch = "Number of Indentations is mismatched.";
-        public const string IndentationInvalid = "Number of Indentation character is invalid.";
+        public const string IndentationInvalid = "Number of Indentation characters is invalid.";
         public const string SyntaxError = "The Syntax is invalid.";
 
         public AstError(ParserRuleContext context, AstNode? node = null)

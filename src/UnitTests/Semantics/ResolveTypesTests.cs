@@ -1,25 +1,21 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using Zsharp;
 using Zsharp.AST;
-using Zsharp.Semantics;
 
 namespace UnitTests.Semantics
 {
     [TestClass]
-    public class ResolveTypesTest
+    public class ResolveTypesTests
     {
         private static AstFile ParseFile(string code)
         {
-            var errors = new AstErrorSite();
+            var compiler = new Compiler();
+            var errors = compiler.Compile("UnitTests", "ResolveTypeTests", code);
+            errors.Should().BeEmpty();
 
-            var file = Build.File(code);
-            var resolveSymbols = new ResolveSymbols(errors);
-            resolveSymbols.Visit(file);
-            var resolver = new ResolveTypes(errors);
-            resolver.Visit(file);
-
-            errors.HasErrors.Should().BeFalse();
-            return file;
+            return compiler.Context.Modules.Modules.First().Files.First();
         }
 
         [TestMethod]
