@@ -57,6 +57,11 @@ namespace Zsharp.AST
             _files.Add(file);
         }
 
+        public override void Accept(AstVisitor visitor)
+        {
+            visitor.VisitModulePublic(this);
+        }
+
         public override void VisitChildren(AstVisitor visitor)
         {
             foreach (var file in _files)

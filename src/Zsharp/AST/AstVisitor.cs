@@ -62,7 +62,7 @@ namespace Zsharp.AST
             VisitChildren(parameter);
         }
 
-        public virtual void VisitModule(AstModule module)
+        public virtual void VisitModulePublic(AstModulePublic module)
         {
             VisitChildren(module);
         }

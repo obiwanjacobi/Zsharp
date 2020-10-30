@@ -18,5 +18,10 @@ namespace Zsharp.AST
         public AstModuleExternal(string moduleName)
             : base(moduleName, AstModuleLocality.External)
         { }
+
+        public override void Accept(AstVisitor visitor)
+        {
+            // no-op
+        }
     }
 }

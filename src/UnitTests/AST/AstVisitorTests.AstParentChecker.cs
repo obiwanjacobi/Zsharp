@@ -49,8 +49,7 @@ namespace UnitTests.AST
             }
             public override void VisitFile(AstFile file)
             {
-                // file is root in our tests
-                //file.Parent.Should().NotBeNull();
+                // file is root in our tests (Parent is null)
                 VisitChildren(file);
             }
             public override void VisitFunction(AstFunction function)
@@ -63,7 +62,7 @@ namespace UnitTests.AST
                 parameter.Parent.Should().NotBeNull();
                 VisitChildren(parameter);
             }
-            public override void VisitModule(AstModule module)
+            public override void VisitModulePublic(AstModulePublic module)
             {
                 module.Parent.Should().NotBeNull();
                 VisitChildren(module);

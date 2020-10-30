@@ -6,18 +6,13 @@ namespace Zsharp.AST
         External
     }
 
-    public class AstModule : AstNode
+    public abstract class AstModule : AstNode
     {
-        public AstModule(string modName, AstModuleLocality locality)
+        protected AstModule(string modName, AstModuleLocality locality)
             : base(AstNodeType.Module)
         {
             Name = modName;
             Locality = locality;
-        }
-
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitModule(this);
         }
 
         public AstModuleLocality Locality { get; private set; }
