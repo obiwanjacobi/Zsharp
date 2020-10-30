@@ -55,9 +55,9 @@ namespace Zsharp.AST
 
         public bool TrySetTypeSource(AstNode typeSource) => Ast.SafeSet(ref _typeSource, typeSource);
 
-        public bool IsOptional { get; }
+        public bool IsOptional { get; protected set; }
 
-        public bool IsError { get; }
+        public bool IsError { get; protected set; }
 
         public override bool IsEqual(AstType type)
         {

@@ -17,7 +17,7 @@ namespace Zsharp
         private static AstSymbolTable CreateIntrinsicSymbols()
         {
             var symbols = new AstSymbolTable();
-            AstTypeIntrinsic.AddAll(symbols);
+            AstTypeDefinitionIntrinsic.AddAll(symbols);
             return symbols;
         }
     }

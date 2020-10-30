@@ -19,6 +19,8 @@ namespace Zsharp.AST
 
         public virtual bool IsIntrinsic => false;
 
+        public virtual bool IsExternal => false;
+
         public static AstTypeDefinition Create(Type_defContext context)
         {
             var typeDef = new AstTypeDefinition(context)
@@ -43,29 +45,29 @@ namespace Zsharp.AST
             //if (context.type_Ptr()) return TypePtr;
 
             if (context.BOOL() != null)
-                return AstTypeIntrinsic.Bool;
+                return AstTypeDefinitionIntrinsic.Bool;
             if (context.STR() != null)
-                return AstTypeIntrinsic.Str;
+                return AstTypeDefinitionIntrinsic.Str;
             if (context.F64() != null)
-                return AstTypeIntrinsic.F64;
+                return AstTypeDefinitionIntrinsic.F64;
             if (context.F32() != null)
-                return AstTypeIntrinsic.F32;
+                return AstTypeDefinitionIntrinsic.F32;
             if (context.I8() != null)
-                return AstTypeIntrinsic.I8;
+                return AstTypeDefinitionIntrinsic.I8;
             if (context.I16() != null)
-                return AstTypeIntrinsic.I16;
+                return AstTypeDefinitionIntrinsic.I16;
             if (context.I64() != null)
-                return AstTypeIntrinsic.I64;
+                return AstTypeDefinitionIntrinsic.I64;
             if (context.I32() != null)
-                return AstTypeIntrinsic.I32;
+                return AstTypeDefinitionIntrinsic.I32;
             if (context.U8() != null)
-                return AstTypeIntrinsic.U8;
+                return AstTypeDefinitionIntrinsic.U8;
             if (context.U16() != null)
-                return AstTypeIntrinsic.U16;
+                return AstTypeDefinitionIntrinsic.U16;
             if (context.U64() != null)
-                return AstTypeIntrinsic.U64;
+                return AstTypeDefinitionIntrinsic.U64;
             if (context.U32() != null)
-                return AstTypeIntrinsic.U32;
+                return AstTypeDefinitionIntrinsic.U32;
 
             return null;
         }

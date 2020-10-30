@@ -114,7 +114,7 @@ namespace Zsharp.Emit
             if (typeReference.TypeDefinition.IsIntrinsic)
             {
                 // Map intrinsic data types to .NET data types
-                var type = ((AstTypeIntrinsic)typeReference.TypeDefinition).SystemType;
+                var type = ((AstTypeDefinitionIntrinsic)typeReference.TypeDefinition).SystemType;
                 return Module.ImportReference(type);
             }
 

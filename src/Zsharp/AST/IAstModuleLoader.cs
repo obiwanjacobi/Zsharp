@@ -2,6 +2,6 @@
 {
     public interface IAstModuleLoader
     {
-        AstModuleExternal LoadExternal(string moduleName);
+        AstModuleExternal? LoadExternal(string moduleName);
     }
 }

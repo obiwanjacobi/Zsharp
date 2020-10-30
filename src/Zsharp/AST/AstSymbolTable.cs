@@ -7,9 +7,9 @@ namespace Zsharp.AST
     {
         private readonly Dictionary<string, AstSymbolEntry> _table = new Dictionary<string, AstSymbolEntry>();
 
-        public AstSymbolTable()
+        public AstSymbolTable(string name = "")
         {
-            Name = String.Empty;
+            Name = name;
         }
 
         public AstSymbolTable(string name, AstSymbolTable parentTable)
