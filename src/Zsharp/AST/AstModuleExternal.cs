@@ -17,7 +17,8 @@
 
         public void AddTypeDefinition(AstTypeDefinitionExternal typeDefinition)
         {
-            Symbols.AddSymbol(typeDefinition.Identifier.Name, AstSymbolKind.Type, typeDefinition);
+            var entry = Symbols.AddSymbol(typeDefinition.Identifier.Name, AstSymbolKind.Type, typeDefinition);
+            entry.SymbolLocality = AstSymbolLocality.Imported;
         }
     }
 }

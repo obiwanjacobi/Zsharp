@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using Zsharp.AST;
 using Zsharp.Semantics;
 
 namespace UnitTests.AST
@@ -23,15 +25,16 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
-        public void LoadExternalModules()
+        public void LoadExternal_System()
         {
             var assemblies = LoadTestAssemblies();
+            var loader = new ExternalModuleLoader(assemblies);
+            loader.Modules.Should().HaveCount(1);
 
-            var modules = new ExternalModuleLoader(assemblies);
-
-            modules.Modules.Should().HaveCount(1);
-            var system = modules.LoadExternal("System");
+            var system = loader.LoadExternal("System");
             system.Should().NotBeNull();
+            system.Symbols.Namespace.Should().Be("System");
+            system.Symbols.Entries.All(e => e.SymbolLocality == AstSymbolLocality.Imported).Should().BeTrue();
         }
     }
 }
