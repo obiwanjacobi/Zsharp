@@ -112,7 +112,7 @@ namespace Zsharp.AST
         public override object? VisitFunction_def(Function_defContext context)
         {
             var file = _buildercontext.GetCurrent<AstFile>();
-            var function = new AstFunction(context);
+            var function = new AstFunctionDefinition(context);
 
             file.AddFunction(function);
             _buildercontext.SetCurrent(function);
@@ -276,7 +276,7 @@ namespace Zsharp.AST
         public override object? VisitFunction_parameter(Function_parameterContext context)
         {
             var funcParam = new AstFunctionParameter(context);
-            var function = _buildercontext.GetCurrent<AstFunction>();
+            var function = _buildercontext.GetCurrent<AstFunctionDefinition>();
             function.TryAddParameter(funcParam);
 
             _buildercontext.SetCurrent(funcParam);
@@ -288,7 +288,7 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_parameter_self(Function_parameter_selfContext context)
         {
-            var function = _buildercontext.GetCurrent<AstFunction>();
+            var function = _buildercontext.GetCurrent<AstFunctionDefinition>();
             var funcParam = new AstFunctionParameter(context);
             funcParam.SetIdentifier(AstIdentifierIntrinsic.Self);
             function.TryAddParameter(funcParam);

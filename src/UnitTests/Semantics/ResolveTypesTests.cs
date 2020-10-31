@@ -105,7 +105,7 @@ namespace UnitTests.Semantics
 
             var file = ParseFile(code);
 
-            var fn = file.CodeBlock.ItemAt<AstFunction>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
             var a = fn.CodeBlock.ItemAt<AstAssignment>(0);
             var v = a.Variable as AstVariableDefinition;
             var p = a.Expression.RHS.VariableReference.ParameterDefinition;

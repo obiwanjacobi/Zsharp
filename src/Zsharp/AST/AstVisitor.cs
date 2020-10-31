@@ -52,7 +52,7 @@ namespace Zsharp.AST
             VisitChildren(file);
         }
 
-        public virtual void VisitFunction(AstFunction function)
+        public virtual void VisitFunctionDefinition(AstFunctionDefinition function)
         {
             VisitChildren(function);
         }

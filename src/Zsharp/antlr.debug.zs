@@ -1,1 +1,4 @@
-v = x + 42
+fn: ()
+    return
+fn1: ()
+    fn()

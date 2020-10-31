@@ -51,7 +51,7 @@ namespace Zsharp.AST
         {
             Ast.Guard(node, "Cannot add null.");
 
-            if ((SymbolKind == AstSymbolKind.Function && node is AstFunction) ||
+            if ((SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinition) ||
                 (SymbolKind == AstSymbolKind.Variable && node is AstFunctionParameter) ||
                 (SymbolKind == AstSymbolKind.Variable && node is AstVariableDefinition) ||
                 (SymbolKind == AstSymbolKind.Type && node is AstTypeDefinition)

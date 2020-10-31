@@ -53,7 +53,7 @@ namespace Zsharp.Dgml
             return node;
         }
 
-        public Node WriteFunction(AstFunction function, string parentId)
+        public Node WriteFunction(AstFunctionDefinition function, string parentId)
         {
             var identifier = function.Identifier;
             var name = identifier.Name;
