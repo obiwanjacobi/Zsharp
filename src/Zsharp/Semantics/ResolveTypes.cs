@@ -100,7 +100,11 @@ namespace Zsharp.Semantics
                     var def = (IAstTypeReferenceSite?)var.VariableDefinition
                         ?? (IAstTypeReferenceSite?)var.ParameterDefinition;
 
-                    Ast.Guard(def, "No VariableDefinition or ParameterDefintion was set.");
+                    if (def == null)
+                    {
+                        this._errorSite.UndefinedVariable(var);
+                        return;
+                    }
 
                     var typeRef = def?.TypeReference
                         ?? FindTypeReference(var);

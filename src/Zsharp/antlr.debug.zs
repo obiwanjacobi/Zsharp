@@ -1,2 +1,1 @@
-import mod1
-import mod2
+v = x + 42

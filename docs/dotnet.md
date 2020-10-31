@@ -166,7 +166,7 @@ Public fields are represented as a struct with the same name as the class (with 
 
 Public instance methods are represented as (`self`) bound-functions.
 
-Public static methods are normal functions with the name of the class prefixed to the method name.
+Public static methods are normal functions with the name of the class prefixed to the method name. (How do we parse back a `ConsoleWriteLine` to `Console.WriteLine`?) The import statement can contain the static class name and will expose all its static members (`import System.Console` allows `WriteLine("")`). Using an import alias is also supported on a per function (method) basis (`import ConsoleWriteLine = System.Console.WriteLine`).
 
 Public extension methods are represented as self-bound (this) functions (if we can detect those).
 

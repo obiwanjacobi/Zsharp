@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Antlr4.Runtime;
+using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -16,6 +17,8 @@ namespace Zsharp.AST
         {
             _assignCtx = context;
         }
+
+        public ParserRuleContext? Context => (ParserRuleContext?)_refCtx ?? (ParserRuleContext?)_assignCtx;
 
         public bool HasDefinition => _varDef != null || _paramDef != null;
 
