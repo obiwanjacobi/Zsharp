@@ -220,7 +220,23 @@ namespace UnitTests.AST
         public void VariableReference()
         {
             const string code =
-                "b = b + 1" + Tokens.NewLine
+                "b = x" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var exp = assign.Expression;
+
+            exp.Should().NotBeNull();
+            exp.RHS.VariableReference.Should().NotBeNull();
+            exp.RHS.VariableReference.Symbol.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void VariableReferencePlus()
+        {
+            const string code =
+                "b = x + 1" + Tokens.NewLine
                 ;
 
             var file = Build.File(code);

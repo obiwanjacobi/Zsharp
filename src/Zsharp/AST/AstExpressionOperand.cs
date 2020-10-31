@@ -7,7 +7,6 @@ namespace Zsharp.AST
     public class AstExpressionOperand : AstNode, IAstTypeReferenceSite
     {
         private readonly Literal_boolContext? _litBoolCtx;
-        private readonly Function_callContext? _callCtx;
 
         public AstExpressionOperand(AstExpression expr)
             : base(AstNodeType.Operand)
@@ -30,16 +29,17 @@ namespace Zsharp.AST
             variable.SetParent(this);
         }
 
+        public AstExpressionOperand(AstFunctionReference function)
+            : base(AstNodeType.Operand)
+        {
+            FunctionReference = function;
+            function.SetParent(this);
+        }
+
         public AstExpressionOperand(Literal_boolContext context)
             : base(AstNodeType.Operand)
         {
             _litBoolCtx = context;
-        }
-
-        public AstExpressionOperand(Function_callContext context)
-            : base(AstNodeType.Operand)
-        {
-            _callCtx = context;
         }
 
         public ParserRuleContext? Context
@@ -48,8 +48,6 @@ namespace Zsharp.AST
             {
                 if (_litBoolCtx != null)
                     return _litBoolCtx;
-                if (_callCtx != null)
-                    return _callCtx;
                 return null;
             }
         }
@@ -59,6 +57,8 @@ namespace Zsharp.AST
         public AstNumeric? Numeric { get; }
 
         public AstVariableReference? VariableReference { get; }
+
+        public AstFunctionReference? FunctionReference { get; }
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;

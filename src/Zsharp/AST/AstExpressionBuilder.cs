@@ -170,30 +170,18 @@ namespace Zsharp.AST
 
         public override object? VisitExpression_value(Expression_valueContext context)
         {
-            var number = context.number();
-            if (number != null)
-            {
-                var nr = VisitNumber(number);
-                Ast.Guard<AstExpressionOperand>(nr);
-                _values.Push((AstExpressionOperand)nr!);
+            var operand = VisitChildren(context);
 
-                var expr = new AstExpression(context);
-                _operators.Push(expr);
-                return null;
-            }
-
-            if (context.expression_bool() != null)
+            if (operand != null)
             {
-                var operand = VisitChildren(context);
                 Ast.Guard<AstExpressionOperand>(operand);
                 _values.Push((AstExpressionOperand)operand!);
 
                 var expr = new AstExpression(context);
                 _operators.Push(expr);
-                return null;
             }
 
-            return base.VisitChildren(context);
+            return null;
         }
 
         public override object? VisitExpression_arithmetic(Expression_arithmeticContext context)
@@ -209,7 +197,18 @@ namespace Zsharp.AST
             => new AstExpressionOperand(context);
 
         public override object? VisitFunction_call(Function_callContext context)
-            => new AstExpressionOperand(context);
+        {
+            var function = new AstFunctionReference(context);
+
+            _builderContext.SetCurrent(function);
+            VisitChildren(context);
+            _builderContext.RevertCurrent();
+
+            var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            symbols.Symbols.Add(function);
+
+            return new AstExpressionOperand(function);
+        }
 
         public override object? VisitVariable_ref(Variable_refContext context)
         {

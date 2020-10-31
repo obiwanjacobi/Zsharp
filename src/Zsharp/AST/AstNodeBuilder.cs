@@ -299,7 +299,23 @@ namespace Zsharp.AST
             return any;
         }
 
+        public override object? VisitFunction_call(Function_callContext context)
+        {
+            var function = new AstFunctionReference(context);
+            var codeBlock = _buildercontext.GetCodeBlock();
+            Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
 
+            codeBlock!.AddItem(function);
+
+            _buildercontext.SetCurrent(function);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
+
+            var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
+            symbols.Symbols.Add(function);
+
+            return any;
+        }
 
         public override object? VisitVariable_def_typed(Variable_def_typedContext context)
         {

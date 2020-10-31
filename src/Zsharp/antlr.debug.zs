@@ -1,4 +1,4 @@
 fn: ()
     return
 fn1: ()
-    fn()
+    x = p
