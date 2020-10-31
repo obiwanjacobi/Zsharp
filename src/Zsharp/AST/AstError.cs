@@ -15,6 +15,7 @@ namespace Zsharp.AST
             Node = node;
             Context = context;
             Text = String.Empty;
+            Source = String.Empty;
         }
 
         public ParserRuleContext Context { get; }
@@ -23,6 +24,13 @@ namespace Zsharp.AST
 
         public string Text { get; set; }
 
+        public string Source { get; set; }
+
         public Exception? Error => Context.exception;
+
+        public override string ToString()
+        {
+            return $"{Text} at {Context.Start.Line}, {Context.Start.Column + 1} ({Source})";
+        }
     }
 }

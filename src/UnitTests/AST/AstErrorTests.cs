@@ -18,6 +18,19 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void SyntaxError()
+        {
+            const string code =
+                "v + 42" + Tokens.NewLine
+                ;
+
+            var compiler = Compile(code);
+            var error = compiler.Context.Errors.Single();
+            error.Context.Should().NotBeNull();
+            error.Source.Should().NotBeNullOrEmpty();
+        }
+
+        [TestMethod]
         public void TopUndefinedVariable()
         {
             const string code =
@@ -26,7 +39,8 @@ namespace UnitTests.AST
 
             var compiler = Compile(code);
             var error = compiler.Context.Errors.Single();
-            error.Node.Should().BeOfType<AstVariableReference>();
+            var variable = (AstVariableReference)error.Node;
+            variable.Identifier.Name.Should().Be("x");
             error.Text.Should().Contain("Undefined Variable");
         }
     }

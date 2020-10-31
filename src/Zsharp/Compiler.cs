@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Zsharp.AST;
 using Zsharp.Parser;
@@ -52,16 +53,37 @@ namespace Zsharp
             _resolveTypes.Visit(file);
         }
 
-        private static ZsharpParser CreateParser(string sourceName, string code)
+        private ZsharpParser CreateParser(string sourceName, string code)
         {
             var stream = new AntlrInputStream(code)
             {
                 name = sourceName
             };
+
             var lexer = new ZsharpLexer(stream);
             var tokenStream = new CommonTokenStream(lexer);
             var parser = new ZsharpParser(tokenStream);
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(new AstErrorHandlerParser(Context));
+
             return parser;
+        }
+
+        private class AstErrorHandlerParser : IAntlrErrorListener<IToken>
+        {
+            private readonly CompilerContext _context;
+
+            public AstErrorHandlerParser(CompilerContext context)
+            {
+                _context = context;
+            }
+
+            public void SyntaxError(TextWriter output, IRecognizer recognizer,
+                IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
+            {
+                var err = _context.AddError((ParserRuleContext)e.Context, $"Syntax Error: {msg}");
+                err.Source = recognizer.InputStream.SourceName;
+            }
         }
     }
 }
