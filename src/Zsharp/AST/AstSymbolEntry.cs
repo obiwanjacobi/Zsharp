@@ -9,6 +9,7 @@ namespace Zsharp.AST
     public class AstSymbolEntry
     {
         private readonly List<AstNode> _references = new List<AstNode>();
+        private readonly List<string> _aliases = new List<string>();
 
         public AstSymbolEntry(string symbolName, AstSymbolKind symbolKind)
         {
@@ -68,6 +69,25 @@ namespace Zsharp.AST
             {
                 _references.Add(node);
             }
+        }
+
+        public IEnumerable<string> Aliases => _aliases;
+
+        public bool TryAddAlias(string alias)
+        {
+            if (!_aliases.Contains(alias))
+            {
+                _aliases.Add(alias);
+                return true;
+            }
+            return false;
+        }
+
+        public void AddAlias(string alias)
+        {
+            if (!TryAddAlias(alias))
+                throw new ArgumentException(
+                    $"Alias '{alias}' is alread present for symbol {SymbolName}.", nameof(alias));
         }
 
         internal static string MakeKey(string name, AstSymbolKind kind) => name + kind;

@@ -104,7 +104,8 @@ namespace Zsharp.AST
         {
             get
             {
-                if (ParentTable != null)
+                if (ParentTable != null &&
+                    !String.IsNullOrEmpty(ParentTable.Name))
                 {
                     return ParentTable.Namespace + "." + Name;
                 }

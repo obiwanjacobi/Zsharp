@@ -10,7 +10,7 @@ codeblock: (flow_statement | variable_assign | function_call | definition | comm
 module_statement : statement_module | statement_import | statement_export;
 module_name: identifier_module | module_name DOT identifier_module;
 statement_module: MODULE SP module_name newline;
-statement_import: IMPORT SP module_name newline;
+statement_import: IMPORT SP (alias_module SP EQ_ASSIGN SP)? module_name newline;
 statement_export: EXPORT SP (identifier_func | identifier_type) newline;
 
 // flow control
@@ -125,6 +125,9 @@ template_param_list_use_type: SMALL_ANGLEopen type_ref GREAT_ANGLEclose;
 template_param_list: SMALL_ANGLEopen template_param_any (COMMA SP template_param_any)* GREAT_ANGLEclose;
 template_param_var: identifier_param type_ref_use;
 template_param_any: template_param_var | type_name;
+
+// aliases
+alias_module: identifier_module;
 
 // identifiers
 identifier_type: IDENTIFIERupper;

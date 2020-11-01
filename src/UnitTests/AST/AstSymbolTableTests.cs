@@ -73,13 +73,7 @@ namespace UnitTests.AST
                 Tokens.Indent1 + "print()" + Tokens.NewLine
                 ;
 
-            // setup external module symbols
-            var externalModule = new AstModuleExternal("external");
-            var entry = externalModule.Symbols.AddSymbol("print", AstSymbolKind.Function);
-            entry.SymbolLocality = AstSymbolLocality.Imported;
-            var moduleLoader = new ModuleLoader() { Modules = { externalModule } };
-
-            var file = Build.File(code, moduleLoader);
+            var file = Build.File(code);
             var fn = file.Functions.First();
 
             var symbols = fn.Symbols;

@@ -1,4 +1,3 @@
+import print = external.static.print
 fn: ()
-    return
-fn1: ()
-    x = p
+    print()

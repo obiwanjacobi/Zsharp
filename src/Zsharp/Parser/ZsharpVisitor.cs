@@ -471,6 +471,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTemplate_param_any([NotNull] ZsharpParser.Template_param_anyContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.alias_module"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAlias_module([NotNull] ZsharpParser.Alias_moduleContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.identifier_type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
