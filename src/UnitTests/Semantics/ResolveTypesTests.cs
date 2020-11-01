@@ -9,9 +9,9 @@ namespace UnitTests.Semantics
     [TestClass]
     public class ResolveTypesTests
     {
-        private static AstFile ParseFile(string code)
+        private static AstFile ParseFile(string code, IAstModuleLoader moduleLoader = null)
         {
-            var compiler = new Compiler(new ModuleLoader());
+            var compiler = new Compiler(moduleLoader ?? new ModuleLoader());
             var errors = compiler.Compile("UnitTests", "ResolveTypeTests", code);
             errors.Should().BeEmpty();
 
@@ -111,6 +111,27 @@ namespace UnitTests.Semantics
             var p = a.Expression.RHS.VariableReference.ParameterDefinition;
             p.Should().NotBeNull();
             v.TypeReference.Identifier.Name.Should().Be(p.TypeReference.Identifier.Name);
+        }
+
+        [TestMethod]
+        public void ImportFunctionName()
+        {
+            const string code =
+                "import external" + Tokens.NewLine +
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "print()" + Tokens.NewLine
+                ;
+
+            // setup external module symbols
+            var externalModule = new AstModuleExternal("external");
+            var entry = externalModule.Symbols.AddSymbol("print", AstSymbolKind.Function);
+            entry.SymbolLocality = AstSymbolLocality.Imported;
+            var moduleLoader = new ModuleLoader() { Modules = { externalModule } };
+
+            var file = ParseFile(code, moduleLoader);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var call = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
+            call.FunctionDefinition.Should().NotBeNull();
         }
     }
 }

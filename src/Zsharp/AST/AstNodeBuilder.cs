@@ -91,7 +91,7 @@ namespace Zsharp.AST
             module.AddImport(context, externalModule);
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.Symbols.AddSymbol(context.module_name().GetText(), AstSymbolKind.Module, null);
+            var entry = symbols.Symbols.AddSymbol(externalModule.Name, AstSymbolKind.Module, externalModule);
             entry.SymbolLocality = AstSymbolLocality.Imported;
 
             return null;

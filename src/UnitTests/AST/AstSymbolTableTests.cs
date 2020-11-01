@@ -6,7 +6,7 @@ using Zsharp.AST;
 namespace UnitTests.AST
 {
     [TestClass]
-    public class AstSymbolTableTests
+    public partial class AstSymbolTableTests
     {
         [TestMethod]
         public void TopVariableDefInit()
@@ -73,14 +73,18 @@ namespace UnitTests.AST
                 Tokens.Indent1 + "print()" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code);
+            // setup external module symbols
+            var externalModule = new AstModuleExternal("external");
+            var entry = externalModule.Symbols.AddSymbol("print", AstSymbolKind.Function);
+            entry.SymbolLocality = AstSymbolLocality.Imported;
+            var moduleLoader = new ModuleLoader() { Modules = { externalModule } };
+
+            var file = Build.File(code, moduleLoader);
             var fn = file.Functions.First();
 
             var symbols = fn.Symbols;
             var fnSymbol = symbols.FindEntry("print", AstSymbolKind.Function);
             fnSymbol.SymbolKind.Should().Be(AstSymbolKind.Function);
-            // cannot be known at this point
-            //fnSymbol.SymbolLocality.Should().Be(AstSymbolLocality.Imported);
 
             // the import entry should be module
             fnSymbol = symbols.FindEntry("external", AstSymbolKind.Module);

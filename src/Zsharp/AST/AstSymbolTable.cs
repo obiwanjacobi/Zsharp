@@ -6,6 +6,7 @@ namespace Zsharp.AST
     public class AstSymbolTable
     {
         private readonly Dictionary<string, AstSymbolEntry> _table = new Dictionary<string, AstSymbolEntry>();
+        private readonly List<AstSymbolTable> _symbolTables = new List<AstSymbolTable>();
 
         public AstSymbolTable(string name = "")
         {
@@ -24,7 +25,7 @@ namespace Zsharp.AST
 
         public AstSymbolTable? ParentTable { get; }
 
-        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node)
+        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node = null)
         {
             var exOrImported = FindEntry(symbolName, AstSymbolKind.NotSet);
             var entry = FindEntry(symbolName, kind);
@@ -44,6 +45,14 @@ namespace Zsharp.AST
             {
                 entry.AddNode(node);
             }
+
+            if (node is AstModuleExternal externalModule)
+            {
+                Ast.Guard(kind == AstSymbolKind.Module, $"Adding an External Module as a {kind}.");
+                // register external table at this 'level'
+                _symbolTables.Add(externalModule.Symbols);
+            }
+
             return entry;
         }
 
@@ -54,16 +63,28 @@ namespace Zsharp.AST
                 throw new ArgumentException("Parsing dot-names is not implemented yet.", nameof(name));
             }
 
+            AstSymbolEntry? entry = null;
             var key = AstSymbolEntry.MakeKey(name, kind);
             if (_table.ContainsKey(key))
             {
-                return _table[key];
+                entry = _table[key];
             }
-            if (ParentTable != null)
+            else
             {
-                return ParentTable.FindEntry(name, kind);
+                foreach (var table in _symbolTables)
+                {
+                    entry = table.FindEntry(name, kind);
+                    if (entry != null)
+                        break;
+                }
             }
-            return null;
+
+            if (ParentTable != null && entry == null)
+            {
+                entry = ParentTable.FindEntry(name, kind);
+            }
+
+            return entry;
         }
 
         public AstSymbolEntry? FindEntry(AstIdentifier identifier, AstSymbolKind kind)
