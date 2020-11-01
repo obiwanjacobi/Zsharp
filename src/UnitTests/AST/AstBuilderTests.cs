@@ -110,6 +110,19 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void BuildFile_FunctionCall()
+        {
+            const string code =
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn()" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var func = file.Functions.First().CodeBlock.ItemAt<AstFunctionReference>(0);
+            func.Identifier.Name.Should().Be("fn");
+        }
+
+        [TestMethod]
         public void BuildFile_Assignment()
         {
             const string code =

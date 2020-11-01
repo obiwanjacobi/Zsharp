@@ -247,5 +247,21 @@ namespace UnitTests.AST
             exp.LHS.VariableReference.Should().NotBeNull();
             exp.LHS.VariableReference.Symbol.Should().NotBeNull();
         }
+
+        [TestMethod]
+        public void FunctionCall()
+        {
+            const string code =
+                "r = fn()" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var exp = assign.Expression;
+
+            exp.Should().NotBeNull();
+            exp.RHS.FunctionReference.Should().NotBeNull();
+            exp.RHS.FunctionReference.Symbol.Should().NotBeNull();
+        }
     }
 }
