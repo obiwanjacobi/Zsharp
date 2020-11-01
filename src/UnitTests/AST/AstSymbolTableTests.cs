@@ -65,6 +65,29 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void ImportFunctionName()
+        {
+            const string code =
+                "import external" + Tokens.NewLine +
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "print()" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.Functions.First();
+
+            var symbols = fn.Symbols;
+            var fnSymbol = symbols.FindEntry("print", AstSymbolKind.Function);
+            fnSymbol.SymbolKind.Should().Be(AstSymbolKind.Function);
+            // cannot be known at this point
+            //fnSymbol.SymbolLocality.Should().Be(AstSymbolLocality.Imported);
+
+            // the import entry should be module
+            fnSymbol = symbols.FindEntry("external", AstSymbolKind.Module);
+            fnSymbol.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void FunctionName()
         {
             const string code =
