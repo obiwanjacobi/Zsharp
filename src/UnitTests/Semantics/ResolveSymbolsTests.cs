@@ -58,5 +58,23 @@ namespace UnitTests.Semantics
             vr.VariableDefinition.Should().Be(x);
             vr.Symbol.Should().Be(x.Symbol);
         }
+
+        [TestMethod]
+        public void FunctionReference()
+        {
+            const string code =
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn()" + Tokens.NewLine
+                ;
+
+            var file = ParseFile(code);
+
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            fn.Should().NotBeNull();
+
+            var fnRef = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
+            fnRef.Should().NotBeNull();
+            fnRef.Symbol.Definition.Should().NotBeNull();
+        }
     }
 }
