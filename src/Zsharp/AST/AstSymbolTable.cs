@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Zsharp.AST
 {
     public class AstSymbolTable
     {
         private readonly Dictionary<string, AstSymbolEntry> _table = new Dictionary<string, AstSymbolEntry>();
-        private readonly List<AstSymbolTable> _symbolTables = new List<AstSymbolTable>();
 
         public AstSymbolTable(string name = "")
         {
@@ -36,7 +36,7 @@ namespace Zsharp.AST
                 if (exOrImported != null)
                 {
                     _table.Remove(exOrImported.Key);
-                    entry.SymbolLocality = exOrImported.SymbolLocality;
+                    Merge(entry, exOrImported);
                 }
                 _table[entry.Key] = entry;
             }
@@ -46,37 +46,37 @@ namespace Zsharp.AST
                 entry.AddNode(node);
             }
 
-            if (node is AstModuleExternal externalModule)
-            {
-                Ast.Guard(kind == AstSymbolKind.Module, $"Adding an External Module as a {kind}.");
-                // register external table at this 'level'
-                _symbolTables.Add(externalModule.Symbols);
-            }
-
             return entry;
         }
 
-        public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind)
+        private void Merge(AstSymbolEntry targetEntry, AstSymbolEntry sourceEntry)
         {
-            if (name.Contains('.'))
+            targetEntry.SymbolLocality = sourceEntry.SymbolLocality;
+            foreach (var alias in sourceEntry.Aliases)
             {
-                throw new ArgumentException("Parsing dot-names is not implemented yet.", nameof(name));
+                targetEntry.TryAddAlias(alias);
             }
+        }
 
+        public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
+        {
             AstSymbolEntry? entry = null;
             var key = AstSymbolEntry.MakeKey(name, kind);
             if (_table.ContainsKey(key))
             {
                 entry = _table[key];
             }
+            else if (kind != AstSymbolKind.NotSet)
+            {
+                // check aliases
+                entry = _table.Values
+                    .SingleOrDefault(e => e.Aliases.Contains(name) && e.SymbolKind == kind);
+            }
             else
             {
-                foreach (var table in _symbolTables)
-                {
-                    entry = table.FindEntry(name, kind);
-                    if (entry != null)
-                        break;
-                }
+                // by name only (kind is ignored)
+                entry = _table.Values
+                    .SingleOrDefault(e => e.SymbolName == name || e.Aliases.Contains(name));
             }
 
             if (ParentTable != null && entry == null)

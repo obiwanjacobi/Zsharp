@@ -19,7 +19,7 @@ namespace Zsharp.AST
             : base(inferredFrom.Context!)
         {
             SetIdentifier(inferredFrom.Identifier!);
-            SetTypeDefinition(inferredFrom.TypeDefinition!);
+            TrySetTypeDefinition(inferredFrom.TypeDefinition!);
             _typeSource = inferredFrom.TypeSource;
         }
 

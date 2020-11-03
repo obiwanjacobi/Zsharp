@@ -3,13 +3,28 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using Zsharp;
 using Zsharp.AST;
+using Zsharp.Semantics;
 
 namespace UnitTests.Semantics
 {
     [TestClass]
     public class ResolveTypesTests
     {
-        private static AstFile ParseFile(string code, IAstModuleLoader moduleLoader = null)
+        private static AssemblyManager LoadTestAssemblies()
+        {
+            var assemblies = new AssemblyManager();
+            assemblies.LoadAssembly(@"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Console.dll");
+            return assemblies;
+        }
+
+        private static ExternalModuleLoader CreateModuleLoader()
+        {
+            var assemblies = LoadTestAssemblies();
+            var loader = new ExternalModuleLoader(assemblies);
+            return loader;
+        }
+
+        private static AstFile CompileFile(string code, IAstModuleLoader moduleLoader = null)
         {
             var compiler = new Compiler(moduleLoader ?? new ModuleLoader());
             var errors = compiler.Compile("UnitTests", "ResolveTypeTests", code);
@@ -25,7 +40,7 @@ namespace UnitTests.Semantics
                 "v: U8" + Tokens.NewLine
                 ;
 
-            var file = ParseFile(code);
+            var file = CompileFile(code);
 
             var v = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
             v.TypeReference.Should().NotBeNull();
@@ -43,7 +58,7 @@ namespace UnitTests.Semantics
                 "v: U8 = 42" + Tokens.NewLine
                 ;
 
-            var file = ParseFile(code);
+            var file = CompileFile(code);
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(0);
             var v = a.Variable as AstVariableDefinition;
@@ -63,7 +78,7 @@ namespace UnitTests.Semantics
                 "v = 42" + Tokens.NewLine
                 ;
 
-            var file = ParseFile(code);
+            var file = CompileFile(code);
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(0);
             var v = a.Variable as AstVariableDefinition;
@@ -83,7 +98,7 @@ namespace UnitTests.Semantics
                 "x = v" + Tokens.NewLine
                 ;
 
-            var file = ParseFile(code);
+            var file = CompileFile(code);
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(0);
             var v = a.Variable as AstVariableDefinition;
@@ -103,7 +118,7 @@ namespace UnitTests.Semantics
                 Tokens.Indent1 + "x = p" + Tokens.NewLine
                 ;
 
-            var file = ParseFile(code);
+            var file = CompileFile(code);
 
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
             var a = fn.CodeBlock.ItemAt<AstAssignment>(0);
@@ -114,24 +129,21 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
-        public void ImportFunctionName()
+        public void ImportFunctionNameAlias()
         {
             const string code =
-                "import external" + Tokens.NewLine +
+                "import Print = System.Console.WriteLine" + Tokens.NewLine +
                 "fn: ()" + Tokens.NewLine +
-                Tokens.Indent1 + "print()" + Tokens.NewLine
+                Tokens.Indent1 + "Print(\"Hello World\")" + Tokens.NewLine
                 ;
 
-            // setup external module symbols
-            var externalModule = new AstModuleExternal("external");
-            var entry = externalModule.Symbols.AddSymbol("print", AstSymbolKind.Function);
-            entry.SymbolLocality = AstSymbolLocality.Imported;
-            var moduleLoader = new ModuleLoader() { Modules = { externalModule } };
+            var moduleLoader = CreateModuleLoader();
+            var file = CompileFile(code, moduleLoader);
 
-            var file = ParseFile(code, moduleLoader);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
             var call = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
-            call.FunctionDefinition.Should().NotBeNull();
+
+            call.Symbol.Definition.Should().NotBeNull();
         }
     }
 }

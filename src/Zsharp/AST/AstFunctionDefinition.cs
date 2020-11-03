@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstFunctionDefinition : AstFunction,
+    public class AstFunctionDefinition : AstFunctionParameters,
         IAstCodeBlockSite, IAstSymbolTableSite
     {
-        private readonly List<AstFunctionParameter> _parameters = new List<AstFunctionParameter>();
-
         public AstFunctionDefinition(Function_defContext functionCtx)
         {
             Context = functionCtx;
         }
 
         public Function_defContext Context { get; }
-
-        public IEnumerable<AstFunctionParameter> Parameters => _parameters;
 
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
@@ -65,26 +60,11 @@ namespace Zsharp.AST
             return Symbols.AddSymbol(symbolName, kind, node);
         }
 
-        public bool TryAddParameter(AstFunctionParameter param)
-        {
-            if (param != null &&
-                param.TrySetParent(this))
-            {
-                _parameters.Add(param);
-                return true;
-            }
-            return false;
-        }
-
         public override void Accept(AstVisitor visitor) => visitor.VisitFunctionDefinition(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var param in _parameters)
-            {
-                param.Accept(visitor);
-            }
-
+            base.VisitChildren(visitor);
             CodeBlock?.Accept(visitor);
         }
 
@@ -93,7 +73,7 @@ namespace Zsharp.AST
         /// </summary>
         private void AddFunctionSymbols()
         {
-            foreach (var param in _parameters)
+            foreach (var param in Parameters)
             {
                 // function parameters are registered as variables
                 Symbols.AddSymbol(param.Identifier.Name, AstSymbolKind.Variable, param);

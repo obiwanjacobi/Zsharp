@@ -25,6 +25,20 @@ namespace Zsharp.AST
             return symbolTable.FindEntry(variable, AstSymbolKind.Variable);
         }
 
+        public static AstSymbolKind ToSymbolKind(this AstNodeType nodeType)
+        {
+            return nodeType switch
+            {
+                AstNodeType.Enum => AstSymbolKind.Enum,
+                AstNodeType.Function => AstSymbolKind.Function,
+                AstNodeType.Struct => AstSymbolKind.Struct,
+                AstNodeType.Type => AstSymbolKind.Type,
+                AstNodeType.Module => AstSymbolKind.Module,
+                AstNodeType.Variable => AstSymbolKind.Variable,
+                _ => AstSymbolKind.NotSet
+            };
+        }
+
         public static AstSymbolEntry Add(this AstSymbolTable symbolTable, AstVariable variable)
         {
             return AddSymbol(symbolTable, variable, AstSymbolKind.Variable, variable);

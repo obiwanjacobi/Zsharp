@@ -54,6 +54,7 @@ namespace Zsharp.AST
 
             if ((SymbolKind == AstSymbolKind.Module && node is AstModuleExternal) ||
                 (SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinition) ||
+                (SymbolKind == AstSymbolKind.Function && node is AstFunctionExternal) ||
                 (SymbolKind == AstSymbolKind.Variable && node is AstFunctionParameter) ||
                 (SymbolKind == AstSymbolKind.Variable && node is AstVariableDefinition) ||
                 (SymbolKind == AstSymbolKind.Type && node is AstTypeDefinition)
@@ -75,7 +76,8 @@ namespace Zsharp.AST
 
         public bool TryAddAlias(string alias)
         {
-            if (!_aliases.Contains(alias))
+            if (!String.IsNullOrEmpty(alias) &&
+                !_aliases.Contains(alias))
             {
                 _aliases.Add(alias);
                 return true;

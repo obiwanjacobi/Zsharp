@@ -16,6 +16,14 @@ namespace UnitTests.AST
             return assemblies;
         }
 
+        private static ExternalModuleLoader CreateModuleLoader()
+        {
+            var assemblies = LoadTestAssemblies();
+            var loader = new ExternalModuleLoader(assemblies);
+            loader.Modules.Should().HaveCount(2);
+            return loader;
+        }
+
         [TestMethod]
         public void LoadExternalAssembly()
         {
@@ -27,9 +35,7 @@ namespace UnitTests.AST
         [TestMethod]
         public void LoadExternal_System()
         {
-            var assemblies = LoadTestAssemblies();
-            var loader = new ExternalModuleLoader(assemblies);
-            loader.Modules.Should().HaveCount(1);
+            var loader = CreateModuleLoader();
 
             var system = loader.LoadExternal("System");
             system.Should().NotBeNull();

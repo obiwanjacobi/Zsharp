@@ -25,7 +25,6 @@ namespace UnitTests.AST
             def.TypeReference.Identifier.Name.Should().Be("U8");
         }
 
-
         [TestMethod]
         public void TopVariableName()
         {
@@ -61,7 +60,7 @@ namespace UnitTests.AST
 
             // the export entry is removed
             fn = symbols.FindEntry("fn", AstSymbolKind.NotSet);
-            fn.Should().BeNull();
+            fn.SymbolKind.Should().NotBe(AstSymbolKind.NotSet);
         }
 
         [TestMethod]

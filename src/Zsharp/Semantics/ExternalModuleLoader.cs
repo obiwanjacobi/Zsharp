@@ -8,7 +8,7 @@ namespace Zsharp.Semantics
     public class ExternalModuleLoader : IAstModuleLoader
     {
         private readonly Dictionary<string, AstModuleExternal> _modules = new Dictionary<string, AstModuleExternal>();
-        private readonly Dictionary<string, AstTypeReferenceExternal> _typeReferences = new Dictionary<string, AstTypeReferenceExternal>();
+        private readonly ExternalTypeRepository _typeRepository = new ExternalTypeRepository();
 
         public ExternalModuleLoader(AssemblyManager assemblies)
         {
@@ -37,29 +37,19 @@ namespace Zsharp.Semantics
 
         private void AddType(TypeDefinition type)
         {
-            if (!_modules.TryGetValue(type.Namespace, out AstModuleExternal? module))
+
+
+            var builder = new ImportedTypeBuilder(_typeRepository);
+            builder.Build(type);
+
+            var moduleName = builder.Namespace;
+            if (!_modules.TryGetValue(moduleName, out AstModuleExternal? module))
             {
-                module = new AstModuleExternal(type.Namespace);
-                _modules.Add(type.Namespace, module);
+                module = new AstModuleExternal(moduleName);
+                _modules.Add(moduleName, module);
             }
 
-            module.AddTypeDefinition(new AstTypeDefinitionExternal(
-                type.Name, GetOrAddTypeReference(type.BaseType)));
-
-            //foreach (var method in type.Methods)
-            //{
-            //    module.AddFunction(new AstFunctionExternal(method));
-            //}
-        }
-
-        private AstTypeReferenceExternal GetOrAddTypeReference(TypeReference typeReference)
-        {
-            if (!_typeReferences.TryGetValue(typeReference.FullName, out AstTypeReferenceExternal? typeRef))
-            {
-                typeRef = new AstTypeReferenceExternal(typeReference);
-                _typeReferences.Add(typeReference.FullName, typeRef);
-            }
-            return typeRef;
+            builder.AddTo(module);
         }
 
         public AssemblyManager Assemblies { get; }

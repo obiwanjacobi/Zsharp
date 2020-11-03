@@ -8,7 +8,6 @@ namespace Zsharp.AST
     public class AstModulePublic : AstModule
     {
         private readonly List<Statement_moduleContext> _contexts = new List<Statement_moduleContext>();
-        private readonly List<Statement_importContext> _imports = new List<Statement_importContext>();
         private readonly List<Statement_exportContext> _exports = new List<Statement_exportContext>();
 
         public AstModulePublic(string moduleName)
@@ -17,8 +16,6 @@ namespace Zsharp.AST
 
         private readonly List<AstFile> _files = new List<AstFile>();
         public IEnumerable<AstFile> Files => _files;
-
-        public IEnumerable<Statement_importContext> Imports => _imports;
 
         public IEnumerable<Statement_exportContext> Exports => _exports;
 
@@ -31,14 +28,6 @@ namespace Zsharp.AST
                 Ast.Guard(Name == moduleCtx.module_name().GetText(), "Not the same module.");
                 _contexts.Add(moduleCtx);
             }
-        }
-
-        public void AddImport(Statement_importContext importCtx, AstModule externalModule)
-        {
-            if (importCtx == null)
-                throw new ArgumentNullException(nameof(importCtx));
-
-            _imports.Add(importCtx);
         }
 
         public void AddExport(Statement_exportContext exportCtx)

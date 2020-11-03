@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -51,7 +52,18 @@ namespace Zsharp.AST
 
         public AstModuleExternal Import(Statement_importContext importCtx)
         {
-            var moduleName = importCtx.module_name().GetText();
+            string moduleName = String.Empty;
+            if (importCtx.alias_module() != null)
+            {
+                // if alias then last part of dot name is symbol.
+                var dotName = new AstDotName(importCtx.module_name().GetText());
+                moduleName = dotName.ModuleName;
+            }
+            else
+            {
+                moduleName = importCtx.module_name().GetText();
+            }
+
             var module = FindModule<AstModuleExternal>(moduleName);
             if (module == null)
             {

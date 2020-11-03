@@ -86,14 +86,29 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_import(Statement_importContext context)
         {
-            var externalModule = _buildercontext.CompilerContext.Modules.Import(context);
-            var module = _buildercontext.GetCurrent<AstModulePublic>();
-            module.AddImport(context, externalModule);
+            var module = _buildercontext.CompilerContext.Modules.Import(context);
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.Symbols.AddSymbol(externalModule.Name, AstSymbolKind.Module, externalModule);
+            var entry = symbols.AddSymbol(module.Name, AstSymbolKind.Module, module);
             entry.SymbolLocality = AstSymbolLocality.Imported;
 
+            var alias = context.alias_module();
+            if (alias != null)
+            {
+                var dotName = new AstDotName(context.module_name().GetText());
+                // lookup the symbol in the external module
+                entry = module.Symbols.FindEntry(dotName.Symbol);
+                if (entry == null)
+                {
+                    _buildercontext.CompilerContext.AddError(module, context,
+                        $"Symbol '{dotName.Symbol}' was not found in Module '{module.Name}'.");
+                    return null;
+                }
+
+                entry = symbols.AddSymbol(dotName.Symbol, entry.Definition.NodeType.ToSymbolKind(), entry.Definition);
+                entry.SymbolLocality = AstSymbolLocality.Imported;
+                entry.AddAlias(alias.GetText());
+            }
             return null;
         }
 
