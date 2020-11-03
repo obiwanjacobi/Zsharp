@@ -86,18 +86,24 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_import(Statement_importContext context)
         {
-            var module = _buildercontext.CompilerContext.Modules.Import(context);
+            var dotName = new AstDotName(context.module_name().GetText());
+            var alias = context.alias_module()?.GetText();
+
+            // if alias then last part of dot name is symbol.
+            var moduleName = String.IsNullOrEmpty(alias) ? dotName.ToString() : dotName.ModuleName;
+            var module = _buildercontext.CompilerContext.Modules.Import(moduleName);
+            if (module == null)
+            {
+                _buildercontext.CompilerContext.AddError(context,
+                        $"Module '{moduleName}' was not found as an external Assembly.");
+                return null;
+            }
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.AddSymbol(module.Name, AstSymbolKind.Module, module);
-            entry.SymbolLocality = AstSymbolLocality.Imported;
-
-            var alias = context.alias_module();
-            if (alias != null)
+            if (!String.IsNullOrEmpty(alias))
             {
-                var dotName = new AstDotName(context.module_name().GetText());
                 // lookup the symbol in the external module
-                entry = module.Symbols.FindEntry(dotName.Symbol);
+                var entry = module.Symbols.FindEntry(dotName.Symbol);
                 if (entry == null)
                 {
                     _buildercontext.CompilerContext.AddError(module, context,
@@ -107,7 +113,12 @@ namespace Zsharp.AST
 
                 entry = symbols.AddSymbol(dotName.Symbol, entry.Definition.NodeType.ToSymbolKind(), entry.Definition);
                 entry.SymbolLocality = AstSymbolLocality.Imported;
-                entry.AddAlias(alias.GetText());
+                entry.AddAlias(alias);
+            }
+            else
+            {
+                var entry = symbols.AddSymbol(module.Name, AstSymbolKind.Module, module);
+                entry.SymbolLocality = AstSymbolLocality.Imported;
             }
             return null;
         }

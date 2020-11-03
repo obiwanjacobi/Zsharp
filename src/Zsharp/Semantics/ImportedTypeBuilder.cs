@@ -82,6 +82,7 @@ namespace Zsharp.Semantics
 
                     if (method.IsStatic)
                     {
+                        // TODO: get_/set_ property methods name handling
                         _aliases.TryAdd(function.Identifier.Name,
                             $"{typeDefinition.Name}{function.Identifier.Name}");
                     }
@@ -110,7 +111,9 @@ namespace Zsharp.Semantics
 
         private bool IsStructType(TypeDefinition typeDefinition)
         {
-            return typeDefinition.GetConstructors().Any() &&
+            return
+                !(typeDefinition.IsAbstract && typeDefinition.IsSealed) &&
+                typeDefinition.GetConstructors().Any() &&
                 typeDefinition.Methods.Any(m => !m.IsStatic && m.IsPublic);
         }
 
