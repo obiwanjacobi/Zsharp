@@ -23,10 +23,6 @@ namespace Zsharp.AST
 
         public override void Accept(AstVisitor visitor)
         {
-            if (ParentAs<AstCodeBlock>() != null)
-            {
-                base.Accept(visitor);
-            }
             visitor.VisitVariableDefinition(this);
         }
 

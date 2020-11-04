@@ -10,5 +10,10 @@ namespace Zsharp.AST
         }
 
         public bool HasSelfParameter { get; }
+
+        public override void Accept(AstVisitor visitor)
+        {
+            // no-op
+        }
     }
 }

@@ -44,5 +44,22 @@ namespace Zsharp.AST
                 throw new InvalidOperationException(
                     "SymbolEntry is already set or null.");
         }
+
+        public bool TryResolve()
+        {
+            var entry = Symbol?.SymbolTable.Resolve(Symbol);
+            if (entry != null)
+            {
+                _symbol = entry;
+                return true;
+            }
+            return false;
+        }
+
+        public override void VisitChildren(AstVisitor visitor)
+        {
+            base.VisitChildren(visitor);
+            TypeReference?.Accept(visitor);
+        }
     }
 }

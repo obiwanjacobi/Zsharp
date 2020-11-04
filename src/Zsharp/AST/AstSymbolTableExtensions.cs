@@ -15,14 +15,10 @@ namespace Zsharp.AST
             return null;
         }
 
-        public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, AstType type)
+        public static AstSymbolEntry? Find<T>(this AstSymbolTable symbolTable, T node)
+            where T : AstNode, IAstIdentifierSite
         {
-            return symbolTable.FindEntry(type, AstSymbolKind.Type);
-        }
-
-        public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, AstVariable variable)
-        {
-            return symbolTable.FindEntry(variable, AstSymbolKind.Variable);
+            return symbolTable.FindEntry(node, node.NodeType.ToSymbolKind());
         }
 
         public static AstSymbolKind ToSymbolKind(this AstNodeType nodeType)
@@ -39,14 +35,10 @@ namespace Zsharp.AST
             };
         }
 
-        public static AstSymbolEntry Add(this AstSymbolTable symbolTable, AstVariable variable)
+        public static AstSymbolEntry Add<T>(this AstSymbolTable symbolTable, T node)
+            where T : AstNode, IAstIdentifierSite
         {
-            return AddSymbol(symbolTable, variable, AstSymbolKind.Variable, variable);
-        }
-
-        public static AstSymbolEntry Add(this AstSymbolTable symbolTable, AstFunction function)
-        {
-            return AddSymbol(symbolTable, function, AstSymbolKind.Function, function);
+            return AddSymbol(symbolTable, node, node.NodeType.ToSymbolKind(), node);
         }
 
         private static AstSymbolEntry AddSymbol(AstSymbolTable symbolTable,

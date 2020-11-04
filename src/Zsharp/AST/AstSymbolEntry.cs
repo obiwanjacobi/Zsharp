@@ -8,14 +8,18 @@ namespace Zsharp.AST
     [DebuggerDisplay("{SymbolName} ({SymbolKind})")]
     public class AstSymbolEntry
     {
+        private readonly AstSymbolTable _symbolTable;
         private readonly List<AstNode> _references = new List<AstNode>();
         private readonly List<string> _aliases = new List<string>();
 
-        public AstSymbolEntry(string symbolName, AstSymbolKind symbolKind)
+        public AstSymbolEntry(AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
         {
+            _symbolTable = symbolTable;
             SymbolName = symbolName;
             SymbolKind = symbolKind;
         }
+
+        public AstSymbolTable SymbolTable => _symbolTable;
 
         public IEnumerable<AstNode> References => _references;
         public IEnumerable<T> ReferencesOf<T>() where T : AstNode

@@ -57,5 +57,17 @@ namespace Zsharp.Semantics
                 }
             }
         }
+
+        public override void VisitFunctionReference(AstFunctionReference function)
+        {
+            if (function.FunctionDefinition == null)
+            {
+                var success = function.TryResolve();
+
+                if (!success)
+                    _errorSite.AddError(function, function.Context,
+                        $"Unresolved reference to Function '{function.Identifier.Name}'.");
+            }
+        }
     }
 }

@@ -32,11 +32,6 @@ namespace Zsharp.AST
             VisitChildren(codeBlock);
         }
 
-        public virtual void VisitCodeBlockItem(AstCodeBlockItem codeBlockItem)
-        {
-            VisitChildren(codeBlockItem);
-        }
-
         public virtual void VisitExpression(AstExpression expression)
         {
             VisitChildren(expression);
@@ -53,6 +48,11 @@ namespace Zsharp.AST
         }
 
         public virtual void VisitFunctionDefinition(AstFunctionDefinition function)
+        {
+            VisitChildren(function);
+        }
+
+        public virtual void VisitFunctionReference(AstFunctionReference function)
         {
             VisitChildren(function);
         }

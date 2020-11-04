@@ -32,11 +32,6 @@ namespace UnitTests.AST
                 codeBlock.Parent.Should().NotBeNull();
                 VisitChildren(codeBlock);
             }
-            public override void VisitCodeBlockItem(AstCodeBlockItem codeBlockItem)
-            {
-                codeBlockItem.Parent.Should().NotBeNull();
-                VisitChildren(codeBlockItem);
-            }
             public override void VisitExpression(AstExpression expression)
             {
                 expression.Parent.Should().NotBeNull();

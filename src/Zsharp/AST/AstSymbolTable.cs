@@ -25,6 +25,20 @@ namespace Zsharp.AST
 
         public AstSymbolTable? ParentTable { get; }
 
+        public IEnumerable<AstSymbolEntry> Entries => _table.Values;
+
+        public string Namespace
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(ParentTable?.Name))
+                {
+                    return ParentTable.Namespace + "." + Name;
+                }
+                return Name;
+            }
+        }
+
         public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node = null)
         {
             var exOrImported = FindEntry(symbolName, AstSymbolKind.NotSet);
@@ -32,9 +46,11 @@ namespace Zsharp.AST
 
             if (entry == null)
             {
-                entry = new AstSymbolEntry(symbolName, kind);
-                if (exOrImported != null)
+                entry = new AstSymbolEntry(this, symbolName, kind);
+                if (exOrImported?.SymbolTable == this)
                 {
+                    Ast.Guard(_table.ContainsValue(exOrImported), "Exported/Imported Symbol is not defined in this SymbolTable.");
+
                     _table.Remove(exOrImported.Key);
                     Merge(entry, exOrImported);
                 }
@@ -56,9 +72,56 @@ namespace Zsharp.AST
             {
                 targetEntry.TryAddAlias(alias);
             }
+            foreach (var r in sourceEntry.References)
+            {
+                targetEntry.AddNode(r);
+            }
+        }
+
+        public AstSymbolEntry? Resolve(AstSymbolEntry symbolEntry)
+        {
+            if (symbolEntry == null)
+                return null;
+
+            var table = this;
+            while (table != null)
+            {
+                var entry = table.FindEntryLocal(symbolEntry.SymbolName, symbolEntry.SymbolKind);
+                if (entry?.Definition != null)
+                {
+                    if (!Object.ReferenceEquals(entry, symbolEntry))
+                        Merge(entry, symbolEntry);
+                    return entry;
+                }
+                table = table.ParentTable;
+            }
+            return null;
         }
 
         public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
+        {
+            var entry = FindEntryLocal(name, kind);
+
+            if (ParentTable != null && entry == null)
+            {
+                entry = ParentTable.FindEntry(name, kind);
+            }
+
+            return entry;
+        }
+
+        public AstSymbolEntry? FindEntry(AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
+        {
+            return FindEntry(identifier.Name, kind);
+        }
+
+        public AstSymbolEntry? FindEntry(IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
+        {
+            identifierSite.ThrowIfIdentifierNotSet();
+            return FindEntry(identifierSite.Identifier!.Name, kind);
+        }
+
+        private AstSymbolEntry? FindEntryLocal(string name, AstSymbolKind kind)
         {
             AstSymbolEntry? entry = null;
             var key = AstSymbolEntry.MakeKey(name, kind);
@@ -79,38 +142,7 @@ namespace Zsharp.AST
                     .SingleOrDefault(e => e.SymbolName == name || e.Aliases.Contains(name));
             }
 
-            if (ParentTable != null && entry == null)
-            {
-                entry = ParentTable.FindEntry(name, kind);
-            }
-
             return entry;
-        }
-
-        public AstSymbolEntry? FindEntry(AstIdentifier identifier, AstSymbolKind kind)
-        {
-            return FindEntry(identifier.Name, kind);
-        }
-
-        public AstSymbolEntry? FindEntry(IAstIdentifierSite identifierSite, AstSymbolKind kind)
-        {
-            identifierSite.ThrowIfIdentifierNotSet();
-            return FindEntry(identifierSite.Identifier!.Name, kind);
-        }
-
-        public IEnumerable<AstSymbolEntry> Entries => _table.Values;
-
-        public string Namespace
-        {
-            get
-            {
-                if (ParentTable != null &&
-                    !String.IsNullOrEmpty(ParentTable.Name))
-                {
-                    return ParentTable.Namespace + "." + Name;
-                }
-                return Name;
-            }
         }
     }
 }

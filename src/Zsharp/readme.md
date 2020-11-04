@@ -12,3 +12,13 @@
 - Remove parent from TypeReference and share instances (instead of copy).
 - grammar: fix how the dot works in module_name.
 - grammar: change Variable_def_typed_init so it can reuse Variable_def_typed (as child)?
+
+SymbolTable (root)
+    SymbolEntry => Definition x
+
+    SymbolTable (fn)
+        SymbolEntry => Reference x
+
+
+
+SymbolEntry Resolve(SymbolEntry)

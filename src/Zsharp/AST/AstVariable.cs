@@ -35,6 +35,17 @@ namespace Zsharp.AST
                     "SymbolEntry is already set or null.");
         }
 
+        public bool TryResolve()
+        {
+            var entry = Symbol?.SymbolTable.Resolve(Symbol);
+            if (entry != null)
+            {
+                _symbol = entry;
+                return true;
+            }
+            return false;
+        }
+
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 

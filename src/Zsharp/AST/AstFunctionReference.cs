@@ -24,5 +24,10 @@ namespace Zsharp.AST
                 throw new InvalidOperationException(
                     "Function Definition is already set or null.");
         }
+
+        public override void Accept(AstVisitor visitor)
+        {
+            visitor.VisitFunctionReference(this);
+        }
     }
 }

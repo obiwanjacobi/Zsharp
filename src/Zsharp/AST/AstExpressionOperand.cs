@@ -79,6 +79,7 @@ namespace Zsharp.AST
             Expression?.Accept(visitor);
             Numeric?.Accept(visitor);
             VariableReference?.Accept(visitor);
+            FunctionReference?.Accept(visitor);
         }
     }
 }

@@ -76,5 +76,26 @@ namespace UnitTests.Semantics
             fnRef.Should().NotBeNull();
             fnRef.Symbol.Definition.Should().NotBeNull();
         }
+
+        [TestMethod]
+        public void FunctionForwardReference()
+        {
+            const string code =
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn2()" + Tokens.NewLine +
+                "fn2: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn()" + Tokens.NewLine
+                ;
+
+            var file = ParseFile(code);
+
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            fn.Should().NotBeNull();
+
+            var fnRef = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
+            fnRef.Should().NotBeNull();
+            fnRef.Identifier.Name.Should().Be("fn2");
+            fnRef.Symbol.Definition.Should().NotBeNull();
+        }
     }
 }
