@@ -400,9 +400,11 @@ s.fn1()     // normal function call
     .fn4()
 ```
 
-If return type is not `Void`, the actual return type is used. See also Fluent Functions (below).
+If return type is not `Void`, the actual return type is used to determine if the next function call is valid (self type). See also Fluent Functions (below).
 
 ### Overriding Self Bound Functions
+
+> TBD: How would that work?
 
 ---
 
@@ -480,6 +482,15 @@ Call([sum.Ptr()](p)
     sum() = sum() + p
     ...
 )
+```
+
+> We cannot use lambda's to make an anonymous 'object' like in JavaScript at this point. Do we want that?
+
+```JS
+return
+    {
+        fn1 = () => blabla;
+    };
 ```
 
 ---
@@ -563,7 +574,7 @@ ReportProgress(self, ProgressEvent progressEvent)
 
 ## Pure Functional
 
-A pure function -without side-effects- can be recognized by the lack of mutable captures and the presence of immutable parameters. It also has to have a return value.
+A pure function -without side-effects- can be recognized by the lack of mutable captures and the presence of immutable (only in-) parameters. It also has to have a return value.
 
 ```csharp
 // has imm param but potentially writes to globalVar
@@ -676,6 +687,12 @@ accept: (self: MyStruct, v: Visitor)
 
 ## Captures
 
+Captures are snapshots (copies) or references to contextual state -like local variables- that accompany a child context.
+
+Function can use captures to be able to reference global variables in their body.
+
+Lambda's can use captures to be able to reference data in their vicinity to use during execution of the lambda.
+
 An additional syntax is considered for capturing dependencies of any code block. This may be a valuable feature when refactoring code.
 
 ```csharp
@@ -689,9 +706,21 @@ Captures also may be used as a synchronization mechanism for shared data. At the
 
 In case of a mutable capture, it's value is written back to the original storage when the block of code is completed.
 
-> We do need a mechanism to handle conflicts when writing back captured data.
+> How do we allow to opt in for all these different capture behaviors?
+
+> We do need a mechanism to handle conflicts when writing back captured data? Or is this directed by using the correct Data type wrapper (`Atom<T>`)?
 
 > Perhaps as an optimization, immutable captures (in general) could be passed as references to a parent stack frame?
+
+Read-only capture are never a problem, the problem exists when using pointer-captures that are written to sometime during the execution of the function/lambda or code block.
+
+We might not always want to make a hidden state object to store their 'captures'.
+
+Function-captures may want to use different mechanism to synchronize access to shared/global state. We could use data type wrappers like `Atom<T>` to indicate this strategy. By default a global variable state is read at first access by the function and compared with the actual value before a new value is written at the end of the function (optimistic locking).
+
+Lambda-captures may outlive the function they're declared in. Not sure how pointer-captures would work in that scenario?
+
+Block-captures work as functions would.
 
 ---
 

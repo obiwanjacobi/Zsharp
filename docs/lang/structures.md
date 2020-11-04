@@ -57,6 +57,8 @@ MyDerived: MyStruct
 
 `MyDerived` has two fields: `field1` and `field2`. An instance of  the `MyDerived` structure can be treated as an instance of the `MyStruct` structure.
 
+Inheritance makes the structure bigger.
+
 > Multiple inheritance is not supported at this moment.
 
 Here is an example of containment:
