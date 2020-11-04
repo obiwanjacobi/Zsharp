@@ -21,7 +21,7 @@ namespace UnitTests.AST
                 }
                 VisitChildren(operand);
             }
-            public override void VisitFunctionDefinition(AstFunctionDefinition function)
+            public override void VisitFunctionDefinition(AstFunctionDefinitionImpl function)
             {
                 function.TypeReference.Should().NotBeNull();
                 VisitChildren(function);

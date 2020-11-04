@@ -69,7 +69,7 @@ namespace UnitTests.Semantics
 
             var file = ParseFile(code);
 
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             fn.Should().NotBeNull();
 
             var fnRef = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
@@ -89,7 +89,7 @@ namespace UnitTests.Semantics
 
             var file = ParseFile(code);
 
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             fn.Should().NotBeNull();
 
             var fnRef = fn.CodeBlock.ItemAt<AstFunctionReference>(0);

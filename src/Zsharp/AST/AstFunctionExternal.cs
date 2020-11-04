@@ -2,7 +2,7 @@
 
 namespace Zsharp.AST
 {
-    public class AstFunctionExternal : AstFunctionParameters
+    public class AstFunctionExternal : AstFunctionDefinition
     {
         public AstFunctionExternal(MethodDefinition method)
         {

@@ -6,7 +6,7 @@ namespace Zsharp.AST
 {
     public class AstFile : AstNode, IAstSymbolTableSite, IAstCodeBlockSite
     {
-        private readonly List<AstFunctionDefinition> _functions = new List<AstFunctionDefinition>();
+        private readonly List<AstFunctionDefinitionImpl> _functions = new List<AstFunctionDefinitionImpl>();
 
         public AstFile(string scopeName, AstSymbolTable parentTable, FileContext context)
             : base(AstNodeType.File)
@@ -17,7 +17,7 @@ namespace Zsharp.AST
 
         public FileContext Context { get; }
 
-        public IEnumerable<AstFunctionDefinition> Functions => _functions;
+        public IEnumerable<AstFunctionDefinitionImpl> Functions => _functions;
 
         public AstSymbolTable Symbols => CodeBlock!.Symbols;
 
@@ -43,7 +43,7 @@ namespace Zsharp.AST
             }
         }
 
-        public void AddFunction(AstFunctionDefinition function)
+        public void AddFunction(AstFunctionDefinitionImpl function)
         {
             CodeBlock!.AddItem(function);
             _functions.Add(function);

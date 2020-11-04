@@ -109,7 +109,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
             symbols.Entries.Should().HaveCount(2);
 
@@ -127,7 +127,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
             symbols.Entries.Should().HaveCount(2);
 
@@ -144,7 +144,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
             symbols.Entries.Should().HaveCount(1);
 
@@ -160,7 +160,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
             var v = symbols.FindEntry("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
@@ -176,7 +176,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
 
             var v = symbols.FindEntry("v", AstSymbolKind.Variable);

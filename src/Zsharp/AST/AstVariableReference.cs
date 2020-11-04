@@ -1,50 +1,23 @@
-﻿using Antlr4.Runtime;
-using System;
-using static Zsharp.Parser.ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstVariableReference : AstVariable
     {
-        private readonly Variable_refContext? _refCtx;
-        private readonly Variable_assign_autoContext? _assignCtx;
-
         public AstVariableReference(Variable_refContext context)
         {
-            _refCtx = context;
+            Context = context;
         }
         public AstVariableReference(Variable_assign_autoContext context)
         {
-            _assignCtx = context;
+            Context = context;
         }
 
-        public ParserRuleContext? Context => (ParserRuleContext?)_refCtx ?? (ParserRuleContext?)_assignCtx;
+        public bool HasDefinition => VariableDefinition != null || ParameterDefinition != null;
 
-        public bool HasDefinition => _varDef != null || _paramDef != null;
+        public AstVariableDefinition? VariableDefinition => Symbol?.DefinitionAs<AstVariableDefinition>();
 
-        private AstVariableDefinition? _varDef;
-        public AstVariableDefinition? VariableDefinition => _varDef;
-
-        public bool TrySetVariableDefinition(AstVariableDefinition variableDefinition) => Ast.SafeSet(ref _varDef, variableDefinition);
-
-        public void SetVariableDefinition(AstVariableDefinition variableDefinition)
-        {
-            if (!TrySetVariableDefinition(variableDefinition))
-                throw new InvalidOperationException(
-                    "VariableDefinition was already set or null.");
-        }
-
-        private AstFunctionParameter? _paramDef;
-        public AstFunctionParameter? ParameterDefinition => _paramDef;
-
-        public bool TrySetParameterDefinition(AstFunctionParameter paramDefinition) => Ast.SafeSet(ref _paramDef, paramDefinition);
-
-        public void SetParameterDefinition(AstFunctionParameter paramDefinition)
-        {
-            if (!TrySetParameterDefinition(paramDefinition))
-                throw new InvalidOperationException(
-                    "FunctionParameter definition was already set or null.");
-        }
+        public AstFunctionParameter? ParameterDefinition => Symbol?.DefinitionAs<AstFunctionParameter>();
 
         public override void Accept(AstVisitor visitor) => visitor.VisitVariableReference(this);
     }

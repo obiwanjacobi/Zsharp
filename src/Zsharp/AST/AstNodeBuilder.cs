@@ -138,7 +138,7 @@ namespace Zsharp.AST
         public override object? VisitFunction_def(Function_defContext context)
         {
             var file = _buildercontext.GetCurrent<AstFile>();
-            var function = new AstFunctionDefinition(context);
+            var function = new AstFunctionDefinitionImpl(context);
 
             file.AddFunction(function);
             _buildercontext.SetCurrent(function);
@@ -302,7 +302,7 @@ namespace Zsharp.AST
         public override object? VisitFunction_parameter(Function_parameterContext context)
         {
             var funcParam = new AstFunctionParameter(context);
-            var function = _buildercontext.GetCurrent<AstFunctionDefinition>();
+            var function = _buildercontext.GetCurrent<AstFunctionDefinitionImpl>();
             function.TryAddParameter(funcParam);
 
             _buildercontext.SetCurrent(funcParam);
@@ -314,7 +314,7 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_parameter_self(Function_parameter_selfContext context)
         {
-            var function = _buildercontext.GetCurrent<AstFunctionDefinition>();
+            var function = _buildercontext.GetCurrent<AstFunctionDefinitionImpl>();
             var funcParam = new AstFunctionParameter(context);
             funcParam.SetIdentifier(AstIdentifierIntrinsic.Self);
             function.TryAddParameter(funcParam);
@@ -462,11 +462,8 @@ namespace Zsharp.AST
 
             var symbolsSite = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbolsSite.Symbols.Find(typeRef);
-            var typeDef = entry?.DefinitionAs<AstTypeDefinition>();
-            if (typeDef != null)
-            {
-                typeRef.SetTypeDefinition(typeDef);
-            }
+            if (entry != null)
+                typeRef.SetSymbol(entry);
 
             return null;
         }

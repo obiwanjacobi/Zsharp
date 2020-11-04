@@ -20,13 +20,11 @@ namespace Zsharp.Semantics
             Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
             Ast.Guard(type?.Identifier, "AstTypeReference or AstIdentifier is null.");
 
-            var entry = SymbolTable!.Find(type!);
-            // will not be found if external
-            if (entry != null)
+            var success = type.TryResolve();
+
+            if (!success)
             {
-                var def = entry.DefinitionAs<AstTypeDefinition>();
-                Ast.Guard(def, "Type Symbol Entry has no AstTypeDefinition.");
-                type!.SetTypeDefinition(def!);
+                _errorSite.UndefinedType(type);
             }
 
             VisitChildren(type!);
@@ -40,13 +38,6 @@ namespace Zsharp.Semantics
             {
                 AstTypeReference? leftTypeRef = expression.LHS?.TypeReference;
                 AstTypeReference? rightTypeRef = expression.RHS?.TypeReference;
-
-                if (leftTypeRef != null && rightTypeRef != null &&
-                    !leftTypeRef.IsEqual(rightTypeRef))
-                {
-                    _errorSite.AddError(expression, expression.Context,
-                        "Different Types on both sides of the operator.");
-                }
 
                 AstTypeReference? typeRef = null;
                 if (leftTypeRef != null)
@@ -82,9 +73,15 @@ namespace Zsharp.Semantics
             var numeric = operand.Numeric;
             if (numeric != null)
             {
+                Ast.Guard(SymbolTable, "No SymbolTable set.");
+
                 var typeDef = FindTypeByBitCount(numeric.GetBitCount(), numeric.Sign);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found by bit count.");
                 var typeRef = AstTypeReference.Create(numeric, typeDef!);
+                var entry = SymbolTable!.Add(typeRef);
+                if (entry.Definition == null)
+                    entry.AddNode(typeDef!);
+
                 operand.SetTypeReference(typeRef);
                 return;
             }
@@ -100,15 +97,7 @@ namespace Zsharp.Semantics
                     var def = (IAstTypeReferenceSite?)var.VariableDefinition
                         ?? (IAstTypeReferenceSite?)var.ParameterDefinition;
 
-                    if (def == null)
-                    {
-                        this._errorSite.UndefinedVariable(var);
-                        return;
-                    }
-
-                    var typeRef = def?.TypeReference
-                        ?? FindTypeReference(var);
-
+                    var typeRef = def?.TypeReference ?? FindTypeReference(var);
                     if (typeRef != null)
                     {
                         var.SetTypeReference(new AstTypeReference(typeRef));

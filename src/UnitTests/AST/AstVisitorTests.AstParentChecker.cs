@@ -47,7 +47,7 @@ namespace UnitTests.AST
                 // file is root in our tests (Parent is null)
                 VisitChildren(file);
             }
-            public override void VisitFunctionDefinition(AstFunctionDefinition function)
+            public override void VisitFunctionDefinition(AstFunctionDefinitionImpl function)
             {
                 function.Parent.Should().NotBeNull();
                 VisitChildren(function);

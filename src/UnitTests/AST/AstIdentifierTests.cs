@@ -48,7 +48,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var p = fn.Parameters.FirstOrDefault();
             var id = p.Identifier;
 
@@ -65,7 +65,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var p = fn.Parameters.FirstOrDefault();
             p.TypeReference.Should().NotBeNull();
             p.Identifier.Name.Should().Be("self");
@@ -80,7 +80,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var assign = fn.CodeBlock.ItemAt<AstAssignment>(0);
             assign.Variable.Identifier.Name.Should().Be("v");
         }
@@ -94,7 +94,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var assign = fn.CodeBlock.ItemAt<AstAssignment>(0);
             assign.Variable.Identifier.Name.Should().Be("p");
 

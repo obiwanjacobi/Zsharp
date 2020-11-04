@@ -1,3 +1,4 @@
+using Antlr4.Runtime;
 using System;
 
 namespace Zsharp.AST
@@ -10,6 +11,8 @@ namespace Zsharp.AST
         {
             _typeRef = typeReference;
         }
+
+        public ParserRuleContext? Context { get; protected set; }
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;

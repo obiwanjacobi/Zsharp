@@ -17,7 +17,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var ag = fn.CodeBlock.ItemAt<AstAssignment>(0);
             ag.Should().NotBeNull();
             var br = fn.CodeBlock.ItemAt<AstBranch>(1);
@@ -35,7 +35,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
             br.Should().NotBeNull();
             br.Indent.Should().Be(1);

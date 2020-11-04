@@ -41,7 +41,7 @@ namespace UnitTests.AST
             var error = compiler.Context.Errors.Single();
             var variable = (AstVariableReference)error.Node;
             variable.Identifier.Name.Should().Be("x");
-            error.Text.Should().Contain("Undefined Variable");
+            error.Text.Should().Contain("undefined Variable");
         }
     }
 }

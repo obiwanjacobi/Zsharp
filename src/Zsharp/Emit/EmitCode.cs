@@ -23,7 +23,7 @@ namespace Zsharp.Emit
             VisitChildren(module);
         }
 
-        public override void VisitFunctionDefinition(AstFunctionDefinition function)
+        public override void VisitFunctionDefinition(AstFunctionDefinitionImpl function)
         {
             using var scope = Context.AddFunction(function);
 

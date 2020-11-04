@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -19,33 +18,16 @@ namespace Zsharp.AST
             : base(inferredFrom.Context!)
         {
             SetIdentifier(inferredFrom.Identifier!);
-            TrySetTypeDefinition(inferredFrom.TypeDefinition!);
+            TrySetSymbol(inferredFrom.Symbol!);
             _typeSource = inferredFrom.TypeSource;
         }
 
         protected AstTypeReference()
         { }
 
-        private AstTypeDefinition? _typeDefinition;
-        public AstTypeDefinition? TypeDefinition => _typeDefinition;
 
-        public bool TrySetTypeDefinition(AstTypeDefinition typeDefinition)
-        {
-            if (Ast.SafeSet(ref _typeDefinition, typeDefinition))
-            {
-                // usually fails - just catches dangling definitions
-                typeDefinition.TrySetParent(this);
-                return true;
-            }
-            return false;
-        }
 
-        public void SetTypeDefinition(AstTypeDefinition typeDefinition)
-        {
-            if (!TrySetTypeDefinition(typeDefinition))
-                throw new InvalidOperationException(
-                    "TypeDefinition is already set or null.");
-        }
+        public AstTypeDefinition? TypeDefinition => Symbol?.DefinitionAs<AstTypeDefinition>();
 
         private AstNode? _typeSource;
         /// <summary>
@@ -98,7 +80,7 @@ namespace Zsharp.AST
 
             var typeRef = new AstTypeReference();
             typeRef.SetIdentifier(typeDef.Identifier!);
-            typeRef.SetTypeDefinition(typeDef);
+            typeRef.TrySetSymbol(typeDef.Symbol!);
             typeRef.TrySetTypeSource(typeSource);
             return typeRef;
         }

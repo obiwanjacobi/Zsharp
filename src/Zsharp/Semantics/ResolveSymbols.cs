@@ -42,18 +42,12 @@ namespace Zsharp.Semantics
                 var entry = variable.Symbol;
                 Ast.Guard(entry, "Variable has no Symbol.");
 
-                var varDef = entry!.DefinitionAs<AstVariableDefinition>();
-                if (varDef == null)
+                var success = variable.TryResolve();
+
+                if (!success &&
+                    variable.ParentAs<AstAssignment>() == null)
                 {
-                    var paramDef = entry.DefinitionAs<AstFunctionParameter>();
-                    if (paramDef != null)
-                    {
-                        variable.SetParameterDefinition(paramDef);
-                    }
-                }
-                else
-                {
-                    variable.SetVariableDefinition(varDef);
+                    _errorSite.UndefinedVariable(variable);
                 }
             }
         }
@@ -65,8 +59,9 @@ namespace Zsharp.Semantics
                 var success = function.TryResolve();
 
                 if (!success)
-                    _errorSite.AddError(function, function.Context,
-                        $"Unresolved reference to Function '{function.Identifier.Name}'.");
+                {
+                    _errorSite.UndefinedFunction(function);
+                }
             }
         }
     }

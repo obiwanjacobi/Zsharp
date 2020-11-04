@@ -120,7 +120,7 @@ namespace UnitTests.Semantics
 
             var file = CompileFile(code);
 
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var a = fn.CodeBlock.ItemAt<AstAssignment>(0);
             var v = a.Variable as AstVariableDefinition;
             var p = a.Expression.RHS.VariableReference.ParameterDefinition;
@@ -140,7 +140,7 @@ namespace UnitTests.Semantics
             var moduleLoader = CreateModuleLoader();
             var file = CompileFile(code, moduleLoader);
 
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var call = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
 
             call.Symbol.Definition.Should().NotBeNull();
