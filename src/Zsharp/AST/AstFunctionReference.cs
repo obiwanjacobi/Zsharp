@@ -5,7 +5,7 @@ namespace Zsharp.AST
 {
     public class AstFunctionReference : AstFunction
     {
-        private readonly List<AstFunctionParameterReference> _params = new List<AstFunctionParameterReference>();
+        private readonly List<AstFunctionParameterReference> _parameters = new List<AstFunctionParameterReference>();
 
         public AstFunctionReference(Function_callContext context)
         {
@@ -16,13 +16,21 @@ namespace Zsharp.AST
 
         public AstFunctionDefinition? FunctionDefinition => Symbol?.DefinitionAs<AstFunctionDefinition>();
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionReference(this);
-
-        public IEnumerable<AstFunctionParameterReference> Parameters => _params;
+        public IEnumerable<AstFunctionParameterReference> Parameters => _parameters;
 
         public void AddParameter(AstFunctionParameterReference parameter)
         {
-            _params.Add(parameter);
+            _parameters.Add(parameter);
+        }
+
+        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionReference(this);
+
+        public override void VisitChildren(AstVisitor visitor)
+        {
+            foreach (var param in _parameters)
+            {
+                param.Accept(visitor);
+            }
         }
     }
 }

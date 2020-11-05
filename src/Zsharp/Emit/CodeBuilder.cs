@@ -1,4 +1,5 @@
-﻿using Mono.Cecil.Cil;
+﻿using Mono.Cecil;
+using Mono.Cecil.Cil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,13 @@ namespace Zsharp.Emit
 {
     public class CodeBuilder
     {
+        private readonly MethodDefinition _methodDefinition;
         private readonly Dictionary<string, CodeBlock> _blocks = new Dictionary<string, CodeBlock>();
         private readonly Dictionary<string, VariableDefinition> _variables = new Dictionary<string, VariableDefinition>();
 
-        public CodeBuilder()
+        public CodeBuilder(MethodDefinition methodDefinition)
         {
+            _methodDefinition = methodDefinition;
             CodeBlock = AddBlock("__entry");
         }
 
@@ -92,6 +95,11 @@ namespace Zsharp.Emit
             var varDef = createVariableDefinition(name);
             _variables[name] = varDef;
             return varDef;
+        }
+
+        public ParameterDefinition GetParameter(string name)
+        {
+            return _methodDefinition.Parameters.Single(p => p.Name == name);
         }
 
         public void Apply(ILProcessor iLProcessor)

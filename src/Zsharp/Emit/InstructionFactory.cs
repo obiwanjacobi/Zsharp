@@ -28,5 +28,6 @@ namespace Zsharp.Emit
         public Instruction StoreVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Stloc, varDef);
 
         public Instruction Call(MethodDefinition method) => _iLProcessor.Create(OpCodes.Call, method);
+        public Instruction LoadParameter(ParameterDefinition paramDef) => _iLProcessor.Create(OpCodes.Ldarg, paramDef);
     }
 }

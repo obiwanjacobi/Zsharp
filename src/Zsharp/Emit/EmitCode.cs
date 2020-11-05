@@ -32,10 +32,11 @@ namespace Zsharp.Emit
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            // TODO: function parameters
+            VisitChildren(function);
 
             var method = Context.FindFunction(function.FunctionDefinition);
-            Context.InstructionFactory.Call(method);
+            var call = Context.InstructionFactory.Call(method);
+            Context.CodeBuilder.CodeBlock.Add(call);
         }
 
         public override void VisitVariableDefinition(AstVariableDefinition variable)

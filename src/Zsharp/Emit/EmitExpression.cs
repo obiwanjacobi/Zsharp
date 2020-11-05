@@ -131,14 +131,22 @@ namespace Zsharp.Emit
             var name = variable.Identifier.Name;
             var il = _context.InstructionFactory;
 
-            if (!_context.HasVariable(name))
+            if (variable.VariableDefinition != null)
             {
-                // TODO: ParameterDefinition
-                _context.AddVariable(variable.VariableDefinition);
+                if (!_context.HasVariable(name))
+                {
+                    _context.AddVariable(variable.VariableDefinition);
+                }
+                var varDef = _context.CodeBuilder.GetVariable(name);
+                var instruction = il.LoadVariable(varDef);
+                _context.CodeBuilder.CodeBlock.Add(instruction);
             }
-            var varDef = _context.CodeBuilder.GetVariable(name);
-            var instruction = il.LoadVariable(varDef);
-            _context.CodeBuilder.CodeBlock.Add(instruction);
+            if (variable.ParameterDefinition != null)
+            {
+                var paramDef = _context.CodeBuilder.GetParameter(name);
+                var instruction = il.LoadParameter(paramDef);
+                _context.CodeBuilder.CodeBlock.Add(instruction);
+            }
         }
     }
 }

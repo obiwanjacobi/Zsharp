@@ -127,6 +127,20 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void BuildFile_FunctionCallParameters()
+        {
+            const string code =
+                "fn: (p: U8)" + Tokens.NewLine +
+                Tokens.Indent1 + "fn(p + 1)" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var func = file.Functions.First().CodeBlock.ItemAt<AstFunctionReference>(0);
+            var p = func.Parameters.First();
+            p.Expression.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void BuildFile_Assignment()
         {
             const string code =

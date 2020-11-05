@@ -65,6 +65,23 @@ namespace UnitTests.Emit
         }
 
         [TestMethod]
+        public void FunctionCallParameter()
+        {
+            const string code =
+                "module test" + Tokens.NewLine +
+                "fn: (p: U8)" + Tokens.NewLine +
+                Tokens.Indent1 + "fn(p + 1)" + Tokens.NewLine
+                ;
+
+            var emit = CreateEmitCode(code);
+
+            var moduleClass = emit.Context.Module.Types.Find("test");
+            var fn = moduleClass.Methods.First();
+            fn.Name.Should().Be("fn");
+            fn.Body.Instructions.Should().HaveCount(5);
+        }
+
+        [TestMethod]
         public void VariableAssignment_Constant()
         {
             const string code =

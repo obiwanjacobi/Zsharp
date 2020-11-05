@@ -343,7 +343,7 @@ namespace Zsharp.AST
             return any;
         }
 
-        public override object VisitFunction_param_use(Function_param_useContext context)
+        public override object? VisitFunction_param_use(Function_param_useContext context)
         {
             var param = new AstFunctionParameterReference(context);
             var function = _buildercontext.GetCurrent<AstFunctionReference>();

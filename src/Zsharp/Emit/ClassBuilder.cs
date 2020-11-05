@@ -36,12 +36,21 @@ namespace Zsharp.Emit
             return _typeDefinition.Fields.Any(f => f.Name == name);
         }
 
-        public MethodDefinition AddFunction(AstFunction function)
+        public MethodDefinition AddFunction(AstFunctionDefinition function)
         {
             var methodDef = new MethodDefinition(
                 function.Identifier.Name,
                 ToMethodAttibutes(function),
                 _context.ToTypeReference(function.TypeReference));
+
+            foreach (var p in function.Parameters)
+            {
+                methodDef.Parameters.Add(new ParameterDefinition(
+                    p.Identifier.Name,
+                    ToParameterAttributes(p),
+                    _context.ToTypeReference(p.TypeReference)
+                    ));
+            }
 
             _typeDefinition.Methods.Add(methodDef);
             return methodDef;
@@ -60,6 +69,16 @@ namespace Zsharp.Emit
 
             attrs |= (function.Symbol.SymbolLocality == AstSymbolLocality.Exported)
                 ? MethodAttributes.Public : MethodAttributes.Private;
+
+            return attrs;
+        }
+
+        private static ParameterAttributes ToParameterAttributes(AstFunctionParameter p)
+        {
+            var attrs = ParameterAttributes.In;
+
+            if (p.TypeReference.IsOptional)
+                attrs |= ParameterAttributes.Optional;
 
             return attrs;
         }

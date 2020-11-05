@@ -16,8 +16,6 @@ namespace Zsharp.AST
 
         public ParserRuleContext Context => _paramCtx;
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionParameterReference(this);
-
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
@@ -28,6 +26,13 @@ namespace Zsharp.AST
             if (!TrySetExpression(expression))
                 throw new InvalidOperationException(
                     "Expression is already set or null.");
+        }
+
+        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionParameterReference(this);
+
+        public override void VisitChildren(AstVisitor visitor)
+        {
+            Expression?.Accept(visitor);
         }
     }
 }
