@@ -82,11 +82,11 @@ namespace Zsharp.Emit
             return scope;
         }
 
-        public MethodDefinition FindFunction(AstFunctionDefinition function)
+        public MethodReference FindFunction(AstFunctionDefinition function)
         {
             if (function is AstFunctionExternal externalFunction)
             {
-                return externalFunction.MethodDefinition;
+                return Module.ImportReference(externalFunction.MethodDefinition);
             }
 
             return Module.Types

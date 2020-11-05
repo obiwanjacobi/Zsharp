@@ -4,15 +4,31 @@ using System.Linq;
 using Zsharp;
 using Zsharp.AST;
 using Zsharp.Emit;
+using Zsharp.Semantics;
 
 namespace UnitTests.Emit
 {
     [TestClass]
     public class EmitCodeTests
     {
-        private static EmitCode CreateEmitCode(string code)
+        private static AssemblyManager LoadTestAssemblies()
         {
-            var compiler = new Compiler(new ModuleLoader());
+            var assemblies = new AssemblyManager();
+            assemblies.LoadAssembly(@"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Console.dll");
+            return assemblies;
+        }
+
+        private static ExternalModuleLoader CreateModuleLoader()
+        {
+            var assemblies = LoadTestAssemblies();
+            var loader = new ExternalModuleLoader(assemblies);
+            loader.Modules.Should().HaveCount(2);
+            return loader;
+        }
+
+        private static EmitCode CreateEmitCode(string code, IAstModuleLoader moduleLoader = null)
+        {
+            var compiler = new Compiler(moduleLoader ?? new ModuleLoader());
             var errors = compiler.Compile("UnitTests", "EmitCodeTests", code);
             errors.Should().BeEmpty();
 
@@ -79,6 +95,23 @@ namespace UnitTests.Emit
             var fn = moduleClass.Methods.First();
             fn.Name.Should().Be("fn");
             fn.Body.Instructions.Should().HaveCount(5);
+        }
+
+        [TestMethod]
+        public void ExternalFunctionCallParameter()
+        {
+            const string code =
+                "module ExternalFunctionCallParameter" + Tokens.NewLine +
+                "import Print = System.Console.WriteLine" + Tokens.NewLine +
+                "Main: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "Print(\"Hello World\")" + Tokens.NewLine
+                ;
+
+            var moduleLoader = CreateModuleLoader();
+            var emit = CreateEmitCode(code, moduleLoader);
+            emit.Should().NotBeNull();
+
+            emit.SaveAs("ExternalFunctionCallParameter.dll");
         }
 
         [TestMethod]
