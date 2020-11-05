@@ -1,6 +1,7 @@
 ﻿using Mono.Cecil;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zsharp.AST;
 
 namespace Zsharp.Emit
@@ -70,7 +71,7 @@ namespace Zsharp.Emit
             return scope;
         }
 
-        public IDisposable AddFunction(AstFunction function)
+        public IDisposable AddFunction(AstFunctionDefinition function)
         {
             var classBuilder = ModuleClass ??
                 throw new InvalidOperationException("There is no module class to add a function to.");
@@ -79,6 +80,18 @@ namespace Zsharp.Emit
             var scope = new FunctionScope(this, func);
             Scopes.Push(scope);
             return scope;
+        }
+
+        public MethodDefinition FindFunction(AstFunctionDefinition function)
+        {
+            if (function is AstFunctionExternal externalFunction)
+            {
+                return externalFunction.MethodDefinition;
+            }
+
+            return Module.Types
+                .SelectMany(t => t.Methods)
+                .Single(m => m.Name == function.Identifier?.Name);
         }
 
         public bool HasVariable(string name)

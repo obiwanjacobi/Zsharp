@@ -14,7 +14,7 @@ namespace Zsharp.AST
         { }
 
         private AstExpression? _expression;
-        public AstExpression? Expression { get { return _expression; } }
+        public AstExpression? Expression => _expression;
 
         public bool HasExpression
         {

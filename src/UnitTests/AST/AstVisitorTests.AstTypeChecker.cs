@@ -15,18 +15,25 @@ namespace UnitTests.AST
             }
             public override void VisitExpressionOperand(AstExpressionOperand operand)
             {
-                if (operand.VariableReference == null)
-                {     // variable not implemented
-                    operand.TypeReference.Should().NotBeNull();
-                }
+                operand.TypeReference.Should().NotBeNull();
                 VisitChildren(operand);
             }
-            public override void VisitFunctionDefinition(AstFunctionDefinitionImpl function)
+            public override void VisitFunctionDefinition(AstFunctionDefinition function)
             {
                 function.TypeReference.Should().NotBeNull();
                 VisitChildren(function);
             }
-            public override void VisitFunctionParameter(AstFunctionParameter parameter)
+            public override void VisitFunctionReference(AstFunctionReference function)
+            {
+                function.TypeReference.Should().NotBeNull();
+                VisitChildren(function);
+            }
+            public override void VisitFunctionParameterDefinition(AstFunctionParameterDefinition parameter)
+            {
+                parameter.TypeReference.Should().NotBeNull();
+                VisitChildren(parameter);
+            }
+            public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
             {
                 parameter.TypeReference.Should().NotBeNull();
                 VisitChildren(parameter);

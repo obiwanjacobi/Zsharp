@@ -354,6 +354,8 @@ When calling a bound function, the 'self' parameter can be used as an 'object' u
 > This means implicit conversions => something we don't want?
 We may want this conversion in order to reduce noise of transforming self parameter types.
 
+The `self` parameter can never be optional `Opt<T>`.
+
 Any type can be used, for instance Enum types:
 
 ```C#

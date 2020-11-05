@@ -6,8 +6,11 @@ namespace Zsharp.AST
     {
         public AstFunctionExternal(MethodDefinition method)
         {
+            MethodDefinition = method;
             HasSelfParameter = !method.IsStatic;
         }
+
+        public MethodDefinition MethodDefinition { get; }
 
         public bool HasSelfParameter { get; }
 

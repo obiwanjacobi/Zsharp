@@ -301,7 +301,7 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_parameter(Function_parameterContext context)
         {
-            var funcParam = new AstFunctionParameter(context);
+            var funcParam = new AstFunctionParameterDefinition(context);
             var function = _buildercontext.GetCurrent<AstFunctionDefinitionImpl>();
             function.TryAddParameter(funcParam);
 
@@ -315,7 +315,7 @@ namespace Zsharp.AST
         public override object? VisitFunction_parameter_self(Function_parameter_selfContext context)
         {
             var function = _buildercontext.GetCurrent<AstFunctionDefinitionImpl>();
-            var funcParam = new AstFunctionParameter(context);
+            var funcParam = new AstFunctionParameterDefinition(context);
             funcParam.SetIdentifier(AstIdentifierIntrinsic.Self);
             function.TryAddParameter(funcParam);
 
@@ -339,6 +339,19 @@ namespace Zsharp.AST
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(function);
+
+            return any;
+        }
+
+        public override object VisitFunction_param_use(Function_param_useContext context)
+        {
+            var param = new AstFunctionParameterReference(context);
+            var function = _buildercontext.GetCurrent<AstFunctionReference>();
+            function.AddParameter(param);
+
+            _buildercontext.SetCurrent(param);
+            var any = VisitChildren(context);
+            _buildercontext.RevertCurrent();
 
             return any;
         }

@@ -1,30 +1,12 @@
 ﻿using System;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstFunctionParameter : AstNode, IAstIdentifierSite, IAstTypeReferenceSite
+    public abstract class AstFunctionParameter : AstNode, IAstIdentifierSite, IAstTypeReferenceSite
     {
-        private readonly Function_parameterContext? _paramCtx;
-        private readonly Function_parameter_selfContext? _selfCtx;
-
-        public AstFunctionParameter()
+        protected AstFunctionParameter()
             : base(AstNodeType.FunctionParameter)
         { }
-
-        public AstFunctionParameter(Function_parameterContext context)
-            : base(AstNodeType.FunctionParameter)
-        {
-            _paramCtx = context;
-        }
-
-        public AstFunctionParameter(Function_parameter_selfContext context)
-            : base(AstNodeType.FunctionParameter)
-        {
-            _selfCtx = context;
-        }
-
-        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionParameter(this);
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;

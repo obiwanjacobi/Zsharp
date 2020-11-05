@@ -47,7 +47,7 @@ namespace Zsharp.AST
             VisitChildren(file);
         }
 
-        public virtual void VisitFunctionDefinition(AstFunctionDefinitionImpl function)
+        public virtual void VisitFunctionDefinition(AstFunctionDefinition function)
         {
             VisitChildren(function);
         }
@@ -57,7 +57,12 @@ namespace Zsharp.AST
             VisitChildren(function);
         }
 
-        public virtual void VisitFunctionParameter(AstFunctionParameter parameter)
+        public virtual void VisitFunctionParameterDefinition(AstFunctionParameterDefinition parameter)
+        {
+            VisitChildren(parameter);
+        }
+
+        public virtual void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
         {
             VisitChildren(parameter);
         }

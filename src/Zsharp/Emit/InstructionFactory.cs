@@ -1,4 +1,5 @@
-﻿using Mono.Cecil.Cil;
+﻿using Mono.Cecil;
+using Mono.Cecil.Cil;
 using System;
 
 namespace Zsharp.Emit
@@ -25,5 +26,7 @@ namespace Zsharp.Emit
 
         public Instruction LoadVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Ldloc, varDef);
         public Instruction StoreVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Stloc, varDef);
+
+        public Instruction Call(MethodDefinition method) => _iLProcessor.Create(OpCodes.Call, method);
     }
 }

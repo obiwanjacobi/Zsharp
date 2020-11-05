@@ -127,7 +127,7 @@ namespace Zsharp.Semantics
             var typeRef = _typeRepository.GetTypeReference(method.ReturnType);
             function.SetTypeReference(typeRef);
 
-            AstFunctionParameter funcParam;
+            AstFunctionParameterDefinition funcParam;
             if (!method.IsStatic)
             {
                 funcParam = CreateParameter(AstIdentifierIntrinsic.Self, method.DeclaringType);
@@ -143,10 +143,9 @@ namespace Zsharp.Semantics
             return function;
         }
 
-        private AstFunctionParameter CreateParameter(AstIdentifier identifier, TypeReference type)
+        private AstFunctionParameterDefinition CreateParameter(AstIdentifier identifier, TypeReference type)
         {
-            var funcParam = new AstFunctionParameter();
-            funcParam.SetIdentifier(identifier);
+            var funcParam = new AstFunctionParameterDefinition(identifier);
             var typeRef = _typeRepository.GetTypeReference(type);
             funcParam.SetTypeReference(typeRef);
             return funcParam;

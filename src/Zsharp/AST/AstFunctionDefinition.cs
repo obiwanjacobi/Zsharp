@@ -6,11 +6,11 @@ namespace Zsharp.AST
 {
     public abstract class AstFunctionDefinition : AstFunction
     {
-        private readonly List<AstFunctionParameter> _parameters = new List<AstFunctionParameter>();
+        private readonly List<AstFunctionParameterDefinition> _parameters = new List<AstFunctionParameterDefinition>();
 
         public IEnumerable<AstFunctionParameter> Parameters => _parameters;
 
-        public bool TryAddParameter(AstFunctionParameter param)
+        public bool TryAddParameter(AstFunctionParameterDefinition param)
         {
             if (param != null &&
                 param.TrySetParent(this))

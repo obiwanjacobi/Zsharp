@@ -1,9 +1,12 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using System.Collections.Generic;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstFunctionReference : AstFunction
     {
+        private readonly List<AstFunctionParameterReference> _params = new List<AstFunctionParameterReference>();
+
         public AstFunctionReference(Function_callContext context)
         {
             Context = context;
@@ -13,9 +16,13 @@ namespace Zsharp.AST
 
         public AstFunctionDefinition? FunctionDefinition => Symbol?.DefinitionAs<AstFunctionDefinition>();
 
-        public override void Accept(AstVisitor visitor)
+        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionReference(this);
+
+        public IEnumerable<AstFunctionParameterReference> Parameters => _params;
+
+        public void AddParameter(AstFunctionParameterReference parameter)
         {
-            visitor.VisitFunctionReference(this);
+            _params.Add(parameter);
         }
     }
 }
