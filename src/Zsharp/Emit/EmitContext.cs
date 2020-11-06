@@ -12,6 +12,10 @@ namespace Zsharp.Emit
         {
             Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
             Module = assembly.MainModule;
+            ////C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.9\System.Private.CoreLib.dll
+            //var netAssembly = AssemblyDefinition.ReadAssembly(
+            //    @"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.9\System.Private.CoreLib.dll");
+            //Module.AssemblyReferences.Add(netAssembly.Name);
         }
 
         public static EmitContext Create(string assemblyName, Version? version = null)

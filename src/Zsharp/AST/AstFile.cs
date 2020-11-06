@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -23,6 +24,9 @@ namespace Zsharp.AST
 
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
+
+        public bool HasExports
+            => _codeBlock.Symbols.Entries.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);
 
         public bool TrySetCodeBlock(AstCodeBlock codeBlock) => this.SafeSetParent(ref _codeBlock, codeBlock);
 

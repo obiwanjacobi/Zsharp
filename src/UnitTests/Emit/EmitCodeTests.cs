@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Zsharp;
 using Zsharp.AST;
 using Zsharp.Emit;
@@ -36,6 +38,17 @@ namespace UnitTests.Emit
             var emit = new EmitCode("EmitCodeTest");
             emit.Visit(module);
             return emit;
+        }
+
+        private static void InvokeStatic(string assemblyName, string typeName, string methodName)
+        {
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            var path = Path.GetDirectoryName(thisAssembly.Location);
+
+            var assembly = Assembly.LoadFile(Path.Combine(path, assemblyName + ".dll"));
+            var type = assembly.ExportedTypes.Single(t => t.Name == typeName);
+            var method = type.GetMethods().Single(m => m.Name == methodName);
+            method.Invoke(null, null);
         }
 
         [TestMethod]
@@ -103,8 +116,8 @@ namespace UnitTests.Emit
             const string code =
                 "module ExternalFunctionCallParameter" + Tokens.NewLine +
                 "import Print = System.Console.WriteLineString" + Tokens.NewLine +
-                "Main: ()" + Tokens.NewLine +
-                Tokens.Indent1 + "Print(\"Hello World\")" + Tokens.NewLine
+                "export Main: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "Print(\"Hello Z# World\")" + Tokens.NewLine
                 ;
 
             var moduleLoader = CreateModuleLoader();
@@ -112,6 +125,8 @@ namespace UnitTests.Emit
             emit.Should().NotBeNull();
 
             emit.SaveAs("ExternalFunctionCallParameter.dll");
+
+            InvokeStatic("ExternalFunctionCallParameter", "ExternalFunctionCallParameter", "Main");
         }
 
         [TestMethod]

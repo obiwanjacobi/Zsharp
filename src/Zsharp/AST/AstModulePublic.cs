@@ -19,7 +19,7 @@ namespace Zsharp.AST
 
         public IEnumerable<Statement_exportContext> Exports => _exports;
 
-        public bool HasExports => _exports.Any();
+        public bool HasExports => _exports.Any() || _files.Any(f => f.HasExports);
 
         public void AddModule(Statement_moduleContext moduleCtx)
         {

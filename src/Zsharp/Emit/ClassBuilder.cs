@@ -1,4 +1,5 @@
 ﻿using Mono.Cecil;
+using System;
 using System.Linq;
 using Zsharp.AST;
 
@@ -19,6 +20,7 @@ namespace Zsharp.Emit
         {
             var moduleDefinition = context.Module;
             var typeDef = new TypeDefinition(moduleDefinition.Name, module.Name, ToTypeAttributes(module));
+            typeDef.BaseType = moduleDefinition.ImportReference(typeof(Object));
             moduleDefinition.Types.Add(typeDef);
             return new ClassBuilder(context, typeDef);
         }
