@@ -18,9 +18,11 @@ I am still playing with the syntax, concepts and constructs of the language. Thi
 
 > `TBD` 'To Be Determined' notes can be found in places where I consider alternatives and still have not decided.
 
-## Facebook
+## Community
 
 I have created a [group on Facebook](https://www.facebook.com/groups/724275751426108/) for discussing Z# (Zlang).
+
+You can also join the Z# Discord server: https://discord.gg/5r9YMXHrYU
 
 ## TODO
 
