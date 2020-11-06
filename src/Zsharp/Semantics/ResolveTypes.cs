@@ -70,6 +70,18 @@ namespace Zsharp.Semantics
                 return;
             }
 
+            var litBool = operand.LiteralBoolean;
+            if (litBool != null)
+            {
+                Ast.Guard(SymbolTable, "No SymbolTable set.");
+
+                var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
+                    AstIdentifierIntrinsic.Bool.Name, AstSymbolKind.Type);
+                Ast.Guard(typeDef, "No AstTypeDefintion was found for Boolean.");
+                AssignType(operand, litBool, typeDef!);
+                return;
+            }
+
             var numeric = operand.LiteralNumeric;
             if (numeric != null)
             {
@@ -77,12 +89,19 @@ namespace Zsharp.Semantics
 
                 var typeDef = FindTypeByBitCount(numeric.GetBitCount(), numeric.Sign);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found by bit count.");
-                var typeRef = AstTypeReference.Create(numeric, typeDef!);
-                var entry = SymbolTable!.Add(typeRef);
-                if (entry.Definition == null)
-                    entry.AddNode(typeDef!);
+                AssignType(operand, numeric, typeDef!);
+                return;
+            }
 
-                operand.SetTypeReference(typeRef);
+            var litString = operand.LiteralString;
+            if (litString != null)
+            {
+                Ast.Guard(SymbolTable, "No SymbolTable set.");
+
+                var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
+                    AstIdentifierIntrinsic.Str.Name, AstSymbolKind.Type);
+                Ast.Guard(typeDef, "No AstTypeDefintion was found for String.");
+                AssignType(operand, litString, typeDef!);
                 return;
             }
 
@@ -109,6 +128,16 @@ namespace Zsharp.Semantics
                     operand.SetTypeReference(var.TypeReference);
                 }
             }
+        }
+
+        private void AssignType(AstExpressionOperand operand, AstNode node, AstTypeDefinition typeDef)
+        {
+            var typeRef = AstTypeReference.Create(node, typeDef!);
+            var entry = SymbolTable!.Add(typeRef);
+            if (entry.Definition == null)
+                entry.AddNode(typeDef!);
+
+            operand.SetTypeReference(typeRef);
         }
 
         public override void VisitAssignment(AstAssignment assign)
