@@ -119,7 +119,7 @@ namespace Zsharp.Emit
             }
         }
 
-        public override void VisitNumeric(AstNumeric numeric)
+        public override void VisitLiteralNumeric(AstLiteralNumeric numeric)
         {
             var il = _context.InstructionFactory;
             var instruction = il.LoadConstant((Int32)numeric.AsSigned());

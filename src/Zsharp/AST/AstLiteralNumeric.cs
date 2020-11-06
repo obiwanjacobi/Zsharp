@@ -1,51 +1,48 @@
 using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
 using System;
-using Zsharp.Parser;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstNumericBuilder : ZsharpBaseVisitor<UInt64>
+    public class AstLiteralNumeric : AstNode
     {
-        private readonly AstNode? _parent;
-
-        public AstNumericBuilder()
-        { }
-
-        public AstNumericBuilder(AstNode parent)
+        private AstLiteralNumeric(NumberContext context)
+            : base(AstNodeType.Literal)
         {
-            _parent = parent;
+            Context = context;
         }
 
-        private AstNumeric? _numeric;
-        public AstNumeric? Build(NumberContext numberCtx)
-        {
-            VisitNumber(numberCtx);
-            return _numeric;
-        }
+        public ParserRuleContext Context { get; }
 
-        public AstNumeric? Test(ParserRuleContext context)
-        {
-            Visit(context);
-            return _numeric;
-        }
+        public UInt64 Value { get; private set; }
 
-        protected override UInt64 AggregateResult(UInt64 aggregate, UInt64 nextResult)
+        public AstNumericSign Sign { get; }
+
+        public UInt64 AsUnsigned() => Value;
+
+        // TODO: Numeric does not know about the negate-operator yet.
+        public Int64 AsSigned() => (Int64)Value;
+
+        public override void Accept(AstVisitor visitor) => visitor.VisitLiteralNumeric(this);
+
+        public UInt32 GetBitCount()
         {
-            if (nextResult == 0)
+            UInt64 n = Value;
+            UInt32 count = 0;
+            while (n > 0)
             {
-                return aggregate;
+                count++;
+                n >>= 1;
             }
-            return nextResult;
+            return count;
         }
 
-        public override UInt64 VisitNumber([NotNull] NumberContext context)
+        public static AstLiteralNumeric Create(NumberContext context)
         {
-            _numeric = new AstNumeric(context);
-            _numeric.TrySetParent(_parent);
-            _numeric.Value = GetNumberValue(context);
-            return _numeric.Value;
+            return new AstLiteralNumeric(context)
+            {
+                Value = GetNumberValue(context)
+            };
         }
 
         private static ulong GetNumberValue(NumberContext context)

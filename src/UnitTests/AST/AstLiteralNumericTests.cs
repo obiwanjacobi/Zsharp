@@ -5,8 +5,15 @@ using Zsharp.AST;
 namespace UnitTests.AST
 {
     [TestClass]
-    public class AstNumericBuilderTests
+    public class AstLiteralNumericTests
     {
+        private static AstLiteralNumeric ParseNumeric(string code)
+        {
+            var file = Build.File(code);
+            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            return assign.Expression.RHS.LiteralNumeric;
+        }
+
         [TestMethod]
         public void Binary()
         {
@@ -14,8 +21,7 @@ namespace UnitTests.AST
                 "n = 0b0000_0000_1111_0000" + Tokens.NewLine
                 ;
 
-            var builder = new AstNumericBuilder();
-            var num = builder.Test(Parser.ParseFile(code));
+            var num = ParseNumeric(code);
             num.AsUnsigned().Should().Be(0x00F0);
         }
 
@@ -26,8 +32,7 @@ namespace UnitTests.AST
                 "n = 0c10" + Tokens.NewLine
                 ;
 
-            var builder = new AstNumericBuilder();
-            var num = builder.Test(Parser.ParseFile(code));
+            var num = ParseNumeric(code);
             num.AsUnsigned().Should().Be(8);
         }
 
@@ -38,8 +43,7 @@ namespace UnitTests.AST
                 "n = 42" + Tokens.NewLine
                 ;
 
-            var builder = new AstNumericBuilder();
-            var num = builder.Test(Parser.ParseFile(code));
+            var num = ParseNumeric(code);
             num.AsUnsigned().Should().Be(42);
         }
 
@@ -50,8 +54,7 @@ namespace UnitTests.AST
                 "n = 0d42" + Tokens.NewLine
                 ;
 
-            var builder = new AstNumericBuilder();
-            var num = builder.Test(Parser.ParseFile(code));
+            var num = ParseNumeric(code);
             num.AsUnsigned().Should().Be(42);
         }
 
@@ -62,8 +65,7 @@ namespace UnitTests.AST
                 "n = 0x42" + Tokens.NewLine
                 ;
 
-            var builder = new AstNumericBuilder();
-            var num = builder.Test(Parser.ParseFile(code));
+            var num = ParseNumeric(code);
             num.AsUnsigned().Should().Be(0x42);
         }
     }

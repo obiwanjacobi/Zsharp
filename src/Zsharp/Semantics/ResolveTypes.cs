@@ -70,7 +70,7 @@ namespace Zsharp.Semantics
                 return;
             }
 
-            var numeric = operand.Numeric;
+            var numeric = operand.LiteralNumeric;
             if (numeric != null)
             {
                 Ast.Guard(SymbolTable, "No SymbolTable set.");

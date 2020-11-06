@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Zsharp.AST;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace UnitTests.AST
 {
@@ -22,7 +21,7 @@ namespace UnitTests.AST
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Number);
             exp.LHS.Should().BeNull();
-            exp.RHS.Numeric.AsUnsigned().Should().Be(42);
+            exp.RHS.LiteralNumeric.AsUnsigned().Should().Be(42);
         }
 
         [TestMethod]
@@ -38,10 +37,10 @@ namespace UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Plus);
-            exp.LHS.Numeric.Should().NotBeNull();
-            exp.RHS.Numeric.Should().NotBeNull();
-            exp.LHS.Numeric.AsSigned().Should().Be(2);
-            exp.RHS.Numeric.AsSigned().Should().Be(4);
+            exp.LHS.LiteralNumeric.Should().NotBeNull();
+            exp.RHS.LiteralNumeric.Should().NotBeNull();
+            exp.LHS.LiteralNumeric.AsSigned().Should().Be(2);
+            exp.RHS.LiteralNumeric.AsSigned().Should().Be(4);
         }
 
         [TestMethod]
@@ -57,7 +56,7 @@ namespace UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Plus);
-            exp.LHS.Numeric.AsSigned().Should().Be(2);
+            exp.LHS.LiteralNumeric.AsSigned().Should().Be(2);
             exp.RHS.Expression.Operator.Should().Be(AstExpressionOperator.Multiply);
         }
 
@@ -75,7 +74,7 @@ namespace UnitTests.AST
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Negate);
             exp.LHS.Should().BeNull();
-            exp.RHS.Numeric.AsUnsigned().Should().Be(4);
+            exp.RHS.LiteralNumeric.AsUnsigned().Should().Be(4);
         }
 
         [TestMethod]
@@ -91,9 +90,9 @@ namespace UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Plus);
-            exp.LHS.Numeric.AsSigned().Should().Be(2);
+            exp.LHS.LiteralNumeric.AsSigned().Should().Be(2);
             exp.RHS.Expression.Operator.Should().Be(AstExpressionOperator.Negate);
-            exp.RHS.Expression.RHS.Numeric.AsSigned().Should().Be(4);
+            exp.RHS.Expression.RHS.LiteralNumeric.AsSigned().Should().Be(4);
         }
 
         [TestMethod]
@@ -110,7 +109,7 @@ namespace UnitTests.AST
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Multiply);
             exp.LHS.Expression.Operator.Should().Be(AstExpressionOperator.Plus);
-            exp.RHS.Numeric.AsSigned().Should().Be(6);
+            exp.RHS.LiteralNumeric.AsSigned().Should().Be(6);
         }
 
         [TestMethod]
@@ -126,7 +125,7 @@ namespace UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Modulo);
-            exp.RHS.Numeric.AsSigned().Should().Be(3);
+            exp.RHS.LiteralNumeric.AsSigned().Should().Be(3);
             exp.LHS.Expression.Operator.Should().Be(AstExpressionOperator.Divide);
             exp.LHS.Expression.LHS.Expression.Operator.Should().Be(AstExpressionOperator.Plus);
         }
@@ -145,7 +144,7 @@ namespace UnitTests.AST
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Plus);
             exp.RHS.Expression.Operator.Should().Be(AstExpressionOperator.Negate);
-            exp.LHS.Numeric.AsUnsigned().Should().Be(2);
+            exp.LHS.LiteralNumeric.AsUnsigned().Should().Be(2);
         }
 
         [TestMethod]
@@ -161,8 +160,8 @@ namespace UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Greater);
-            exp.LHS.Numeric.AsSigned().Should().Be(2);
-            exp.RHS.Numeric.AsSigned().Should().Be(4);
+            exp.LHS.LiteralNumeric.AsSigned().Should().Be(2);
+            exp.RHS.LiteralNumeric.AsSigned().Should().Be(4);
         }
 
         [TestMethod]
@@ -178,8 +177,8 @@ namespace UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Equal);
-            exp.LHS.Numeric.AsSigned().Should().Be(2);
-            exp.RHS.Numeric.AsSigned().Should().Be(4);
+            exp.LHS.LiteralNumeric.AsSigned().Should().Be(2);
+            exp.RHS.LiteralNumeric.AsSigned().Should().Be(4);
         }
 
         [TestMethod]
@@ -196,7 +195,7 @@ namespace UnitTests.AST
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Not);
             exp.LHS.Should().BeNull();
-            exp.RHS.Context.Should().BeOfType<Literal_boolContext>();
+            exp.RHS.LiteralBoolean.Should().NotBeNull();
         }
 
         [TestMethod]

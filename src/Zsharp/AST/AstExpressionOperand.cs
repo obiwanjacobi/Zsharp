@@ -1,13 +1,9 @@
-using Antlr4.Runtime;
 using System;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstExpressionOperand : AstNode, IAstTypeReferenceSite
     {
-        private readonly Literal_boolContext? _litBoolCtx;
-
         public AstExpressionOperand(AstExpression expr)
             : base(AstNodeType.Operand)
         {
@@ -15,11 +11,25 @@ namespace Zsharp.AST
             expr.SetParent(this);
         }
 
-        public AstExpressionOperand(AstNumeric num)
+        public AstExpressionOperand(AstLiteralBoolean litBool)
             : base(AstNodeType.Operand)
         {
-            Numeric = num;
+            LiteralBoolean = litBool;
+            litBool.SetParent(this);
+        }
+
+        public AstExpressionOperand(AstLiteralNumeric num)
+            : base(AstNodeType.Operand)
+        {
+            LiteralNumeric = num;
             num.SetParent(this);
+        }
+
+        public AstExpressionOperand(AstLiteralString litStr)
+            : base(AstNodeType.Operand)
+        {
+            LiteralString = litStr;
+            litStr.SetParent(this);
         }
 
         public AstExpressionOperand(AstVariableReference variable)
@@ -36,31 +46,20 @@ namespace Zsharp.AST
             function.SetParent(this);
         }
 
-        public AstExpressionOperand(Literal_boolContext context)
-            : base(AstNodeType.Operand)
-        {
-            _litBoolCtx = context;
-        }
-
-        public ParserRuleContext? Context
-        {
-            get
-            {
-                if (_litBoolCtx != null)
-                    return _litBoolCtx;
-                return null;
-            }
-        }
-
         public AstExpression? Expression { get; }
 
-        public AstNumeric? Numeric { get; }
+        public AstLiteralBoolean? LiteralBoolean { get; }
+
+        public AstLiteralNumeric? LiteralNumeric { get; }
+
+        public AstLiteralString? LiteralString { get; }
 
         public AstVariableReference? VariableReference { get; }
 
         public AstFunctionReference? FunctionReference { get; }
 
         private AstTypeReference? _typeRef;
+
         public AstTypeReference? TypeReference => _typeRef;
 
         public bool TrySetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
@@ -77,7 +76,9 @@ namespace Zsharp.AST
         public override void VisitChildren(AstVisitor visitor)
         {
             Expression?.Accept(visitor);
-            Numeric?.Accept(visitor);
+            LiteralBoolean?.Accept(visitor);
+            LiteralNumeric?.Accept(visitor);
+            LiteralString?.Accept(visitor);
             VariableReference?.Accept(visitor);
             FunctionReference?.Accept(visitor);
         }

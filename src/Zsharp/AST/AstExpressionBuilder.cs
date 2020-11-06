@@ -133,7 +133,7 @@ namespace Zsharp.AST
 
             if (expr.LHS == null &&
                 expr.Operator == AstExpressionOperator.None &&
-                expr.RHS?.Numeric != null)
+                expr.RHS?.LiteralNumeric != null)
             {
                 // expression used as a number wrapper
                 expr.Operator = AstExpressionOperator.Number;
@@ -193,9 +193,6 @@ namespace Zsharp.AST
         public override object? VisitExpression_comparison(Expression_comparisonContext context)
             => ProcessExpression(new ComparisonContextWrapper(context));
 
-        public override object? VisitLiteral_bool(Literal_boolContext context)
-            => new AstExpressionOperand(context);
-
         public override object? VisitFunction_call(Function_callContext context)
         {
             var function = new AstFunctionReference(context);
@@ -224,14 +221,15 @@ namespace Zsharp.AST
             return new AstExpressionOperand(varRef);
         }
 
+        public override object? VisitLiteral_bool(Literal_boolContext context)
+            => new AstExpressionOperand(new AstLiteralBoolean(context));
+
         public override object? VisitNumber(NumberContext context)
-        {
-            var builder = new AstNumericBuilder();
-            var numeric = builder.Build(context);
-            Ast.Guard(numeric, "AstNumericBuilder did not produce instance.");
-            var operand = new AstExpressionOperand(numeric!);
-            return operand;
-        }
+            => new AstExpressionOperand(AstLiteralNumeric.Create(context));
+
+        public override object? VisitString(StringContext context)
+            => new AstExpressionOperand(new AstLiteralString(context));
+
 
         public override object? VisitOperator_arithmetic(Operator_arithmeticContext context)
         {

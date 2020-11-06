@@ -43,7 +43,7 @@ namespace Zsharp.Dgml
             };
         }
 
-        public static string AsString(this AstNumeric numeric)
+        public static string AsString(this AstLiteralNumeric numeric)
         {
             return numeric.Context.GetText();
         }
@@ -59,7 +59,7 @@ namespace Zsharp.Dgml
             return AsString(lhs) + AsString(expression.Operator) + AsString(rhs);
         }
 
-        public static string AsString(this AstExpressionOperand operand)
+        public static string AsString(this AstExpressionOperand? operand)
         {
             if (operand == null)
             { return String.Empty; }
@@ -68,13 +68,9 @@ namespace Zsharp.Dgml
             if (expr != null)
             { return AsString(expr); }
 
-            var num = operand.Numeric;
+            var num = operand.LiteralNumeric;
             if (num != null)
             { return AsString(num); }
-
-            var context = operand.Context;
-            if (context != null)
-            { return context.GetText(); }
 
             return String.Empty;
         }

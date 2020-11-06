@@ -16,7 +16,7 @@
         Branch,         // CodeBlock.
         Expression,     // CodeBlock., Branch.[1]
         Operand,        // Expression.1|2
-        Numeric,        // Expression.1
+        Literal,        // Expression.1
 
         Variable,
         FunctionParameter,

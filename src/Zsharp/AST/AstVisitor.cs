@@ -72,9 +72,19 @@ namespace Zsharp.AST
             VisitChildren(module);
         }
 
-        public virtual void VisitNumeric(AstNumeric numeric)
+        public virtual void VisitLiteralNumeric(AstLiteralNumeric numeric)
         {
             VisitChildren(numeric);
+        }
+
+        public virtual void VisitLiteralBoolean(AstLiteralBoolean literalBool)
+        {
+            VisitChildren(literalBool);
+        }
+
+        public virtual void VisitLiteralString(AstLiteralString literalString)
+        {
+            VisitChildren(literalString);
         }
 
         public virtual void VisitTypeReference(AstTypeReference type)

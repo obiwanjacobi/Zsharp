@@ -72,7 +72,7 @@ namespace UnitTests.AST
                 module.Parent.Should().NotBeNull();
                 VisitChildren(module);
             }
-            public override void VisitNumeric(AstNumeric numeric)
+            public override void VisitLiteralNumeric(AstLiteralNumeric numeric)
             {
                 numeric.Parent.Should().NotBeNull();
                 VisitChildren(numeric);

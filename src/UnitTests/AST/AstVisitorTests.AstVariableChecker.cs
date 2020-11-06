@@ -15,7 +15,7 @@ namespace UnitTests.AST
             public override void VisitExpressionOperand(AstExpressionOperand operand)
             {
                 if (operand.Expression == null &&
-                    operand.Numeric == null)
+                    operand.LiteralNumeric == null)
                 {
                     operand.VariableReference.Should().NotBeNull();
                 }
@@ -23,7 +23,6 @@ namespace UnitTests.AST
             }
             public override void VisitVariableReference(AstVariableReference variable)
             {
-                //ASSERT_NE(variable.getVariableDefinition(), nullptr);
                 VisitChildren(variable);
             }
         }
