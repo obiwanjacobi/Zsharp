@@ -102,7 +102,7 @@ namespace UnitTests.Emit
         {
             const string code =
                 "module ExternalFunctionCallParameter" + Tokens.NewLine +
-                "import Print = System.Console.WriteLine" + Tokens.NewLine +
+                "import Print = System.Console.WriteLineString" + Tokens.NewLine +
                 "Main: ()" + Tokens.NewLine +
                 Tokens.Indent1 + "Print(\"Hello World\")" + Tokens.NewLine
                 ;

@@ -1494,14 +1494,14 @@ public partial class ZsharpParser : Parser {
 		public Variable_refContext variable_ref() {
 			return GetRuleContext<Variable_refContext>(0);
 		}
+		public Expression_boolContext expression_bool() {
+			return GetRuleContext<Expression_boolContext>(0);
+		}
 		public Expression_arithmeticContext expression_arithmetic() {
 			return GetRuleContext<Expression_arithmeticContext>(0);
 		}
 		public Expression_logicContext expression_logic() {
 			return GetRuleContext<Expression_logicContext>(0);
-		}
-		public Expression_boolContext expression_bool() {
-			return GetRuleContext<Expression_boolContext>(0);
 		}
 		public Expression_valueContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -1550,19 +1550,19 @@ public partial class ZsharpParser : Parser {
 			case 5:
 				EnterOuterAlt(_localctx, 5);
 				{
-				State = 346; expression_arithmetic(0);
+				State = 346; expression_bool();
 				}
 				break;
 			case 6:
 				EnterOuterAlt(_localctx, 6);
 				{
-				State = 347; expression_logic(0);
+				State = 347; expression_arithmetic(0);
 				}
 				break;
 			case 7:
 				EnterOuterAlt(_localctx, 7);
 				{
-				State = 348; expression_bool();
+				State = 348; expression_logic(0);
 				}
 				break;
 			}
@@ -6241,10 +6241,10 @@ public partial class ZsharpParser : Parser {
 		'\x156', '\x155', '\x3', '\x2', '\x2', '\x2', '\x157', '+', '\x3', '\x2', 
 		'\x2', '\x2', '\x158', '\x160', '\x5', '\xAA', 'V', '\x2', '\x159', '\x160', 
 		'\x5', '\xC2', '\x62', '\x2', '\x15A', '\x160', '\x5', 'J', '&', '\x2', 
-		'\x15B', '\x160', '\x5', '\\', '/', '\x2', '\x15C', '\x160', '\x5', '\x30', 
-		'\x19', '\x2', '\x15D', '\x160', '\x5', '\x34', '\x1B', '\x2', '\x15E', 
-		'\x160', '\x5', '<', '\x1F', '\x2', '\x15F', '\x158', '\x3', '\x2', '\x2', 
-		'\x2', '\x15F', '\x159', '\x3', '\x2', '\x2', '\x2', '\x15F', '\x15A', 
+		'\x15B', '\x160', '\x5', '\\', '/', '\x2', '\x15C', '\x160', '\x5', '<', 
+		'\x1F', '\x2', '\x15D', '\x160', '\x5', '\x30', '\x19', '\x2', '\x15E', 
+		'\x160', '\x5', '\x34', '\x1B', '\x2', '\x15F', '\x158', '\x3', '\x2', 
+		'\x2', '\x2', '\x15F', '\x159', '\x3', '\x2', '\x2', '\x2', '\x15F', '\x15A', 
 		'\x3', '\x2', '\x2', '\x2', '\x15F', '\x15B', '\x3', '\x2', '\x2', '\x2', 
 		'\x15F', '\x15C', '\x3', '\x2', '\x2', '\x2', '\x15F', '\x15D', '\x3', 
 		'\x2', '\x2', '\x2', '\x15F', '\x15E', '\x3', '\x2', '\x2', '\x2', '\x160', 

@@ -118,11 +118,24 @@ namespace Zsharp.Emit
                         $"Unrecognized Logic Expression Operator {expression.Operator}");
             }
         }
+        public override void VisitLiteralBoolean(AstLiteralBoolean literalBool)
+        {
+            var il = _context.InstructionFactory;
+            var instruction = il.LoadConstant(literalBool.Value);
+            _context.CodeBuilder.CodeBlock.Add(instruction);
+        }
 
         public override void VisitLiteralNumeric(AstLiteralNumeric numeric)
         {
             var il = _context.InstructionFactory;
             var instruction = il.LoadConstant((Int32)numeric.AsSigned());
+            _context.CodeBuilder.CodeBlock.Add(instruction);
+        }
+
+        public override void VisitLiteralString(AstLiteralString literalString)
+        {
+            var il = _context.InstructionFactory;
+            var instruction = il.LoadConstant(literalString.Value);
             _context.CodeBuilder.CodeBlock.Add(instruction);
         }
 

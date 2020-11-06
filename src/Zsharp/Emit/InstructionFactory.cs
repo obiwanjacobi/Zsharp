@@ -22,7 +22,9 @@ namespace Zsharp.Emit
         public Instruction BitwiseOr() => _iLProcessor.Create(OpCodes.Or);
         public Instruction BitwiseXor() => _iLProcessor.Create(OpCodes.Xor);
 
+        public Instruction LoadConstant(Boolean constant) => _iLProcessor.Create(OpCodes.Ldc_I4, constant ? 1 : 0);
         public Instruction LoadConstant(Int32 constant) => _iLProcessor.Create(OpCodes.Ldc_I4, constant);
+        public Instruction LoadConstant(String constant) => _iLProcessor.Create(OpCodes.Ldstr, constant);
 
         public Instruction LoadVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Ldloc, varDef);
         public Instruction StoreVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Stloc, varDef);

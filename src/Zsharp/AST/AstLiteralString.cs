@@ -9,7 +9,7 @@ namespace Zsharp.AST
             : base(AstNodeType.Literal)
         {
             Context = context;
-            Value = context.STRING().GetText();
+            Value = Parse(context.STRING().GetText());
         }
 
         public ParserRuleContext Context { get; }
@@ -19,6 +19,11 @@ namespace Zsharp.AST
         public override void Accept(AstVisitor visitor)
         {
             visitor.VisitLiteralString(this);
+        }
+
+        private static string Parse(string withQuotes)
+        {
+            return withQuotes[1..^1];
         }
     }
 }

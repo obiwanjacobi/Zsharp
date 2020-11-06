@@ -3,6 +3,7 @@ using Mono.Cecil.Rocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Zsharp.AST;
 
 namespace Zsharp.Semantics
@@ -120,7 +121,7 @@ namespace Zsharp.Semantics
         private AstFunctionExternal CreateFunction(MethodDefinition method, int overloadIndex)
         {
             var function = new AstFunctionExternal(method);
-            var functionName = overloadIndex > 0 ? $"{method.Name}{overloadIndex + 1}" : method.Name;
+            var functionName = overloadIndex > 0 ? ToOverloadName(method) : method.Name;
             function.SetIdentifier(new AstIdentifierExternal(functionName, AstIdentifierType.Function));
 
             // TODO: special Void handling
@@ -141,6 +142,17 @@ namespace Zsharp.Semantics
             }
 
             return function;
+        }
+
+        private string ToOverloadName(MethodDefinition method)
+        {
+            var name = new StringBuilder(method.Name);
+
+            foreach (var p in method.Parameters)
+            {
+                name.Append(p.ParameterType.Name);
+            }
+            return name.ToString();
         }
 
         private AstFunctionParameterDefinition CreateParameter(AstIdentifier identifier, TypeReference type)

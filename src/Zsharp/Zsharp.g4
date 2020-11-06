@@ -32,8 +32,8 @@ definition_top: function_def_export | function_def | enum_def | struct_def
 definition: function_def | variable_def;
 
 // expressions
-expression_value: number | string | function_call | variable_ref
-    | expression_arithmetic | expression_logic | expression_bool;
+expression_value: number | string | function_call | variable_ref  | expression_bool
+    | expression_arithmetic | expression_logic;
 comptime_expression_value: number | string | expression_bool;
 
 expression_arithmetic: 
