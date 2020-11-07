@@ -8,8 +8,11 @@ namespace Zsharp.AST
     [DebuggerDisplay("{SymbolName} ({SymbolKind})")]
     public class AstSymbolEntry
     {
+        private readonly List<AstNode> _definitions = new List<AstNode>();
         private readonly List<AstNode> _references = new List<AstNode>();
         private readonly List<string> _aliases = new List<string>();
+        private readonly Dictionary<AstFunctionReference, AstFunctionDefinition> _overloads
+            = new Dictionary<AstFunctionReference, AstFunctionDefinition>();
 
         public AstSymbolEntry(AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
         {
@@ -29,7 +32,7 @@ namespace Zsharp.AST
         public AstSymbolKind SymbolKind { get; }
         public AstSymbolLocality SymbolLocality { get; set; }
 
-        public AstNode? Definition { get; private set; }
+        public AstNode? Definition => _definitions.SingleOrDefault();
         public T? DefinitionAs<T>() where T : class => Definition as T;
 
         public void PromoteToDefinition(AstNode definitionNode, AstNode referenceNode)
@@ -38,7 +41,22 @@ namespace Zsharp.AST
             Ast.Guard(_references.IndexOf(referenceNode) != -1, "Specified reference Node was not found in the References.");
 
             _references.Remove(referenceNode);
-            Definition = definitionNode;
+            _definitions.Add(definitionNode);
+        }
+
+        public bool HasOverloads => _definitions.Count > 1;
+
+        public IEnumerable<AstFunctionDefinition> Overloads => _definitions.Cast<AstFunctionDefinition>();
+
+        public AstFunctionDefinition? FindOverloadDefinition(AstFunctionReference overload)
+        {
+            _overloads.TryGetValue(overload, out AstFunctionDefinition? functionDef);
+            return functionDef;
+        }
+
+        public void SetOverload(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
+        {
+            _overloads.Add(functionRef, functionDef);
         }
 
         public void AddNode(AstNode node)
@@ -46,18 +64,21 @@ namespace Zsharp.AST
             Ast.Guard(node, "Cannot add null.");
 
             if ((SymbolKind == AstSymbolKind.Module && node is AstModuleExternal) ||
-                (SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinitionImpl) ||
-                (SymbolKind == AstSymbolKind.Function && node is AstFunctionExternal) ||
-                (SymbolKind == AstSymbolKind.Variable && node is AstFunctionParameter) ||
+                (SymbolKind == AstSymbolKind.Variable && node is AstFunctionParameterDefinition) ||
                 (SymbolKind == AstSymbolKind.Variable && node is AstVariableDefinition) ||
                 (SymbolKind == AstSymbolKind.Type && node is AstTypeDefinition)
-                // (SymbolKind == AstSymbolKind.Struct && node is AstStruct) ||
-                // (SymbolKind == AstSymbolKind.Enum && node is AstEnum) ||
-                // (SymbolKind == AstSymbolKind.Field && node is AstField)
                 )
             {
                 Ast.Guard(Definition == null, "Definition is already set.");
-                Definition = node;
+                _definitions.Add(node);
+            }
+            else if (
+                (SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinitionImpl) ||
+                (SymbolKind == AstSymbolKind.Function && node is AstFunctionExternal)
+                )
+            {
+                // TODO: check overloadKey
+                _definitions.Add(node);
             }
             else
             {

@@ -11,7 +11,21 @@ namespace Zsharp.AST
 
         public Function_callContext Context { get; }
 
-        public AstFunctionDefinition? FunctionDefinition => Symbol?.DefinitionAs<AstFunctionDefinition>();
+        public AstFunctionDefinition? FunctionDefinition
+        {
+            get
+            {
+                Ast.Guard(Symbol, $"No Symbol is set for Function reference {Identifier.Name}.");
+                var entry = Symbol!;
+
+                if (entry.HasOverloads)
+                {
+                    return entry.FindOverloadDefinition(this);
+                }
+
+                return entry.DefinitionAs<AstFunctionDefinition>();
+            }
+        }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitFunctionReference(this);
 

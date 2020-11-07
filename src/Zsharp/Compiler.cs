@@ -13,6 +13,7 @@ namespace Zsharp
         private readonly AstBuilder _astBuilder;
         private readonly ResolveSymbols _resolveSymbols;
         private readonly ResolveTypes _resolveTypes;
+        private readonly ResolveOverloads _resolveOverloads;
 
         public Compiler(IAstModuleLoader moduleLoader)
         {
@@ -20,6 +21,7 @@ namespace Zsharp
             _astBuilder = new AstBuilder(Context);
             _resolveSymbols = new ResolveSymbols(Context);
             _resolveTypes = new ResolveTypes(Context);
+            _resolveOverloads = new ResolveOverloads(Context);
         }
 
         public CompilerContext Context { get; }
@@ -51,6 +53,7 @@ namespace Zsharp
             // Note: processing is in order
             _resolveSymbols.Visit(file);
             _resolveTypes.Visit(file);
+            _resolveOverloads.Visit(file);
         }
 
         private ZsharpParser CreateParser(string sourceName, string code)

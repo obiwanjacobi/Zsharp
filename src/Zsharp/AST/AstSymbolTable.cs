@@ -82,14 +82,14 @@ namespace Zsharp.AST
         {
             if (symbolEntry == null)
                 return null;
-            if (symbolEntry.Definition != null)
+            if (symbolEntry.HasOverloads || symbolEntry.Definition != null)
                 return symbolEntry;
 
             var table = this;
             while (table != null)
             {
                 var entry = table.FindEntryLocal(symbolEntry.SymbolName, symbolEntry.SymbolKind);
-                if (entry?.Definition != null)
+                if (entry.HasOverloads || entry?.Definition != null)
                 {
                     Merge(entry, symbolEntry);
                     return entry;

@@ -174,6 +174,14 @@ namespace Zsharp.Semantics
             }
         }
 
+        public override void VisitFunctionReference(AstFunctionReference function)
+        {
+            VisitChildren(function);
+
+            var success = function.TryResolve();
+            Ast.Guard(success, $"Failed to resolve {function.Identifier.Name}.");
+        }
+
         public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
         {
             VisitChildren(parameter);
