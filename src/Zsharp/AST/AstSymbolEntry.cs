@@ -8,18 +8,17 @@ namespace Zsharp.AST
     [DebuggerDisplay("{SymbolName} ({SymbolKind})")]
     public class AstSymbolEntry
     {
-        private readonly AstSymbolTable _symbolTable;
         private readonly List<AstNode> _references = new List<AstNode>();
         private readonly List<string> _aliases = new List<string>();
 
         public AstSymbolEntry(AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
         {
-            _symbolTable = symbolTable;
+            SymbolTable = symbolTable;
             SymbolName = symbolName;
             SymbolKind = symbolKind;
         }
 
-        public AstSymbolTable SymbolTable => _symbolTable;
+        public AstSymbolTable SymbolTable { get; }
 
         public IEnumerable<AstNode> References => _references;
         public IEnumerable<T> ReferencesOf<T>() where T : AstNode
@@ -30,26 +29,16 @@ namespace Zsharp.AST
         public AstSymbolKind SymbolKind { get; }
         public AstSymbolLocality SymbolLocality { get; set; }
 
-        private AstNode? _definition;
-        public AstNode? Definition => _definition;
-        public T? DefinitionAs<T>() where T : class
-            => _definition as T;
+        public AstNode? Definition { get; private set; }
+        public T? DefinitionAs<T>() where T : class => Definition as T;
 
         public void PromoteToDefinition(AstNode definitionNode, AstNode referenceNode)
         {
-            if (_definition != null)
-            {
-                throw new InvalidOperationException("Symbol already has a definition.");
-            }
-
-            if (_references.IndexOf(referenceNode) == -1)
-            {
-                throw new ArgumentException(
-                    "Specified reference Node was not found in the References.", nameof(referenceNode));
-            }
+            Ast.Guard(Definition == null, "Symbol already has a definition.");
+            Ast.Guard(_references.IndexOf(referenceNode) != -1, "Specified reference Node was not found in the References.");
 
             _references.Remove(referenceNode);
-            _definition = definitionNode;
+            Definition = definitionNode;
         }
 
         public void AddNode(AstNode node)
@@ -67,8 +56,8 @@ namespace Zsharp.AST
                 // (SymbolKind == AstSymbolKind.Field && node is AstField)
                 )
             {
-                Ast.Guard(_definition == null, "Definition is already set.");
-                _definition = node;
+                Ast.Guard(Definition == null, "Definition is already set.");
+                Definition = node;
             }
             else
             {

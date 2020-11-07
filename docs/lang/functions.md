@@ -234,6 +234,8 @@ _ = retFunc()       // ok, explicitly not interested in retval
 
 > Could the compiler have an opinion about where the return statement is located? Only allow early exits inside and `if` and as last statement in the function. What about only one inside a loop?
 
+> TBD: should we also support covariant return types?
+
 ### Error
 
 The return type of a function can contain an error `Err<T>`, Refer to [Errors](errors.md) for more details.
@@ -293,9 +295,10 @@ fn(self: Struct2, p: U8)
 fn(self: Struct1)  // error
 ```
 
-One exception to this rule are the Type Constructor functions. See Also [Types](./types.md).
+> Thinking of supporting at least compile time overload resolvement. 
+This makes interacting with existing .NET code a lot less hassle.
 
-> TBD: should we also support covariant return types?
+One exception to this rule are the Type Constructor functions. See Also [Types](./types.md).
 
 ---
 

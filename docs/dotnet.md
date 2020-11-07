@@ -175,6 +175,8 @@ Public extension methods are represented as self-bound (this) functions (if we c
 In Z# you would need an allocator to place an object on the heap.
 Then there has to be a .NET (implicit) allocator. `GC`, to make it clear it is a Garbage Collected heap, which does not clash with the static methods on the (System) `GC` class.
 
+> TBD: drop allocators completely?
+
 ```csharp
 import System
 ...
@@ -246,6 +248,11 @@ Implementing a (C#) `new` function to replace an old function on a class is not 
 Interfaces (querying, calling and implementing)
 
 Interface methods are translated to self-bound template interface functions sharing the name of the .NET interface.
+
+### Generics
+
+Using .NET generics uses the same syntax as Z# templates.
+This may cause confusion an we may want to change the syntax for generics or templates. Perhaps use a `#` in template syntax to indicate the compile-time nature of that mechanism?
 
 ### Delegates and Events
 

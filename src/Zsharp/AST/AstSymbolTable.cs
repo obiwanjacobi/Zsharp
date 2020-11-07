@@ -82,6 +82,8 @@ namespace Zsharp.AST
         {
             if (symbolEntry == null)
                 return null;
+            if (symbolEntry.Definition != null)
+                return symbolEntry;
 
             var table = this;
             while (table != null)
@@ -89,8 +91,7 @@ namespace Zsharp.AST
                 var entry = table.FindEntryLocal(symbolEntry.SymbolName, symbolEntry.SymbolKind);
                 if (entry?.Definition != null)
                 {
-                    if (!Object.ReferenceEquals(entry, symbolEntry))
-                        Merge(entry, symbolEntry);
+                    Merge(entry, symbolEntry);
                     return entry;
                 }
                 table = table.ParentTable;
