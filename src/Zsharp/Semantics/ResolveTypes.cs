@@ -180,7 +180,7 @@ namespace Zsharp.Semantics
 
             if (parameter.TypeReference == null)
             {
-                parameter.SetTypeReference(parameter.Expression.TypeReference);
+                parameter.SetTypeReference(new AstTypeReference(parameter.Expression.TypeReference));
             }
         }
 

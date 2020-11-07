@@ -1,9 +1,10 @@
 ﻿using Antlr4.Runtime;
+using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstFunctionParameterDefinition : AstFunctionParameter
+    public class AstFunctionParameterDefinition : AstFunctionParameter, IAstSymbolEntrySite
     {
         private readonly Function_parameterContext? _paramCtx;
         private readonly Function_parameter_selfContext? _selfCtx;
@@ -26,5 +27,28 @@ namespace Zsharp.AST
         public ParserRuleContext? Context => (ParserRuleContext?)_paramCtx ?? (ParserRuleContext?)_selfCtx;
 
         public override void Accept(AstVisitor visitor) => visitor.VisitFunctionParameterDefinition(this);
+
+        private AstSymbolEntry? _symbol;
+        public AstSymbolEntry? Symbol => _symbol;
+
+        public bool TrySetSymbol(AstSymbolEntry symbolEntry) => Ast.SafeSet(ref _symbol, symbolEntry);
+
+        public void SetSymbol(AstSymbolEntry symbolEntry)
+        {
+            if (!TrySetSymbol(symbolEntry))
+                throw new InvalidOperationException(
+                    "SymbolEntry is already set or null.");
+        }
+
+        public bool TryResolve()
+        {
+            var entry = Symbol?.SymbolTable.Resolve(Symbol);
+            if (entry != null)
+            {
+                _symbol = entry;
+                return true;
+            }
+            return false;
+        }
     }
 }
