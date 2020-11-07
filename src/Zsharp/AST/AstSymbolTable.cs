@@ -42,7 +42,7 @@ namespace Zsharp.AST
         public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node = null)
         {
             var exOrImported = FindEntry(symbolName, AstSymbolKind.NotSet);
-            var entry = FindEntry(symbolName, kind);
+            var entry = FindEntryLocal(symbolName, kind);
 
             if (entry == null)
             {

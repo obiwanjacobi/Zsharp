@@ -65,7 +65,7 @@ namespace Zsharp.Emit
             return attrs;
         }
 
-        private MethodAttributes ToMethodAttibutes(AstFunction function)
+        private MethodAttributes ToMethodAttibutes(IAstSymbolEntrySite function)
         {
             var attrs = MethodAttributes.Static | MethodAttributes.HideBySig;
 

@@ -1,13 +1,30 @@
 using System;
+using System.Collections.Generic;
 
 namespace Zsharp.AST
 {
-    public abstract class AstFunction : AstCodeBlockItem,
+    public abstract class AstFunction<ParamT> : AstCodeBlockItem,
         IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolEntrySite
+        where ParamT : AstFunctionParameter
     {
+        private readonly List<ParamT> _parameters = new List<ParamT>();
+
         protected AstFunction()
             : base(AstNodeType.Function)
         { }
+
+        public IEnumerable<ParamT> Parameters => _parameters;
+
+        public bool TryAddParameter(ParamT param)
+        {
+            if (param != null &&
+                param.TrySetParent(this))
+            {
+                _parameters.Add(param);
+                return true;
+            }
+            return false;
+        }
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;

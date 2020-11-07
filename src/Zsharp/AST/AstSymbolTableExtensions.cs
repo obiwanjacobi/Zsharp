@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Zsharp.AST
 {
@@ -41,12 +42,26 @@ namespace Zsharp.AST
             return AddSymbol(symbolTable, node, node.NodeType.ToSymbolKind(), node);
         }
 
+        public static AstSymbolEntry Add<T>(this AstSymbolTable symbolTable, AstFunction<T> function)
+            where T : AstFunctionParameter
+        {
+            var name = $"{function.Identifier.Name}{function.Parameters.Count()}";
+            return AddSymbol(symbolTable, name, AstSymbolKind.Function, function);
+        }
+
+
         private static AstSymbolEntry AddSymbol(AstSymbolTable symbolTable,
             IAstIdentifierSite identifierSite, AstSymbolKind symbolKind, AstNode node)
         {
             var name = identifierSite.Identifier?.Name
                 ?? throw new ArgumentException("No identifier name.", nameof(identifierSite));
 
+            return AddSymbol(symbolTable, name, symbolKind, node);
+        }
+
+        private static AstSymbolEntry AddSymbol(AstSymbolTable symbolTable,
+            string name, AstSymbolKind symbolKind, AstNode node)
+        {
             var entry = symbolTable.AddSymbol(name, symbolKind, node);
 
             if (node is IAstSymbolEntrySite symbolSite)

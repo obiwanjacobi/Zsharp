@@ -17,7 +17,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunction>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
             var t = fn.TypeReference;
             t.IsOptional.Should().BeFalse();
             t.IsError.Should().BeFalse();
@@ -33,7 +33,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunction>(0);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
             var t = fn.TypeReference;
             t.IsOptional.Should().BeTrue();
             t.IsError.Should().BeTrue();

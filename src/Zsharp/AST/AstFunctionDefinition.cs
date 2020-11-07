@@ -1,29 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Zsharp.AST
 {
-    public abstract class AstFunctionDefinition : AstFunction
+    public abstract class AstFunctionDefinition : AstFunction<AstFunctionParameterDefinition>
     {
-        private readonly List<AstFunctionParameterDefinition> _parameters = new List<AstFunctionParameterDefinition>();
-
-        public IEnumerable<AstFunctionParameter> Parameters => _parameters;
-
-        public bool TryAddParameter(AstFunctionParameterDefinition param)
-        {
-            if (param != null &&
-                param.TrySetParent(this))
-            {
-                _parameters.Add(param);
-                return true;
-            }
-            return false;
-        }
-
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var param in _parameters)
+            foreach (var param in Parameters)
             {
                 param.Accept(visitor);
             }
@@ -32,7 +16,7 @@ namespace Zsharp.AST
         public override string? ToString()
         {
             if (TypeReference?.Identifier != null && Identifier != null)
-                return $"{TypeReference.Identifier.Name} {Identifier.Name}({String.Join(", ", _parameters.Select(p => $"{p.TypeReference.Identifier.Name} {p.Identifier.Name}"))})";
+                return $"{TypeReference.Identifier.Name} {Identifier.Name}({String.Join(", ", Parameters.Select(p => $"{p.TypeReference.Identifier.Name} {p.Identifier.Name}"))})";
 
             return base.ToString();
         }

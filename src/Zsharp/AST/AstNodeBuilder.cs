@@ -168,7 +168,7 @@ namespace Zsharp.AST
             string scopeName = symbols.Namespace;
 
             var cbSite = _buildercontext.GetCurrent<IAstCodeBlockSite>();
-            var parent = cbSite as AstFunction;
+            var parent = cbSite as AstFunctionDefinition;
             if (parent?.Identifier != null)
             {
                 scopeName = parent.Identifier.Name;
@@ -347,7 +347,7 @@ namespace Zsharp.AST
         {
             var param = new AstFunctionParameterReference(context);
             var function = _buildercontext.GetCurrent<AstFunctionReference>();
-            function.AddParameter(param);
+            function.TryAddParameter(param);
 
             _buildercontext.SetCurrent(param);
             var any = VisitChildren(context);
