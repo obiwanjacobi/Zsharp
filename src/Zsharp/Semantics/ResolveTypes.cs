@@ -32,6 +32,9 @@ namespace Zsharp.Semantics
 
         public override void VisitExpression(AstExpression expression)
         {
+            if (expression.TypeReference != null)
+                return;
+
             VisitChildren(expression);
 
             if (expression.TypeReference == null)
@@ -57,10 +60,10 @@ namespace Zsharp.Semantics
 
         public override void VisitExpressionOperand(AstExpressionOperand operand)
         {
-            VisitChildren(operand);
-
             if (operand.TypeReference != null)
                 return;
+
+            VisitChildren(operand);
 
             var expr = operand.Expression;
             if (expr != null)
@@ -168,6 +171,16 @@ namespace Zsharp.Semantics
                 {
                     assign.Variable.SetTypeReference(new AstTypeReference(typeRef));
                 }
+            }
+        }
+
+        public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
+        {
+            VisitChildren(parameter);
+
+            if (parameter.TypeReference == null)
+            {
+                parameter.SetTypeReference(parameter.Expression.TypeReference);
             }
         }
 

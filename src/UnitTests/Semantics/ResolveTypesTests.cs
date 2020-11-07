@@ -145,5 +145,21 @@ namespace UnitTests.Semantics
 
             call.Symbol.Definition.Should().NotBeNull();
         }
+
+        [TestMethod]
+        public void FunctionCallParameterReference()
+        {
+            const string code =
+                "fn: (p: U8)" + Tokens.NewLine +
+                Tokens.Indent1 + "fn(42)" + Tokens.NewLine
+                ;
+
+            var file = CompileFile(code);
+
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var call = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
+            var p = call.Parameters.First();
+            p.TypeReference.Should().NotBeNull();
+        }
     }
 }

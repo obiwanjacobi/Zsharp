@@ -17,7 +17,7 @@ namespace Zsharp.Semantics
 
         public override void VisitAssignment(AstAssignment assign)
         {
-            base.VisitAssignment(assign);
+            VisitChildren(assign);
 
             if (assign.Variable is AstVariableReference varRef &&
                 varRef.VariableDefinition == null)
