@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Zsharp.AST
 {
@@ -27,18 +27,7 @@ namespace Zsharp.AST
             return false;
         }
 
-        public string OverloadKey
-        {
-            get
-            {
-                var key = new StringBuilder(Identifier.Name);
-                foreach (var p in _parameters)
-                {
-                    key.Append(p.TypeReference.Identifier.Name);
-                }
-                return key.ToString();
-            }
-        }
+        public string OverloadKey => String.Join(String.Empty, _parameters.Select(p => p.TypeReference.Identifier.Name));
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;

@@ -3,6 +3,7 @@ using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zsharp.Parser;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -111,7 +112,10 @@ namespace Zsharp.AST
                     return null;
                 }
 
-                entry = symbols.AddSymbol(dotName.Symbol, entry.Definition.NodeType.ToSymbolKind(), entry.Definition);
+                if (entry.HasOverloads)
+                    entry = symbols.Symbols.AddSymbol(dotName.Symbol, entry.SymbolKind, entry.Overloads.ToArray());
+                else
+                    entry = symbols.Symbols.AddSymbol(dotName.Symbol, entry.SymbolKind, entry.Definition);
                 entry.SymbolLocality = AstSymbolLocality.Imported;
                 entry.AddAlias(alias);
             }

@@ -37,8 +37,6 @@ namespace Zsharp.Semantics
 
         private void AddType(TypeDefinition type)
         {
-
-
             var builder = new ImportedTypeBuilder(_typeRepository);
             builder.Build(type);
 

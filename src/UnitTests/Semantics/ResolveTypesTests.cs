@@ -143,7 +143,7 @@ namespace UnitTests.Semantics
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var call = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
 
-            call.Symbol.Definition.Should().NotBeNull();
+            call.Symbol.FindOverloadDefinition(call).Should().NotBeNull();
         }
 
         [TestMethod]

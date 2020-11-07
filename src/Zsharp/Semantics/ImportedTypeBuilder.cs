@@ -3,7 +3,6 @@ using Mono.Cecil.Rocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Zsharp.AST;
 
 namespace Zsharp.Semantics
@@ -75,10 +74,9 @@ namespace Zsharp.Semantics
             foreach (var methodGroup in typeDefinition.Methods
                 .Where(m => m.IsPublic).GroupBy(m => m.Name))
             {
-                int overloadIndex = 0;
                 foreach (var method in methodGroup)
                 {
-                    var function = CreateFunction(method, overloadIndex);
+                    var function = CreateFunction(method);
                     _functions.Add(function);
 
                     if (method.IsStatic)
@@ -87,8 +85,6 @@ namespace Zsharp.Semantics
                         _aliases.TryAdd(function.Identifier.Name,
                             $"{typeDefinition.Name}{function.Identifier.Name}");
                     }
-
-                    overloadIndex++;
                 }
             }
         }
@@ -118,11 +114,10 @@ namespace Zsharp.Semantics
                 typeDefinition.Methods.Any(m => !m.IsStatic && m.IsPublic);
         }
 
-        private AstFunctionExternal CreateFunction(MethodDefinition method, int overloadIndex)
+        private AstFunctionExternal CreateFunction(MethodDefinition method)
         {
             var function = new AstFunctionExternal(method);
-            var functionName = overloadIndex > 0 ? ToOverloadName(method) : method.Name;
-            function.SetIdentifier(new AstIdentifierExternal(functionName, AstIdentifierType.Function));
+            function.SetIdentifier(new AstIdentifierExternal(method.Name, AstIdentifierType.Function));
 
             // TODO: special Void handling
             var typeRef = _typeRepository.GetTypeReference(method.ReturnType);
@@ -142,17 +137,6 @@ namespace Zsharp.Semantics
             }
 
             return function;
-        }
-
-        private string ToOverloadName(MethodDefinition method)
-        {
-            var name = new StringBuilder(method.Name);
-
-            foreach (var p in method.Parameters)
-            {
-                name.Append(p.ParameterType.Name);
-            }
-            return name.ToString();
         }
 
         private AstFunctionParameterDefinition CreateParameter(AstIdentifier identifier, TypeReference type)
