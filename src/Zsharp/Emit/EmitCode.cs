@@ -1,4 +1,5 @@
-﻿using Zsharp.AST;
+﻿using System;
+using Zsharp.AST;
 
 namespace Zsharp.Emit
 {
@@ -63,12 +64,34 @@ namespace Zsharp.Emit
                 if (branch.HasExpression)
                 {
                     VisitChildren(branch);
-                    // TODO: ld expression result
-                    return;
                 }
 
                 Context.CodeBuilder.Return();
             }
+            else
+            {
+                throw new NotImplementedException(
+                    $"Emit Branch '{branch.BranchType}' not implemented.");
+            }
+        }
+
+        public override void VisitBranchConditional(AstBranchConditional branch)
+        {
+            Visit(branch.Expression!);
+
+            var builder = Context.CodeBuilder;
+            var nextBlock = builder.BranchConditional(
+                builder.NewBlockLabel(), builder.NewBlockLabel());
+
+            Visit(branch.CodeBlock!);
+
+            if (branch.HasSubBranch)
+            {
+                // TODO: the sub-branch's nextBlock should be the root's nextBlock...
+                Visit(branch.SubBranch!);
+            }
+
+            builder.CodeBlock = nextBlock;
         }
 
         public override void VisitExpression(AstExpression expression)

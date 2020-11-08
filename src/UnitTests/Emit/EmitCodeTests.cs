@@ -111,7 +111,7 @@ namespace UnitTests.Emit
         }
 
         [TestMethod]
-        public void ExternalFunctionCallParameter()
+        public void ExternalFunctionCallParameter_Run()
         {
             const string code =
                 "module ExternalFunctionCallParameter" + Tokens.NewLine +
@@ -178,6 +178,25 @@ namespace UnitTests.Emit
             var moduleClass = emit.Context.Module.Types.Find("test");
             var body = moduleClass.Methods.First().Body;
             body.Instructions.Should().HaveCount(5);
+        }
+
+        [TestMethod]
+        public void BranchIfTrue()
+        {
+            const string code =
+                "module test" + Tokens.NewLine +
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "if true" + Tokens.NewLine +
+                Tokens.Indent2 + "return" + Tokens.NewLine
+                ;
+
+            var emit = CreateEmitCode(code);
+
+            var moduleClass = emit.Context.Module.Types.Find("test");
+            var body = moduleClass.Methods.First().Body;
+            body.Instructions.Should().HaveCount(5);
+
+            emit.SaveAs("BranchIfTrue.dll");
         }
     }
 }

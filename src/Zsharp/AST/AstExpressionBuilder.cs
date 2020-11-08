@@ -156,6 +156,13 @@ namespace Zsharp.AST
                 }
             }
 
+            if (expr == null &&
+                _values.Count > 0)
+            {
+                expr = new AstExpression(_values.Pop());
+                Ast.Guard(_values.Count == 0, "Orphan ExpressionOperands.");
+            }
+
             return expr;
         }
 

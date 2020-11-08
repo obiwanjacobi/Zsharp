@@ -30,6 +30,12 @@ namespace Zsharp.AST
             Context = context;
         }
 
+        public AstExpression(AstExpressionOperand operand)
+            : base(AstNodeType.Expression)
+        {
+            _rhs = operand;
+        }
+
         public ParserRuleContext? Context { get; }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitExpression(this);

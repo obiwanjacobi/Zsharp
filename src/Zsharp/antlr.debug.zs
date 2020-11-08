@@ -1,3 +1,3 @@
-import print = external.static.print
 fn: ()
-    print()
+    if true
+        return

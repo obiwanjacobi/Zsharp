@@ -28,6 +28,25 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void IfTrue()
+        {
+            const string code =
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "if true" + Tokens.NewLine +
+                Tokens.Indent2 + "return" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.Functions.FirstOrDefault();
+            var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
+            br.Should().NotBeNull();
+            br.BranchType.Should().Be(AstBranchType.Conditional);
+            br.IsConditional.Should().BeTrue();
+            br.HasCode.Should().BeTrue();
+            br.HasExpression.Should().BeTrue();
+        }
+
+        [TestMethod]
         public void Else()
         {
             const string code =

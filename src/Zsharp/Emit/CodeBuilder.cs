@@ -11,6 +11,7 @@ namespace Zsharp.Emit
         private readonly MethodDefinition _methodDefinition;
         private readonly Dictionary<string, CodeBlock> _blocks = new Dictionary<string, CodeBlock>();
         private readonly Dictionary<string, VariableDefinition> _variables = new Dictionary<string, VariableDefinition>();
+        private int _blockIndex;
 
         public CodeBuilder(MethodDefinition methodDefinition)
         {
@@ -18,7 +19,7 @@ namespace Zsharp.Emit
             CodeBlock = AddBlock("__entry");
         }
 
-        public CodeBlock CodeBlock { get; private set; }
+        public CodeBlock CodeBlock { get; set; }
 
         public CodeBlock? MoveToNextBlock()
         {
@@ -40,7 +41,14 @@ namespace Zsharp.Emit
 
         public CodeBlock? Return()
         {
+            CodeBlock.Return();
             return MoveToNextBlock();
+        }
+
+        public string NewBlockLabel()
+        {
+            _blockIndex++;
+            return $"{_methodDefinition.Name}{_blockIndex}";
         }
 
         public CodeBlock Branch(string targetLabel)
@@ -51,15 +59,15 @@ namespace Zsharp.Emit
             return targetBlock;
         }
 
-        public (CodeBlock Next, CodeBlock Alt) BranchConditional(string targetLabel, string altLabel)
+        public CodeBlock BranchConditional(string targetLabel, string altLabel)
         {
             CodeBlock.BranchConditional(targetLabel, altLabel);
 
-            var targetBlock = GetBlock(targetLabel);
             var altBlock = GetBlock(altLabel);
+            var targetBlock = GetBlock(targetLabel);
 
             CodeBlock = altBlock;
-            return (targetBlock, altBlock);
+            return targetBlock;
         }
 
         protected CodeBlock GetBlock(string label)
@@ -106,15 +114,30 @@ namespace Zsharp.Emit
         {
             foreach (var codeBlock in _blocks.Values)
             {
-                foreach (var instruction in codeBlock.Instructions)
-                {
-                    iLProcessor.Append(instruction);
-                }
+                if (codeBlock.Termination == CodeBlockTermination.Return)
+                    codeBlock.Return(iLProcessor);
+                else if (String.IsNullOrEmpty(codeBlock.NextBlock) &&
+                    String.IsNullOrEmpty(codeBlock.NextBlockAlt) &&
+                    codeBlock.Termination == CodeBlockTermination.FallThrough)
+                    codeBlock.Return(iLProcessor);
+            }
+
+            foreach (var codeBlock in _blocks.Values)
+            {
+                AppendInstructions(iLProcessor, codeBlock);
 
                 _blocks.TryGetValue(codeBlock.NextBlock, out CodeBlock? nextBlock);
                 _blocks.TryGetValue(codeBlock.NextBlockAlt, out CodeBlock? altBlock);
 
                 EmitBranch(iLProcessor, codeBlock, nextBlock, altBlock);
+            }
+        }
+
+        private static void AppendInstructions(ILProcessor iLProcessor, CodeBlock codeBlock)
+        {
+            foreach (var instruction in codeBlock.Instructions)
+            {
+                iLProcessor.Append(instruction);
             }
         }
 
@@ -131,6 +154,9 @@ namespace Zsharp.Emit
                     break;
                 case CodeBlockTermination.Return:
                     iLProcessor.Append(iLProcessor.Create(OpCodes.Ret));
+                    break;
+                case CodeBlockTermination.FallThrough:
+                    // no-op
                     break;
                 default:
                     throw new InvalidOperationException("Invalid CodeBlock Termination.");
@@ -159,6 +185,18 @@ namespace Zsharp.Emit
         public string NextBlock { get; private set; }
         public string NextBlockAlt { get; private set; }
 
+        internal void Return(ILProcessor? iLProcessor = null)
+        {
+            if (iLProcessor != null)
+            {
+                Add(iLProcessor.Create(OpCodes.Ret));
+                // to prevent another ret
+                Termination = CodeBlockTermination.FallThrough;
+            }
+            else
+                Termination = CodeBlockTermination.Return;
+        }
+
         internal void Branch(string targetLabel)
         {
             Termination = CodeBlockTermination.Branch;
@@ -179,6 +217,7 @@ namespace Zsharp.Emit
 
     public enum CodeBlockTermination
     {
+        FallThrough,
         Return,
         Branch,
         BranchConditional,
