@@ -29,8 +29,6 @@ namespace Zsharp.AST
         public Exception? Error => Context.exception;
 
         public override string ToString()
-        {
-            return $"{Text} at {Context.Start.Line}, {Context.Start.Column + 1} ({Source})";
-        }
+            => $"{Text} at {Context.Start.Line}, {Context.Start.Column + 1} ({Source})";
     }
 }

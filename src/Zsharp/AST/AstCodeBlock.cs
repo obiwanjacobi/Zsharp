@@ -7,7 +7,7 @@ namespace Zsharp.AST
     {
         private readonly List<AstCodeBlockItem> _items = new List<AstCodeBlockItem>();
 
-        public AstCodeBlock(string scopeName, AstSymbolTable parentTable, CodeblockContext? context)
+        public AstCodeBlock(string scopeName, AstSymbolTable parentTable, CodeblockContext? context = null)
             : base(AstNodeType.CodeBlock)
         {
             Symbols = new AstSymbolTable(scopeName, parentTable);

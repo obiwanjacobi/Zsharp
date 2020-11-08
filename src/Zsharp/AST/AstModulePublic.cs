@@ -9,12 +9,12 @@ namespace Zsharp.AST
     {
         private readonly List<Statement_moduleContext> _contexts = new List<Statement_moduleContext>();
         private readonly List<Statement_exportContext> _exports = new List<Statement_exportContext>();
+        private readonly List<AstFile> _files = new List<AstFile>();
 
         public AstModulePublic(string moduleName)
             : base(moduleName, AstModuleLocality.Public)
         { }
 
-        private readonly List<AstFile> _files = new List<AstFile>();
         public IEnumerable<AstFile> Files => _files;
 
         public IEnumerable<Statement_exportContext> Exports => _exports;
@@ -46,10 +46,7 @@ namespace Zsharp.AST
             _files.Add(file);
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitModulePublic(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitModulePublic(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

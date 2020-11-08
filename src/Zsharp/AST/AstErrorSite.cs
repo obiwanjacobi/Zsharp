@@ -6,19 +6,16 @@ namespace Zsharp.AST
     public class AstErrorSite
     {
         private readonly List<AstError> _errors = new List<AstError>();
+
         public IEnumerable<AstError> Errors => _errors;
 
         public bool HasErrors => _errors.Count > 0;
 
         public AstError AddError(ParserRuleContext context, string text)
-        {
-            return AddError(text, context);
-        }
+            => AddError(text, context);
 
         public AstError AddError(AstNode node, ParserRuleContext context, string text)
-        {
-            return AddError(text, context, node);
-        }
+            => AddError(text, context, node);
 
         private AstError AddError(string text, ParserRuleContext context, AstNode? node = null)
         {

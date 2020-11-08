@@ -6,39 +6,33 @@ namespace Zsharp.AST
 {
     public class AstExpression : AstNode, IAstTypeReferenceSite
     {
-        private readonly Expression_arithmeticContext? _arithmeticCtx;
-        private readonly Expression_logicContext? _logicCtx;
-        private readonly Expression_comparisonContext? _comparisonCtx;
-        private readonly Expression_valueContext? _valueCtx;
-
         public AstExpression(Expression_arithmeticContext context)
             : base(AstNodeType.Expression)
         {
-            _arithmeticCtx = context;
+            Context = context;
         }
 
         public AstExpression(Expression_logicContext context)
             : base(AstNodeType.Expression)
         {
-            _logicCtx = context;
+            Context = context;
         }
 
         public AstExpression(Expression_comparisonContext context)
             : base(AstNodeType.Expression)
         {
-            _comparisonCtx = context;
+            Context = context;
         }
 
         public AstExpression(Expression_valueContext context)
             : base(AstNodeType.Expression)
         {
-            _valueCtx = context;
+            Context = context;
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitExpression(this);
-        }
+        public ParserRuleContext? Context { get; }
+
+        public override void Accept(AstVisitor visitor) => visitor.VisitExpression(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {
@@ -69,22 +63,6 @@ namespace Zsharp.AST
             if (!TrySetTypeReference(typeReference))
                 throw new InvalidOperationException(
                     "TypeReference is already set or null.");
-        }
-
-        public ParserRuleContext? Context
-        {
-            get
-            {
-                if (_arithmeticCtx != null)
-                    return _arithmeticCtx;
-                if (_logicCtx != null)
-                    return _logicCtx;
-                if (_comparisonCtx != null)
-                    return _comparisonCtx;
-                if (_valueCtx != null)
-                    return _valueCtx;
-                return null;
-            }
         }
 
         public bool Add(AstExpressionOperand op)

@@ -39,7 +39,7 @@ namespace Zsharp.AST
             }
         }
 
-        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, params AstNode[] nodes)
+        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, params AstNode?[]? nodes)
         {
             var exOrImported = FindEntry(symbolName, AstSymbolKind.NotSet);
             var entry = FindEntryLocal(symbolName, kind);
@@ -61,7 +61,8 @@ namespace Zsharp.AST
             {
                 foreach (var node in nodes)
                 {
-                    entry.AddNode(node);
+                    if (node != null)
+                        entry.AddNode(node);
                 }
             }
             return entry;
@@ -115,9 +116,7 @@ namespace Zsharp.AST
         }
 
         public AstSymbolEntry? FindEntry(AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
-        {
-            return FindEntry(identifier.Name, kind);
-        }
+            => FindEntry(identifier.Name, kind);
 
         public AstSymbolEntry? FindEntry(IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
         {

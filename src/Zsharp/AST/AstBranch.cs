@@ -1,31 +1,21 @@
+using Antlr4.Runtime;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstBranch : AstCodeBlockItem
     {
-        private readonly Statement_returnContext? _returnCtx;
-        private readonly Statement_breakContext? _breakCtx;
-        private readonly Statement_continueContext? _continueCtx;
-
-        public AstBranch(Statement_returnContext context)
-            : base(AstNodeType.Branch)
-        {
-            _returnCtx = context;
-            BranchType = AstBranchType.ExitFunction;
-        }
-
         public AstBranch(Statement_breakContext context)
             : base(AstNodeType.Branch)
         {
-            _breakCtx = context;
+            Context = context;
             BranchType = AstBranchType.ExitLoop;
         }
 
         public AstBranch(Statement_continueContext context)
             : base(AstNodeType.Branch)
         {
-            _continueCtx = context;
+            Context = context;
             BranchType = AstBranchType.ExitIteration;
         }
 
@@ -34,6 +24,8 @@ namespace Zsharp.AST
         {
             BranchType = branchType;
         }
+
+        public ParserRuleContext? Context { get; protected set; }
 
         public AstBranchType BranchType { get; }
 

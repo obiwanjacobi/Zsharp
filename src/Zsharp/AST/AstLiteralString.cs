@@ -16,10 +16,7 @@ namespace Zsharp.AST
 
         public string Value { get; }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitLiteralString(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitLiteralString(this);
 
         private static string Parse(string withQuotes)
         {

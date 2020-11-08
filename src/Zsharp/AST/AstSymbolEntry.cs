@@ -24,15 +24,20 @@ namespace Zsharp.AST
         public AstSymbolTable SymbolTable { get; }
 
         public IEnumerable<AstNode> References => _references;
+
         public IEnumerable<T> ReferencesOf<T>() where T : AstNode
             => _references.OfType<T>();
 
         public string Key => MakeKey(SymbolName, SymbolKind);
+
         public string SymbolName { get; }
+
         public AstSymbolKind SymbolKind { get; }
+
         public AstSymbolLocality SymbolLocality { get; set; }
 
         public AstNode? Definition => _definitions.SingleOrDefault();
+
         public T? DefinitionAs<T>() where T : class => Definition as T;
 
         public void PromoteToDefinition(AstNode definitionNode, AstNode referenceNode)

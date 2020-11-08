@@ -5,24 +5,20 @@ namespace Zsharp.AST
 {
     public class AstBranchConditional : AstBranchExpression, IAstCodeBlockSite
     {
-        private readonly Statement_ifContext? _ifCtx;
-        private readonly Statement_elseContext? _elseCtx;
-        private readonly Statement_elseifContext? _elseifCtx;
-
         public AstBranchConditional(Statement_ifContext context)
             : base(AstBranchType.Conditional)
         {
-            _ifCtx = context;
+            Context = context;
         }
         public AstBranchConditional(Statement_elseContext context)
             : base(AstBranchType.Conditional)
         {
-            _elseCtx = context;
+            Context = context;
         }
         public AstBranchConditional(Statement_elseifContext context)
             : base(AstBranchType.Conditional)
         {
-            _elseifCtx = context;
+            Context = context;
         }
 
         private AstCodeBlock? _codeBlock;
@@ -69,11 +65,8 @@ namespace Zsharp.AST
 
         public AstBranchConditional LastSubBranch() => HasSubBranch ? _subBranch!.LastSubBranch() : this;
 
-        public override void Accept(AstVisitor visitor)
-        {
-            base.Accept(visitor);
-            visitor.VisitBranchConditional(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitBranchConditional(this);
+
         public override void VisitChildren(AstVisitor visitor)
         {
             base.VisitChildren(visitor);

@@ -1,3 +1,4 @@
+using Antlr4.Runtime;
 using System;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -7,19 +8,22 @@ namespace Zsharp.AST
     {
         public AstAssignment(Variable_assign_autoContext context)
             : base(AstNodeType.Assignment)
-        { }
+        {
+            Context = context;
+        }
 
         public AstAssignment(Variable_def_typed_initContext context)
             : base(AstNodeType.Assignment)
-        { }
+        {
+            Context = context;
+        }
+
+        public ParserRuleContext Context { get; }
 
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public bool TrySetExpression(AstExpression expression)
-        {
-            return this.SafeSetParent(ref _expression, expression);
-        }
+        public bool TrySetExpression(AstExpression expression) => this.SafeSetParent(ref _expression, expression);
 
         public void SetExpression(AstExpression expression)
         {
@@ -61,10 +65,7 @@ namespace Zsharp.AST
             }
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitAssignment(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitAssignment(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

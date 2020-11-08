@@ -5,15 +5,13 @@ namespace Zsharp.AST
     public class AstTypeDefinition : AstType
     {
         public AstTypeDefinition(Type_defContext context)
-            : base(context.type_ref_use().type_ref().type_name())
         {
             Context = context;
         }
+
         protected AstTypeDefinition(AstIdentifier identifier)
             : base(identifier)
         { }
-
-        public new Type_defContext? Context { get; }
 
         public AstTypeReference? BaseType { get; internal set; }
 

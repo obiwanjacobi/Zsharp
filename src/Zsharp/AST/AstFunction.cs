@@ -1,3 +1,4 @@
+using Antlr4.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Zsharp.AST
         protected AstFunction()
             : base(AstNodeType.Function)
         { }
+
+        public ParserRuleContext? Context { get; protected set; }
 
         public IEnumerable<ParamT> Parameters => _parameters;
 

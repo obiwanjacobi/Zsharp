@@ -18,10 +18,7 @@ namespace Zsharp.AST
             : base(typeReference)
         { }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitVariableDefinition(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitVariableDefinition(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

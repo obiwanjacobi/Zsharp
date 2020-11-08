@@ -1,3 +1,4 @@
+using Antlr4.Runtime;
 using System;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -25,18 +26,14 @@ namespace Zsharp.AST
         protected AstType()
             : base(AstNodeType.Type)
         { }
-        protected AstType(Type_nameContext context)
-            : base(AstNodeType.Type)
-        {
-            Context = context;
-        }
+
         protected AstType(AstIdentifier identifier)
             : base(AstNodeType.Type)
         {
             TrySetIdentifier(identifier);
         }
 
-        public Type_nameContext? Context { get; }
+        public ParserRuleContext? Context { get; protected set; }
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;

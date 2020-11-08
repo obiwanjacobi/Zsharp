@@ -6,26 +6,25 @@ namespace Zsharp.AST
     [DebuggerDisplay("{Identifier}")]
     public class AstTypeReference : AstType
     {
-        protected AstTypeReference(Type_ref_useContext context)
-            : base(context.type_ref().type_name())
-        {
-            var typeRef = context.type_ref();
-            IsOptional = typeRef.QUESTION() != null;
-            IsError = typeRef.ERROR() != null;
-        }
-
         public AstTypeReference(AstTypeReference inferredFrom)
-            : base(inferredFrom.Context!)
         {
+            Context = inferredFrom.Context;
             SetIdentifier(inferredFrom.Identifier!);
             TrySetSymbol(inferredFrom.Symbol!);
             _typeSource = inferredFrom.TypeSource;
         }
 
+        protected AstTypeReference(Type_ref_useContext context)
+        {
+            Context = context;
+
+            var typeRef = context.type_ref();
+            IsOptional = typeRef.QUESTION() != null;
+            IsError = typeRef.ERROR() != null;
+        }
+
         protected AstTypeReference()
         { }
-
-
 
         public AstTypeDefinition? TypeDefinition => Symbol?.DefinitionAs<AstTypeDefinition>();
 

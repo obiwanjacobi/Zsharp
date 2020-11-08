@@ -6,17 +6,14 @@ namespace Zsharp.AST
 {
     public class AstFunctionParameterDefinition : AstFunctionParameter, IAstSymbolEntrySite
     {
-        private readonly Function_parameterContext? _paramCtx;
-        private readonly Function_parameter_selfContext? _selfCtx;
-
         public AstFunctionParameterDefinition(Function_parameterContext context)
         {
-            _paramCtx = context;
+            Context = context;
         }
 
         public AstFunctionParameterDefinition(Function_parameter_selfContext context)
         {
-            _selfCtx = context;
+            Context = context;
         }
 
         public AstFunctionParameterDefinition(AstIdentifier identifier)
@@ -24,7 +21,7 @@ namespace Zsharp.AST
             SetIdentifier(identifier);
         }
 
-        public ParserRuleContext? Context => (ParserRuleContext?)_paramCtx ?? (ParserRuleContext?)_selfCtx;
+        public ParserRuleContext? Context { get; }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitFunctionParameterDefinition(this);
 

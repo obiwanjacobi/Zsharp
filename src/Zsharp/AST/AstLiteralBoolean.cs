@@ -1,5 +1,4 @@
 ﻿using Antlr4.Runtime;
-using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -15,11 +14,8 @@ namespace Zsharp.AST
 
         public ParserRuleContext Context { get; }
 
-        public Boolean Value { get; }
+        public bool Value { get; }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitLiteralBoolean(this);
-        }
+        public override void Accept(AstVisitor visitor) => visitor.VisitLiteralBoolean(this);
     }
 }

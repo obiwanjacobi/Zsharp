@@ -17,9 +17,7 @@ namespace Zsharp.AST
 
         public static AstSymbolEntry? Find<T>(this AstSymbolTable symbolTable, T node)
             where T : AstNode, IAstIdentifierSite
-        {
-            return symbolTable.FindEntry(node, node.NodeType.ToSymbolKind());
-        }
+            => symbolTable.FindEntry(node, node.NodeType.ToSymbolKind());
 
         public static AstSymbolKind ToSymbolKind(this AstNodeType nodeType)
         {
@@ -37,9 +35,7 @@ namespace Zsharp.AST
 
         public static AstSymbolEntry Add<T>(this AstSymbolTable symbolTable, T node)
             where T : AstNode, IAstIdentifierSite
-        {
-            return AddSymbol(symbolTable, node, node.NodeType.ToSymbolKind(), node);
-        }
+            => AddSymbol(symbolTable, node, node.NodeType.ToSymbolKind(), node);
 
         private static AstSymbolEntry AddSymbol(AstSymbolTable symbolTable,
             IAstIdentifierSite identifierSite, AstSymbolKind symbolKind, AstNode node)

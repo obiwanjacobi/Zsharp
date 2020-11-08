@@ -13,7 +13,7 @@ namespace Zsharp.AST
             : base(AstNodeType.File)
         {
             Context = context;
-            SetCodeBlock(new AstCodeBlock(scopeName, parentTable, null));
+            SetCodeBlock(new AstCodeBlock(scopeName, parentTable));
         }
 
         public FileContext Context { get; }

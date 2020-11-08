@@ -11,8 +11,6 @@ namespace Zsharp.AST
             Context = functionCtx;
         }
 
-        public Function_defContext Context { get; }
-
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
 
@@ -50,14 +48,10 @@ namespace Zsharp.AST
             }
         }
 
-        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode node)
+        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node = null)
         {
-            if (Symbols == null)
-            {
-                throw new InvalidOperationException("SymbolTable not set.");
-            }
-
-            return Symbols.AddSymbol(symbolName, kind, node);
+            Ast.Guard(Symbols != null, "SymbolTable not set.");
+            return Symbols!.AddSymbol(symbolName, kind, node);
         }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitFunctionDefinition(this);

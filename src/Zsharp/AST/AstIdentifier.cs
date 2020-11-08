@@ -1,4 +1,4 @@
-using System;
+using Antlr4.Runtime;
 using System.Diagnostics;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -16,76 +16,58 @@ namespace Zsharp.AST
 
         public AstIdentifier(Identifier_typeContext context)
         {
-            _typeCtx = context;
+            Context = context;
+            Name = context.GetText();
+            IdentifierType = AstIdentifierType.Type;
         }
 
         public AstIdentifier(Identifier_varContext context)
         {
-            _varCtx = context;
+            Context = context;
+            Name = context.GetText();
+            IdentifierType = AstIdentifierType.Variable;
         }
 
         public AstIdentifier(Identifier_paramContext context)
         {
-            _paramCtx = context;
+            Context = context;
+            Context = context;
+            Name = context.GetText();
+            IdentifierType = AstIdentifierType.Parameter;
         }
 
         public AstIdentifier(Identifier_funcContext context)
         {
-            _funcCtx = context;
+            Context = context;
+            Name = context.GetText();
+            IdentifierType = AstIdentifierType.Function;
         }
 
         public AstIdentifier(Identifier_fieldContext context)
         {
-            _fieldCtx = context;
+            Context = context;
+            Name = context.GetText();
+            IdentifierType = AstIdentifierType.Field;
         }
 
         public AstIdentifier(Identifier_enumoptionContext context)
         {
-            _enumOptCtx = context;
+            Context = context;
+            Name = context.GetText();
+            IdentifierType = AstIdentifierType.EnumOption;
         }
 
-        protected AstIdentifier()
-        { }
-
-        public virtual string Name
+        protected AstIdentifier(string name, AstIdentifierType identifierType)
         {
-            get
-            {
-                if (_typeCtx != null)
-                    return _typeCtx.GetText();
-                if (_varCtx != null)
-                    return _varCtx.GetText();
-                if (_paramCtx != null)
-                    return _paramCtx.GetText();
-                if (_funcCtx != null)
-                    return _funcCtx.GetText();
-                if (_fieldCtx != null)
-                    return _fieldCtx.GetText();
-                if (_enumOptCtx != null)
-                    return _enumOptCtx.GetText();
-                return String.Empty;
-            }
+            Name = name;
+            IdentifierType = identifierType;
         }
 
-        public virtual AstIdentifierType IdentifierType
-        {
-            get
-            {
-                if (_typeCtx != null)
-                    return AstIdentifierType.Type;
-                if (_varCtx != null)
-                    return AstIdentifierType.Variable;
-                if (_paramCtx != null)
-                    return AstIdentifierType.Parameter;
-                if (_funcCtx != null)
-                    return AstIdentifierType.Function;
-                if (_fieldCtx != null)
-                    return AstIdentifierType.Field;
-                if (_enumOptCtx != null)
-                    return AstIdentifierType.EnumOption;
-                return AstIdentifierType.Unknown;
-            }
-        }
+        public ParserRuleContext? Context { get; }
+
+        public string Name { get; }
+
+        public AstIdentifierType IdentifierType { get; }
 
         public bool IsEqual(AstIdentifier? that)
         {

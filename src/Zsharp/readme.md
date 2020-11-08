@@ -3,8 +3,6 @@
 ## TODO
 
 - Check unit test coverage
-- rethink ResolveSymbols/ResolveTypes. Do these need to be separate or integrated?
-- Function overloading: need function parameter types for unique symbol name - not available during node building.
 - More tests on syntax errors (non-happy-flow).
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16).
 - Remove parent from TypeReference and share instances (instead of copy).

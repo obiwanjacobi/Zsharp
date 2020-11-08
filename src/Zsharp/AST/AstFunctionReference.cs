@@ -9,8 +9,6 @@ namespace Zsharp.AST
             Context = context;
         }
 
-        public Function_callContext Context { get; }
-
         public AstFunctionDefinition? FunctionDefinition
         {
             get
