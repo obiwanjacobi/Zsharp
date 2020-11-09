@@ -2,7 +2,7 @@
 
 namespace Zsharp.Emit
 {
-    public sealed class FunctionScope : Scope, ILocalStorageProvider
+    public sealed class FunctionScope : Scope
     {
         public FunctionScope(EmitContext emitContext, MethodDefinition methodDefinition)
             : base(emitContext)
@@ -14,11 +14,6 @@ namespace Zsharp.Emit
         public InstructionFactory InstructionFactory { get; }
 
         public CodeBuilder CodeBuilder { get; }
-
-        public void CreateSlot(string name, TypeReference typeReference)
-        {
-            CodeBuilder.AddVariable(name, typeReference);
-        }
 
         protected override void Dispose(bool disposing)
         {

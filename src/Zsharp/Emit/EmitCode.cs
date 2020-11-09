@@ -22,8 +22,9 @@ namespace Zsharp.Emit
                 Context = EmitContext.Create(module.Name);
             }
 
-            using var scope = Context.AddModule(module);
             _isInit = true;
+            using var scope = Context.AddModule(module);
+
             VisitChildren(module);
         }
 
@@ -46,9 +47,21 @@ namespace Zsharp.Emit
 
         public override void VisitVariableDefinition(AstVariableDefinition variable)
         {
-            if (!Context.HasVariable(variable.Identifier.Name))
+            var name = variable.Identifier.Name;
+
+            if (_isInit)
             {
-                Context.AddVariable(variable);
+                if (!Context.ModuleClass.HasField(name))
+                {
+                    Context.ModuleClass.AddField(name, Context.ToTypeReference(variable.TypeReference));
+                }
+            }
+            else
+            {
+                if (!Context.CodeBuilder.HasVariable(name))
+                {
+                    Context.CodeBuilder.AddVariable(name, Context.ToTypeReference(variable.TypeReference));
+                }
             }
         }
 

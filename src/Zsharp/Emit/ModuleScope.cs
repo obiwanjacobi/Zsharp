@@ -1,8 +1,6 @@
-﻿using Mono.Cecil;
-
-namespace Zsharp.Emit
+﻿namespace Zsharp.Emit
 {
-    public sealed class ModuleScope : Scope, ILocalStorageProvider
+    public sealed class ModuleScope : Scope
     {
         public ModuleScope(EmitContext emitContext, ClassBuilder classBuilder)
             : base(emitContext)
@@ -11,11 +9,6 @@ namespace Zsharp.Emit
         }
 
         public ClassBuilder ClassBuilder { get; }
-
-        public void CreateSlot(string name, TypeReference typeReference)
-        {
-            ClassBuilder.AddField(name, typeReference);
-        }
 
         protected override void Dispose(bool disposing)
         {

@@ -1,16 +1,7 @@
-﻿using Mono.Cecil;
-using System;
+﻿using System;
 
 namespace Zsharp.Emit
 {
-    /// <summary>
-    /// Provides storage for 'local' variables.
-    /// </summary>
-    public interface ILocalStorageProvider
-    {
-        void CreateSlot(string name, TypeReference typeReference);
-    }
-
     public abstract class Scope : IDisposable
     {
         protected Scope(EmitContext context)

@@ -95,28 +95,6 @@ namespace Zsharp.Emit
                 .Single(m => m.Name == function.Identifier?.Name);
         }
 
-        public bool HasVariable(string name)
-        {
-            var scope = Scopes.Peek();
-
-            if (scope is ModuleScope moduleScope)
-            {
-                return moduleScope.ClassBuilder.HasField(name);
-            }
-            if (scope is FunctionScope functionScope)
-            {
-                return functionScope.CodeBuilder.HasVariable(name);
-            }
-            return false;
-        }
-
-        public void AddVariable(AstVariableDefinition variable)
-        {
-            var provider = (ILocalStorageProvider)Scopes.Peek();
-
-            provider.CreateSlot(variable.Identifier.Name, ToTypeReference(variable.TypeReference));
-        }
-
         internal TypeReference ToTypeReference(AstTypeReference typeReference)
         {
             if (typeReference == null)
