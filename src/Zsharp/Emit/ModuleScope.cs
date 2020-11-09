@@ -16,5 +16,11 @@ namespace Zsharp.Emit
         {
             ClassBuilder.AddField(name, typeReference);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ClassBuilder.Dispose();
+        }
     }
 }

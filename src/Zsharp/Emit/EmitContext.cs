@@ -12,10 +12,6 @@ namespace Zsharp.Emit
         {
             Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
             Module = assembly.MainModule;
-            ////C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.9\System.Private.CoreLib.dll
-            //var netAssembly = AssemblyDefinition.ReadAssembly(
-            //    @"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.9\System.Private.CoreLib.dll");
-            //Module.AssemblyReferences.Add(netAssembly.Name);
         }
 
         public static EmitContext Create(string assemblyName, Version? version = null)
@@ -38,7 +34,10 @@ namespace Zsharp.Emit
         {
             get
             {
-                if (Scopes.Peek() is ModuleScope moduleScope)
+                var scopes = Scopes.ToArray();
+
+                if (scopes.Length > 0 &&
+                    scopes[^1] is ModuleScope moduleScope)
                 {
                     return moduleScope;
                 }
@@ -46,17 +45,7 @@ namespace Zsharp.Emit
             }
         }
 
-        internal FunctionScope FunctionScope
-        {
-            get
-            {
-                if (Scopes.Peek() is FunctionScope functionScope)
-                {
-                    return functionScope;
-                }
-                throw new InvalidOperationException($"No current active Function Scope.");
-            }
-        }
+        internal FunctionScope FunctionScope => (FunctionScope)Scopes.Peek();
 
         public ClassBuilder ModuleClass => ModuleScope.ClassBuilder;
 
@@ -68,15 +57,23 @@ namespace Zsharp.Emit
         {
             if (Module.Types.Find(module.Name) != null)
                 throw new ArgumentException($"ModuleClass for {module.Name} already exists.");
+            if (Scopes.Count > 0)
+                throw new InvalidOperationException("A Module must be added first.");
 
             var classBuilder = ClassBuilder.Create(this, module);
-            var scope = new ModuleScope(this, classBuilder);
-            Scopes.Push(scope);
-            return scope;
+            var modScope = new ModuleScope(this, classBuilder);
+            Scopes.Push(modScope);
+
+            var funScope = new FunctionScope(this, classBuilder.ModuleInitializer);
+            Scopes.Push(funScope);
+
+            return new LinkedScopes(funScope, modScope);
         }
 
         public IDisposable AddFunction(AstFunctionDefinition function)
         {
+            if (Scopes.Count == 0)
+                throw new InvalidOperationException("A Module must be added first.");
             var classBuilder = ModuleClass ??
                 throw new InvalidOperationException("There is no module class to add a function to.");
 

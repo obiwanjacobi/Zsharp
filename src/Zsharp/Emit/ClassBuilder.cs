@@ -5,7 +5,7 @@ using Zsharp.AST;
 
 namespace Zsharp.Emit
 {
-    public class ClassBuilder
+    public sealed class ClassBuilder : IDisposable
     {
         private readonly EmitContext _context;
         private readonly TypeDefinition _typeDefinition;
@@ -14,6 +14,7 @@ namespace Zsharp.Emit
         {
             _context = context;
             _typeDefinition = typeDefinition;
+            ModuleInitializer = CreateModuleInitializer();
         }
 
         public static ClassBuilder Create(EmitContext context, AstModulePublic module)
@@ -40,6 +41,16 @@ namespace Zsharp.Emit
             return _typeDefinition.Fields.Any(f => f.Name == name);
         }
 
+        public MethodDefinition ModuleInitializer { get; }
+
+        public void Dispose()
+        {
+            if (ModuleInitializer.Body.Instructions.Count > 0)
+            {
+                _typeDefinition.Methods.Add(ModuleInitializer);
+            }
+        }
+
         public MethodDefinition AddFunction(AstFunctionDefinition function)
         {
             var methodDef = new MethodDefinition(
@@ -57,6 +68,16 @@ namespace Zsharp.Emit
             }
 
             _typeDefinition.Methods.Add(methodDef);
+            return methodDef;
+        }
+
+        private MethodDefinition CreateModuleInitializer()
+        {
+            var methodDef = new MethodDefinition(
+                ".cctor",
+                MethodAttributes.Private | MethodAttributes.Static | MethodAttributes.HideBySig |
+                    MethodAttributes.SpecialName | MethodAttributes.RTSpecialName,
+                _context.Module.TypeSystem.Void);
             return methodDef;
         }
 
