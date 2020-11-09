@@ -111,10 +111,10 @@ namespace UnitTests.Emit
         }
 
         [TestMethod]
-        public void ExternalFunctionCallParameter_Run()
+        public void ExternalFunctionCallParameterAlias_Run()
         {
             const string code =
-                "module ExternalFunctionCallParameter" + Tokens.NewLine +
+                "module EmitCodeTests" + Tokens.NewLine +
                 "import Print = System.Console.WriteLine" + Tokens.NewLine +
                 "export Main: ()" + Tokens.NewLine +
                 Tokens.Indent1 + "Print(\"Hello Z# World\")" + Tokens.NewLine
@@ -124,9 +124,28 @@ namespace UnitTests.Emit
             var emit = CreateEmitCode(code, moduleLoader);
             emit.Should().NotBeNull();
 
-            emit.SaveAs("ExternalFunctionCallParameter.dll");
+            emit.SaveAs("ExternalFunctionCallParameterAlias_Run.dll");
 
-            InvokeStatic("ExternalFunctionCallParameter", "ExternalFunctionCallParameter", "Main");
+            InvokeStatic("ExternalFunctionCallParameterAlias_Run", "EmitCodeTests", "Main");
+        }
+
+        [TestMethod]
+        public void ExternalFunctionCallParameter_Run()
+        {
+            const string code =
+                "module EmitCodeTests" + Tokens.NewLine +
+                "import System.Console" + Tokens.NewLine +
+                "export Main: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "WriteLine(\"Hello Z# World\")" + Tokens.NewLine
+                ;
+
+            var moduleLoader = CreateModuleLoader();
+            var emit = CreateEmitCode(code, moduleLoader);
+            emit.Should().NotBeNull();
+
+            emit.SaveAs("ExternalFunctionCallParameter_Run.dll");
+
+            InvokeStatic("ExternalFunctionCallParameter_Run", "EmitCodeTests", "Main");
         }
 
         [TestMethod]

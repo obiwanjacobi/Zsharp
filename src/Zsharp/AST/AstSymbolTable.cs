@@ -92,6 +92,9 @@ namespace Zsharp.AST
             while (table != null)
             {
                 var entry = table.FindEntryLocal(symbolEntry.SymbolName, symbolEntry.SymbolKind);
+                if (entry == null)
+                    entry = table.FindEntryInModules(symbolEntry.SymbolName, symbolEntry.SymbolKind);
+
                 if (entry != null &&
                     (entry.HasOverloads || entry.Definition != null))
                 {
@@ -146,6 +149,22 @@ namespace Zsharp.AST
             }
 
             return entry;
+        }
+
+        private AstSymbolEntry? FindEntryInModules(string symbolName, AstSymbolKind symbolKind)
+        {
+            var moduleSymbols = _table.Values
+                .Where(e => e.SymbolKind == AstSymbolKind.Module &&
+                       e.SymbolLocality == AstSymbolLocality.Imported)
+                .Select(e => e.DefinitionAs<AstModuleExternal>()!.Symbols);
+
+            foreach (var symbols in moduleSymbols)
+            {
+                var entry = symbols.FindEntryLocal(symbolName, symbolKind);
+                if (entry != null)
+                    return entry;
+            }
+            return null;
         }
     }
 }
