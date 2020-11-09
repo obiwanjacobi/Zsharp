@@ -56,7 +56,7 @@ namespace Zsharp.Emit
         public IEnumerable<Instruction> BitwiseShiftLeft()
         {
             return new[] {
-                _iLProcessor.Create(OpCodes.Ldc_I4_S, 31),
+                _iLProcessor.Create(OpCodes.Ldc_I4, 31),
                 _iLProcessor.Create(OpCodes.And),
                 _iLProcessor.Create(OpCodes.Shl),
             };
@@ -64,15 +64,22 @@ namespace Zsharp.Emit
         public IEnumerable<Instruction> BitwiseShiftRight()
         {
             return new[] {
-                _iLProcessor.Create(OpCodes.Ldc_I4_S, 31),
+                _iLProcessor.Create(OpCodes.Ldc_I4, 31),
                 _iLProcessor.Create(OpCodes.And),
                 _iLProcessor.Create(OpCodes.Shr),
             };
         }
 
         public Instruction LoadConstant(Boolean constant) => _iLProcessor.Create(OpCodes.Ldc_I4, constant ? 1 : 0);
-        public Instruction LoadConstant(Int32 constant) => _iLProcessor.Create(OpCodes.Ldc_I4, constant);
+        public Instruction LoadConstant(SByte constant) => _iLProcessor.Create(OpCodes.Ldc_I4_S, constant);
         public Instruction LoadConstant(String constant) => _iLProcessor.Create(OpCodes.Ldstr, constant);
+        public Instruction LoadConstant(UInt64 constant, UInt32 bitCount)
+        {
+            if (bitCount <= 32)
+                return _iLProcessor.Create(OpCodes.Ldc_I4, (Int32)constant);
+            else
+                return _iLProcessor.Create(OpCodes.Ldc_I8, constant);
+        }
 
         public Instruction LoadVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Ldloc, varDef);
         public Instruction StoreVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Stloc, varDef);
@@ -92,6 +99,5 @@ namespace Zsharp.Emit
 
         public Instruction Call(MethodReference method) => _iLProcessor.Create(OpCodes.Call, method);
         public Instruction LoadParameter(ParameterDefinition paramDef) => _iLProcessor.Create(OpCodes.Ldarg, paramDef);
-
     }
 }

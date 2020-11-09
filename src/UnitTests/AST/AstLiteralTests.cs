@@ -47,7 +47,7 @@ namespace UnitTests.AST
                 ;
 
             var num = ParseNumeric(code);
-            num.AsUnsigned().Should().Be(0x00F0);
+            num.Value.Should().Be(0x00F0);
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace UnitTests.AST
                 ;
 
             var num = ParseNumeric(code);
-            num.AsUnsigned().Should().Be(8);
+            num.Value.Should().Be(8);
         }
 
         [TestMethod]
@@ -69,7 +69,7 @@ namespace UnitTests.AST
                 ;
 
             var num = ParseNumeric(code);
-            num.AsUnsigned().Should().Be(42);
+            num.Value.Should().Be(42);
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace UnitTests.AST
                 ;
 
             var num = ParseNumeric(code);
-            num.AsUnsigned().Should().Be(42);
+            num.Value.Should().Be(42);
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace UnitTests.AST
                 ;
 
             var num = ParseNumeric(code);
-            num.AsUnsigned().Should().Be(0x42);
+            num.Value.Should().Be(0x42);
         }
 
         [TestMethod]

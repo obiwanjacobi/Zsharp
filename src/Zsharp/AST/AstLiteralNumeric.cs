@@ -18,11 +18,6 @@ namespace Zsharp.AST
 
         public AstNumericSign Sign { get; }
 
-        public UInt64 AsUnsigned() => Value;
-
-        // TODO: Numeric does not know about the negate-operator yet.
-        public Int64 AsSigned() => (Int64)Value;
-
         public override void Accept(AstVisitor visitor) => visitor.VisitLiteralNumeric(this);
 
         public UInt32 GetBitCount()
