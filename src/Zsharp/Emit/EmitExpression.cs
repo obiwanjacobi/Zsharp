@@ -14,7 +14,6 @@ namespace Zsharp.Emit
 
         public override void VisitExpression(AstExpression expression)
         {
-
             if (expression.IsOperator(AstExpressionOperator.MaskArithmetic))
             {
                 VisitChildren(expression);
@@ -33,6 +32,10 @@ namespace Zsharp.Emit
             else if (expression.IsOperator(AstExpressionOperator.MaskLogic))
             {
                 EmitLogicOperation(expression);
+            }
+            else
+            {
+                VisitChildren(expression);
             }
         }
 
