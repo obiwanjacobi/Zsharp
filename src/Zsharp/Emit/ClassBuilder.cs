@@ -19,8 +19,10 @@ namespace Zsharp.Emit
         public static ClassBuilder Create(EmitContext context, AstModulePublic module)
         {
             var moduleDefinition = context.Module;
-            var typeDef = new TypeDefinition(moduleDefinition.Name, module.Name, ToTypeAttributes(module));
-            typeDef.BaseType = moduleDefinition.ImportReference(typeof(Object));
+            var typeDef = new TypeDefinition(moduleDefinition.Name, module.Name, ToTypeAttributes(module))
+            {
+                BaseType = moduleDefinition.ImportReference(typeof(Object))
+            };
             moduleDefinition.Types.Add(typeDef);
             return new ClassBuilder(context, typeDef);
         }

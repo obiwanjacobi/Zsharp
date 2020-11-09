@@ -1,7 +1,5 @@
 ﻿using Mono.Cecil;
-using Mono.Cecil.Cil;
 using System;
-using System.Linq;
 
 namespace Zsharp.Emit
 {
@@ -33,53 +31,6 @@ namespace Zsharp.Emit
             var scope = Context.Scopes.Pop();
             if (!Object.ReferenceEquals(scope, this))
                 throw new InvalidOperationException("Scope stack out of sync.");
-        }
-    }
-
-    public sealed class FunctionScope : Scope, ILocalStorageProvider
-    {
-        public FunctionScope(EmitContext emitContext, MethodDefinition methodDefinition)
-            : base(emitContext)
-        {
-            MethodDefinition = methodDefinition;
-            InstructionFactory = new InstructionFactory(methodDefinition.Body.GetILProcessor());
-            CodeBuilder = new CodeBuilder(methodDefinition);
-        }
-
-        public MethodDefinition MethodDefinition { get; }
-
-        public InstructionFactory InstructionFactory { get; }
-
-        public CodeBuilder CodeBuilder { get; }
-
-        public void CreateSlot(string name, TypeReference typeReference)
-        {
-            var varDef = new VariableDefinition(typeReference);
-            MethodDefinition.Body.Variables.Add(varDef);
-            CodeBuilder.AddVariable(name, varDef);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            CodeBuilder.Apply(MethodDefinition.Body.GetILProcessor());
-            MethodDefinition.Body.InitLocals = CodeBuilder.Variables.Any();
-            base.Dispose(disposing);
-        }
-    }
-
-    public sealed class ModuleScope : Scope, ILocalStorageProvider
-    {
-        public ModuleScope(EmitContext emitContext, ClassBuilder classBuilder)
-            : base(emitContext)
-        {
-            ClassBuilder = classBuilder;
-        }
-
-        public ClassBuilder ClassBuilder { get; }
-
-        public void CreateSlot(string name, TypeReference typeReference)
-        {
-            ClassBuilder.AddField(name, typeReference);
         }
     }
 }

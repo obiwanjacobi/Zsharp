@@ -89,7 +89,12 @@ namespace Zsharp.Emit
 
         public IEnumerable<VariableDefinition> Variables => _variables.Values;
 
-        public void AddVariable(string name, VariableDefinition varDef) => _variables.Add(name, varDef);
+        public void AddVariable(string name, TypeReference typeReference)
+        {
+            var varDef = new VariableDefinition(typeReference);
+            _methodDefinition.Body.Variables.Add(varDef);
+            _variables.Add(name, varDef);
+        }
 
         public VariableDefinition GetVariable(string name) => _variables[name];
 
@@ -110,26 +115,29 @@ namespace Zsharp.Emit
             return _methodDefinition.Parameters.Single(p => p.Name == name);
         }
 
-        public void Apply(ILProcessor iLProcessor)
+        public void Apply()
         {
+            var il = _methodDefinition.Body.GetILProcessor();
+            _methodDefinition.Body.InitLocals = _variables.Any();
+
             foreach (var codeBlock in _blocks.Values)
             {
                 if (codeBlock.Termination == CodeBlockTermination.Return)
-                    codeBlock.Return(iLProcessor);
+                    codeBlock.Return(il);
                 else if (String.IsNullOrEmpty(codeBlock.NextBlock) &&
                     String.IsNullOrEmpty(codeBlock.NextBlockAlt) &&
                     codeBlock.Termination == CodeBlockTermination.FallThrough)
-                    codeBlock.Return(iLProcessor);
+                    codeBlock.Return(il);
             }
 
             foreach (var codeBlock in _blocks.Values)
             {
-                AppendInstructions(iLProcessor, codeBlock);
+                AppendInstructions(il, codeBlock);
 
                 _blocks.TryGetValue(codeBlock.NextBlock, out CodeBlock? nextBlock);
                 _blocks.TryGetValue(codeBlock.NextBlockAlt, out CodeBlock? altBlock);
 
-                EmitBranch(iLProcessor, codeBlock, nextBlock, altBlock);
+                EmitBranch(il, codeBlock, nextBlock, altBlock);
             }
         }
 
