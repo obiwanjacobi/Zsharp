@@ -14,18 +14,20 @@ namespace Zsharp.Emit
 
         public override void VisitExpression(AstExpression expression)
         {
-            base.VisitExpression(expression);
 
             if (expression.IsOperator(AstExpressionOperator.MaskArithmetic))
             {
+                VisitChildren(expression);
                 EmitArithmeticOperation(expression);
             }
             else if (expression.IsOperator(AstExpressionOperator.MaskBitwise))
             {
+                VisitChildren(expression);
                 EmitBitwiseOperation(expression);
             }
             else if (expression.IsOperator(AstExpressionOperator.MaskComparison))
             {
+                VisitChildren(expression);
                 EmitComparisonOperation(expression);
             }
             else if (expression.IsOperator(AstExpressionOperator.MaskLogic))
@@ -45,9 +47,9 @@ namespace Zsharp.Emit
                 AstExpressionOperator.Minus => il.ArithmeticSubtract(),
                 AstExpressionOperator.Divide => il.ArithmeticDivide(),
                 AstExpressionOperator.Multiply => il.ArithmeticMultiple(),
-                AstExpressionOperator.Modulo => throw new NotImplementedException(errTxt),
+                AstExpressionOperator.Modulo => il.ArithmeticModulo(),
                 AstExpressionOperator.Power => throw new NotImplementedException(errTxt),
-                AstExpressionOperator.Negate => throw new NotImplementedException(errTxt),
+                AstExpressionOperator.Negate => il.ArithmeticNegate(),
                 _ => throw new InvalidOperationException(
                     $"Unrecognized Arithmetic Expression Operator {expression.Operator}"),
             };
@@ -65,58 +67,94 @@ namespace Zsharp.Emit
                 AstExpressionOperator.BitAnd => il.BitwiseAnd(),
                 AstExpressionOperator.BitOr => il.BitwiseOr(),
                 AstExpressionOperator.BitXor => il.BitwiseXor(),
-                AstExpressionOperator.BitShiftLeft => throw new NotImplementedException(errTxt),
-                AstExpressionOperator.BitShiftRight => throw new NotImplementedException(errTxt),
+                AstExpressionOperator.BitNegate => throw new NotImplementedException(errTxt),
+                _ => null,
+            };
+
+            if (instruction != null)
+            {
+                _context.CodeBuilder.CodeBlock.Add(instruction);
+                return;
+            }
+
+            var instructions = expression.Operator switch
+            {
+                AstExpressionOperator.BitShiftLeft => il.BitwiseShiftLeft(),
+                AstExpressionOperator.BitShiftRight => il.BitwiseShiftRight(),
                 AstExpressionOperator.BitRollLeft => throw new NotImplementedException(errTxt),
                 AstExpressionOperator.BitRollRight => throw new NotImplementedException(errTxt),
-                AstExpressionOperator.BitNegate => throw new NotImplementedException(errTxt),
                 _ => throw new InvalidOperationException(
                     $"Unrecognized Bitwise Expression Operator {expression.Operator}"),
             };
 
-            _context.CodeBuilder.CodeBlock.Add(instruction);
+            _context.CodeBuilder.CodeBlock.Add(instructions);
         }
 
         private void EmitComparisonOperation(AstExpression expression)
         {
-            var errTxt = $"Comparison Expression Operator {expression.Operator} is not implemented yet.";
+            var il = _context.InstructionFactory;
 
-            switch (expression.Operator)
+            var instruction = expression.Operator switch
             {
-                case AstExpressionOperator.Equal:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.NotEqual:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.Greater:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.Smaller:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.GreaterEqual:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.SmallerEqual:
-                    throw new NotImplementedException(errTxt);
-                default:
-                    throw new InvalidOperationException(
-                        $"Unrecognized Comparison Expression Operator {expression.Operator}");
+                AstExpressionOperator.Equal => il.CompareEqual(),
+                AstExpressionOperator.Greater => il.CompareGreater(),
+                AstExpressionOperator.Smaller => il.CompareLesser(),
+                _ => null
+            };
+
+            if (instruction != null)
+            {
+                _context.CodeBuilder.CodeBlock.Add(instruction);
+                return;
             }
+
+            var instructions = expression.Operator switch
+            {
+                AstExpressionOperator.NotEqual => il.CompareNotEqual(),
+                AstExpressionOperator.GreaterEqual => il.CompareGreaterEqual(),
+                AstExpressionOperator.SmallerEqual => il.CompareLesserEqual(),
+                _ => throw new InvalidOperationException(
+                        $"Unrecognized Comparison Expression Operator {expression.Operator}")
+            };
+
+            _context.CodeBuilder.CodeBlock.Add(instructions);
         }
 
         private void EmitLogicOperation(AstExpression expression)
         {
+            /*
+             * Logic operator implementation contain branches.
+             * Also requires logic in-between and after emitting left and right hand sides.
+             * 
+             * `lhs && rhs`
+             * 
+             * <lhs>
+             * br-ne not-true
+             * 
+             * <rhs>
+             * br continue
+             * 
+             * not-true:
+             * ld 0
+             * 
+             * continue:
+             * ...
+             */
+
             var errTxt = $"Logic Expression Operator {expression.Operator} is not implemented yet.";
 
-            switch (expression.Operator)
+            // TODO: build up code around lhs/rhs
+            expression.LHS?.Accept(this);
+            expression.RHS?.Accept(this);
+
+            throw expression.Operator switch
             {
-                case AstExpressionOperator.And:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.Or:
-                    throw new NotImplementedException(errTxt);
-                case AstExpressionOperator.Not:
-                    throw new NotImplementedException(errTxt);
-                default:
-                    throw new InvalidOperationException(
-                        $"Unrecognized Logic Expression Operator {expression.Operator}");
-            }
+                AstExpressionOperator.And => new NotImplementedException(errTxt),
+                AstExpressionOperator.Or => new NotImplementedException(errTxt),
+                AstExpressionOperator.Not => new NotImplementedException(errTxt),
+                _ => new InvalidOperationException(
+                    $"Unrecognized Logic Expression Operator {expression.Operator}"),
+            };
         }
         public override void VisitLiteralBoolean(AstLiteralBoolean literalBool)
         {

@@ -221,6 +221,7 @@ namespace Zsharp.Emit
         public IEnumerable<Instruction> Instructions => _instructions;
 
         public void Add(Instruction instruction) => _instructions.Add(instruction);
+        public void Add(IEnumerable<Instruction> instructions) => _instructions.AddRange(instructions);
     }
 
     public enum CodeBlockTermination

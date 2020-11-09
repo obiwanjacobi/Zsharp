@@ -12,6 +12,8 @@
 
 > *) Division for integer types are rounded towards zero.
 
+> *) Cannot do square-root with `//` for it conflicts with comment syntax. Perhaps `/*`? Or change the comment syntax?
+
 Some examples:
 
 ```C#
