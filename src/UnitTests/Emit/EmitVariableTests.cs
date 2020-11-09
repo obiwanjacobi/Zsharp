@@ -9,6 +9,23 @@ namespace UnitTests.Emit
     public class EmitVariableTests
     {
         [TestMethod]
+        public void TopVariableAssignment_Constant()
+        {
+            const string code =
+                "module test" + Tokens.NewLine +
+                "a = 42" + Tokens.NewLine
+                ;
+
+            var emit = Emit.Create(code);
+
+            var moduleClass = emit.Context.Module.Types.Find("test");
+            var body = moduleClass.Methods.First().Body;
+            body.Instructions.Should().HaveCount(3);
+
+            emit.SaveAs("TopVariableAssignment_Constant.dll");
+        }
+
+        [TestMethod]
         public void VariableAssignment_Constant()
         {
             const string code =
@@ -23,6 +40,8 @@ namespace UnitTests.Emit
             var body = moduleClass.Methods.First().Body;
             // ldc 42, stloc 'a', ret
             body.Instructions.Should().HaveCount(3);
+
+            emit.SaveAs("VariableAssignment_Constant.dll");
         }
 
         [TestMethod]
@@ -40,6 +59,8 @@ namespace UnitTests.Emit
             var body = moduleClass.Methods.First().Body;
             // ldc 42, ldc 101, add, stloc 'a', ret
             body.Instructions.Should().HaveCount(5);
+
+            emit.SaveAs("VariableAssignment_ExpressionConstants.dl");
         }
 
         [TestMethod]
@@ -57,6 +78,8 @@ namespace UnitTests.Emit
             var moduleClass = emit.Context.Module.Types.Find("test");
             var body = moduleClass.Methods.First().Body;
             body.Instructions.Should().HaveCount(5);
+
+            emit.SaveAs("VariableAssignment_ExpressionVariableRef.dll");
         }
     }
 }

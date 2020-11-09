@@ -41,6 +41,15 @@ namespace Zsharp.Emit
             return _typeDefinition.Fields.Any(f => f.Name == name);
         }
 
+        public FieldDefinition GetField(string name)
+        {
+            var field = _typeDefinition.Fields.Find(name);
+            if (field == null)
+                throw new ArgumentException(
+                    $"Variable backup Field '{name}' was not found.", nameof(name));
+            return field;
+        }
+
         public MethodDefinition ModuleInitializer { get; }
 
         public void Dispose()
@@ -83,7 +92,7 @@ namespace Zsharp.Emit
 
         private static TypeAttributes ToTypeAttributes(AstModulePublic module)
         {
-            var attrs = TypeAttributes.Class;
+            var attrs = TypeAttributes.Class | TypeAttributes.Abstract | TypeAttributes.Sealed;
             attrs |= module.HasExports ? TypeAttributes.Public : TypeAttributes.NotPublic;
             return attrs;
         }

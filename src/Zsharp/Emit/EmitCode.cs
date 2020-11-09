@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Mono.Cecil;
+using System;
 using Zsharp.AST;
 
 namespace Zsharp.Emit
 {
     public class EmitCode : AstVisitor
     {
+        private bool _isInit;
+
         public EmitCode(string assemblyName)
         {
             Context = EmitContext.Create(assemblyName);
@@ -20,12 +23,13 @@ namespace Zsharp.Emit
             }
 
             using var scope = Context.AddModule(module);
-
+            _isInit = true;
             VisitChildren(module);
         }
 
         public override void VisitFunctionDefinition(AstFunctionDefinition function)
         {
+            _isInit = false;
             using var scope = Context.AddFunction(function);
 
             VisitChildren(function);
@@ -52,9 +56,33 @@ namespace Zsharp.Emit
         {
             base.VisitAssignment(assign);
 
-            var varDef = Context.CodeBuilder.GetVariable(assign.Variable.Identifier.Name);
-            var store = Context.InstructionFactory.StoreVariable(varDef);
-            Context.CodeBuilder.CodeBlock.Add(store);
+            var name = assign.Variable.Identifier.Name;
+
+            if (_isInit)
+            {
+                FieldDefinition field;
+
+                if (Context.ModuleClass.HasField(name))
+                    field = Context.ModuleClass.GetField(name);
+                else
+                {
+                    var varDef = assign.Variable as AstVariableDefinition;
+                    if (varDef == null)
+                    {
+                        var varRef = (AstVariableReference)assign.Variable;
+                        varDef = varRef.VariableDefinition;
+                    }
+                    field = Context.ModuleClass.AddField(name, Context.ToTypeReference(varDef.TypeReference));
+                }
+                var store = Context.InstructionFactory.StoreField(field);
+                Context.CodeBuilder.CodeBlock.Add(store);
+            }
+            else
+            {
+                var varDef = Context.CodeBuilder.GetVariable(name);
+                var store = Context.InstructionFactory.StoreVariable(varDef);
+                Context.CodeBuilder.CodeBlock.Add(store);
+            }
         }
 
         public override void VisitBranchExpression(AstBranchExpression branch)
@@ -95,7 +123,7 @@ namespace Zsharp.Emit
         }
 
         public override void VisitExpression(AstExpression expression)
-            => new EmitExpression(Context).VisitExpression(expression);
+            => new EmitExpression(Context, _isInit).VisitExpression(expression);
 
         public void SaveAs(string filePath) => Context.Assembly.Write(filePath);
     }

@@ -5,11 +5,13 @@ namespace Zsharp.Emit
 {
     public class EmitExpression : AstVisitor
     {
+        private readonly bool _isInit;
         private readonly EmitContext _context;
 
-        public EmitExpression(EmitContext context)
+        public EmitExpression(EmitContext context, bool isInit)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _isInit = isInit;
         }
 
         public override void VisitExpression(AstExpression expression)
@@ -187,13 +189,20 @@ namespace Zsharp.Emit
 
             if (variable.VariableDefinition != null)
             {
-                if (!_context.HasVariable(name))
+                if (_isInit)
                 {
-                    _context.AddVariable(variable.VariableDefinition);
+                    throw new NotImplementedException();
                 }
-                var varDef = _context.CodeBuilder.GetVariable(name);
-                var instruction = il.LoadVariable(varDef);
-                _context.CodeBuilder.CodeBlock.Add(instruction);
+                else
+                {
+                    if (!_context.HasVariable(name))
+                    {
+                        _context.AddVariable(variable.VariableDefinition);
+                    }
+                    var varDef = _context.CodeBuilder.GetVariable(name);
+                    var instruction = il.LoadVariable(varDef);
+                    _context.CodeBuilder.CodeBlock.Add(instruction);
+                }
             }
             if (variable.ParameterDefinition != null)
             {
