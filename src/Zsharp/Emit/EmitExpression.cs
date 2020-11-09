@@ -191,14 +191,16 @@ namespace Zsharp.Emit
             {
                 if (_isInit)
                 {
-                    throw new NotImplementedException();
+                    var field = _context.ModuleClass.GetField(name);
+                    var load = _context.InstructionFactory.LoadField(field);
+                    _context.CodeBuilder.CodeBlock.Add(load);
                 }
                 else
                 {
-                    if (!_context.HasVariable(name))
-                    {
-                        _context.AddVariable(variable.VariableDefinition);
-                    }
+                    //if (!_context.HasVariable(name))
+                    //{
+                    //    _context.AddVariable(variable.VariableDefinition);
+                    //}
                     var varDef = _context.CodeBuilder.GetVariable(name);
                     var instruction = il.LoadVariable(varDef);
                     _context.CodeBuilder.CodeBlock.Add(instruction);

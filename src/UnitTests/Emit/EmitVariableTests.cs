@@ -26,6 +26,24 @@ namespace UnitTests.Emit
         }
 
         [TestMethod]
+        public void TopVariableAssignment_VariableRef()
+        {
+            const string code =
+                "module test" + Tokens.NewLine +
+                "x = 42" + Tokens.NewLine +
+                "a = x + 42" + Tokens.NewLine
+                ;
+
+            var emit = Emit.Create(code);
+
+            var moduleClass = emit.Context.Module.Types.Find("test");
+            var body = moduleClass.Methods.First().Body;
+            body.Instructions.Should().HaveCount(7);
+
+            emit.SaveAs("TopVariableAssignment_VariableRef.dll");
+        }
+
+        [TestMethod]
         public void VariableAssignment_Constant()
         {
             const string code =

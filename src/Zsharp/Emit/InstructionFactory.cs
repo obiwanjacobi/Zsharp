@@ -77,7 +77,12 @@ namespace Zsharp.Emit
         public Instruction LoadVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Ldloc, varDef);
         public Instruction StoreVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Stloc, varDef);
 
-        public Instruction LoadField(FieldDefinition field) => throw new NotImplementedException();
+        public Instruction LoadField(FieldDefinition field)
+        {
+            if (field.FieldType.Name == typeof(String).Name)
+                return _iLProcessor.Create(OpCodes.Ldsfld, field);
+            return _iLProcessor.Create(OpCodes.Ldfld, field);
+        }
         public Instruction StoreField(FieldDefinition field)
         {
             if (field.FieldType.Name == typeof(String).Name)
