@@ -1,4 +1,5 @@
 ﻿using Mono.Cecil;
+using Mono.Cecil.Cil;
 using System;
 using System.Linq;
 using Zsharp.AST;
@@ -54,7 +55,9 @@ namespace Zsharp.Emit
 
         public void Dispose()
         {
-            if (ModuleInitializer.Body.Instructions.Count > 0)
+            // ignore initializer if it's empty or just a Ret.
+            if (ModuleInitializer.Body.Instructions.Count > 0 &&
+                ModuleInitializer.Body.Instructions[0].OpCode != OpCodes.Ret)
             {
                 _typeDefinition.Methods.Add(ModuleInitializer);
             }

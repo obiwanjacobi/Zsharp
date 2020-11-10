@@ -115,24 +115,20 @@ Public fields are represented as a struct with the same name as the class (with 
 
 Public instance methods are represented as (`self`) bound-functions.
 
-Public static methods are normal functions with the name of the class prefixed to the method name. (How do we parse back a `ConsoleWriteLine` to `Console.WriteLine`?) The import statement can contain the static class name and will expose all its static members (`import System.Console` allows `WriteLine("")`). Using an import alias is also supported on a per function (method) basis (`import ConsoleWriteLine = System.Console.WriteLine`).
+Public static methods are normal functions with the name of the class prefixed to the method name. The import statement can contain the static class name and will expose all its static members (`import System.Console` allows `WriteLine("")`). Using an import alias is also generated on a per function (method) basis, as if: (`import ConsoleWriteLine = System.Console.WriteLine`).
 
 Public extension methods are represented as self-bound (this) functions (if we can detect those).
 
 > How do you instantiate a new instance of a .NET class?
 
-In Z# you would need an allocator to place an object on the heap.
-Then there has to be a .NET (implicit) allocator. `GC`, to make it clear it is a Garbage Collected heap, which does not clash with the static methods on the (System) `GC` class.
-
-> TBD: drop allocators completely?
+> We need some distinction between the reference types of .NET and the 'structs' of Z#. (`ref` keyword or `Ref<T>` type?)
 
 ```csharp
 import System
 ...
-o = Object(GC)  // call parameter-less ctor
+o = ref Object()  // call parameter-less ctor
+o: Ref<Object> = Object()
 ```
-
-Any constructor parameters are specified after the allocator.
 
 > How do you derive from a .NET (abstract) base class.
 
@@ -144,10 +140,9 @@ import System
 MyType: Object
     MyExtraField: U8
 
-// we could even leave out the GC allocator to cut down on the noise and ceremony.
-MyType: (self: MyType, [GC: GCAllocator,] p: U8)
-    Object(self, GC)        // call base class constructor
-    t = GC.MyType
+MyType: (self: MyType, p: U8)
+    Object(self)        // call base class constructor
+    ...
 ```
 
 Refer to [Type Constructors](/lang/types.md#Type-Constructors) to see how to call base class constructors. For .NET classes the call to the base class constructor function must come first.
@@ -167,12 +162,12 @@ For each .NET class that has public (protected) members an implicit interface is
 A Z# function bound to the derived class `self`, with the exact same name (Identifier) and parameters will override the base implementation.
 
 ```csharp
-import System:
+import System
 
 MyStruct: Object
 
 ToString(self: MyStruct): Str
-    // cast self to base type to call overridden fn
+    // cast self to base type to call base fn
     return ToString(self.Object())
 
 o: Object = MyStruct

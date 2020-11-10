@@ -118,21 +118,34 @@ namespace Zsharp.Emit
 
         public override void VisitBranchConditional(AstBranchConditional branch)
         {
-            Visit(branch.Expression!);
-
-            var builder = Context.CodeBuilder;
-            var nextBlock = builder.BranchConditional(
-                builder.NewBlockLabel(), builder.NewBlockLabel());
-
-            Visit(branch.CodeBlock!);
-
-            if (branch.HasSubBranch)
+            if (branch.HasExpression)
             {
-                // TODO: the sub-branch's nextBlock should be the root's nextBlock...
-                Visit(branch.SubBranch!);
-            }
+                Visit(branch.Expression!);
 
-            builder.CodeBlock = nextBlock;
+                CodeBlock nextBlock;
+                var builder = Context.CodeBuilder;
+                if (branch.ParentAs<AstBranchConditional>() == null)
+                {
+                    nextBlock = builder.BranchConditional(
+                        builder.NewBlockLabel(), builder.NewBlockLabel());
+                }
+                else    // sub-branch
+                {
+                    nextBlock = builder.Branch(builder.NewBlockLabel());
+                }
+
+                Visit(branch.CodeBlock!);
+
+                builder.CodeBlock = nextBlock;
+
+                if (branch.HasSubBranch)
+                {
+                    // TODO: the sub-branch's nextBlock should be the root's nextBlock...
+                    Visit(branch.SubBranch!);
+                }
+            }
+            else
+                Visit(branch.CodeBlock!);
         }
 
         public override void VisitExpression(AstExpression expression)
