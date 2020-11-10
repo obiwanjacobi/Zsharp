@@ -12,12 +12,12 @@ Arithmetic, bitwise and logical operators.
 
 | Operator | Description
 |---|---
-| `+` | Addition
-| `-` | Subtraction / Negation
+| `+` | Addition / Absolute? (unary)
+| `-` | Subtraction / Negation (unary)
 | `*` | Multiplication
 | `/` | Division
 | `%` | Remainder
-| `**` | Power (`**2` ? => `**3`, `**4` etc?)
+| `**` | Power
 | `( )` | Math Precedence
 | `=` | Equals
 | `<>` | Not Equals
@@ -32,12 +32,13 @@ Arithmetic, bitwise and logical operators.
 | `&` | Bitwise And
 | `|` | Bitwise Or
 | `^` | Bitwise Exclusive Or
-| `~` | Bitwise Negation (invert)
+| `~` | Bitwise Negation (complement/invert)
 | `>>` | Bitwise Shift Right
 | `<<` | Bitwise Shift Left
 | `>|` | Bitwise Rotate Right
 | `|<` | Bitwise Rotate Left
 | `=` | Value Assignment
+| `:=` | Value Assignment with inferred Type
 
 > Ternary operators cannot contain other ternary operators. No nesting of `? :` for readability.
 
@@ -56,18 +57,18 @@ Arithmetic, bitwise and logical operators.
 | `( )` | Function / Array/List initialization
 | `" "` | String
 | `' '` | Character
-| `@` | Disable String formatting features
+| `@` | Disable String formatting features / Compiler Function?
 | `{ }` | String formatting parameter / Code Decorator / Object construction
 | `[ ]` | Index / Slice / Range / Capture
-| `!` | Possible Error (on return type)
+| `!` | Possible Error (return type)
 | `?` | Optional variable or parameter/return value
-| `??` | Optional variable assignment fallback
+| `??` | Optional variable fallback
 | `??=` | Optional variable conditional assignment
 | `#` | Pragma / Attribute Access
 | `#!` | Compile-Time Code
 | `=>` | Line continuation (instead of indent)
 
-> TBD: `=>` should perhaps be `->` so we can use `=>` for some 'assignment' variant?
+> TBD: `=>` should perhaps be `->` so we can use `=>` for some 'assignment' variant? Currently `=>` is used in Lambdas.
 
 > Are there others like conditional assignment `??=`?
 
@@ -75,10 +76,10 @@ Arithmetic, bitwise and logical operators.
 
 | Symbol | Type | Description
 |---|---|---
-| `!` | Err\<T> (post) | Error return value or T
-| `?` | Opt\<T> (post) | Optional; T or Nothing
-| `*` | Ptr\<T> (pre) | Pointer to T
-| `^` | Imm\<T> (pre) | Immutable T
+| `!` | `Err<T>`  | Error return value or T
+| `?` | `Opt<T>`  | Optional; T or Nothing
+| `*` | `Ptr<T>`  | Pointer to T
+| `^` | `Imm<T>`  | Immutable T
 
 ---
 
@@ -90,15 +91,15 @@ Arithmetic, bitwise and logical operators.
 | `$` | reserved
 | `->` | Alternate function return type (confusing in combination with `=>`)
 | `<=` | map structure (also arithmetic)
-| `( )` | array/list initializer?
+| `( )` | array/list initializer/literal?
 | `|>` | 
 | `<|` | 
 | `:=` | reserve for variable assignment with type inference.
-| `<=>` | Swap operator (`><`?)
+| `<=>` | Swap operator
 
 ---
 
-Not sure about these:
+## 
 
 | Operator | Description
 |---|---
@@ -112,6 +113,35 @@ Not sure about these:
 | `&=` | read - ?? - write
 | `$=` | read - ?? - write
 | `^=` | read - ?? - write
+
+> TBD: do we allow a list of right values?
+
+```csharp
+a = 42
+a += (12, 23, 34)
+// a = a + 12 + 23 + 34
+```
+
+---
+
+## Data Type Wrapper Conversion Assignment Operators
+
+Goal is to have a quick and easy way to convert from a normal data type `T` to one of the wrapper types (of T).
+
+| Operator | Description
+|---|---
+| `=!` | `Err<T>` = `T`
+| `=?` | `Opt<T>` = `T`
+| `=*` | `Ptr<T>` = `T` (`Ptr()` conversion)
+| `=^` | `Imm<T>` = `T`
+
+```csharp
+a: U8 = 42
+err =! a    // err: Err<U8>
+opt =? a    // opt: Opt<U8>
+ptr =* a    // ptr: Ptr<U8>
+imm =^ a    // imm: Imm<U8>
+```
 
 ---
 

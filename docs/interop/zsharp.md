@@ -1,59 +1,8 @@
-# .NET Interop
-
-How to do 2-way interop with .NET (IL)?
-
-Z# assemblies can be used in another .NET project (Z# to .NET).
-
-.NET assemblies can be used in a Z# project (.NET to Z#).
-
-## Z# to .NET
-
-How are the various Z# language constructs represented in .NET.
-
-Z# | .NET (C#) | Parent
---|--|--
-project [name] | namespace [name] | Assembly [name]
-module [name] | public static class [name] | namespace
-\<module w/o exports> | private static class [name] | namespace
-export function [name] | public static [name] | module class
-function [name] | private static [name] | module class
-export struct [name] | public struct [name] | module class
-struct [name] | private struct [name] | module class
-export enum [name] | public enum [name] | module class
-enum [name] | private enum [name] | module class
-export type [name] | public struct [name] | module class
-type [name] | public struct [name] | module class
- - or - | Primitive .NET Type |
-module variable [name] | private static {Type} [name] | module class
-function variable [name] | local {Type} [name] | static method
-function self parameter | this parameter | static method
-
-> For a Console application the Main function will be implemented by a compiler-generated `Main` function that calls the entry point of the program.
-
----
-
-## TODO
-
-- expressions
-- error handling (exceptions/Error/Err<T>)
-- defer
-- arrays
-- Imm\<T>
-- Opt\<T>
-- Bit\<n>
-- Ptr\<T>
-- Range/Iter/Slice (Span<T>)
-- name/identifier matching and representation (case insensitive)
-- Memory Heap Allocation. Could be as simple as a wrapper `class HeapAlloc<T> where T : struct` to get a struct on the heap. Look into Boxing.
-
----
----
-
-## .NET to Z#
+# .NET to Z\#
 
 How are referenced (imported) .NET code constructs translated to the Z# language constructs.
 
-### Identifiers
+## Identifiers
 
 > How are Identifier in .NET represented in Z#?
 
@@ -76,7 +25,7 @@ Z# has a simplified type identification system that needs to be mapped from .NET
 
 At runtime Z# code can always use the `Object.GetType()` method to gain access to type info.
 
-### Types
+## Types
 
 How to map the primitive .NET type to Z# types?
 
@@ -115,13 +64,13 @@ The `as` keyword is a dynamic type cast (at runtime).
 There are several options in Z# to do this.
 See [Test for Interface Implementation](./lang/interfaces.md#Test-for-Interface-Implementation) for more details.
 
-### Null vs Optional
+## Null vs Optional
 
 The `null` keyword is not be available in Z#. Using the nullable reference attributes types will be represented as `Opt<T>` as indicated by the attributes. .NET methods that do not have these attributes are assumed to be nullable and always translate to `Opt<T>`.
 
 Nullable value types will also be represented with `Opt<T>`.
 
-### Loops and Enumerators
+## Loops and Enumerators
 
 The .NET `IEnumerable<T>` interface is mapped to one of the `GetIter` functions.
 
@@ -129,7 +78,7 @@ The .NET `IEnumerator<T>` interface is mapped to the `Iter<T>` type, which basic
 
 How the loops are generated in IL does not really matter.
 
-### IDisposable
+## IDisposable
 
 .NET Types that implement IDisposable can be used as is. Z# can call the Dispose method - no problem.
 
@@ -137,7 +86,7 @@ The C# `using` construct (which is a try-finally block) has to be build with `de
 
 Note: `defer` has not received a whole lot of thought yet, so things may change.
 
-### Exceptions vs Errors
+## Exceptions vs Errors
 
 In principle all .NET Exceptions are to be translated to `Error` object representations.
 
@@ -153,7 +102,7 @@ The `defer` keyword can be used as a finally handler, although this also is on a
 
 Throwing an exception from Z# code is passing an instance in the `Error` functions which will see its an `Exception` and throw it. The code _should_ to be generated in such a way that the stack trace represent the position where the exception was passed into Error - not Error itself.
 
-### Classes
+## Classes
 
 How to deal with Classes/Objects and inheritance?
 (calling and implementing)
@@ -243,18 +192,18 @@ Implementing a (C#) `new` function to replace an old function on a class is not 
 - can it all be done at compile time?
 - should we give overloaded methods a special name to differentiate between them (method, method1, method2)?
 
-### Interfaces
+## Interfaces
 
 Interfaces (querying, calling and implementing)
 
 Interface methods are translated to self-bound template interface functions sharing the name of the .NET interface.
 
-### Generics
+## Generics
 
 Using .NET generics uses the same syntax as Z# templates.
 This may cause confusion an we may want to change the syntax for generics or templates. Perhaps use a `#` in template syntax to indicate the compile-time nature of that mechanism?
 
-### Delegates and Events
+## Delegates and Events
 
 A delegate is a wrapper around an instance pointer and a function pointer.
 
@@ -264,7 +213,7 @@ Multi-cast delegates are a linked list of delegates that will all fire when the 
 
 Events are a standardized delegate signature (sender, args) and a 'property' mechanism for adding and removing delegates. Similar to Properties, Events will be exposed as `add` and `remove` functions.
 
-### Lambdas
+## Lambdas
 
 ...
 
