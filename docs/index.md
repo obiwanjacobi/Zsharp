@@ -10,8 +10,6 @@ More on the Design goals of Z# [here](design.md)
 
 Take a look at some samples [here](samples.md)
 
-Read more on .NET interop [here](dotnet.md)
-
 ## Work In Progress
 
 I am still playing with the syntax, concepts and constructs of the language. Things will change!
@@ -22,7 +20,7 @@ I am still playing with the syntax, concepts and constructs of the language. Thi
 
 I have created a [group on Facebook](https://www.facebook.com/groups/724275751426108/) for discussing Z# (Zlang).
 
-You can also join the Z# Discord server: https://discord.gg/5r9YMXHrYU
+You can also [join the Z# Discord server)[https://discord.gg/5r9YMXHrYU].
 
 ## TODO
 
