@@ -24,8 +24,23 @@ namespace Zsharp.AST
             {
                 Text = text
             };
-            _messages.Add(error);
-            return error;
+            return AddMessage(error);
+        }
+
+        private AstMessage AddMessage(AstMessage message)
+        {
+            var duplicate = FindDuplicate(message);
+            if (duplicate == null)
+            {
+                _messages.Add(message);
+                return message;
+            }
+            return duplicate;
+        }
+
+        private AstMessage? FindDuplicate(AstMessage message)
+        {
+            return _messages.SingleOrDefault(m => m.Equals(message));
         }
     }
 }

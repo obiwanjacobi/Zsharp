@@ -11,7 +11,7 @@
         public static AstMessage UndefinedFunction(this AstErrorSite errorSite, AstFunctionReference function)
         {
             return errorSite.AddError(function, function.Context,
-                $"Reference to an undefined Function '{function.Identifier.Name}'.");
+                $"Reference to an undefined Function '{function}'.");
         }
 
         public static AstMessage UndefinedType(this AstErrorSite errorSite, AstTypeReference type)
@@ -23,7 +23,7 @@
         public static AstMessage OverloadNotFound(this AstErrorSite errorSite, AstFunctionReference function)
         {
             return errorSite.AddError(function, function.Context,
-                $"No overload was found for '{function}'.");
+                $"No overload was found for Function '{function}'.");
         }
     }
 }

@@ -133,10 +133,9 @@ namespace Zsharp.Semantics
             }
 
             var fn = operand.FunctionReference;
-            if (fn != null)
+            if (fn?.TypeReference != null)
             {
-                var typeRef = fn.TypeReference;
-                operand.SetTypeReference(new AstTypeReference(typeRef!));
+                operand.SetTypeReference(new AstTypeReference(fn.TypeReference));
             }
         }
 
@@ -186,7 +185,11 @@ namespace Zsharp.Semantics
             VisitChildren(function);
 
             var success = function.TryResolve();
-            Ast.Guard(success, $"Failed to resolve {function.Identifier.Name}.");
+            if (!success)
+            {
+                _errorSite.UndefinedFunction(function);
+                return;
+            }
 
             if (function.TypeReference == null &&
                 !function.Symbol.HasOverloads &&

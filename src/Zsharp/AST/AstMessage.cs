@@ -11,7 +11,7 @@ namespace Zsharp.AST
         Error
     }
 
-    public class AstMessage
+    public class AstMessage : IEquatable<AstMessage>
     {
         public const string EmptyCodeBlock = "Empty Code Block (indicates a parse error).";
         public const string IndentationMismatch = "Number of Indentations is mismatched.";
@@ -37,9 +37,23 @@ namespace Zsharp.AST
 
         public string Source { get; set; }
 
+        public (int Line, int Column) Location => (Context.Start.Line, Context.Start.Column + 1);
+
         public Exception? Error => Context.exception;
 
+        public bool Equals(AstMessage? other)
+        {
+            if (other != null)
+            {
+                return
+                    Object.ReferenceEquals(Context, other.Context) &&
+                    Object.ReferenceEquals(Node, other.Node) &&
+                    String.Compare(Text, other.Text) == 0;
+            }
+            return false;
+        }
+
         public override string ToString()
-            => $"{MessageType}: {Text} at {Context.Start.Line}, {Context.Start.Column + 1} ({Source})";
+            => $"{MessageType}: {Text} at {Location.Line}, {Location.Column} ({Source})";
     }
 }
