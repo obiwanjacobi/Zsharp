@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Zsharp;
 using Zsharp.AST;
@@ -14,7 +16,16 @@ namespace UnitTests.AST
             var moduleLoader = new ModuleLoader();
             var compiler = new Compiler(moduleLoader);
             compiler.Compile("UnitTests", "AstErrorTests", code);
+            PrintErrors(compiler.Context.Errors);
             return compiler;
+        }
+
+        private static void PrintErrors(IEnumerable<AstError> errors)
+        {
+            foreach (var err in errors)
+            {
+                Console.WriteLine(err);
+            }
         }
 
         [TestMethod]
