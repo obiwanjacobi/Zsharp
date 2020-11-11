@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,6 +31,10 @@ namespace UnitTests.Emit
         {
             var compiler = new Compiler(moduleLoader ?? new ModuleLoader());
             var errors = compiler.Compile("UnitTests", "EmitCodeTests", code);
+            foreach (var err in errors)
+            {
+                Console.WriteLine(err);
+            }
             errors.Should().BeEmpty();
 
             var module = compiler.Context.Modules.Modules.First();

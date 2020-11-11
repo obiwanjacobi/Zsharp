@@ -131,6 +131,13 @@ namespace Zsharp.Semantics
                     operand.SetTypeReference(var.TypeReference);
                 }
             }
+
+            var fn = operand.FunctionReference;
+            if (fn != null)
+            {
+                var typeRef = fn.TypeReference;
+                operand.SetTypeReference(new AstTypeReference(typeRef!));
+            }
         }
 
         private void AssignType(AstExpressionOperand operand, AstNode node, AstTypeDefinition typeDef)
@@ -180,6 +187,13 @@ namespace Zsharp.Semantics
 
             var success = function.TryResolve();
             Ast.Guard(success, $"Failed to resolve {function.Identifier.Name}.");
+
+            if (function.TypeReference == null &&
+                !function.Symbol.HasOverloads &&
+                function.FunctionDefinition?.TypeReference != null)
+            {
+                function.SetTypeReference(new AstTypeReference(function.FunctionDefinition.TypeReference));
+            }
         }
 
         public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)

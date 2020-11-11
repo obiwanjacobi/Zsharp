@@ -161,6 +161,7 @@ namespace Zsharp.Emit
                     $"Unrecognized Logic Expression Operator {expression.Operator}"),
             };
         }
+
         public override void VisitLiteralBoolean(AstLiteralBoolean literalBool)
         {
             var il = _context.InstructionFactory;
@@ -197,10 +198,6 @@ namespace Zsharp.Emit
                 }
                 else
                 {
-                    //if (!_context.HasVariable(name))
-                    //{
-                    //    _context.AddVariable(variable.VariableDefinition);
-                    //}
                     var varDef = _context.CodeBuilder.GetVariable(name);
                     var instruction = il.LoadVariable(varDef);
                     _context.CodeBuilder.CodeBlock.Add(instruction);
@@ -212,6 +209,15 @@ namespace Zsharp.Emit
                 var instruction = il.LoadParameter(paramDef);
                 _context.CodeBuilder.CodeBlock.Add(instruction);
             }
+        }
+
+        public override void VisitFunctionReference(AstFunctionReference function)
+        {
+            VisitChildren(function);
+
+            var method = _context.FindFunction(function.FunctionDefinition);
+            var call = _context.InstructionFactory.Call(method);
+            _context.CodeBuilder.CodeBlock.Add(call);
         }
     }
 }

@@ -96,7 +96,7 @@ namespace Zsharp.AST
             if (module == null)
             {
                 _buildercontext.CompilerContext.AddError(context,
-                        $"Module '{moduleName}' was not found as an external Assembly.");
+                        $"Module '{moduleName}' was not found in an external Assembly.");
                 return null;
             }
 

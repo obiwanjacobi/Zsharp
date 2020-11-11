@@ -102,5 +102,23 @@ namespace UnitTests.Emit
 
             emit.SaveAs("FunctionCallParameterReturn.dll");
         }
+
+        [TestMethod]
+        public void FunctionCallResult_Run()
+        {
+            const string code =
+                "module test" + Tokens.NewLine +
+                "import System.Console" + Tokens.NewLine +
+                "fn: (): Str" + Tokens.NewLine +
+                Tokens.Indent1 + "return \"Hello Z# World\"" + Tokens.NewLine +
+                "export Main: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "WriteLine(fn())" + Tokens.NewLine
+                ;
+
+            var emit = Emit.Create(code, Emit.CreateModuleLoader());
+            emit.SaveAs("FunctionCallResult_Run.dll");
+
+            Emit.InvokeStatic("FunctionCallResult_Run", "test", "Main");
+        }
     }
 }

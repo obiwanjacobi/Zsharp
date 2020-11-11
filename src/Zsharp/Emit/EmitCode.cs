@@ -31,6 +31,7 @@ namespace Zsharp.Emit
         public override void VisitFunctionDefinition(AstFunctionDefinition function)
         {
             _isInit = false;
+
             using var scope = Context.AddFunction(function);
 
             VisitChildren(function);

@@ -10,7 +10,14 @@ namespace UnitTests
 
         public AstModuleExternal LoadExternal(string moduleName)
         {
-            return Modules.FirstOrDefault(m => m.Name == moduleName) ?? new AstModuleExternal(moduleName);
+            var mod = Modules.FirstOrDefault(m => m.Name == moduleName);
+
+            if (mod == null)
+            {
+                mod = new AstModuleExternal(moduleName);
+                Modules.Add(mod);
+            }
+            return mod;
         }
     }
 }
