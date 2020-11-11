@@ -68,6 +68,18 @@ s = Slice(a, r)
 i = GetIter(s)
 ```
 
+> TBD Use ranges for value range checking?
+
+```csharp
+x = 42
+// 'in' is interpreted differently than in a loop!
+if x in [0..100]
+    // true
+```
+
+That would also mean this: `Range<T>` to allow for floats etc.
+Step would only be needed in a loop/iter scenario.
+
 ## Iterators
 
 - Array

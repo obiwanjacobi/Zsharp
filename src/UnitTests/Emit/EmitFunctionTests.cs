@@ -23,6 +23,8 @@ namespace UnitTests.Emit
             var fn = moduleClass.Methods.First();
             fn.Name.Should().Be("fn");
             fn.Body.Instructions.Should().HaveCount(1);
+
+            emit.SaveAs("Function.dll");
         }
 
         [TestMethod]
@@ -40,6 +42,8 @@ namespace UnitTests.Emit
             var fn = moduleClass.Methods.First();
             fn.Name.Should().Be("fn");
             fn.Body.Instructions.Should().HaveCount(5);
+
+            emit.SaveAs("FunctionCallParameter.dll");
         }
 
         [TestMethod]
@@ -78,6 +82,25 @@ namespace UnitTests.Emit
             emit.SaveAs("ExternalFunctionCallParameter_Run.dll");
 
             Emit.InvokeStatic("ExternalFunctionCallParameter_Run", "EmitCodeTests", "Main");
+        }
+
+        [TestMethod]
+        public void FunctionCallParameterReturn()
+        {
+            const string code =
+                "module test" + Tokens.NewLine +
+                "fn: (p: U8): U8" + Tokens.NewLine +
+                Tokens.Indent1 + "return p + 1" + Tokens.NewLine
+                ;
+
+            var emit = Emit.Create(code);
+
+            var moduleClass = emit.Context.Module.Types.Find("test");
+            var fn = moduleClass.Methods.First();
+            fn.Name.Should().Be("fn");
+            fn.Body.Instructions.Should().HaveCount(4);
+
+            emit.SaveAs("FunctionCallParameterReturn.dll");
         }
     }
 }
