@@ -1,4 +1,6 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using System.Linq;
+using System.Text;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -27,12 +29,30 @@ namespace Zsharp.AST
 
         public override void Accept(AstVisitor visitor) => visitor.VisitFunctionReference(this);
 
-        public override void VisitChildren(AstVisitor visitor)
+        public override string? ToString()
         {
-            foreach (var param in Parameters)
+            var txt = new StringBuilder();
+
+            txt.Append(Identifier.Name);
+            txt.Append(": (");
+
+            for (int i = 0; i < Parameters.Count(); i++)
             {
-                param.Accept(visitor);
+                if (i > 0)
+                    txt.Append(", ");
+
+                var p = Parameters.ElementAt(i);
+                txt.Append(p.TypeReference.Identifier.Name);
             }
+            txt.Append(")");
+
+            if (TypeReference?.Identifier != null)
+            {
+                txt.Append(": ");
+                txt.Append(TypeReference.Identifier.Name);
+            }
+
+            return txt.ToString();
         }
     }
 }

@@ -137,12 +137,13 @@ namespace Zsharp.Emit
              * br-ne not-true
              * 
              * <rhs>
-             * br continue
+             * br test
              * 
              * not-true:
              * ld 0
              * 
-             * continue:
+             * test:
+             * br-ne ...
              * ...
              */
 

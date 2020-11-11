@@ -18,13 +18,18 @@ namespace Zsharp.Semantics
                 return;
 
             var overloadDef = ResolveOverload(function);
+            if (overloadDef == null)
+            {
+                _errorSite.OverloadNotFound(function);
+            }
+
             function.Symbol.SetOverload(function, overloadDef);
         }
 
-        private AstFunctionDefinition ResolveOverload(AstFunctionReference function)
+        private AstFunctionDefinition? ResolveOverload(AstFunctionReference function)
         {
             // TODO: more elaborate overload resolution here...
-            return function.Symbol!.Overloads.Single(def => def.OverloadKey == function.OverloadKey);
+            return function.Symbol!.Overloads.SingleOrDefault(def => def.OverloadKey == function.OverloadKey);
         }
     }
 }

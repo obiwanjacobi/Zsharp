@@ -43,5 +43,20 @@ namespace UnitTests.AST
             variable.Identifier.Name.Should().Be("x");
             error.Text.Should().Contain("undefined Variable");
         }
+
+        [TestMethod]
+        public void FunctionParameterConvert()
+        {
+            const string code =
+                "fn: (p: U8)" + Tokens.NewLine +
+                Tokens.Indent1 + "return" + Tokens.NewLine +
+                "Main: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn(\"42\")" + Tokens.NewLine
+                ;
+
+            var compiler = Compile(code);
+            var error = compiler.Context.Errors.Single();
+            error.Text.Should().Contain("No overload was found");
+        }
     }
 }

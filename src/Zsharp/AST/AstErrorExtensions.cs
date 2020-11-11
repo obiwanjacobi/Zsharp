@@ -19,5 +19,11 @@
             return errorSite.AddError(type, type.Context,
                 $"Reference to an undefined Type '{type.Identifier.Name}'.");
         }
+
+        public static AstError OverloadNotFound(this AstErrorSite errorSite, AstFunctionReference function)
+        {
+            return errorSite.AddError(function, function.Context,
+                $"No overload was found for '{function}'.");
+        }
     }
 }

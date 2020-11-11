@@ -1,24 +1,36 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Text;
 
 namespace Zsharp.AST
 {
     public abstract class AstFunctionDefinition : AstFunction<AstFunctionParameterDefinition>
     {
-        public override void VisitChildren(AstVisitor visitor)
-        {
-            foreach (var param in Parameters)
-            {
-                param.Accept(visitor);
-            }
-        }
-
         public override string? ToString()
         {
-            if (TypeReference?.Identifier != null && Identifier != null)
-                return $"{TypeReference.Identifier.Name} {Identifier.Name}({String.Join(", ", Parameters.Select(p => $"{p.TypeReference.Identifier.Name} {p.Identifier.Name}"))})";
+            var txt = new StringBuilder();
 
-            return base.ToString();
+            txt.Append(Identifier.Name);
+            txt.Append(": (");
+
+            for (int i = 0; i < Parameters.Count(); i++)
+            {
+                if (i > 0)
+                    txt.Append(", ");
+
+                var p = Parameters.ElementAt(i);
+                txt.Append(p.Identifier.Name);
+                txt.Append(": ");
+                txt.Append(p.TypeReference.Identifier.Name);
+            }
+            txt.Append(")");
+
+            if (TypeReference?.Identifier != null)
+            {
+                txt.Append(": ");
+                txt.Append(TypeReference.Identifier.Name);
+            }
+
+            return txt.ToString();
         }
     }
 }
