@@ -26,7 +26,7 @@ namespace Zsharp
 
         public CompilerContext Context { get; }
 
-        public IEnumerable<AstError> Compile(string filePath, string defaultModuleName, string code)
+        public IEnumerable<AstMessage> Compile(string filePath, string defaultModuleName, string code)
         {
             var parser = CreateParser(filePath, code);
             var file = parser.file();

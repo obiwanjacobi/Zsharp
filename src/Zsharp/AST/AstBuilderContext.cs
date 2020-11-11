@@ -18,7 +18,7 @@ namespace Zsharp.AST
 
         public CompilerContext CompilerContext { get; }
 
-        public IEnumerable<AstError> Errors => CompilerContext.Errors;
+        public IEnumerable<AstMessage> Errors => CompilerContext.Errors;
         public bool HasErrors => CompilerContext.HasErrors;
 
         public UInt32 Indent { get; private set; }
@@ -35,7 +35,7 @@ namespace Zsharp.AST
 
             if (indent % Indent > 0)
             {
-                CompilerContext.AddError(context, AstError.IndentationInvalid);
+                CompilerContext.AddError(context, AstMessage.IndentationInvalid);
                 // guess where it should go
                 return (UInt32)Math.Round((double)indent / Indent);
             }

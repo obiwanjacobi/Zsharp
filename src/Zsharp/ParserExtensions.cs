@@ -7,12 +7,12 @@ namespace Zsharp
 {
     public static class ParserExtensions
     {
-        public static IEnumerable<AstError> Errors(this ParserRuleContext ctx)
+        public static IEnumerable<AstMessage> Errors(this ParserRuleContext ctx)
         {
-            var errors = new List<AstError>();
+            var errors = new List<AstMessage>();
 
             if (ctx.exception != null)
-                errors.Add(new AstError(ctx));
+                errors.Add(new AstMessage(AstMessageType.Error, ctx));
 
             if (ctx.children != null)
             {

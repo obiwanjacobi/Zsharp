@@ -3,20 +3,31 @@ using System;
 
 namespace Zsharp.AST
 {
-    public class AstError
+    public enum AstMessageType
+    {
+        Trace,
+        Information,
+        Warning,
+        Error
+    }
+
+    public class AstMessage
     {
         public const string EmptyCodeBlock = "Empty Code Block (indicates a parse error).";
         public const string IndentationMismatch = "Number of Indentations is mismatched.";
         public const string IndentationInvalid = "Number of Indentation characters is invalid.";
         public const string SyntaxError = "The Syntax is invalid.";
 
-        public AstError(ParserRuleContext context, AstNode? node = null)
+        public AstMessage(AstMessageType messageType, ParserRuleContext context, AstNode? node = null)
         {
+            MessageType = messageType;
             Node = node;
             Context = context;
             Text = String.Empty;
             Source = String.Empty;
         }
+
+        public AstMessageType MessageType { get; }
 
         public ParserRuleContext Context { get; }
 
@@ -29,6 +40,6 @@ namespace Zsharp.AST
         public Exception? Error => Context.exception;
 
         public override string ToString()
-            => $"{Text} at {Context.Start.Line}, {Context.Start.Column + 1} ({Source})";
+            => $"{MessageType}: {Text} at {Context.Start.Line}, {Context.Start.Column + 1} ({Source})";
     }
 }

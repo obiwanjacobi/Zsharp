@@ -20,7 +20,7 @@ namespace Zsharp.AST
             _namespace = ns;
         }
 
-        public IEnumerable<AstError> Errors => _buildercontext.Errors;
+        public IEnumerable<AstMessage> Errors => _buildercontext.Errors;
 
         public bool HasErrors => _buildercontext.HasErrors;
 
@@ -60,7 +60,7 @@ namespace Zsharp.AST
             if (node is ParserRuleContext context &&
                 context.exception != null)
             {
-                _buildercontext.CompilerContext.AddError(context, AstError.SyntaxError);
+                _buildercontext.CompilerContext.AddError(context, AstMessage.SyntaxError);
                 // usually pointless to continue
                 return false;
             }

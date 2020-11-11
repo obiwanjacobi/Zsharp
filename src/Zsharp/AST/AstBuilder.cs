@@ -15,7 +15,7 @@ namespace Zsharp.AST
 
         public bool HasErrors => _context.HasErrors;
 
-        public IEnumerable<AstError> Errors => _context.Errors;
+        public IEnumerable<AstMessage> Errors => _context.Errors;
 
         public AstFile Build(FileContext fileCtx, string moduleName)
         {
