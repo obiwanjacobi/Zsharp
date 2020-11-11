@@ -21,6 +21,7 @@ namespace Zsharp.Semantics
             if (overloadDef == null)
             {
                 _errorSite.OverloadNotFound(function);
+                return;
             }
 
             function.Symbol.SetOverload(function, overloadDef);

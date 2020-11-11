@@ -54,6 +54,8 @@ namespace Zsharp.Semantics
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
+            VisitChildren(function);
+
             if (function.FunctionDefinition == null)
             {
                 var success = function.TryResolve();

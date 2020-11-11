@@ -184,15 +184,7 @@ namespace Zsharp.Semantics
         {
             VisitChildren(function);
 
-            var success = function.TryResolve();
-            if (!success)
-            {
-                _errorSite.UndefinedFunction(function);
-                return;
-            }
-
             if (function.TypeReference == null &&
-                !function.Symbol.HasOverloads &&
                 function.FunctionDefinition?.TypeReference != null)
             {
                 function.SetTypeReference(new AstTypeReference(function.FunctionDefinition.TypeReference));

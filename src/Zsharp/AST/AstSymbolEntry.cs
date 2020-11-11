@@ -61,6 +61,11 @@ namespace Zsharp.AST
 
         public void SetOverload(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
         {
+            Ast.Guard(functionRef, "Function Reference argument is null");
+            Ast.Guard(functionDef, "Function Definition argument is null");
+            Ast.Guard(_references.Contains(functionRef), "Function Reference argument does not belong to this symbol.");
+            Ast.Guard(_definitions.Contains(functionDef), "Function Definition argument does not belong to this symbol.");
+
             _overloads.Add(functionRef, functionDef);
         }
 
@@ -109,6 +114,11 @@ namespace Zsharp.AST
             if (!TryAddAlias(alias))
                 throw new ArgumentException(
                     $"Alias '{alias}' is alread present for symbol {SymbolName}.", nameof(alias));
+        }
+
+        internal void Delete()
+        {
+            SymbolTable.Delete(this);
         }
 
         internal static string MakeKey(string name, AstSymbolKind kind) => name + kind;

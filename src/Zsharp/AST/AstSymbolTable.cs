@@ -99,6 +99,7 @@ namespace Zsharp.AST
                     (entry.HasOverloads || entry.Definition != null))
                 {
                     Merge(entry, symbolEntry);
+                    symbolEntry.Delete();
                     return entry;
                 }
                 table = table.ParentTable;
@@ -125,6 +126,11 @@ namespace Zsharp.AST
         {
             identifierSite.ThrowIfIdentifierNotSet();
             return FindEntry(identifierSite.Identifier!.Name, kind);
+        }
+
+        internal void Delete(AstSymbolEntry symbolEntry)
+        {
+            _table.Remove(symbolEntry.Key);
         }
 
         private AstSymbolEntry? FindEntryLocal(string name, AstSymbolKind kind)
