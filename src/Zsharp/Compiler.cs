@@ -14,6 +14,7 @@ namespace Zsharp
         private readonly ResolveSymbols _resolveSymbols;
         private readonly ResolveTypes _resolveTypes;
         private readonly ResolveOverloads _resolveOverloads;
+        private readonly CheckRules _checkRules;
 
         public Compiler(IAstModuleLoader moduleLoader)
         {
@@ -22,6 +23,7 @@ namespace Zsharp
             _resolveSymbols = new ResolveSymbols(Context);
             _resolveTypes = new ResolveTypes(Context);
             _resolveOverloads = new ResolveOverloads(Context);
+            _checkRules = new CheckRules(Context);
         }
 
         public CompilerContext Context { get; }
@@ -54,6 +56,7 @@ namespace Zsharp
             _resolveSymbols.Visit(file);
             _resolveTypes.Visit(file);
             _resolveOverloads.Visit(file);
+            _checkRules.Visit(file);
         }
 
         private ZsharpParser CreateParser(string sourceName, string code)

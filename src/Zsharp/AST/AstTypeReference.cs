@@ -72,7 +72,7 @@ namespace Zsharp.AST
             return typeRef;
         }
 
-        public static AstTypeReference Create(AstNode typeSource, AstTypeDefinition typeDef)
+        public static AstTypeReference Create(AstTypeDefinition typeDef, AstNode? typeSource = null)
         {
             Ast.Guard(typeDef != null, "TypeDefinition is null.");
             Ast.Guard(typeDef!.Identifier != null, "TypeDefinition has no Identifier.");
@@ -80,7 +80,8 @@ namespace Zsharp.AST
             var typeRef = new AstTypeReference();
             typeRef.SetIdentifier(typeDef.Identifier!);
             typeRef.TrySetSymbol(typeDef.Symbol!);
-            typeRef.TrySetTypeSource(typeSource);
+            if (typeSource != null)
+                typeRef.TrySetTypeSource(typeSource);
             return typeRef;
         }
     }

@@ -4,15 +4,15 @@ namespace Zsharp.AST
 {
     public class AstTypeDefinitionIntrinsic : AstTypeDefinition
     {
-        public AstTypeDefinitionIntrinsic(AstIdentifier identifier, Type systemType)
+        public AstTypeDefinitionIntrinsic(AstIdentifier identifier, Type? systemType)
             : base(identifier)
         {
-            SystemType = systemType ?? throw new ArgumentNullException(nameof(systemType));
+            SystemType = systemType;
         }
 
         public override bool IsIntrinsic => true;
 
-        public Type SystemType { get; private set; }
+        public Type? SystemType { get; private set; }
 
         public static readonly AstTypeDefinitionIntrinsic U8 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U8, typeof(Byte));
         public static readonly AstTypeDefinitionIntrinsic U16 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U16, typeof(UInt16));
@@ -26,6 +26,7 @@ namespace Zsharp.AST
         public static readonly AstTypeDefinitionIntrinsic F32 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.F32, typeof(Single));
         public static readonly AstTypeDefinitionIntrinsic Str = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Str, typeof(String));
         public static readonly AstTypeDefinitionIntrinsic Bool = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Bool, typeof(Boolean));
+        public static readonly AstTypeDefinitionIntrinsic Void = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Void, null);
 
         public static void AddAll(AstSymbolTable symbols)
         {
@@ -41,6 +42,7 @@ namespace Zsharp.AST
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.U64);
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.U32);
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.U8);
+            AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.Void);
         }
 
         private static void AddIntrinsicSymbol(AstSymbolTable symbols, AstTypeDefinitionIntrinsic type)

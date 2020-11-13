@@ -19,6 +19,7 @@ namespace Zsharp.AST
         public static readonly AstIdentifierIntrinsic F32 = new AstIdentifierIntrinsic("F32", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic Str = new AstIdentifierIntrinsic("Str", AstIdentifierType.Type);
         public static readonly AstIdentifierIntrinsic Bool = new AstIdentifierIntrinsic("Bool", AstIdentifierType.Type);
+        public static readonly AstIdentifierIntrinsic Void = new AstIdentifierIntrinsic("Void", AstIdentifierType.Type);
     }
 
     public abstract class AstType : AstNode, IAstIdentifierSite, IAstSymbolEntrySite

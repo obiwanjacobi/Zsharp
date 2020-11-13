@@ -141,7 +141,7 @@ namespace Zsharp.Semantics
 
         private void AssignType(AstExpressionOperand operand, AstNode node, AstTypeDefinition typeDef)
         {
-            var typeRef = AstTypeReference.Create(node, typeDef!);
+            var typeRef = AstTypeReference.Create(typeDef!, node);
             var entry = SymbolTable!.Add(typeRef);
             if (entry.Definition == null)
                 entry.AddNode(typeDef!);
@@ -170,7 +170,7 @@ namespace Zsharp.Semantics
                 var def = entry!.DefinitionAs<AstTypeDefinition>();
                 if (def != null)
                 {
-                    typeRef = AstTypeReference.Create(expr, def);
+                    typeRef = AstTypeReference.Create(def, expr);
                     assign.Variable.SetTypeReference(typeRef);
                 }
                 else

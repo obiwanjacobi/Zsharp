@@ -12,10 +12,12 @@ namespace UnitTests.AST
             "// comment" + Tokens.NewLine +
             "export MyFunction" + Tokens.NewLine +
             "x = 42" + Tokens.NewLine +
-            "MyFunction: (p: U8): Bool" + Tokens.NewLine +
+            "fn1: (p: U8): Bool" + Tokens.NewLine +
             Tokens.Indent1 + "if p = 42" + Tokens.NewLine +
             Tokens.Indent2 + "return true" + Tokens.NewLine +
-            Tokens.Indent1 + "return p <> 0" + Tokens.NewLine
+            Tokens.Indent1 + "return p <> 0" + Tokens.NewLine +
+            "fn2: (): Bool" + Tokens.NewLine +
+            Tokens.Indent1 + "return fn1(42)" + Tokens.NewLine
             ;
 
         [TestMethod]

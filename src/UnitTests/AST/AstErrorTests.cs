@@ -84,5 +84,20 @@ namespace UnitTests.AST
             var error = compiler.Context.Errors.Single();
             error.Text.Should().Contain("No overload was found");
         }
+
+        [TestMethod]
+        public void FunctionReturnValueNotUsed()
+        {
+            const string code =
+                "fn: (p: U8): U8" + Tokens.NewLine +
+                Tokens.Indent1 + "return p" + Tokens.NewLine +
+                "Main: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn(42)" + Tokens.NewLine
+                ;
+
+            var compiler = Compile(code);
+            var error = compiler.Context.Errors.Single();
+            error.Text.Should().Contain("return value").And.Contain("assigned");
+        }
     }
 }

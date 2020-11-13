@@ -25,5 +25,12 @@
             return errorSite.AddError(function, function.Context,
                 $"No overload was found for Function '{function}'.");
         }
+
+        public static AstMessage FunctionReturnValueNotUsed(this AstErrorSite errorSite, AstFunctionReference function)
+        {
+            return errorSite.AddError(function, function.Context,
+                $"The return value must be assigned for Function '{function}'.");
+        }
+
     }
 }
