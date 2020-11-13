@@ -97,8 +97,20 @@ namespace UnitTests.AST
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var assign = fn.CodeBlock.ItemAt<AstAssignment>(0);
             assign.Variable.Identifier.Name.Should().Be("p");
+        }
 
-            // TODO: add assert for connection between param and var.
+        [TestMethod]
+        public void CanonicalName()
+        {
+            const string code =
+                "fn: (p_some_name: U8)" + Tokens.NewLine +
+                Tokens.Indent1 + "pSOMENAME = 42" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var assign = fn.CodeBlock.ItemAt<AstAssignment>(0);
+            assign.Variable.Identifier.CanonicalName.Should().Be("psomename");
         }
     }
 }
