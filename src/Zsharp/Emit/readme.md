@@ -2,7 +2,7 @@
 
 ## CodeBlock
 
-A code block is a single flow of execution that either ends with a (condition) branch or a return.
+A code block is a single flow of execution that either ends with a (condition) branch, return or fall through.
 
 ---
 
