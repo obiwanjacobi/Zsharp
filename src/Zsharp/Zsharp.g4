@@ -70,6 +70,7 @@ function_return_type: type_ref_use;
 function_call: indent? identifier_func PARENopen function_parameter_uselist? PARENclose newline?;
 function_parameter_uselist: function_param_use (COMMA SP function_param_use)*;
 function_param_use: expression_value;
+function_call_retval_unused: indent UNUSED SP EQ_ASSIGN SP function_call;
 
 // variables
 variable_def_top: (variable_def_typed | variable_def_typed_init | variable_assign_auto) newline;

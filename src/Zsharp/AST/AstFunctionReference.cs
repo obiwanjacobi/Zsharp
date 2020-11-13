@@ -9,7 +9,10 @@ namespace Zsharp.AST
         public AstFunctionReference(Function_callContext context)
         {
             Context = context;
+            EnforceReturnValueUse = context.Payload is not Function_call_retval_unusedContext;
         }
+
+        public bool EnforceReturnValueUse { get; }
 
         public AstFunctionDefinition? FunctionDefinition
         {

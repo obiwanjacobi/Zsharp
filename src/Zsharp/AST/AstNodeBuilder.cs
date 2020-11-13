@@ -162,13 +162,6 @@ namespace Zsharp.AST
 
             var any = VisitChildrenExcept(context, identifier);
             _buildercontext.RevertCurrent();
-
-            if (context.function_return_type() == null)
-            {
-                var typeRef = AstTypeReference.Create(AstTypeDefinitionIntrinsic.Void);
-                function.SetTypeReference(typeRef);
-                symbolTable.Symbols.Add(typeRef);
-            }
             return any;
         }
 
@@ -338,6 +331,8 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_call(Function_callContext context)
         {
+            _buildercontext.CheckIndent(context, context.indent());
+
             var function = new AstFunctionReference(context);
             var codeBlock = _buildercontext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
@@ -487,8 +482,14 @@ namespace Zsharp.AST
             var symbolsSite = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             var entry = symbolsSite.Symbols.Find(typeRef);
             if (entry != null)
+            {
+                entry.AddNode(typeRef);
                 typeRef.SetSymbol(entry);
-
+            }
+            else
+            {
+                symbolsSite.Symbols.Add(typeRef);
+            }
             return null;
         }
     }

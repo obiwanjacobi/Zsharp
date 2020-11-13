@@ -267,6 +267,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFunction_param_use([NotNull] ZsharpParser.Function_param_useContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.function_call_retval_unused"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_call_retval_unused([NotNull] ZsharpParser.Function_call_retval_unusedContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_def_top"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

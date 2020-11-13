@@ -14,7 +14,7 @@ namespace Zsharp.Semantics
         public override void VisitFunctionReference(AstFunctionReference function)
         {
             if (function.ParentAs<AstCodeBlock>() != null &&
-                function.TypeReference?.TypeDefinition != AstTypeDefinitionIntrinsic.Void)
+                function.TypeReference != null)
             {
                 _errorSite.FunctionReturnValueNotUsed(function);
             }

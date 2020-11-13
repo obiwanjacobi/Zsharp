@@ -38,6 +38,7 @@ namespace Zsharp.Semantics
                 "Double" => AstIdentifierIntrinsic.F64.CanonicalName,
                 "String" => AstIdentifierIntrinsic.Str.CanonicalName,
                 "Boolean" => AstIdentifierIntrinsic.Bool.CanonicalName,
+                "Void" => AstIdentifierIntrinsic.Void.CanonicalName,
                 _ => nativeName,
             };
         }
