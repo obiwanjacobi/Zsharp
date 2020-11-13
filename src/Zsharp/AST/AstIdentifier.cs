@@ -1,4 +1,5 @@
 using Antlr4.Runtime;
+using System;
 using System.Diagnostics;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -7,65 +8,49 @@ namespace Zsharp.AST
     [DebuggerDisplay("{Name}")]
     public class AstIdentifier
     {
-        private readonly Identifier_typeContext? _typeCtx;
-        private readonly Identifier_varContext? _varCtx;
-        private readonly Identifier_paramContext? _paramCtx;
-        private readonly Identifier_funcContext? _funcCtx;
-        private readonly Identifier_fieldContext? _fieldCtx;
-        private readonly Identifier_enumoptionContext? _enumOptCtx;
-
         public AstIdentifier(Identifier_typeContext context)
-        {
-            Context = context;
-            Name = context.GetText();
-            IdentifierType = AstIdentifierType.Type;
-        }
+            : this(context, AstIdentifierType.Type)
+        { }
 
         public AstIdentifier(Identifier_varContext context)
-        {
-            Context = context;
-            Name = context.GetText();
-            IdentifierType = AstIdentifierType.Variable;
-        }
+            : this(context, AstIdentifierType.Variable)
+        { }
 
         public AstIdentifier(Identifier_paramContext context)
-        {
-            Context = context;
-            Context = context;
-            Name = context.GetText();
-            IdentifierType = AstIdentifierType.Parameter;
-        }
+            : this(context, AstIdentifierType.Parameter)
+        { }
 
         public AstIdentifier(Identifier_funcContext context)
-        {
-            Context = context;
-            Name = context.GetText();
-            IdentifierType = AstIdentifierType.Function;
-        }
+            : this(context, AstIdentifierType.Function)
+        { }
 
         public AstIdentifier(Identifier_fieldContext context)
-        {
-            Context = context;
-            Name = context.GetText();
-            IdentifierType = AstIdentifierType.Field;
-        }
+            : this(context, AstIdentifierType.Field)
+        { }
 
         public AstIdentifier(Identifier_enumoptionContext context)
+            : this(context, AstIdentifierType.EnumOption)
+        { }
+
+        protected AstIdentifier(ParserRuleContext context, AstIdentifierType identifierType)
         {
-            Context = context;
+            Context = context ?? throw new ArgumentNullException(nameof(context));
             Name = context.GetText();
-            IdentifierType = AstIdentifierType.EnumOption;
+            CanonicalName = ToCanonical(Name);
+            IdentifierType = identifierType;
         }
 
         protected AstIdentifier(string name, AstIdentifierType identifierType)
         {
             Name = name;
+            CanonicalName = ToCanonical(Name);
             IdentifierType = identifierType;
         }
 
         public ParserRuleContext? Context { get; }
 
         public string Name { get; }
+        public string CanonicalName { get; }
 
         public AstIdentifierType IdentifierType { get; }
 
@@ -74,8 +59,24 @@ namespace Zsharp.AST
             if (that == null)
                 return false;
 
-            return Name == that.Name &&
+            return CanonicalName == that.CanonicalName &&
                 IdentifierType == that.IdentifierType;
+        }
+
+        public bool IsNameMatch(string name)
+        {
+            return IsNameMatch(Name, name);
+        }
+
+        public static bool IsNameMatch(string name1, string name2)
+        {
+            return ToCanonical(name1) == ToCanonical(name2);
+        }
+
+        private static string ToCanonical(string symbolName)
+        {
+            var simplified = symbolName.Replace("_", String.Empty);
+            return simplified[0] + simplified[1..].ToLowerInvariant();
         }
     }
 }
