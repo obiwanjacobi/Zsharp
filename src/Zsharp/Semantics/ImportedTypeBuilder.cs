@@ -82,8 +82,8 @@ namespace Zsharp.Semantics
                     if (method.IsStatic)
                     {
                         // TODO: get_/set_ property methods name handling
-                        _aliases.TryAdd(function.Identifier.Name,
-                            $"{typeDefinition.Name}{function.Identifier.Name}");
+                        _aliases.TryAdd(function.Identifier.CanonicalName,
+                            $"{typeDefinition.Name}{function.Identifier.CanonicalName}");
                     }
                 }
             }

@@ -79,7 +79,7 @@ namespace Zsharp.Semantics
                 Ast.Guard(SymbolTable, "No SymbolTable set.");
 
                 var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
-                    AstIdentifierIntrinsic.Bool.Name, AstSymbolKind.Type);
+                    AstIdentifierIntrinsic.Bool.CanonicalName, AstSymbolKind.Type);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found for Boolean.");
                 AssignType(operand, litBool, typeDef!);
                 return;
@@ -102,7 +102,7 @@ namespace Zsharp.Semantics
                 Ast.Guard(SymbolTable, "No SymbolTable set.");
 
                 var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
-                    AstIdentifierIntrinsic.Str.Name, AstSymbolKind.Type);
+                    AstIdentifierIntrinsic.Str.CanonicalName, AstSymbolKind.Type);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found for String.");
                 AssignType(operand, litString, typeDef!);
                 return;

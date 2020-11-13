@@ -19,7 +19,7 @@ namespace Zsharp.AST
 
         public void AddTypeDefinition(AstTypeDefinitionExternal typeDefinition)
         {
-            var entry = Symbols.AddSymbol(typeDefinition.Identifier.Name, AstSymbolKind.Type, typeDefinition);
+            var entry = Symbols.AddSymbol(typeDefinition.Identifier.CanonicalName, AstSymbolKind.Type, typeDefinition);
             entry.SymbolLocality = AstSymbolLocality.Imported;
         }
 

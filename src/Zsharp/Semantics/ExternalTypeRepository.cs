@@ -26,18 +26,18 @@ namespace Zsharp.Semantics
         {
             return nativeName switch
             {
-                "Byte" => AstIdentifierIntrinsic.U8.Name,
-                "UInt16" => AstIdentifierIntrinsic.U16.Name,
-                "UInt32" => AstIdentifierIntrinsic.U32.Name,
-                "UInt64" => AstIdentifierIntrinsic.U64.Name,
-                "SByte" => AstIdentifierIntrinsic.I8.Name,
-                "Int16" => AstIdentifierIntrinsic.I16.Name,
-                "Int32" => AstIdentifierIntrinsic.I32.Name,
-                "Int64" => AstIdentifierIntrinsic.I64.Name,
-                "Single" => AstIdentifierIntrinsic.F32.Name,
-                "Double" => AstIdentifierIntrinsic.F64.Name,
-                "String" => AstIdentifierIntrinsic.Str.Name,
-                "Boolean" => AstIdentifierIntrinsic.Bool.Name,
+                "Byte" => AstIdentifierIntrinsic.U8.CanonicalName,
+                "UInt16" => AstIdentifierIntrinsic.U16.CanonicalName,
+                "UInt32" => AstIdentifierIntrinsic.U32.CanonicalName,
+                "UInt64" => AstIdentifierIntrinsic.U64.CanonicalName,
+                "SByte" => AstIdentifierIntrinsic.I8.CanonicalName,
+                "Int16" => AstIdentifierIntrinsic.I16.CanonicalName,
+                "Int32" => AstIdentifierIntrinsic.I32.CanonicalName,
+                "Int64" => AstIdentifierIntrinsic.I64.CanonicalName,
+                "Single" => AstIdentifierIntrinsic.F32.CanonicalName,
+                "Double" => AstIdentifierIntrinsic.F64.CanonicalName,
+                "String" => AstIdentifierIntrinsic.Str.CanonicalName,
+                "Boolean" => AstIdentifierIntrinsic.Bool.CanonicalName,
                 _ => nativeName,
             };
         }

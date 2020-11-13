@@ -8,7 +8,8 @@ namespace Zsharp.AST
     {
         public AstDotName(string identifier)
         {
-            _parts = identifier.Split('.');
+            _parts = identifier.Split('.')
+                .Select(ToCanonical).ToArray();
         }
 
         public int Count => _parts.Length;
@@ -44,6 +45,24 @@ namespace Zsharp.AST
         public override string ToString()
         {
             return Join(0, _parts.Length);
+        }
+
+        public static string ToCanonical(string symbolName)
+        {
+            if (String.IsNullOrEmpty(symbolName))
+                return symbolName;
+
+            var simplified = symbolName.Replace("_", String.Empty);
+            var prefix = String.Empty;
+
+            // .NET property getters and setters
+            if (symbolName.StartsWith("_get") || symbolName.StartsWith("_set"))
+            {
+                prefix = simplified.Substring(0, 3);
+                simplified = simplified.Substring(3);
+            }
+
+            return prefix + simplified[0] + simplified[1..].ToLowerInvariant();
         }
 
         private string Join(int offset, int length)

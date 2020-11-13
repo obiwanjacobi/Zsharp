@@ -66,14 +66,14 @@ namespace Zsharp.Emit
         public MethodDefinition AddFunction(AstFunctionDefinition function)
         {
             var methodDef = new MethodDefinition(
-                function.Identifier.Name,
+                function.Identifier.CanonicalName,
                 ToMethodAttibutes(function),
                 _context.ToTypeReference(function.TypeReference));
 
             foreach (var p in function.Parameters)
             {
                 methodDef.Parameters.Add(new ParameterDefinition(
-                    p.Identifier.Name,
+                    p.Identifier.CanonicalName,
                     ToParameterAttributes(p),
                     _context.ToTypeReference(p.TypeReference)
                     ));

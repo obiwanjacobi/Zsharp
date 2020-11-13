@@ -92,7 +92,7 @@ namespace Zsharp.Emit
 
             return Module.Types
                 .SelectMany(t => t.Methods)
-                .Single(m => m.Name == function.Identifier?.Name);
+                .Single(m => m.Name == function.Identifier?.CanonicalName);
         }
 
         internal TypeReference ToTypeReference(AstTypeReference typeReference)
@@ -114,7 +114,7 @@ namespace Zsharp.Emit
             IMetadataScope? metadataScope = null;
 
             var typeRef = new TypeReference("Todo",
-                typeReference.TypeDefinition.Identifier.Name,
+                typeReference.TypeDefinition.Identifier.CanonicalName,
                 Module,
                 metadataScope, true);
 

@@ -175,7 +175,7 @@ namespace Zsharp.AST
             var parent = cbSite as AstFunctionDefinition;
             if (parent?.Identifier != null)
             {
-                scopeName = parent.Identifier.Name;
+                scopeName = parent.Identifier.CanonicalName;
             }
 
             var codeBlock = new AstCodeBlock(scopeName, symbols, context);

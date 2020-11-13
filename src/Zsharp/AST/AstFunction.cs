@@ -30,7 +30,7 @@ namespace Zsharp.AST
             return false;
         }
 
-        public string OverloadKey => String.Join(String.Empty, _parameters.Select(p => p.TypeReference.Identifier.Name));
+        public string OverloadKey => String.Join(String.Empty, _parameters.Select(p => p.TypeReference.Identifier.CanonicalName));
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;

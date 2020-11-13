@@ -70,7 +70,7 @@ namespace Zsharp.AST
             foreach (var param in Parameters)
             {
                 // function parameters are registered as variables
-                var entry = Symbols.AddSymbol(param.Identifier.Name, AstSymbolKind.Variable, param);
+                var entry = Symbols.AddSymbol(param.Identifier.CanonicalName, AstSymbolKind.Variable, param);
                 param.SetSymbol(entry);
             }
         }

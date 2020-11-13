@@ -48,7 +48,7 @@ namespace Zsharp.Emit
 
         public override void VisitVariableDefinition(AstVariableDefinition variable)
         {
-            var name = variable.Identifier.Name;
+            var name = variable.Identifier.CanonicalName;
 
             if (_isInit)
             {
@@ -70,7 +70,7 @@ namespace Zsharp.Emit
         {
             base.VisitAssignment(assign);
 
-            var name = assign.Variable.Identifier.Name;
+            var name = assign.Variable.Identifier.CanonicalName;
 
             if (_isInit)
             {

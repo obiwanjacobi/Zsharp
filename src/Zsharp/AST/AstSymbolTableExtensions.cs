@@ -40,7 +40,7 @@ namespace Zsharp.AST
         private static AstSymbolEntry AddSymbol(AstSymbolTable symbolTable,
             IAstIdentifierSite identifierSite, AstSymbolKind symbolKind, AstNode node)
         {
-            var name = identifierSite.Identifier?.Name
+            var name = identifierSite.Identifier?.CanonicalName
                 ?? throw new ArgumentException("No identifier name.", nameof(identifierSite));
 
             return AddSymbol(symbolTable, name, symbolKind, node);

@@ -186,7 +186,7 @@ namespace Zsharp.Emit
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
-            var name = variable.Identifier.Name;
+            var name = variable.Identifier.CanonicalName;
             var il = _context.InstructionFactory;
 
             if (variable.VariableDefinition != null)

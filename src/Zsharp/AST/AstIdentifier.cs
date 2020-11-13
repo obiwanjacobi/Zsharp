@@ -36,14 +36,14 @@ namespace Zsharp.AST
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
             Name = context.GetText();
-            CanonicalName = ToCanonical(Name);
+            CanonicalName = AstDotName.ToCanonical(Name);
             IdentifierType = identifierType;
         }
 
         protected AstIdentifier(string name, AstIdentifierType identifierType)
         {
             Name = name;
-            CanonicalName = ToCanonical(Name);
+            CanonicalName = AstDotName.ToCanonical(Name);
             IdentifierType = identifierType;
         }
 
@@ -61,22 +61,6 @@ namespace Zsharp.AST
 
             return CanonicalName == that.CanonicalName &&
                 IdentifierType == that.IdentifierType;
-        }
-
-        public bool IsNameMatch(string name)
-        {
-            return IsNameMatch(Name, name);
-        }
-
-        public static bool IsNameMatch(string name1, string name2)
-        {
-            return ToCanonical(name1) == ToCanonical(name2);
-        }
-
-        private static string ToCanonical(string symbolName)
-        {
-            var simplified = symbolName.Replace("_", String.Empty);
-            return simplified[0] + simplified[1..].ToLowerInvariant();
         }
     }
 }

@@ -120,12 +120,12 @@ namespace Zsharp.AST
         }
 
         public AstSymbolEntry? FindEntry(AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
-            => FindEntry(identifier.Name, kind);
+            => FindEntry(identifier.CanonicalName, kind);
 
         public AstSymbolEntry? FindEntry(IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
             identifierSite.ThrowIfIdentifierNotSet();
-            return FindEntry(identifierSite.Identifier!.Name, kind);
+            return FindEntry(identifierSite.Identifier!.CanonicalName, kind);
         }
 
         internal void Delete(AstSymbolEntry symbolEntry)
