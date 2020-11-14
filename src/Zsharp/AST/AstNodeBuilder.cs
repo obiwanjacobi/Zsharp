@@ -1,5 +1,4 @@
 using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstNodeBuilder : ZsharpBaseVisitor<object?>
+    public class AstNodeBuilder : ZsharpBaseVisitor<List<AstNode>>
     {
         private readonly AstBuilderContext _buildercontext;
         private readonly string _namespace;
@@ -24,7 +23,7 @@ namespace Zsharp.AST
 
         public bool HasErrors => _buildercontext.HasErrors;
 
-        public object? VisitChildrenExcept(ParserRuleContext node, ParserRuleContext except)
+        public List<AstNode> VisitChildrenExcept(ParserRuleContext node, ParserRuleContext except)
         {
             var result = DefaultResult;
             for (int i = 0; i < node.children.Count; i++)
@@ -45,17 +44,21 @@ namespace Zsharp.AST
             return result;
         }
 
-        protected override object? AggregateResult(object? aggregate, object? nextResult)
+        protected override List<AstNode> DefaultResult => new List<AstNode>();
+
+        protected override List<AstNode> AggregateResult(List<AstNode> aggregate, List<AstNode> nextResult)
         {
-            if (nextResult == null)
+            if (nextResult.Count == 0)
             {
                 return aggregate;
             }
-            return nextResult;
+            var newAgg = new List<AstNode>(aggregate);
+            newAgg.AddRange(nextResult);
+            return newAgg;
         }
 
         // use as generic error handler
-        protected override bool ShouldVisitNextChild(IRuleNode node, object? currentResult)
+        protected override bool ShouldVisitNextChild(IRuleNode node, List<AstNode> currentResult)
         {
             if (node is ParserRuleContext context &&
                 context.exception != null)
@@ -67,25 +70,24 @@ namespace Zsharp.AST
             return true;
         }
 
-        public override object? VisitFile(FileContext context)
+        public override List<AstNode> VisitFile(FileContext context)
         {
             var file = new AstFile(_namespace, _buildercontext.CompilerContext.IntrinsicSymbols, context);
 
             _buildercontext.SetCurrent(file);
-            base.VisitChildren(context);
+            _ = base.VisitChildren(context);
             _buildercontext.RevertCurrent();
 
-            return file;
+            return file.ToNodeList();
         }
 
-        public override object? VisitStatement_module([NotNull] Statement_moduleContext context)
+        public override List<AstNode> VisitStatement_module(Statement_moduleContext context)
         {
             _buildercontext.CompilerContext.Modules.AddModule(context);
-
             return base.VisitStatement_module(context);
         }
 
-        public override object? VisitStatement_import(Statement_importContext context)
+        public override List<AstNode> VisitStatement_import(Statement_importContext context)
         {
             var dotName = new AstDotName(context.module_name().GetText());
             var alias = context.alias_module()?.GetText();
@@ -97,7 +99,7 @@ namespace Zsharp.AST
             {
                 _buildercontext.CompilerContext.AddError(context,
                         $"Module '{moduleName}' was not found in an external Assembly.");
-                return null;
+                return DefaultResult;
             }
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
@@ -109,7 +111,7 @@ namespace Zsharp.AST
                 {
                     _buildercontext.CompilerContext.AddError(module, context,
                         $"Symbol '{dotName.Symbol}' was not found in Module '{module.Name}'.");
-                    return null;
+                    return DefaultResult;
                 }
 
                 if (entry.HasOverloads)
@@ -124,10 +126,10 @@ namespace Zsharp.AST
                 var entry = symbols.AddSymbol(module.Name, AstSymbolKind.Module, module);
                 entry.SymbolLocality = AstSymbolLocality.Imported;
             }
-            return null;
+            return DefaultResult;
         }
 
-        public override object? VisitStatement_export(Statement_exportContext context)
+        public override List<AstNode> VisitStatement_export(Statement_exportContext context)
         {
             var module = _buildercontext.GetCurrent<AstModulePublic>();
             module.AddExport(context);
@@ -136,10 +138,32 @@ namespace Zsharp.AST
             var entry = symbols.Symbols.AddSymbol(context.identifier_func().GetText(), AstSymbolKind.NotSet, null);
             entry.SymbolLocality = AstSymbolLocality.Exported;
 
-            return null;
+            return DefaultResult;
         }
 
-        public override object? VisitFunction_def(Function_defContext context)
+        public override List<AstNode> VisitCodeblock(CodeblockContext context)
+        {
+            var stSite = _buildercontext.GetCurrent<IAstSymbolTableSite>();
+            var symbols = stSite.Symbols;
+            string scopeName = symbols.Namespace;
+
+            var cbSite = _buildercontext.GetCurrent<IAstCodeBlockSite>();
+            var parent = cbSite as AstFunctionDefinition;
+            if (parent?.Identifier != null)
+            {
+                scopeName = parent.Identifier.CanonicalName;
+            }
+
+            var codeBlock = new AstCodeBlock(scopeName, symbols, context);
+            cbSite.SetCodeBlock(codeBlock);
+
+            _buildercontext.SetCurrent(codeBlock);
+            _ = base.VisitChildren(context);
+            _buildercontext.RevertCurrent();
+            return codeBlock.ToNodeList();
+        }
+
+        public override List<AstNode> VisitFunction_def(Function_defContext context)
         {
             var file = _buildercontext.GetCurrent<AstFile>();
             var function = new AstFunctionDefinitionImpl(context);
@@ -160,176 +184,38 @@ namespace Zsharp.AST
                 entry.SymbolLocality = AstSymbolLocality.Exported;
             }
 
-            var any = VisitChildrenExcept(context, identifier);
+            _ = VisitChildrenExcept(context, identifier);
             _buildercontext.RevertCurrent();
-            return any;
+            return function.ToNodeList();
         }
 
-        public override object? VisitCodeblock(CodeblockContext context)
+        public override List<AstNode> VisitFunction_parameter(Function_parameterContext context)
         {
-            var stSite = _buildercontext.GetCurrent<IAstSymbolTableSite>();
-            var symbols = stSite.Symbols;
-            string scopeName = symbols.Namespace;
-
-            var cbSite = _buildercontext.GetCurrent<IAstCodeBlockSite>();
-            var parent = cbSite as AstFunctionDefinition;
-            if (parent?.Identifier != null)
-            {
-                scopeName = parent.Identifier.CanonicalName;
-            }
-
-            var codeBlock = new AstCodeBlock(scopeName, symbols, context);
-            cbSite.SetCodeBlock(codeBlock);
-
-            _buildercontext.SetCurrent(codeBlock);
-            var any = base.VisitChildren(context);
-            _buildercontext.RevertCurrent();
-            return any;
-        }
-
-        public override object? VisitStatement_if(Statement_ifContext context)
-        {
-            var indent = _buildercontext.CheckIndent(context, context.indent());
-            var codeBlock = _buildercontext.GetCodeBlock(indent);
-
-            var branch = new AstBranchConditional(context);
-            codeBlock.AddItem(branch);
-
-            _buildercontext.SetCurrent(branch);
-            var any = VisitChildren(context);
-            _buildercontext.RevertCurrent();
-            return any;
-        }
-
-        public override object? VisitStatement_else(Statement_elseContext context)
-        {
-            var indent = _buildercontext.CheckIndent(context, context.indent());
-            var branch = _buildercontext.GetCurrent<AstBranchConditional>();
-            Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
-
-            var subBr = new AstBranchConditional(context);
-            branch.AddSubBranch(subBr);
-
-            _buildercontext.SetCurrent(subBr);
-            var any = VisitChildren(context);
-            _buildercontext.RevertCurrent();
-            return any;
-        }
-
-        public override object? VisitStatement_elseif(Statement_elseifContext context)
-        {
-            var indent = _buildercontext.CheckIndent(context, context.indent());
-            var branch = _buildercontext.GetCurrent<AstBranchConditional>();
-            Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
-
-            var subBr = new AstBranchConditional(context);
-            branch.AddSubBranch(subBr);
-
-            _buildercontext.SetCurrent(subBr);
-            var any = VisitChildren(context);
-            _buildercontext.RevertCurrent();
-            return any;
-        }
-
-        public override object? VisitStatement_return(Statement_returnContext context)
-        {
-            var indent = _buildercontext.CheckIndent(context, context.indent());
-            var codeBlock = _buildercontext.GetCodeBlock(indent);
-
-            var branch = new AstBranchExpression(context);
-            codeBlock.AddItem(branch);
-
-            _buildercontext.SetCurrent(branch);
-            var any = base.VisitChildren(context);
-            _buildercontext.RevertCurrent();
-            return any;
-        }
-
-        public override object? VisitStatement_break(Statement_breakContext context)
-        {
-            var indent = _buildercontext.CheckIndent(context, context.indent());
-            var codeBlock = _buildercontext.GetCodeBlock(indent);
-
-            var branch = new AstBranch(context);
-            codeBlock.AddItem(branch);
-
-            return VisitChildren(context);
-        }
-
-        public override object? VisitStatement_continue(Statement_continueContext context)
-        {
-            var indent = _buildercontext.CheckIndent(context, context.indent());
-            var codeBlock = _buildercontext.GetCodeBlock(indent);
-
-            var branch = new AstBranch(context);
-            codeBlock.AddItem(branch);
-
-            return VisitChildren(context);
-        }
-
-        public override object? VisitIdentifier_type(Identifier_typeContext context)
-        {
-            _buildercontext.AddIdentifier(new AstIdentifier(context));
-            return null;
-        }
-
-        public override object? VisitIdentifier_var(Identifier_varContext context)
-        {
-            _buildercontext.AddIdentifier(new AstIdentifier(context));
-            return null;
-        }
-
-        public override object? VisitIdentifier_param(Identifier_paramContext context)
-        {
-            _buildercontext.AddIdentifier(new AstIdentifier(context));
-            return null;
-        }
-
-        public override object? VisitIdentifier_func(Identifier_funcContext context)
-        {
-            _buildercontext.AddIdentifier(new AstIdentifier(context));
-            return null;
-        }
-
-        public override object? VisitIdentifier_field(Identifier_fieldContext context)
-        {
-            _buildercontext.AddIdentifier(new AstIdentifier(context));
-            return null;
-        }
-
-        public override object? VisitIdentifier_enumoption(Identifier_enumoptionContext context)
-        {
-            _buildercontext.AddIdentifier(new AstIdentifier(context));
-            return null;
-        }
-
-        public override object? VisitFunction_parameter(Function_parameterContext context)
-        {
-            var funcParam = new AstFunctionParameterDefinition(context);
+            var parameter = new AstFunctionParameterDefinition(context);
             var function = _buildercontext.GetCurrent<AstFunctionDefinitionImpl>();
-            function.TryAddParameter(funcParam);
+            function.TryAddParameter(parameter);
 
-            _buildercontext.SetCurrent(funcParam);
-            var any = VisitChildren(context);
+            _buildercontext.SetCurrent(parameter);
+            _ = VisitChildren(context);
             _buildercontext.RevertCurrent();
 
-            return any;
+            return parameter.ToNodeList();
         }
 
-        public override object? VisitFunction_parameter_self(Function_parameter_selfContext context)
+        public override List<AstNode> VisitFunction_parameter_self(Function_parameter_selfContext context)
         {
             var function = _buildercontext.GetCurrent<AstFunctionDefinitionImpl>();
-            var funcParam = new AstFunctionParameterDefinition(context);
-            funcParam.SetIdentifier(AstIdentifierIntrinsic.Self);
-            function.TryAddParameter(funcParam);
+            var parameter = new AstFunctionParameterDefinition(context);
+            parameter.SetIdentifier(AstIdentifierIntrinsic.Self);
+            function.TryAddParameter(parameter);
 
-            _buildercontext.SetCurrent(funcParam);
-            var any = VisitChildren(context);
+            _buildercontext.SetCurrent(parameter);
+            _ = VisitChildren(context);
             _buildercontext.RevertCurrent();
-            return any;
+            return parameter.ToNodeList();
         }
 
-        public override object? VisitFunction_call(Function_callContext context)
+        public override List<AstNode> VisitFunction_call(Function_callContext context)
         {
             _buildercontext.CheckIndent(context, context.indent());
 
@@ -340,29 +226,29 @@ namespace Zsharp.AST
             codeBlock!.AddItem(function);
 
             _buildercontext.SetCurrent(function);
-            var any = VisitChildren(context);
+            _ = VisitChildren(context);
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(function);
 
-            return any;
+            return function.ToNodeList();
         }
 
-        public override object? VisitFunction_param_use(Function_param_useContext context)
+        public override List<AstNode> VisitFunction_param_use(Function_param_useContext context)
         {
-            var param = new AstFunctionParameterReference(context);
+            var parameter = new AstFunctionParameterReference(context);
             var function = _buildercontext.GetCurrent<AstFunctionReference>();
-            function.TryAddParameter(param);
+            function.TryAddParameter(parameter);
 
-            _buildercontext.SetCurrent(param);
-            var any = VisitChildren(context);
+            _buildercontext.SetCurrent(parameter);
+            _ = VisitChildren(context);
             _buildercontext.RevertCurrent();
 
-            return any;
+            return parameter.ToNodeList();
         }
 
-        public override object? VisitVariable_def_typed(Variable_def_typedContext context)
+        public override List<AstNode> VisitVariable_def_typed(Variable_def_typedContext context)
         {
             var variable = new AstVariableDefinition(context);
             var codeBlock = _buildercontext.GetCodeBlock();
@@ -371,16 +257,16 @@ namespace Zsharp.AST
             codeBlock!.AddItem(variable);
 
             _buildercontext.SetCurrent(variable);
-            var any = VisitChildren(context);
+            _ = VisitChildren(context);
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(variable);
 
-            return any;
+            return variable.ToNodeList();
         }
 
-        public override object? VisitVariable_def_typed_init(Variable_def_typed_initContext context)
+        public override List<AstNode> VisitVariable_def_typed_init(Variable_def_typed_initContext context)
         {
             var assign = new AstAssignment(context);
             var codeBlock = _buildercontext.GetCodeBlock();
@@ -393,17 +279,17 @@ namespace Zsharp.AST
             assign.SetVariable(variable);
 
             _buildercontext.SetCurrent(variable);
-            var any = VisitChildren(context);
+            _ = VisitChildren(context);
             _buildercontext.RevertCurrent();
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(variable);
 
-            return any;
+            return assign.ToNodeList();
         }
 
-        public override object? VisitVariable_assign_auto(Variable_assign_autoContext context)
+        public override List<AstNode> VisitVariable_assign_auto(Variable_assign_autoContext context)
         {
             var assign = new AstAssignment(context);
             var codeBlock = _buildercontext.GetCodeBlock();
@@ -416,40 +302,153 @@ namespace Zsharp.AST
             assign.SetVariable(variable);
 
             _buildercontext.SetCurrent(variable);
-            var any = VisitChildren(context);
+            _ = VisitChildren(context);
             _buildercontext.RevertCurrent();
             _buildercontext.RevertCurrent();
 
             var symbols = _buildercontext.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(variable);
 
-            return any;
+            return assign.ToNodeList();
         }
 
-        public override object? VisitVariable_def(Variable_defContext context)
+        public override List<AstNode> VisitVariable_def(Variable_defContext context)
         {
             var indent = _buildercontext.CheckIndent(context, context.indent());
             var codeBlock = _buildercontext.GetCodeBlock(indent);
 
             _buildercontext.SetCurrent(codeBlock);
-            var any = VisitChildren(context);
+            var results = VisitChildren(context);
             _buildercontext.RevertCurrent();
-            return any;
+            return results;
         }
 
-        public override object? VisitVariable_assign(Variable_assignContext context)
+        public override List<AstNode> VisitVariable_assign(Variable_assignContext context)
         {
             var indent = _buildercontext.CheckIndent(context, context.indent());
             var codeBlock = _buildercontext.GetCodeBlock(indent);
 
             _buildercontext.SetCurrent(codeBlock);
-            var any = VisitChildren(context);
+            var results = VisitChildren(context);
             _buildercontext.RevertCurrent();
-            return any;
+            return results;
         }
 
+        public override List<AstNode> VisitStatement_if(Statement_ifContext context)
+        {
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
 
-        public override object? VisitExpression_value(Expression_valueContext context)
+            var branch = new AstBranchConditional(context);
+            codeBlock.AddItem(branch);
+
+            _buildercontext.SetCurrent(branch);
+            _ = VisitChildren(context);
+            _buildercontext.RevertCurrent();
+            return branch.ToNodeList();
+        }
+
+        public override List<AstNode> VisitStatement_else(Statement_elseContext context)
+        {
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var branch = _buildercontext.GetCurrent<AstBranchConditional>();
+            Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
+
+            var subBr = new AstBranchConditional(context);
+            branch.AddSubBranch(subBr);
+
+            _buildercontext.SetCurrent(subBr);
+            _ = VisitChildren(context);
+            _buildercontext.RevertCurrent();
+            return subBr.ToNodeList();
+        }
+
+        public override List<AstNode> VisitStatement_elseif(Statement_elseifContext context)
+        {
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var branch = _buildercontext.GetCurrent<AstBranchConditional>();
+            Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
+
+            var subBr = new AstBranchConditional(context);
+            branch.AddSubBranch(subBr);
+
+            _buildercontext.SetCurrent(subBr);
+            _ = VisitChildren(context);
+            _buildercontext.RevertCurrent();
+            return subBr.ToNodeList();
+        }
+
+        public override List<AstNode> VisitStatement_return(Statement_returnContext context)
+        {
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
+
+            var branch = new AstBranchExpression(context);
+            codeBlock.AddItem(branch);
+
+            _buildercontext.SetCurrent(branch);
+            _ = base.VisitChildren(context);
+            _buildercontext.RevertCurrent();
+            return branch.ToNodeList();
+        }
+
+        public override List<AstNode> VisitStatement_break(Statement_breakContext context)
+        {
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
+
+            var branch = new AstBranch(context);
+            codeBlock.AddItem(branch);
+            return branch.ToNodeList();
+        }
+
+        public override List<AstNode> VisitStatement_continue(Statement_continueContext context)
+        {
+            var indent = _buildercontext.CheckIndent(context, context.indent());
+            var codeBlock = _buildercontext.GetCodeBlock(indent);
+
+            var branch = new AstBranch(context);
+            codeBlock.AddItem(branch);
+            return branch.ToNodeList();
+        }
+
+        public override List<AstNode> VisitIdentifier_type(Identifier_typeContext context)
+        {
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
+            return DefaultResult;
+        }
+
+        public override List<AstNode> VisitIdentifier_var(Identifier_varContext context)
+        {
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
+            return DefaultResult;
+        }
+
+        public override List<AstNode> VisitIdentifier_param(Identifier_paramContext context)
+        {
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
+            return DefaultResult;
+        }
+
+        public override List<AstNode> VisitIdentifier_func(Identifier_funcContext context)
+        {
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
+            return DefaultResult;
+        }
+
+        public override List<AstNode> VisitIdentifier_field(Identifier_fieldContext context)
+        {
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
+            return DefaultResult;
+        }
+
+        public override List<AstNode> VisitIdentifier_enumoption(Identifier_enumoptionContext context)
+        {
+            _buildercontext.AddIdentifier(new AstIdentifier(context));
+            return DefaultResult;
+        }
+
+        public override List<AstNode> VisitExpression_value(Expression_valueContext context)
         {
             var builder = new AstExpressionBuilder(_buildercontext);
             var expr = builder.Build(context);
@@ -457,11 +456,12 @@ namespace Zsharp.AST
             {
                 var site = _buildercontext.GetCurrent<IAstExpressionSite>();
                 site.SetExpression(expr);
+                return expr.ToNodeList();
             }
-            return null;
+            return DefaultResult;
         }
 
-        public override object? VisitExpression_logic(Expression_logicContext context)
+        public override List<AstNode> VisitExpression_logic(Expression_logicContext context)
         {
             var builder = new AstExpressionBuilder(_buildercontext);
             var expr = builder.Build(context);
@@ -469,11 +469,12 @@ namespace Zsharp.AST
             {
                 var site = _buildercontext.GetCurrent<IAstExpressionSite>();
                 site.SetExpression(expr);
+                return expr.ToNodeList();
             }
-            return null;
+            return DefaultResult;
         }
 
-        public override object? VisitType_ref_use(Type_ref_useContext context)
+        public override List<AstNode> VisitType_ref_use(Type_ref_useContext context)
         {
             var typeRef = AstTypeReference.Create(context);
             var trSite = _buildercontext.GetCurrent<IAstTypeReferenceSite>();
@@ -490,7 +491,7 @@ namespace Zsharp.AST
             {
                 symbolsSite.Symbols.Add(typeRef);
             }
-            return null;
+            return typeRef.ToNodeList();
         }
     }
 }

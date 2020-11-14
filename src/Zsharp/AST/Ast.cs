@@ -1,10 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Zsharp.AST
 {
     public static class Ast
     {
+        public static List<AstNode> ToNodeList(this AstNode node)
+        {
+            return new List<AstNode>
+            {
+                node
+            };
+        }
+
+        public static List<T> ToList<T>(this T instance)
+        {
+            return new List<T>
+            {
+                instance
+            };
+        }
+
         public static bool SafeSet<T>(ref T? storage, T? value)
             where T : class
         {
