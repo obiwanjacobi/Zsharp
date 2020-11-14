@@ -4,29 +4,32 @@ namespace Zsharp.AST
 {
     public class AstTypeDefinitionIntrinsic : AstTypeDefinition
     {
-        public AstTypeDefinitionIntrinsic(AstIdentifier identifier, Type? systemType)
+        public AstTypeDefinitionIntrinsic(AstIdentifier identifier, bool isUnsigned, Type? systemType)
             : base(identifier)
         {
+            IsUnsigned = isUnsigned;
             SystemType = systemType;
         }
 
         public override bool IsIntrinsic => true;
 
+        public override bool IsUnsigned { get; }
+
         public Type? SystemType { get; private set; }
 
-        public static readonly AstTypeDefinitionIntrinsic U8 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U8, typeof(Byte));
-        public static readonly AstTypeDefinitionIntrinsic U16 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U16, typeof(UInt16));
-        public static readonly AstTypeDefinitionIntrinsic U64 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U64, typeof(UInt64));
-        public static readonly AstTypeDefinitionIntrinsic U32 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U32, typeof(UInt32));
-        public static readonly AstTypeDefinitionIntrinsic I8 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.I8, typeof(SByte));
-        public static readonly AstTypeDefinitionIntrinsic I16 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.I16, typeof(Int16));
-        public static readonly AstTypeDefinitionIntrinsic I64 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.I64, typeof(UInt64));
-        public static readonly AstTypeDefinitionIntrinsic I32 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.I32, typeof(Int32));
-        public static readonly AstTypeDefinitionIntrinsic F64 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.F64, typeof(Double));
-        public static readonly AstTypeDefinitionIntrinsic F32 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.F32, typeof(Single));
-        public static readonly AstTypeDefinitionIntrinsic Str = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Str, typeof(String));
-        public static readonly AstTypeDefinitionIntrinsic Bool = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Bool, typeof(Boolean));
-        public static readonly AstTypeDefinitionIntrinsic Void = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Void, null);
+        public static readonly AstTypeDefinitionIntrinsic U8 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U8, true, typeof(Byte));
+        public static readonly AstTypeDefinitionIntrinsic U16 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U16, true, typeof(UInt16));
+        public static readonly AstTypeDefinitionIntrinsic U64 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U64, true, typeof(UInt64));
+        public static readonly AstTypeDefinitionIntrinsic U32 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.U32, true, typeof(UInt32));
+        public static readonly AstTypeDefinitionIntrinsic I8 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.I8, false, typeof(SByte));
+        public static readonly AstTypeDefinitionIntrinsic I16 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.I16, false, typeof(Int16));
+        public static readonly AstTypeDefinitionIntrinsic I64 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.I64, false, typeof(UInt64));
+        public static readonly AstTypeDefinitionIntrinsic I32 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.I32, false, typeof(Int32));
+        public static readonly AstTypeDefinitionIntrinsic F64 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.F64, false, typeof(Double));
+        public static readonly AstTypeDefinitionIntrinsic F32 = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.F32, false, typeof(Single));
+        public static readonly AstTypeDefinitionIntrinsic Str = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Str, false, typeof(String));
+        public static readonly AstTypeDefinitionIntrinsic Bool = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Bool, false, typeof(Boolean));
+        public static readonly AstTypeDefinitionIntrinsic Void = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Void, false, null);
 
         public static void AddAll(AstSymbolTable symbols)
         {

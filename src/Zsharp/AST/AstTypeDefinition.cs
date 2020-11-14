@@ -19,6 +19,8 @@ namespace Zsharp.AST
 
         public virtual bool IsExternal => false;
 
+        public virtual bool IsUnsigned => false;
+
         public static AstTypeDefinition Create(Type_defContext context)
         {
             var typeDef = new AstTypeDefinition(context)

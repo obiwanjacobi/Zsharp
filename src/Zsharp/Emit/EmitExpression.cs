@@ -46,13 +46,15 @@ namespace Zsharp.Emit
             var errTxt = $"Arithmetic Expression Operator {expression.Operator} is not implemented yet.";
             var il = _context.InstructionFactory;
 
+            bool isUnsigned = expression.TypeReference.TypeDefinition.IsUnsigned;
+
             var instruction = expression.Operator switch
             {
-                AstExpressionOperator.Plus => il.ArithmeticAdd(),
-                AstExpressionOperator.Minus => il.ArithmeticSubtract(),
-                AstExpressionOperator.Divide => il.ArithmeticDivide(),
-                AstExpressionOperator.Multiply => il.ArithmeticMultiple(),
-                AstExpressionOperator.Modulo => il.ArithmeticModulo(),
+                AstExpressionOperator.Plus => il.ArithmeticAdd(isUnsigned),
+                AstExpressionOperator.Minus => il.ArithmeticSubtract(isUnsigned),
+                AstExpressionOperator.Divide => il.ArithmeticDivide(isUnsigned),
+                AstExpressionOperator.Multiply => il.ArithmeticMultiple(isUnsigned),
+                AstExpressionOperator.Modulo => il.ArithmeticModulo(isUnsigned),
                 AstExpressionOperator.Power => throw new NotImplementedException(errTxt),
                 AstExpressionOperator.Negate => il.ArithmeticNegate(),
                 _ => throw new InvalidOperationException(

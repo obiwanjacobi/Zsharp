@@ -14,11 +14,16 @@ namespace Zsharp.Emit
             _iLProcessor = processor;
         }
 
-        public Instruction ArithmeticAdd() => _iLProcessor.Create(OpCodes.Add);
-        public Instruction ArithmeticSubtract() => _iLProcessor.Create(OpCodes.Sub);
-        public Instruction ArithmeticDivide() => _iLProcessor.Create(OpCodes.Div);
-        public Instruction ArithmeticModulo() => _iLProcessor.Create(OpCodes.Rem);
-        public Instruction ArithmeticMultiple() => _iLProcessor.Create(OpCodes.Mul);
+        public Instruction ArithmeticAdd(bool isUnsigned)
+            => _iLProcessor.Create(isUnsigned ? OpCodes.Add_Ovf : OpCodes.Add_Ovf_Un);
+        public Instruction ArithmeticSubtract(bool isUnsigned)
+            => _iLProcessor.Create(isUnsigned ? OpCodes.Sub_Ovf : OpCodes.Sub_Ovf_Un);
+        public Instruction ArithmeticDivide(bool isUnsigned)
+            => _iLProcessor.Create(isUnsigned ? OpCodes.Div : OpCodes.Div_Un);
+        public Instruction ArithmeticModulo(bool isUnsigned)
+            => _iLProcessor.Create(isUnsigned ? OpCodes.Rem : OpCodes.Rem_Un);
+        public Instruction ArithmeticMultiple(bool isUnsigned)
+            => _iLProcessor.Create(isUnsigned ? OpCodes.Mul_Ovf : OpCodes.Mul_Ovf_Un);
         public Instruction ArithmeticNegate() => _iLProcessor.Create(OpCodes.Neg);
 
         public Instruction CompareEqual() => _iLProcessor.Create(OpCodes.Ceq);
