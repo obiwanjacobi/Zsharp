@@ -30,6 +30,12 @@ namespace Zsharp.AST
             return false;
         }
 
+        public void AddParameter(ParamT param)
+        {
+            if (!TryAddParameter(param))
+                throw new InvalidOperationException("Parameter was already set or null.");
+        }
+
         public string OverloadKey => String.Join(String.Empty, _parameters.Select(p => p.TypeReference.Identifier.CanonicalName));
 
         private AstIdentifier? _identifier;

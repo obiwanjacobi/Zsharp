@@ -35,7 +35,7 @@ namespace Zsharp.AST
 
             if (indent % Indent > 0)
             {
-                CompilerContext.AddError(context, AstMessage.IndentationInvalid);
+                CompilerContext.InvalidIndentation(context);
                 // guess where it should go
                 return (UInt32)Math.Round((double)indent / Indent);
             }

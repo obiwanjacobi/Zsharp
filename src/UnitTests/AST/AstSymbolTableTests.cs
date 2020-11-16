@@ -59,8 +59,8 @@ namespace UnitTests.AST
             fn.SymbolLocality.Should().Be(AstSymbolLocality.Exported);
 
             // the export entry is removed
-            fn = symbols.FindEntry("fn", AstSymbolKind.NotSet);
-            fn.SymbolKind.Should().NotBe(AstSymbolKind.NotSet);
+            fn = symbols.FindEntry("fn", AstSymbolKind.Unknown);
+            fn.SymbolKind.Should().NotBe(AstSymbolKind.Unknown);
         }
 
         [TestMethod]

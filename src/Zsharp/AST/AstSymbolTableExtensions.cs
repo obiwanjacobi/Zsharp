@@ -29,7 +29,7 @@ namespace Zsharp.AST
                 AstNodeType.Type => AstSymbolKind.Type,
                 AstNodeType.Module => AstSymbolKind.Module,
                 AstNodeType.Variable => AstSymbolKind.Variable,
-                _ => AstSymbolKind.NotSet
+                _ => AstSymbolKind.Unknown
             };
         }
 

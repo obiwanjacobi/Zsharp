@@ -1,27 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Zsharp.AST
 {
     public static class Ast
     {
-        public static List<AstNode> ToNodeList(this AstNode node)
-        {
-            return new List<AstNode>
-            {
-                node
-            };
-        }
-
-        public static List<T> ToList<T>(this T instance)
-        {
-            return new List<T>
-            {
-                instance
-            };
-        }
-
         public static bool SafeSet<T>(ref T? storage, T? value)
             where T : class
         {
@@ -54,7 +37,7 @@ namespace Zsharp.AST
                 throw new ArgumentNullException(typeof(T).Name,
                     $"Object not of the expected type ({typeof(T).Name}) because it was null.");
             if (!(instance is T))
-                throw new ArgumentException($"Object not of the expected type: {typeof(T).Name}");
+                throw new ArgumentException($"Object of type '{instance.GetType().Name}' is not of the expected type: {typeof(T).Name}");
         }
 
         [Conditional("DEBUG")]

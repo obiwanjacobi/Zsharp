@@ -87,7 +87,16 @@ namespace Zsharp
             public void SyntaxError(TextWriter output, IRecognizer recognizer,
                 IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
             {
-                var err = _context.AddError((ParserRuleContext)e.Context, $"Syntax Error: {msg}");
+                AstMessage err;
+                if (e != null)
+                {
+                    err = _context.AddError((ParserRuleContext)e.Context, $"Syntax Error: {msg}");
+                }
+                else
+                {
+                    err = _context.AddError(line, charPositionInLine + 1, $"Syntax Error near '{offendingSymbol.Text}' : {msg}");
+                }
+
                 err.Source = recognizer.InputStream.SourceName;
             }
         }

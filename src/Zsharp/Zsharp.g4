@@ -32,7 +32,7 @@ definition_top: function_def_export | function_def | enum_def | struct_def
 definition: function_def | variable_def;
 
 // expressions
-expression_value: number | string | function_call | variable_ref  | expression_bool
+expression_value: number | string | function_call| type_conv | variable_ref  | expression_bool
     | expression_arithmetic | expression_logic;
 comptime_expression_value: number | string | expression_bool;
 
@@ -117,6 +117,18 @@ type_Ptr: PTR template_param_list_use_type;
 type_Opt: OPT template_param_list_use_type;
 type_Err: ERR template_param_list_use_type;
 type_Imm: IMM template_param_list_use_type;
+
+// type conversion
+type_conv: type_conv_U8 | type_conv_U16 | type_conv_U32 | type_conv_U64
+    | type_conv_I8 | type_conv_I16 | type_conv_I32 | type_conv_I64;
+type_conv_U8: U8 PARENopen function_param_use PARENclose;
+type_conv_U16: U16 PARENopen function_param_use PARENclose;
+type_conv_U32: U32 PARENopen function_param_use PARENclose;
+type_conv_U64: U64 PARENopen function_param_use PARENclose;
+type_conv_I8: I8 PARENopen function_param_use PARENclose;
+type_conv_I16: I16 PARENopen function_param_use PARENclose;
+type_conv_I32: I32 PARENopen function_param_use PARENclose;
+type_conv_I64: I64 PARENopen function_param_use PARENclose;
 
 // templates
 template_param_list_use: SMALL_ANGLEopen template_param_use (COMMA SP template_param_use)* GREAT_ANGLEclose;

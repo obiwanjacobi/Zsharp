@@ -27,7 +27,7 @@ namespace Zsharp.AST
         {
             if (!String.IsNullOrEmpty(symbol))
             {
-                var entry = Symbols.FindEntry(symbol, AstSymbolKind.NotSet);
+                var entry = Symbols.FindEntry(symbol, AstSymbolKind.Unknown);
                 entry.AddAlias(alias);
             }
             else

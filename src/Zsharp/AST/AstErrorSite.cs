@@ -12,6 +12,14 @@ namespace Zsharp.AST
 
         public bool HasErrors => Errors.Any();
 
+        public AstMessage AddError(int line, int column, string text)
+        {
+            var error = new AstMessage(AstMessageType.Error, line, column)
+            {
+                Text = text
+            };
+            return AddMessage(error);
+        }
         public AstMessage AddError(ParserRuleContext context, string text)
             => AddError(text, context);
 

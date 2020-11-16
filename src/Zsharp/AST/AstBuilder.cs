@@ -48,7 +48,7 @@ namespace Zsharp.AST
         {
             var builder = new AstNodeBuilder(_context, moduleName);
             var file = builder.VisitFile(fileCtx);
-            return (AstFile)file!.Single();
+            return (AstFile)file!;
         }
 
         private static Statement_moduleContext? ToStatementModule(FileContext fileCtx)

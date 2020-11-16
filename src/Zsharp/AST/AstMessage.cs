@@ -11,13 +11,8 @@ namespace Zsharp.AST
         Error
     }
 
-    public class AstMessage : IEquatable<AstMessage>
+    public sealed class AstMessage : IEquatable<AstMessage>
     {
-        public const string EmptyCodeBlock = "Empty Code Block (indicates a parse error).";
-        public const string IndentationMismatch = "Number of Indentations is mismatched.";
-        public const string IndentationInvalid = "Number of Indentation characters is invalid.";
-        public const string SyntaxError = "The Syntax is invalid.";
-
         public AstMessage(AstMessageType messageType, ParserRuleContext context, AstNode? node = null)
         {
             MessageType = messageType;
@@ -27,9 +22,17 @@ namespace Zsharp.AST
             Source = String.Empty;
         }
 
+        public AstMessage(AstMessageType messageType, int line, int column)
+        {
+            MessageType = messageType;
+            _location = (line, column);
+            Text = String.Empty;
+            Source = String.Empty;
+        }
+
         public AstMessageType MessageType { get; }
 
-        public ParserRuleContext Context { get; }
+        public ParserRuleContext? Context { get; }
 
         public AstNode? Node { get; }
 
@@ -37,9 +40,10 @@ namespace Zsharp.AST
 
         public string Source { get; set; }
 
-        public (int Line, int Column) Location => (Context.Start.Line, Context.Start.Column + 1);
+        private (int Line, int Column)? _location;
+        public (int Line, int Column) Location => _location ?? (Context!.Start.Line, Context.Start.Column + 1);
 
-        public Exception? Error => Context.exception;
+        public Exception? Error => Context?.exception;
 
         public bool Equals(AstMessage? other)
         {

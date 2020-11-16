@@ -141,7 +141,7 @@ namespace Zsharp.AST
             {
                 entry = _table[key];
             }
-            else if (kind != AstSymbolKind.NotSet)
+            else if (kind != AstSymbolKind.Unknown)
             {
                 // check aliases
                 entry = _table.Values

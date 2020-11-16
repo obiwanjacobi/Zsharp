@@ -184,10 +184,15 @@ namespace Zsharp.Semantics
         {
             VisitChildren(function);
 
-            if (function.TypeReference == null &&
-                function.FunctionDefinition?.TypeReference != null)
+            if (function.TypeReference == null)
             {
-                function.SetTypeReference(new AstTypeReference(function.FunctionDefinition.TypeReference));
+                if (function.FunctionDefinition == null)
+                {
+                    _ = function.TryResolve();
+                }
+
+                if (function.FunctionDefinition?.TypeReference != null)
+                    function.SetTypeReference(new AstTypeReference(function.FunctionDefinition.TypeReference));
             }
         }
 

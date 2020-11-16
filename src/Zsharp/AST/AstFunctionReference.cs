@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Antlr4.Runtime;
+using System.Linq;
 using System.Text;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -6,10 +7,10 @@ namespace Zsharp.AST
 {
     public class AstFunctionReference : AstFunction<AstFunctionParameterReference>
     {
-        public AstFunctionReference(Function_callContext context)
+        public AstFunctionReference(ParserRuleContext context)
         {
             Context = context;
-            EnforceReturnValueUse = context.Payload is not Function_call_retval_unusedContext;
+            EnforceReturnValueUse = context.Parent is not Function_call_retval_unusedContext;
         }
 
         public bool EnforceReturnValueUse { get; }
@@ -45,7 +46,7 @@ namespace Zsharp.AST
                     txt.Append(", ");
 
                 var p = Parameters.ElementAt(i);
-                txt.Append(p.TypeReference.Identifier.Name);
+                txt.Append(p.Expression?.TypeReference?.Identifier?.Name);
             }
             txt.Append(")");
 

@@ -4,46 +4,41 @@ namespace Zsharp.AST
 {
     public class AstExpressionOperand : AstNode, IAstTypeReferenceSite
     {
+        public AstExpressionOperand(AstNode node)
+            : base(AstNodeType.Operand)
+        {
+            Ast.Guard(node, "Expression Operand created with null.");
+
+            Expression = node as AstExpression;
+            LiteralBoolean = node as AstLiteralBoolean;
+            LiteralNumeric = node as AstLiteralNumeric;
+            LiteralString = node as AstLiteralString;
+            VariableReference = node as AstVariableReference;
+            FunctionReference = node as AstFunctionReference;
+
+            if (Expression == null &&
+                LiteralBoolean == null &&
+                LiteralNumeric == null &&
+                LiteralString == null &&
+                VariableReference == null &&
+                FunctionReference == null)
+            {
+                throw new ArgumentException(
+                    $"Node type {node.GetType().Name} is not an expression operand.");
+            }
+
+            node.SetParent(this);
+
+            if (node is IAstTypeReferenceSite typeRefSite &&
+                typeRefSite.TypeReference != null)
+                SetTypeReference(new AstTypeReference(typeRefSite.TypeReference));
+        }
+
         public AstExpressionOperand(AstExpression expr)
             : base(AstNodeType.Operand)
         {
             Expression = expr;
             expr.SetParent(this);
-        }
-
-        public AstExpressionOperand(AstLiteralBoolean litBool)
-            : base(AstNodeType.Operand)
-        {
-            LiteralBoolean = litBool;
-            litBool.SetParent(this);
-        }
-
-        public AstExpressionOperand(AstLiteralNumeric num)
-            : base(AstNodeType.Operand)
-        {
-            LiteralNumeric = num;
-            num.SetParent(this);
-        }
-
-        public AstExpressionOperand(AstLiteralString litStr)
-            : base(AstNodeType.Operand)
-        {
-            LiteralString = litStr;
-            litStr.SetParent(this);
-        }
-
-        public AstExpressionOperand(AstVariableReference variable)
-            : base(AstNodeType.Operand)
-        {
-            VariableReference = variable;
-            variable.SetParent(this);
-        }
-
-        public AstExpressionOperand(AstFunctionReference function)
-            : base(AstNodeType.Operand)
-        {
-            FunctionReference = function;
-            function.SetParent(this);
         }
 
         public AstExpression? Expression { get; }

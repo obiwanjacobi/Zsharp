@@ -97,5 +97,22 @@ namespace UnitTests.Semantics
             fn2.Symbol.References.Should().HaveCount(1);
             fn2.Symbol.FindOverloadDefinition(fn2Ref).Should().Be(fn2);
         }
+
+        [TestMethod]
+        public void ResolveConversionFunction()
+        {
+            const string code =
+                "fn1: (p: U8): U16" + Tokens.NewLine +
+                Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
+                ;
+
+            var file = CompileFile(code);
+
+            var fn1 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var br = fn1.CodeBlock.ItemAt<AstBranchExpression>(0);
+            var convRef = br.Expression.RHS.FunctionReference;
+
+            convRef.FunctionDefinition.Should().NotBeNull();
+        }
     }
 }

@@ -82,10 +82,7 @@ namespace Zsharp.AST
                 Ast.Guard(Definition == null, "Definition is already set.");
                 _definitions.Add(node);
             }
-            else if (
-                (SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinitionImpl) ||
-                (SymbolKind == AstSymbolKind.Function && node is AstFunctionExternal)
-                )
+            else if (SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinition)
             {
                 // TODO: check overloadKey
                 _definitions.Add(node);

@@ -1,3 +1,2 @@
-fn: ()
-    if true
-        return
+fn: (p: U8)
+    return fn(p + 42)

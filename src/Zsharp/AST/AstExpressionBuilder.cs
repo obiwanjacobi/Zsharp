@@ -1,30 +1,36 @@
 using Antlr4.Runtime;
 using System.Collections.Generic;
-using Zsharp.Parser;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public partial class AstExpressionBuilder : ZsharpBaseVisitor<object?>
+    public partial class AstExpressionBuilder : AstNodeBuilder
     {
         private readonly Stack<AstExpressionOperand> _values = new Stack<AstExpressionOperand>();
         private readonly Stack<AstExpression> _operators = new Stack<AstExpression>();
-        private readonly AstBuilderContext _builderContext;
 
-        public AstExpressionBuilder(AstBuilderContext context)
+        public AstExpressionBuilder(AstBuilderContext context, string ns)
+            : base(context, ns)
+        { }
+
+        public AstExpression? Build(Expression_valueContext context)
         {
-            _builderContext = context;
+            var operand = VisitChildren(context);
+
+            if (operand != null)
+            {
+                _values.Push(new AstExpressionOperand((AstNode)operand));
+
+                var expr = new AstExpression(context);
+                _operators.Push(expr);
+            }
+
+            return BuildExpression(0);
         }
 
-        public AstExpression? Build(Expression_valueContext expressionCtx)
+        public AstExpression? Build(Expression_logicContext context)
         {
-            var val = VisitExpression_value(expressionCtx);
-            return Cast(val);
-        }
-
-        public AstExpression? Build(Expression_logicContext expressionCtx)
-        {
-            var val = VisitExpression_logic(expressionCtx);
+            var val = VisitExpression_logic(context);
             return Cast(val);
         }
 
@@ -175,22 +181,6 @@ namespace Zsharp.AST
             return nextResult;
         }
 
-        public override object? VisitExpression_value(Expression_valueContext context)
-        {
-            var operand = VisitChildren(context);
-
-            if (operand != null)
-            {
-                Ast.Guard<AstExpressionOperand>(operand);
-                _values.Push((AstExpressionOperand)operand!);
-
-                var expr = new AstExpression(context);
-                _operators.Push(expr);
-            }
-
-            return null;
-        }
-
         public override object? VisitExpression_arithmetic(Expression_arithmeticContext context)
             => ProcessExpression(new ArithmeticContextWrapper(context));
 
@@ -200,43 +190,81 @@ namespace Zsharp.AST
         public override object? VisitExpression_comparison(Expression_comparisonContext context)
             => ProcessExpression(new ComparisonContextWrapper(context));
 
+        public override object? VisitArithmetic_operand(Arithmetic_operandContext context)
+        {
+            var node = (AstNode?)base.VisitChildren(context);
+            if (node != null)
+                return new AstExpressionOperand(node);
+            return null;
+        }
+
+        public override object? VisitLogic_operand(Logic_operandContext context)
+        {
+            var node = (AstNode?)base.VisitChildren(context);
+            if (node != null)
+                return new AstExpressionOperand(node);
+            return null;
+        }
+
+        public override object? VisitComparison_operand(Comparison_operandContext context)
+        {
+            var node = (AstNode?)base.VisitChildren(context);
+            if (node != null)
+                return new AstExpressionOperand(node);
+            return null;
+        }
+
         public override object? VisitFunction_call(Function_callContext context)
         {
             var function = new AstFunctionReference(context);
 
-            _builderContext.SetCurrent(function);
-            VisitChildren(context);
-            _builderContext.RevertCurrent();
+            BuilderContext.SetCurrent(function);
+            _ = VisitChildren(context);
+            BuilderContext.RevertCurrent();
 
-            var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(function);
 
-            return new AstExpressionOperand(function);
+            return (function);
+        }
+
+        public override object? VisitType_conv(Type_convContext context)
+        {
+            var builder = new AstTypeConversionBuilder(BuilderContext);
+            var function = (AstFunctionReference)builder.VisitType_conv(context);
+
+            BuilderContext.SetCurrent(function);
+            _ = VisitChildren(context);
+            BuilderContext.RevertCurrent();
+
+            var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
+            symbols.Symbols.Add(function);
+
+            return function;
         }
 
         public override object? VisitVariable_ref(Variable_refContext context)
         {
             var varRef = new AstVariableReference(context);
 
-            _builderContext.SetCurrent(varRef);
+            BuilderContext.SetCurrent(varRef);
             VisitChildren(context);
-            _builderContext.RevertCurrent();
+            BuilderContext.RevertCurrent();
 
-            var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(varRef);
 
-            return new AstExpressionOperand(varRef);
+            return varRef;
         }
 
         public override object? VisitLiteral_bool(Literal_boolContext context)
-            => new AstExpressionOperand(new AstLiteralBoolean(context));
+            => new AstLiteralBoolean(context);
 
         public override object? VisitNumber(NumberContext context)
-            => new AstExpressionOperand(AstLiteralNumeric.Create(context));
+            => AstLiteralNumeric.Create(context);
 
         public override object? VisitString(StringContext context)
-            => new AstExpressionOperand(new AstLiteralString(context));
-
+            => new AstLiteralString(context);
 
         public override object? VisitOperator_arithmetic(Operator_arithmeticContext context)
         {
@@ -319,30 +347,6 @@ namespace Zsharp.AST
             if (context.BIT_NOT() != null)
                 return AstExpressionOperator.BitNegate;
             return AstExpressionOperator.None;
-        }
-
-        public override object? VisitIdentifier_type(Identifier_typeContext context)
-        {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
-            return null;
-        }
-
-        public override object? VisitIdentifier_var(Identifier_varContext context)
-        {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
-            return null;
-        }
-
-        public override object? VisitIdentifier_param(Identifier_paramContext context)
-        {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
-            return null;
-        }
-
-        public override object? VisitIdentifier_func(Identifier_funcContext context)
-        {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
-            return null;
         }
     }
 }
