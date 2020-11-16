@@ -29,6 +29,19 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void SyntaxError_Spaces()
+        {
+            const string code =
+                "v=42" + Tokens.NewLine
+                ;
+
+            var compiler = Compile(code);
+            var error = compiler.Context.Errors.Single();
+            error.Context.Should().NotBeNull();
+            error.Source.Should().NotBeNullOrEmpty();
+        }
+
+        [TestMethod]
         public void SyntaxError()
         {
             const string code =
