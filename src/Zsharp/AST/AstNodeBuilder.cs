@@ -218,19 +218,22 @@ namespace Zsharp.AST
         {
             _builderContext.CheckIndent(context, context.indent());
 
-            var function = new AstFunctionReference(context);
+            var function = CreateFunctionReference(context);
             var codeBlock = _builderContext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
-
             codeBlock!.AddItem(function);
+            return function;
+        }
 
+        protected AstFunctionReference CreateFunctionReference(Function_callContext context)
+        {
+            var function = new AstFunctionReference(context);
             _builderContext.SetCurrent(function);
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(function);
-
             return function;
         }
 
@@ -245,25 +248,6 @@ namespace Zsharp.AST
             _builderContext.RevertCurrent();
 
             return parameter;
-        }
-
-        public override object? VisitType_conv(Type_convContext context)
-        {
-            var builder = new AstTypeConversionBuilder(_builderContext);
-            var function = (AstFunctionReference)builder.VisitType_conv(context);
-
-            var codeBlock = _builderContext.GetCodeBlock();
-            Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
-            codeBlock!.AddItem(function);
-
-            _builderContext.SetCurrent(function);
-            _ = VisitChildren(context);
-            _builderContext.RevertCurrent();
-
-            var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(function);
-
-            return function;
         }
 
         public override object? VisitVariable_def_typed(Variable_def_typedContext context)
@@ -310,10 +294,11 @@ namespace Zsharp.AST
         public override object? VisitVariable_assign_auto(Variable_assign_autoContext context)
         {
             var assign = new AstAssignment(context);
+
             var codeBlock = _builderContext.GetCodeBlock();
             Ast.Guard(codeBlock, "BuilderContext did not have a CodeBlock.");
-
             codeBlock!.AddItem(assign);
+
             _builderContext.SetCurrent(assign);
 
             var variable = new AstVariableReference(context);
@@ -322,7 +307,7 @@ namespace Zsharp.AST
             _builderContext.SetCurrent(variable);
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
-            _builderContext.RevertCurrent();
+            _builderContext.RevertCurrent();    // assign
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(variable);

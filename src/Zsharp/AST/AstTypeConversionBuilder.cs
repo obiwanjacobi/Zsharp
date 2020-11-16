@@ -5,13 +5,6 @@ namespace Zsharp.AST
 {
     public class AstTypeConversionBuilder : ZsharpBaseVisitor<AstNode>
     {
-        private readonly AstBuilderContext _buildercontext;
-
-        public AstTypeConversionBuilder(AstBuilderContext buildercontext)
-        {
-            _buildercontext = buildercontext;
-        }
-
         public override AstNode VisitType_conv_U16(Type_conv_U16Context context)
         {
             var function = new AstFunctionReference(context);

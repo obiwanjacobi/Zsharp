@@ -99,7 +99,7 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
-        public void ResolveConversionFunction()
+        public void ResolveConversionFunction_Expression()
         {
             const string code =
                 "fn1: (p: U8): U16" + Tokens.NewLine +
@@ -113,6 +113,20 @@ namespace UnitTests.Semantics
             var convRef = br.Expression.RHS.FunctionReference;
 
             convRef.FunctionDefinition.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void ResolveConversionFunction_TopVariableAssign()
+        {
+            const string code =
+                "x = U16(42)" + Tokens.NewLine
+                ;
+
+            var file = CompileFile(code);
+
+            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+
+            assign.Expression.TypeReference.Should().NotBeNull();
         }
     }
 }
