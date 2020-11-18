@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Zsharp.Emit
 {
-    public class InstructionFactory
+    public partial class InstructionFactory
     {
         private readonly ILProcessor _iLProcessor;
 
@@ -84,6 +84,13 @@ namespace Zsharp.Emit
                 return _iLProcessor.Create(OpCodes.Ldc_I4, (Int32)constant);
             else
                 return _iLProcessor.Create(OpCodes.Ldc_I8, constant);
+        }
+
+        public Instruction Convert(IntrinsicType target, IntrinsicType source)
+        {
+            var unsigned = (source >= IntrinsicType.U8 && source <= IntrinsicType.U64);
+            var table = unsigned ? _unsignedConversions : _signedConversions;
+            return _iLProcessor.Create(table[(int)target]);
         }
 
         public Instruction LoadVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Ldloc, varDef);

@@ -176,11 +176,11 @@ namespace Zsharp.AST
             Ast.Guard(function.Identifier, "Function Identifier is not set.");
 
             var symbolTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbolTable.Symbols.Add(function);
+            function.CreateSymbols(symbolTable.Symbols);
 
             if (context.Parent is Function_def_exportContext)
             {
-                entry.SymbolLocality = AstSymbolLocality.Exported;
+                function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
             }
 
             _ = VisitChildrenExcept(context, identifier);
@@ -233,7 +233,7 @@ namespace Zsharp.AST
             _builderContext.RevertCurrent();
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(function);
+            function.CreateSymbols(symbols.Symbols);
             return function;
         }
 

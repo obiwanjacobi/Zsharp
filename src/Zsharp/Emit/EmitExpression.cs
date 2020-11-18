@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Zsharp.AST;
 
 namespace Zsharp.Emit
@@ -218,9 +219,23 @@ namespace Zsharp.Emit
         {
             VisitChildren(function);
 
-            var method = _context.FindFunction(function.FunctionDefinition);
-            var call = _context.InstructionFactory.Call(method);
-            _context.CodeBuilder.CodeBlock.Add(call);
+            var functionDef = function.FunctionDefinition;
+            if (functionDef.IsIntrinsic)
+            {
+                var target = ((AstTypeDefinitionIntrinsic)
+                    functionDef.TypeReference.TypeDefinition).ToIntrinsicType();
+                var source = ((AstTypeDefinitionIntrinsic)
+                    functionDef.Parameters.First().TypeReference.TypeDefinition).ToIntrinsicType();
+
+                var conv = _context.InstructionFactory.Convert(target, source);
+                _context.CodeBuilder.CodeBlock.Add(conv);
+            }
+            else
+            {
+                var method = _context.FindFunction(functionDef);
+                var call = _context.InstructionFactory.Call(method);
+                _context.CodeBuilder.CodeBlock.Add(call);
+            }
         }
     }
 }

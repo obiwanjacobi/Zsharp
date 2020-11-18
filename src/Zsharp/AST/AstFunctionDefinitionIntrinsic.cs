@@ -24,6 +24,8 @@
             SetTypeReference(toReturn);
         }
 
+        public override bool IsIntrinsic => true;
+
         public override void Accept(AstVisitor visitor)
         {
             // no-op
@@ -40,7 +42,9 @@
         }
 
         private static void AddIntrinsicSymbol(AstSymbolTable symbols, AstFunctionDefinitionIntrinsic function)
-            => symbols.AddSymbol(function.Identifier!.CanonicalName, AstSymbolKind.Function, function);
+        {
+            function.CreateSymbols(symbols);
+        }
 
         private void SetParameter(AstTypeDefinitionIntrinsic type)
         {

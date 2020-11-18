@@ -17,6 +17,8 @@ namespace Zsharp.AST
 
         public ParserRuleContext? Context { get; protected set; }
 
+        public virtual bool IsIntrinsic => false;
+
         public IEnumerable<ParamT> Parameters => _parameters;
 
         public bool TryAddParameter(ParamT param)
@@ -83,6 +85,27 @@ namespace Zsharp.AST
                 return true;
             }
             return false;
+        }
+
+        public void CreateSymbols(AstSymbolTable symbols)
+        {
+            if (TypeReference != null &&
+                TypeReference.Symbol == null)
+            {
+                symbols.Add(TypeReference);
+            }
+            foreach (var parameter in Parameters)
+            {
+                if (parameter.TypeReference != null &&
+                    parameter.TypeReference.Symbol == null)
+                {
+                    symbols.Add(parameter.TypeReference);
+                }
+            }
+            if (Symbol == null)
+            {
+                symbols.Add(this);
+            }
         }
 
         public override void VisitChildren(AstVisitor visitor)
