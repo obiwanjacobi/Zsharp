@@ -9,19 +9,24 @@ namespace Zsharp.AST
         public AstFunctionParameterDefinition(Function_parameterContext context)
         {
             Context = context;
+            IsSelf = false;
         }
 
         public AstFunctionParameterDefinition(Function_parameter_selfContext context)
         {
             Context = context;
+            IsSelf = true;
         }
 
         public AstFunctionParameterDefinition(AstIdentifier identifier)
         {
             SetIdentifier(identifier);
+            IsSelf = identifier.IsEqual(AstIdentifierIntrinsic.Self);
         }
 
         public ParserRuleContext? Context { get; }
+
+        public bool IsSelf { get; }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitFunctionParameterDefinition(this);
 

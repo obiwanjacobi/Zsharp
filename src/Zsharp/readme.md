@@ -7,6 +7,6 @@
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16).
 - Remove parent from TypeReference and share instances (instead of copy).
 - Emit integer type sizes (un)signed: (U/I8-U/I64)
-- Add Type Conversion (Type names as function names)
+- Add (custom) Type Conversion (Type names as function names)
 - Add Structs, Enums, Custom Data Types
 - implement discard as variable: `_ = fn()`

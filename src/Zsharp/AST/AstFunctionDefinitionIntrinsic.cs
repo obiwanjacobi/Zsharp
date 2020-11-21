@@ -2,8 +2,6 @@
 {
     public class AstFunctionDefinitionIntrinsic : AstFunctionDefinition
     {
-        public static readonly AstIdentifierIntrinsic SourceParameterIdentifier = new AstIdentifierIntrinsic("source", AstIdentifierType.Parameter);
-
         public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic fromParameter, AstTypeDefinitionIntrinsic toReturn)
         {
             SetIdentifier(typeIdentifier);
@@ -48,7 +46,7 @@
 
         private void SetParameter(AstTypeDefinitionIntrinsic type)
         {
-            var parameter = new AstFunctionParameterDefinition(SourceParameterIdentifier);
+            var parameter = new AstFunctionParameterDefinition(AstIdentifierIntrinsic.Self);
             parameter.SetTypeReference(AstTypeReference.Create(type));
             AddParameter(parameter);
         }
