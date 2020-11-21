@@ -1,15 +1,25 @@
 # Type Conversion
 
+In general converting to a type is done by using the target type name to convert to as a function name.
+
+This is very similar to [Type Constructors](types.md$Type-Constructors), which are also functions with the same name as the Type to be created. Conversion functions are seen as a special type of constructor (or factory) function. One thing that is special about them is that the first parameter is a `self` parameter of the source Type to convert from.
+
+```csharp
+TargetType: (self: SourceType): TargetType
+TargetType: (self: SourceType, bits: Range): TargetType
+TargetType: (self: SourceType, other: X): TargetType
+```
+
 ## Built-in Types
 
-The allowed conversions are all explicitly represented by a function. The name of the function is the target type. There is no implicit conversion on assignment or anywhere, ever.
+The allowed conversions are all explicitly represented by a function. The name of the function is the target type.
+
+>There is no implicit conversion on assignment anywhere, ever.
 
 ```C#
 b = 42        // U8
-s = b.Text(alloc)   // to string "42"
+s = b.Text()  // to string "42"
 ```
-
-Because `Text` allocates memory to store its content an Allocator object is required for this conversion.
 
 Type conversion from larger to smaller types need some extra help:
 
@@ -19,13 +29,11 @@ b = v.U8()          // error: loss of data!
 b = v.U8([8..16])   // using a Range to extract the bits
 ```
 
-Alternative Syntax?
+Using forward type inference.
 
 ```C#
-v = 42: U16         // v => U16
-b = v: U8           // error: loss of data!
-// Nah:
-b = v: U8([8..16])  // using a Range to extract the bits
+v: U16 = 42         // v => U16
+b: U8 = v           // error: loss of data!
 ```
 
 Unchecked signed to unsigned or visa versa conversions boil down to the number of bits: can the target type contain all the bits of the original value - even though the meaning of those bits may change.
@@ -51,5 +59,5 @@ o: Opt<U8>
 v = o       // error: o could be nothing
 
 // without checking first
-if o => v = 0
+if o => v = o
 ```
