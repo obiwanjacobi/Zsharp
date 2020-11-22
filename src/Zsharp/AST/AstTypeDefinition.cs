@@ -4,7 +4,7 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstTypeDefinition : AstType
+    public abstract class AstTypeDefinition : AstType
     {
         private readonly Dictionary<string, AstTypeFieldDefinition> _fields = new Dictionary<string, AstTypeFieldDefinition>();
 
@@ -16,7 +16,18 @@ namespace Zsharp.AST
             : base(nodeType)
         { }
 
-        public AstTypeReference? BaseType { get; internal set; }
+        private AstTypeReference? _baseType;
+        public AstTypeReference? BaseType => _baseType;
+
+        public bool TrySetBaseType(AstTypeReference typeReference)
+        => this.SafeSetParent(ref _baseType, typeReference);
+
+        public void SetBaseType(AstTypeReference typeReference)
+        {
+            if (!TrySetBaseType(typeReference))
+                throw new InvalidOperationException(
+                    "Base Type already set or null.");
+        }
 
         public virtual bool IsIntrinsic => false;
 
@@ -45,7 +56,14 @@ namespace Zsharp.AST
                     "Type Field was already added or null.");
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitTypeDefinition(this);
+        public override void VisitChildren(AstVisitor visitor)
+        {
+            BaseType?.Accept(visitor);
+            foreach (var option in Fields)
+            {
+                option.Accept(visitor);
+            }
+        }
 
         public static AstTypeDefinition? SelectKnownTypeDefinition(Known_typesContext context)
         {

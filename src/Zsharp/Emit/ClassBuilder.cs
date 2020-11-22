@@ -83,6 +83,37 @@ namespace Zsharp.Emit
             return methodDef;
         }
 
+        public TypeDefinition AddTypeEnum(AstTypeDefinitionEnum enumType)
+        {
+            var typeDef = CreateType<System.Enum>(enumType.Identifier.CanonicalName, ToTypeAttributes(enumType));
+            var typeRef = _context.ToTypeReference(enumType.BaseType!);
+
+            var fieldAttrs = FieldAttributes.Public | FieldAttributes.SpecialName | FieldAttributes.RTSpecialName;
+            var fieldDef = new FieldDefinition("value__", fieldAttrs, typeRef);
+            typeDef.Fields.Add(fieldDef);
+
+            foreach (var field in enumType.Fields)
+            {
+                fieldAttrs = FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.Literal;
+                fieldDef = new FieldDefinition(field.Identifier.CanonicalName, fieldAttrs, typeDef);
+                typeDef.Fields.Add(fieldDef);
+            }
+
+            _typeDefinition.NestedTypes.Add(typeDef);
+            return typeDef;
+        }
+
+        private TypeDefinition CreateType<BaseT>(string typeName, TypeAttributes typeAttributes)
+        {
+            var moduleDefinition = _context.Module;
+            var typeDef = new TypeDefinition(moduleDefinition.Name, typeName, typeAttributes)
+            {
+                BaseType = moduleDefinition.ImportReference(typeof(BaseT))
+            };
+            moduleDefinition.Types.Add(typeDef);
+            return typeDef;
+        }
+
         private MethodDefinition CreateModuleInitializer()
         {
             var methodDef = new MethodDefinition(
@@ -97,6 +128,15 @@ namespace Zsharp.Emit
         {
             var attrs = TypeAttributes.Class | TypeAttributes.Abstract | TypeAttributes.Sealed;
             attrs |= module.HasExports ? TypeAttributes.Public : TypeAttributes.NotPublic;
+            return attrs;
+        }
+
+        private static TypeAttributes ToTypeAttributes(AstTypeDefinitionEnum typeDefinition)
+        {
+            var attrs = TypeAttributes.Class | TypeAttributes.Sealed;
+            attrs |= typeDefinition.Symbol.SymbolLocality == AstSymbolLocality.Exported
+                ? TypeAttributes.NestedPublic
+                : TypeAttributes.NestedPrivate;
             return attrs;
         }
 

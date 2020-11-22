@@ -82,10 +82,15 @@ namespace UnitTests.AST
                 type.Parent.Should().NotBeNull();
                 VisitChildren(type);
             }
-            public override void VisitTypeDefinition(AstTypeDefinition type)
+            public override void VisitTypeDefinitionExternal(AstTypeDefinitionExternal external)
             {
-                type.Parent.Should().NotBeNull();
-                VisitChildren(type);
+                external.Parent.Should().NotBeNull();
+                VisitChildren(external);
+            }
+            public override void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
+            {
+                enumType.Parent.Should().NotBeNull();
+                VisitChildren(enumType);
             }
             public override void VisitVariableDefinition(AstVariableDefinition variable)
             {

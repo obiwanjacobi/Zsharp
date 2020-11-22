@@ -491,6 +491,15 @@ namespace Zsharp.AST
             _builderContext.RevertCurrent();
 
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
+
+            if (typeDef.BaseType == null)
+            {
+                var typeRef = AstTypeReference.Create(AstTypeDefinitionIntrinsic.I32);
+                symbolsSite.Symbols.Add(typeRef);
+
+                typeDef.SetBaseType(typeRef);
+            }
+
             symbolsSite.Symbols.Add(typeDef);
 
             return typeDef;

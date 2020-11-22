@@ -11,5 +11,10 @@ namespace Zsharp.AST
         }
 
         public int Indent { get; set; }
+
+        public override void Accept(AstVisitor visitor)
+        {
+            visitor.VisitTypeDefinitionEnum(this);
+        }
     }
 }

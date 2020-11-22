@@ -62,6 +62,11 @@ namespace Zsharp.AST
             VisitChildren(parameter);
         }
 
+        public virtual void VisitTypeFieldDefinition(AstTypeFieldDefinition field)
+        {
+            VisitChildren(field);
+        }
+
         public virtual void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
         {
             VisitChildren(parameter);
@@ -92,9 +97,19 @@ namespace Zsharp.AST
             VisitChildren(type);
         }
 
-        public virtual void VisitTypeDefinition(AstTypeDefinition type)
+        public virtual void VisitTypeDefinitionExternal(AstTypeDefinitionExternal external)
         {
-            VisitChildren(type);
+            VisitChildren(external);
+        }
+
+        public virtual void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
+        {
+            VisitChildren(enumType);
+        }
+
+        public virtual void VisitTypeDefinitionEnumOption(AstTypeDefinitionEnumOption enumOption)
+        {
+            VisitChildren(enumOption);
         }
 
         public virtual void VisitVariableDefinition(AstVariableDefinition variable)

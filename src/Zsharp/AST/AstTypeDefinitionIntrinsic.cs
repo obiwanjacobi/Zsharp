@@ -48,6 +48,11 @@ namespace Zsharp.AST
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.Void);
         }
 
+        public override void Accept(AstVisitor visitor)
+        {
+            // no-op
+        }
+
         private static void AddIntrinsicSymbol(AstSymbolTable symbols, AstTypeDefinitionIntrinsic type)
             => symbols.AddSymbol(type.Identifier!.CanonicalName, AstSymbolKind.Type, type);
     }

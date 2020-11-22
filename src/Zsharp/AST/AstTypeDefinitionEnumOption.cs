@@ -39,7 +39,7 @@ namespace Zsharp.AST
 
         public bool TryResolve()
         {
-            throw new NotImplementedException();
+            return _symbol?.Definition == this;
         }
     }
 }

@@ -5,9 +5,15 @@
         public AstTypeDefinitionExternal(string typeName, AstTypeReference? baseType)
             : base(new AstIdentifierExternal(typeName, AstIdentifierType.Type))
         {
-            BaseType = baseType;
+            if (baseType != null)
+                SetBaseType(baseType);
         }
 
         public override bool IsExternal => true;
+
+        public override void Accept(AstVisitor visitor)
+        {
+            visitor.VisitTypeDefinitionExternal(this);
+        }
     }
 }

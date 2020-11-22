@@ -114,6 +114,7 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var e = file.CodeBlock.ItemAt<AstTypeDefinitionEnum>(0);
             e.Symbol.Definition.Should().Be(e);
+            e.BaseType.Identifier.Name.Should().Be("I32");
 
             var f = (AstTypeDefinitionEnumOption)e.Fields.First();
             f.Identifier.Name.Should().Be("None");

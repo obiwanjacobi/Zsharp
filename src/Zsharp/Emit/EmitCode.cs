@@ -152,6 +152,11 @@ namespace Zsharp.Emit
         public override void VisitExpression(AstExpression expression)
             => new EmitExpression(Context, _isInit).VisitExpression(expression);
 
+        public override void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
+        {
+            Context.ModuleClass.AddTypeEnum(enumType);
+        }
+
         public void SaveAs(string filePath) => Context.Assembly.Write(filePath);
     }
 }
