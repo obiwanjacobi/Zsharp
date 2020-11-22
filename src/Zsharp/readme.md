@@ -10,3 +10,4 @@
 - Add (custom) Type Conversion (Type names as function names)
 - Add Structs, Enums, Custom Data Types
 - implement discard as variable: `_ = fn()`
+- resolve expression operators to (intrinsic or custom) functions

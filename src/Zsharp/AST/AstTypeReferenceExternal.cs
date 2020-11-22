@@ -10,7 +10,7 @@ namespace Zsharp.AST
         {
             _typeReference = typeReference;
 
-            IsOptional = typeReference.IsOptionalModifier | typeReference.IsByReference;
+            IsOptional = typeReference.IsByReference;
         }
 
         public AstTypeReferenceExternal(AstTypeReferenceExternal inferredFrom)

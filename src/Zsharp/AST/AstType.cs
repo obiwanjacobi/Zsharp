@@ -1,6 +1,5 @@
 using Antlr4.Runtime;
 using System;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -81,63 +80,6 @@ namespace Zsharp.AST
                 return false;
 
             return Identifier.IsEqual(type.Identifier);
-        }
-
-        internal static void Construct(AstType instance, Type_nameContext context)
-        {
-            AstIdentifier? identifier;
-
-            var idCtx = context.identifier_type();
-            if (idCtx != null)
-            {
-                identifier = new AstIdentifier(idCtx);
-                // TODO: type parameters context.type_param_list()
-            }
-            else
-            {
-                var knownCtx = context.known_types();
-                identifier = SelectKnownIdentifier(knownCtx);
-            }
-
-            Ast.Guard(identifier, "Identifier failed.");
-            instance.SetIdentifier(identifier!);
-        }
-
-        private static AstIdentifier? SelectKnownIdentifier(Known_typesContext context)
-        {
-            if (context == null)
-                return null;
-            //if (context.type_Bit()) return Bit;
-            //if (context.type_Ptr()) return Ptr;
-
-            AstIdentifier? identifier = null;
-
-            if (context.BOOL() != null)
-                identifier = AstIdentifierIntrinsic.Bool;
-            if (context.STR() != null)
-                identifier = AstIdentifierIntrinsic.Str;
-            if (context.F64() != null)
-                identifier = AstIdentifierIntrinsic.F64;
-            if (context.F32() != null)
-                identifier = AstIdentifierIntrinsic.F32;
-            if (context.I8() != null)
-                identifier = AstIdentifierIntrinsic.I8;
-            if (context.I16() != null)
-                identifier = AstIdentifierIntrinsic.I16;
-            if (context.I64() != null)
-                identifier = AstIdentifierIntrinsic.I64;
-            if (context.I32() != null)
-                identifier = AstIdentifierIntrinsic.I32;
-            if (context.U8() != null)
-                identifier = AstIdentifierIntrinsic.U8;
-            if (context.U16() != null)
-                identifier = AstIdentifierIntrinsic.U16;
-            if (context.U64() != null)
-                identifier = AstIdentifierIntrinsic.U64;
-            if (context.U32() != null)
-                identifier = AstIdentifierIntrinsic.U32;
-
-            return identifier;
         }
     }
 }

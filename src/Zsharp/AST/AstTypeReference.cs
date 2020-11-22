@@ -14,7 +14,7 @@ namespace Zsharp.AST
             _typeSource = inferredFrom.TypeSource;
         }
 
-        protected AstTypeReference(Type_ref_useContext context)
+        public AstTypeReference(Type_ref_useContext context)
         {
             Context = context;
 
@@ -45,7 +45,7 @@ namespace Zsharp.AST
             if (!base.IsEqual(type))
                 return false;
 
-            if (!(type is AstTypeReference typedThat))
+            if (type is not AstTypeReference typedThat)
                 return false;
 
             var typeDef = TypeDefinition;
@@ -63,14 +63,6 @@ namespace Zsharp.AST
         }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitTypeReference(this);
-
-        public static AstTypeReference Create(Type_ref_useContext context)
-        {
-            Ast.Guard(context, "AstTypeReference.Create is passed a null");
-            var typeRef = new AstTypeReference(context);
-            AstType.Construct(typeRef, context.type_ref().type_name());
-            return typeRef;
-        }
 
         public static AstTypeReference Create(AstTypeDefinition typeDef, AstNode? typeSource = null)
         {

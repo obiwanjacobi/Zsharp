@@ -479,7 +479,12 @@ namespace Zsharp.AST
 
         public override object? VisitType_ref_use(Type_ref_useContext context)
         {
-            var typeRef = AstTypeReference.Create(context);
+            var typeRef = new AstTypeReference(context);
+
+            _builderContext.SetCurrent(typeRef);
+            _ = VisitChildren(context);
+            _builderContext.RevertCurrent();
+
             var trSite = _builderContext.GetCurrent<IAstTypeReferenceSite>();
             trSite.SetTypeReference(typeRef);
 
@@ -495,6 +500,43 @@ namespace Zsharp.AST
                 symbolsSite.Symbols.Add(typeRef);
             }
             return typeRef;
+        }
+
+        public override object? VisitKnown_types(Known_typesContext context)
+        {
+            AstIdentifier? identifier = null;
+
+            if (context.BOOL() != null)
+                identifier = AstIdentifierIntrinsic.Bool;
+            if (context.STR() != null)
+                identifier = AstIdentifierIntrinsic.Str;
+            if (context.F64() != null)
+                identifier = AstIdentifierIntrinsic.F64;
+            if (context.F32() != null)
+                identifier = AstIdentifierIntrinsic.F32;
+            if (context.I8() != null)
+                identifier = AstIdentifierIntrinsic.I8;
+            if (context.I16() != null)
+                identifier = AstIdentifierIntrinsic.I16;
+            if (context.I64() != null)
+                identifier = AstIdentifierIntrinsic.I64;
+            if (context.I32() != null)
+                identifier = AstIdentifierIntrinsic.I32;
+            if (context.U8() != null)
+                identifier = AstIdentifierIntrinsic.U8;
+            if (context.U16() != null)
+                identifier = AstIdentifierIntrinsic.U16;
+            if (context.U64() != null)
+                identifier = AstIdentifierIntrinsic.U64;
+            if (context.U32() != null)
+                identifier = AstIdentifierIntrinsic.U32;
+
+            if (identifier != null)
+            {
+                _builderContext.AddIdentifier(identifier);
+            }
+
+            return identifier;
         }
     }
 }

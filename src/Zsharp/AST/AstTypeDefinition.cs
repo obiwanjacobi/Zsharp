@@ -21,20 +21,6 @@ namespace Zsharp.AST
 
         public virtual bool IsUnsigned => false;
 
-        public static AstTypeDefinition Create(Type_defContext context)
-        {
-            var typeDef = new AstTypeDefinition(context)
-            {
-                BaseType = AstTypeReference.Create(context.type_ref_use())
-            };
-
-            var identifier = new AstIdentifier(context.identifier_type());
-            typeDef.SetIdentifier(identifier);
-
-            // TODO: type parameters: context.type_param_list()
-            return typeDef;
-        }
-
         public override void Accept(AstVisitor visitor) => visitor.VisitTypeDefinition(this);
 
         public static AstTypeDefinition? SelectKnownTypeDefinition(Known_typesContext context)
