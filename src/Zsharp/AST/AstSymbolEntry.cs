@@ -73,11 +73,11 @@ namespace Zsharp.AST
         {
             Ast.Guard(node, "Cannot add null.");
 
-            if ((SymbolKind == AstSymbolKind.Module && node is AstModuleExternal) ||
-                (SymbolKind == AstSymbolKind.Variable && node is AstFunctionParameterDefinition) ||
-                (SymbolKind == AstSymbolKind.Variable && node is AstVariableDefinition) ||
-                (SymbolKind == AstSymbolKind.Type && node is AstTypeDefinition)
-                )
+            if (node is AstModuleExternal ||
+                node is AstFunctionParameterDefinition ||
+                node is AstVariableDefinition ||
+                node is AstTypeDefinition ||
+                node is AstTypeFieldDefinition)
             {
                 Ast.Guard(Definition == null, "Definition is already set.");
                 _definitions.Add(node);

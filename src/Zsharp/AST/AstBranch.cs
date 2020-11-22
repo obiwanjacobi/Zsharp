@@ -3,7 +3,7 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstBranch : AstCodeBlockItem
+    public class AstBranch : AstNode, IAstCodeBlockItem
     {
         public AstBranch(Statement_breakContext context)
             : base(AstNodeType.Branch)
@@ -26,6 +26,8 @@ namespace Zsharp.AST
         }
 
         public ParserRuleContext? Context { get; protected set; }
+
+        public int Indent { get; set; }
 
         public AstBranchType BranchType { get; }
 

@@ -23,8 +23,8 @@ namespace Zsharp.AST
 
     public abstract class AstType : AstNode, IAstIdentifierSite, IAstSymbolEntrySite
     {
-        protected AstType()
-            : base(AstNodeType.Type)
+        protected AstType(AstNodeType nodeType)
+            : base(nodeType)
         { }
 
         protected AstType(AstIdentifier identifier)

@@ -7,6 +7,7 @@ namespace Zsharp.AST
     public class AstTypeReference : AstType
     {
         public AstTypeReference(AstTypeReference inferredFrom)
+            : base(AstNodeType.Type)
         {
             Context = inferredFrom.Context;
             SetIdentifier(inferredFrom.Identifier!);
@@ -15,6 +16,7 @@ namespace Zsharp.AST
         }
 
         public AstTypeReference(Type_ref_useContext context)
+            : base(AstNodeType.Type)
         {
             Context = context;
 
@@ -24,6 +26,7 @@ namespace Zsharp.AST
         }
 
         protected AstTypeReference()
+            : base(AstNodeType.Type)
         { }
 
         public AstTypeDefinition? TypeDefinition => Symbol?.DefinitionAs<AstTypeDefinition>();

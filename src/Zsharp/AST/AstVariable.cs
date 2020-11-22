@@ -3,7 +3,7 @@ using System;
 
 namespace Zsharp.AST
 {
-    public abstract class AstVariable : AstCodeBlockItem,
+    public abstract class AstVariable : AstNode, IAstCodeBlockItem,
         IAstIdentifierSite, IAstSymbolEntrySite, IAstTypeReferenceSite
     {
         protected AstVariable(AstTypeReference? typeReference = null)
@@ -13,6 +13,8 @@ namespace Zsharp.AST
         }
 
         public ParserRuleContext? Context { get; protected set; }
+
+        public int Indent { get; set; }
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;

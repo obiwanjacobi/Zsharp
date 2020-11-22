@@ -1,16 +1,19 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using System;
+using System.Collections.Generic;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstTypeDefinition : AstType
     {
-        public AstTypeDefinition(Type_defContext context)
-        {
-            Context = context;
-        }
+        private readonly Dictionary<string, AstTypeFieldDefinition> _fields = new Dictionary<string, AstTypeFieldDefinition>();
 
         protected AstTypeDefinition(AstIdentifier identifier)
             : base(identifier)
+        { }
+
+        protected AstTypeDefinition(AstNodeType nodeType)
+            : base(nodeType)
         { }
 
         public AstTypeReference? BaseType { get; internal set; }
@@ -20,6 +23,27 @@ namespace Zsharp.AST
         public virtual bool IsExternal => false;
 
         public virtual bool IsUnsigned => false;
+
+        public IEnumerable<AstTypeFieldDefinition> Fields => _fields.Values;
+
+        public bool TryAddField(AstTypeFieldDefinition field)
+        {
+            if (field?.Identifier == null)
+                return false;
+
+            if (_fields.TryAdd(field.Identifier.CanonicalName, field))
+            {
+                return field.TrySetParent(this);
+            }
+            return false;
+        }
+
+        public void AddField(AstTypeFieldDefinition field)
+        {
+            if (!TryAddField(field))
+                throw new InvalidOperationException(
+                    "Type Field was already added or null.");
+        }
 
         public override void Accept(AstVisitor visitor) => visitor.VisitTypeDefinition(this);
 

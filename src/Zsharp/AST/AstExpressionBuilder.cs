@@ -1,4 +1,5 @@
 using Antlr4.Runtime;
+using System;
 using System.Collections.Generic;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -15,23 +16,35 @@ namespace Zsharp.AST
 
         public AstExpression? Build(Expression_valueContext context)
         {
-            var operand = VisitChildren(context);
-
-            if (operand != null)
-            {
-                _values.Push(new AstExpressionOperand((AstNode)operand));
-
-                var expr = new AstExpression(context);
-                _operators.Push(expr);
-            }
-
-            return BuildExpression(0);
+            return Build(context, () => new AstExpression(context));
         }
 
         public AstExpression? Build(Expression_logicContext context)
         {
-            var val = VisitExpression_logic(context);
-            return Cast(val);
+            return Build(context, () => new AstExpression(context));
+        }
+
+        public AstExpression? Build(Comptime_expression_valueContext context)
+        {
+            return Build(context, () => new AstExpression(context));
+        }
+
+        private AstExpression? Build(ParserRuleContext context, Func<AstExpression> createExpression)
+        {
+            var operand = VisitChildren(context);
+
+            if (operand != null)
+            {
+                if (operand is AstExpressionOperand expressionOperand)
+                    _values.Push(expressionOperand);
+                else
+                    _values.Push(new AstExpressionOperand((AstNode)operand));
+
+                var expr = createExpression();
+                _operators.Push(expr);
+            }
+
+            return BuildExpression(0);
         }
 
         public AstExpression? Test(ParserRuleContext context)

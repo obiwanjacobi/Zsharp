@@ -20,5 +20,7 @@
 
         Variable,
         FunctionParameter,
+        Field,
+        EnumOption,
     }
 }

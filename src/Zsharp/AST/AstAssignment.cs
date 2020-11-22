@@ -4,7 +4,7 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstAssignment : AstCodeBlockItem, IAstExpressionSite
+    public class AstAssignment : AstNode, IAstCodeBlockItem, IAstExpressionSite
     {
         public AstAssignment(Variable_assign_autoContext context)
             : base(AstNodeType.Assignment)
@@ -19,6 +19,8 @@ namespace Zsharp.AST
         }
 
         public ParserRuleContext Context { get; }
+
+        public int Indent { get; set; }
 
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;

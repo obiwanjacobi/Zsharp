@@ -5,7 +5,7 @@ namespace Zsharp.AST
 {
     public class AstCodeBlock : AstNode, IAstSymbolTableSite
     {
-        private readonly List<AstCodeBlockItem> _items = new List<AstCodeBlockItem>();
+        private readonly List<IAstCodeBlockItem> _items = new List<IAstCodeBlockItem>();
 
         public AstCodeBlock(string scopeName, AstSymbolTable parentTable, CodeblockContext? context = null)
             : base(AstNodeType.CodeBlock)
@@ -18,14 +18,15 @@ namespace Zsharp.AST
 
         public CodeblockContext? Context { get; }
 
-        public IEnumerable<AstCodeBlockItem> Items => _items;
+        public IEnumerable<IAstCodeBlockItem> Items => _items;
 
         public AstSymbolTable Symbols { get; }
 
-        public T? ItemAt<T>(int index) where T : AstCodeBlockItem
+        public T? ItemAt<T>(int index) where T : AstNode, IAstCodeBlockItem
             => _items[index] as T;
 
-        public void AddItem(AstCodeBlockItem item)
+        public void AddItem<T>(T item)
+            where T : AstNode, IAstCodeBlockItem
         {
             _items.Add(item);
             item.Indent = Indent;
@@ -36,7 +37,7 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var item in Items)
+            foreach (AstNode item in Items)
             {
                 item.Accept(visitor);
             }

@@ -91,7 +91,7 @@ namespace Zsharp.Dgml
             var link = CreateLink(parentId, node.Id);
 
             int i = 0;
-            foreach (var item in codeBlock.Items)
+            foreach (AstNode item in codeBlock.Items)
             {
                 i++;
                 var itemNode = WriteCodeBlockItem(item, node.Id);
@@ -110,7 +110,7 @@ namespace Zsharp.Dgml
             return node;
         }
 
-        public Node WriteCodeBlockItem(AstCodeBlockItem codeBlockItem, string codeBlockId)
+        public Node WriteCodeBlockItem(AstNode codeBlockItem, string codeBlockId)
         {
             switch (codeBlockItem.NodeType)
             {

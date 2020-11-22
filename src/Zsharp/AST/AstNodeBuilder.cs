@@ -453,8 +453,23 @@ namespace Zsharp.AST
 
         public override object? VisitExpression_value(Expression_valueContext context)
         {
+            return CreateExpression(builder => builder.Build(context));
+        }
+
+        public override object? VisitExpression_logic(Expression_logicContext context)
+        {
+            return CreateExpression(builder => builder.Build(context));
+        }
+
+        public override object? VisitComptime_expression_value(Comptime_expression_valueContext context)
+        {
+            return CreateExpression(builder => builder.Build(context));
+        }
+
+        private AstExpression? CreateExpression(Func<AstExpressionBuilder, AstExpression?> buildFn)
+        {
             var builder = new AstExpressionBuilder(_builderContext, _namespace);
-            var expr = builder.Build(context);
+            var expr = buildFn(builder);
             if (expr != null)
             {
                 var site = _builderContext.GetCurrent<IAstExpressionSite>();
@@ -464,17 +479,43 @@ namespace Zsharp.AST
             return null;
         }
 
-        public override object? VisitExpression_logic(Expression_logicContext context)
+        public override object? VisitEnum_def(Enum_defContext context)
         {
-            var builder = new AstExpressionBuilder(_builderContext, _namespace);
-            var expr = builder.Build(context);
-            if (expr != null)
-            {
-                var site = _builderContext.GetCurrent<IAstExpressionSite>();
-                site.SetExpression(expr);
-                return expr;
-            }
-            return null;
+            var typeDef = new AstTypeDefinitionEnum(context);
+
+            var codeBlock = _builderContext.GetCodeBlock();
+            codeBlock.AddItem(typeDef);
+
+            _builderContext.SetCurrent(typeDef);
+            _ = VisitChildren(context);
+            _builderContext.RevertCurrent();
+
+            var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            symbolsSite.Symbols.Add(typeDef);
+
+            return typeDef;
+        }
+
+        public override object? VisitEnum_option_def(Enum_option_defContext context)
+        {
+            var fieldDef = new AstTypeDefinitionEnumOption(context);
+
+            _builderContext.SetCurrent(fieldDef);
+            _ = VisitChildren(context);
+            _builderContext.RevertCurrent();
+
+            var typeDef = _builderContext.GetCurrent<AstTypeDefinitionEnum>();
+            typeDef.AddField(fieldDef);
+
+            var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            symbolsSite.Symbols.Add(fieldDef);
+
+            return fieldDef;
+        }
+
+        public override object? VisitEnum_option_def_listline(Enum_option_def_listlineContext context)
+        {
+            throw new NotImplementedException();
         }
 
         public override object? VisitType_ref_use(Type_ref_useContext context)

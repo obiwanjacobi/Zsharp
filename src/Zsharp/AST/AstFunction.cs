@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Zsharp.AST
 {
-    public abstract class AstFunction<ParamT> : AstCodeBlockItem,
+    public abstract class AstFunction<ParamT> : AstNode, IAstCodeBlockItem,
         IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolEntrySite
         where ParamT : AstFunctionParameter
     {
@@ -16,6 +16,8 @@ namespace Zsharp.AST
         { }
 
         public ParserRuleContext? Context { get; protected set; }
+
+        public int Indent { get; set; }
 
         public virtual bool IsIntrinsic => false;
 

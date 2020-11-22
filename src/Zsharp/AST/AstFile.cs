@@ -41,10 +41,7 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var ci in CodeBlock!.Items)
-            {
-                ci.Accept(visitor);
-            }
+            CodeBlock?.Accept(visitor);
         }
 
         public void AddFunction(AstFunctionDefinitionImpl function)

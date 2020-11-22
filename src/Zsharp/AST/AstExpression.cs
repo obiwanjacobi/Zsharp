@@ -30,6 +30,12 @@ namespace Zsharp.AST
             Context = context;
         }
 
+        public AstExpression(Comptime_expression_valueContext context)
+                : base(AstNodeType.Expression)
+        {
+            Context = context;
+        }
+
         public AstExpression(AstExpressionOperand operand)
             : base(AstNodeType.Expression)
         {
