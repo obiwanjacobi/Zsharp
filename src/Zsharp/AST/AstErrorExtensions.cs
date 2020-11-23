@@ -22,6 +22,12 @@ namespace Zsharp.AST
                 $"Reference to an undefined Type '{type.Identifier.Name}'");
         }
 
+        public static AstMessage InvalidEnumBaseType(this AstErrorSite errorSite, AstTypeReference type)
+        {
+            return errorSite.AddError(type, type.Context,
+                $"Specified Type is not valid as an Enum Base Type: '{type.Identifier.Name}'");
+        }
+
         public static AstMessage OverloadNotFound(this AstErrorSite errorSite, AstFunctionReference function)
         {
             return errorSite.AddError(function, function.Context,

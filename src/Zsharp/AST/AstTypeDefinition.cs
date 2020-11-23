@@ -4,7 +4,7 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public abstract class AstTypeDefinition : AstType
+    public abstract class AstTypeDefinition : AstType, IAstTypeReferenceSite
     {
         private readonly Dictionary<string, AstTypeFieldDefinition> _fields = new Dictionary<string, AstTypeFieldDefinition>();
 
@@ -20,13 +20,26 @@ namespace Zsharp.AST
         public AstTypeReference? BaseType => _baseType;
 
         public bool TrySetBaseType(AstTypeReference typeReference)
-        => this.SafeSetParent(ref _baseType, typeReference);
+            => this.SafeSetParent(ref _baseType, typeReference);
+
 
         public void SetBaseType(AstTypeReference typeReference)
         {
             if (!TrySetBaseType(typeReference))
                 throw new InvalidOperationException(
-                    "Base Type already set or null.");
+                    "Base Type Reference already set or null.");
+        }
+
+        AstTypeReference? IAstTypeReferenceSite.TypeReference => _baseType;
+
+        bool IAstTypeReferenceSite.TrySetTypeReference(AstTypeReference typeReference)
+            => TrySetBaseType(typeReference);
+
+        void IAstTypeReferenceSite.SetTypeReference(AstTypeReference typeReference)
+        {
+            if (!TrySetBaseType(typeReference))
+                throw new InvalidOperationException(
+                    "Base Type Reference already set or null.");
         }
 
         public virtual bool IsIntrinsic => false;

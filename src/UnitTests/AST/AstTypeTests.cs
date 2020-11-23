@@ -121,5 +121,25 @@ namespace UnitTests.AST
             f.Expression.Should().NotBeNull();
             f.Symbol.Definition.Should().Be(f);
         }
+
+
+        [TestMethod]
+        public void EnumTypeDefinition_BaseType()
+        {
+            const string code =
+                "MyEnum: U8" + Tokens.NewLine +
+                Tokens.Indent1 + "None = 0" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var e = file.CodeBlock.ItemAt<AstTypeDefinitionEnum>(0);
+            e.Symbol.Definition.Should().Be(e);
+            e.BaseType.Identifier.Name.Should().Be("U8");
+
+            var f = (AstTypeDefinitionEnumOption)e.Fields.First();
+            f.Identifier.Name.Should().Be("None");
+            f.Expression.Should().NotBeNull();
+            f.Symbol.Definition.Should().Be(f);
+        }
     }
 }
