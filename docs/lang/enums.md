@@ -82,6 +82,8 @@ MyEnum: Bit<4>      // 4-bits wide
     optx = 0x10    // error: too large!
 ```
 
+Using the `Bit<T>` base type suggests that you are working with flags.
+
 Floating point types can also be used. The auto-numbering interval for floating points is `1.0`.
 
 ```C#
@@ -131,3 +133,5 @@ MyFunc: (p1: MyEnum)
 MyFunc(opt2)    // MyEnum.opt2
 MyFunc(.opt2)   // MyEnum.opt2
 ```
+
+---

@@ -21,6 +21,12 @@ module variable [name] | private static {Type} [name] | module class
 function variable [name] | local {Type} [name] | static method
 function self parameter | this parameter | static method
 
+## Enum
+
+.NET only supports integer base types for enums. That means that our `Str` and `F32` or `F64` examples do not translate directly into a .NET enum. Instead they will be generated as a static class with constant field values for these specific (base) types.
+
+---
+
 > For a Console application the Main function will be implemented by a compiler-generated `Main` function that calls the entry point of the program.
 
 ---
