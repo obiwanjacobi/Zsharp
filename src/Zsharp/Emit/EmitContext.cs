@@ -8,6 +8,8 @@ namespace Zsharp.Emit
 {
     public sealed partial class EmitContext
     {
+        public static readonly DotNet DotNet = new DotNet();
+
         private EmitContext(AssemblyDefinition assembly)
         {
             Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
@@ -16,12 +18,24 @@ namespace Zsharp.Emit
 
         public static EmitContext Create(string assemblyName, Version? version = null)
         {
-            return new EmitContext(
-                AssemblyDefinition.CreateAssembly(
+            var assembly = AssemblyDefinition.CreateAssembly(
                     new AssemblyNameDefinition(assemblyName,
                         version ?? new Version(1, 0)),
-                    assemblyName, ModuleKind.Dll)
-            );
+                    assemblyName, ModuleKind.Dll);
+
+            // add [assembly: TargetFramework(".NETCoreApp,Version=v5.0")]
+            var attrCtor = assembly.MainModule.ImportReference(
+                    typeof(System.Runtime.Versioning.TargetFrameworkAttribute)
+                        .GetConstructor(new[] { typeof(string) })
+                );
+
+            var stringType = assembly.MainModule.ImportReference(DotNet.StringType);
+            var targetFxAttr = new CustomAttribute(attrCtor);
+            targetFxAttr.ConstructorArguments.Add(
+                new CustomAttributeArgument(stringType, ".NETCoreApp,Version=v5.0"));
+            assembly.CustomAttributes.Add(targetFxAttr);
+
+            return new EmitContext(assembly);
         }
 
         public AssemblyDefinition Assembly { get; private set; }

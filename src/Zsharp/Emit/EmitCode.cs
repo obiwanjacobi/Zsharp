@@ -1,5 +1,6 @@
 ﻿using Mono.Cecil;
 using System;
+using System.IO;
 using Zsharp.AST;
 
 namespace Zsharp.Emit
@@ -157,6 +158,10 @@ namespace Zsharp.Emit
             Context.ModuleClass.AddTypeEnum(enumType);
         }
 
-        public void SaveAs(string filePath) => Context.Assembly.Write(filePath);
+        public void SaveAs(string filePath)
+        {
+            Context.Assembly.Name.Name = Path.GetFileNameWithoutExtension(filePath);
+            Context.Assembly.Write(filePath);
+        }
     }
 }

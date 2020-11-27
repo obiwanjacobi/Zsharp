@@ -178,7 +178,7 @@ namespace Zsharp.AST
             var symbolTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
             function.CreateSymbols(symbolTable.Symbols);
 
-            if (context.Parent is Function_def_exportContext)
+            if (context.Parent is Statement_export_inlineContext)
             {
                 function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
             }
@@ -502,6 +502,11 @@ namespace Zsharp.AST
 
             symbolsSite.Symbols.Add(typeDef);
 
+            if (context.Parent is Statement_export_inlineContext)
+            {
+                typeDef.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
+            }
+
             return typeDef;
         }
 
@@ -533,12 +538,14 @@ namespace Zsharp.AST
 
             AstIdentifier? identifier = null;
 
+            // .NET/C# does only supports number based enums
             if (context.STR() != null)
                 identifier = AstIdentifierIntrinsic.Str;
             if (context.F64() != null)
                 identifier = AstIdentifierIntrinsic.F64;
             if (context.F32() != null)
                 identifier = AstIdentifierIntrinsic.F32;
+
             if (context.I8() != null)
                 identifier = AstIdentifierIntrinsic.I8;
             if (context.I16() != null)

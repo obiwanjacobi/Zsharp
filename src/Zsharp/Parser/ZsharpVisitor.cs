@@ -87,6 +87,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitStatement_export([NotNull] ZsharpParser.Statement_exportContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.statement_export_inline"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStatement_export_inline([NotNull] ZsharpParser.Statement_export_inlineContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.flow_statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -218,12 +224,6 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitFunction_def([NotNull] ZsharpParser.Function_defContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.function_def_export"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitFunction_def_export([NotNull] ZsharpParser.Function_def_exportContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.function_parameter_list"/>.
 	/// </summary>

@@ -12,6 +12,7 @@ module_name: identifier_module | module_name DOT identifier_module;
 statement_module: MODULE SP module_name newline;
 statement_import: IMPORT SP (alias_module SP EQ_ASSIGN SP)? module_name newline;
 statement_export: EXPORT SP (identifier_func | identifier_type) newline;
+statement_export_inline: EXPORT SP (function_def | type_def | struct_def | enum_def);
 
 // flow control
 flow_statement: statement_if | statement_else | statement_elseif
@@ -27,8 +28,8 @@ statement_loop_infinite: LOOP;
 statement_loop_while: LOOP SP expression_logic;
 
 // definition
-definition_top: function_def_export | function_def | enum_def | struct_def 
-    | type_def | type_alias | variable_def_top;
+definition_top: function_def | enum_def | struct_def 
+    | type_def | type_alias | variable_def_top | statement_export_inline;
 definition: function_def | variable_def;
 
 // expressions
@@ -62,7 +63,6 @@ expression_bool: literal_bool | variable_ref | function_call;
 
 // functions
 function_def: identifier_func COLON SP PARENopen function_parameter_list? PARENclose function_return_type? newline codeblock;
-function_def_export: EXPORT SP function_def;
 function_parameter_list: (function_parameter | function_parameter_self) (COMMA SP function_parameter)*;
 function_parameter: identifier_param type_ref_use;
 function_parameter_self: SELF type_ref_use;

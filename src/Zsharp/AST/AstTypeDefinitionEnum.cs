@@ -1,4 +1,6 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using System.Collections.Generic;
+using System.Linq;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -11,6 +13,9 @@ namespace Zsharp.AST
         }
 
         public int Indent { get; set; }
+
+        public new IEnumerable<AstTypeDefinitionEnumOption> Fields
+            => base.Fields.Cast<AstTypeDefinitionEnumOption>();
 
         public override void Accept(AstVisitor visitor)
         {

@@ -20,12 +20,9 @@ namespace Zsharp.Emit
 
         public static ClassBuilder Create(EmitContext context, AstModulePublic module)
         {
-            var moduleDefinition = context.Module;
-            var typeDef = new TypeDefinition(moduleDefinition.Name, module.Name, ToTypeAttributes(module))
-            {
-                BaseType = moduleDefinition.ImportReference(typeof(Object))
-            };
-            moduleDefinition.Types.Add(typeDef);
+            var typeDef = CreateType(
+                context.Module, context.Module.Name, module.Name, ToTypeAttributes(module));
+            context.Module.Types.Add(typeDef);
             return new ClassBuilder(context, typeDef);
         }
 
@@ -85,7 +82,7 @@ namespace Zsharp.Emit
 
         public TypeDefinition AddTypeEnum(AstTypeDefinitionEnum enumType)
         {
-            var typeDef = CreateType<System.Enum>(enumType.Identifier.CanonicalName, ToTypeAttributes(enumType));
+            var typeDef = CreateType(String.Empty, enumType.Identifier.CanonicalName, ToTypeAttributes(enumType), EmitContext.DotNet.EnumType);
             var typeRef = _context.ToTypeReference(enumType.BaseType!);
 
             var fieldAttrs = FieldAttributes.Public | FieldAttributes.SpecialName | FieldAttributes.RTSpecialName;
@@ -95,7 +92,12 @@ namespace Zsharp.Emit
             foreach (var field in enumType.Fields)
             {
                 fieldAttrs = FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.Literal;
-                fieldDef = new FieldDefinition(field.Identifier.CanonicalName, fieldAttrs, typeDef);
+                fieldDef = new FieldDefinition(field.Identifier.CanonicalName, fieldAttrs, typeDef)
+                {
+                    // Todo: compile time constant expression
+                    //Constant = field.Expression.ConstantValue();
+                    Constant = 1
+                };
                 typeDef.Fields.Add(fieldDef);
             }
 
@@ -103,14 +105,23 @@ namespace Zsharp.Emit
             return typeDef;
         }
 
-        private TypeDefinition CreateType<BaseT>(string typeName, TypeAttributes typeAttributes)
+        private TypeDefinition CreateType(string ns, string typeName, TypeAttributes typeAttributes, TypeReference? baseType = null)
         {
-            var moduleDefinition = _context.Module;
-            var typeDef = new TypeDefinition(moduleDefinition.Name, typeName, typeAttributes)
+            return CreateType(_context.Module, ns, typeName, typeAttributes, baseType);
+        }
+
+        private static TypeDefinition CreateType(ModuleDefinition moduleDefinition,
+            string ns, string typeName, TypeAttributes typeAttributes, TypeReference? baseType = null)
+        {
+            var typeDef = new TypeDefinition(ns, typeName, typeAttributes);
+            if (baseType != null)
             {
-                BaseType = moduleDefinition.ImportReference(typeof(BaseT))
-            };
-            moduleDefinition.Types.Add(typeDef);
+                typeDef.BaseType = moduleDefinition.ImportReference(baseType);
+            }
+            else
+            {
+                typeDef.BaseType = moduleDefinition.ImportReference(EmitContext.DotNet.ObjectType);
+            }
             return typeDef;
         }
 
