@@ -350,5 +350,14 @@ namespace Zsharp.AST
                 return AstExpressionOperator.BitNegate;
             return AstExpressionOperator.None;
         }
+
+        public static AstExpression CreateLiteral(int value)
+        {
+            var numeric = new AstLiteralNumeric((UInt64)value);
+            return new AstExpression(new AstExpressionOperand(numeric))
+            {
+                Operator = AstExpressionOperator.Number
+            };
+        }
     }
 }

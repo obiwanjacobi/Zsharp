@@ -25,9 +25,11 @@ function self parameter | this parameter | static method
 
 .NET only supports integer base types for enums. That means that our `Str` and `F32` or `F64` examples do not translate directly into a .NET enum. Instead they will be generated as a static class with constant field values for these specific (base) types.
 
----
+## Struct
 
-> For a Console application the Main function will be implemented by a compiler-generated `Main` function that calls the entry point of the program.
+A value type or struct in .NET cannot be inherited. Z# defined structs with base types can be written out where the base fields are duplicated in the derived type (in order).
+
+For polymorphism in Z#, the compiler has to check if the fields (in order) match those of the requested type. This leans towards duck-typing in that if the fields match - you must be the same type, which is also how Z# handles interfaces: if the functions match, you must be the same interface.
 
 ---
 
@@ -43,4 +45,16 @@ function self parameter | this parameter | static method
 - Ptr\<T>
 - Range/Iter/Slice (Span<T>)
 - name/identifier matching and representation (case insensitive)
-- Memory Heap Allocation. Could be as simple as a wrapper `class HeapAlloc<T> where T : struct` to get a struct on the heap. Look into Boxing.
+- Memory Heap Allocation. Could be as simple as a wrapper `class HeapAlloc<T> where T : struct` to get a struct on the heap. Look into Boxing. There only need to be a (simple) way to indicate a heap target.
+
+How to indicate in the syntax an object is on the heap?
+
+```csharp
+fn: ()
+    // stack
+    a = 42
+    // heap
+    b: Mem<U8> = 42     // wrapper type
+    c = Mem(42)         // conversion with type infer
+    d @= 42             // Mem<T> operator
+```

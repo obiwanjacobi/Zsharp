@@ -507,6 +507,20 @@ namespace Zsharp.AST
                 typeDef.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
             }
 
+            int value = 0;
+            foreach (var field in typeDef.Fields)
+            {
+                if (field.Expression == null)
+                {
+                    field.SetExpression(AstExpressionBuilder.CreateLiteral(value));
+                }
+                else
+                {
+                    value = (int)field.Expression.RHS.LiteralNumeric.Value;
+                }
+                value++;
+            }
+
             return typeDef;
         }
 

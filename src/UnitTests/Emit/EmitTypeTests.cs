@@ -30,15 +30,18 @@ namespace UnitTests.Emit
         {
             const string code =
                 "module test" + Tokens.NewLine +
-                "export MyEnum" + Tokens.NewLine +
-                Tokens.Indent1 + "None = 0" + Tokens.NewLine
+                "export Count" + Tokens.NewLine +
+                Tokens.Indent1 + "Zero" + Tokens.NewLine +
+                Tokens.Indent1 + "One" + Tokens.NewLine +
+                Tokens.Indent1 + "Two" + Tokens.NewLine +
+                Tokens.Indent1 + "Three" + Tokens.NewLine
                 ;
 
             var emit = Emit.Create(code);
 
             var moduleClass = emit.Context.Module.Types.Find("test");
-            var typeEnum = moduleClass.NestedTypes.Find("Myenum");
-            typeEnum.Fields.Should().HaveCount(1 + 1);
+            var typeEnum = moduleClass.NestedTypes.Find("Count");
+            typeEnum.Fields.Should().HaveCount(4 + 1);
 
             emit.SaveAs("TypeEnumExport.dll");
         }

@@ -6,13 +6,19 @@ namespace Zsharp.AST
 {
     public class AstLiteralNumeric : AstNode
     {
+        public AstLiteralNumeric(UInt64 value)
+            : base(AstNodeType.Literal)
+        {
+            Value = value;
+        }
+
         private AstLiteralNumeric(NumberContext context)
             : base(AstNodeType.Literal)
         {
             Context = context;
         }
 
-        public ParserRuleContext Context { get; }
+        public ParserRuleContext? Context { get; }
 
         public UInt64 Value { get; private set; }
 

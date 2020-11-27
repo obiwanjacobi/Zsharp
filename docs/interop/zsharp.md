@@ -107,7 +107,7 @@ Throwing an exception from Z# code is passing an instance in the `Error` functio
 How to deal with Classes/Objects and inheritance?
 (calling and implementing)
 
-How do you deal with a Reference-Type when Z# is mainly Value-Type focussed.
+How do you deal with a Reference-Type when Z# is mainly Value-Type focussed?
 
 > Classes are represented as structures with functions.
 

@@ -3,6 +3,7 @@ using Mono.Cecil.Cil;
 using System;
 using System.Linq;
 using Zsharp.AST;
+using Zsharp.Semantics;
 
 namespace Zsharp.Emit
 {
@@ -94,9 +95,7 @@ namespace Zsharp.Emit
                 fieldAttrs = FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.Literal;
                 fieldDef = new FieldDefinition(field.Identifier.CanonicalName, fieldAttrs, typeDef)
                 {
-                    // Todo: compile time constant expression
-                    //Constant = field.Expression.ConstantValue();
-                    Constant = 1
+                    Constant = field.Expression.ConstantValue()
                 };
                 typeDef.Fields.Add(fieldDef);
             }

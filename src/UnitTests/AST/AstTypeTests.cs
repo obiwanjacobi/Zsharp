@@ -116,7 +116,7 @@ namespace UnitTests.AST
             e.Symbol.Definition.Should().Be(e);
             e.BaseType.Identifier.Name.Should().Be("I32");
 
-            var f = (AstTypeDefinitionEnumOption)e.Fields.First();
+            var f = e.Fields.First();
             f.Identifier.Name.Should().Be("None");
             f.Expression.Should().NotBeNull();
             f.Symbol.Definition.Should().Be(f);
@@ -136,10 +136,42 @@ namespace UnitTests.AST
             e.Symbol.Definition.Should().Be(e);
             e.BaseType.Identifier.Name.Should().Be("U8");
 
-            var f = (AstTypeDefinitionEnumOption)e.Fields.First();
+            var f = e.Fields.First();
             f.Identifier.Name.Should().Be("None");
             f.Expression.Should().NotBeNull();
             f.Symbol.Definition.Should().Be(f);
+        }
+
+        [TestMethod]
+        public void EnumTypeDefinition_AutoNumber()
+        {
+            const string code =
+                "Count" + Tokens.NewLine +
+                Tokens.Indent1 + "Zero" + Tokens.NewLine +
+                Tokens.Indent1 + "One" + Tokens.NewLine +
+                Tokens.Indent1 + "Two" + Tokens.NewLine +
+                Tokens.Indent1 + "Three" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var e = file.CodeBlock.ItemAt<AstTypeDefinitionEnum>(0);
+            e.Symbol.Definition.Should().Be(e);
+
+            var f = e.Fields.First();
+            f.Identifier.Name.Should().Be("Zero");
+            f.Expression.RHS.LiteralNumeric.Value.Should().Be(0);
+
+            f = e.Fields.Skip(1).First();
+            f.Identifier.Name.Should().Be("One");
+            f.Expression.RHS.LiteralNumeric.Value.Should().Be(1);
+
+            f = e.Fields.Skip(2).First();
+            f.Identifier.Name.Should().Be("Two");
+            f.Expression.RHS.LiteralNumeric.Value.Should().Be(2);
+
+            f = e.Fields.Skip(3).First();
+            f.Identifier.Name.Should().Be("Three");
+            f.Expression.RHS.LiteralNumeric.Value.Should().Be(3);
         }
     }
 }
