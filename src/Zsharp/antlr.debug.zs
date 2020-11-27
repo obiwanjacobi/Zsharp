@@ -1,2 +1,3 @@
-export MyEnum
-    None, One, Two
+MyStruct
+    Id: U8
+    Name: Str

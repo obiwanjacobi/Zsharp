@@ -36,14 +36,15 @@ For polymorphism in Z#, the compiler has to check if the fields (in order) match
 ## TODO
 
 - expressions
-- error handling (exceptions/Error/Err<T>)
+- error handling (exceptions/Error/Err\<T>)
 - defer
 - arrays
 - Imm\<T>
 - Opt\<T>
 - Bit\<n>
 - Ptr\<T>
-- Range/Iter/Slice (Span<T>)
+- Range/Iter/Slice (Span\<T>)
+- Union Types may be difficult
 - name/identifier matching and representation (case insensitive)
 - Memory Heap Allocation. Could be as simple as a wrapper `class HeapAlloc<T> where T : struct` to get a struct on the heap. Look into Boxing. There only need to be a (simple) way to indicate a heap target.
 
@@ -56,5 +57,7 @@ fn: ()
     // heap
     b: Mem<U8> = 42     // wrapper type
     c = Mem(42)         // conversion with type infer
-    d @= 42             // Mem<T> operator
+    d: U8@ = 42         // Mem<T> type operator?
 ```
+
+Cannot reuse `Ptr<T>` type operator `*` because a Z# struct is also a `struct` in .NET. A pointer to a struct would be a `ref struct`. A pointer to a heap-allocated instance would simply be a .NET managed reference.

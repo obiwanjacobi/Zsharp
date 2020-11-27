@@ -36,7 +36,7 @@ if a = myFunc()      // error!
 
 ## Chaining
 
-> FIX: CLashes with comparison is equal!
+> FIX: Clashes with comparison is equal!
 
 The assignment can be chained across multiple variables (left operand) that all get assigned the same value (right operand). Type inference works as expected and the inferred type is applied to all untyped vars.
 
@@ -56,7 +56,7 @@ a = b = c: U24 = 42
 
 ### Structure Assignment
 
-Assigning structures works the same as primitve values. A new copy is made for the target.
+Assigning structures works the same as primitive values. A new copy is made for the target.
 
 ```csharp
 s: Struct
@@ -246,6 +246,8 @@ s = MyStruct
 // or do we allow in-order?
 ```
 
+> Is there a need to override how deconstruction is done on a (custom) type?
+
 Swap scalar variables (unlike structs)
 
 ```C#
@@ -256,6 +258,9 @@ y = 101
 
 // x = 101
 // y = 42
+
+// swap operator?
+x <=> y
 ```
 
 ---

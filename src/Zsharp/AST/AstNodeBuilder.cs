@@ -606,6 +606,40 @@ namespace Zsharp.AST
             return typeRef;
         }
 
+        public override object? VisitStruct_def(Struct_defContext context)
+        {
+            var typeDef = new AstTypeDefinitionStruct(context);
+
+            var codeBlock = _builderContext.GetCodeBlock();
+            codeBlock.AddItem(typeDef);
+
+            _builderContext.SetCurrent(typeDef);
+            _ = VisitChildren(context);
+            _builderContext.RevertCurrent();
+
+            var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            symbolsSite.Symbols.Add(typeDef);
+
+            return typeDef;
+        }
+
+        public override object? VisitStruct_field_def(Struct_field_defContext context)
+        {
+            var fieldDef = new AstTypeDefinitionStructField(context);
+
+            _builderContext.SetCurrent(fieldDef);
+            _ = VisitChildren(context);
+            _builderContext.RevertCurrent();
+
+            var typeDef = _builderContext.GetCurrent<AstTypeDefinitionStruct>();
+            typeDef.AddField(fieldDef);
+
+            var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            symbolsSite.Symbols.Add(fieldDef);
+
+            return fieldDef;
+        }
+
         public override object? VisitType_ref_use(Type_ref_useContext context)
         {
             var typeRef = new AstTypeReference(context);

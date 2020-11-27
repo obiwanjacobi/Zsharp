@@ -22,7 +22,6 @@ namespace Zsharp.AST
         public bool TrySetBaseType(AstTypeReference typeReference)
             => this.SafeSetParent(ref _baseType, typeReference);
 
-
         public void SetBaseType(AstTypeReference typeReference)
         {
             if (!TrySetBaseType(typeReference))

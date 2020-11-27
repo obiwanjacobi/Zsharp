@@ -122,7 +122,6 @@ namespace UnitTests.AST
             f.Symbol.Definition.Should().Be(f);
         }
 
-
         [TestMethod]
         public void EnumTypeDefinition_BaseType()
         {
@@ -172,6 +171,26 @@ namespace UnitTests.AST
             f = e.Fields.Skip(3).First();
             f.Identifier.Name.Should().Be("Three");
             f.Expression.RHS.LiteralNumeric.Value.Should().Be(3);
+        }
+
+        [TestMethod]
+        public void StructTypeDefinition()
+        {
+            const string code =
+                "MyStruct" + Tokens.NewLine +
+                Tokens.Indent1 + "Id: U32" + Tokens.NewLine +
+                Tokens.Indent1 + "Name: Str" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var s = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
+            s.Symbol.Definition.Should().Be(s);
+            s.BaseType.Should().BeNull();
+
+            var f = s.Fields.First();
+            f.Identifier.Name.Should().Be("Id");
+            f.TypeReference.Should().NotBeNull();
+            f.Symbol.Definition.Should().Be(f);
         }
     }
 }

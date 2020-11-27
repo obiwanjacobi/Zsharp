@@ -107,8 +107,7 @@ str = StrUtf8.Encode(buffer)    // option #1
 str = buffer.ToUtf8()           // option #2
 // str: StrUtf8
 
-// do we need allocation?
-str = buffer.ToUtf8(alloc)      // option #2
+str = buffer.ToUtf8()      // option #2
 ```
 
 ### Text
@@ -124,8 +123,6 @@ Text
 > A TextBuilder will probably be required to efficiently create longer texts.
 
 > We could introduce a type that holds concatenated strings/texts as separate parts and read them using an iterator appearing to be one continuous text. That way no extra memory allocation is required putting the parts together - only some extra processing during read. An additional 'build' function could do all the allocations and return a single text at any point in time.
-
-> Zero terminated strings provide different advantages as to a pointer-length one. Zero-terminated requires less housekeeping and the zero-sentinel is well established. A pointer-length may be very convenient for sub-strings and splitting parts. If there would be a way to transparently use one or the other - interchangeably.
 
 ---
 
@@ -390,7 +387,20 @@ s = h.Seconds()     // s = 7200
 
 ---
 
-## Types with Operators
+## Builtin Wrapper Types
+
+Several wrapper types are used to add meaning to other types.
+
+Type | Meaning
+--|--
+`Err<T>` | T or Error
+`Opt<T>` | T or Nothing
+`Ptr<T>` | Pointer to T
+`Imm<T>` | T is immutable
+`Atom<T>` | Atomic access
+`Mem<T>` | Heap allocated
+
+## Types Operators
 
 Some built-in (decorator) types are use so often, it makes sense to provide a shorter version in the form of an operator.
 
@@ -430,21 +440,14 @@ Err<T>: T or Error _
 
 `Ptr` is discussed in more detail [here](pointers.md).
 
-Several convenience types are created.
-
-```csharp
-ImmPtr<T> = Ptr<Imm<T>>
-OptErr<T> = Err<Opt<T>>
-```
-
 ### Operators
 
 ```csharp
 o: U8?      // optional U8
 e: U8!      // U8 or error
 x: U8!?     // optional U8 or Error
-p: *U8?     // optional pointer to an U8
-i: ^*U8?    // pointer to an optional immutable U8
+p: U8*?     // optional pointer to an U8
+i: U8^*?    // pointer to an optional immutable U8
 ```
 
 `Err<T>` is typically (only) used on function return values.
