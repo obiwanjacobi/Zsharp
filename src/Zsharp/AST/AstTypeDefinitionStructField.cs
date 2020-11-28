@@ -40,5 +40,11 @@ namespace Zsharp.AST
         {
             return _symbol?.Definition == this;
         }
+
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitTypeDefinitionStructField(this);
+
+        public override void VisitChildren(AstVisitor visitor)
+            => TypeReference?.Accept(visitor);
     }
 }

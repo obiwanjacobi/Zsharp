@@ -112,6 +112,16 @@ namespace Zsharp.AST
             VisitChildren(enumOption);
         }
 
+        public virtual void VisitTypeDefinitionStruct(AstTypeDefinitionStruct structType)
+        {
+            VisitChildren(structType);
+        }
+
+        public virtual void VisitTypeDefinitionStructField(AstTypeDefinitionStructField structField)
+        {
+            VisitChildren(structField);
+        }
+
         public virtual void VisitVariableDefinition(AstVariableDefinition variable)
         {
             VisitChildren(variable);

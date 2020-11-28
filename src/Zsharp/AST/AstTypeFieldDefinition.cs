@@ -3,13 +3,9 @@ using System;
 
 namespace Zsharp.AST
 {
-    public class AstTypeFieldDefinition : AstNode, IAstIdentifierSite
+    public abstract class AstTypeFieldDefinition : AstNode, IAstIdentifierSite
     {
-        public AstTypeFieldDefinition()
-            : base(AstNodeType.Field)
-        { }
-
-        protected AstTypeFieldDefinition(AstNodeType nodeType)
+        protected AstTypeFieldDefinition(AstNodeType nodeType = AstNodeType.Field)
             : base(nodeType)
         { }
 
@@ -27,10 +23,5 @@ namespace Zsharp.AST
 
         public bool TrySetIdentifier(AstIdentifier identifier)
             => Ast.SafeSet(ref _identifier, identifier);
-
-        public override void Accept(AstVisitor visitor)
-        {
-            // TODO
-        }
     }
 }

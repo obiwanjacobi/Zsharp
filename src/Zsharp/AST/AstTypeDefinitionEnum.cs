@@ -18,8 +18,6 @@ namespace Zsharp.AST
             => base.Fields.Cast<AstTypeDefinitionEnumOption>();
 
         public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitTypeDefinitionEnum(this);
-        }
+            => visitor.VisitTypeDefinitionEnum(this);
     }
 }

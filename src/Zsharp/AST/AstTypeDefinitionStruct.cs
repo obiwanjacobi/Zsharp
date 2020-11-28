@@ -12,14 +12,12 @@ namespace Zsharp.AST
             Context = context;
         }
 
+        public int Indent { get; set; }
+
         public new IEnumerable<AstTypeDefinitionStructField> Fields
             => base.Fields.Cast<AstTypeDefinitionStructField>();
 
-        public int Indent { get; set; }
-
         public override void Accept(AstVisitor visitor)
-        {
-            throw new System.NotImplementedException();
-        }
+            => visitor.VisitTypeDefinitionStruct(this);
     }
 }
