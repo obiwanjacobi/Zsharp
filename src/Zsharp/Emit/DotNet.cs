@@ -22,6 +22,10 @@ namespace Zsharp.Emit
             => _runtimeAssembly.MainModule.Types.Find("String")
             ?? throw new InvalidOperationException("String type was not found!");
 
+        public TypeDefinition ValueType
+            => _runtimeAssembly.MainModule.Types.Find("ValueType")
+            ?? throw new InvalidOperationException("ValueType type was not found!");
+
         public TypeDefinition EnumType
             => _runtimeAssembly.MainModule.Types.Find("Enum")
             ?? throw new InvalidOperationException("Enum type was not found!");

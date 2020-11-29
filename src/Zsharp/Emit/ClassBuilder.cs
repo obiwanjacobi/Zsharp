@@ -81,6 +81,22 @@ namespace Zsharp.Emit
             return methodDef;
         }
 
+        public TypeDefinition AddTypeStruct(AstTypeDefinitionStruct structType)
+        {
+            var typeDef = CreateType(String.Empty, structType.Identifier.CanonicalName, ToTypeAttributes(structType), EmitContext.DotNet.ValueType);
+
+            foreach (var field in structType.Fields)
+            {
+                var typeRef = _context.ToTypeReference(field.TypeReference);
+                var fieldAttrs = FieldAttributes.Public;
+                var fieldDef = new FieldDefinition(field.Identifier.CanonicalName, fieldAttrs, typeRef);
+                typeDef.Fields.Add(fieldDef);
+            }
+
+            _typeDefinition.NestedTypes.Add(typeDef);
+            return typeDef;
+        }
+
         public TypeDefinition AddTypeEnum(AstTypeDefinitionEnum enumType)
         {
             var typeDef = CreateType(String.Empty, enumType.Identifier.CanonicalName, ToTypeAttributes(enumType), EmitContext.DotNet.EnumType);
@@ -138,6 +154,15 @@ namespace Zsharp.Emit
         {
             var attrs = TypeAttributes.Class | TypeAttributes.Abstract | TypeAttributes.Sealed;
             attrs |= module.HasExports ? TypeAttributes.Public : TypeAttributes.NotPublic;
+            return attrs;
+        }
+
+        private static TypeAttributes ToTypeAttributes(AstTypeDefinitionStruct typeDefinition)
+        {
+            var attrs = TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.SequentialLayout | TypeAttributes.BeforeFieldInit;
+            attrs |= typeDefinition.Symbol.SymbolLocality == AstSymbolLocality.Exported
+                ? TypeAttributes.NestedPublic
+                : TypeAttributes.NestedPrivate;
             return attrs;
         }
 

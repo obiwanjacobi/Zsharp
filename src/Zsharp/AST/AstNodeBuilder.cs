@@ -620,6 +620,11 @@ namespace Zsharp.AST
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
             symbolsSite.Symbols.Add(typeDef);
 
+            if (context.Parent is Statement_export_inlineContext)
+            {
+                typeDef.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
+            }
+
             return typeDef;
         }
 

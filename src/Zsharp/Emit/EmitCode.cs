@@ -158,6 +158,11 @@ namespace Zsharp.Emit
             Context.ModuleClass.AddTypeEnum(enumType);
         }
 
+        public override void VisitTypeDefinitionStruct(AstTypeDefinitionStruct structType)
+        {
+            Context.ModuleClass.AddTypeStruct(structType);
+        }
+
         public void SaveAs(string filePath)
         {
             Context.Assembly.Name.Name = Path.GetFileNameWithoutExtension(filePath);
