@@ -10,35 +10,35 @@ Of these wellknown functions there are two flavors: unchecked and checked implem
 
 Arithmetic, bitwise and logical operators.
 
-| Operator | Description
-|---|---
-| `+` | Addition / Absolute? (unary)
-| `-` | Subtraction / Negation (unary)
-| `*` | Multiplication
-| `/` | Division
-| `%` | Remainder
-| `**` | Power
-| `( )` | Math Precedence
-| `=` | Equals
-| `<>` | Not Equals
-| `>` | Greater than
-| `<` | Smaller than
-| `>=` | Greater or Equal
-| `<=` | Smaller or Equal (`=<`?)
-| `? :` | Ternary Conditional
-| `and` | Logical And
-| `or` | Logical Or
-| `not` | Logical Negation
-| `&` | Bitwise And
-| `|` | Bitwise Or
-| `^` | Bitwise Exclusive Or
-| `~` | Bitwise Negation (complement/invert)
-| `>>` | Bitwise Shift Right
-| `<<` | Bitwise Shift Left
-| `>|` | Bitwise Rotate Right
-| `|<` | Bitwise Rotate Left
-| `=` | Value Assignment
-| `:=` | Value Assignment with inferred Type
+| Operator | Fn Name | Description
+|--|--|--
+| `+` | Add | Addition / Absolute? (unary)
+| `-` | Subtract, Negate | Subtraction / Negation (unary)
+| `*` | Multiply | Multiplication
+| `/` | Divide | Division
+| `%` | Remainder | Remainder
+| `**` | Power | Power
+| `( )` | - | Math Precedence
+| `=` | IsEqual | Equals
+| `<>` | IsNotEqual | Not Equals
+| `>` | IsGreaterThan | Greater than
+| `<` | IsLesserThan | Smaller than
+| `>=` | IsGreaterEqual | Greater or Equal
+| `<=` | IsLesserEqual | Smaller or Equal (`=<`?)
+| `? :` | - | Ternary Conditional
+| `and` | LogicAnd | Logical And
+| `or` | LogicOr | Logical Or
+| `not` | LogicNot | Logical Negation
+| `&` | - | Bitwise And
+| `|` | - | Bitwise Or
+| `^` | - | Bitwise Exclusive Or
+| `~` | - | Bitwise Negation (complement/invert)
+| `>>` | - | Bitwise Shift Right
+| `<<` | - | Bitwise Shift Left
+| `>|` | - | Bitwise Rotate Right
+| `|<` | - | Bitwise Rotate Left
+| `=` | - | Value Assignment
+| `:=` | - | Value Assignment with inferred Type
 
 > Ternary operators cannot contain other ternary operators. No nesting of `? :` for readability.
 
@@ -99,7 +99,7 @@ Arithmetic, bitwise and logical operators.
 
 ---
 
-## 
+## Short-hand Operators
 
 | Operator | Description
 |---|---

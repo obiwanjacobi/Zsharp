@@ -577,6 +577,34 @@ ReportProgress(self, ProgressEvent progressEvent)
 
 ---
 
+## Weak Functions
+
+> TBD not sure if this will fly
+
+Weak functions are function declarations that allows external code to implement the function. It is a forward declaration that does not needs to be resolved.
+
+If the weak function cannot be resolved it and its call sites are removed without compile errors.
+
+```csharp
+weakFn: () _
+
+// not implemented => removed
+weakFn()
+```
+
+```csharp
+weakFn: () _
+
+// implementation
+weakFn: ()
+    return
+
+// implemented => called
+weakFn()
+```
+
+---
+
 ## Pure Functional
 
 A pure function -without side-effects- can be recognized by the lack of mutable captures and the presence of immutable (only in-) parameters. It also has to have a return value.
@@ -788,7 +816,7 @@ intrinsic functions (operator implementations) - extensions?
 
 top-level function calls/one-time initialization at first access of module.
 
-declarative code: see if we can find a syntax that could would make it easy to call lts of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
+declarative code: see if we can find a syntax that could would make it easy to call lots of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
 https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md
 
 

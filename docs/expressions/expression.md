@@ -4,7 +4,7 @@ Almost all operators are binary and use an infix notation: the operator symbols 
 
 A unary expression is one that takes only one operand. Negating a numeric value (`-5`) is an example.
 
-> Note that operators that mutate a value in-place are absent in Z#. Examples of these operators are `++`, `--` and `+=`, `-=`. These are not supported.
+> Note that operators that mutate a value in-place are absent in Z#. Examples of these operators are `++` and `--`. These are not supported. Operators like `+=` and `-=` are short hand for `x = x + y`. These are supported.
 
 The supported expressions are divided in these categories:
 
@@ -16,6 +16,8 @@ The supported expressions are divided in these categories:
 
 See also the [Match Expression](../lang/match.md)
 
+---
+
 ## Precedence
 
 When using more than one operator in a single expression, some operators are processed before others: precedence.
@@ -24,4 +26,42 @@ The use of `()` indicates that everything inside the parentheses is processed be
 
 ---
 
-> TBD
+## Operator Overloads
+
+Every operator can be specialized (overloaded) for a specific type. These functions are all [checked](../compiler/checked.md#Operator-Overloads) by the compiler if they confirm to the rules for that specific operator.
+
+The name and prototype of the function that implements an operator overload is bound to specific rules, otherwise it cannot be resolved.
+
+```csharp
+[name]: ([params]): [ret]
+```
+
+- `[name]` Each [operator](../lexical/operators.md#Operator-Symbols) has an associated function name.
+- `[params]` The left-hand-side operand is defined as a self parameter. The right-hand-side operator is the second parameter. For unary operators only the right-hand-side parameter is defined as a self parameter. Based on the type of this self parameter an initial match is made. A secondary match is made on the exact type of the second parameter - if available.
+- `[ret]` The resulting type of the operator function. Usually this is the same type as the self parameter, but it can be different. The compiler will respect this type for further processing. For comparison and logical operators the return type is always `Bool`.
+
+```csharp
+Vector
+    x: I32
+    y: I32
+    z: I32
+
+Negate: (self: Vector): Vector
+    return { x = -self.x, y = -self.y, z = -self.z }
+IsEqual: (self: Vector, other: Vector): Bool
+    return self.x = other.x and
+            self.y = other.y and
+            self.z = other.z
+
+v = Vector
+    x = 42
+    y = 68
+    z = 101
+
+notV = -v       // calls Negate operator overload function
+areEq = v = notV    // calls IsEqual operator overload function
+```
+
+These operator overload functions can also be called directly if one prefers the explicit nature of them.
+
+> Not sure if the bitwise operators overloading would not result in a totally different semantics. For now not supported.
