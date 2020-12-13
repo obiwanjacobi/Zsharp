@@ -8,6 +8,8 @@ namespace Zsharp.AST
     [DebuggerDisplay("{Name}")]
     public class AstIdentifier
     {
+        private const string Delimiter = "%";
+
         public AstIdentifier(Identifier_typeContext context)
             : this(context, AstIdentifierType.Type)
         { }
@@ -53,10 +55,25 @@ namespace Zsharp.AST
 
         public ParserRuleContext? Context { get; }
 
-        public string Name { get; }
-        public string CanonicalName { get; }
-
+        public string Name { get; private set; }
+        public string CanonicalName { get; private set; }
         public AstIdentifierType IdentifierType { get; }
+
+        private int _templateParameterCount;
+        public int TemplateParameterCount
+        {
+            get { return _templateParameterCount; }
+            set
+            {
+                _templateParameterCount = value;
+                var parts = Name.Split(Delimiter);
+                if (_templateParameterCount > 0)
+                    Name = $"{parts[0]}{Delimiter}{_templateParameterCount}";
+                else
+                    Name = parts[0];
+                CanonicalName = AstDotName.ToCanonical(Name);
+            }
+        }
 
         public bool IsEqual(AstIdentifier? that)
         {

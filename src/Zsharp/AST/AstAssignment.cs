@@ -80,32 +80,19 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var field in _fields)
-            {
-                field.Accept(visitor);
-            }
             Expression?.Accept(visitor);
             Variable?.Accept(visitor);
         }
 
-        private readonly List<AstTypeFieldInitialization> _fields = new List<AstTypeFieldInitialization>();
-        public IEnumerable<AstTypeFieldInitialization> Fields => _fields;
+        // routing from place in parse tree (child of Assignment) 
+        // to logical storage site (TypeReference)
+        public IEnumerable<AstTypeFieldInitialization> Fields
+            => Variable.TypeReference.Fields;
 
         public bool TryAddFieldInit(AstTypeFieldInitialization field)
-        {
-            if (field != null)
-            {
-                _fields.Add(field);
-                return true;
-            }
-            return false;
-        }
+            => Variable.TypeReference.TryAddFieldInit(field);
 
         public void AddFieldInit(AstTypeFieldInitialization field)
-        {
-            if (!TryAddFieldInit(field))
-                throw new InvalidOperationException(
-                    "TypeField is alread set or null.");
-        }
+            => Variable.TypeReference.AddFieldInit(field);
     }
 }

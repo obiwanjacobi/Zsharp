@@ -4,7 +4,10 @@ grammar Zsharp;
 file : header* source* INDENT? EOF;
 header: module_statement | comment | empty_line;
 source: definition_top | comment | empty_line;
-codeblock: (flow_statement | variable_assign | function_call | definition | comment | empty_line)+;
+codeblock: (flow_statement 
+    | variable_assign_value | variable_assign_struct 
+    | function_call | definition 
+    | comment | empty_line)+;
 
 // modules
 module_statement : statement_module | statement_import | statement_export;

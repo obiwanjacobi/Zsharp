@@ -291,12 +291,6 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitVariable_def_typed([NotNull] ZsharpParser.Variable_def_typedContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_assign"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitVariable_assign([NotNull] ZsharpParser.Variable_assignContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_assign_value"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

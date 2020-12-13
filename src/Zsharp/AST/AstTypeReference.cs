@@ -7,7 +7,8 @@ using static Zsharp.Parser.ZsharpParser;
 namespace Zsharp.AST
 {
     [DebuggerDisplay("{Identifier}")]
-    public class AstTypeReference : AstType, IAstTemplateSite
+    public class AstTypeReference : AstType,
+        IAstTemplateSite, IAstTypeInitializeSite
     {
         public AstTypeReference(AstTypeReference inferredFrom)
             : base(AstNodeType.Type)
@@ -73,7 +74,13 @@ namespace Zsharp.AST
         }
 
         public override void Accept(AstVisitor visitor)
-            => visitor.VisitTypeReference(this);
+        {
+            foreach (var field in _fields)
+            {
+                field.Accept(visitor);
+            }
+            visitor.VisitTypeReference(this);
+        }
 
         public static AstTypeReference Create(AstTypeDefinition typeDef, AstNode? typeSource = null)
         {
@@ -95,11 +102,13 @@ namespace Zsharp.AST
         {
             if (templateParameter is AstTemplateParameterReference parameter)
             {
-                if (_parameters.FirstOrDefault(p =>
+                if (_parameters.SingleOrDefault(p =>
                     p.Identifier?.Name == parameter.Identifier?.Name) != null)
                     return false;
 
                 _parameters.Add(parameter);
+
+                Identifier.TemplateParameterCount = _parameters.Count;
                 return true;
             }
             return false;
@@ -110,6 +119,27 @@ namespace Zsharp.AST
             if (!TryAddTemplateParameter(templateParameter))
                 throw new InvalidOperationException(
                     "TemplateParameter is already set or null.");
+        }
+
+        private readonly List<AstTypeFieldInitialization> _fields = new List<AstTypeFieldInitialization>();
+        public IEnumerable<AstTypeFieldInitialization> Fields => _fields;
+
+        public bool TryAddFieldInit(AstTypeFieldInitialization field)
+        {
+            if (field != null &&
+                field.TrySetParent(this))
+            {
+                _fields.Add(field);
+                return true;
+            }
+            return false;
+        }
+
+        public void AddFieldInit(AstTypeFieldInitialization field)
+        {
+            if (!TryAddFieldInit(field))
+                throw new InvalidOperationException(
+                    "TypeField is alread set or null.");
         }
     }
 }
