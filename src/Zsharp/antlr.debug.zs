@@ -1,3 +1,2 @@
-MyStruct
-    Id: U8
-    Name: Str
+s = MyStruct
+    Id = 42

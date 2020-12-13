@@ -1,10 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     [DebuggerDisplay("{Identifier}")]
-    public class AstTypeReference : AstType
+    public class AstTypeReference : AstType, IAstTemplateSite
     {
         public AstTypeReference(AstTypeReference inferredFrom)
             : base(AstNodeType.Type)
@@ -15,14 +18,12 @@ namespace Zsharp.AST
             _typeSource = inferredFrom.TypeSource;
         }
 
-        public AstTypeReference(Type_ref_useContext context)
+        public AstTypeReference(Type_refContext context)
             : base(AstNodeType.Type)
         {
             Context = context;
-
-            var typeRef = context.type_ref();
-            IsOptional = typeRef.QUESTION() != null;
-            IsError = typeRef.ERROR() != null;
+            IsOptional = context.QUESTION() != null;
+            IsError = context.ERROR() != null;
         }
 
         public AstTypeReference(Enum_base_typeContext context)
@@ -71,7 +72,8 @@ namespace Zsharp.AST
             return false;
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitTypeReference(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitTypeReference(this);
 
         public static AstTypeReference Create(AstTypeDefinition typeDef, AstNode? typeSource = null)
         {
@@ -84,6 +86,30 @@ namespace Zsharp.AST
             if (typeSource != null)
                 typeRef.TrySetTypeSource(typeSource);
             return typeRef;
+        }
+
+        private readonly List<AstTemplateParameterReference> _parameters = new List<AstTemplateParameterReference>();
+        public IEnumerable<AstTemplateParameter> Parameters => _parameters;
+
+        public bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
+        {
+            if (templateParameter is AstTemplateParameterReference parameter)
+            {
+                if (_parameters.FirstOrDefault(p =>
+                    p.Identifier?.Name == parameter.Identifier?.Name) != null)
+                    return false;
+
+                _parameters.Add(parameter);
+                return true;
+            }
+            return false;
+        }
+
+        public void AddTemplateParameter(AstTemplateParameter templateParameter)
+        {
+            if (!TryAddTemplateParameter(templateParameter))
+                throw new InvalidOperationException(
+                    "TemplateParameter is already set or null.");
         }
     }
 }

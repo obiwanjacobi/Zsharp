@@ -43,22 +43,25 @@ namespace Zsharp.AST
             return indent / Indent;
         }
 
+        public T? TryGetCurrent<T>()
+            where T : class
+        {
+            foreach (var c in _current)
+            {
+                if (c is T t)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
         public T GetCurrent<T>()
             where T : class
         {
-            T? p = null;
-
-            foreach (var c in _current)
-            {
-                p = c as T;
-                if (p != null)
-                {
-                    break;
-                }
-            }
-
-            Ast.Guard(p, "GetCurrent() => null");
-            return p!;
+            T? t = TryGetCurrent<T>();
+            Ast.Guard(t, $"GetCurrent() could not find {typeof(T).Name}");
+            return t!;
         }
 
         public void SetCurrent<T>(T current) where T : AstNode
@@ -83,20 +86,23 @@ namespace Zsharp.AST
 
         public AstCodeBlock GetCodeBlock(UInt32 indent)
         {
-            AstCodeBlock? p = null;
+            AstCodeBlock? cb = TryGetCodeBlock(indent);
+            Ast.Guard(cb, $"CodeBlock was not found for indent {indent}.");
+            return cb!;
+        }
 
+        public AstCodeBlock? TryGetCodeBlock(UInt32 indent)
+        {
             foreach (var c in _current)
             {
-                p = c as AstCodeBlock;
-                if (p != null &&
-                    p.Indent == indent)
+                if (c is AstCodeBlock cb &&
+                    cb.Indent == indent)
                 {
-                    break;
+                    return cb;
                 }
             }
 
-            Ast.Guard(p != null, "GetCodeBlock => null");
-            return p!;
+            return null;
         }
 
         public bool TryAddIdentifier(AstIdentifier identifier)

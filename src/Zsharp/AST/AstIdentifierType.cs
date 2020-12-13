@@ -8,6 +8,7 @@
         Parameter,
         Function,
         Field,
-        EnumOption
+        EnumOption,
+        TemplateParameter,
     }
 }

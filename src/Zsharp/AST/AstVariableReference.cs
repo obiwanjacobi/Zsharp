@@ -8,17 +8,27 @@ namespace Zsharp.AST
         {
             Context = context;
         }
-        public AstVariableReference(Variable_assign_autoContext context)
+
+        public AstVariableReference(Variable_assign_structContext context)
         {
             Context = context;
         }
 
-        public bool HasDefinition => VariableDefinition != null || ParameterDefinition != null;
+        public AstVariableReference(Variable_assign_valueContext context)
+        {
+            Context = context;
+        }
 
-        public AstVariableDefinition? VariableDefinition => Symbol?.DefinitionAs<AstVariableDefinition>();
+        public bool HasDefinition
+            => VariableDefinition != null || ParameterDefinition != null;
 
-        public AstFunctionParameter? ParameterDefinition => Symbol?.DefinitionAs<AstFunctionParameter>();
+        public AstVariableDefinition? VariableDefinition
+            => Symbol?.DefinitionAs<AstVariableDefinition>();
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitVariableReference(this);
+        public AstFunctionParameter? ParameterDefinition
+            => Symbol?.DefinitionAs<AstFunctionParameter>();
+
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitVariableReference(this);
     }
 }

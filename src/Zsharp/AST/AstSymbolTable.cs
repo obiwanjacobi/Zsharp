@@ -21,7 +21,15 @@ namespace Zsharp.AST
             ParentTable = parentTable;
         }
 
-        public string Name { get; }
+        public string Name { get; private set; }
+
+        public void SetName(string name)
+        {
+            if (!String.IsNullOrEmpty(Name))
+                throw new InvalidOperationException(
+                    "Name is already set");
+            Name = name;
+        }
 
         public AstSymbolTable? ParentTable { get; }
 

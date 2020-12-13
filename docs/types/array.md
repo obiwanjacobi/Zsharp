@@ -35,7 +35,7 @@ There are two ways to select array elements:
 
 Using an index (zero-based, positive integer) pinpoints a single element. The type of this operation is the element type of the array. It can be used to read or write a single value (T).
 
-Multiple array elements are selected when using [`Range`s](range.md). These too can be used to read a value from the array as well as write a value to to the array - if it is mutable.
+Multiple array elements are selected when using [Ranges](range.md). These too can be used to read a value from the array as well as write a value to to the array - if it is mutable.
 
 The resulting type of a Range operation is a `Slice`. A slice is a view into the original array bounded by the range that created it. It is continuous and sequential, just like an array. Think of it as a subset.
 

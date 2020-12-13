@@ -1,18 +1,26 @@
 using Antlr4.Runtime;
 using System;
+using System.Collections.Generic;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstAssignment : AstNode, IAstCodeBlockItem, IAstExpressionSite
+    public class AstAssignment : AstNode,
+        IAstCodeBlockItem, IAstExpressionSite, IAstTypeInitializeSite
     {
-        public AstAssignment(Variable_assign_autoContext context)
+        public AstAssignment(Variable_def_typedContext context)
             : base(AstNodeType.Assignment)
         {
             Context = context;
         }
 
-        public AstAssignment(Variable_def_typed_initContext context)
+        public AstAssignment(Variable_assign_structContext context)
+            : base(AstNodeType.Assignment)
+        {
+            Context = context;
+        }
+
+        public AstAssignment(Variable_assign_valueContext context)
             : base(AstNodeType.Assignment)
         {
             Context = context;
@@ -35,6 +43,7 @@ namespace Zsharp.AST
         }
 
         private AstVariable? _variable;
+
         public AstVariable? Variable => _variable;
 
         public bool TrySetVariable(AstVariable variable)
@@ -71,8 +80,32 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
+            foreach (var field in _fields)
+            {
+                field.Accept(visitor);
+            }
             Expression?.Accept(visitor);
             Variable?.Accept(visitor);
+        }
+
+        private readonly List<AstTypeFieldInitialization> _fields = new List<AstTypeFieldInitialization>();
+        public IEnumerable<AstTypeFieldInitialization> Fields => _fields;
+
+        public bool TryAddFieldInit(AstTypeFieldInitialization field)
+        {
+            if (field != null)
+            {
+                _fields.Add(field);
+                return true;
+            }
+            return false;
+        }
+
+        public void AddFieldInit(AstTypeFieldInitialization field)
+        {
+            if (!TryAddFieldInit(field))
+                throw new InvalidOperationException(
+                    "TypeField is alread set or null.");
         }
     }
 }

@@ -1,7 +1,7 @@
 grammar Zsharp;
 
 // entry point
-file : header* source* EOF;
+file : header* source* INDENT? EOF;
 header: module_statement | comment | empty_line;
 source: definition_top | comment | empty_line;
 codeblock: (flow_statement | variable_assign | function_call | definition | comment | empty_line)+;
@@ -73,18 +73,18 @@ function_param_use: expression_value;
 function_call_retval_unused: indent UNUSED SP EQ_ASSIGN SP function_call;
 
 // variables
-variable_def_top: (variable_def_typed | variable_def_typed_init | variable_assign_auto) newline;
-variable_def: indent (variable_def_typed | variable_def_typed_init) newline;
-variable_def_typed: identifier_var type_ref_use;
-variable_def_typed_init: identifier_var type_ref_use SP EQ_ASSIGN SP expression_value;
-variable_assign_auto: identifier_var SP EQ_ASSIGN SP expression_value;
-variable_assign: indent variable_assign_auto;
+variable_def_top: variable_def_typed | variable_assign_value | variable_assign_struct;
+variable_def: indent (variable_def_typed | variable_assign_value | variable_assign_struct);
+variable_def_typed: identifier_var type_ref_use newline;
+variable_assign_value: identifier_var type_ref_use? SP EQ_ASSIGN SP expression_value newline;
+variable_assign_struct: identifier_var SP EQ_ASSIGN SP type_ref newline struct_field_init*;
 variable_ref: identifier_var;
 
 // structs
-struct_def: identifier_type template_param_list? (type_ref_use)? (newline struct_field_def_list);
+struct_def: identifier_type template_param_list? (type_ref_use)? newline struct_field_def_list;
 struct_field_def_list: struct_field_def+;
 struct_field_def: indent identifier_field type_ref_use newline;
+struct_field_init: indent identifier_field SP EQ_ASSIGN SP expression_value newline;
 
 // enums
 enum_def: identifier_type (COLON SP enum_base_type)? newline (enum_option_def_list | enum_option_def_listline);
@@ -137,12 +137,13 @@ template_param_list_use_number: SMALL_ANGLEopen number GREAT_ANGLEclose;
 template_param_list_use_type: SMALL_ANGLEopen type_ref GREAT_ANGLEclose;
 template_param_list: SMALL_ANGLEopen template_param_any (COMMA SP template_param_any)* GREAT_ANGLEclose;
 template_param_var: identifier_param type_ref_use;
-template_param_any: template_param_var | type_name;
+template_param_any: template_param_var | identifier_template_param;
 
 // aliases
 alias_module: identifier_module;
 
 // identifiers
+identifier_template_param: IDENTIFIERupper;
 identifier_type: IDENTIFIERupper;
 identifier_var: IDENTIFIERlower;
 identifier_param: IDENTIFIERlower;

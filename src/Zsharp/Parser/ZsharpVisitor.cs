@@ -291,23 +291,23 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitVariable_def_typed([NotNull] ZsharpParser.Variable_def_typedContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_def_typed_init"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitVariable_def_typed_init([NotNull] ZsharpParser.Variable_def_typed_initContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_assign_auto"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitVariable_assign_auto([NotNull] ZsharpParser.Variable_assign_autoContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_assign"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitVariable_assign([NotNull] ZsharpParser.Variable_assignContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_assign_value"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVariable_assign_value([NotNull] ZsharpParser.Variable_assign_valueContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_assign_struct"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVariable_assign_struct([NotNull] ZsharpParser.Variable_assign_structContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_ref"/>.
 	/// </summary>
@@ -332,6 +332,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitStruct_field_def([NotNull] ZsharpParser.Struct_field_defContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.struct_field_init"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStruct_field_init([NotNull] ZsharpParser.Struct_field_initContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.enum_def"/>.
 	/// </summary>
@@ -536,6 +542,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitAlias_module([NotNull] ZsharpParser.Alias_moduleContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.identifier_template_param"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIdentifier_template_param([NotNull] ZsharpParser.Identifier_template_paramContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.identifier_type"/>.
 	/// </summary>

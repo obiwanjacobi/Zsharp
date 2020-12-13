@@ -2,21 +2,37 @@
 
 A Range encapsulates a range of indices and optionally a step value.
 
+Given an array of integers:
+
+Array|1|2|3|4|5|6|7|8
+--|--|--|--|--|--|--|--|--
+Index|0|1|2|3|4|5|6|7
+Reverse|-8|-7|-6|-5|-4|-3|-2|-1
+
 ## Syntax
 
 > Note: Range's stop or end term is exclusive!
 
-```C#
-[1..4]      // closed range
+```csharp
+[1..4]      // closed range (skip first)
 [..4]       // from start
 [4..]       // till end
 [..]        // all
 [0]         // first
 [-1]        // last
+[..-1]      // till one before end
 ```
 
-```C#
-rng = Rng(1, 6)     // ??
+```csharp
+rng = Range(1, 6)     // allow??
+```
+
+```csharp
+arr = (1, 2, 3, 4, 5, 6)
+// index-based array composition?
+x = arr[0, 3, 1, 4]
+// x: Array<U8> = (1, 4, 2, 5)
+// x cannot be a Slice
 ```
 
 ### Step
@@ -33,7 +49,9 @@ A third optional parameter for a range is the step the value takes on each itera
 [5..0, -1]
 ```
 
-If no step is specified it is always 1. This means that ranges with start > end, will not iterate - a behavior that is most useful/common/expected I think.
+> Not sure about the `,` - may change to `:` perhaps: `[0..5:1]`
+
+If no step is specified it is always 1. This means that non-normalized ranges with start > end, will not iterate - a behavior that is most useful/common/expected I think.
 
 ### Static
 
@@ -54,7 +72,7 @@ Keeps track of the indices that define a range.
 
 ```csharp
 Range
-    begin: U32
+    begin: U32?
     end: U32?
     step: U32 = 1
 ```
@@ -62,10 +80,10 @@ Range
 Ranges convert to Slices when paired with an array or list.
 
 ```csharp
-a: Array<U8> = [ 1, 2, 3, 4, 5 ]
-r = [0..]
-s = Slice(a, r)
-i = GetIter(s)
+a: Array<U8> = (1, 2, 3, 4, 5)
+r = [0..]       // Range object
+s = Slice(a, r) // Slice<T> object
+i = GetIter(s)  // Iter<T> object
 ```
 
 > TBD Use ranges for value range checking?
@@ -127,4 +145,15 @@ Slice<T>
     ptr: Ptr<T>
     offset: U32
     length: U32
+```
+
+---
+
+Examples
+
+```csharp
+arr = (1, 2, 3, 4, 5)
+
+loop v in arr[1..-2]    // 2, 3
+    ...
 ```

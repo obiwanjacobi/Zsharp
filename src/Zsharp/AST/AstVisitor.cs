@@ -67,6 +67,11 @@ namespace Zsharp.AST
             VisitChildren(field);
         }
 
+        public virtual void VisitTypeFieldInitialization(AstTypeFieldInitialization field)
+        {
+            VisitChildren(field);
+        }
+
         public virtual void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
         {
             VisitChildren(parameter);

@@ -9,7 +9,7 @@ namespace Zsharp.AST
             Context = context;
         }
 
-        public AstVariableDefinition(Variable_def_typed_initContext context)
+        public AstVariableDefinition(Variable_assign_valueContext context)
         {
             Context = context;
         }

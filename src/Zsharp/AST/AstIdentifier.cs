@@ -32,6 +32,10 @@ namespace Zsharp.AST
             : this(context, AstIdentifierType.EnumOption)
         { }
 
+        public AstIdentifier(Identifier_template_paramContext context)
+            : this(context, AstIdentifierType.TemplateParameter)
+        { }
+
         protected AstIdentifier(ParserRuleContext context, AstIdentifierType identifierType)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));

@@ -20,6 +20,7 @@
 
         Variable,
         FunctionParameter,
+        TemplateParameter,
         Field,
         EnumOption,
     }

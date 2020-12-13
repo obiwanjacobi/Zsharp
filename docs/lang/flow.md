@@ -32,6 +32,15 @@ true ? ... : ...    // ternary operator
 true ? ...          // ternary without 'else'
 ```
 
+Allow `in` keyword in `if` statement?
+
+```csharp
+arr = (1, 2, 3, 4, 5)
+x = 2
+if x in arr // can x be found in arr?
+    ...     // true
+```
+
 ### Parenthesis
 
 When parenthesis are used they are always part of the expression, not of the `if` statement. There is always a space after the `if` statement - this is what sets it apart from a function call.
@@ -83,7 +92,7 @@ loop c
     do_this_42_times    // is c available - and what value?
 ```
 
-> TODO: loop with more than one range?
+> TODO: loop with more than one range? Hard to control behavior.
 
 ```csharp
 loop w in [5..0], h in [0..10]

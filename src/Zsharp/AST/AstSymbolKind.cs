@@ -11,5 +11,6 @@
         Type,
         Variable,
         Field,
+        TemplateParameter,  // Type | Variable
     };
 }

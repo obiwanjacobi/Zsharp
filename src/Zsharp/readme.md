@@ -12,5 +12,6 @@
 - Add (custom) Type Conversion (Type names as function names)
 - Add Custom Data Types (and export)
 - implement discard as variable: `_ = fn()`
+- Emit struct field init
 - Can we move ParserRuleContext Context property to AstNode?
 - Add SymbolEntrySite to TypeDefinition?
