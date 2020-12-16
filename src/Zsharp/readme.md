@@ -15,3 +15,5 @@
 - Emit struct field init
 - Can we move ParserRuleContext Context property to AstNode?
 - Add SymbolEntrySite to TypeDefinition?
+- TypeReferences of built-in types are added to root SymbolTable that contains definition.
+    Need to see if this is a problem when multiple files are compiled using the same root symbol table.

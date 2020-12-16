@@ -16,7 +16,8 @@ namespace Zsharp.AST
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public bool TrySetExpression(AstExpression expression) => this.SafeSetParent(ref _expression, expression);
+        public bool TrySetExpression(AstExpression expression)
+            => this.SafeSetParent(ref _expression, expression);
 
         public void SetExpression(AstExpression expression)
         {
@@ -25,10 +26,12 @@ namespace Zsharp.AST
                     "Expression is already set or null.");
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionParameterReference(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitFunctionParameterReference(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {
+            base.VisitChildren(visitor);
             Expression?.Accept(visitor);
         }
     }

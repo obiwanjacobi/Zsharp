@@ -210,6 +210,7 @@ namespace UnitTests.AST
             var f = s.Fields.First();
             f.Identifier.Name.Should().Be("Id");
             f.TypeReference.Should().NotBeNull();
+            f.TypeReference.IsTemplateParameter.Should().BeTrue();
             f.Symbol.Definition.Should().Be(f);
         }
 
@@ -226,14 +227,6 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var s = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
-            s.Symbol.Definition.Should().Be(s);
-            s.BaseType.Should().BeNull();
-
-            var f = s.Fields.First();
-            f.Identifier.Name.Should().Be("Id");
-            f.TypeReference.Should().NotBeNull();
-            f.Symbol.Definition.Should().Be(f);
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(1);
             a.Fields.Should().HaveCount(2);

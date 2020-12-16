@@ -51,6 +51,8 @@ z = typedRet()      // Error! cannot determine type
 
 Template parameters are applied at compile time. A parameter name (first char) _MUST_ be capitalized when it is used as a Type.
 
+> If Templates are nested `MyStruct<Array<U8> >` there __must__ be a space between each closing `>` angle bracket. Otherwise the current parser will interpret it as a `>>` bit shift right operator.
+
 ### Restricting Template Parameters
 
 You might want to use a template with type restriction instead of a normal functions or struct with just the type, in order to keep the specific type without having to cast. For instance in case of a function return type or a structure field.

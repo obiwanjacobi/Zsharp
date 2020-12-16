@@ -21,7 +21,10 @@ namespace Zsharp.Semantics
             Ast.Guard(type?.Identifier, "AstTypeReference or AstIdentifier is null.");
 
             var success = type.TryResolve();
+            if (!success && type.IsTemplateParameter)
+            {
 
+            }
             if (!success)
             {
                 _errorSite.UndefinedType(type);
@@ -251,34 +254,19 @@ namespace Zsharp.Semantics
                 index++;
 
             Ast.Guard(index <= 32, "Numeric Type too large.");
-
-            AstTypeDefinition? typeDef = null;
             string typeName = sign == AstNumericSign.Signed ? "I" : "U";
 
-            switch (index)
+            typeName = index switch
             {
-                case 0:
-                case 1:
-                    typeDef = FindTypeDefinition(GlobalSymbols!, typeName + "8");
-                    break;
-                case 2:
-                    typeDef = FindTypeDefinition(GlobalSymbols!, typeName + "16");
-                    break;
-                case 3:
-                case 4:
-                    typeDef = FindTypeDefinition(GlobalSymbols!, typeName + "32");
-                    break;
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                    typeDef = FindTypeDefinition(GlobalSymbols!, typeName + "64");
-                    break;
-                default:
-                    throw new NotSupportedException(
-                        $"The '{typeName}{index}' Type is not supported.");
-            }
+                < 2 => typeName + "8",
+                < 3 => typeName + "16",
+                < 5 => typeName + "32",
+                < 9 => typeName + "64",
+                _ => throw new NotSupportedException(
+            $"The '{typeName}{index}' Type is not supported."),
+            };
 
+            var typeDef = FindTypeDefinition(GlobalSymbols!, typeName);
             return typeDef;
         }
 

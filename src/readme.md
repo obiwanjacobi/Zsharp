@@ -9,7 +9,7 @@ Structs can be allocated on the callstack and on the heap.
 
 ## Explicit Memory Management
 
-How to allign the Garbage Collector (GC) with the memory semantics of Z# - which are not fully crystalized yet.
+How to align the Garbage Collector (GC) with the memory semantics of Z# - which are not fully crystalized yet.
 
 ## Zsharp Runtime
 
@@ -17,7 +17,7 @@ I think it could be a good idea to have a runtime assembly that contains common 
 
 ## .NET Interop
 
-Using .NET it becomes possible to intermix (compiled) Zsharp code with other .NET code. 
+Using .NET it becomes possible to intermix (compiled) Zsharp code with other .NET code.
 
 ### Using .NET code in Zsharp
 

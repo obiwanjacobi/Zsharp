@@ -710,6 +710,11 @@ namespace Zsharp.AST
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
 
+            var template = _builderContext.TryGetCurrent<IAstTemplateSite>();
+            if (template != null)
+                typeRef.IsTemplateParameter = template.Parameters.Any(
+                    p => p.Identifier!.CanonicalName == typeRef.Identifier.CanonicalName);
+
             var trSite = _builderContext.GetCurrent<IAstTypeReferenceSite>();
             trSite.SetTypeReference(typeRef);
 
@@ -724,6 +729,7 @@ namespace Zsharp.AST
             {
                 symbolsSite.Symbols.Add(typeRef);
             }
+
             return typeRef;
         }
 

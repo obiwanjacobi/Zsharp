@@ -23,9 +23,9 @@ namespace Zsharp.AST
         {
             return nodeType switch
             {
-                AstNodeType.Enum => AstSymbolKind.Enum,
+                AstNodeType.Enum => AstSymbolKind.Type,
                 AstNodeType.Function => AstSymbolKind.Function,
-                AstNodeType.Struct => AstSymbolKind.Struct,
+                AstNodeType.Struct => AstSymbolKind.Type,
                 AstNodeType.Type => AstSymbolKind.Type,
                 AstNodeType.Module => AstSymbolKind.Module,
                 AstNodeType.Variable => AstSymbolKind.Variable,
@@ -45,12 +45,12 @@ namespace Zsharp.AST
             var name = identifierSite.Identifier?.CanonicalName
                 ?? throw new ArgumentException("No identifier name.", nameof(identifierSite));
 
-            return AddSymbol(symbolTable, name, symbolKind, node);
-        }
+            // reference to a template parameter are detected as TypeReferences
+            if (symbolKind == AstSymbolKind.Type &&
+                node is AstTypeReference typeRef &&
+                typeRef.IsTemplateParameter)
+                symbolKind = AstSymbolKind.TemplateParameter;
 
-        private static AstSymbolEntry AddSymbol(AstSymbolTable symbolTable,
-            string name, AstSymbolKind symbolKind, AstNode node)
-        {
             var entry = symbolTable.AddSymbol(name, symbolKind, node);
 
             if (node is IAstSymbolEntrySite symbolSite)

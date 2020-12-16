@@ -95,6 +95,9 @@ namespace Zsharp.AST
             return typeRef;
         }
 
+        // true when type name is actually a template parameter name
+        public bool IsTemplateParameter { get; set; }
+
         private readonly List<AstTemplateParameterReference> _parameters = new List<AstTemplateParameterReference>();
         public IEnumerable<AstTemplateParameter> Parameters => _parameters;
 
@@ -103,7 +106,7 @@ namespace Zsharp.AST
             if (templateParameter is AstTemplateParameterReference parameter)
             {
                 if (_parameters.SingleOrDefault(p =>
-                    p.Identifier?.Name == parameter.Identifier?.Name) != null)
+                    p.Identifier?.CanonicalName == parameter.Identifier?.CanonicalName) != null)
                     return false;
 
                 _parameters.Add(parameter);

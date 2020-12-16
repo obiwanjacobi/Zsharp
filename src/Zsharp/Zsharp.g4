@@ -134,7 +134,7 @@ type_conv_I32: I32 PARENopen function_param_use PARENclose;
 type_conv_I64: I64 PARENopen function_param_use PARENclose;
 
 // templates
-template_param_list_use: SMALL_ANGLEopen template_param_use (COMMA SP template_param_use)* GREAT_ANGLEclose;
+template_param_list_use: SMALL_ANGLEopen template_param_use (COMMA SP template_param_use)* SP? GREAT_ANGLEclose;
 template_param_use: type_ref | literal | literal_bool;
 template_param_list_use_number: SMALL_ANGLEopen number GREAT_ANGLEclose;
 template_param_list_use_type: SMALL_ANGLEopen type_ref GREAT_ANGLEclose;

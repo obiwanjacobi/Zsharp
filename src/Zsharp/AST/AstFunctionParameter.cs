@@ -31,5 +31,10 @@ namespace Zsharp.AST
                 throw new InvalidOperationException(
                     "TypeReference is already set or null.");
         }
+
+        public override void VisitChildren(AstVisitor visitor)
+        {
+            TypeReference?.Accept(visitor);
+        }
     }
 }

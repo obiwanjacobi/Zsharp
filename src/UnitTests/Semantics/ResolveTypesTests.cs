@@ -167,5 +167,24 @@ namespace UnitTests.Semantics
             var p = call.Parameters.First();
             p.TypeReference.Should().NotBeNull();
         }
+
+        [TestMethod]
+        public void TemplateInstantiation()
+        {
+            const string code =
+                "Struct<T>" + Tokens.NewLine +
+                Tokens.Indent1 + "Id: T" + Tokens.NewLine +
+                "s = Struct<U8>" + Tokens.NewLine +
+                Tokens.Indent1 + "Id = 42" + Tokens.NewLine
+                ;
+
+            var file = CompileFile(code);
+
+            //var template = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
+            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
+            var v = a.Variable;
+            v.Symbol.Definition.Should().NotBeNull();
+            //var id = v.TypeReference.Fields.First();
+        }
     }
 }

@@ -77,7 +77,8 @@ namespace Zsharp.AST
                 node is AstFunctionParameterDefinition ||
                 node is AstVariableDefinition ||
                 node is AstTypeDefinition ||
-                node is AstTypeFieldDefinition)
+                node is AstTypeFieldDefinition ||
+                node is AstTemplateParameterDefinition)
             {
                 Ast.Guard(Definition == null, "Definition is already set.");
                 _definitions.Add(node);

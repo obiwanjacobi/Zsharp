@@ -1,5 +1,4 @@
-﻿using System;
-using static Zsharp.Parser.ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -16,7 +15,7 @@ namespace Zsharp.AST
 
         public override void Accept(AstVisitor visitor)
         {
-            throw new NotImplementedException();
+            visitor.VisitTemplateParameterReference(this);
         }
     }
 }

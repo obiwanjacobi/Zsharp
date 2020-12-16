@@ -28,7 +28,8 @@ namespace Zsharp.AST
 
         public bool IsSelf { get; }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionParameterDefinition(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitFunctionParameterDefinition(this);
 
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;

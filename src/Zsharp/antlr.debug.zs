@@ -1,2 +1,2 @@
-s = MyStruct<U8>
+s = MyStruct<Array<U8> >
     Id = 42

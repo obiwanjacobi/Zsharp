@@ -6,9 +6,7 @@
         Unknown,
         Module,
         Function,
-        Struct,
-        Enum,
-        Type,
+        Type,               // Struct, Enum
         Variable,
         Field,
         TemplateParameter,  // Type | Variable
