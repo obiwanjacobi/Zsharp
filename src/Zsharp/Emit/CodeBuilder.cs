@@ -19,6 +19,10 @@ namespace Zsharp.Emit
             CodeBlock = AddBlock("__entry");
         }
 
+        public MethodDefinition MethodDefinition => _methodDefinition;
+
+        public IEnumerable<CodeBlock> CodeBlocks => _blocks.Values;
+
         public CodeBlock CodeBlock { get; set; }
 
         public CodeBlock? MoveToNextBlock()

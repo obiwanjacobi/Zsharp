@@ -90,7 +90,7 @@ Arithmetic, bitwise and logical operators.
 | `\` | reserved
 | `$` | reserved
 | `->` | Alternate function return type (confusing in combination with `=>`)
-| `<=` | map structure (also arithmetic)
+| `<=` | map structure (also arithmetic) / assign struct properties
 | `( )` | array/list initializer/literal?
 | `|>` | 
 | `<|` | 

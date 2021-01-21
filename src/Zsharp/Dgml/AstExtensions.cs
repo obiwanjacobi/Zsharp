@@ -45,7 +45,7 @@ namespace Zsharp.Dgml
 
         public static string AsString(this AstLiteralNumeric numeric)
         {
-            return numeric.Context.GetText();
+            return numeric.Value.ToString();
         }
 
         public static string AsString(this AstExpression expression)
@@ -72,7 +72,28 @@ namespace Zsharp.Dgml
             if (num != null)
             { return AsString(num); }
 
+            var bl = operand.LiteralBoolean;
+            if (bl != null)
+            { return bl.Value.ToString(); }
+
+            var str = operand.LiteralString;
+            if (str != null)
+            { return str.Value; }
+
+            var varRef = operand.VariableReference;
+            if (varRef != null)
+            { return AsString(varRef); }
+
+            var funRef = operand.FunctionReference;
+            if (funRef != null)
+            { return funRef.AsString(); }
+
             return String.Empty;
+        }
+
+        private static string AsString(this IAstIdentifierSite? identifierSite)
+        {
+            return identifierSite?.Identifier?.Name ?? String.Empty;
         }
     }
 }

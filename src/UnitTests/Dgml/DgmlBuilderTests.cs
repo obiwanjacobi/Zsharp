@@ -24,7 +24,7 @@ namespace UnitTests.Dgml
                 Tokens.Indent1 + "return false" + Tokens.NewLine
                 ;
 
-            var builder = new DgmlBuilder();
+            var builder = new AstDgmlBuilder();
             builder.WriteFile(Build.File(code));
             builder.SaveAs(GetPath("DgmlBuilderTests_File_If.dgml"));
         }
@@ -40,7 +40,7 @@ namespace UnitTests.Dgml
                 Tokens.Indent2 + "return false" + Tokens.NewLine
                 ;
 
-            var builder = new DgmlBuilder();
+            var builder = new AstDgmlBuilder();
             builder.WriteFile(Build.File(code));
             builder.SaveAs(GetPath("DgmlBuilderTests_File_IfElse.dgml"));
         }
@@ -58,7 +58,7 @@ namespace UnitTests.Dgml
                 Tokens.Indent2 + "return false" + Tokens.NewLine
                 ;
 
-            var builder = new DgmlBuilder();
+            var builder = new AstDgmlBuilder();
             builder.WriteFile(Build.File(code));
             builder.SaveAs(GetPath("DgmlBuilderTests_File_IfElseIfElse.dgml"));
         }
@@ -75,7 +75,7 @@ namespace UnitTests.Dgml
                 Tokens.Indent1 + "return 3" + Tokens.NewLine
                 ;
 
-            var builder = new DgmlBuilder();
+            var builder = new AstDgmlBuilder();
             builder.WriteFile(Build.File(code));
             builder.SaveAs(GetPath("DgmlBuilderTests_File_IfNested.dgml"));
         }
