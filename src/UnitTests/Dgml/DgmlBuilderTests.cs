@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using Zsharp.AST;
 using Zsharp.Dgml;
 
 namespace UnitTests.Dgml
@@ -14,6 +15,14 @@ namespace UnitTests.Dgml
             return Path.Combine(TestContext.DeploymentDirectory, fileName);
         }
 
+        private void CreateDgml(AstFile file, string fileName)
+        {
+            var builder = new AstDgmlBuilder();
+            builder.CreateCommon();
+            builder.WriteFile(file);
+            builder.SaveAs(GetPath(fileName));
+        }
+
         [TestMethod]
         public void File_If()
         {
@@ -24,9 +33,7 @@ namespace UnitTests.Dgml
                 Tokens.Indent1 + "return false" + Tokens.NewLine
                 ;
 
-            var builder = new AstDgmlBuilder();
-            builder.WriteFile(Build.File(code));
-            builder.SaveAs(GetPath("DgmlBuilderTests_File_If.dgml"));
+            CreateDgml(Build.File(code), "DgmlBuilderTests_File_If.dgml");
         }
 
         [TestMethod]
@@ -40,9 +47,7 @@ namespace UnitTests.Dgml
                 Tokens.Indent2 + "return false" + Tokens.NewLine
                 ;
 
-            var builder = new AstDgmlBuilder();
-            builder.WriteFile(Build.File(code));
-            builder.SaveAs(GetPath("DgmlBuilderTests_File_IfElse.dgml"));
+            CreateDgml(Build.File(code), "DgmlBuilderTests_File_IfElse.dgml");
         }
 
         [TestMethod]
@@ -58,9 +63,7 @@ namespace UnitTests.Dgml
                 Tokens.Indent2 + "return false" + Tokens.NewLine
                 ;
 
-            var builder = new AstDgmlBuilder();
-            builder.WriteFile(Build.File(code));
-            builder.SaveAs(GetPath("DgmlBuilderTests_File_IfElseIfElse.dgml"));
+            CreateDgml(Build.File(code), "DgmlBuilderTests_File_IfElseIfElse.dgml");
         }
 
         [TestMethod]
@@ -75,9 +78,7 @@ namespace UnitTests.Dgml
                 Tokens.Indent1 + "return 3" + Tokens.NewLine
                 ;
 
-            var builder = new AstDgmlBuilder();
-            builder.WriteFile(Build.File(code));
-            builder.SaveAs(GetPath("DgmlBuilderTests_File_IfNested.dgml"));
+            CreateDgml(Build.File(code), "DgmlBuilderTests_File_IfNested.dgml");
         }
     }
 }

@@ -52,14 +52,13 @@ namespace Zsharp.Dgml
             if (paramNames.Length > 0)
             {
                 node.Group = DefaultGroup;
-                var paramNode = CreateNode(name, paramNames, "Parameter");
+                var paramNode = CreateNode(name, paramNames);
                 _ = CreateLink(node.Id, paramNode.Id, ContainsCategory);
             }
 
-            var codeBlock = function.CodeBlock;
-            if (codeBlock != null)
+            if (function.CodeBlock.Items.Any())
             {
-                WriteCodeBlock(codeBlock, node.Id);
+                WriteCodeBlock(function.CodeBlock, node.Id);
             }
 
             return node;
