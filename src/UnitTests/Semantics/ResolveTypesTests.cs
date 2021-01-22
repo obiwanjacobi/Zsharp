@@ -180,11 +180,16 @@ namespace UnitTests.Semantics
 
             var file = CompileFile(code);
 
-            //var template = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
+            var template = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
+
             var a = file.CodeBlock.ItemAt<AstAssignment>(1);
             var v = a.Variable;
             v.Symbol.Definition.Should().NotBeNull();
             //var id = v.TypeReference.Fields.First();
+
+            var typeSymbol = v.Symbol.SymbolTable.FindEntry(v.TypeReference.Identifier, AstSymbolKind.Type);
+            var typeDef = typeSymbol.DefinitionAs<AstTypeDefinitionStruct>();
+            typeDef.TemplateDefinition.Should().Be(template);
         }
     }
 }

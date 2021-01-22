@@ -42,7 +42,7 @@ namespace Zsharp.Dgml
                 if (!String.IsNullOrEmpty(codeBlock.NextBlock))
                 {
                     var nextNode = blockNodes[codeBlock.NextBlock];
-                    var link = CreateLink(blockNode.Id, nextNode.Id);
+                    _ = CreateLink(blockNode.Id, nextNode.Id);
                 }
                 if (!String.IsNullOrEmpty(codeBlock.NextBlockAlt))
                 {

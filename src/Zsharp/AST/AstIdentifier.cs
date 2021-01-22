@@ -8,7 +8,8 @@ namespace Zsharp.AST
     [DebuggerDisplay("{Name}")]
     public class AstIdentifier
     {
-        private const string Delimiter = "%";
+        private const string TemplateDelimiter = "%";
+        private const string ParameterDelimiter = ";";
 
         public AstIdentifier(Identifier_typeContext context)
             : this(context, AstIdentifierType.Type)
@@ -38,17 +39,17 @@ namespace Zsharp.AST
             : this(context, AstIdentifierType.TemplateParameter)
         { }
 
-        protected AstIdentifier(ParserRuleContext context, AstIdentifierType identifierType)
+        public AstIdentifier(string name, AstIdentifierType identifierType)
         {
-            Context = context ?? throw new ArgumentNullException(nameof(context));
-            Name = context.GetText();
+            Name = name;
             CanonicalName = AstDotName.ToCanonical(Name);
             IdentifierType = identifierType;
         }
 
-        protected AstIdentifier(string name, AstIdentifierType identifierType)
+        protected AstIdentifier(ParserRuleContext context, AstIdentifierType identifierType)
         {
-            Name = name;
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+            Name = context.GetText();
             CanonicalName = AstDotName.ToCanonical(Name);
             IdentifierType = identifierType;
         }
@@ -59,6 +60,7 @@ namespace Zsharp.AST
         public string CanonicalName { get; private set; }
         public AstIdentifierType IdentifierType { get; }
 
+        // for template definition
         private int _templateParameterCount;
         public int TemplateParameterCount
         {
@@ -66,13 +68,38 @@ namespace Zsharp.AST
             set
             {
                 _templateParameterCount = value;
-                var parts = Name.Split(Delimiter);
+                var parts = Name.Split(TemplateDelimiter);
                 if (_templateParameterCount > 0)
-                    Name = $"{parts[0]}{Delimiter}{_templateParameterCount}";
+                    Name = $"{parts[0]}{TemplateDelimiter}{_templateParameterCount}";
                 else
                     Name = parts[0];
                 CanonicalName = AstDotName.ToCanonical(Name);
             }
+        }
+
+        // 'MyTemplate%1'
+        public string TemplateDefinitionName
+        {
+            get
+            {
+                if (_templateParameterCount > 0)
+                    return CanonicalName;
+                if (Name.Contains(ParameterDelimiter))
+                {
+                    var parts = Name.Split(ParameterDelimiter);
+                    return $"{parts[0]}{TemplateDelimiter}{parts.Length - 1}";
+                }
+                return String.Empty;
+            }
+        }
+
+        // for template usage
+        public void AddTemplateParameter(string? name)
+        {
+            Ast.Guard(name, "Parameter name is null.");
+
+            Name += ParameterDelimiter + name;
+            CanonicalName = AstDotName.ToCanonical(Name);
         }
 
         public bool IsEqual(AstIdentifier? that)

@@ -10,7 +10,7 @@ namespace Zsharp.Dgml
             return op switch
             {
                 AstExpressionOperator.Open => "(",
-                AstExpressionOperator.Close => ")(",
+                AstExpressionOperator.Close => ")",
                 // arithmetic
                 AstExpressionOperator.Plus => "+",
                 AstExpressionOperator.Minus => "-",

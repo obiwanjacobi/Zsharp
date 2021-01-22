@@ -6,6 +6,9 @@ namespace Zsharp.AST
     public class AstTypeDefinitionStructField : AstTypeFieldDefinition,
         IAstTypeReferenceSite, IAstSymbolEntrySite
     {
+        public AstTypeDefinitionStructField()
+        { }
+
         public AstTypeDefinitionStructField(Struct_field_defContext context)
         {
             Context = context;

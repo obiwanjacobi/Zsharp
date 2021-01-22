@@ -95,8 +95,10 @@ namespace Zsharp.AST
             return typeRef;
         }
 
-        // true when type name is actually a template parameter name
+        // true when type name is actually a template parameter name (T)
         public bool IsTemplateParameter { get; set; }
+        // true when type is a template instantiation
+        public bool IsTemplate => _parameters.Count > 0;
 
         private readonly List<AstTemplateParameterReference> _parameters = new List<AstTemplateParameterReference>();
         public IEnumerable<AstTemplateParameter> Parameters => _parameters;
@@ -111,7 +113,7 @@ namespace Zsharp.AST
 
                 _parameters.Add(parameter);
 
-                Identifier.TemplateParameterCount = _parameters.Count;
+                Identifier!.AddTemplateParameter(parameter.TypeReference?.Identifier?.Name);
                 return true;
             }
             return false;
@@ -142,7 +144,7 @@ namespace Zsharp.AST
         {
             if (!TryAddFieldInit(field))
                 throw new InvalidOperationException(
-                    "TypeField is alread set or null.");
+                    "TypeField is already set or null.");
         }
     }
 }

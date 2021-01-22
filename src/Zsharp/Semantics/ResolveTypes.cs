@@ -20,16 +20,39 @@ namespace Zsharp.Semantics
             Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
             Ast.Guard(type?.Identifier, "AstTypeReference or AstIdentifier is null.");
 
-            var success = type.TryResolve();
-            if (!success && type.IsTemplateParameter)
+            if (!type!.IsTemplateParameter)
             {
+                var success = type!.TryResolve();
+                if (!success)
+                {
+                    if (type.IsTemplate)
+                    {
+                        var entry = type.Symbol;
+                        var templateType = entry.SymbolTable.FindDefinition<AstTypeDefinitionStruct>(
+                            type.Identifier.TemplateDefinitionName, AstSymbolKind.Type);
 
-            }
-            if (!success)
-            {
-                _errorSite.UndefinedType(type);
-            }
+                        // TODO: template instantiations should probably go to 
+                        // module scope (private) or global scope (exported)
+                        var typeDef = new AstTypeDefinitionStruct(templateType, entry.SymbolTable);
+                        typeDef.SetIdentifier(
+                            new AstIdentifier(type.Identifier.Name, type.Identifier.IdentifierType));
+                        foreach (var field in templateType.Fields)
+                        {
+                            var fieldDef = new AstTypeDefinitionStructField();
+                            fieldDef.SetIdentifier(new AstIdentifier(field.Identifier.Name, field.Identifier.IdentifierType));
+                            fieldDef.SetTypeReference(new AstTypeReference(field.TypeReference));
+                            typeDef.AddField(fieldDef);
 
+                            entry.SymbolTable.Add(fieldDef);
+                        }
+
+                        entry.AddNode(typeDef);
+                        Ast.Guard(entry.Definition, "Invalid Template Definition.");
+                    }
+                    else
+                        _errorSite.UndefinedType(type);
+                }
+            }
             VisitChildren(type!);
         }
 

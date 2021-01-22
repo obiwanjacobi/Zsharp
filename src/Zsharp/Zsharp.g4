@@ -269,7 +269,7 @@ BIT_XOR_IMM: '^';
 BIT_NOT: '~';
 BIT_SHL: '<<';
 BIT_SHR: '>>';
-BIT_ROLL: '|,';
+BIT_ROLL: '|<';
 BIT_ROLR: '>|';
 CONCAT: '&&';
 SUBopen: '[';
