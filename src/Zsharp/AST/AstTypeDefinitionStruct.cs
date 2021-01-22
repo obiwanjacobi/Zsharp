@@ -15,16 +15,6 @@ namespace Zsharp.AST
             Context = context;
         }
 
-        public AstTypeDefinitionStruct(AstTypeDefinitionStruct templateDefinition, AstSymbolTable parentTable)
-            : base(AstNodeType.Struct)
-        {
-            Symbols = new AstSymbolTable("", parentTable);
-            TemplateDefinition = templateDefinition;
-        }
-
-        // set if this is a template instantiation
-        public AstTypeDefinitionStruct? TemplateDefinition { get; }
-
         public int Indent { get; set; }
 
         public new IEnumerable<AstTypeDefinitionStructField> Fields

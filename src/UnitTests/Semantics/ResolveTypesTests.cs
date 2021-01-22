@@ -188,7 +188,7 @@ namespace UnitTests.Semantics
             //var id = v.TypeReference.Fields.First();
 
             var typeSymbol = v.Symbol.SymbolTable.FindEntry(v.TypeReference.Identifier, AstSymbolKind.Type);
-            var typeDef = typeSymbol.DefinitionAs<AstTypeDefinitionStruct>();
+            var typeDef = typeSymbol.DefinitionAs<AstTemplateInstanceStruct>();
             typeDef.TemplateDefinition.Should().Be(template);
         }
     }

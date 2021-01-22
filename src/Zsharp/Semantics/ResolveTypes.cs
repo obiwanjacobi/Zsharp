@@ -31,9 +31,7 @@ namespace Zsharp.Semantics
                         var templateType = entry.SymbolTable.FindDefinition<AstTypeDefinitionStruct>(
                             type.Identifier.TemplateDefinitionName, AstSymbolKind.Type);
 
-                        // TODO: template instantiations should probably go to 
-                        // module scope (private) or global scope (exported)
-                        var typeDef = new AstTypeDefinitionStruct(templateType, entry.SymbolTable);
+                        var typeDef = new AstTemplateInstanceStruct(templateType);
                         typeDef.SetIdentifier(
                             new AstIdentifier(type.Identifier.Name, type.Identifier.IdentifierType));
                         foreach (var field in templateType.Fields)

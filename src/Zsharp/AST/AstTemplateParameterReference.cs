@@ -10,12 +10,11 @@ namespace Zsharp.AST
 
         public override bool TryResolve()
         {
+            // TODO: ??
             return true;
         }
 
         public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitTemplateParameterReference(this);
-        }
+            => visitor.VisitTemplateParameterReference(this);
     }
 }
