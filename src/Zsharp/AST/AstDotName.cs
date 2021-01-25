@@ -1,23 +1,42 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Zsharp.AST
 {
-    public class AstDotName
+    public class AstDotName : IEnumerable<string>
     {
-        public AstDotName(string identifier)
+        public const char Separator = '.';
+
+        private AstDotName(string[] parts)
         {
-            _parts = identifier.Split('.')
-                .Select(ToCanonical).ToArray();
+            Ast.Guard(parts, "Parts is null");
+            Ast.Guard(parts.Length > 0, "Parts is empty");
+            _parts = parts;
+        }
+
+        public AstDotName(string canonical)
+        {
+            Ast.Guard(canonical, "Canonical is null");
+            _parts = canonical.Split(Separator).ToArray();
+        }
+
+        public static AstDotName FromText(string text)
+        {
+            Ast.Guard(text, "Text is null");
+            return new AstDotName(
+                text.Split(Separator).Select(ToCanonical).ToArray());
         }
 
         public int Count => _parts.Length;
 
         private readonly string[] _parts;
-
         public IEnumerable<string> Parts => _parts;
 
+        public bool IsDotName => _parts.Length > 1;
+
+        // not including last part
         public string ModuleName
         {
             get
@@ -30,6 +49,7 @@ namespace Zsharp.AST
             }
         }
 
+        // last part
         public string Symbol
         {
             get
@@ -67,7 +87,20 @@ namespace Zsharp.AST
 
         private string Join(int offset, int length)
         {
-            return String.Join('.', _parts.Skip(offset).Take(length));
+            return String.Join(Separator, _parts.Skip(offset).Take(length));
+        }
+
+        public IEnumerator<string> GetEnumerator()
+        {
+            foreach (var part in _parts)
+            {
+                yield return part;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

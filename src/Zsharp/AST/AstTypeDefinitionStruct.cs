@@ -5,8 +5,8 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstTypeDefinitionStruct : AstTypeDefinition, IAstCodeBlockItem,
-        IAstTemplateSite, IAstSymbolTableSite
+    public class AstTypeDefinitionStruct : AstTypeDefinition,
+        IAstCodeBlockItem, IAstTemplateSite, IAstSymbolTableSite
     {
         public AstTypeDefinitionStruct(Struct_defContext context, AstSymbolTable parentTable)
             : base(AstNodeType.Struct)
@@ -17,10 +17,30 @@ namespace Zsharp.AST
 
         public int Indent { get; set; }
 
+        public AstSymbolTable Symbols { get; }
+
+        public override bool TrySetIdentifier(AstIdentifier identifier)
+        {
+            var success = base.TrySetIdentifier(identifier);
+
+            if (success)
+                Symbols.SetName(identifier.CanonicalName);
+
+            return success;
+        }
+
         public new IEnumerable<AstTypeDefinitionStructField> Fields
             => base.Fields.Cast<AstTypeDefinitionStructField>();
 
-        public AstSymbolTable Symbols { get; }
+        public bool TryAddField(AstTypeDefinitionStructField field)
+        {
+            var success = base.TryAddField(field);
+
+            if (success)
+                Symbols.Add(field);
+
+            return success;
+        }
 
         private readonly List<AstTemplateParameter> _parameters = new List<AstTemplateParameter>();
         public IEnumerable<AstTemplateParameter> Parameters => _parameters;

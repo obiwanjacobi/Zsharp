@@ -30,6 +30,7 @@ namespace Zsharp.AST
                 AstNodeType.Module => AstSymbolKind.Module,
                 AstNodeType.Variable => AstSymbolKind.Variable,
                 AstNodeType.Field => AstSymbolKind.Field,
+                AstNodeType.EnumOption => AstSymbolKind.Field,
                 AstNodeType.TemplateParameter => AstSymbolKind.TemplateParameter,
                 _ => AstSymbolKind.Unknown
             };

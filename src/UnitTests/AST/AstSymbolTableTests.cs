@@ -186,5 +186,38 @@ namespace UnitTests.AST
             v.ReferencesOf<AstVariableReference>().First().Identifier.IdentifierType
                 .Should().Be(AstIdentifierType.Variable);
         }
+
+
+        [TestMethod]
+        public void EnumOptionDotName()
+        {
+            const string code =
+                "MyEnum" + Tokens.NewLine +
+                Tokens.Indent1 + "Zero" + Tokens.NewLine +
+                Tokens.Indent1 + "One" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var astEnum = file.CodeBlock.ItemAt<AstTypeDefinitionEnum>(0);
+            var symbols = file.Symbols;
+            var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
+            entry.SymbolKind.Should().Be(AstSymbolKind.Field);
+        }
+
+        [TestMethod]
+        public void StructFieldDotName()
+        {
+            const string code =
+                "MyStruct" + Tokens.NewLine +
+                Tokens.Indent1 + "Fld1: U8" + Tokens.NewLine +
+                Tokens.Indent1 + "Fld2: Str" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var astStruct = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
+            var symbols = file.Symbols;
+            var entry = symbols.FindEntry("Mystruct.Fld1", AstSymbolKind.Field);
+            entry.SymbolKind.Should().Be(AstSymbolKind.Field);
+        }
     }
 }

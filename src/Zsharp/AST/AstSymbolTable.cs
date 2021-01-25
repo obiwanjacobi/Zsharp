@@ -117,13 +117,16 @@ namespace Zsharp.AST
 
         public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
-            var entry = FindEntryLocal(name, kind);
+            var entry = FindEntryRecursive(name, kind);
 
-            if (ParentTable != null && entry == null)
+            if (entry == null)
             {
-                entry = ParentTable.FindEntry(name, kind);
+                var dotName = new AstDotName(name);
+                if (dotName.IsDotName)
+                {
+                    entry = FindEntryDotName(dotName, kind);
+                }
             }
-
             return entry;
         }
 
@@ -139,6 +142,18 @@ namespace Zsharp.AST
         internal void Delete(AstSymbolEntry symbolEntry)
         {
             _table.Remove(symbolEntry.Key);
+        }
+
+        private AstSymbolEntry? FindEntryRecursive(string name, AstSymbolKind kind)
+        {
+            var entry = FindEntryLocal(name, kind);
+
+            if (ParentTable != null && entry == null)
+            {
+                entry = ParentTable.FindEntry(name, kind);
+            }
+
+            return entry;
         }
 
         private AstSymbolEntry? FindEntryLocal(string name, AstSymbolKind kind)
@@ -162,6 +177,32 @@ namespace Zsharp.AST
                     .SingleOrDefault(e => e.SymbolName == name || e.Aliases.Contains(name));
             }
 
+            return entry;
+        }
+
+        private AstSymbolEntry? FindEntryDotName(AstDotName dotName, AstSymbolKind kind)
+        {
+            AstSymbolEntry? entry = null;
+            var table = this;
+            foreach (var namePart in dotName)
+            {
+                var isLast = namePart == dotName.Symbol;
+
+                var kindPart = isLast ? kind : AstSymbolKind.Unknown;
+                entry = table.FindEntryRecursive(namePart, kindPart);
+
+                if (entry == null)
+                    return null;
+
+                if (!isLast)
+                {
+                    var tableSite = entry.DefinitionAs<IAstSymbolTableSite>();
+                    if (tableSite == null)
+                        return null;
+
+                    table = tableSite.Symbols;
+                }
+            }
             return entry;
         }
 

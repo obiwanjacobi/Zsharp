@@ -89,7 +89,7 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_import(Statement_importContext context)
         {
-            var dotName = new AstDotName(context.module_name().GetText());
+            var dotName = AstDotName.FromText(context.module_name().GetText());
             var alias = context.alias_module()?.GetText();
 
             // if alias then last part of dot name is symbol.
@@ -493,7 +493,8 @@ namespace Zsharp.AST
 
         public override object? VisitEnum_def(Enum_defContext context)
         {
-            var typeDef = new AstTypeDefinitionEnum(context);
+            var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            var typeDef = new AstTypeDefinitionEnum(context, symbolsSite.Symbols);
 
             var codeBlock = _builderContext.GetCodeBlock();
             codeBlock.AddItem(typeDef);
@@ -501,8 +502,6 @@ namespace Zsharp.AST
             _builderContext.SetCurrent(typeDef);
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
-
-            var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
 
             if (typeDef.BaseType == null)
             {
