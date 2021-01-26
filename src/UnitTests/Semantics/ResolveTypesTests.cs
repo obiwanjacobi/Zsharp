@@ -169,7 +169,7 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
-        public void TemplateInstantiation()
+        public void StructTemplateInstantiation()
         {
             const string code =
                 "Struct<T>" + Tokens.NewLine +
@@ -179,17 +179,36 @@ namespace UnitTests.Semantics
                 ;
 
             var file = CompileFile(code);
-
             var template = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
-
             var a = file.CodeBlock.ItemAt<AstAssignment>(1);
             var v = a.Variable;
             v.Symbol.Definition.Should().NotBeNull();
-            //var id = v.TypeReference.Fields.First();
+            var id = v.TypeReference.Fields.First();
+            // TODO:
+            //id.Expression.TypeReference.TypeDefinition.Should().NotBeNull();
 
             var typeSymbol = v.Symbol.SymbolTable.FindEntry(v.TypeReference.Identifier, AstSymbolKind.Type);
             var typeDef = typeSymbol.DefinitionAs<AstTemplateInstanceStruct>();
             typeDef.TemplateDefinition.Should().Be(template);
+        }
+
+        [TestMethod]
+        public void EnumUseOption()
+        {
+            const string code =
+                "MyEnum" + Tokens.NewLine +
+                Tokens.Indent1 + "Zero" + Tokens.NewLine +
+                "v = MyEnum.Zero" + Tokens.NewLine
+                ;
+
+            var file = CompileFile(code);
+            var symbols = file.Symbols;
+            var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
+            entry.Definition.Should().NotBeNull();
+
+            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
+            var v = a.Variable;
+            v.Symbol.Definition.Should().NotBeNull();
         }
     }
 }

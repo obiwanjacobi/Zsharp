@@ -80,7 +80,7 @@ namespace Zsharp.AST
 
         public bool TryResolve()
         {
-            var entry = Symbol?.SymbolTable.Resolve(_symbol);
+            var entry = Symbol?.SymbolTable.ResolveDefinition(_symbol);
             if (entry != null)
             {
                 _symbol = entry;

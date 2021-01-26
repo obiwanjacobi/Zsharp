@@ -43,7 +43,7 @@ namespace Zsharp.AST
 
         public virtual bool TryResolve()
         {
-            var entry = Symbol?.SymbolTable.Resolve(Symbol);
+            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
             if (entry != null)
             {
                 _symbol = entry;

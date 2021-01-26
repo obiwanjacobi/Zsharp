@@ -40,6 +40,8 @@ namespace Zsharp.AST
 
         public T? DefinitionAs<T>() where T : class => Definition as T;
 
+        public bool HasDefinition => _definitions.Count > 0;
+
         public void PromoteToDefinition(AstNode definitionNode, AstNode referenceNode)
         {
             Ast.Guard(Definition == null, "Symbol already has a definition.");

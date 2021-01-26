@@ -62,5 +62,16 @@ namespace UnitTests.Smoke
             Parser.ParseForError(code)
                 .Should().BeNull();
         }
+
+        [TestMethod]
+        public void GlobalEnumVariableInit()
+        {
+            const string code =
+                "v = MyEnum.None" + Tokens.NewLine
+                ;
+
+            Parser.ParseForError(code)
+                .Should().BeNull();
+        }
     }
 }

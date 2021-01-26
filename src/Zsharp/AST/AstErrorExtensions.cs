@@ -28,6 +28,12 @@ namespace Zsharp.AST
                 $"Specified Type is not valid as an Enum Base Type: '{type.Identifier.Name}'");
         }
 
+        public static AstMessage UndefinedEnumeration(this AstErrorSite errorSite, AstTypeFieldReferenceEnumOption enumOption)
+        {
+            return errorSite.AddError(enumOption, enumOption.Context,
+                $"Reference to an undefined Enumeration Option '{enumOption.Identifier.Name}'");
+        }
+
         public static AstMessage OverloadNotFound(this AstErrorSite errorSite, AstFunctionReference function)
         {
             return errorSite.AddError(function, function.Context,

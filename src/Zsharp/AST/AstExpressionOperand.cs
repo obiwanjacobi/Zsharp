@@ -15,13 +15,15 @@ namespace Zsharp.AST
             LiteralString = node as AstLiteralString;
             VariableReference = node as AstVariableReference;
             FunctionReference = node as AstFunctionReference;
+            FieldReference = node as AstTypeFieldReference;
 
             if (Expression == null &&
                 LiteralBoolean == null &&
                 LiteralNumeric == null &&
                 LiteralString == null &&
                 VariableReference == null &&
-                FunctionReference == null)
+                FunctionReference == null &&
+                FieldReference == null)
             {
                 throw new ArgumentException(
                     $"Node type {node.GetType().Name} is not an expression operand.");
@@ -53,6 +55,8 @@ namespace Zsharp.AST
 
         public AstFunctionReference? FunctionReference { get; }
 
+        public AstTypeFieldReference? FieldReference { get; }
+
         private AstTypeReference? _typeRef;
 
         public AstTypeReference? TypeReference => _typeRef;
@@ -76,6 +80,7 @@ namespace Zsharp.AST
             LiteralString?.Accept(visitor);
             VariableReference?.Accept(visitor);
             FunctionReference?.Accept(visitor);
+            FieldReference?.Accept(visitor);
         }
     }
 }

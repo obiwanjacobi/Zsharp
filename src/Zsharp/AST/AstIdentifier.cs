@@ -35,6 +35,10 @@ namespace Zsharp.AST
             : this(context, AstIdentifierType.EnumOption)
         { }
 
+        public AstIdentifier(Enum_option_useContext context)
+            : this(context, AstIdentifierType.EnumOption)
+        { }
+
         public AstIdentifier(Identifier_template_paramContext context)
             : this(context, AstIdentifierType.TemplateParameter)
         { }
@@ -50,7 +54,8 @@ namespace Zsharp.AST
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
             Name = context.GetText();
-            CanonicalName = AstDotName.ToCanonical(Name);
+            var dotName = AstDotName.FromText(Name);
+            CanonicalName = dotName.ToString();
             IdentifierType = identifierType;
         }
 

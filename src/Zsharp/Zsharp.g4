@@ -36,9 +36,10 @@ definition_top: function_def | enum_def | struct_def
 definition: function_def | variable_def;
 
 // expressions
-expression_value: number | string | function_call| type_conv | variable_ref  | expression_bool
+expression_value: number | string | function_call | type_conv 
+    | variable_ref | enum_option_use | expression_bool 
     | expression_arithmetic | expression_logic;
-comptime_expression_value: number | string | expression_bool;
+comptime_expression_value: number | string | expression_bool | enum_option_use;
 
 expression_arithmetic: 
       expression_arithmetic SP operator_arithmetic SP expression_arithmetic
@@ -100,6 +101,7 @@ enum_base_type: type_Bit
     | F64 | F32 
     | I16 | I64 | I32 | I8
     | U16 | U64 | U32 | U8;
+enum_option_use: identifier_type DOT identifier_enumoption;
 
 // types
 type_def: identifier_type template_param_list? type_ref_use SP UNUSED newline;

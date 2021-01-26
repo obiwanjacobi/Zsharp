@@ -189,7 +189,7 @@ namespace UnitTests.AST
 
 
         [TestMethod]
-        public void EnumOptionDotName()
+        public void EnumDefOptionDotName()
         {
             const string code =
                 "MyEnum" + Tokens.NewLine +
@@ -198,14 +198,13 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var astEnum = file.CodeBlock.ItemAt<AstTypeDefinitionEnum>(0);
             var symbols = file.Symbols;
             var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
             entry.SymbolKind.Should().Be(AstSymbolKind.Field);
         }
 
         [TestMethod]
-        public void StructFieldDotName()
+        public void StructDefFieldDotName()
         {
             const string code =
                 "MyStruct" + Tokens.NewLine +
@@ -214,10 +213,30 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var astStruct = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
             var symbols = file.Symbols;
             var entry = symbols.FindEntry("Mystruct.Fld1", AstSymbolKind.Field);
             entry.SymbolKind.Should().Be(AstSymbolKind.Field);
+        }
+
+        [TestMethod]
+        public void EnumUseOption()
+        {
+            const string code =
+                "MyEnum" + Tokens.NewLine +
+                Tokens.Indent1 + "Zero" + Tokens.NewLine +
+                Tokens.Indent1 + "One" + Tokens.NewLine +
+                "v = MyEnum.Zero" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var symbols = file.Symbols;
+
+            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
+
+            var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
+            entry.SymbolKind.Should().Be(AstSymbolKind.Field);
+            // make sure we get the reference, not the definition
+            entry.References.Count().Should().Be(1);
         }
     }
 }

@@ -42,7 +42,13 @@ namespace Zsharp.AST
 
         public bool TryResolve()
         {
-            throw new NotImplementedException();
+            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
+            if (entry != null)
+            {
+                _symbol = entry;
+                return true;
+            }
+            return false;
         }
     }
 }

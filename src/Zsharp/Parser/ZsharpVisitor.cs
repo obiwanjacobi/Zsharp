@@ -369,6 +369,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitEnum_base_type([NotNull] ZsharpParser.Enum_base_typeContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.enum_option_use"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitEnum_option_use([NotNull] ZsharpParser.Enum_option_useContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.type_def"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

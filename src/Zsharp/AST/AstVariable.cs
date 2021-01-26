@@ -42,7 +42,7 @@ namespace Zsharp.AST
 
         public bool TryResolve()
         {
-            var entry = Symbol?.SymbolTable.Resolve(Symbol);
+            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
             if (entry != null)
             {
                 _symbol = entry;
@@ -61,6 +61,11 @@ namespace Zsharp.AST
             if (!TrySetTypeReference(typeReference))
                 throw new InvalidOperationException(
                     "TypeReference is already set or null.");
+        }
+
+        public override void VisitChildren(AstVisitor visitor)
+        {
+            TypeReference?.Accept(visitor);
         }
     }
 }

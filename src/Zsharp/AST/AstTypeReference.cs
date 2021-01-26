@@ -73,15 +73,6 @@ namespace Zsharp.AST
             return false;
         }
 
-        public override void Accept(AstVisitor visitor)
-        {
-            foreach (var field in _fields)
-            {
-                field.Accept(visitor);
-            }
-            visitor.VisitTypeReference(this);
-        }
-
         public static AstTypeReference Create(AstTypeDefinition typeDef, AstNode? typeSource = null)
         {
             Ast.Guard(typeDef != null, "TypeDefinition is null.");
@@ -145,6 +136,21 @@ namespace Zsharp.AST
             if (!TryAddFieldInit(field))
                 throw new InvalidOperationException(
                     "TypeField is already set or null.");
+        }
+
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitTypeReference(this);
+
+        public override void VisitChildren(AstVisitor visitor)
+        {
+            foreach (var param in _parameters)
+            {
+                param.Accept(visitor);
+            }
+            foreach (var field in _fields)
+            {
+                field.Accept(visitor);
+            }
         }
     }
 }

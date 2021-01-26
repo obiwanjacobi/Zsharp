@@ -76,9 +76,13 @@ namespace Zsharp.AST
             return entry;
         }
 
-        private void Merge(AstSymbolEntry targetEntry, AstSymbolEntry sourceEntry)
+        private static void Merge(AstSymbolEntry targetEntry, AstSymbolEntry sourceEntry)
         {
-            targetEntry.SymbolLocality = sourceEntry.SymbolLocality;
+            // only allow from private up 
+            // not from exported to private
+            if (targetEntry.SymbolLocality == AstSymbolLocality.Private)
+                targetEntry.SymbolLocality = sourceEntry.SymbolLocality;
+
             foreach (var alias in sourceEntry.Aliases)
             {
                 targetEntry.TryAddAlias(alias);
@@ -89,24 +93,26 @@ namespace Zsharp.AST
             }
         }
 
-        public AstSymbolEntry? Resolve(AstSymbolEntry symbolEntry)
+        public AstSymbolEntry? ResolveDefinition(AstSymbolEntry symbolEntry)
         {
             if (symbolEntry == null)
                 return null;
             if (symbolEntry.HasOverloads || symbolEntry.Definition != null)
                 return symbolEntry;
 
+            var dotName = new AstDotName(symbolEntry.SymbolName);
             var table = this;
             while (table != null)
             {
                 var entry = table.FindEntryLocal(symbolEntry.SymbolName, symbolEntry.SymbolKind);
-                if (entry == null)
+                if (!HasDefinition(entry) && dotName.IsDotName)
+                    entry = table.FindEntryDotName(dotName, symbolEntry.SymbolKind);
+                if (!HasDefinition(entry))
                     entry = table.FindEntryInModules(symbolEntry.SymbolName, symbolEntry.SymbolKind);
 
-                if (entry != null &&
-                    (entry.HasOverloads || entry.Definition != null))
+                if (HasDefinition(entry))
                 {
-                    Merge(entry, symbolEntry);
+                    Merge(entry!, symbolEntry);
                     symbolEntry.Delete();
                     return entry;
                 }
@@ -114,6 +120,9 @@ namespace Zsharp.AST
             }
             return null;
         }
+
+        private static bool HasDefinition(AstSymbolEntry? entry)
+            => entry?.HasDefinition ?? false;
 
         public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
         {

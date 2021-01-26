@@ -259,6 +259,21 @@ namespace Zsharp.AST
             return varRef;
         }
 
+        public override object? VisitEnum_option_use(Enum_option_useContext context)
+        {
+            var enumOpt = new AstTypeFieldReferenceEnumOption(context);
+
+            // not using standard VisitChildren because 
+            // Identifier needs special processing with dot-name.
+            var identifier = new AstIdentifier(context);
+            enumOpt.SetIdentifier(identifier);
+
+            var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
+            symbols.Symbols.Add(enumOpt);
+
+            return enumOpt;
+        }
+
         public override object? VisitLiteral_bool(Literal_boolContext context)
             => new AstLiteralBoolean(context);
 

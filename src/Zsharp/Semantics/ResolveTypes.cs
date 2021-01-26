@@ -156,6 +156,17 @@ namespace Zsharp.Semantics
                 }
             }
 
+            var fld = operand.FieldReference;
+            if (fld?.Symbol?.Definition != null)
+            {
+                var enumOptDef = fld.Symbol.DefinitionAs<AstTypeDefinitionEnumOption>();
+                if (enumOptDef != null)
+                {
+                    var enumDef = enumOptDef.ParentAs<AstTypeDefinitionEnum>();
+                    operand.SetTypeReference(AstTypeReference.Create(enumDef!));
+                }
+            }
+
             var fn = operand.FunctionReference;
             if (fn?.TypeReference != null)
             {
@@ -201,6 +212,17 @@ namespace Zsharp.Semantics
                 {
                     assign.Variable.SetTypeReference(new AstTypeReference(typeRef));
                 }
+            }
+        }
+
+        public override void VisitTypeFieldReferenceEnumOption(AstTypeFieldReferenceEnumOption enumOption)
+        {
+            VisitChildren(enumOption);
+
+            if (enumOption.Symbol.Definition == null &&
+                !enumOption.TryResolve())
+            {
+                _errorSite.UndefinedEnumeration(enumOption);
             }
         }
 
