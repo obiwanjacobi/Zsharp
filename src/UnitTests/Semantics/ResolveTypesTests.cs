@@ -183,7 +183,7 @@ namespace UnitTests.Semantics
             var a = file.CodeBlock.ItemAt<AstAssignment>(1);
             var v = a.Variable;
             v.Symbol.Definition.Should().NotBeNull();
-            var id = v.TypeReference.Fields.First();
+            var id = a.Fields.First();
             // TODO:
             //id.Expression.TypeReference.TypeDefinition.Should().NotBeNull();
 

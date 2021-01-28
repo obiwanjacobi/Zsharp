@@ -76,23 +76,38 @@ namespace Zsharp.AST
             }
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitAssignment(this);
+        private readonly List<AstTypeFieldInitialization> _fields = new List<AstTypeFieldInitialization>();
+        public IEnumerable<AstTypeFieldInitialization> Fields => _fields;
+
+        public bool TryAddFieldInit(AstTypeFieldInitialization field)
+        {
+            if (field != null &&
+                field.TrySetParent(this))
+            {
+                _fields.Add(field);
+                return true;
+            }
+            return false;
+        }
+
+        public void AddFieldInit(AstTypeFieldInitialization field)
+        {
+            if (!TryAddFieldInit(field))
+                throw new InvalidOperationException(
+                    "TypeField is already set or null.");
+        }
+
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitAssignment(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {
             Expression?.Accept(visitor);
             Variable?.Accept(visitor);
+            foreach (var field in _fields)
+            {
+                field.Accept(visitor);
+            }
         }
-
-        // routing from place in parse tree (child of Assignment) 
-        // to logical storage site (TypeReference)
-        public IEnumerable<AstTypeFieldInitialization> Fields
-            => Variable.TypeReference.Fields;
-
-        public bool TryAddFieldInit(AstTypeFieldInitialization field)
-            => Variable.TypeReference.TryAddFieldInit(field);
-
-        public void AddFieldInit(AstTypeFieldInitialization field)
-            => Variable.TypeReference.AddFieldInit(field);
     }
 }

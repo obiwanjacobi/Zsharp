@@ -8,7 +8,7 @@ namespace Zsharp.AST
 {
     [DebuggerDisplay("{Identifier}")]
     public class AstTypeReference : AstType,
-        IAstTemplateSite, IAstTypeInitializeSite
+        IAstTemplateSite
     {
         public AstTypeReference(AstTypeReference inferredFrom)
             : base(AstNodeType.Type)
@@ -117,27 +117,6 @@ namespace Zsharp.AST
                     "TemplateParameter is already set or null.");
         }
 
-        private readonly List<AstTypeFieldInitialization> _fields = new List<AstTypeFieldInitialization>();
-        public IEnumerable<AstTypeFieldInitialization> Fields => _fields;
-
-        public bool TryAddFieldInit(AstTypeFieldInitialization field)
-        {
-            if (field != null &&
-                field.TrySetParent(this))
-            {
-                _fields.Add(field);
-                return true;
-            }
-            return false;
-        }
-
-        public void AddFieldInit(AstTypeFieldInitialization field)
-        {
-            if (!TryAddFieldInit(field))
-                throw new InvalidOperationException(
-                    "TypeField is already set or null.");
-        }
-
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTypeReference(this);
 
@@ -146,10 +125,6 @@ namespace Zsharp.AST
             foreach (var param in _parameters)
             {
                 param.Accept(visitor);
-            }
-            foreach (var field in _fields)
-            {
-                field.Accept(visitor);
             }
         }
     }

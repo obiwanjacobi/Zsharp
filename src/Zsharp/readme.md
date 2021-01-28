@@ -5,7 +5,6 @@
 - Check unit test coverage
 - More tests on syntax errors (non-happy-flow).
 - SymbolTables contain nested symbols (e.g. field names of structs) without scope/owner identifier.
-- Struct (Template) usage does not correctly setup the instantiated type (template parameters) and the instance (field initializations)
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16). 
     RetVal of operator overload determines resulting type.
 - Resolve Expression operators to (intrinsic or custom) function names.
