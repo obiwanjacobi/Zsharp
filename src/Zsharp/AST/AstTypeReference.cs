@@ -10,15 +10,6 @@ namespace Zsharp.AST
     public class AstTypeReference : AstType,
         IAstTemplateSite
     {
-        public AstTypeReference(AstTypeReference inferredFrom)
-            : base(AstNodeType.Type)
-        {
-            Context = inferredFrom.Context;
-            SetIdentifier(inferredFrom.Identifier!);
-            TrySetSymbol(inferredFrom.Symbol!);
-            _typeSource = inferredFrom.TypeSource;
-        }
-
         public AstTypeReference(Type_refContext context)
             : base(AstNodeType.Type)
         {
@@ -37,15 +28,16 @@ namespace Zsharp.AST
             : base(AstNodeType.Type)
         { }
 
+        private AstTypeReference(AstTypeReference typeOrigin)
+            : base(AstNodeType.Type)
+        {
+            Context = typeOrigin.Context;
+            SetIdentifier(typeOrigin.Identifier!);
+            TrySetSymbol(typeOrigin.Symbol!);
+            _typeOrigin = typeOrigin;
+        }
+
         public AstTypeDefinition? TypeDefinition => Symbol?.DefinitionAs<AstTypeDefinition>();
-
-        private AstNode? _typeSource;
-        /// <summary>
-        /// A reference to a source node that helped determine the type.
-        /// </summary>
-        public AstNode? TypeSource => _typeSource;
-
-        public bool TrySetTypeSource(AstNode typeSource) => Ast.SafeSet(ref _typeSource, typeSource);
 
         public bool IsOptional { get; protected set; }
 
@@ -73,7 +65,23 @@ namespace Zsharp.AST
             return false;
         }
 
-        public static AstTypeReference Create(AstTypeDefinition typeDef, AstNode? typeSource = null)
+        private AstTypeReference? _typeOrigin;
+        // points to the origin of this 'proxy'.
+        public AstTypeReference? TypeOrigin => _typeOrigin;
+
+        public bool TrySetTypeOrigin(AstTypeReference typeOrigin) => Ast.SafeSet(ref _typeOrigin, typeOrigin);
+
+        public bool IsProxy => TypeOrigin != null;
+
+        public AstTypeReference MakeProxy()
+        {
+            if (TypeOrigin != null)
+                return new AstTypeReference(TypeOrigin);
+
+            return new AstTypeReference(this);
+        }
+
+        public static AstTypeReference Create(AstTypeDefinition typeDef)
         {
             Ast.Guard(typeDef != null, "TypeDefinition is null.");
             Ast.Guard(typeDef!.Identifier != null, "TypeDefinition has no Identifier.");
@@ -81,8 +89,6 @@ namespace Zsharp.AST
             var typeRef = new AstTypeReference();
             typeRef.SetIdentifier(typeDef.Identifier!);
             typeRef.TrySetSymbol(typeDef.Symbol!);
-            if (typeSource != null)
-                typeRef.TrySetTypeSource(typeSource);
             return typeRef;
         }
 

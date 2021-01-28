@@ -38,7 +38,7 @@ namespace Zsharp.Semantics
                         {
                             var fieldDef = new AstTypeDefinitionStructField();
                             fieldDef.SetIdentifier(new AstIdentifier(field.Identifier.Name, field.Identifier.IdentifierType));
-                            fieldDef.SetTypeReference(new AstTypeReference(field.TypeReference));
+                            fieldDef.SetTypeReference(field.TypeReference.MakeProxy());
                             typeDef.AddField(fieldDef);
 
                             entry.SymbolTable.Add(fieldDef);
@@ -105,7 +105,7 @@ namespace Zsharp.Semantics
                 var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
                     AstIdentifierIntrinsic.Bool.CanonicalName, AstSymbolKind.Type);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found for Boolean.");
-                AssignType(operand, litBool, typeDef!);
+                AssignType(operand, typeDef!);
                 return;
             }
 
@@ -116,7 +116,7 @@ namespace Zsharp.Semantics
 
                 var typeDef = FindTypeByBitCount(numeric.GetBitCount(), numeric.Sign);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found by bit count.");
-                AssignType(operand, numeric, typeDef!);
+                AssignType(operand, typeDef!);
                 return;
             }
 
@@ -128,7 +128,7 @@ namespace Zsharp.Semantics
                 var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
                     AstIdentifierIntrinsic.Str.CanonicalName, AstSymbolKind.Type);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found for String.");
-                AssignType(operand, litString, typeDef!);
+                AssignType(operand, typeDef!);
                 return;
             }
 
@@ -146,7 +146,7 @@ namespace Zsharp.Semantics
                     var typeRef = def?.TypeReference ?? FindTypeReference(var);
                     if (typeRef != null)
                     {
-                        var.SetTypeReference(new AstTypeReference(typeRef));
+                        var.SetTypeReference(typeRef.MakeProxy());
                     }
                 }
 
@@ -170,13 +170,13 @@ namespace Zsharp.Semantics
             var fn = operand.FunctionReference;
             if (fn?.TypeReference != null)
             {
-                operand.SetTypeReference(new AstTypeReference(fn.TypeReference));
+                operand.SetTypeReference(fn.TypeReference.MakeProxy());
             }
         }
 
-        private void AssignType(AstExpressionOperand operand, AstNode node, AstTypeDefinition typeDef)
+        private void AssignType(AstExpressionOperand operand, AstTypeDefinition typeDef)
         {
-            var typeRef = AstTypeReference.Create(typeDef!, node);
+            var typeRef = AstTypeReference.Create(typeDef!);
             var entry = SymbolTable!.Add(typeRef);
             if (entry.Definition == null)
                 entry.AddNode(typeDef!);
@@ -205,12 +205,12 @@ namespace Zsharp.Semantics
                 var def = entry!.DefinitionAs<AstTypeDefinition>();
                 if (def != null)
                 {
-                    typeRef = AstTypeReference.Create(def, expr);
+                    typeRef = AstTypeReference.Create(def);
                     assign.Variable.SetTypeReference(typeRef);
                 }
                 else
                 {
-                    assign.Variable.SetTypeReference(new AstTypeReference(typeRef));
+                    assign.Variable.SetTypeReference(typeRef.MakeProxy());
                 }
             }
         }
@@ -238,7 +238,10 @@ namespace Zsharp.Semantics
                 }
 
                 if (function.FunctionDefinition?.TypeReference != null)
-                    function.SetTypeReference(new AstTypeReference(function.FunctionDefinition.TypeReference));
+                {
+                    function.SetTypeReference(
+                        function.FunctionDefinition.TypeReference.MakeProxy());
+                }
             }
         }
 
@@ -248,7 +251,7 @@ namespace Zsharp.Semantics
 
             if (parameter.TypeReference == null)
             {
-                parameter.SetTypeReference(new AstTypeReference(parameter.Expression.TypeReference));
+                parameter.SetTypeReference(parameter.Expression.TypeReference.MakeProxy());
             }
         }
 

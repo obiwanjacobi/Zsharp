@@ -33,7 +33,7 @@ namespace Zsharp.AST
 
             if (node is IAstTypeReferenceSite typeRefSite &&
                 typeRefSite.TypeReference != null)
-                SetTypeReference(new AstTypeReference(typeRefSite.TypeReference));
+                SetTypeReference(typeRefSite.TypeReference.MakeProxy());
         }
 
         public AstExpressionOperand(AstExpression expr)

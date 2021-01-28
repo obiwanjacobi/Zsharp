@@ -19,7 +19,7 @@ namespace Zsharp.Semantics
                 _typeReferences.Add(key, typeRef);
             }
 
-            return new AstTypeReferenceExternal(_typeReferences[key]);
+            return _typeReferences[key].MakeProxy();
         }
 
         private static string ToZsharpName(string nativeName)

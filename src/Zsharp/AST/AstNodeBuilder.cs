@@ -73,7 +73,7 @@ namespace Zsharp.AST
             var file = new AstFile(_namespace, _builderContext.CompilerContext.IntrinsicSymbols, context);
 
             _builderContext.SetCurrent(file);
-            _builderContext.SetCurrent(file.CodeBlock);
+            _builderContext.SetCurrent(file.CodeBlock!);
             _ = base.VisitChildren(context);
             _builderContext.RevertCurrent();
             _builderContext.RevertCurrent();

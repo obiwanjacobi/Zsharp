@@ -12,12 +12,5 @@ namespace Zsharp.AST
 
             IsOptional = typeReference.IsByReference;
         }
-
-        public AstTypeReferenceExternal(AstTypeReferenceExternal inferredFrom)
-            : base(inferredFrom)
-        {
-            _typeReference = inferredFrom._typeReference;
-            IsOptional = inferredFrom.IsOptional;
-        }
     }
 }
