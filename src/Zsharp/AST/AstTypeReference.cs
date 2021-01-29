@@ -65,13 +65,11 @@ namespace Zsharp.AST
             return false;
         }
 
-        private AstTypeReference? _typeOrigin;
+        private readonly AstTypeReference? _typeOrigin;
         // points to the origin of this 'proxy'.
         public AstTypeReference? TypeOrigin => _typeOrigin;
 
-        public bool TrySetTypeOrigin(AstTypeReference typeOrigin) => Ast.SafeSet(ref _typeOrigin, typeOrigin);
-
-        public bool IsProxy => TypeOrigin != null;
+        public bool IsProxy => _typeOrigin != null;
 
         public AstTypeReference MakeProxy()
         {
