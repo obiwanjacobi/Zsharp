@@ -4,18 +4,18 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 
 | Keyword | Description
 |--|--
-| loop | Loop statement
-| break | Break out of a loop
-| continue | Skip to next iteration
-| if | Conditional branch
-| else | Opposite of conditional branch
-| return | Exit a Function
-| yield | Exits a Coroutine Function
-| in | Iterating values
-| self | A bound Type
-| try | Propagate if Error
-| catch | Handle Error
-| match | Pattern matching
+| `loop` | Loop statement
+| `break` | Break out of a loop
+| `continue` | Skip to next iteration
+| `if` | Conditional branch
+| `else` | Opposite of conditional branch
+| `return` | Exit a Function
+| `yield` | Exits a Coroutine Function
+| `in` | Iterating values
+| `self` | A bound Type
+| `try` | Propagate if Error
+| `catch` | Handle Error
+| `match` | Pattern matching
 
 ---
 
@@ -26,16 +26,18 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 - and
 - or
 - not
+- xor?
 
 ## Reserved for future use
 
-- defer
-- errdefer
-- in
-- out
-- var
-- ref
-- use
-- any
-- asm
-- bank
+Keyword | Description
+--|--
+`defer` | defers execution until end of scope
+`errdefer` | defers execution till exit with error
+`out` | opposite of in?
+`var` | ?
+`ref` | explicit reference?
+`use` | inline module imports?
+`any` | a type that can be anything
+`asm` | inline assembly
+`with` | context variables

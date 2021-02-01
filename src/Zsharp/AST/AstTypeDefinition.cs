@@ -47,6 +47,8 @@ namespace Zsharp.AST
 
         public virtual bool IsUnsigned => false;
 
+        public virtual bool IsStruct => false;
+
         public IEnumerable<AstTypeFieldDefinition> Fields => _fields.Values;
 
         public bool TryAddField(AstTypeFieldDefinition field)

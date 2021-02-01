@@ -6,13 +6,11 @@ namespace Zsharp.Emit
 {
     public class EmitExpression : AstVisitor
     {
-        private readonly bool _isInit;
         private readonly EmitContext _context;
 
-        public EmitExpression(EmitContext context, bool isInit)
+        public EmitExpression(EmitContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _isInit = isInit;
         }
 
         public override void VisitExpression(AstExpression expression)
@@ -194,7 +192,7 @@ namespace Zsharp.Emit
 
             if (variable.VariableDefinition != null)
             {
-                if (_isInit)
+                if (variable.IsTopLevel())
                 {
                     var field = _context.ModuleClass.GetField(name);
                     var load = _context.InstructionFactory.LoadField(field);
@@ -232,7 +230,7 @@ namespace Zsharp.Emit
             }
             else
             {
-                var method = _context.FindFunction(functionDef);
+                var method = _context.GetFunctionReference(functionDef);
                 var call = _context.InstructionFactory.Call(method);
                 _context.CodeBuilder.CodeBlock.Add(call);
             }

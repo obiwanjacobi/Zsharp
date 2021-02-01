@@ -97,7 +97,7 @@ namespace Zsharp.Emit
             return scope;
         }
 
-        public MethodReference FindFunction(AstFunctionDefinition function)
+        public MethodReference GetFunctionReference(AstFunctionDefinition function)
         {
             if (function is AstFunctionExternal externalFunction)
             {
@@ -107,6 +107,30 @@ namespace Zsharp.Emit
             return Module.Types
                 .SelectMany(t => t.Methods)
                 .Single(m => m.Name == function.Identifier?.CanonicalName);
+        }
+
+        public TypeDefinition GetTypeDefinition(AstTypeReference typeReference)
+        {
+            //if (typeReference is AstTypeReferenceExternal externalType)
+            //{
+            //    return Module.ImportReference(externalType.??);
+            //}
+
+            var nameParts = typeReference.Symbol.FullName.Split('.');
+            if (nameParts.Length == 0)
+                throw new ArgumentException(
+                    "[Emit] Type (symbol) name was empty.", nameof(typeReference));
+
+            var types = Module.Types;
+            TypeDefinition typeDef;
+            foreach (var name in nameParts)
+            {
+                typeDef = types.Find(name);
+                Ast.Guard(typeDef, $"[Emit] Type not found {typeReference.Symbol.FullName} ({name}).");
+
+                types = typeDef!.NestedTypes;
+            }
+            return typeDef;
         }
 
         internal TypeReference ToTypeReference(AstTypeReference typeReference)

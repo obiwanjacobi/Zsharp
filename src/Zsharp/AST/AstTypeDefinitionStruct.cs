@@ -17,6 +17,8 @@ namespace Zsharp.AST
 
         public int Indent { get; set; }
 
+        public override bool IsStruct => true;
+
         public AstSymbolTable Symbols { get; }
 
         public override bool TrySetIdentifier(AstIdentifier identifier)

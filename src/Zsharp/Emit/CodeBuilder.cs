@@ -145,6 +145,9 @@ namespace Zsharp.Emit
             }
         }
 
+        public static string BuildInitName(string name)
+            => $"{name}_init";
+
         private static void AppendInstructions(ILProcessor iLProcessor, CodeBlock codeBlock)
         {
             foreach (var instruction in codeBlock.Instructions)

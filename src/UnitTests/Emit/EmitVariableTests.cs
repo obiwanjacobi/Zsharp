@@ -99,5 +99,28 @@ namespace UnitTests.Emit
 
             emit.SaveAs("VariableAssignment_ExpressionVariableRef.dll");
         }
+
+        [TestMethod]
+        public void VariableAssignment_StructFieldInit()
+        {
+            const string code =
+                "module test" + Tokens.NewLine +
+                "MyStruct" + Tokens.NewLine +
+                Tokens.Indent1 + "Id: U8" + Tokens.NewLine +
+                Tokens.Indent1 + "Name: Str" + Tokens.NewLine +
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "s = MyStruct" + Tokens.NewLine +
+                Tokens.Indent2 + "Id = 42" + Tokens.NewLine +
+                Tokens.Indent2 + "Name = \"Hello\"" + Tokens.NewLine
+                ;
+
+            var emit = Emit.Create(code);
+
+            var moduleClass = emit.Context.Module.Types.Find("test");
+            var body = moduleClass.Methods.First().Body;
+            body.Instructions.Should().HaveCount(8);
+
+            emit.SaveAs("VariableAssignment_StructFieldInit.dll");
+        }
     }
 }

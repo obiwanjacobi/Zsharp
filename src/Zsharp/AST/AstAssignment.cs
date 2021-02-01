@@ -79,6 +79,8 @@ namespace Zsharp.AST
         private readonly List<AstTypeFieldInitialization> _fields = new List<AstTypeFieldInitialization>();
         public IEnumerable<AstTypeFieldInitialization> Fields => _fields;
 
+        public bool HasFields => _fields.Count > 0;
+
         public bool TryAddFieldInit(AstTypeFieldInitialization field)
         {
             if (field != null &&
