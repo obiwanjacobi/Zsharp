@@ -118,7 +118,7 @@ namespace UnitTests.Emit
 
             var moduleClass = emit.Context.Module.Types.Find("test");
             var body = moduleClass.Methods.First().Body;
-            body.Instructions.Should().HaveCount(8);
+            body.Instructions.Should().HaveCount(11);
 
             emit.SaveAs("VariableAssignment_StructFieldInit.dll");
         }

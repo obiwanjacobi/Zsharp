@@ -81,18 +81,17 @@ namespace Zsharp.Emit
                 var tempVarDef = Context.CodeBuilder.GetVariable(tempName);
 
                 Context.CodeBuilder.CodeBlock.Add(
-                    Context.InstructionFactory.LoadVariable(tempVarDef));
+                    Context.InstructionFactory.LoadVariableAddress(tempVarDef));
                 Context.CodeBuilder.CodeBlock.Add(
                     Context.InstructionFactory.InitObject(tempVarDef.VariableType));
 
                 base.VisitAssignment(assign);
 
-
+                Context.CodeBuilder.CodeBlock.Add(
+                    Context.InstructionFactory.LoadVariable(tempVarDef));
             }
             else
-            {
                 base.VisitAssignment(assign);
-            }
 
             if (assign.IsTopLevel())
             {
@@ -131,7 +130,7 @@ namespace Zsharp.Emit
                 var varDef = Context.CodeBuilder.GetVariable(varName);
 
                 Context.CodeBuilder.CodeBlock.Add(
-                    Context.InstructionFactory.LoadVariable(varDef));
+                    Context.InstructionFactory.LoadVariableAddress(varDef));
 
                 VisitChildren(field);
 

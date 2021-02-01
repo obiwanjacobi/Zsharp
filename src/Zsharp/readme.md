@@ -12,7 +12,7 @@
 - Add (custom) Type Conversion (Type names as function names)
 - Add Custom Data Types (and export)
 - implement discard as variable: `_ = fn()`
-- Emit struct field init
+- Struct field init is always done using a secondary instance - not always necessary (ctor).
 - Can we move ParserRuleContext Context property to AstNode?
 - Add SymbolEntrySite to TypeDefinition?
 - TypeReferences of built-in types are added to root SymbolTable that contains definition.

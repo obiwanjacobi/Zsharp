@@ -94,6 +94,7 @@ namespace Zsharp.Emit
         }
 
         public Instruction LoadVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Ldloc, varDef);
+        public Instruction LoadVariableAddress(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Ldloca, varDef);
         public Instruction StoreVariable(VariableDefinition varDef) => _iLProcessor.Create(OpCodes.Stloc, varDef);
         public Instruction InitObject(TypeReference typeRef) => _iLProcessor.Create(OpCodes.Initobj, typeRef);
 
@@ -103,6 +104,7 @@ namespace Zsharp.Emit
                 return _iLProcessor.Create(OpCodes.Ldsfld, field);
             return _iLProcessor.Create(OpCodes.Ldfld, field);
         }
+
         public Instruction StoreField(FieldDefinition field)
         {
             if (field.FieldType.Name == typeof(String).Name)
