@@ -122,7 +122,7 @@ namespace Zsharp.Emit
                     "[Emit] Type (symbol) name was empty.", nameof(typeReference));
 
             var types = Module.Types;
-            TypeDefinition typeDef;
+            TypeDefinition typeDef = null;
             foreach (var name in nameParts)
             {
                 typeDef = types.Find(name);
