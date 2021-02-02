@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Zsharp.AST;
 
 namespace Zsharp.Emit
@@ -12,6 +11,8 @@ namespace Zsharp.Emit
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+
+        protected EmitContext EmitContext => _context;
 
         public override void VisitExpression(AstExpression expression)
         {
@@ -43,7 +44,7 @@ namespace Zsharp.Emit
         private void EmitArithmeticOperation(AstExpression expression)
         {
             var errTxt = $"Arithmetic Expression Operator {expression.Operator} is not implemented yet.";
-            var il = _context.InstructionFactory;
+            var il = EmitContext.InstructionFactory;
 
             bool isUnsigned = expression.TypeReference.TypeDefinition.IsUnsigned;
 
@@ -60,13 +61,13 @@ namespace Zsharp.Emit
                     $"Unrecognized Arithmetic Expression Operator {expression.Operator}"),
             };
 
-            _context.CodeBuilder.CodeBlock.Add(instruction);
+            EmitContext.CodeBuilder.CodeBlock.Add(instruction);
         }
 
         private void EmitBitwiseOperation(AstExpression expression)
         {
             var errTxt = $"Bitwise Expression Operator {expression.Operator} is not implemented yet.";
-            var il = _context.InstructionFactory;
+            var il = EmitContext.InstructionFactory;
 
             var instruction = expression.Operator switch
             {
@@ -79,7 +80,7 @@ namespace Zsharp.Emit
 
             if (instruction != null)
             {
-                _context.CodeBuilder.CodeBlock.Add(instruction);
+                EmitContext.CodeBuilder.CodeBlock.Add(instruction);
                 return;
             }
 
@@ -93,7 +94,7 @@ namespace Zsharp.Emit
                     $"Unrecognized Bitwise Expression Operator {expression.Operator}"),
             };
 
-            _context.CodeBuilder.CodeBlock.Add(instructions);
+            EmitContext.CodeBuilder.CodeBlock.Add(instructions);
         }
 
         private void EmitComparisonOperation(AstExpression expression)
@@ -110,7 +111,7 @@ namespace Zsharp.Emit
 
             if (instruction != null)
             {
-                _context.CodeBuilder.CodeBlock.Add(instruction);
+                EmitContext.CodeBuilder.CodeBlock.Add(instruction);
                 return;
             }
 
@@ -123,7 +124,7 @@ namespace Zsharp.Emit
                         $"Unrecognized Comparison Expression Operator {expression.Operator}")
             };
 
-            _context.CodeBuilder.CodeBlock.Add(instructions);
+            EmitContext.CodeBuilder.CodeBlock.Add(instructions);
         }
 
         private void EmitLogicOperation(AstExpression expression)
@@ -166,73 +167,68 @@ namespace Zsharp.Emit
 
         public override void VisitLiteralBoolean(AstLiteralBoolean literalBool)
         {
-            var il = _context.InstructionFactory;
-            var instruction = il.LoadConstant(literalBool.Value);
-            _context.CodeBuilder.CodeBlock.Add(instruction);
+            var il = EmitContext.InstructionFactory;
+            EmitContext.CodeBuilder.CodeBlock.Add(
+                il.LoadConstant(literalBool.Value));
         }
 
         public override void VisitLiteralNumeric(AstLiteralNumeric numeric)
         {
-            var il = _context.InstructionFactory;
-            var instruction = il.LoadConstant(numeric.Value, numeric.GetBitCount());
-            _context.CodeBuilder.CodeBlock.Add(instruction);
+            var il = EmitContext.InstructionFactory;
+            EmitContext.CodeBuilder.CodeBlock.Add(
+                il.LoadConstant(numeric.Value, numeric.GetBitCount()));
         }
 
         public override void VisitLiteralString(AstLiteralString literalString)
         {
-            var il = _context.InstructionFactory;
-            var instruction = il.LoadConstant(literalString.Value);
-            _context.CodeBuilder.CodeBlock.Add(instruction);
+            var il = EmitContext.InstructionFactory;
+            EmitContext.CodeBuilder.CodeBlock.Add(
+                il.LoadConstant(literalString.Value));
         }
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
             var name = variable.Identifier.CanonicalName;
-            var il = _context.InstructionFactory;
+            var il = EmitContext.InstructionFactory;
 
             if (variable.VariableDefinition != null)
             {
                 if (variable.IsTopLevel())
                 {
-                    var field = _context.ModuleClass.GetField(name);
-                    var load = _context.InstructionFactory.LoadField(field);
-                    _context.CodeBuilder.CodeBlock.Add(load);
+                    var field = EmitContext.ModuleClass.GetField(name);
+                    EmitContext.CodeBuilder.CodeBlock.Add(
+                        il.LoadField(field));
                 }
                 else
                 {
-                    var varDef = _context.CodeBuilder.GetVariable(name);
-                    var instruction = il.LoadVariable(varDef);
-                    _context.CodeBuilder.CodeBlock.Add(instruction);
+                    var varDef = EmitContext.CodeBuilder.GetVariable(name);
+                    EmitContext.CodeBuilder.CodeBlock.Add(
+                        il.LoadVariable(varDef));
                 }
             }
             if (variable.ParameterDefinition != null)
             {
-                var paramDef = _context.CodeBuilder.GetParameter(name);
-                var instruction = il.LoadParameter(paramDef);
-                _context.CodeBuilder.CodeBlock.Add(instruction);
+                var paramDef = EmitContext.CodeBuilder.GetParameter(name);
+                EmitContext.CodeBuilder.CodeBlock.Add(
+                    il.LoadParameter(paramDef));
             }
         }
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            VisitChildren(function);
-
             var functionDef = function.FunctionDefinition;
             if (functionDef.IsIntrinsic)
             {
-                var target = ((AstTypeDefinitionIntrinsic)
-                    functionDef.TypeReference.TypeDefinition).ToIntrinsicType();
-                var source = ((AstTypeDefinitionIntrinsic)
-                    functionDef.Parameters.First().TypeReference.TypeDefinition).ToIntrinsicType();
-
-                var conv = _context.InstructionFactory.Convert(target, source);
-                _context.CodeBuilder.CodeBlock.Add(conv);
+                var intrinsic = new EmitIntrinsic(EmitContext);
+                intrinsic.EmitFunction(function, (AstFunctionDefinitionIntrinsic)functionDef);
             }
             else
             {
-                var method = _context.GetFunctionReference(functionDef);
-                var call = _context.InstructionFactory.Call(method);
-                _context.CodeBuilder.CodeBlock.Add(call);
+                VisitChildren(function);
+
+                var method = EmitContext.GetFunctionReference(functionDef);
+                EmitContext.CodeBuilder.CodeBlock.Add(
+                    EmitContext.InstructionFactory.Call(method));
             }
         }
     }

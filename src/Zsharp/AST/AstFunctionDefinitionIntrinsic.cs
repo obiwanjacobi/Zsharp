@@ -11,11 +11,6 @@
 
         public override bool IsIntrinsic => true;
 
-        public override void Accept(AstVisitor visitor)
-        {
-            // no-op
-        }
-
         public static void AddAll(AstSymbolTable symbols)
         {
             var convertU8ToU16 = new AstFunctionDefinitionIntrinsic(
@@ -40,9 +35,7 @@
         }
 
         private static void AddIntrinsicSymbol(AstSymbolTable symbols, AstFunctionDefinitionIntrinsic function)
-        {
-            function.CreateSymbols(symbols);
-        }
+            => function.CreateSymbols(symbols);
 
         private void SetParameter(AstTypeDefinitionIntrinsic type)
         {
@@ -52,8 +45,9 @@
         }
 
         private void SetTypeReference(AstTypeDefinitionIntrinsic type)
-        {
-            SetTypeReference(AstTypeReference.Create(type));
-        }
+            => SetTypeReference(AstTypeReference.Create(type));
+
+        public override void Accept(AstVisitor visitor)
+            => throw new System.NotImplementedException("Must not Visit Intrinsic Function Definition.");
     }
 }

@@ -111,17 +111,18 @@ This helps with passing necessary but non-informative parameters.
 > What happens when multiple of the same type are specified? Compile Error?
 
 ```csharp
-s = MyStruct
-    ...
-v = 42
-
-fn: (self: MyStruct)
+fn: (self: MyStruct, p: U8)
     ...
 pred: (p: U8): Bool
     return p = 42
 
+s = MyStruct
+    ...
+v = 42
+
 with s, v
     // matches parameters on type
-    if pred()
+    // specified overrule context
+    if pred(42)
         fn()
 ```

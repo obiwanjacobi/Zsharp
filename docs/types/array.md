@@ -120,7 +120,7 @@ x = arr.At(i)   // lookup value (U8)
 p = arr.PtrTo(i)  // lookup pointer (Ptr<U8>)
 s = arr.PtrTo(i, 2) // sub-array (Slice<U8, 2>)
 
-arr: Array<U8> = ( 1, 2, 3)     // mutable
+arr: Array<U8> = ( 1, 2, 3 )     // mutable
 arr.At(i) = 42  // At used as getter and setter?
 
 // or separate?
