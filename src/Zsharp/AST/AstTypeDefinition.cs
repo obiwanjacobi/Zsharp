@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -77,41 +76,6 @@ namespace Zsharp.AST
             {
                 option.Accept(visitor);
             }
-        }
-
-        public static AstTypeDefinition? SelectKnownTypeDefinition(Known_typesContext context)
-        {
-            if (context == null)
-                return null;
-            //if (context.type_Bit()) return TypeBit;
-            //if (context.type_Ptr()) return TypePtr;
-
-            if (context.BOOL() != null)
-                return AstTypeDefinitionIntrinsic.Bool;
-            if (context.STR() != null)
-                return AstTypeDefinitionIntrinsic.Str;
-            if (context.F64() != null)
-                return AstTypeDefinitionIntrinsic.F64;
-            if (context.F32() != null)
-                return AstTypeDefinitionIntrinsic.F32;
-            if (context.I8() != null)
-                return AstTypeDefinitionIntrinsic.I8;
-            if (context.I16() != null)
-                return AstTypeDefinitionIntrinsic.I16;
-            if (context.I64() != null)
-                return AstTypeDefinitionIntrinsic.I64;
-            if (context.I32() != null)
-                return AstTypeDefinitionIntrinsic.I32;
-            if (context.U8() != null)
-                return AstTypeDefinitionIntrinsic.U8;
-            if (context.U16() != null)
-                return AstTypeDefinitionIntrinsic.U16;
-            if (context.U64() != null)
-                return AstTypeDefinitionIntrinsic.U64;
-            if (context.U32() != null)
-                return AstTypeDefinitionIntrinsic.U32;
-
-            return null;
         }
     }
 }

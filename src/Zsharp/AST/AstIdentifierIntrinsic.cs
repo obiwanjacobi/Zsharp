@@ -20,5 +20,27 @@
         public AstIdentifierIntrinsic(string name, AstIdentifierType identifierType)
             : base(name, identifierType)
         { }
+
+        public static AstIdentifierIntrinsic? Lookup(string identifier)
+        {
+            return AstDotName.ToCanonical(identifier) switch
+            {
+                "U8" => U8,
+                "U16" => U16,
+                "U32" => U32,
+                "U64" => U64,
+                "I8" => I8,
+                "I16" => I16,
+                "I32" => I32,
+                "I64" => I64,
+                "F32" => F32,
+                "F64" => F64,
+                "Str" => Str,
+                "Bool" => Bool,
+                "Void" => Void,
+                "self" => Self,
+                _ => null
+            };
+        }
     }
 }

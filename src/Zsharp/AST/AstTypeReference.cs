@@ -18,12 +18,6 @@ namespace Zsharp.AST
             IsError = context.ERROR() != null;
         }
 
-        public AstTypeReference(Enum_base_typeContext context)
-            : base(AstNodeType.Type)
-        {
-            Context = context;
-        }
-
         protected AstTypeReference()
             : base(AstNodeType.Type)
         { }

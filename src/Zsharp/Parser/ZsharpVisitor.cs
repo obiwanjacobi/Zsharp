@@ -363,12 +363,6 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitEnum_option_value([NotNull] ZsharpParser.Enum_option_valueContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.enum_base_type"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitEnum_base_type([NotNull] ZsharpParser.Enum_base_typeContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.enum_option_use"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -404,96 +398,6 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitType_name([NotNull] ZsharpParser.Type_nameContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.known_types"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitKnown_types([NotNull] ZsharpParser.Known_typesContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_Bit"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_Bit([NotNull] ZsharpParser.Type_BitContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_Ptr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_Ptr([NotNull] ZsharpParser.Type_PtrContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_Opt"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_Opt([NotNull] ZsharpParser.Type_OptContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_Err"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_Err([NotNull] ZsharpParser.Type_ErrContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_Imm"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_Imm([NotNull] ZsharpParser.Type_ImmContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_conv"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_conv([NotNull] ZsharpParser.Type_convContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_conv_U8"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_conv_U8([NotNull] ZsharpParser.Type_conv_U8Context context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_conv_U16"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_conv_U16([NotNull] ZsharpParser.Type_conv_U16Context context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_conv_U32"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_conv_U32([NotNull] ZsharpParser.Type_conv_U32Context context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_conv_U64"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_conv_U64([NotNull] ZsharpParser.Type_conv_U64Context context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_conv_I8"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_conv_I8([NotNull] ZsharpParser.Type_conv_I8Context context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_conv_I16"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_conv_I16([NotNull] ZsharpParser.Type_conv_I16Context context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_conv_I32"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_conv_I32([NotNull] ZsharpParser.Type_conv_I32Context context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZsharpParser.type_conv_I64"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_conv_I64([NotNull] ZsharpParser.Type_conv_I64Context context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.template_param_list_use"/>.
 	/// </summary>

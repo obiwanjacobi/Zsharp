@@ -557,66 +557,6 @@ namespace Zsharp.AST
             throw new NotImplementedException();
         }
 
-        public override object? VisitEnum_base_type(Enum_base_typeContext context)
-        {
-            var typeRef = new AstTypeReference(context);
-
-            AstIdentifier? identifier = null;
-
-            // .NET/C# does only supports number based enums
-            if (context.STR() != null)
-                identifier = AstIdentifierIntrinsic.Str;
-            if (context.F64() != null)
-                identifier = AstIdentifierIntrinsic.F64;
-            if (context.F32() != null)
-                identifier = AstIdentifierIntrinsic.F32;
-
-            if (context.I8() != null)
-                identifier = AstIdentifierIntrinsic.I8;
-            if (context.I16() != null)
-                identifier = AstIdentifierIntrinsic.I16;
-            if (context.I64() != null)
-                identifier = AstIdentifierIntrinsic.I64;
-            if (context.I32() != null)
-                identifier = AstIdentifierIntrinsic.I32;
-            if (context.U8() != null)
-                identifier = AstIdentifierIntrinsic.U8;
-            if (context.U16() != null)
-                identifier = AstIdentifierIntrinsic.U16;
-            if (context.U64() != null)
-                identifier = AstIdentifierIntrinsic.U64;
-            if (context.U32() != null)
-                identifier = AstIdentifierIntrinsic.U32;
-
-            if (identifier == null)
-            {
-                _builderContext.CompilerContext.InvalidEnumBaseType(typeRef);
-                return null;
-            }
-
-            _builderContext.SetCurrent(typeRef);
-            _builderContext.AddIdentifier(identifier);
-
-            _ = VisitChildren(context);
-            _builderContext.RevertCurrent();
-
-            var trSite = _builderContext.GetCurrent<IAstTypeReferenceSite>();
-            trSite.SetTypeReference(typeRef);
-
-            var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbolsSite.Symbols.Find(typeRef);
-            if (entry != null)
-            {
-                entry.AddNode(typeRef);
-                typeRef.SetSymbol(entry);
-            }
-            else
-            {
-                symbolsSite.Symbols.Add(typeRef);
-            }
-            return typeRef;
-        }
-
         public override object? VisitStruct_def(Struct_defContext context)
         {
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
@@ -730,43 +670,6 @@ namespace Zsharp.AST
             }
 
             return typeRef;
-        }
-
-        public override object? VisitKnown_types(Known_typesContext context)
-        {
-            AstIdentifier? identifier = null;
-
-            if (context.BOOL() != null)
-                identifier = AstIdentifierIntrinsic.Bool;
-            if (context.STR() != null)
-                identifier = AstIdentifierIntrinsic.Str;
-            if (context.F64() != null)
-                identifier = AstIdentifierIntrinsic.F64;
-            if (context.F32() != null)
-                identifier = AstIdentifierIntrinsic.F32;
-            if (context.I8() != null)
-                identifier = AstIdentifierIntrinsic.I8;
-            if (context.I16() != null)
-                identifier = AstIdentifierIntrinsic.I16;
-            if (context.I64() != null)
-                identifier = AstIdentifierIntrinsic.I64;
-            if (context.I32() != null)
-                identifier = AstIdentifierIntrinsic.I32;
-            if (context.U8() != null)
-                identifier = AstIdentifierIntrinsic.U8;
-            if (context.U16() != null)
-                identifier = AstIdentifierIntrinsic.U16;
-            if (context.U64() != null)
-                identifier = AstIdentifierIntrinsic.U64;
-            if (context.U32() != null)
-                identifier = AstIdentifierIntrinsic.U32;
-
-            if (identifier != null)
-            {
-                _builderContext.AddIdentifier(identifier);
-            }
-
-            return identifier;
         }
     }
 }

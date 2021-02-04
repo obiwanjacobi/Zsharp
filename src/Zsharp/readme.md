@@ -18,6 +18,7 @@
     Type Constructor functions are very similar - but without the self parameter.
 - Add Custom Data Types (and export)
 - implement discard as variable: `_ = fn()`
+- Struct field references with dot does not work (s.fld)
 - Struct field init is always done using a secondary instance - not always necessary (ctor).
 - Can we move ParserRuleContext Context property to AstNode?
 - Add SymbolEntrySite to TypeDefinition?

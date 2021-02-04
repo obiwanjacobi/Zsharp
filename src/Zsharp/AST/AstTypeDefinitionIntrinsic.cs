@@ -31,6 +31,27 @@ namespace Zsharp.AST
         public static readonly AstTypeDefinitionIntrinsic Bool = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Bool, false, typeof(Boolean));
         public static readonly AstTypeDefinitionIntrinsic Void = new AstTypeDefinitionIntrinsic(AstIdentifierIntrinsic.Void, false, null);
 
+        public static AstTypeDefinitionIntrinsic? Lookup(string typeName)
+        {
+            return AstDotName.ToCanonical(typeName) switch
+            {
+                "U8" => U8,
+                "U16" => U16,
+                "U32" => U32,
+                "U64" => U64,
+                "I8" => I8,
+                "I16" => I16,
+                "I32" => I32,
+                "I64" => I64,
+                "F32" => F32,
+                "F64" => F64,
+                "Str" => Str,
+                "Bool" => Bool,
+                "Void" => Void,
+                _ => null
+            };
+        }
+
         public static void AddAll(AstSymbolTable symbols)
         {
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.Bool);

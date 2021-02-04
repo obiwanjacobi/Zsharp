@@ -36,7 +36,7 @@ definition_top: function_def | enum_def | struct_def
 definition: function_def | variable_def;
 
 // expressions
-expression_value: number | string | function_call | type_conv 
+expression_value: number | string | function_call //| type_conv 
     | variable_ref | enum_option_use | expression_bool 
     | expression_arithmetic | expression_logic;
 comptime_expression_value: number | string | expression_bool | enum_option_use;
@@ -91,16 +91,11 @@ struct_field_def: indent identifier_field type_ref_use newline;
 struct_field_init: indent identifier_field SP EQ_ASSIGN SP expression_value newline;
 
 // enums
-enum_def: identifier_type (COLON SP enum_base_type)? newline (enum_option_def_list | enum_option_def_listline);
+enum_def: identifier_type type_ref_use? newline (enum_option_def_list | enum_option_def_listline);
 enum_option_def_listline: indent (identifier_enumoption COMMA SP)* identifier_enumoption COMMA? newline;
 enum_option_def_list: (enum_option_def newline)* enum_option_def newline;
 enum_option_def: indent identifier_enumoption enum_option_value?;
 enum_option_value: SP EQ_ASSIGN SP comptime_expression_value;
-enum_base_type: type_Bit 
-    | STR
-    | F64 | F32 
-    | I16 | I64 | I32 | I8
-    | U16 | U64 | U32 | U8;
 enum_option_use: identifier_type DOT identifier_enumoption;
 
 // types
@@ -109,31 +104,7 @@ type_alias: identifier_type template_param_list? SP EQ_ASSIGN SP type_ref newlin
 type_ref_use: COLON SP type_ref;
 type_ref: type_name ERROR? QUESTION?;
 
-type_name: known_types | identifier_type template_param_list_use?;
-known_types:
-    type_Bit | type_Ptr
-    | BOOL | STR
-    | F64 | F32 
-    | I16 | I64 | I32 | I8  
-    | U16 | U64 | U32 | U8;
-
-type_Bit: BIT template_param_list_use_number;
-type_Ptr: PTR template_param_list_use_type;
-type_Opt: OPT template_param_list_use_type;
-type_Err: ERR template_param_list_use_type;
-type_Imm: IMM template_param_list_use_type;
-
-// type conversion
-type_conv: type_conv_U8 | type_conv_U16 | type_conv_U32 | type_conv_U64
-    | type_conv_I8 | type_conv_I16 | type_conv_I32 | type_conv_I64;
-type_conv_U8: U8 PARENopen function_param_use PARENclose;
-type_conv_U16: U16 PARENopen function_param_use PARENclose;
-type_conv_U32: U32 PARENopen function_param_use PARENclose;
-type_conv_U64: U64 PARENopen function_param_use PARENclose;
-type_conv_I8: I8 PARENopen function_param_use PARENclose;
-type_conv_I16: I16 PARENopen function_param_use PARENclose;
-type_conv_I32: I32 PARENopen function_param_use PARENclose;
-type_conv_I64: I64 PARENopen function_param_use PARENclose;
+type_name: identifier_type template_param_list_use?;
 
 // templates
 template_param_list_use: SMALL_ANGLEopen template_param_use (COMMA SP template_param_use)* SP? GREAT_ANGLEclose;
@@ -188,25 +159,6 @@ indent: INDENT;
 //
 // Tokens
 //
-
-// type names
-U8: 'U8';
-U16: 'U16';
-U32: 'U32';
-U64: 'U64';
-I8: 'I8';
-I16: 'I16';
-I32: 'I32';
-I64: 'I64';
-F32: 'F32';
-F64: 'F64';
-STR: 'Str';
-BOOL: 'Bool';
-BIT: 'Bit';
-PTR: 'Ptr';
-OPT: 'Opt';
-ERR: 'Err';
-IMM: 'Imm';
 
 // keywords
 MODULE: 'module';
