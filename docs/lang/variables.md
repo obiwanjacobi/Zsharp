@@ -123,6 +123,10 @@ v = 42
 with s, v
     // matches parameters on type
     // specified overrule context
-    if pred(42)
-        fn()
+    if pred()
+        fn(101)
 ```
+
+> Can `self` parameters also come from context? Is there a reason to prohibit that?
+
+Nested `with` contexts are stacked with a reference to its parent. That means that existing types can be overridden with new values and type-lookup is done from most nested (or current) context up to the root context. The value of the first context that has the type registered, will be used.

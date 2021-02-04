@@ -13,6 +13,9 @@
 - Resolve Expression operators to (intrinsic or custom) function names.
 - Emit integer type sizes (un)signed: (U/I8-U/I64)
 - Add (custom) Type Conversion (Type names as function names)
+    Current intrinsic conversions are hardcoded in grammar (not ideal).
+    Conversions are simply functions with same name as (target) type and a self paramter of source type.
+    Type Constructor functions are very similar - but without the self parameter.
 - Add Custom Data Types (and export)
 - implement discard as variable: `_ = fn()`
 - Struct field init is always done using a secondary instance - not always necessary (ctor).

@@ -14,7 +14,7 @@ TargetType: (self: SourceType, other: X): TargetType
 
 The allowed conversions are all explicitly represented by a function. The name of the function is the target type.
 
->There is no implicit conversion on assignment anywhere, ever.
+> There is no implicit conversion on assignment anywhere, ever.
 
 ```C#
 b = 42        // U8
@@ -27,6 +27,7 @@ Type conversion from larger to smaller types need some extra help:
 v = 0x4242          // U16
 b = v.U8()          // error: loss of data!
 b = v.U8([8..16])   // using a Range to extract the bits
+l = v.U32()         // l: U32
 ```
 
 Using forward type inference.
@@ -34,6 +35,7 @@ Using forward type inference.
 ```C#
 v: U16 = 42         // v => U16
 b: U8 = v           // error: loss of data!
+l: U32 = v          // ok
 ```
 
 Unchecked signed to unsigned or visa versa conversions boil down to the number of bits: can the target type contain all the bits of the original value - even though the meaning of those bits may change.
