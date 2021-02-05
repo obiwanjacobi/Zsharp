@@ -26,7 +26,7 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
-        public void FunctionCallDot()
+        public void FunctionCallSelf()
         {
             const string code =
                 "MyStruct" + Tokens.NewLine +

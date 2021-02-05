@@ -8,6 +8,37 @@ namespace UnitTests.AST
     public class AstIndentationTests
     {
         [TestMethod]
+        public void TopVariableAfterFunction()
+        {
+            const string code =
+                "fn: (p: U8)" + Tokens.NewLine +
+                Tokens.Indent1 + "p = 42" + Tokens.NewLine +
+                Tokens.Indent1 + "return" + Tokens.NewLine +
+                "v = 42" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var ag = file.CodeBlock.ItemAt<AstAssignment>(1);
+            ag.Should().NotBeNull();
+            ag.Indent.Should().Be(0);
+        }
+
+        [TestMethod]
+        public void TopVariableAfterStruct()
+        {
+            const string code =
+                "MyStruct" + Tokens.NewLine +
+                Tokens.Indent1 + "Id: U32" + Tokens.NewLine +
+                "v = 42" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var ag = file.CodeBlock.ItemAt<AstAssignment>(1);
+            ag.Should().NotBeNull();
+            ag.Indent.Should().Be(0);
+        }
+
+        [TestMethod]
         public void FunctionBody()
         {
             const string code =
