@@ -36,7 +36,9 @@ namespace Zsharp.AST
 
         public AstSymbolLocality SymbolLocality { get; set; }
 
-        public string FullName => $"{SymbolTable.Namespace}.{SymbolName}";
+        public string FullName => String.IsNullOrEmpty(SymbolTable.Namespace)
+            ? SymbolName
+            : $"{SymbolTable.Namespace}.{SymbolName}";
 
         public AstNode? Definition => _definitions.SingleOrDefault();
 

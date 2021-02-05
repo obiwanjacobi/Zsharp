@@ -6,7 +6,6 @@
 
 - Check unit test coverage
 - More tests on syntax errors (non-happy-flow).
-- SymbolTables contain nested symbols (e.g. field names of structs) without scope/owner identifier.
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16). 
     RetVal of operator overload determines resulting type.
     Type of target (variable) determines resulting type.

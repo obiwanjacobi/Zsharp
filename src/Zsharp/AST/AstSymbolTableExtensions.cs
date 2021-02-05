@@ -55,9 +55,8 @@ namespace Zsharp.AST
             var entry = symbolTable.AddSymbol(name, symbolKind, node);
 
             if (node is IAstSymbolEntrySite symbolSite)
-            {
                 symbolSite.SetSymbol(entry);
-            }
+
             return entry;
         }
     }
