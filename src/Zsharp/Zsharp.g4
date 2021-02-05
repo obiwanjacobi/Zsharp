@@ -3,9 +3,10 @@ grammar Zsharp;
 // entry point
 file : header* source* INDENT? EOF;
 header: module_statement | comment | empty_line;
-source: definition_top | comment | empty_line;
+source: definition_top | function_use 
+    | comment | empty_line;
 codeblock: (flow_statement 
-    | function_call | definition 
+    | function_use | definition 
     | comment | empty_line)+;
 
 // modules
@@ -32,13 +33,12 @@ statement_loop_while: LOOP SP expression_logic;
 // definition
 definition_top: function_def | enum_def | struct_def 
     | type_def | type_alias | variable_def_top 
-    | function_call | function_call_self
     | statement_export_inline;
 definition: function_def | variable_def;
 
 // expressions
 expression_value: number | string 
-    | function_call | function_call_self
+    | function_use
     | variable_ref | variable_field_ref
     | enum_option_use | expression_bool
     | expression_arithmetic | expression_logic;
@@ -51,7 +51,7 @@ expression_arithmetic:
     | operator_arithmetic_unary expression_arithmetic
     | operator_bits_unary expression_arithmetic
     | arithmetic_operand;
-arithmetic_operand: number | variable_ref | function_call;
+arithmetic_operand: number | variable_ref | function_use ;
 
 expression_logic: 
       expression_logic SP operator_logic SP expression_logic
@@ -64,9 +64,9 @@ expression_comparison:
       expression_comparison SP operator_comparison SP expression_comparison
     | PARENopen expression_comparison PARENclose
     | comparison_operand;
-comparison_operand: function_call | variable_ref | literal | expression_arithmetic;
+comparison_operand: function_use | variable_ref | literal | expression_arithmetic;
 
-expression_bool: literal_bool | variable_ref | function_call;
+expression_bool: literal_bool | variable_ref | function_use;
 
 // functions
 function_def: identifier_func COLON SP PARENopen function_parameter_list? PARENclose function_return_type? newline codeblock;
@@ -74,10 +74,11 @@ function_parameter_list: (function_parameter | function_parameter_self) (COMMA S
 function_parameter: identifier_param type_ref_use;
 function_parameter_self: SELF type_ref_use;
 function_return_type: type_ref_use;
-function_call: indent? identifier_func PARENopen function_parameter_uselist? PARENclose newline?;
+function_use: indent? (function_call | function_call_self);
+function_call: identifier_func PARENopen function_parameter_uselist? PARENclose newline?;
 function_parameter_uselist: function_param_use (COMMA SP function_param_use)*;
 function_param_use: expression_value;
-function_call_retval_unused: indent UNUSED SP EQ_ASSIGN SP function_call;
+function_call_retval_unused: indent UNUSED SP EQ_ASSIGN SP function_use;
 function_call_self: variable_ref DOT function_call;
 
 // variables

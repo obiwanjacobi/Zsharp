@@ -2,10 +2,10 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-namespace UnitTests.Smoke
+namespace UnitTests.Grammar
 {
     [TestClass]
-    public class SmokeParserTests
+    public class GrammarParserTests
     {
         [TestMethod]
         public void File_Empty()

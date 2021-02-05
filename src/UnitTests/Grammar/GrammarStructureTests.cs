@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests.Smoke
+namespace UnitTests.Grammar
 {
     [TestClass]
-    public class SmokeStructureTests
+    public class GrammarStructureTests
     {
         [TestMethod]
         public void DefaultWithFields()

@@ -395,6 +395,16 @@ public partial class ZsharpBaseVisitor<Result> : AbstractParseTreeVisitor<Result
 	/// <return>The visitor result.</return>
 	public virtual Result VisitFunction_return_type([NotNull] ZsharpParser.Function_return_typeContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.function_use"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitFunction_use([NotNull] ZsharpParser.Function_useContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.function_call"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>

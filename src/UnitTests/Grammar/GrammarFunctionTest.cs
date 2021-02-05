@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests.Smoke
+namespace UnitTests.Grammar
 {
     [TestClass]
-    public class SmokeFunctionTest
+    public class GrammarFunctionTest
     {
         [TestMethod]
         public void Export()
@@ -36,6 +36,18 @@ namespace UnitTests.Smoke
         {
             const string code =
                 "fn: (p: U8)" + Tokens.NewLine +
+                Tokens.Indent1 + "return" + Tokens.NewLine
+                ;
+
+            Parser.ParseForError(code)
+                .Should().BeNull();
+        }
+
+        [TestMethod]
+        public void VoidParamSelf()
+        {
+            const string code =
+                "fn: (self: U8)" + Tokens.NewLine +
                 Tokens.Indent1 + "return" + Tokens.NewLine
                 ;
 
@@ -92,11 +104,45 @@ namespace UnitTests.Smoke
         }
 
         [TestMethod]
+        public void TopCall()
+        {
+            const string code =
+                "fn()" + Tokens.NewLine
+                ;
+
+            Parser.ParseForError(code)
+                .Should().BeNull();
+        }
+
+        [TestMethod]
         public void Call()
         {
             const string code =
                 "fn: ()" + Tokens.NewLine +
                 Tokens.Indent1 + "call()" + Tokens.NewLine
+                ;
+
+            Parser.ParseForError(code)
+                .Should().BeNull();
+        }
+
+        [TestMethod]
+        public void TopCallSelf()
+        {
+            const string code =
+                "x.fn()" + Tokens.NewLine
+                ;
+
+            Parser.ParseForError(code)
+                .Should().BeNull();
+        }
+
+        [TestMethod]
+        public void CallSelf()
+        {
+            const string code =
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "x.call()" + Tokens.NewLine
                 ;
 
             Parser.ParseForError(code)

@@ -6,6 +6,9 @@
 
 - Check unit test coverage
 - More tests on syntax errors (non-happy-flow).
+- Indent checking: Indent info is on parent context. 
+    Make a list where items can be removed by an IDisplosable object.
+    Can be used for Current too (removes Revert calls)
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16). 
     RetVal of operator overload determines resulting type.
     Type of target (variable) determines resulting type.
@@ -16,7 +19,7 @@
     Conversions are simply functions with same name as (target) type and a self paramter of source type.
     Type Constructor functions are very similar - but without the self parameter.
 - Add Custom Data Types (and export)
-- implement discard as variable: `_ = fn()`
+- implement discard as variable: `_ = fn()` (now function rule)
 - Struct field references with dot does not work (s.fld)
 - Struct field init is always done using a secondary instance - not always necessary (ctor).
 - Can we move ParserRuleContext Context property to AstNode?

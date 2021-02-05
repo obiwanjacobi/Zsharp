@@ -222,10 +222,8 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_call(Function_callContext context)
         {
-            var indent = _builderContext.CheckIndent(context, context.indent());
-
             var function = CreateFunctionReference(context);
-            var codeBlock = _builderContext.GetCodeBlock(indent);
+            var codeBlock = _builderContext.GetCodeBlock();
             codeBlock!.AddItem(function);
             return function;
         }

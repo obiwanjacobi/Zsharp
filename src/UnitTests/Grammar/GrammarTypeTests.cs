@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests.Smoke
+namespace UnitTests.Grammar
 {
     [TestClass]
-    public class SmokeTypeTests
+    public class GrammarTypeTests
     {
         [TestMethod]
         public void Bit()
@@ -66,6 +66,30 @@ namespace UnitTests.Smoke
         {
             const string code =
                 "MyType = Map<Str, U8>" + Tokens.NewLine
+                ;
+
+            Parser.ParseForError(code)
+                .Should().BeNull();
+        }
+
+        [TestMethod]
+        public void TypeEnum()
+        {
+            const string code =
+                "MyEnum" + Tokens.NewLine +
+                Tokens.Indent1 + "None = 0" + Tokens.NewLine
+                ;
+
+            Parser.ParseForError(code)
+                .Should().BeNull();
+        }
+
+        [TestMethod]
+        public void TypeStruct()
+        {
+            const string code =
+                "MyStruct" + Tokens.NewLine +
+                Tokens.Indent1 + "Id: U32" + Tokens.NewLine
                 ;
 
             Parser.ParseForError(code)
