@@ -5,7 +5,6 @@
         None,
         Module,         // root
         File,           // Module.
-        Global,         // File.1
         Function,       // File.
         Struct,         // File.
         Enum,           // File.

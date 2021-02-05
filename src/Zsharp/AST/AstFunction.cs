@@ -28,7 +28,11 @@ namespace Zsharp.AST
             if (param != null &&
                 param.TrySetParent(this))
             {
-                _parameters.Add(param);
+                // always make sure 'self' is first param
+                if (param.Identifier == AstIdentifierIntrinsic.Self)
+                    _parameters.Insert(0, param);
+                else
+                    _parameters.Add(param);
                 return true;
             }
             return false;

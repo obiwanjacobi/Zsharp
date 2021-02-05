@@ -5,7 +5,6 @@ file : header* source* INDENT? EOF;
 header: module_statement | comment | empty_line;
 source: definition_top | comment | empty_line;
 codeblock: (flow_statement 
-    | variable_assign_value | variable_assign_struct 
     | function_call | definition 
     | comment | empty_line)+;
 
@@ -32,12 +31,16 @@ statement_loop_while: LOOP SP expression_logic;
 
 // definition
 definition_top: function_def | enum_def | struct_def 
-    | type_def | type_alias | variable_def_top | statement_export_inline;
+    | type_def | type_alias | variable_def_top 
+    | function_call | function_call_self
+    | statement_export_inline;
 definition: function_def | variable_def;
 
 // expressions
-expression_value: number | string | function_call //| type_conv 
-    | variable_ref | enum_option_use | expression_bool 
+expression_value: number | string 
+    | function_call | function_call_self
+    | variable_ref | variable_field_ref
+    | enum_option_use | expression_bool
     | expression_arithmetic | expression_logic;
 comptime_expression_value: number | string | expression_bool | enum_option_use;
 
@@ -75,6 +78,7 @@ function_call: indent? identifier_func PARENopen function_parameter_uselist? PAR
 function_parameter_uselist: function_param_use (COMMA SP function_param_use)*;
 function_param_use: expression_value;
 function_call_retval_unused: indent UNUSED SP EQ_ASSIGN SP function_call;
+function_call_self: variable_ref DOT function_call;
 
 // variables
 variable_def_top: variable_def_typed | variable_assign_value | variable_assign_struct;
@@ -82,7 +86,8 @@ variable_def: indent (variable_def_typed | variable_assign_value | variable_assi
 variable_def_typed: identifier_var type_ref_use newline;
 variable_assign_value: identifier_var type_ref_use? SP EQ_ASSIGN SP expression_value newline;
 variable_assign_struct: identifier_var SP EQ_ASSIGN SP type_ref newline struct_field_init*;
-variable_ref: identifier_var;
+variable_ref: SELF | identifier_var;
+variable_field_ref: variable_ref DOT identifier_field;
 
 // structs
 struct_def: identifier_type template_param_list? (type_ref_use)? newline struct_field_def_list;

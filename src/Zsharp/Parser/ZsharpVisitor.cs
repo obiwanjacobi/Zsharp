@@ -273,6 +273,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFunction_call_retval_unused([NotNull] ZsharpParser.Function_call_retval_unusedContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.function_call_self"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_call_self([NotNull] ZsharpParser.Function_call_selfContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_def_top"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -308,6 +314,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitVariable_ref([NotNull] ZsharpParser.Variable_refContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.variable_field_ref"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVariable_field_ref([NotNull] ZsharpParser.Variable_field_refContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.struct_def"/>.
 	/// </summary>

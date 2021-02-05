@@ -42,7 +42,7 @@ namespace UnitTests.AST
                 "MyStruct" + Tokens.NewLine +
                 Tokens.Indent1 + "Fld: U16" + Tokens.NewLine +
                 "U16: (self: MyStruct): U16" + Tokens.NewLine +
-                Tokens.Indent1 + "return 42" + Tokens.NewLine +
+                Tokens.Indent1 + "return self.Fld" + Tokens.NewLine +
                 "fn: (p: MyStruct): U16" + Tokens.NewLine +
                 Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
                 ;

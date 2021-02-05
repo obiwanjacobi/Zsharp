@@ -25,6 +25,9 @@ namespace Zsharp.AST
 
         public UInt32 CheckIndent(ParserRuleContext context, IndentContext indentCtx)
         {
+            if (indentCtx == null)
+                return 0;
+
             var indent = (UInt32)indentCtx.GetText().Length;
             Debug.Assert(indent < Int32.MaxValue);
 

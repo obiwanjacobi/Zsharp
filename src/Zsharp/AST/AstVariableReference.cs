@@ -28,6 +28,15 @@ namespace Zsharp.AST
         public AstFunctionParameter? ParameterDefinition
             => Symbol?.DefinitionAs<AstFunctionParameter>();
 
+        private AstTypeFieldReference? _fieldRef;
+        public AstTypeFieldReference? Field => _fieldRef;
+
+        public T? FieldAs<T>() where T : class
+            => _fieldRef as T;
+
+        public bool TrySetTypeFieldReference(AstTypeFieldReference fieldReference)
+            => this.SafeSetParent(ref _fieldRef, fieldReference);
+
         public override void Accept(AstVisitor visitor)
             => visitor.VisitVariableReference(this);
     }

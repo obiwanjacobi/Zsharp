@@ -230,16 +230,22 @@ namespace Zsharp.AST
         public override object? VisitFunction_call(Function_callContext context)
             => CreateFunctionReference(context);
 
-        public override object? VisitVariable_ref(Variable_refContext context)
-        {
-            var varRef = new AstVariableReference(context);
+        
 
-            BuilderContext.SetCurrent(varRef);
-            VisitChildren(context);
+        public override object? VisitVariable_field_ref(Variable_field_refContext context)
+        {
+            var varRefCtx = context.variable_ref();
+            var varRef = (AstVariableReference)VisitVariable_ref(varRefCtx)!;
+            var fieldRef = new AstTypeFieldReferenceStructField(context);
+
+            BuilderContext.SetCurrent(fieldRef);
+            VisitChildrenExcept(context, varRefCtx);
             BuilderContext.RevertCurrent();
 
             var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(varRef);
+            symbols.Symbols.Add(fieldRef);
+
+            varRef.TrySetTypeFieldReference(fieldRef);
 
             return varRef;
         }

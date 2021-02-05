@@ -11,7 +11,12 @@ namespace Zsharp.AST
             Context = paramCtx;
         }
 
-        public ParserRuleContext Context { get; }
+        public AstFunctionParameterReference(AstExpression expression)
+        {
+            TrySetExpression(expression);
+        }
+
+        public ParserRuleContext? Context { get; }
 
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;

@@ -2,7 +2,8 @@
 
 namespace Zsharp.AST
 {
-    public class AstVariableDefinition : AstVariable
+    public class AstVariableDefinition : AstVariable,
+        IAstCodeBlockItem
     {
         public AstVariableDefinition(Variable_def_typedContext context)
         {
@@ -17,6 +18,8 @@ namespace Zsharp.AST
         public AstVariableDefinition(AstTypeReference? typeReference)
             : base(typeReference)
         { }
+
+        public int Indent { get; set; }
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitVariableDefinition(this);

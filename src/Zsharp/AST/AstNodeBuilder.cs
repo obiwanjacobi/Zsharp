@@ -222,12 +222,26 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_call(Function_callContext context)
         {
-            _builderContext.CheckIndent(context, context.indent());
+            var indent = _builderContext.CheckIndent(context, context.indent());
 
             var function = CreateFunctionReference(context);
-            var codeBlock = _builderContext.GetCodeBlock();
+            var codeBlock = _builderContext.GetCodeBlock(indent);
             codeBlock!.AddItem(function);
             return function;
+        }
+
+        public override object? VisitFunction_call_self(Function_call_selfContext context)
+        {
+            var fnRef = (AstFunctionReference)VisitFunction_call(context.function_call())!;
+            var varRef = (AstVariableReference)VisitVariable_ref(context.variable_ref())!;
+
+            // make variable into a parameter ref
+            var expression = new AstExpression(new AstExpressionOperand(varRef));
+            var param = new AstFunctionParameterReference(expression);
+            param.SetIdentifier(AstIdentifierIntrinsic.Self);
+            fnRef.AddParameter(param);
+
+            return fnRef;
         }
 
         protected AstFunctionReference CreateFunctionReference(Function_callContext context)
@@ -239,6 +253,7 @@ namespace Zsharp.AST
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
             function.CreateSymbols(symbols.Symbols);
+
             return function;
         }
 
@@ -246,7 +261,7 @@ namespace Zsharp.AST
         {
             var parameter = new AstFunctionParameterReference(context);
             var function = _builderContext.GetCurrent<AstFunctionReference>();
-            function.TryAddParameter(parameter);
+            function.AddParameter(parameter);
 
             _builderContext.SetCurrent(parameter);
             _ = VisitChildren(context);
@@ -285,6 +300,23 @@ namespace Zsharp.AST
             var results = VisitChildren(context);
             _builderContext.RevertCurrent();
             return results;
+        }
+
+        public override object? VisitVariable_ref(Variable_refContext context)
+        {
+            var varRef = new AstVariableReference(context);
+
+            BuilderContext.SetCurrent(varRef);
+            VisitChildren(context);
+            BuilderContext.RevertCurrent();
+
+            if (context.SELF() != null)
+                varRef.SetIdentifier(AstIdentifierIntrinsic.Self);
+
+            var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
+            symbols.Symbols.Add(varRef);
+
+            return varRef;
         }
 
         public override object? VisitVariable_assign_value(Variable_assign_valueContext context)

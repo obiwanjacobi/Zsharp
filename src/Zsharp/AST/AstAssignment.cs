@@ -47,14 +47,7 @@ namespace Zsharp.AST
         public AstVariable? Variable => _variable;
 
         public bool TrySetVariable(AstVariable variable)
-        {
-            if (this.SafeSetParent(ref _variable, variable))
-            {
-                variable.Indent = Indent;
-                return true;
-            }
-            return false;
-        }
+            => this.SafeSetParent(ref _variable, variable);
 
         public void SetVariable(AstVariable variable)
         {
