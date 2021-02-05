@@ -35,24 +35,21 @@ namespace UnitTests.AST
             intrinsic.Parameters.First().IsSelf.Should().BeTrue();
         }
 
-        [Ignore]
+        [TestMethod]
         public void CustomConversion()
         {
             const string code =
                 "MyStruct" + Tokens.NewLine +
                 Tokens.Indent1 + "Fld: U16" + Tokens.NewLine +
-                //
-                // functions with name of type is not in grammar yet!
-                //
                 "U16: (self: MyStruct): U16" + Tokens.NewLine +
-                Tokens.Indent1 + "return self.Fld" + Tokens.NewLine +
+                Tokens.Indent1 + "return 42" + Tokens.NewLine +
                 "fn: (p: MyStruct): U16" + Tokens.NewLine +
                 Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
                 ;
 
             var file = ParseFile(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var intrinsic = fn.Symbols.FindDefinition<AstFunctionDefinitionIntrinsic>("U16", AstSymbolKind.Function);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(2);
+            var intrinsic = fn.Symbols.FindDefinition<AstFunctionDefinition>("U16", AstSymbolKind.Function);
             intrinsic.Parameters.First().IsSelf.Should().BeTrue();
         }
     }
