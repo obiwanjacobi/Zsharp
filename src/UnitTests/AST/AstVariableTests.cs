@@ -9,6 +9,20 @@ namespace UnitTests.AST
     public class AstVariableTests
     {
         [TestMethod]
+        public void DiscardVariableAssign()
+        {
+            const string code =
+                "fn: (): U8" + Tokens.NewLine +
+                Tokens.Indent1 + "return" + Tokens.NewLine +
+                "_ = fn()" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.CodeBlock.ItemAt<AstFunctionReference>(1);
+            fn.EnforceReturnValueUse.Should().BeFalse();
+        }
+
+        [TestMethod]
         public void StructFieldAccess()
         {
             const string code =

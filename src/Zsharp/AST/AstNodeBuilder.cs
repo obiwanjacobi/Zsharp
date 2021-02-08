@@ -223,7 +223,7 @@ namespace Zsharp.AST
         public override object? VisitFunction_call(Function_callContext context)
         {
             var function = CreateFunctionReference(context);
-            var codeBlock = _builderContext.GetCodeBlock();
+            var codeBlock = _builderContext.GetCodeBlock(context);
             codeBlock!.AddItem(function);
             return function;
         }
@@ -275,7 +275,7 @@ namespace Zsharp.AST
         public override object? VisitVariable_def_typed(Variable_def_typedContext context)
         {
             var variable = new AstVariableDefinition(context);
-            var codeBlock = _builderContext.GetCodeBlock();
+            var codeBlock = _builderContext.GetCodeBlock(context);
 
             codeBlock!.AddItem(variable);
 
@@ -291,8 +291,7 @@ namespace Zsharp.AST
 
         public override object? VisitVariable_def(Variable_defContext context)
         {
-            var indent = _builderContext.CheckIndent(context, context.indent());
-            var codeBlock = _builderContext.GetCodeBlock(indent);
+            var codeBlock = _builderContext.GetCodeBlock(context);
 
             _builderContext.SetCurrent(codeBlock);
             var results = VisitChildren(context);
@@ -341,7 +340,7 @@ namespace Zsharp.AST
 
         private void VisitVariableAssign(ParserRuleContext context, AstAssignment assign, AstVariable variable)
         {
-            var codeBlock = _builderContext.GetCodeBlock();
+            var codeBlock = _builderContext.GetCodeBlock(context);
 
             codeBlock.AddItem(assign);
             _builderContext.SetCurrent(assign);
@@ -363,8 +362,7 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_if(Statement_ifContext context)
         {
-            var indent = _builderContext.CheckIndent(context, context.indent());
-            var codeBlock = _builderContext.GetCodeBlock(indent);
+            var codeBlock = _builderContext.GetCodeBlock(context);
 
             var branch = new AstBranchConditional(context);
             codeBlock.AddItem(branch);
@@ -407,8 +405,7 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_return(Statement_returnContext context)
         {
-            var indent = _builderContext.CheckIndent(context, context.indent());
-            var codeBlock = _builderContext.GetCodeBlock(indent);
+            var codeBlock = _builderContext.GetCodeBlock(context);
 
             var branch = new AstBranchExpression(context);
             codeBlock.AddItem(branch);
@@ -421,8 +418,7 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_break(Statement_breakContext context)
         {
-            var indent = _builderContext.CheckIndent(context, context.indent());
-            var codeBlock = _builderContext.GetCodeBlock(indent);
+            var codeBlock = _builderContext.GetCodeBlock(context);
 
             var branch = new AstBranch(context);
             codeBlock.AddItem(branch);
@@ -431,8 +427,7 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_continue(Statement_continueContext context)
         {
-            var indent = _builderContext.CheckIndent(context, context.indent());
-            var codeBlock = _builderContext.GetCodeBlock(indent);
+            var codeBlock = _builderContext.GetCodeBlock(context);
 
             var branch = new AstBranch(context);
             codeBlock.AddItem(branch);
@@ -526,7 +521,7 @@ namespace Zsharp.AST
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
             var typeDef = new AstTypeDefinitionEnum(context, symbolsSite.Symbols);
 
-            var codeBlock = _builderContext.GetCodeBlock();
+            var codeBlock = _builderContext.GetCodeBlock(context);
             codeBlock.AddItem(typeDef);
 
             _builderContext.SetCurrent(typeDef);
@@ -592,7 +587,7 @@ namespace Zsharp.AST
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
             var typeDef = new AstTypeDefinitionStruct(context, symbolsSite.Symbols);
 
-            var codeBlock = _builderContext.GetCodeBlock();
+            var codeBlock = _builderContext.GetCodeBlock(context);
             codeBlock.AddItem(typeDef);
 
             _builderContext.SetCurrent(typeDef);
