@@ -210,5 +210,24 @@ namespace UnitTests.Semantics
             var v = a.Variable;
             v.Symbol.Definition.Should().NotBeNull();
         }
+
+        [TestMethod]
+        public void TemplateFunction()
+        {
+            const string code =
+                "fn: <T>(p: T): Str" + Tokens.NewLine +
+                Tokens.Indent1 + "return \"\"" + Tokens.NewLine +
+                "s = fn<U8>(42)" + Tokens.NewLine
+                ;
+
+            var file = CompileFile(code);
+
+            var symbols = file.Symbols;
+            var entry = symbols.FindEntry("fn", AstSymbolKind.Function);
+            entry.Definition.Should().NotBeNull();
+
+            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
+            a.Expression.RHS.FunctionReference.FunctionDefinition.Should().NotBeNull();
+        }
     }
 }

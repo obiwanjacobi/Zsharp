@@ -44,8 +44,11 @@ namespace Zsharp.AST
             return success;
         }
 
-        private readonly List<AstTemplateParameter> _parameters = new List<AstTemplateParameter>();
-        public IEnumerable<AstTemplateParameter> Parameters => _parameters;
+        // true when type is a template definition
+        public bool IsTemplate => _templateParameters.Count > 0;
+
+        private readonly List<AstTemplateParameter> _templateParameters = new List<AstTemplateParameter>();
+        public IEnumerable<AstTemplateParameter> TemplateParameters => _templateParameters;
 
         public void AddTemplateParameter(AstTemplateParameter templateParameter)
         {
@@ -60,9 +63,9 @@ namespace Zsharp.AST
                 return false;
 
             Symbols.Add(templateParameter);
-            _parameters.Add(templateParameter);
+            _templateParameters.Add(templateParameter);
 
-            Identifier.TemplateParameterCount = _parameters.Count;
+            Identifier.TemplateParameterCount = _templateParameters.Count;
             return true;
         }
 

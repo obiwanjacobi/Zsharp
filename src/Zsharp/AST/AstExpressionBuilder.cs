@@ -230,8 +230,6 @@ namespace Zsharp.AST
         public override object? VisitFunction_call(Function_callContext context)
             => CreateFunctionReference(context);
 
-        
-
         public override object? VisitVariable_field_ref(Variable_field_refContext context)
         {
             var varRefCtx = context.variable_ref();

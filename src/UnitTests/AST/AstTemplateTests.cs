@@ -52,5 +52,30 @@ namespace UnitTests.AST
             name.Symbol.Should().NotBeNull();
             name.Expression.Should().NotBeNull();
         }
+
+        [TestMethod]
+        public void TemplateFunctionDefinition()
+        {
+            const string code =
+                "fn: <T>(c: U16): T" + Tokens.NewLine +
+                Tokens.Indent1 + "return c.T()" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            fn.IsTemplate.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void TemplateFunctionReference()
+        {
+            const string code =
+                "fn<U8>(42)" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.CodeBlock.ItemAt<AstFunctionReference>(0);
+            fn.IsTemplate.Should().BeTrue();
+        }
     }
 }

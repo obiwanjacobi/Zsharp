@@ -87,20 +87,20 @@ namespace Zsharp.AST
         // true when type name is actually a template parameter name (T)
         public bool IsTemplateParameter { get; set; }
         // true when type is a template instantiation
-        public bool IsTemplate => _parameters.Count > 0;
+        public bool IsTemplate => _templateParameters.Count > 0;
 
-        private readonly List<AstTemplateParameterReference> _parameters = new List<AstTemplateParameterReference>();
-        public IEnumerable<AstTemplateParameter> Parameters => _parameters;
+        private readonly List<AstTemplateParameterReference> _templateParameters = new List<AstTemplateParameterReference>();
+        public IEnumerable<AstTemplateParameter> TemplateParameters => _templateParameters;
 
         public bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
         {
             if (templateParameter is AstTemplateParameterReference parameter)
             {
-                if (_parameters.SingleOrDefault(p =>
+                if (_templateParameters.SingleOrDefault(p =>
                     p.Identifier?.CanonicalName == parameter.Identifier?.CanonicalName) != null)
                     return false;
 
-                _parameters.Add(parameter);
+                _templateParameters.Add(parameter);
 
                 Identifier!.AddTemplateParameter(parameter.TypeReference?.Identifier?.Name);
                 return true;
@@ -120,7 +120,7 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var param in _parameters)
+            foreach (var param in _templateParameters)
             {
                 param.Accept(visitor);
             }

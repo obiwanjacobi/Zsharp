@@ -132,6 +132,11 @@ namespace Zsharp.AST
             VisitChildren(structField);
         }
 
+        public virtual void VisitTypeFieldReferenceStructField(AstTypeFieldReferenceStructField structField)
+        {
+            VisitChildren(structField);
+        }
+
         public virtual void VisitTemplateInstanceStruct(AstTemplateInstanceStruct structTemplate)
         {
             VisitChildren(structTemplate);

@@ -6,6 +6,7 @@
 
 - Check unit test coverage
 - More tests on syntax errors (non-happy-flow).
+- Move all Semantic errors to CheckRules.
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16).
     RetVal of operator overload determines resulting type.
     Type of target (variable) determines resulting type.
@@ -15,7 +16,6 @@
     Type Constructor functions are very similar - but without the self parameter.
 - Add Custom Data Types (and export)
 - `_ = fn()` results in an Assignment without a Variable...
-- Struct field init is always done using a secondary instance - not always necessary (ctor).
 - Can we move ParserRuleContext Context property to AstNode?
 - Add SymbolEntrySite to TypeDefinition?
 - May need to split Function Type ([template] params + retval) from function definition name.
@@ -24,3 +24,7 @@
     Need to see if this is a problem when multiple files are compiled using the same root symbol table.
 
 ---
+
+## Optimizations
+
+- Struct field init is always done using a secondary instance - not always necessary (ctor).

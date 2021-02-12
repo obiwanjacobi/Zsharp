@@ -69,13 +69,13 @@ comparison_operand: function_use | variable_ref | literal | expression_arithmeti
 expression_bool: literal_bool | variable_ref | function_use;
 
 // functions
-function_def: identifier_func COLON SP PARENopen function_parameter_list? PARENclose function_return_type? newline codeblock;
+function_def: identifier_func COLON SP template_param_list? PARENopen function_parameter_list? PARENclose function_return_type? newline codeblock;
 function_parameter_list: (function_parameter | function_parameter_self) (COMMA SP function_parameter)*;
 function_parameter: identifier_param type_ref_use;
 function_parameter_self: SELF type_ref_use;
 function_return_type: type_ref_use;
 function_use: indent? (function_call | function_call_self | function_call_retval_unused);
-function_call: identifier_func PARENopen function_parameter_uselist? PARENclose newline?;
+function_call: identifier_func template_param_list_use? PARENopen function_parameter_uselist? PARENclose newline?;
 function_parameter_uselist: function_param_use (COMMA SP function_param_use)*;
 function_param_use: expression_value;
 function_call_retval_unused: UNUSED SP EQ_ASSIGN SP (function_call | function_call_self);
@@ -114,7 +114,7 @@ type_name: identifier_type template_param_list_use?;
 
 // templates
 template_param_list_use: SMALL_ANGLEopen template_param_use (COMMA SP template_param_use)* SP? GREAT_ANGLEclose;
-template_param_use: type_ref | literal | literal_bool;
+template_param_use: type_ref | comptime_expression_value;
 template_param_list_use_number: SMALL_ANGLEopen number GREAT_ANGLEclose;
 template_param_list_use_type: SMALL_ANGLEopen type_ref GREAT_ANGLEclose;
 template_param_list: SMALL_ANGLEopen template_param_any (COMMA SP template_param_any)* GREAT_ANGLEclose;

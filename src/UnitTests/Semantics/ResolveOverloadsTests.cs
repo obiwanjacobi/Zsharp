@@ -99,6 +99,21 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
+        public void ResolveFunction_Expression()
+        {
+            const string code =
+                "fn: (p: U8): U16" + Tokens.NewLine +
+                Tokens.Indent1 + "return U16(p)" + Tokens.NewLine +
+                "x = fn(42)" + Tokens.NewLine
+                ;
+
+            var file = CompileFile(code);
+            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
+            a.Expression.TypeReference.Should().NotBeNull();
+            a.Variable.TypeReference.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void ResolveConversionFunction_Expression()
         {
             const string code =

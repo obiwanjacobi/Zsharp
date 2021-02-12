@@ -79,8 +79,6 @@ namespace UnitTests.AST
             var compiler = Compile(code);
             var error = compiler.Context.Errors.First();
             error.Text.Should().Contain("undefined Function");
-            error = compiler.Context.Errors.Skip(1).First();
-            error.Text.Should().Contain("overload").And.Contain("found");
         }
 
         [TestMethod]

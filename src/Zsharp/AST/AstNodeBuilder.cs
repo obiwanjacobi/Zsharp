@@ -676,7 +676,7 @@ namespace Zsharp.AST
 
             var template = _builderContext.TryGetCurrent<IAstTemplateSite>();
             if (template != null)
-                typeRef.IsTemplateParameter = template.Parameters.Any(
+                typeRef.IsTemplateParameter = template.TemplateParameters.Any(
                     p => p.Identifier?.CanonicalName == typeRef.Identifier?.CanonicalName);
 
             var trSite = _builderContext.GetCurrent<IAstTypeReferenceSite>();

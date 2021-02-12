@@ -1,4 +1,6 @@
 ﻿using Antlr4.Runtime;
+// TODO:
+using Zsharp.Dgml;
 
 namespace Zsharp.AST
 {
@@ -20,6 +22,12 @@ namespace Zsharp.AST
         {
             return errorSite.AddError(type, type.Context,
                 $"Reference to an undefined Type '{type.Identifier.Name}'");
+        }
+
+        public static AstMessage ExpressionNoType(this AstErrorSite errorSite, AstExpression expression)
+        {
+            return errorSite.AddError(expression, expression.Context,
+                $"Could not determine the Type for Expression '{expression.AsString()}'");
         }
 
         public static AstMessage InvalidEnumBaseType(this AstErrorSite errorSite, AstTypeReference type)
