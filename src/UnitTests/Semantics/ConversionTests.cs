@@ -2,25 +2,12 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using Zsharp.AST;
-using Zsharp.Semantics;
 
-namespace UnitTests.AST
+namespace UnitTests.Semantics
 {
     [TestClass]
     public class ConversionTests
     {
-        private static AstFile ParseFile(string code)
-        {
-            var errors = new AstErrorSite();
-
-            var file = Build.File(code);
-            var resolveSymbols = new ResolveSymbols(errors);
-            resolveSymbols.Visit(file);
-
-            errors.HasErrors.Should().BeFalse();
-            return file;
-        }
-
         [TestMethod]
         public void IntrinsicConversion()
         {
@@ -29,7 +16,7 @@ namespace UnitTests.AST
                 Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
                 ;
 
-            var file = ParseFile(code);
+            var file = Compile.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var intrinsic = fn.Symbols.FindDefinition<AstFunctionDefinitionIntrinsic>("U16", AstSymbolKind.Function);
             intrinsic.Parameters.First().IsSelf.Should().BeTrue();
@@ -47,7 +34,7 @@ namespace UnitTests.AST
                 Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
                 ;
 
-            var file = ParseFile(code);
+            var file = Compile.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(2);
             var intrinsic = fn.Symbols.FindDefinition<AstFunctionDefinition>("U16", AstSymbolKind.Function);
             intrinsic.Parameters.First().IsSelf.Should().BeTrue();

@@ -1,42 +1,29 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Linq;
-using Zsharp;
 using Zsharp.AST;
-using Zsharp.Semantics;
 
 namespace UnitTests.Semantics
 {
     [TestClass]
-    public class ResolveTypesTests
+    public class ResolveDefinitionTests
     {
-        private static AssemblyManager LoadTestAssemblies()
+        [TestMethod]
+        public void TopVariableInferDef()
         {
-            var assemblies = new AssemblyManager();
-            assemblies.LoadAssembly(@"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Console.dll");
-            return assemblies;
-        }
+            const string code =
+                "v = 42" + Tokens.NewLine
+                ;
 
-        private static ExternalModuleLoader CreateModuleLoader()
-        {
-            var assemblies = LoadTestAssemblies();
-            var loader = new ExternalModuleLoader(assemblies);
-            return loader;
-        }
+            var file = Compile.File(code);
 
-        private static AstFile CompileFile(string code, IAstModuleLoader moduleLoader = null)
-        {
-            var compiler = new Compiler(moduleLoader ?? new ModuleLoader());
-            var errors = compiler.Compile("UnitTests", "ResolveTypeTests", code);
-            foreach (var err in errors)
-            {
-                Console.WriteLine(err);
-            }
+            var a = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var v = a.Variable as AstVariableDefinition;
+            v.Should().NotBeNull();
+            v.Parent.Should().Be(a);
 
-            errors.Should().BeEmpty();
-
-            return ((AstModulePublic)compiler.Context.Modules.Modules.First()).Files.First();
+            var sym = file.CodeBlock.Symbols.Find(v);
+            sym.Definition.Should().NotBeNull();
         }
 
         [TestMethod]
@@ -46,7 +33,7 @@ namespace UnitTests.Semantics
                 "v: U8" + Tokens.NewLine
                 ;
 
-            var file = CompileFile(code);
+            var file = Compile.File(code);
 
             var v = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
             v.TypeReference.Should().NotBeNull();
@@ -64,7 +51,7 @@ namespace UnitTests.Semantics
                 "v: U8 = 42" + Tokens.NewLine
                 ;
 
-            var file = CompileFile(code);
+            var file = Compile.File(code);
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(0);
             var v = a.Variable as AstVariableDefinition;
@@ -84,7 +71,7 @@ namespace UnitTests.Semantics
                 "v = 42" + Tokens.NewLine
                 ;
 
-            var file = CompileFile(code);
+            var file = Compile.File(code);
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(0);
             var v = a.Variable as AstVariableDefinition;
@@ -97,14 +84,14 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
-        public void TopVariableReference()
+        public void TopVariableInferReference()
         {
             const string code =
                 "v = 42" + Tokens.NewLine +
                 "x = v" + Tokens.NewLine
                 ;
 
-            var file = CompileFile(code);
+            var file = Compile.File(code);
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(0);
             var v = a.Variable as AstVariableDefinition;
@@ -117,6 +104,66 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
+        public void TopVariableReference()
+        {
+            const string code =
+                "x: U8" + Tokens.NewLine +
+                "v = x + 1" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code);
+
+            var x = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
+            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
+            var vd = a.Variable as AstVariableDefinition;
+            vd.Should().NotBeNull();
+            var vr = a.Expression.LHS.VariableReference;
+            vr.Should().NotBeNull();
+
+            vr.VariableDefinition.Should().Be(x);
+            vr.Symbol.Should().Be(x.Symbol);
+        }
+
+        [TestMethod]
+        public void FunctionReference()
+        {
+            const string code =
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn()" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code);
+
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            fn.Should().NotBeNull();
+
+            var fnRef = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
+            fnRef.Should().NotBeNull();
+            fnRef.Symbol.Definition.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void FunctionForwardReference()
+        {
+            const string code =
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn2()" + Tokens.NewLine +
+                "fn2: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn()" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code);
+
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            fn.Should().NotBeNull();
+
+            var fnRef = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
+            fnRef.Should().NotBeNull();
+            fnRef.Identifier.Name.Should().Be("fn2");
+            fnRef.Symbol.Definition.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void FunctionParameterReference()
         {
             const string code =
@@ -124,7 +171,7 @@ namespace UnitTests.Semantics
                 Tokens.Indent1 + "x = p" + Tokens.NewLine
                 ;
 
-            var file = CompileFile(code);
+            var file = Compile.File(code);
 
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var a = fn.CodeBlock.ItemAt<AstAssignment>(0);
@@ -143,8 +190,8 @@ namespace UnitTests.Semantics
                 Tokens.Indent1 + "Print(\"Hello World\")" + Tokens.NewLine
                 ;
 
-            var moduleLoader = CreateModuleLoader();
-            var file = CompileFile(code, moduleLoader);
+            var moduleLoader = Compile.CreateModuleLoader();
+            var file = Compile.File(code, moduleLoader);
 
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var call = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
@@ -160,7 +207,7 @@ namespace UnitTests.Semantics
                 Tokens.Indent1 + "fn(42)" + Tokens.NewLine
                 ;
 
-            var file = CompileFile(code);
+            var file = Compile.File(code);
 
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var call = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
@@ -178,7 +225,7 @@ namespace UnitTests.Semantics
                 Tokens.Indent1 + "Id = 42" + Tokens.NewLine
                 ;
 
-            var file = CompileFile(code);
+            var file = Compile.File(code);
             var template = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
             var a = file.CodeBlock.ItemAt<AstAssignment>(1);
             var v = a.Variable;
@@ -201,7 +248,7 @@ namespace UnitTests.Semantics
                 "v = MyEnum.Zero" + Tokens.NewLine
                 ;
 
-            var file = CompileFile(code);
+            var file = Compile.File(code);
             var symbols = file.Symbols;
             var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
             entry.Definition.Should().NotBeNull();
@@ -220,7 +267,7 @@ namespace UnitTests.Semantics
                 "s = fn<U8>(42)" + Tokens.NewLine
                 ;
 
-            var file = CompileFile(code);
+            var file = Compile.File(code);
 
             var symbols = file.Symbols;
             var entry = symbols.FindEntry("fn", AstSymbolKind.Function);

@@ -3,11 +3,11 @@ using Zsharp.AST;
 
 namespace Zsharp.Semantics
 {
-    public class ResolveTypes : AstVisitorWithSymbols
+    public class ResolveDefinition : AstVisitorWithSymbols
     {
         private readonly AstErrorSite _errorSite;
 
-        public ResolveTypes(AstErrorSite errorSite)
+        public ResolveDefinition(AstErrorSite errorSite)
         {
             _errorSite = errorSite;
         }
@@ -189,6 +189,23 @@ namespace Zsharp.Semantics
             Ast.Guard(assign.Variable, "AstVariable not set on assign.");
             VisitChildren(assign);
 
+            if (assign.Variable is AstVariableReference varRef &&
+                varRef.VariableDefinition == null)
+            {
+                var entry = varRef.Symbol;
+
+                // variable.TypeReference can be null
+                var varDef = new AstVariableDefinition(varRef.TypeReference);
+                varDef.SetIdentifier(varRef.Identifier!);
+                varDef.SetSymbol(entry!);
+                entry!.PromoteToDefinition(varDef, varRef);
+
+                assign.SetVariableDefinition(varDef);
+
+                // do the children again for types
+                VisitChildren(assign);
+            }
+
             if (assign.Variable!.TypeReference == null)
             {
                 // typeless assign of var (x = 42)
@@ -215,6 +232,23 @@ namespace Zsharp.Semantics
             }
         }
 
+        public override void VisitVariableReference(AstVariableReference variable)
+        {
+            if (!variable.HasDefinition)
+            {
+                var entry = variable.Symbol;
+                Ast.Guard(entry, "Variable has no Symbol.");
+
+                var success = variable.TryResolve();
+
+                if (!success &&
+                    variable.ParentAs<AstAssignment>() == null)
+                {
+                    _errorSite.UndefinedVariable(variable);
+                }
+            }
+        }
+
         public override void VisitTypeFieldReferenceEnumOption(AstTypeFieldReferenceEnumOption enumOption)
         {
             VisitChildren(enumOption);
@@ -234,7 +268,12 @@ namespace Zsharp.Semantics
             {
                 if (function.FunctionDefinition == null)
                 {
-                    _ = function.TryResolve();
+                    var success = function.TryResolve();
+
+                    if (!success)
+                    {
+                        _errorSite.UndefinedFunction(function);
+                    }
                 }
 
                 if (function.FunctionDefinition?.TypeReference != null)

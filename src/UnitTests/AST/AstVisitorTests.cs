@@ -46,10 +46,7 @@ namespace UnitTests.AST
 
             var errors = new AstErrorSite();
 
-            var symbolResolver = new ResolveSymbols(errors);
-            symbolResolver.Visit(file);
-
-            var typeResolver = new ResolveTypes(errors);
+            var typeResolver = new ResolveDefinition(errors);
             typeResolver.Visit(file);
 
             errors.HasErrors.Should().BeFalse();

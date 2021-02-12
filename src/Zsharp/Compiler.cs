@@ -11,8 +11,7 @@ namespace Zsharp
     public class Compiler
     {
         private readonly AstBuilder _astBuilder;
-        private readonly ResolveSymbols _resolveSymbols;
-        private readonly ResolveTypes _resolveTypes;
+        private readonly ResolveDefinition _resolveTypes;
         private readonly ResolveOverloads _resolveOverloads;
         private readonly CheckRules _checkRules;
 
@@ -20,8 +19,7 @@ namespace Zsharp
         {
             Context = new CompilerContext(moduleLoader);
             _astBuilder = new AstBuilder(Context);
-            _resolveSymbols = new ResolveSymbols(Context);
-            _resolveTypes = new ResolveTypes(Context);
+            _resolveTypes = new ResolveDefinition(Context);
             _resolveOverloads = new ResolveOverloads(Context);
             _checkRules = new CheckRules(Context);
         }
@@ -53,7 +51,6 @@ namespace Zsharp
         private void ApplySemantics(AstFile file)
         {
             // Note: processing is in order
-            _resolveSymbols.Visit(file);
             _resolveTypes.Visit(file);
             _resolveOverloads.Visit(file);
             _checkRules.Visit(file);
