@@ -27,7 +27,7 @@ namespace Zsharp.AST
 
         public ParserRuleContext? Context { get; protected set; }
 
-        public int Indent { get; set; }
+        public uint Indent { get; set; }
 
         public AstBranchType BranchType { get; }
 

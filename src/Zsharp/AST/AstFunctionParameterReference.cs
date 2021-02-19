@@ -4,7 +4,8 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstFunctionParameterReference : AstFunctionParameter, IAstExpressionSite
+    public class AstFunctionParameterReference : AstFunctionParameter,
+        IAstExpressionSite
     {
         public AstFunctionParameterReference(Function_param_useContext paramCtx)
         {

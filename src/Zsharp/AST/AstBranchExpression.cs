@@ -3,7 +3,8 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstBranchExpression : AstBranch, IAstExpressionSite
+    public class AstBranchExpression : AstBranch,
+        IAstExpressionSite
     {
         public AstBranchExpression(Statement_returnContext context)
             : base(AstBranchType.ExitFunction)
@@ -20,7 +21,8 @@ namespace Zsharp.AST
 
         public bool HasExpression => _expression != null;
 
-        public bool TrySetExpression(AstExpression expression) => this.SafeSetParent(ref _expression, expression);
+        public bool TrySetExpression(AstExpression expression)
+            => this.SafeSetParent(ref _expression, expression);
 
         public void SetExpression(AstExpression expression)
         {
@@ -29,7 +31,8 @@ namespace Zsharp.AST
                     "Expression is already set or null.");
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitBranchExpression(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitBranchExpression(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

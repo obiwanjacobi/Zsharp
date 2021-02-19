@@ -1,4 +1,5 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -19,7 +20,12 @@ namespace Zsharp.AST
             : base(typeReference)
         { }
 
-        public int Indent { get; set; }
+        internal AstVariableDefinition(ParserRuleContext context)
+        {
+            Context = context;
+        }
+
+        public uint Indent { get; set; }
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitVariableDefinition(this);

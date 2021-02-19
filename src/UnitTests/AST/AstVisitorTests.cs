@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Zsharp.AST;
+using Zsharp;
 using Zsharp.Semantics;
 
 namespace UnitTests.AST
@@ -44,12 +44,12 @@ namespace UnitTests.AST
             var file = Build.File(code);
             file.Should().NotBeNull();
 
-            var errors = new AstErrorSite();
+            var context = new CompilerContext(new ModuleLoader());
 
-            var typeResolver = new ResolveDefinition(errors);
+            var typeResolver = new ResolveDefinition(context);
             typeResolver.Visit(file);
 
-            errors.HasErrors.Should().BeFalse();
+            context.HasErrors.Should().BeFalse();
 
             var checker = new AstTypeChecker();
             checker.Visit(file);

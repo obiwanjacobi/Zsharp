@@ -1,4 +1,5 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -15,6 +16,11 @@ namespace Zsharp.AST
         }
 
         public AstVariableReference(Variable_assign_valueContext context)
+        {
+            Context = context;
+        }
+
+        internal AstVariableReference(ParserRuleContext context)
         {
             Context = context;
         }

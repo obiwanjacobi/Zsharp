@@ -2,6 +2,6 @@
 {
     public interface IAstCodeBlockItem
     {
-        int Indent { get; set; }
+        uint Indent { get; set; }
     }
 }

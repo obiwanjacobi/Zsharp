@@ -2,14 +2,15 @@ using System;
 
 namespace Zsharp.AST
 {
-    public class AstExpressionOperand : AstNode, IAstTypeReferenceSite
+    public class AstExpressionOperand : AstNode,
+        IAstTypeReferenceSite, IAstExpressionSite
     {
         public AstExpressionOperand(AstNode node)
             : base(AstNodeType.Operand)
         {
             Ast.Guard(node, "Expression Operand created with null.");
 
-            Expression = node as AstExpression;
+            _expression = node as AstExpression;
             LiteralBoolean = node as AstLiteralBoolean;
             LiteralNumeric = node as AstLiteralNumeric;
             LiteralString = node as AstLiteralString;
@@ -39,11 +40,21 @@ namespace Zsharp.AST
         public AstExpressionOperand(AstExpression expr)
             : base(AstNodeType.Operand)
         {
-            Expression = expr;
-            expr.SetParent(this);
+            TrySetExpression(expr);
         }
 
-        public AstExpression? Expression { get; }
+        private AstExpression? _expression;
+        public AstExpression? Expression => _expression;
+
+        public bool TrySetExpression(AstExpression expression)
+            => this.SafeSetParent(ref _expression, expression);
+
+        public void SetExpression(AstExpression expression)
+        {
+            if (!TrySetExpression(expression))
+                throw new InvalidOperationException(
+                    "Expression is already set or null.");
+        }
 
         public AstLiteralBoolean? LiteralBoolean { get; }
 
@@ -61,7 +72,8 @@ namespace Zsharp.AST
 
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool TrySetTypeReference(AstTypeReference typeReference) => Ast.SafeSet(ref _typeRef, typeReference);
+        public bool TrySetTypeReference(AstTypeReference typeReference)
+            => Ast.SafeSet(ref _typeRef, typeReference);
 
         public void SetTypeReference(AstTypeReference typeReference)
         {
@@ -70,7 +82,8 @@ namespace Zsharp.AST
                     "TypeReference is already set or null.");
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitExpressionOperand(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitExpressionOperand(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

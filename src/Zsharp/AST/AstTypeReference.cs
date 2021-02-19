@@ -13,6 +13,7 @@ namespace Zsharp.AST
         public AstTypeReference(Type_refContext context)
             : base(AstNodeType.Type)
         {
+            _templateParameters = new List<AstTemplateParameterReference>();
             Context = context;
             IsOptional = context.QUESTION() != null;
             IsError = context.ERROR() != null;
@@ -20,7 +21,9 @@ namespace Zsharp.AST
 
         protected AstTypeReference()
             : base(AstNodeType.Type)
-        { }
+        {
+            _templateParameters = new List<AstTemplateParameterReference>();
+        }
 
         private AstTypeReference(AstTypeReference typeOrigin)
             : base(AstNodeType.Type)
@@ -67,10 +70,16 @@ namespace Zsharp.AST
 
         public AstTypeReference MakeProxy()
         {
-            if (TypeOrigin != null)
-                return new AstTypeReference(TypeOrigin);
+            AstTypeReference typeRef;
 
-            return new AstTypeReference(this);
+            if (TypeOrigin != null)
+                typeRef = new AstTypeReference(TypeOrigin);
+            else
+                typeRef = new AstTypeReference(this);
+
+            typeRef.IsTemplateParameter = IsTemplateParameter;
+
+            return typeRef;
         }
 
         public static AstTypeReference Create(AstTypeDefinition typeDef)
@@ -87,13 +96,19 @@ namespace Zsharp.AST
         // true when type name is actually a template parameter name (T)
         public bool IsTemplateParameter { get; set; }
         // true when type is a template instantiation
-        public bool IsTemplate => _templateParameters.Count > 0;
+        public bool IsTemplate
+            => TypeOrigin?.IsTemplate ?? _templateParameters.Count > 0;
 
-        private readonly List<AstTemplateParameterReference> _templateParameters = new List<AstTemplateParameterReference>();
-        public IEnumerable<AstTemplateParameter> TemplateParameters => _templateParameters;
+        private readonly List<AstTemplateParameterReference>? _templateParameters;
+        public IEnumerable<AstTemplateParameter> TemplateParameters
+            => TypeOrigin?.TemplateParameters ?? _templateParameters;
 
         public bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
         {
+            if (TypeOrigin != null || _templateParameters == null)
+                throw new InvalidOperationException(
+                    "Cannot add Template Parameter onto a TypeReference Proxy.");
+
             if (templateParameter is AstTemplateParameterReference parameter)
             {
                 if (_templateParameters.SingleOrDefault(p =>
@@ -120,9 +135,12 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var param in _templateParameters)
+            if (_templateParameters != null)
             {
-                param.Accept(visitor);
+                foreach (var param in _templateParameters)
+                {
+                    param.Accept(visitor);
+                }
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using System;
 using System.Linq;
 using Zsharp;
 using Zsharp.AST;
@@ -27,11 +26,8 @@ namespace UnitTests.Semantics
         {
             var compiler = new Compiler(moduleLoader ?? new ModuleLoader());
             var errors = compiler.Compile("UnitTests", "ResolveTypeTests", code);
-            foreach (var err in errors)
-            {
-                Console.WriteLine(err);
-            }
-
+            
+            errors.PrintErrors();
             errors.Should().BeEmpty();
 
             return ((AstModulePublic)compiler.Context.Modules.Modules.First()).Files.First();

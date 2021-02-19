@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Antlr4.Runtime;
+using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -16,6 +17,12 @@ namespace Zsharp.AST
             Context = context;
         }
         public AstBranchConditional(Statement_elseifContext context)
+            : base(AstBranchType.Conditional)
+        {
+            Context = context;
+        }
+
+        internal AstBranchConditional(ParserRuleContext context)
             : base(AstBranchType.Conditional)
         {
             Context = context;

@@ -15,7 +15,7 @@ namespace Zsharp.AST
             Context = context;
         }
 
-        public int Indent { get; set; }
+        public uint Indent { get; set; }
 
         public override bool IsStruct => true;
 

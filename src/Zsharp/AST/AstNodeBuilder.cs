@@ -25,13 +25,13 @@ namespace Zsharp.AST
 
         public bool HasErrors => _builderContext.HasErrors;
 
-        public object? VisitChildrenExcept(ParserRuleContext node, ParserRuleContext except)
+        public object? VisitChildrenExcept(ParserRuleContext node, params ParserRuleContext?[] except)
         {
             var result = DefaultResult;
             for (int i = 0; i < node.children.Count; i++)
             {
                 var child = node.children[i];
-                if (Object.ReferenceEquals(child, except))
+                if (except.Contains(child))
                     continue;
 
                 if (!ShouldVisitNextChild(node, result))
@@ -181,16 +181,22 @@ namespace Zsharp.AST
             VisitIdentifier_func(identifier);
             Ast.Guard(function.Identifier, "Function Identifier is not set.");
 
+            var templateParams = context.template_param_list();
+            if (templateParams != null)
+            {
+                VisitTemplate_param_list(templateParams);
+            }
+
             var symbolTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
             function.CreateSymbols(symbolTable.Symbols);
-
             if (context.Parent is Statement_export_inlineContext)
             {
                 function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
             }
 
-            _ = VisitChildrenExcept(context, identifier);
+            _ = VisitChildrenExcept(context, identifier, templateParams);
             _builderContext.RevertCurrent();
+
             return function;
         }
 

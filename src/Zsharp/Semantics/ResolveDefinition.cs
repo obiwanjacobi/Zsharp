@@ -5,53 +5,11 @@ namespace Zsharp.Semantics
 {
     public class ResolveDefinition : AstVisitorWithSymbols
     {
-        private readonly AstErrorSite _errorSite;
+        private readonly CompilerContext _context;
 
-        public ResolveDefinition(AstErrorSite errorSite)
+        public ResolveDefinition(CompilerContext context)
         {
-            _errorSite = errorSite;
-        }
-
-        public override void VisitTypeReference(AstTypeReference type)
-        {
-            if (type.TypeDefinition != null)
-                return;
-
-            Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
-            Ast.Guard(type?.Identifier, "AstTypeReference or AstIdentifier is null.");
-
-            if (!type!.IsTemplateParameter)
-            {
-                var success = type!.TryResolve();
-                if (!success)
-                {
-                    if (type.IsTemplate)
-                    {
-                        var entry = type.Symbol;
-                        var templateType = entry.SymbolTable.FindDefinition<AstTypeDefinitionStruct>(
-                            type.Identifier.TemplateDefinitionName, AstSymbolKind.Type);
-
-                        var typeDef = new AstTemplateInstanceStruct(templateType);
-                        typeDef.SetIdentifier(
-                            new AstIdentifier(type.Identifier.Name, type.Identifier.IdentifierType));
-                        foreach (var field in templateType.Fields)
-                        {
-                            var fieldDef = new AstTypeDefinitionStructField();
-                            fieldDef.SetIdentifier(new AstIdentifier(field.Identifier.Name, field.Identifier.IdentifierType));
-                            fieldDef.SetTypeReference(field.TypeReference.MakeProxy());
-                            typeDef.AddField(fieldDef);
-
-                            entry.SymbolTable.Add(fieldDef);
-                        }
-
-                        entry.AddNode(typeDef);
-                        Ast.Guard(entry.Definition, "Invalid Template Definition.");
-                    }
-                    else
-                        _errorSite.UndefinedType(type);
-                }
-            }
-            VisitChildren(type!);
+            _context = context;
         }
 
         public override void VisitExpression(AstExpression expression)
@@ -176,10 +134,10 @@ namespace Zsharp.Semantics
 
         private void AssignType(AstExpressionOperand operand, AstTypeDefinition typeDef)
         {
-            var typeRef = AstTypeReference.Create(typeDef!);
+            var typeRef = AstTypeReference.Create(typeDef);
             var entry = SymbolTable!.Add(typeRef);
             if (entry.Definition == null)
-                entry.AddNode(typeDef!);
+                entry.AddNode(typeDef);
 
             operand.SetTypeReference(typeRef);
         }
@@ -195,7 +153,7 @@ namespace Zsharp.Semantics
                 var entry = varRef.Symbol;
 
                 // variable.TypeReference can be null
-                var varDef = new AstVariableDefinition(varRef.TypeReference);
+                var varDef = new AstVariableDefinition(varRef.TypeReference?.MakeProxy());
                 varDef.SetIdentifier(varRef.Identifier!);
                 varDef.SetSymbol(entry!);
                 entry!.PromoteToDefinition(varDef, varRef);
@@ -244,7 +202,7 @@ namespace Zsharp.Semantics
                 if (!success &&
                     variable.ParentAs<AstAssignment>() == null)
                 {
-                    _errorSite.UndefinedVariable(variable);
+                    _context.UndefinedVariable(variable);
                 }
             }
         }
@@ -256,7 +214,7 @@ namespace Zsharp.Semantics
             if (enumOption.Symbol.Definition == null &&
                 !enumOption.TryResolve())
             {
-                _errorSite.UndefinedEnumeration(enumOption);
+                _context.UndefinedEnumeration(enumOption);
             }
         }
 
@@ -272,7 +230,19 @@ namespace Zsharp.Semantics
 
                     if (!success)
                     {
-                        _errorSite.UndefinedFunction(function);
+                        if (function.IsTemplate)
+                        {
+                            var entry = function.Symbol;
+                            var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinitionImpl>(
+                                function.Identifier.TemplateDefinitionName, AstSymbolKind.Function);
+
+                            var typeDef = new AstTemplateInstanceFunction(templateFunction);
+
+                            typeDef.Instantiate(_context, function);
+                            entry.AddNode(typeDef);
+                        }
+                        else
+                            _context.UndefinedFunction(function);
                     }
                 }
 
@@ -292,6 +262,37 @@ namespace Zsharp.Semantics
             {
                 parameter.SetTypeReference(parameter.Expression.TypeReference.MakeProxy());
             }
+        }
+
+        public override void VisitTypeReference(AstTypeReference type)
+        {
+            if (type.TypeDefinition != null)
+                return;
+
+            Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
+            Ast.Guard(type?.Identifier, "AstTypeReference or AstIdentifier is null.");
+
+            if (!type!.IsTemplateParameter)
+            {
+                var success = type!.TryResolve();
+                if (!success)
+                {
+                    if (type.IsTemplate)
+                    {
+                        var entry = type.Symbol;
+                        var templateType = entry.SymbolTable.FindDefinition<AstTypeDefinitionStruct>(
+                            type.Identifier.TemplateDefinitionName, AstSymbolKind.Type);
+
+                        var typeDef = new AstTemplateInstanceStruct(templateType);
+                        typeDef.Instantiate(type);
+                        entry.AddNode(typeDef);
+                        Ast.Guard(entry.Definition, "Invalid Template Definition.");
+                    }
+                    else
+                        _context.UndefinedType(type);
+                }
+            }
+            VisitChildren(type!);
         }
 
         private AstTypeReference? FindTypeReference(AstNode? node)

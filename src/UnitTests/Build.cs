@@ -38,7 +38,7 @@ namespace UnitTests
             return astFile;
         }
 
-        private static void PrintErrors(IEnumerable<AstMessage> errors)
+        public static void PrintErrors(this IEnumerable<AstMessage> errors)
         {
             foreach (var err in errors)
             {

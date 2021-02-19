@@ -4,7 +4,8 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstExpression : AstNode, IAstTypeReferenceSite
+    public class AstExpression : AstNode,
+        IAstTypeReferenceSite
     {
         public AstExpression(Expression_arithmeticContext context)
             : base(AstNodeType.Expression)
@@ -40,6 +41,12 @@ namespace Zsharp.AST
             : base(AstNodeType.Expression)
         {
             _rhs = operand;
+        }
+
+        internal AstExpression(ParserRuleContext context)
+                : base(AstNodeType.Expression)
+        {
+            Context = context;
         }
 
         public ParserRuleContext? Context { get; }

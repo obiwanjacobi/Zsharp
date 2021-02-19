@@ -9,7 +9,7 @@ namespace Zsharp.AST
         protected AstVariable(AstTypeReference? typeReference = null)
             : base(AstNodeType.Variable)
         {
-            _typeRef = typeReference;
+            TrySetTypeReference(typeReference);
         }
 
         public ParserRuleContext? Context { get; protected set; }

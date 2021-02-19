@@ -7,6 +7,9 @@
 - Check unit test coverage
 - More tests on syntax errors (non-happy-flow).
 - Move all Semantic errors to CheckRules.
+- Identifier.CanonicalName for template (function) reference is wrong (type starts with lower case).
+- AstTemplateInstanceFunction has duplicate code with AstFunctionDefinitionImpl 
+    and does not support partial templates (missing TemplateParameters).
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16).
     RetVal of operator overload determines resulting type.
     Type of target (variable) determines resulting type.

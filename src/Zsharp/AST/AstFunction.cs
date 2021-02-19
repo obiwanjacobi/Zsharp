@@ -17,7 +17,7 @@ namespace Zsharp.AST
 
         public ParserRuleContext? Context { get; protected set; }
 
-        public int Indent { get; set; }
+        public uint Indent { get; set; }
 
         public virtual bool IsIntrinsic => false;
 
@@ -44,12 +44,14 @@ namespace Zsharp.AST
                 throw new InvalidOperationException("Parameter was already set or null.");
         }
 
-        public string OverloadKey => String.Join(String.Empty, _parameters.Select(p => p.TypeReference.Identifier.CanonicalName));
+        public string OverloadKey =>
+            String.Join(String.Empty, _parameters.Select(p => p.TypeReference.Identifier.CanonicalName));
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool TrySetIdentifier(AstIdentifier identifier) => Ast.SafeSet(ref _identifier, identifier);
+        public bool TrySetIdentifier(AstIdentifier identifier)
+            => Ast.SafeSet(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
         {
@@ -61,7 +63,8 @@ namespace Zsharp.AST
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool TrySetTypeReference(AstTypeReference typeReference) => this.SafeSetParent(ref _typeRef, typeReference);
+        public bool TrySetTypeReference(AstTypeReference typeReference)
+            => this.SafeSetParent(ref _typeRef, typeReference);
 
         public void SetTypeReference(AstTypeReference typeReference)
         {

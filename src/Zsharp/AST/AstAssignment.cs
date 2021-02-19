@@ -26,14 +26,21 @@ namespace Zsharp.AST
             Context = context;
         }
 
+        internal AstAssignment(ParserRuleContext context)
+            : base(AstNodeType.Assignment)
+        {
+            Context = context;
+        }
+
         public ParserRuleContext Context { get; }
 
-        public int Indent { get; set; }
+        public uint Indent { get; set; }
 
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public bool TrySetExpression(AstExpression expression) => this.SafeSetParent(ref _expression, expression);
+        public bool TrySetExpression(AstExpression expression)
+            => this.SafeSetParent(ref _expression, expression);
 
         public void SetExpression(AstExpression expression)
         {

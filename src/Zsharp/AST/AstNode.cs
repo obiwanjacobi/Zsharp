@@ -15,7 +15,8 @@ namespace Zsharp.AST
         private AstNode? _parent;
         public AstNode? Parent => _parent;
 
-        public bool TrySetParent(AstNode? parent) => Ast.SafeSet(ref _parent, parent);
+        public bool TrySetParent(AstNode? parent)
+            => Ast.SafeSet(ref _parent, parent);
 
         public void SetParent(AstNode parent)
         {
@@ -41,6 +42,12 @@ namespace Zsharp.AST
             }
 
             return null;
+        }
+
+        // detaches from Parent
+        public void Orphan()
+        {
+            _parent = null;
         }
 
         public abstract void Accept(AstVisitor visitor);

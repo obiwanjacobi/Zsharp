@@ -2,7 +2,7 @@ namespace Zsharp.AST
 {
     public class AstVisitor
     {
-        public virtual void Visit(AstNode node)
+        public void Visit(AstNode node)
         {
             node.Accept(this);
         }
@@ -60,6 +60,11 @@ namespace Zsharp.AST
         public virtual void VisitFunctionParameterDefinition(AstFunctionParameterDefinition parameter)
         {
             VisitChildren(parameter);
+        }
+
+        public virtual void VisitTemplateInstanceFunction(AstTemplateInstanceFunction templateFunction)
+        {
+            VisitChildren(templateFunction);
         }
 
         public virtual void VisitTypeFieldDefinition(AstTypeFieldDefinition field)
