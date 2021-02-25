@@ -176,6 +176,8 @@ If the original type is lost or cannot be determined at compile time, casting up
 
 A pointer to a function can be taken by assigning the function name to a variable or parameter.
 
+> This deviates from normal pointer behavior. To be more consistent perhaps a different syntax is needed: `myFunction.Ptr()` would be more in line with how other pointers work.
+
 The type of a function pointer is the Function Type wrapped in a `Ptr<T>`.
 
 Here is an example of how to construct a pointer to a function.
@@ -186,6 +188,7 @@ myFnImpl: MyFunction        // implementation
     ...
 
 p = myFnImpl            // p: Ptr<MyFunction>
+p = myFnImpl.Ptr()      // explicit
 takePtr(p, 42)          // call function with ptr to function
 
 takePtr: (ptr: Ptr<MyFunction>, p: U8)

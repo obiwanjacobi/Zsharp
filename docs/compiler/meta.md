@@ -1,6 +1,6 @@
 # Meta Programming
 
-> TBD allow to write Z# code that executes at compile time in order to shift the workload as much as possible to compiler.
+Allow to write Z# code that executes at compile time in order to shift the workload as much as possible to the compiler.
 
 ## Intrinsic Attributes
 
@@ -142,6 +142,8 @@ runtimeFn(m)      // call at runtime.
 
 ## Type Information
 
+> This is not the case now we target .NET. However I think type info for structs should still be restricted. Only interface types should be available.
+
 No type information is available at runtime other than the `#typeId` which can only be used as type identifier to compare equality or for use as a key in a map/table store.
 
 Full type information is only available at compile time. Are there any scenarios that would really become a problem not having type info at runtime?
@@ -171,6 +173,7 @@ msg = "Error in '{@file()}' at line {@line()}: {@name()} is invalid."
 
 Hints to the compiler how to compile code...
 Syntax?
+
 ```csharp
 #inline     // pragma (hint)
 @inline()   // compiler function
@@ -180,7 +183,7 @@ inlineFn: (p: U8): Bool => p = 42
 
 | Hint | Description
 |--|--
-| `inline` | duplicate function body at each call site
+| `inline` | duplicate function body at each call site (before optimization)
 | `align x` | line struct up at a memory address that is a multiple of specified value
 
 ---

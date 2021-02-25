@@ -7,6 +7,7 @@
 - Check unit test coverage
 - More tests on syntax errors (non-happy-flow).
 - Move all Semantic errors to CheckRules.
+- Need a (source file) Location class around Antlr Context.
 - Identifier.CanonicalName for template (function) reference is wrong (type starts with lower case).
 - AstTemplateInstanceFunction has duplicate code with AstFunctionDefinitionImpl 
     and does not support partial templates (missing TemplateParameters).
@@ -15,7 +16,7 @@
     Type of target (variable) determines resulting type.
 - Resolve Expression operators to (intrinsic or custom) function names.
 - Add (custom) Type Conversion (Type names as function names)
-    Conversions are simply functions with same name as (target) type and a self paramter of source type.
+    Conversions are simply functions with same name as (target) type and a self parameter of source type.
     Type Constructor functions are very similar - but without the self parameter.
 - Add Custom Data Types (and export)
 - `_ = fn()` results in an Assignment without a Variable...

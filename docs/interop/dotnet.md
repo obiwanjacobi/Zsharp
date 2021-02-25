@@ -16,10 +16,14 @@ export enum [name] | public enum [name] | module class
 enum [name] | private enum [name] | module class
 export type [name] | public struct [name] | module class
 type [name] | public struct [name] | module class
- - or - | Primitive .NET Type |
+ \- or - | Primitive .NET Type |
 module variable [name] | private static {Type} [name] | module class
 function variable [name] | local {Type} [name] | static method
 function self parameter | this parameter | static method
+
+---
+
+> .NET `struct` (heap) vs `ref struct` (stack). Z# does not control the stack/heap choice by type but per case instance... How?
 
 ## Enum
 
@@ -30,6 +34,8 @@ function self parameter | this parameter | static method
 A value type or struct in .NET cannot be inherited. Z# defined structs with base types can be written out where the base fields are duplicated in the derived type (in order).
 
 For polymorphism in Z#, the compiler has to check if the fields (in order) match those of the requested type. This leans towards duck-typing in that if the fields match - you must be the same type, which is also how Z# handles interfaces: if the functions match, you must be the same interface.
+
+For Custom Data Types like `MyType: U8` where a struct derives from a native Type, we may need to introduce a hidden field (starts with '`_`') with a fixed name (like `_base`).
 
 ---
 

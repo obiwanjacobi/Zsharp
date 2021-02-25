@@ -94,11 +94,11 @@ s = "Answer to everything is '{v:x}'"
 // Answer to everything is '2a'
 
 // escape braces
-s = "This will print \\{braces\\}"
+s = "This will print `{braces`}"
 // This will print {braces}
 ```
 
-Using the `{}` characters as is in a string literal, requires the escape sequence `\\`.
+Using the `{}` characters as is in a string literal, requires the escape sequence `.
 
 > What character to use to disable string features like formatting? `@`
 
