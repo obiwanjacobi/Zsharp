@@ -57,8 +57,10 @@ arr = [1, 2, 3, 4, 5]       // 5 x U8
 x = arr[3]                  // x = 4
 l = arr[-1]                 // l = 5
 s = arr[0..3]               // s = 1st, 2nd and 3rd
-arr2 = arr[..]              // arr2 = all elements (not a copy!)
+arr2 = arr[..]              // arr2 = all elements (slice, not a copy!)
 ```
+
+> Do we repeat (or truncate) range assignments of unequal length? `arr1[0..4] = arr2[0..2]`
 
 ---
 
@@ -103,11 +105,12 @@ arr2 = arr.SetAt(i, 42) // returns a new array with changed value at index 'i'
 
 > TBD
 
+Should creating data use the same operator/syntax as indexing?
 Introduce a syntax difference between indexing/ranges `[]` and making data `()`?
 
 You could argue that indexing is a function that looks up the value at a specific position.
 
-Should creating data use the same operator/syntax as indexing?
+Would `[]` be an operator - with a backing function? Would it be overloadable. Would it apply to other Types?
 
 What would the syntax look like if there were no special operators to work with an array?
 
@@ -121,11 +124,43 @@ p = arr.PtrTo(i)  // lookup pointer (Ptr<U8>)
 s = arr.PtrTo(i, 2) // sub-array (Slice<U8, 2>)
 
 arr: Array<U8> = ( 1, 2, 3 )     // mutable
-arr.At(i) = 42  // At used as getter and setter?
+arr.At(i) = 42  // At() used as getter and setter?
 
 // or separate?
 x = arr.GetAt(i)
 arr.SetAt(i, 42)
 ```
 
+> What type would the `At()` function return in order to read and write from it? (A reference as a transparent pointer?)
+
 Are Slices the single way to return references into an array (or list)? Overhead for single values, meant for sub-ranges...
+
+What operators does the Slice have overloaded?
+
+---
+
+> TBD
+
+Multi Dimensional Arrays
+
+Tensor => arbitrary number of dimensions...
+
+```csharp
+// 2x3
+arr2D = (1, 2, 3), (4, 5, 6)
+// 2x 3x3
+arr3D = ((1, 2, 3), (4, 5, 6), (7, 8, 9)),
+        ((11, 12, 13), (14, 15, 16), (17, 18, 19))
+// 2x 2x 2x2
+arr4D = (((1, 2), (3, 4)), ((5, 6), (7, 8))),
+        (((11, 12), (13, 14)), ((15, 16), (17, 18)))
+```
+
+```csharp
+arr2D = Array<U8>(4, 3)
+arr2D.At(0, 0) = 42
+arr2D.At(3, 2) = 42     // last position
+
+arr3D = Array<U8>(4, 3, 2)
+
+```

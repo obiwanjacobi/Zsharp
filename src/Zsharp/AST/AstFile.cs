@@ -7,7 +7,7 @@ namespace Zsharp.AST
 {
     public class AstFile : AstNode, IAstSymbolTableSite, IAstCodeBlockSite
     {
-        private readonly List<AstFunctionDefinitionImpl> _functions = new List<AstFunctionDefinitionImpl>();
+        private readonly List<AstFunctionDefinitionImpl> _functions = new();
 
         public AstFile(string scopeName, AstSymbolTable parentTable, FileContext context)
             : base(AstNodeType.File)

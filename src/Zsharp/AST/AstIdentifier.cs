@@ -61,6 +61,8 @@ namespace Zsharp.AST
 
         public ParserRuleContext? Context { get; }
 
+        public virtual bool IsIntrinsic => false;
+
         public string Name { get; private set; }
         public string CanonicalName { get; private set; }
         public AstIdentifierType IdentifierType { get; }

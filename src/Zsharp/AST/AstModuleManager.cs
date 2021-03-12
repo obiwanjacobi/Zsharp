@@ -5,7 +5,7 @@ namespace Zsharp.AST
 {
     public class AstModuleManager
     {
-        private readonly Dictionary<string, AstModule> _modules = new Dictionary<string, AstModule>();
+        private readonly Dictionary<string, AstModule> _modules = new();
         private readonly IAstModuleLoader _moduleLoader;
 
         public AstModuleManager(IAstModuleLoader moduleLoader)

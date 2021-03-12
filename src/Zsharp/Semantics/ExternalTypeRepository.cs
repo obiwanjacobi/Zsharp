@@ -6,7 +6,7 @@ namespace Zsharp.Semantics
 {
     public class ExternalTypeRepository
     {
-        private readonly Dictionary<string, AstTypeReferenceExternal> _typeReferences = new Dictionary<string, AstTypeReferenceExternal>();
+        private readonly Dictionary<string, AstTypeReferenceExternal> _typeReferences = new();
 
         public AstTypeReference GetTypeReference(TypeReference typeReference)
         {

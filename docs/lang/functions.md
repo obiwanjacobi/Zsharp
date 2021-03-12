@@ -411,6 +411,8 @@ If return type is not `Void`, the actual return type is used to determine if the
 
 > TBD: How would that work?
 
+Type resolution is based on the type of the instance (self). If there is no function available for the (more) specialized type, its parent (derived) type is used. If no function is available at all it is an error.
+
 ---
 
 ## Local Functions
@@ -489,12 +491,29 @@ Call([sum.Ptr()](p)
 )
 ```
 
+> How does capture work inside loops?
+
+```csharp
+import
+    Fn
+    Print
+
+// Fn => (): Void
+l = List<Fn>(10)
+loop c in [0, 10]
+    l.Add([c]() => Print(c))
+for fn in l
+    fn();   // what does it print?
+```
+
+---
+
 > We cannot use lambda's to make an anonymous 'object' like in JavaScript at this point. Do we want that?
 
 ```JS
 return
     {
-        fn1 = () => blabla;
+        fn1 = () => blabla
     };
 ```
 
@@ -535,11 +554,15 @@ coroutine: (p: U8): Iter<U16>
 
 The Coroutine state is kept in hidden a parameter at the call site. It is needed for the correct function of the coroutine but does not show in its declaration.
 
+> Do we need syntax to clearly identify a coroutine?
+
+> What happens when calling the same co-routine (state) with different parameters?
+
 ```C#
 coroutine: (state: Ptr, p: U8) // hidden state param
 
 i = 42
-s1 = 0           // (hidden) coroutine call state at root-scope
+callings1 = 0           // (hidden) coroutine call state at root-scope
 loop [0..3]
     coroutine(i, s1.Ptr())     // ref, yield/return updates state
     i = i + 2
@@ -551,6 +574,8 @@ loop [0..3]
     coroutine(42, s1.Ptr())
     otherCoroutine(42, s2.Ptr())
 ```
+
+> Do we implement co-routines with capture that captures the parameters -so the can't change between calls- and maintains its execution state...?
 
 ---
 
@@ -567,7 +592,7 @@ IntPercent: U8
     #value = [0..101]   // 0-100
 ProgressEventArg
     progress: IntPercent
-ProgressEvent: (self, arg: ProgressEventArg) _
+ProgressEvent<T>: (self: T, arg: ProgressEventArg) _
 
 // use
 ReportProgress(self, ProgressEvent progressEvent)
@@ -735,7 +760,7 @@ v = 42
     // use v here
 ```
 
-Captures also may be used as a synchronization mechanism for shared data. At the start of a capture a copy is made of the data and the code (function) works with that copy. The actual value may be changed (by an interrupt) in the meantime.
+Captures also may be used as a synchronization mechanism for shared data. At the start of a capture a copy is made of the data and the code (function) works with that copy. The actual value may be changed (by another thread) in the meantime.
 
 In case of a mutable capture, it's value is written back to the original storage when the block of code is completed.
 

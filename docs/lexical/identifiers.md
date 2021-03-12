@@ -16,7 +16,7 @@ Here are examples of valid identifiers:
 ```C#
 My_Function1
 someVariable
-_unused
+_hidden
 ```
 
 Here are examples of _invalid_ identifiers:
@@ -43,7 +43,7 @@ Identifiers are the same when:
 
 ### Discard
 
-Using a discard `_` in an identifier is ignored during matching. This includes cases where an identifier starts or ends with a discard.
+Using a discard `_` in an identifier is ignored during matching.
 
 ```csharp
 My_Function(p: U8)
@@ -67,6 +67,19 @@ myFn(_: U8): U8    // param not used
 _ = myFn(42)        // return value not used
 
 ```
+
+If an identifier starts with a `_` it is hidden from immediate public access. This is mostly a function of the IDE.
+
+```csharp
+MyStruct
+    _id: U32
+    Name: Str
+
+s: MyStruct
+s.[intellisense does not show _id]
+```
+
+> Do we want to give meaning to identifiers ending with a `_`? Could we use this for weak-functions (or weak-anything)?
 
 ## Fully Qualified Names
 

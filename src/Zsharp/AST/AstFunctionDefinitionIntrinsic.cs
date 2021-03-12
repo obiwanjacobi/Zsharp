@@ -2,11 +2,30 @@
 {
     public class AstFunctionDefinitionIntrinsic : AstFunctionDefinition
     {
-        public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic fromParameter, AstTypeDefinitionIntrinsic toReturn)
+        public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic selfParameter, AstTypeDefinitionIntrinsic toReturn)
         {
             SetIdentifier(typeIdentifier);
-            SetParameter(fromParameter);
+            SetSelfParameter(selfParameter);
             SetTypeReference(toReturn);
+        }
+
+        public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic toReturn)
+        {
+            SetIdentifier(typeIdentifier);
+            SetTypeReference(toReturn);
+        }
+
+        public void AddParameter(string name, AstTypeDefinition astType)
+        {
+            var parameter = AstFunctionParameterDefinition.Create(name, astType);
+            AddParameter(parameter);
+        }
+
+        public void SetSelfParameter(AstTypeDefinitionIntrinsic type)
+        {
+            var parameter = new AstFunctionParameterDefinition(AstIdentifierIntrinsic.Self);
+            parameter.SetTypeReference(AstTypeReference.From(type));
+            AddParameter(parameter);
         }
 
         public override bool IsIntrinsic => true;
@@ -37,15 +56,8 @@
         private static void AddIntrinsicSymbol(AstSymbolTable symbols, AstFunctionDefinitionIntrinsic function)
             => function.CreateSymbols(symbols);
 
-        private void SetParameter(AstTypeDefinitionIntrinsic type)
-        {
-            var parameter = new AstFunctionParameterDefinition(AstIdentifierIntrinsic.Self);
-            parameter.SetTypeReference(AstTypeReference.Create(type));
-            AddParameter(parameter);
-        }
-
         private void SetTypeReference(AstTypeDefinitionIntrinsic type)
-            => SetTypeReference(AstTypeReference.Create(type));
+            => SetTypeReference(AstTypeReference.From(type));
 
         public override void Accept(AstVisitor visitor)
             => throw new System.NotImplementedException("Must not Visit Intrinsic Function Definition.");

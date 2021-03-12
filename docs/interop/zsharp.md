@@ -74,7 +74,7 @@ Nullable value types will also be represented with `Opt<T>`.
 
 The .NET `IEnumerable<T>` interface is mapped to one of the `GetIter` functions.
 
-The .NET `IEnumerator<T>` interface is mapped to the `Iter<T>` type, which basically performs the same function and has the semantics.
+The .NET `IEnumerator<T>` interface is mapped to the `Iter<T>` type, which basically performs the same function and has the same semantics.
 
 How the loops are generated in IL does not really matter.
 
@@ -88,28 +88,32 @@ Note: `defer` has not received a whole lot of thought yet, so things may change.
 
 ## Exceptions vs Errors
 
+> I think the mismatch between .NET Exceptions and our initial Error and Error handling ideas is too big to try to adapt one to the other. Perhaps the correct thing to do here is to drop the Z# Error handling and adopt exceptions...
+
 In principle all .NET Exceptions are to be translated to `Error` object representations.
 
-All .NET constructors, methods, properties and events will be marked as `Err<T>` identifying that a potential exception could be thrown there. That probably will make using imported .NET code very verbose to work with.
+All .NET constructors, methods, properties and events will be marked as `Err<T>` (`Err<Void>`?), identifying that a potential exception could be thrown there. That will make imported .NET code very verbose to work with.
 
 Z# does not have any constructs for catching exceptions specifically - based on type - but it does have a `catch` keyword that will work.
 
 We could translate a `match` on an `Err<T>` return into a typed catch clause.
 
-The `try` keyword is on a per function-call basis. That may not be optimal for working with exceptions.
+The `try` keyword is on a per function-call basis. That is not optimal for working with exceptions.
 
 The `defer` keyword can be used as a finally handler, although this also is on a per call basis.
 
-Throwing an exception from Z# code is passing an instance in the `Error` functions which will see its an `Exception` and throw it. The code _should_ to be generated in such a way that the stack trace represent the position where the exception was passed into Error - not Error itself.
+> Perhaps we could introduce syntax that allows these keywords (`try`, `catch`, `defer`) to be used on a scope?
+
+Throwing an exception from Z# code is passing an instance in the `Error` functions which will see its an `Exception` and throw it. The code _should_ be generated in such a way that the stack trace represent the position where the exception was passed into Error - not Error itself.
 
 ## Classes
 
-How to deal with Classes/Objects and inheritance?
+> How to deal with Classes/Objects and inheritance?
 (calling and implementing)
 
-How do you deal with a Reference-Type when Z# is mainly Value-Type focussed?
+> How do you deal with a Reference-Type when Z# is mainly Value-Type focussed?
 
-> Classes are represented as structures with functions.
+Classes are represented as structures with functions.
 
 Public fields are represented as a struct with the same name as the class (with a capital first letter).
 
@@ -121,6 +125,8 @@ Public extension methods are represented as self-bound (this) functions (if we c
 
 > How do you instantiate a new instance of a .NET class?
 
+Call the Constructor function: `o: MyObj = MyObj(42)`.
+
 > We need some distinction between the reference types of .NET and the 'structs' of Z#. (`ref` keyword or `Ref<T>` type?)
 
 ```csharp
@@ -130,7 +136,32 @@ o = ref Object()  // call parameter-less ctor
 o: Ref<Object> = Object()
 ```
 
-> How do you derive from a .NET (abstract) base class.
+We probably don't need a `Ref<T>` if we handle Reference Types and Value Types the same based on the presence of a `Ptr<T>` or not.
+
+```csharp
+o = Object()    // ref type
+i = Unit32(42)  // (native) value type
+
+fnByVal: (o: Object, i: Uint32)
+    ...
+fnByRef: (o: Ptr<Object>, i: Ptr<Uint32>)
+    ...
+
+// will make copies of both o and i
+fnByVal(o, i)
+
+// will pass reference to both o and i
+fnByRef(o.Ptr(), i.Ptr())
+// in .NET/C# 'i.Ptr()' will translate to the 'ref' keyword
+```
+
+> Do we make shallow/deep copies of Reference Objects?
+
+> Do we need a mechanism to revert to standard .NET behavior?
+
+---
+
+> How do you derive from a .NET (abstract) base class?
 
 Define a new type that derives from the .NET base class
 

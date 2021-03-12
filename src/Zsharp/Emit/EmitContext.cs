@@ -8,7 +8,7 @@ namespace Zsharp.Emit
 {
     public sealed partial class EmitContext
     {
-        public static readonly DotNet DotNet = new DotNet();
+        public static readonly DotNet DotNet = new();
 
         private EmitContext(AssemblyDefinition assembly)
         {

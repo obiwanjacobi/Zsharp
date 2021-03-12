@@ -16,5 +16,6 @@
         "MULT",
         "ROLR",
         "SMEQ"
-    ]
+    ],
+    "python.pythonPath": "C:\\Users\\marc\\AppData\\Local\\Programs\\Python\\Python39\\python.exe"
 }

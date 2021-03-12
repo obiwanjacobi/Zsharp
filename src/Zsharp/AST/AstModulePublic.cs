@@ -7,9 +7,9 @@ namespace Zsharp.AST
 {
     public class AstModulePublic : AstModule
     {
-        private readonly List<Statement_moduleContext> _contexts = new List<Statement_moduleContext>();
-        private readonly List<Statement_exportContext> _exports = new List<Statement_exportContext>();
-        private readonly List<AstFile> _files = new List<AstFile>();
+        private readonly List<Statement_moduleContext> _contexts = new();
+        private readonly List<Statement_exportContext> _exports = new();
+        private readonly List<AstFile> _files = new();
 
         public AstModulePublic(string moduleName)
             : base(moduleName, AstModuleLocality.Public)

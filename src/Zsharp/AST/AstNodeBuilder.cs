@@ -536,7 +536,7 @@ namespace Zsharp.AST
 
             if (typeDef.BaseType == null)
             {
-                var typeRef = AstTypeReference.Create(AstTypeDefinitionIntrinsic.I32);
+                var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.I32);
                 symbolsSite.Symbols.Add(typeRef);
 
                 typeDef.SetBaseType(typeRef);
@@ -682,8 +682,10 @@ namespace Zsharp.AST
 
             var template = _builderContext.TryGetCurrent<IAstTemplateSite>();
             if (template != null)
-                typeRef.IsTemplateParameter = template.TemplateParameters.Any(
-                    p => p.Identifier?.CanonicalName == typeRef.Identifier?.CanonicalName);
+                typeRef.IsTemplateParameter = template.TemplateParameters
+                    .OfType<AstTemplateParameterDefinition>()
+                    .Any(p =>
+                        p.Identifier?.CanonicalName == typeRef.Identifier?.CanonicalName);
 
             var trSite = _builderContext.GetCurrent<IAstTypeReferenceSite>();
             trSite.SetTypeReference(typeRef);

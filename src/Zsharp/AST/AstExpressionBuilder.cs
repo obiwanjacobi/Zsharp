@@ -7,8 +7,8 @@ namespace Zsharp.AST
 {
     public partial class AstExpressionBuilder : AstNodeBuilder
     {
-        private readonly Stack<AstExpressionOperand> _values = new Stack<AstExpressionOperand>();
-        private readonly Stack<AstExpression> _operators = new Stack<AstExpression>();
+        private readonly Stack<AstExpressionOperand> _values = new();
+        private readonly Stack<AstExpression> _operators = new();
 
         public AstExpressionBuilder(AstBuilderContext context, string ns)
             : base(context, ns)

@@ -32,6 +32,11 @@ namespace Zsharp.AST
                 var symbols = (IAstSymbolTableSite)functionDef;
                 templateFunction.CreateSymbols(symbols.Symbols);
             }
+            else if (functionDef.IsIntrinsic)
+            {
+                throw new NotImplementedException(
+                    "Intrinsic Function not implemented yet.");
+            }
             else
             {
                 throw new NotImplementedException(
@@ -383,7 +388,7 @@ namespace Zsharp.AST
                 var symbols = _context.GetCurrent<IAstSymbolTableSite>();
                 var newSymbol = symbols.Symbols.FindEntry(newTypeName, AstSymbolKind.Type);
 
-                typeRef = AstTypeReference.Create(newSymbol.DefinitionAs<AstTypeDefinition>());
+                typeRef = AstTypeReference.From(newSymbol.DefinitionAs<AstTypeDefinition>());
             }
             else
                 typeRef = type.MakeProxy();

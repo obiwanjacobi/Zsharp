@@ -21,6 +21,9 @@ namespace UnitTests.AST
             var s = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
             s.Symbol.Definition.Should().Be(s);
             s.BaseType.Should().BeNull();
+            s.IsTemplate.Should().BeTrue();
+            var tp = (AstTemplateParameterDefinition)s.TemplateParameters.First();
+            tp.Identifier.Name.Should().Be("T");
 
             var f = s.Fields.First();
             f.Identifier.Name.Should().Be("Id");
@@ -64,6 +67,8 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             fn.IsTemplate.Should().BeTrue();
+            var tp = fn.TemplateParameters.First();
+            tp.Identifier.Name.Should().Be("T");
         }
 
         [TestMethod]
@@ -76,6 +81,8 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionReference>(0);
             fn.IsTemplate.Should().BeTrue();
+            var tp = fn.TemplateParameters.First();
+            tp.TypeReference.Identifier.Name.Should().Be("U8");
         }
     }
 }

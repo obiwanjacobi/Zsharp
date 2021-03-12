@@ -5,19 +5,17 @@ namespace Zsharp.AST
     public class AstTemplateInstanceFunction : AstFunctionDefinition,
         IAstCodeBlockSite, IAstSymbolTableSite
     {
-        public AstTemplateInstanceFunction(AstFunctionDefinitionImpl templateDefinition)
+        public AstTemplateInstanceFunction(AstFunctionDefinition templateDefinition)
         {
             TemplateDefinition = templateDefinition;
-            SetParent(templateDefinition.Parent);
+            TrySetParent(templateDefinition.Parent);
             Context = templateDefinition.Context;
         }
 
-        public AstFunctionDefinitionImpl TemplateDefinition { get; }
+        public AstFunctionDefinition TemplateDefinition { get; }
 
         public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitTemplateInstanceFunction(this);
-        }
+            => visitor.VisitTemplateInstanceFunction(this);
 
         public void Instantiate(CompilerContext context, AstFunctionReference function)
         {

@@ -6,7 +6,7 @@ namespace Zsharp.AST
 {
     public class AstErrorSite
     {
-        private readonly List<AstMessage> _messages = new List<AstMessage>();
+        private readonly List<AstMessage> _messages = new();
 
         public IEnumerable<AstMessage> Errors => _messages.Where(m => m.MessageType == AstMessageType.Error);
 

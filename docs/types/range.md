@@ -42,16 +42,28 @@ A third optional parameter for a range is the step the value takes on each itera
 ```csharp
 // forward
 [0..5]
-[0..5, 1]   // same
-[5..0, 1]   // does not iterate.
+[0..5: 1]   // same
+[5..0: 1]   // does not iterate.
 
 // backward
-[5..0, -1]
+[5..0: -1]
 ```
 
-> Not sure about the `,` - may change to `:` perhaps: `[0..5:1]`
-
 If no step is specified it is always 1. This means that non-normalized ranges with start > end, will not iterate - a behavior that is most useful/common/expected I think.
+
+### Dimensions
+
+> TBD
+
+Multi-dimensional ranges.
+
+```csharp
+// 2D range
+[..5, 3..5]
+// 3D range
+[..5, 3..5, -1]
+
+```
 
 ### Static
 

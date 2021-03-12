@@ -43,6 +43,8 @@ A comment can be used to temporarily disable code:
 // some code was here
 ```
 
+---
+
 ## Documentation Comments
 
 ```C#
@@ -50,3 +52,13 @@ A comment can be used to temporarily disable code:
 ```
 
 > doxygen like @param and @return docs etc?
+
+---
+
+## Temporary Comments
+
+Temporary comment that will give a compiler warning. Useful for when testing out code and don't want to forget leaving it uncommented when submitting.
+
+```csharp
+## compiler warns me about this comment
+```

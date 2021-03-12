@@ -7,8 +7,8 @@ namespace Zsharp.Semantics
 {
     public class AssemblyManager
     {
-        private readonly List<string> _probePaths = new List<string>();
-        private readonly List<AssemblyDefinition> _assemblies = new List<AssemblyDefinition>();
+        private readonly List<string> _probePaths = new();
+        private readonly List<AssemblyDefinition> _assemblies = new();
 
         public void AddProbePath(string path)
         {

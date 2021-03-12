@@ -16,7 +16,7 @@ namespace Zsharp.Semantics
 
     public class ExpressionValue : AstVisitor
     {
-        private readonly Stack<object> _values = new Stack<object>();
+        private readonly Stack<object> _values = new();
 
         private Int64 PopInt()
             => (Int64)_values.Pop();

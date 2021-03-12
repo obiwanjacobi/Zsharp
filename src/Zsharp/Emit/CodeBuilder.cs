@@ -9,8 +9,8 @@ namespace Zsharp.Emit
     public class CodeBuilder
     {
         private readonly MethodDefinition _methodDefinition;
-        private readonly Dictionary<string, CodeBlock> _blocks = new Dictionary<string, CodeBlock>();
-        private readonly Dictionary<string, VariableDefinition> _variables = new Dictionary<string, VariableDefinition>();
+        private readonly Dictionary<string, CodeBlock> _blocks = new();
+        private readonly Dictionary<string, VariableDefinition> _variables = new();
         private int _blockIndex;
 
         public CodeBuilder(MethodDefinition methodDefinition)
@@ -184,7 +184,7 @@ namespace Zsharp.Emit
     /// </summary>
     public class CodeBlock
     {
-        private readonly List<Instruction> _instructions = new List<Instruction>();
+        private readonly List<Instruction> _instructions = new();
 
         public CodeBlock(string label)
         {

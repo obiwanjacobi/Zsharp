@@ -9,8 +9,8 @@ namespace Zsharp.Semantics
 {
     public class ImportedTypeBuilder
     {
-        private readonly List<AstFunctionExternal> _functions = new List<AstFunctionExternal>();
-        private readonly Dictionary<string, string> _aliases = new Dictionary<string, string>();
+        private readonly List<AstFunctionExternal> _functions = new();
+        private readonly Dictionary<string, string> _aliases = new();
         private readonly ExternalTypeRepository _typeRepository;
 
         public ImportedTypeBuilder(ExternalTypeRepository typeRepository)

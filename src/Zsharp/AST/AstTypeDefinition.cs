@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace Zsharp.AST
 {
-    public abstract class AstTypeDefinition : AstType, IAstTypeReferenceSite
+    public abstract class AstTypeDefinition : AstType,
+        IAstTypeReferenceSite
     {
-        private readonly Dictionary<string, AstTypeFieldDefinition> _fields = new Dictionary<string, AstTypeFieldDefinition>();
+        private readonly Dictionary<string, AstTypeFieldDefinition> _fields = new();
 
         protected AstTypeDefinition(AstIdentifier identifier)
             : base(identifier)

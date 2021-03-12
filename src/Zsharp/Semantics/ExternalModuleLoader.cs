@@ -7,8 +7,8 @@ namespace Zsharp.Semantics
 {
     public class ExternalModuleLoader : IAstModuleLoader
     {
-        private readonly Dictionary<string, AstModuleExternal> _modules = new Dictionary<string, AstModuleExternal>();
-        private readonly ExternalTypeRepository _typeRepository = new ExternalTypeRepository();
+        private readonly Dictionary<string, AstModuleExternal> _modules = new();
+        private readonly ExternalTypeRepository _typeRepository = new();
 
         public ExternalModuleLoader(AssemblyManager assemblies)
         {

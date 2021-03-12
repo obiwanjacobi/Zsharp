@@ -5,11 +5,12 @@ using System.Linq;
 
 namespace Zsharp.AST
 {
-    public abstract class AstFunction<ParamT> : AstNode, IAstCodeBlockItem,
-        IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolEntrySite
+    public abstract class AstFunction<ParamT, TemplateParamT> : AstNode, IAstCodeBlockItem,
+        IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolEntrySite, IAstTemplateSite
         where ParamT : AstFunctionParameter
+        where TemplateParamT : AstTemplateParameter
     {
-        private readonly List<ParamT> _parameters = new List<ParamT>();
+        private readonly List<ParamT> _parameters = new();
 
         protected AstFunction()
             : base(AstNodeType.Function)
@@ -42,6 +43,30 @@ namespace Zsharp.AST
         {
             if (!TryAddParameter(param))
                 throw new InvalidOperationException("Parameter was already set or null.");
+        }
+
+        // true when type is a template instantiation
+        public bool IsTemplate => _templateParameters.Count > 0;
+
+        private readonly List<TemplateParamT> _templateParameters = new();
+        public IEnumerable<AstTemplateParameter> TemplateParameters => _templateParameters;
+
+        public virtual bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
+        {
+            if (templateParameter is TemplateParamT parameter)
+            {
+                _templateParameters.Add(parameter);
+                return true;
+            }
+
+            return false;
+        }
+
+        public void AddTemplateParameter(AstTemplateParameter templateParameter)
+        {
+            if (!TryAddTemplateParameter(templateParameter))
+                throw new InvalidOperationException(
+                    "TemplateParameter is already set or null.");
         }
 
         public string OverloadKey =>

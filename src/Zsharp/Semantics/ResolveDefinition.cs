@@ -121,7 +121,7 @@ namespace Zsharp.Semantics
                 if (enumOptDef != null)
                 {
                     var enumDef = enumOptDef.ParentAs<AstTypeDefinitionEnum>();
-                    operand.SetTypeReference(AstTypeReference.Create(enumDef!));
+                    operand.SetTypeReference(AstTypeReference.From(enumDef!));
                 }
             }
 
@@ -134,7 +134,7 @@ namespace Zsharp.Semantics
 
         private void AssignType(AstExpressionOperand operand, AstTypeDefinition typeDef)
         {
-            var typeRef = AstTypeReference.Create(typeDef);
+            var typeRef = AstTypeReference.From(typeDef);
             var entry = SymbolTable!.Add(typeRef);
             if (entry.Definition == null)
                 entry.AddNode(typeDef);
@@ -180,7 +180,7 @@ namespace Zsharp.Semantics
                 var def = entry!.DefinitionAs<AstTypeDefinition>();
                 if (def != null)
                 {
-                    typeRef = AstTypeReference.Create(def);
+                    typeRef = AstTypeReference.From(def);
                     assign.Variable.SetTypeReference(typeRef);
                 }
                 else
@@ -233,7 +233,7 @@ namespace Zsharp.Semantics
                         if (function.IsTemplate)
                         {
                             var entry = function.Symbol;
-                            var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinitionImpl>(
+                            var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinition>(
                                 function.Identifier.TemplateDefinitionName, AstSymbolKind.Function);
 
                             var typeDef = new AstTemplateInstanceFunction(templateFunction);

@@ -8,7 +8,7 @@ namespace Zsharp.AST
 {
     public class AstBuilderContext
     {
-        private readonly Stack<AstNode> _current = new Stack<AstNode>();
+        private readonly Stack<AstNode> _current = new();
 
         public AstBuilderContext(CompilerContext compilerContext, UInt32 indent = 0)
         {

@@ -108,7 +108,7 @@ This helps with passing necessary but non-informative parameters.
 
 `with` keyword starts a scope that contain the specified type instances. A list of instance can be specified separated by a comma (default list separator).
 
-> What happens when multiple of the same type are specified? Compile Error?
+> What happens when multiple of the same type are specified? Compile Error? Match Array\<T>?
 
 ```csharp
 fn: (self: MyStruct, p: U8)
@@ -130,3 +130,20 @@ with s, v
 > Can `self` parameters also come from context? Is there a reason to prohibit that?
 
 Nested `with` contexts are stacked with a reference to its parent. That means that existing types can be overridden with new values and type-lookup is done from most nested (or current) context up to the root context. The value of the first context that has the type registered, will be used.
+
+Another use of the `with` keyword.
+
+```csharp
+MyType: (p: U8): MyType
+    ...
+MyFn: (self: MyType, str: Str)
+    ...
+
+t = MyType(42)
+with t
+    .MyFn("blabla")
+
+// or
+with MyType(42)
+    .MyFn("blabla")
+```

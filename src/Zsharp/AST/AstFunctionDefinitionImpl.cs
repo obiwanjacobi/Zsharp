@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstFunctionDefinitionImpl : AstFunctionDefinition,
-        IAstCodeBlockSite, IAstSymbolTableSite, IAstTemplateSite
+        IAstCodeBlockSite, IAstSymbolTableSite
     {
         public AstFunctionDefinitionImpl(Function_defContext functionCtx)
         {
             Context = functionCtx;
         }
+
+        protected AstFunctionDefinitionImpl()
+        { }
 
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
@@ -55,32 +57,18 @@ namespace Zsharp.AST
             return Symbols!.AddSymbol(symbolName, kind, node);
         }
 
-        // true when type is a template definition
-        public bool IsTemplate => _templateParameters.Count > 0;
-
-        private readonly List<AstTemplateParameter> _templateParameters = new List<AstTemplateParameter>();
-        public IEnumerable<AstTemplateParameter> TemplateParameters => _templateParameters;
-
-        public void AddTemplateParameter(AstTemplateParameter templateParameter)
+        public override bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
         {
-            if (!TryAddTemplateParameter(templateParameter))
-                throw new InvalidOperationException(
-                    "TemplateParameter is already set or null.");
+            if (base.TryAddTemplateParameter(templateParameter))
+            {
+                Symbols.Add((AstTemplateParameterDefinition)templateParameter);
+                return true;
+            }
+            return false;
         }
 
-        public bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
-        {
-            if (templateParameter == null)
-                return false;
-
-            Symbols.Add(templateParameter);
-            _templateParameters.Add(templateParameter);
-
-            Identifier.TemplateParameterCount = _templateParameters.Count;
-            return true;
-        }
-
-        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionDefinition(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitFunctionDefinition(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

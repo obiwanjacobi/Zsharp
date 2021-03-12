@@ -34,7 +34,8 @@ namespace Zsharp.AST
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
 
-        public bool TrySetSymbol(AstSymbolEntry symbolEntry) => Ast.SafeSet(ref _symbol, symbolEntry);
+        public bool TrySetSymbol(AstSymbolEntry symbolEntry)
+            => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public void SetSymbol(AstSymbolEntry symbolEntry)
         {
@@ -52,6 +53,14 @@ namespace Zsharp.AST
                 return true;
             }
             return false;
+        }
+
+        public static AstFunctionParameterDefinition Create(string name, AstTypeDefinition astType)
+        {
+            var identifier = new AstIdentifier(name, AstIdentifierType.Parameter);
+            var param = new AstFunctionParameterDefinition(identifier);
+            param.SetTypeReference(AstTypeReference.From(astType));
+            return param;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -11,9 +10,8 @@ namespace Zsharp.AST
         IAstTemplateSite
     {
         public AstTypeReference(Type_refContext context)
-            : base(AstNodeType.Type)
+            : this()
         {
-            _templateParameters = new List<AstTemplateParameterReference>();
             Context = context;
             IsOptional = context.QUESTION() != null;
             IsError = context.ERROR() != null;
@@ -22,7 +20,7 @@ namespace Zsharp.AST
         protected AstTypeReference()
             : base(AstNodeType.Type)
         {
-            _templateParameters = new List<AstTemplateParameterReference>();
+            _templateParameters = new();
         }
 
         private AstTypeReference(AstTypeReference typeOrigin)
@@ -82,7 +80,7 @@ namespace Zsharp.AST
             return typeRef;
         }
 
-        public static AstTypeReference Create(AstTypeDefinition typeDef)
+        public static AstTypeReference From(AstTypeDefinition typeDef)
         {
             Ast.Guard(typeDef != null, "TypeDefinition is null.");
             Ast.Guard(typeDef!.Identifier != null, "TypeDefinition has no Identifier.");
@@ -111,10 +109,6 @@ namespace Zsharp.AST
 
             if (templateParameter is AstTemplateParameterReference parameter)
             {
-                if (_templateParameters.SingleOrDefault(p =>
-                    p.Identifier?.CanonicalName == parameter.Identifier?.CanonicalName) != null)
-                    return false;
-
                 _templateParameters.Add(parameter);
 
                 Identifier!.AddTemplateParameter(parameter.TypeReference?.Identifier?.Name);
