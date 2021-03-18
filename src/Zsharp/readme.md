@@ -34,3 +34,7 @@
 ## Optimizations
 
 - Struct field init is always done using a secondary instance - not always necessary (ctor).
+
+## Resources
+
+- How C++ resolves a function call https://preshing.com/20210315/how-cpp-resolves-a-function-call/

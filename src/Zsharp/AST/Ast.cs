@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Zsharp.AST
 {
@@ -37,17 +36,17 @@ namespace Zsharp.AST
             where T : class
         {
             if (instance == null)
-                throw new ArgumentNullException(typeof(T).Name,
+                throw new InternalErrorException(
                     $"Object not of the expected type ({typeof(T).Name}) because it was null.");
             if (!(instance is T))
-                throw new ArgumentException($"Object of type '{instance.GetType().Name}' is not of the expected type: {typeof(T).Name}");
+                throw new InternalErrorException($"Object of type '{instance.GetType().Name}' is not of the expected type: {typeof(T).Name}");
         }
 
         [Conditional("DEBUG")]
         public static void Guard(bool trueIsValid, string message)
         {
             if (!trueIsValid)
-                throw new ArgumentException(message);
+                throw new InternalErrorException(message);
         }
 
         [Conditional("DEBUG")]
@@ -55,7 +54,7 @@ namespace Zsharp.AST
             where T : class
         {
             if (instance == null)
-                throw new ArgumentNullException(typeof(T).Name, message);
+                throw new InternalErrorException($"{typeof(T).Name} is null: {message}");
         }
     }
 }
