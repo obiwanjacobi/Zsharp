@@ -64,7 +64,7 @@ fn: [c] InterfaceName
 fn: InterfaceName [c.Ptr()]<T>(p: T): Bool
 ```
 
-> How to differentiate from object construction? => Has no field names.
+> How to differentiate `fn: InterfaceName` from object construction? => Has no field names.
 
 ---
 
@@ -160,7 +160,7 @@ Only useful for `Ptr<T>` types. All function parameters are passed by value.
 ```csharp
 immFn: (p: Ptr<Imm<U8>>)
 // shorter using type operators
-immFn: (p: ^*U8)
+immFn: (p: *^U8)
 ```
 
 ### Out and ByRef Parameters
@@ -203,7 +203,7 @@ allowedFn(editable = false)
 
 ## Return values
 
-Returning multiple values from a function is only possible using a (custom) structure type. There are no out parameters and no tuples.
+Returning multiple values from a function is only possible using a (custom) structure type. There are no out parameters and no tuples (actually there are now...).
 
 ```C#
 MyStruct
@@ -234,7 +234,7 @@ _ = retFunc()       // ok, explicitly not interested in retval
 
 > Could the compiler have an opinion about where the return statement is located? Only allow early exits inside and `if` and as last statement in the function. What about only one inside a loop?
 
-> TBD: should we also support covariant return types?
+> TBD: could we also support covariant return types (function overloads)?
 
 ### Error
 
@@ -254,8 +254,8 @@ We call this Unit type `Void`.
 MyFn: (p: U8) // return Void
     ...
 
-v = MyFn(42)    // legal: v => Void
-// can't do anything with 'v' though
+v = MyFn(42)    // legal?: v => Void
+// can't do anything with 'v'
 ```
 
 Another scenario is with constrained union types.
@@ -287,6 +287,8 @@ But in Z#, only type-bound functions can the `self` parameter be used to overloa
 
 > Not sure if this is actually required. More that resolvement will only be based on the self parameter's Type.
 
+> Would be a problem for interop with existing .NET code.
+
 Give all other functions a unique name.
 
 ```csharp
@@ -296,6 +298,7 @@ fn(self: Struct1)  // error
 ```
 
 > Thinking of supporting at least compile time overload resolvement. 
+
 This makes interacting with existing .NET code a lot less hassle.
 
 One exception to this rule are the Type Constructor functions. See Also [Types](./types.md).
@@ -306,11 +309,9 @@ One exception to this rule are the Type Constructor functions. See Also [Types](
 
 A recursive function is a function that (eventually) calls itself.
 
-Recursive functions are supported although small memory/stack machines will have to be careful of not overflowing the stack.
-
 > TBD: Allow to specify a maximum depth?
 
-> Can the compile analyze how deep the recursion will go?
+> Can the compiler analyze how deep the recursion will go?
 
 > TBD: add explicit syntax to allow a function to be called recursively. Add syntax for calling `fn` in body of `fn` to guard against accidental type or function name mismatches. Can happen easily when overloading on self and calling the 'base'...
 
@@ -323,11 +324,13 @@ recurseFn: (p: U8): U8
         return @recurseFn(p)    // specific syntax
 ```
 
+> What if multiple functions are involved in the recursion? All should be marked.
+
 ---
 
 ## Type Bound (Self)
 
-Using the `self` keyword on the (name of the) first parameter, a function can be bound to a type. In this example the function is bound to the MyStruct type.
+Using the `self` keyword as the (name of the) first parameter, a function can be bound to a type. In this example the function is bound to (a pointer to) the MyStruct type.
 
 ```C#
 boundFn: (self: Ptr<MyStruct>)
@@ -442,7 +445,7 @@ OuterFn: (p: U8)
 
 > Can Local Functions be declared at the end of the containing function?
 
-> Limit on how many nesting levels?
+> Limit on how many nesting levels? Yes, no local functions in local functions.
 
 ---
 
@@ -506,6 +509,8 @@ for fn in l
     fn();   // what does it print?
 ```
 
+`[c]` is capturing by value, so it should print 0-9.
+
 ---
 
 > We cannot use lambda's to make an anonymous 'object' like in JavaScript at this point. Do we want that?
@@ -535,7 +540,7 @@ coroutine: (p: U8)
     yield
     yield
     yield
-    return
+    return  // optional
 
 // multiple calls, one result
 coroutine: (p: U8): U16?
@@ -764,9 +769,9 @@ Captures also may be used as a synchronization mechanism for shared data. At the
 
 In case of a mutable capture, it's value is written back to the original storage when the block of code is completed.
 
-> How do we allow to opt in for all these different capture behaviors?
+> How do we allow to opt-in for all these different capture behaviors?
 
-> We do need a mechanism to handle conflicts when writing back captured data? Or is this directed by using the correct Data type wrapper (`Atom<T>`)?
+> We do need a mechanism to handle conflicts when writing back captured data? Or is this managed by using the correct Data type wrapper (`Atom<T>`)?
 
 > Perhaps as an optimization, immutable captures (in general) could be passed as references to a parent stack frame?
 
@@ -794,7 +799,7 @@ b = fn3(42) |> fn2() |> fn1()
 
 Evaluate LeftHandSide, parse RightHandSide and inject left result into right parse tree.
 
-Subsequent function calls (after `|>`) will have their 1st param missing. That looks a bit strange.
+Subsequent function calls (after `|>`) will have their 1st param missing. That looks a bit strange (but no different than bound functions?).
 
 Does this only work for functions? (concatenation?)
 
@@ -821,29 +826,42 @@ inStream |> yourName
 
 ---
 
+What about (.NET) async-await?
+
+Futures / Promises?
+
+---
+
 Interpret the function parameters `(param: U8)` as a tuple. That means that all functions only have only one actual param, which is a single tuple and is passed by reference (as an optimization), but by value conceptually.
 
 All the parameters need to be read-only (which is a bit odd because they may not use the `Imm<T>` type). This does not mean you cannot pass a pointer and change the content that it points too - that still works.
 
 What is the overhead in building the tuple at the call-site?
 
+We could auto-generate a struct for each function's parameters and allow that struct to be created, initialized and used as the function's only parameter. Although that would encourage functions with a large number of parameters - something we don't want...
+
 Function params are specified in order at call-site, we are steering away from by-order for tuples/deconstruction. That would mean that function parameters are to be specified by name only, which can get very verbose.
+
+Perhaps a 'service' function type uses this principle but calls it a 'message' (like gRPC). Would also return a message in that case.
 
 ---
 
 simulate properties? thru type-bound functions?
-Get\<T>/Set\<T>/Notify\<T>/Watch\<T[]>
+Get\<T> / Set\<T> / Notify\<T> / Watch\<T[]>
 
 tag interrupt service routines (for analysis - volatile) as a simplified interface?
 functions that do not return?
 
 intrinsic functions (operator implementations) - extensions?
 
+inline functions?
+
 top-level function calls/one-time initialization at first access of module.
-
-declarative code: see if we can find a syntax that could would make it easy to call lots of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
-https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md
-
 
 How to define the entry point of a program? (Main)
 Decorator? Fixed Name?
+
+---
+
+declarative code: see if we can find a syntax that would make it easy to call lots of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
+https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md

@@ -138,13 +138,13 @@ Struct
     name: Str
 ```
 
-How ever the `NestedStruct` type is not available outside the structure it was declared in.
+However the `NestedStruct` type is not available outside the structure it was declared in.
 
 > TBD: Can the nested type be anonymous?
 
 ```csharp
 Struct
-    nested      // use {} here?
+    nested
         fld1: U8
         fld2: Str
     name: Str
@@ -268,6 +268,8 @@ anoStructFn: (s: Record)    // other name for struct?
 anoStructFn: (s: {U8, Str}) // tuple like
 ```
 
+Or repeat the struct fields...
+
 ---
 
 This is more a template thing...
@@ -281,6 +283,8 @@ PropGetFn: <S>(self: S): Str
 s = { Name = "MyName" }
 p = PropGetFn(s)
 ```
+
+This allows a sort of duck-typing. As long as the `self` parameter has a `Name` field the code can be compiled.
 
 ## Mapping
 
@@ -316,3 +320,15 @@ s2 = s1.Transform()
 afterTransform: (self: MapS1ToS2)
     self.Target.fld3 = self.Source.z.Str()
 ```
+
+Rule base mapping could use specific operators to indicate what rules to use for normal or reverse mapping.
+
+```csharp
+// Transform<Source, Destination>
+MapStruct1Struct2: Transform<Struct1, Struct2>
+    #Struct2.fld1 <= #Struct1.x     // src => dest
+    #Struct2.fld2 <=> #Struct1.y    // src => dest and reverse
+    #Struct2.fld3 => #Struct1.z     // dest => src
+```
+
+More complex mappings? Like splitting or joining fields? Conditional mapping/logic? External dependencies? Calling helpers for transformation? Nested objects/object trees?

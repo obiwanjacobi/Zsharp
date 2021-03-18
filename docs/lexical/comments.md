@@ -37,7 +37,7 @@ A comment can contain any characters, including more of these `/` :
 ////////-------*******|||||________\\\\\\\\
 ```
 
-A comment can be used to temporarily disable code:
+A comment can be used to (temporarily?) disable code (not recommended):
 
 ```C#
 // some code was here
