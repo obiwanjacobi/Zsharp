@@ -27,8 +27,6 @@ In a sense, the module name is also the namespace of the code in the file.
 
 > Should the module statements `module` and `import` only be used at the top of the file, or can they appear anywhere?
 
-> Should the module statements (module, import and export) be prefixed with a `#` like a pragma, because they represent a meta/compile-time operation that is not really output in the binary...?
-
 > TBD: Circular references?
 
 ---
@@ -44,6 +42,14 @@ fn: ()
 ```
 
 Does loading at runtime (`use`) require the containing function to have an `Err<T>` return type? Will the program be aborted when the module is not found or can it be handled gracefully?
+
+```csharp
+fn: ()
+    use mod1 catch err
+        // handle loading error
+```
+
+Does `use` return a type that represents the loaded module? Something like `Err<Ptr<ModuleInfo>>`
 
 ---
 
@@ -74,3 +80,4 @@ globalVar: U8 = 42  // accessible by all files in module?
 > TBD
 
 - private modules?
+- explicit namespace handling?

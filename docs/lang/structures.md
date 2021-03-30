@@ -84,6 +84,8 @@ s = MyContainer
 
 ## Bit Fields
 
+> This needs to be revised for .NET interop.
+
 A structure can contain bit fields using the `Bit<T>` type.
 All fields using the bit data type will be grouped together.
 
@@ -259,13 +261,15 @@ x.Item1 // Error: Item1 does not exist
 
 ```csharp
 anoStructFn: (s)        // no type
-anoStructFn: (s: Any)   // suggest passing a Str is valid
+anoStructFn: (s: Any)   // suggests passing a Str is valid
 anoStructFn: (s: Dyn)   // indicates the runtime aspect of discovering fields
 anoStructFn: (s: Struct)    // must be a struct
 anoStructFn: (s: Record)    // other name for struct?
 
 // this is most correct, albeit somewhat verbose
 anoStructFn: (s: {U8, Str}) // tuple like
+anoStructFn: (s: (U8, Str)) // not an object, => definition
+// What about the tuple field names?
 ```
 
 Or repeat the struct fields...
@@ -313,12 +317,24 @@ MapS1ToS2: Transform<Struct1, Struct2>
     #Struct2.fld1 = #Struct1.x
     #Struct2.fld2 = #Struct1.y
 
+// call as function object '()' operator?
 s2 = MapS1ToS2(s1)
+// as (overloaded) function on `Transform` type?
 s2 = s1.Transform()
+// reverse mapping
+s1 = s2.Transform()
+// as operator?
+s1 <= s2
+```
 
+How does the `Transform()` function access the mapping when the `self` parameter is one of the source/destination types?
+
+```csharp
 // Transform could support all kinds of hooks (overrides)
 afterTransform: (self: MapS1ToS2)
     self.Target.fld3 = self.Source.z.Str()
+
+// execution of these hooks would not be obvious!
 ```
 
 Rule base mapping could use specific operators to indicate what rules to use for normal or reverse mapping.
@@ -329,6 +345,38 @@ MapStruct1Struct2: Transform<Struct1, Struct2>
     #Struct2.fld1 <= #Struct1.x     // src => dest
     #Struct2.fld2 <=> #Struct1.y    // src => dest and reverse
     #Struct2.fld3 => #Struct1.z     // dest => src
+
+// reverse transformation
+s1 = s2.Transform();
 ```
 
 More complex mappings? Like splitting or joining fields? Conditional mapping/logic? External dependencies? Calling helpers for transformation? Nested objects/object trees?
+
+```csharp
+CustomFn1: (Struct1 self): U16
+    ...
+Deconstruct2:
+    x: U16
+    z: U16
+CustomFn2: (Struct2: self): Deconstruct2
+    ...
+CustomFn3: (Struct1: self, x: U16, y: U16)
+    ...
+
+// Transform<Source, Destination>
+MapStruct1Struct2: Transform<Struct1, Struct2>
+    // CustomFn1 yields mapping result
+    #Struct2.fld1 <= #Struct1.CustomFn1
+    // CustomFn2's result is deconstructed onto target fields
+    #Struct2.CustomFn2 => #Struct1.x, Struct1.z
+    // CustomFn3 receives 2 parameters
+    #Struct2.CustomFn3 <= #Struct1.x, Struct1.y
+```
+
+```csharp
+MapStruct1Struct2: Transform<Struct1, Struct2>
+    // match fields by name
+    #Struct1 <=> #Struct2
+```
+
+If no mapping rule structure is defined the field names are matched on a 1:1 basis in both directions.

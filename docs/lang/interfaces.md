@@ -15,10 +15,11 @@ callFn(ptrFn: Ptr<FunctionInterface>): U8
     return ptrFn(0x4242)
 
 fnImpl: FunctionInterface
-// may repeat declaration for readability
-fnImpl: FunctionInterface (p1: U16): U8
+// may use declaration for readability
+fnImpl: (p1: U16): U8
     return p1.U8([4..12])
 
+// matches on fn signature
 r = callFn(fnImpl)      // r = 0x24
 ```
 
@@ -148,4 +149,18 @@ i = s.As<MyInterface<Struct>>()     // cast/convert (Opt<T>)
 
 // use intrinsic/pragma for compile time checking
 b = s?#MyInterface<Struct>  // similar to check if field exists
+```
+
+---
+
+>TBD
+
+Allow interface definition with types?
+
+```csharp
+ObjectInterface<S, T>
+    fld1: U8
+    fld2: Str
+    fn1: (self: S, p1: U16): U8 _
+    fn2: (self: T, p1: U16): U8 _
 ```

@@ -107,3 +107,27 @@ r = match list
     (x) => x    // match list with one item.
     (x, ...lst) => recurse(lst) + x    // recursive sum function
 ```
+
+---
+
+> TBD
+
+Replace the `match` keyword with `is` to align other pattern matching constructions like: `c is >= 'a' and <= 'z' or >= 'A' and <= 'Z'`
+
+```C#
+a = s is
+    n: U8 => make42(n)
+    x: MyStruct ? x.field1 = 12 => 42
+    x: MyStruct => 0
+
+a = 42
+s = a is
+    < 10 => "Smaller than 10"                   // `<` operator
+    >= 10 and <= 100 => "between 10 and 100"    // logical and
+    > 100 "bigger than 100"                     // `>` operator
+
+// boolean result
+b = c is (>= 'a' and <= 'z') or (>= 'A' and <= 'Z')
+```
+
+? How to separate between pattern matching conditional expressions (bool) and selecting a matching case (switch)?

@@ -1,5 +1,7 @@
-
 # Z\# to .NET
+
+> TBD: Should we drop generating IL and simply transpile to C# and use Roslyn (and all the updates it gets) to do the real work?
+Are there any features that do not map to C# in any way?
 
 How are the various Z# language constructs represented in .NET.
 
@@ -10,11 +12,16 @@ module [name] | public static class [name] | namespace
 \<module w/o exports> | private static class [name] | namespace
 export function [name] | public static [name] | module class
 function [name] | private static [name] | module class
+function [name] (self) | private \<Self> [name] | Self class
+export function [name] (self) | public \<Self> [name] | Self class
 export struct [name] | public struct [name] | module class
+- or - | public record [name] | module class
 struct [name] | private struct [name] | module class
+- or - | private record [name] | module class
 export enum [name] | public enum [name] | module class
 enum [name] | private enum [name] | module class
 export type [name] | public struct [name] | module class
+- or - [name] | public record [name] | module class
 type [name] | public struct [name] | module class
  \- or - | Primitive .NET Type |
 module variable [name] | private static {Type} [name] | module class
@@ -24,6 +31,13 @@ function self parameter | this parameter | static method
 ---
 
 > .NET `struct` (heap) vs `ref struct` (stack). Z# does not control the stack/heap choice by type but per case instance... How?
+
+Hidden function prefixes:
+
+- `get_` Property getter.
+- `set_` Property setter.
+- `init_` Property initializer. Are C# init props translated to `set_`??
+- `op_` Operator implementation.
 
 ## Enum
 
@@ -66,4 +80,4 @@ fn: ()
     d: U8@ = 42         // Mem<T> type operator?
 ```
 
-Cannot reuse `Ptr<T>` type operator `*` because a Z# struct is also a `struct` in .NET. A pointer to a struct would be a `ref struct`. A pointer to a heap-allocated instance would simply be a .NET managed reference.
+Cannot reuse `Ptr<T>` type operator `*` because a Z# struct is also a `struct` in .NET (what if we used record?). A pointer to a struct would be a `ref struct`. A pointer to a heap-allocated instance would simply be a .NET managed reference.

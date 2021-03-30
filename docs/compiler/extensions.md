@@ -83,7 +83,7 @@ Decorator functions are run at compile time and should therefor use the `#!` at 
     ...
 
 // the self parameter is passed implicitly
-{MyFnDecorator(42)}
+{MyFnDecorator(42)}   // mark it here too?
 SomeDecoratedFn: ()
     ...
 ```

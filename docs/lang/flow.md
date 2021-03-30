@@ -56,6 +56,18 @@ Note that `if` is a reserved keyword and no named language element can have the 
 
 ---
 
+## Return
+
+todo
+
+---
+
+## Yield
+
+todo
+
+---
+
 ## Loops
 
 A loop is an essential control mechanism in directing the execution flow of the code. There is only one keyword for making a loop: `loop`.
@@ -118,6 +130,8 @@ loop [0..10]
     LogInt
 ```
 
+> TBD Functional loops. Pas in a function or a lambda as a loop body.
+
 ---
 
 ## Break
@@ -145,10 +159,6 @@ loop                  // loop #1
         if true
             break     // this will exit loop #2
 ```
-
-## Return
-
-todo
 
 ---
 
@@ -202,3 +212,5 @@ fn: (p: U8): U8
 
     exit(fn) c  // return c
 ```
+
+> use `leave` instead of `exit`?

@@ -91,10 +91,10 @@ Arithmetic, bitwise and logical operators.
 | `$` | reserved
 | `->` | Alternate function return type (confusing in combination with `=>`)
 | `<=` | map structure (also arithmetic) / assign struct properties
-| `( )` | array/list initializer/literal?
-| `|>` | 
-| `<|` | 
-| `:=` | reserve for variable assignment with type inference.
+| `()` | Function Object operator
+| `|>` | Parameter pipe?
+| `<|` | Reverse parameter pipe?
+| `:=` | Reserved for variable assignment with type inference.
 | `<=>` | Swap operator
 
 ---
@@ -154,3 +154,5 @@ imm =^ a    // imm: Imm<U8>
 - using two single quotes for a character `'x'` is nice and symmetrical but also redundant. Is there a shorter way to specify characters: `'x`? Only really need to address this if we want to use `'` for something else...
 
 - an operator to test for 'nothing' (optional) or 'default'?
+
+- allow custom defined operators? `.>>.`, `|<<` etc. Requires identifiers to be less strict.

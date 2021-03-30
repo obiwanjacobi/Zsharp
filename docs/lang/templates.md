@@ -226,3 +226,25 @@ With restrictions:
 ```csharp
 MyType<M: Struct<T: OtherStruct>>
 ```
+
+---
+
+> TBD
+
+For .NET interoperability we need to distinguish between .NET generics and Z# compile-time templates.
+
+```csharp
+// run time
+generic<T>
+    ...
+
+// compile time
+template<#T>
+    ...
+
+// combination
+hybrid<#T, G>
+    ...
+```
+
+---

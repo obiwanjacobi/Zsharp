@@ -36,8 +36,10 @@ Keyword | Description
 `errdefer` | defers execution till exit with error
 `out` | opposite of in?
 `var` | ?
-`ref` | explicit reference?
+`ref` | explicit reference? / read-only pointer?
 `use` | inline module imports?
 `any` | a type that can be anything
-`asm` | inline assembly
+`asm` | inline assembly (IL?)
 `with` | context variables
+`async` | async execution
+`await` | awaiting async execution

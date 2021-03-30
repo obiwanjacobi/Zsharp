@@ -2,7 +2,7 @@
 
 When the code in the file depends on code located in a different module, the `import` pragma can be used to declare the location of that dependency.
 
-This import example indicates that the code uses one or more functions from the standard math library.
+This import example indicates that the code uses one or more functions from the standard math (library) module.
 
 ```C#
 # import std.math
@@ -20,6 +20,8 @@ Only one name can be specified at a time. Importing multiple dependencies requir
 ```
 
 Importing a module that does not exist is not an error (perhaps only a warning) as long as no types from that missing module are used. This will make dealing with dependencies of conditional compiled code easier.
+
+> Perhaps this should be a compiler option.
 
 ## Aliasing
 
@@ -55,4 +57,14 @@ When module names look the same:
     Alias = MyModule.MyFunc  // imports module #1 - MyFunc
 ```
 
-> TBD: how does the import find the module?
+---
+
+> TBD: how does the import find the module and/or the assembly the module code is in?
+
+> Be explicit about what assembly to use to import the name/namespace? (for .NET compatibility)
+
+```csharp
+# import from System.Core   // <= assembly
+    System.IO               // <= namespace
+    System.DBNull           // < Type
+```

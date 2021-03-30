@@ -313,18 +313,20 @@ A recursive function is a function that (eventually) calls itself.
 
 > Can the compiler analyze how deep the recursion will go?
 
-> TBD: add explicit syntax to allow a function to be called recursively. Add syntax for calling `fn` in body of `fn` to guard against accidental type or function name mismatches. Can happen easily when overloading on self and calling the 'base'...
+> TBD: add explicit syntax to allow a function to be called recursively. Add syntax for marking `fn` as recursive to guard against accidental type or function name mismatches. Is it a function Type annotation or a function Name annotation?
 
 ```csharp
-{Recursive}     // decorator
-#recursive      // pragma
-recurseFn: (p: U8): U8
+{Recursive}                 // decorator
+#recursive                  // pragma
+recurseFn: @(p: U8): U8     // syntax (on Type)
+@recurseFn: (p: U8): U8     // syntax (on Name)
         // exit condition here...
-        return recurseFn(p)     // no extra syntax
-        return @recurseFn(p)    // specific syntax
+        return recurseFn(p)     // no extra syntax on call
 ```
 
-> What if multiple functions are involved in the recursion? All should be marked.
+> What if multiple functions are involved in the recursion? All should be marked?
+
+> What happens to captures in a recursive function?
 
 ---
 
@@ -378,14 +380,26 @@ b = e.IsMagicValue()        // true
 ```csharp
 Struct
     ...
-fn: (self: Struct)
+fn: (self: Struct): U8
     ...
 
 s: Struct
-s.fn        // calls fn(s)
+v = s.fn    // calls fn(s)
 ```
 
-We call this the poor-man's property syntax.
+We call this the poor-man's property syntax. Do we require the function name to begin with `get_`/`set_` to match .NET properties? Or can we infer them?
+
+> Allow specifying the self-Type explicitly for readability?
+
+```csharp
+Struct
+    ...
+fn: (self: Struct): U8
+    ...
+
+s: Struct
+v = Struct.fn(s)
+```
 
 Auto fluent-functions on self type with void return type.
 
@@ -410,11 +424,25 @@ s.fn1()     // normal function call
 
 If return type is not `Void`, the actual return type is used to determine if the next function call is valid (self type). See also Fluent Functions (below).
 
+> TBD: Allow attaching existing functions to a struct??
+
+```csharp
+Struct1
+    fld1: U8
+// stand alone fn
+fn: (p: U8): U8
+    ...
+// function alias? inline function?
+fnStruct: (self: Struct1) = fn(self.fld1)
+```
+
 ### Overriding Self Bound Functions
 
 > TBD: How would that work?
 
 Type resolution is based on the type of the instance (self). If there is no function available for the (more) specialized type, its parent (derived) type is used. If no function is available at all it is an error.
+
+> To have polymorphism, overload resolution needs to take place at runtime. .NET uses method tables linked to the (type of) instance of the object. We lack that explicit relation and we would need a dispatch function that determines the instance type and knows what functions to call on it. We could compile these self-bound functions into an object member representation in .NET, though...
 
 ---
 
@@ -615,6 +643,8 @@ Weak functions are function declarations that allows external code to implement 
 
 If the weak function cannot be resolved it and its call sites are removed without compile errors.
 
+.NET/C# calls this partial methods and has a whole bunch of restrictions on them (some have been lifted in C#9.0).
+
 ```csharp
 weakFn: () _
 
@@ -633,9 +663,13 @@ weakFn: ()
 weakFn()
 ```
 
+> There is no difference between a function declaration (ending in `_`) and a weak function definition. How do we distinct between weak functions and undefined function (references)?
+
 ---
 
 ## Pure Functional
+
+A pure function is a function that returns the exact same result given the same inputs without any side effects.
 
 A pure function -without side-effects- can be recognized by the lack of mutable captures and the presence of immutable (only in-) parameters. It also has to have a return value.
 
@@ -646,7 +680,7 @@ sideEffect: [globalVar.Ptr()](p: Ptr<Imm<U8>>)
 pureFn: (x: U8, y: U8): U16
 ```
 
-A higher order function is a function that returns a higher-order function.
+A higher order function is a function that returns another function.
 
 ```csharp
 // a function that returns a function
@@ -654,6 +688,33 @@ pureFn: (arr: Arr<U8>): Fn<(U8): U8>
     ...
 // call pureFn and call the function it returns
 v = pureFn([1,2])(42)
+```
+
+> TBD: Syntax for function partial application, composition and currying?
+
+> function composition, partial application and parameter currying should be done inline and at compile time ideally. This would generate more code, but perform better at runtime - as opposed to linking existing functions together. Not sure how to handle external functions that are already compiled.
+
+See also [Piping Operator](#Piping-Operator).
+
+> Composition and value piping are different concepts. Function Composition is building functions from other functions at compile time. Value piping chains (result) values between multiple function calls (result of one function is parameter for next function).
+
+Due to our choices in syntax most of these functional principles has to be spelled out. We could make an exception for not having to specify the `()` [when there is only one (or no) parameter?].
+
+```csharp
+add: (p1: U8, p2: U8): U16
+    return p1 + p2
+// partial application by hand
+add42: (p: U8): U16
+    return add(42, p)
+```
+
+By returning a local function it becomes anonymous. Any references to external variables / parameters need to be captured.
+
+```csharp
+fn: (p1: U8, p2: Str): Fn<(U8): U8>
+    internalFn: [p2](p1: U8): U8
+        return p2.U8() + p1
+    return internalFn
 ```
 
 ---
@@ -695,7 +756,7 @@ add: (self: Calc, v: U8)
 sub: (self: Calc, v: U8)
 
 c = Calc
-// only works with self-dot-syntax
+// only works with self-dot syntax
 c.add(4).sub(2)
 // with scope
 c.add(4)
@@ -795,6 +856,8 @@ Would make line-breaks in long statements (chains) a lot more readable?
 ```csharp
 a = fn1(fn2(fn3(42)))
 b = fn3(42) |> fn2() |> fn1()
+// functional syntax
+b = 42 |> fn3 |> fn2 |> fn1
 ```
 
 Evaluate LeftHandSide, parse RightHandSide and inject left result into right parse tree.
@@ -810,7 +873,7 @@ Does this only work for functions? (concatenation?)
 Could also have a 'backward' piping operator? `<|` going the other way...
 
 ```csharp
-fn1() <| fn2() <| fn3()
+fn1() <| fn2() <| fn3() <| 42
 ```
 
 As concatenation?
@@ -822,6 +885,17 @@ outStream <| "Hello " <| yourName
 
 // C++ style input?
 inStream |> yourName
+```
+
+or use a different syntax
+
+```csharp
+// C++ style output?
+yourName = "Arthur";
+outStream +| "Hello " +| yourName
+
+// C++ style input?
+inStream =| yourName
 ```
 
 ---
@@ -840,28 +914,71 @@ What is the overhead in building the tuple at the call-site?
 
 We could auto-generate a struct for each function's parameters and allow that struct to be created, initialized and used as the function's only parameter. Although that would encourage functions with a large number of parameters - something we don't want...
 
+Associate a parameters structure with a function.
+
+```csharp
+// function with parameters
+fn: (p: u8, s: Str)
+    ...
+
+// compiler based
+p = fn#parameters
+    p = 42
+    s = "42"
+
+// as real struct
+// 'fn' is namespace?
+p = fn.Parameters
+    p = 42
+    s = "42"
+
+// call
+fn(p)
+// same as
+fn(42, "42")
+```
+
+Will there be an automatic overload of `fn` (using an immutable ptr to the parameter structure instance) or does the compiler unpack the structure at the call site to call the original function?
+
+> Will overloaded functions share one parameter structure with all the parameters - or - each have an individual parameter structure?
+
+> The compiler generated option should allow being mapped from a real object.
+
+---
+
 Function params are specified in order at call-site, we are steering away from by-order for tuples/deconstruction. That would mean that function parameters are to be specified by name only, which can get very verbose.
 
 Perhaps a 'service' function type uses this principle but calls it a 'message' (like gRPC). Would also return a message in that case.
 
 ---
 
-simulate properties? thru type-bound functions?
+- simulate properties? thru type-bound functions?
 Get\<T> / Set\<T> / Notify\<T> / Watch\<T[]>
 
-tag interrupt service routines (for analysis - volatile) as a simplified interface?
+- tag interrupt service routines (for analysis - volatile) as a simplified interface?
 functions that do not return?
 
-intrinsic functions (operator implementations) - extensions?
+- intrinsic functions (operator implementations) - extensions?
 
-inline functions?
+- inline functions?
 
-top-level function calls/one-time initialization at first access of module.
+- top-level function calls/one-time initialization at first access of module.
 
-How to define the entry point of a program? (Main)
+- How to define the entry point of a program? (Main)
 Decorator? Fixed Name?
 
 ---
 
 declarative code: see if we can find a syntax that would make it easy to call lots of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
 https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md
+
+---
+
+Allow functions that have no literal implementation but a generator is called during compilation to supply the implementation. Works with decorators and weak functions references?
+
+```csharp
+{FnGenerator}
+Fn: <T>(): T _
+```
+
+This could be how mapping gets implemented.

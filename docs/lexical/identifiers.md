@@ -11,6 +11,8 @@ Identifiers name program entities such as variable, functions and types. These n
 - Can contain alpha-numeric characters.
 - Valid characters lie in the ASCII range (no unicode).
 
+> TBD: Is there a practical reason not to allow special characters or even names that only consist of special characters (as custom operators)?
+
 Here are examples of valid identifiers:
 
 ```C#
@@ -68,7 +70,7 @@ _ = myFn(42)        // return value not used
 
 ```
 
-If an identifier starts with a `_` it is hidden from immediate public access. This is mostly a function of the IDE.
+If an identifier starts with a `_` it is hidden from immediate public access. The field will be `internal` in .NET for an exported structure.
 
 ```csharp
 MyStruct

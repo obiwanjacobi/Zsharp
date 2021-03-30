@@ -9,8 +9,8 @@ The `assembly` keyword works similar to how the `module` keyword works, it names
 Here an assembly that includes module1 and module2:
 
 ```csharp
-assembly Name.OfMy.Assembly
-import
+# assembly Name.OfMy.Assembly
+# import
     module1
     module2
 ```
