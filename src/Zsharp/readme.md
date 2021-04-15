@@ -6,6 +6,7 @@
 
 - Check unit test coverage
 - More tests on syntax errors (non-happy-flow).
+- grammar: Nested templates does not parse: `Struct<Array<U8>>`.
 - Move all Semantic errors to CheckRules.
 - Need a (source file) Location class around Antlr Context.
 - Identifier.CanonicalName for template (function) reference is wrong (type starts with lower case).

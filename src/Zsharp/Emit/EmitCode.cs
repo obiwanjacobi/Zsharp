@@ -196,14 +196,10 @@ namespace Zsharp.Emit
             => new EmitExpression(Context).VisitExpression(expression);
 
         public override void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
-        {
-            Context.ModuleClass.AddTypeEnum(enumType);
-        }
+            => Context.ModuleClass.AddTypeEnum(enumType);
 
         public override void VisitTypeDefinitionStruct(AstTypeDefinitionStruct structType)
-        {
-            Context.ModuleClass.AddTypeStruct(structType);
-        }
+            => Context.ModuleClass.AddTypeStruct(structType);
 
         public void SaveAs(string filePath)
         {

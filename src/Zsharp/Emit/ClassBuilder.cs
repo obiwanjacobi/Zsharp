@@ -36,9 +36,7 @@ namespace Zsharp.Emit
         }
 
         public bool HasField(string name)
-        {
-            return _typeDefinition.Fields.Any(f => f.Name == name);
-        }
+            => _typeDefinition.Fields.Any(f => f.Name == name);
 
         public FieldDefinition GetField(string name)
         {
@@ -121,9 +119,7 @@ namespace Zsharp.Emit
         }
 
         private TypeDefinition CreateType(string ns, string typeName, TypeAttributes typeAttributes, TypeReference? baseType = null)
-        {
-            return CreateType(_context.Module, ns, typeName, typeAttributes, baseType);
-        }
+            => CreateType(_context.Module, ns, typeName, typeAttributes, baseType);
 
         private static TypeDefinition CreateType(ModuleDefinition moduleDefinition,
             string ns, string typeName, TypeAttributes typeAttributes, TypeReference? baseType = null)

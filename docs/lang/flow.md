@@ -123,14 +123,17 @@ Loop with lambda?
 Loop with Function?
 
 ```csharp
-loop [0..10]
+loop n in [0..10]
     (n) => log("Now at {n}.`n")
 
 loop [0..10]
     LogInt
+
+// short syntax?
+loop [0..10] -> LogInt
 ```
 
-> TBD Functional loops. Pas in a function or a lambda as a loop body.
+> TBD Functional loops. Pass in a function or a lambda as a loop body.
 
 ---
 
@@ -158,6 +161,20 @@ loop                  // loop #1
         do_other_stuff_here
         if true
             break     // this will exit loop #2
+```
+
+> Let `break` break out of a scope in general - not a loop specifically. This would require `if` statement scopes to be ignored?
+
+```csharp
+c = 0
+[c]     // capture scope
+    x = c * 42
+    if x = 0
+        break
+    // not executed when x = 0
+
+// back to root scope
+c = 42
 ```
 
 ---
@@ -206,11 +223,23 @@ fn: (p: U8): U8
     if p == 0 => exit()     // abort program
     c: U8
     loop n in [0..p]
-        if p == 42 => exit(iter)    // continue
-        if p == 101 => exit(loop)   // break
+        if n == 42 => exit(iter)    // continue
+        if n == 101 => exit(loop)   // break
         c += 1
 
     exit(fn) c  // return c
 ```
 
 > use `leave` instead of `exit`?
+
+---
+
+> TBD: a way to continue or break a specific outer loop in case of nested loops - or - specifying `exit()` with a variable / symbol name that identifies the instance of what to exit
+
+```csharp
+fn: (p: U8)
+    lp1: loop n in [0..p]   // label the loop?
+        loop i in [0..9]
+            if n + i == 42 => exit(n)       // continue
+            if n + i == 101 => exit(lp1)    // break outer
+```

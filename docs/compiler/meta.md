@@ -123,7 +123,7 @@ m = MyStruct
         "field: {f.name} of type {f.type.name}"
 
 #! compTimeFn(m)  // ok, call at compile time
-compTimeFn(m)     // error! cannot call a compile-time function at runtime. It is not in the binary.
+compTimeFn(m)     // ok, call at compile-time
 
 // normal runtime function included in the binary
 runtimeFn: <T>(m: T)
@@ -140,6 +140,8 @@ runtimeFn(m)      // call at runtime.
 
 > Some `#` compiler attributes may require the code to be `#!` compile time code. An example is the full `#type` information which is only available at compile time.
 
+Not true anymore for .NET.
+
 ## Type Information
 
 > This is not the case now we target .NET. However I think type info for structs should still be restricted. Only interface types should be available.
@@ -148,6 +150,35 @@ No type information is available at runtime other than the `#typeId` which can o
 
 Full type information is only available at compile time. Are there any scenarios that would really become a problem not having type info at runtime?
 
+### Type Traits
+
+> A characteristic that defines a specific behavior.
+
+- built-in traits
+- custom traits
+
+A lot of the `IsXxxx` properties on the .NET `Type` class are traits.
+
+```csharp
+fn: <T>()
+    // special syntax?
+    T::IsInteger
+    T::IsConstant
+    T::IsImmutable
+    // traits as common template functions
+    IsIntegral<T>()
+    IsConstant<T>()
+    IsImmutable<T>()
+
+// custom trait
+#! IsTrait: <T>(): Bool
+    ...
+```
+
+All traits are compile time functions.
+
+---
+
 ## Compiler Functions
 
 The compiler supplies a set of functions that allows interaction with- and modification of the generated code. There is also contextual information available for formatting diagnostic messages.
@@ -155,6 +186,7 @@ The compiler supplies a set of functions that allows interaction with- and modif
 | Function | Note
 |--|--
 | line() | the current source code line number
+| col() | the current source code column number
 | file() | the current source code file name
 | module() | the current module the source code is part of
 | name() | the name of current function or type being compiled

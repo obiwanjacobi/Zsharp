@@ -147,3 +147,9 @@ with t
 with MyType(42)
     .MyFn("blabla")
 ```
+
+---
+
+> use Lazy\<T> .NET type as is?
+
+> Use Nullable\<T> as is?

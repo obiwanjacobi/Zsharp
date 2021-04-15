@@ -1,1 +1,1 @@
-fn<U8>(42)
+s: Struct<Array<U8>>

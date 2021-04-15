@@ -9,30 +9,28 @@ v = 42
 x = 24
 
 a = match v
-    0 =>        // by literal numerical value
-    "" =>       // by literal string value
-    x =>        // by variable value
-    n: U8 =>    // by type (with var name)
-    Str =>      // by type (without var name)
-    s: MyStruct ? s.fld1 = 20 =>  // by type with filter
-    o: OtherStruct { fld1: 42, fld2: "42" } => // by (property) prototype
-    _ =>        // default (ignore) case
+    0 ->        // by literal numerical value
+    "" ->       // by literal string value
+    x ->        // by variable value
+    n: U8 ->    // by type (with var name)
+    Str ->      // by type (without var name)
+    s: MyStruct ? s.fld1 = 20 ->  // by type with filter
+    o: OtherStruct { fld1: 42, fld2: "42" } -> // by (property) prototype
+    _ ->        // default (ignore) case
 ```
 
 > Can the chosen variable names inside the match expression shadow those in the outer code? For instance if variable `x` is used in the outer code, can it be used inside the match as `x: U8`?
 
-The syntax continues after the `=>` which contains the result of the expression when that specific pattern matched.
-
-> Note: the `=>` syntax is still 'to be determined'. Use same as lambda?
+The syntax continues after the `->` which contains the result of the expression when that specific pattern matched.
 
 ```csharp
 s = "42"
 a = match s
-    "" => "Empty"   // use '=>' or ->?
+    "" -> "Empty"
     "0"             // use indent-solves multiple lines
         "Zero"
-    s: Str => s
-    _ => ""
+    s: Str -> s
+    _ -> ""
 ```
 
 This example results in `"The Answer"` based on the string `"42"`:
@@ -41,10 +39,10 @@ This example results in `"The Answer"` based on the string `"42"`:
 s = "42"
 
 a = match s
-    "" => "Empty"
-    "0" => "Zero"
-    "42" => "The Answer"    // this pattern will be chosen
-    _ => ""
+    "" -> "Empty"
+    "0" -> "Zero"
+    "42" -> "The Answer"    // this pattern will be chosen
+    _ -> ""
 
 // a = "The Answer (Str)
 ```
@@ -55,8 +53,8 @@ a = match s
 o: Opt<U8>  // nothing
 
 a = match o
-    ?? => "Nothing"
-    _ => o.Str()
+    ?? -> "Nothing"
+    _ -> o.Str()
 ```
 
 When more comprehensive logic is required to compute the result a function can be called to yield that result.
@@ -70,9 +68,9 @@ s = MyStruct
     field1 = 12
 
 a = match s
-    n: U8 => make42(n)
-    x: MyStruct ? x.field1 = 12 => 42
-    x: MyStruct => 0
+    n: U8 -> make42(n)
+    x: MyStruct ? x.field1 = 12 -> 42
+    x: MyStruct -> 0
 
 // a = 42 (U8)
 ```
@@ -82,9 +80,9 @@ a = match s
 ```csharp
 a = 42
 s = match a
-    < 10 => "Smaller than 10"                   // `<` operator
-    >= 10 and <= 100 => "between 10 and 100"    // logical and
-    > 100 "bigger than 100"                     // `>` operator
+    < 10 -> "Smaller than 10"                   // `<` operator
+    >= 10 and =< 100 -> "between 10 and 100"    // logical and
+    > 100 -> "bigger than 100"                     // `>` operator
     // don't need an _ case, we've covered all numbers
 ```
 
@@ -102,10 +100,10 @@ Patterns for values and patterns for types can be used at the same time. Type ma
 
 ```csharp
 r = match list
-    [] => 0     // match empty list (array syntax)
-    () => 0     // match empty list (tuple syntax)
-    (x) => x    // match list with one item.
-    (x, ...lst) => recurse(lst) + x    // recursive sum function
+    [] -> 0     // match empty list (array syntax)
+    () -> 0     // match empty list (tuple syntax)
+    (x) -> x    // match list with one item.
+    (x, ...lst) -> recurse(lst) + x    // recursive sum function
 ```
 
 ---
@@ -116,18 +114,18 @@ Replace the `match` keyword with `is` to align other pattern matching constructi
 
 ```C#
 a = s is
-    n: U8 => make42(n)
-    x: MyStruct ? x.field1 = 12 => 42
-    x: MyStruct => 0
+    n: U8 -> make42(n)
+    x: MyStruct ? x.field1 = 12 -> 42
+    x: MyStruct -> 0
 
 a = 42
 s = a is
-    < 10 => "Smaller than 10"                   // `<` operator
-    >= 10 and <= 100 => "between 10 and 100"    // logical and
-    > 100 "bigger than 100"                     // `>` operator
+    < 10 =-> "Smaller than 10"                   // `<` operator
+    >= 10 and <= 100 -> "between 10 and 100"    // logical and
+    > 100 -> "bigger than 100"                     // `>` operator
 
 // boolean result
-b = c is (>= 'a' and <= 'z') or (>= 'A' and <= 'Z')
+b = c is (>= 'a' and =< 'z') or (>= 'A' and =< 'Z')
 ```
 
 ? How to separate between pattern matching conditional expressions (bool) and selecting a matching case (switch)?

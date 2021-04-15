@@ -24,7 +24,7 @@ Arithmetic, bitwise and logical operators.
 | `>` | IsGreaterThan | Greater than
 | `<` | IsLesserThan | Smaller than
 | `>=` | IsGreaterEqual | Greater or Equal
-| `<=` | IsLesserEqual | Smaller or Equal (`=<`?)
+| `=<` | IsLesserEqual | Smaller or Equal
 | `? :` | - | Ternary Conditional
 | `and` | LogicAnd | Logical And
 | `or` | LogicOr | Logical Or
@@ -66,9 +66,7 @@ Arithmetic, bitwise and logical operators.
 | `??=` | Optional variable conditional assignment
 | `#` | Pragma / Attribute Access
 | `#!` | Compile-Time Code
-| `=>` | Line continuation (instead of indent)
-
-> TBD: `=>` should perhaps be `->` so we can use `=>` for some 'assignment' variant? Currently `=>` is used in Lambdas.
+| `->` | Line continuation (instead of indent)
 
 > Are there others like conditional assignment `??=`?
 
@@ -89,7 +87,7 @@ Arithmetic, bitwise and logical operators.
 |---|---
 | `\` | reserved
 | `$` | reserved
-| `->` | Alternate function return type (confusing in combination with `=>`)
+| `=>` | used in mapping / some sort of (forward) assignment?
 | `<=` | map structure (also arithmetic) / assign struct properties
 | `()` | Function Object operator
 | `|>` | Parameter pipe?

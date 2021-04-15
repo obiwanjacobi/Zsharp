@@ -1,5 +1,7 @@
 # Pointers
 
+> In light of moving to .NET the Pointer concept may be retired. It no longer refers to an actual (unsafe) pointer and make the difference between value and reference type even more vague.
+
 ## Pointer Types
 
 The template type `Ptr<T>` is used to represent a pointer.

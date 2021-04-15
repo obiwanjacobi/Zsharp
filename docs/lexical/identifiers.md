@@ -11,8 +11,6 @@ Identifiers name program entities such as variable, functions and types. These n
 - Can contain alpha-numeric characters.
 - Valid characters lie in the ASCII range (no unicode).
 
-> TBD: Is there a practical reason not to allow special characters or even names that only consist of special characters (as custom operators)?
-
 Here are examples of valid identifiers:
 
 ```C#
@@ -30,6 +28,10 @@ my-type
 ```
 
 > TBD: I don't see any objection to add '`-`' (minus sign) as a valid character for an identifier...? Or start an identifier with a digit? The parser should be able to match that correctly.
+
+> TBD: Is there a practical reason not to allow special characters or even names that only consist of special characters (as custom operators)?
+
+> TBD: Specifically allowing `.` in an identifier could provide some flexibility for applying namespaces within a module. It could also be used to separate name parts with a non-optional character (`_` is an optional character).
 
 ## Case Sensitivity
 

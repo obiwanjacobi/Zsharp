@@ -116,11 +116,14 @@ templateFn: <S, T, R>(s: S, p: T): R
 // try partial ? => Error
 r = templateFn<U16, U8>(42, 101)    // unclear what types are specified
 
-// parameters inferred, return type specified?
+// parameters inferred, return type specified? Error?
 r = templateFn<U16>(42, 101)
 
-// specified explicitly
+// ok, specified explicitly
 r = templateFn<U8, U8, U16>(42, 101)
+
+// ok, parameters and return type inferred
+r: U16 = templateFn(42, 101)
 ```
 
 ### Non-Type Template Parameters
@@ -133,6 +136,22 @@ FixedArray<T, count: U8>
     arr: Array<T>(count)
 ```
 
+We also allow function pointers to be specified as template parameters.
+
+```csharp
+call<fn: Fn<(I32): I32>>(p: I32)
+    return fn(p)
+
+negate: (i: I32): I32
+    ...
+absolute: (i: I32): I32
+    ...
+
+a = 42
+b = call<negate>(a)     // -42
+c = call<absolute>(a)   // 42
+```
+
 ### Code Template Parameters (inlining)
 
 Have a code block be substituted for a template parameter.
@@ -142,9 +161,9 @@ The goal is to insert code into a template that is compiled as a new whole.
 
 ```csharp
 // takes a void-function with an U8 param 'as code' (#)
-repeatFn: <#Fn<Void, U8>>(c: U8)
+repeat: <fn: #Fn<Void, U8>>(c: U8)
     loop n in [0..c]
-        #T(n)           // <= syntax to be determined
+        fn(n)           // <= syntax to be determined
 
 // use #! to not emit the fn in the binary
 #! doThisFn: (p: U8)

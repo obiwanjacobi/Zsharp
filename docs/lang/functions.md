@@ -6,7 +6,7 @@ A program starts when its entry point (main) function is called.
 
 A function has a name that identifies it uniquely. See [Identifiers](../lexical/identifiers.md).
 
-It is also distinguished by the use of parenthesis `()` when declared or called. Even when the function takes no arguments, the caller still uses the '()' to mark it as function.
+It is also distinguished by the use of parenthesis `()` when declared or called. Even when the function takes no arguments, the caller still uses the '()' to mark it as function (-perhaps not).
 
 ```C#
 MyFunction: ()        // function declaration
@@ -40,7 +40,7 @@ functionName: InterfaceName [captures]<template>(parameters): returnType
 
 `(parameters)`: (optional) By-value parameters the function acts on. Comma separated.
 
-`returnType`: (optional) The Type of the function result.
+`returnType`: (optional) The Type of the function result. `Void` if not specified.
 
 ```csharp
 // not showing implementation
@@ -73,8 +73,8 @@ fn: InterfaceName [c.Ptr()]<T>(p: T): Bool
 Make the function syntax more like variable syntax? => Use an `=` to 'assign' the implementation to the function name.
 
 ```csharp
-// single line, without return, use =>
-isFortyTwo: (p: U8): Bool => p = 42
+// single line, without return, use ->
+isFortyTwo: (p: U8): Bool -> p = 42
 
 // multi line, with indent and return, use =
 isFortyTwo: (p: U8): Bool =
@@ -106,6 +106,17 @@ byref(v.Ptr())            // call with ptr to value
 
 Allow function overloads with some sort of special syntax for literal values?
 
+Function Pointer as function argument syntax:
+
+```csharp
+filter: (predicate: (p: U8): Bool)
+    ...
+filter: (predicate: Fn<(p: U8): Bool>)
+    ...
+filter: (predicate: Fn<U8, Bool>)
+    ...
+```
+
 ### Optional Parameters
 
 Optional function parameters can be specified using the optional symbol `?`.
@@ -115,6 +126,22 @@ hasParam: (p: U8?): Bool
     return p ? true : false
     return p    // error! implicit cast not allowed
     return p?   // but there is a special syntax
+```
+
+> TBD: cancel calling a function when parameter is not available?
+
+```csharp
+fn: (p: U8)
+    ...
+
+v: Opt<U8>  // not set
+
+fn(v?)      // do not call function if v is not set.
+?fn(v)
+
+// shorthand for
+if v?
+    fn(v)
 ```
 
 ### Default Parameter Values
@@ -281,13 +308,15 @@ The true purpose is to not have to distinct between function with or without a r
 
 ## Function Overloads
 
-Function overloading means that there are multiple functions with the same name but different parameter (or return) types.
+Function overloading means that there are multiple functions with the same name but different parameter (or return) types. The compiler picks the best fit for what overloaded function is actually called.
 
 But in Z#, only type-bound functions can the `self` parameter be used to overload the function name. The type of `self` is the only thing allowed to change for functions with the same name.
 
 > Not sure if this is actually required. More that resolvement will only be based on the self parameter's Type.
 
-> Would be a problem for interop with existing .NET code.
+> Would be a problem for interop with existing .NET code. Not having these restrictions makes interacting with existing .NET code a lot less hassle.
+
+> Would also obstruct partial function application.
 
 Give all other functions a unique name.
 
@@ -296,10 +325,6 @@ fn(self: Struct1, p: U8)
 fn(self: Struct2, p: U8)
 fn(self: Struct1)  // error
 ```
-
-> Thinking of supporting at least compile time overload resolvement. 
-
-This makes interacting with existing .NET code a lot less hassle.
 
 One exception to this rule are the Type Constructor functions. See Also [Types](./types.md).
 
@@ -320,6 +345,7 @@ A recursive function is a function that (eventually) calls itself.
 #recursive                  // pragma
 recurseFn: @(p: U8): U8     // syntax (on Type)
 @recurseFn: (p: U8): U8     // syntax (on Name)
+rec recurseFn: (p: U8): U8     // syntax keyword
         // exit condition here...
         return recurseFn(p)     // no extra syntax on call
 ```
@@ -327,6 +353,37 @@ recurseFn: @(p: U8): U8     // syntax (on Type)
 > What if multiple functions are involved in the recursion? All should be marked?
 
 > What happens to captures in a recursive function?
+
+---
+
+## Function Aliases
+
+A new name can be assigned to an existing function, called an alias.
+
+```csharp
+fn: (p: U8)
+    ...
+aliasFn= fn
+
+// calls fn(42)
+aliasFn(42)
+```
+
+Aliases are syntactic sugar and are resolved at compile time.
+
+The alias syntax is also used for function composition. In that case the function body of the composite function  (alias) is not compiled into code but used as a composition template.
+
+```csharp
+fn: (p: U8, s: Str)
+    ...
+
+// alias with body => composition
+fnPartial= (p: Str)
+    fn(42, p)
+
+// calls fn(42, "42")
+fnPartial("42")
+```
 
 ---
 
@@ -440,9 +497,81 @@ fnStruct: (self: Struct1) = fn(self.fld1)
 
 > TBD: How would that work?
 
-Type resolution is based on the type of the instance (self). If there is no function available for the (more) specialized type, its parent (derived) type is used. If no function is available at all it is an error.
+Type resolution is based on the type of the instance (self). If there is no function available for the (more) specialized type, its parent (derived) type is used. If no function is available at all it is an error. This is compile-time resolution of polymorphism.
 
-> To have polymorphism, overload resolution needs to take place at runtime. .NET uses method tables linked to the (type of) instance of the object. We lack that explicit relation and we would need a dispatch function that determines the instance type and knows what functions to call on it. We could compile these self-bound functions into an object member representation in .NET, though...
+We could also have a template that would select the correct type of function to be called at compile-time. Several options exist.
+
+> To have 'real' polymorphism, overload resolution needs to take place at runtime. .NET uses method tables linked to the (type of) instance of the object. We lack that explicit relation and we would need a dispatch function that determines the instance type and knows what functions to call on it. We could compile these self-bound functions into an object member representation in .NET, though...
+
+Manual polymorphism would make the call based on a specific list of functions.
+
+> How would you reference functions with the same name but different `self` types...?
+
+```csharp
+fn: (self: Struct1)
+    ...
+fn: (self: Struct2)
+    ...
+fn: (self: Struct3)
+    ...
+
+s = Struct2
+    ...
+
+// invented syntax for
+// - naming a function with different self types
+// - a functional operator to choose 'fn' from the list
+(fn:<Struct1>, fn:<Struct2>, fn:<Struct3>) >>? s.fn()
+// would call: 'fn: (self: Struct2)'
+
+// have a dedicated function for selecting the correct fn to call
+Visit(s, (fn:<Struct1>, fn:<Struct2>, fn:<Struct3>))
+```
+
+If `fn: (Struct2)` was not in the list, resolution would proceed based on how these structs were derived.
+
+This resolution takes place at run-time. That also allows the function list to be built up dynamically.
+
+---
+
+### Function Object
+
+A function object is where an object can be called as a function with the `()` operator.
+
+```csharp
+Struct1
+    fld1: U8
+    fld2: Str
+
+s = Struct1
+    ....
+
+s()     // how??
+
+// normal function tagged as object function
+{#ObjectFunction}
+fn: (self: Struct1)
+    ...
+
+// special '()' operator impl.
+(): (self: Struct1)
+    ...
+FunctionCall: (self: Struct1)   // or operator by name
+    ...
+```
+
+---
+
+## Type Constructor and Conversion Functions
+
+A function with the same name as a (struct) type is considered a Type Constructor function. A conversion function is considered a variation of a type construction function.
+
+The return type of the function is the type being constructed. A Type constructor or conversion function can have any number of parameters of any type including the type being constructed (which makes it a copy-constructor).
+
+If both the return type as well as the first parameter type are the same and immutable, the constructor function will be called whenever the 'with' syntax (not the context variables) is encountered for that immutable type. See [Immutable Types](types.md#Immutable-Types).
+If multiple overloads exist, standard overload reolution is applied to choose the correct function to call.
+
+More information on [Type Constructors](types.md#Type-Constructors) and [Conversions](conversions.md).
 
 ---
 
@@ -504,17 +633,17 @@ ForEach<T>(self: Array<T>, fn: Act<T, U8>)
 // ptr to fn will work
 arr.ForEach(myCallback)
 // like match, but different (no capture)
-arr.ForEach((v, i) => log("At {i}: {v}"))
+arr.ForEach((v, i) -> log("At {i}: {v}"))
 ```
 
 ```csharp
 CallBack: (p: U8) _
-Call: (fn: Ptr<Callback>)
+Call: (fn: Ptr<Callback>)   // without Ptr<T>?
     ...
 
 sum: U16
 // capture by-ref (ptr)
-Call([sum.Ptr()](p) => sum() = sum() + p)
+Call([sum.Ptr()](p) -> sum() = sum() + p)
 // use indent to allow multiple lines
 Call([sum.Ptr()](p)
     sum() = sum() + p
@@ -532,7 +661,7 @@ import
 // Fn => (): Void
 l = List<Fn>(10)
 loop c in [0, 10]
-    l.Add([c]() => Print(c))
+    l.Add([c]() -> Print(c))
 for fn in l
     fn();   // what does it print?
 ```
@@ -546,7 +675,7 @@ for fn in l
 ```JS
 return
     {
-        fn1 = () => blabla
+        fn1 = () -> blabla
     };
 ```
 
@@ -609,6 +738,18 @@ loop [0..3]
 ```
 
 > Do we implement co-routines with capture that captures the parameters -so the can't change between calls- and maintains its execution state...?
+
+Coroutines should be lazily evaluated. This should work and only execute the code inside the while loop when the next call to the coroutine is made.
+
+```csharp
+allInts: (): Int32
+    i = 0
+    while i < Int32#max
+        yield i
+        i += 1
+```
+
+The state of the function is captured (closure) specific for each call-site.
 
 ---
 
@@ -680,7 +821,7 @@ sideEffect: [globalVar.Ptr()](p: Ptr<Imm<U8>>)
 pureFn: (x: U8, y: U8): U16
 ```
 
-A higher order function is a function that returns another function.
+A higher order function is a function that takes or returns another function (or both).
 
 ```csharp
 // a function that returns a function
@@ -716,6 +857,23 @@ fn: (p1: U8, p2: Str): Fn<(U8): U8>
         return p2.U8() + p1
     return internalFn
 ```
+
+> TBD: a syntax that allows function composition in a way that inlined at compile time. Basically a template function with functional template parameters.
+
+```csharp
+fn: (p: U8, s: Str)
+    ...
+// use alias syntax on composed function
+compFn= (p: U8)
+    fn(p, "42")
+
+// call composite function
+compFn(42)
+// actual code compiled:
+// fn(42, "42")
+```
+
+> Can you take a reference/pointer to a composite function? If you do, you create an actual function stub with the composition compiled.
 
 ---
 
@@ -830,6 +988,8 @@ Captures also may be used as a synchronization mechanism for shared data. At the
 
 In case of a mutable capture, it's value is written back to the original storage when the block of code is completed.
 
+That would also suggest that capture blocks themselves could be multi-threading / execute separately from other parts of the function if the dependencies would allow it. Not sure if this 'feature' would be desirable for it would make reasoning about the code harder.
+
 > How do we allow to opt-in for all these different capture behaviors?
 
 > We do need a mechanism to handle conflicts when writing back captured data? Or is this managed by using the correct Data type wrapper (`Atom<T>`)?
@@ -900,9 +1060,107 @@ inStream =| yourName
 
 ---
 
-What about (.NET) async-await?
+## Operator Functions
 
-Futures / Promises?
+All operators are implemented as functions. The operator is an alias for the actual function.
+
+> Will the compiler supply standard implementation for common operators on custom types? (C++ spaceship operator)
+
+> Value based equivalence out of the box for custom types?
+
+All operator functions will be tested by the compiler if they confirm to the correct operator rules.
+
+For more information refer to [Lexical Operators](../lexical/operators.md).
+
+### Custom operators
+
+> Can custom operators be implemented?
+
+```csharp
+// '.>>.' is the operator. () used to escape the chars.
+(.>>.): <T>(left: T, right: T): T
+    ...
+```
+
+---
+
+## Compile-time Functions
+
+Allows the function call and execution to take place only at compile time. The function will not be part of the binary.
+
+```csharp
+// #! => compile time function (not in binary)
+#! compileTimeFn: (): U8
+    return 42
+
+// use
+a = compileTimeFn()
+// results in (in binary)
+a = 42
+```
+
+See also [Compile-Time Code](../compiler/meta.md#Compile-Time-Code)
+
+---
+
+## Generator Functions
+
+A function that can be called to generate simple string based code at compile time. Use extensions to generate code using the compiler AST.
+
+```csharp
+#! genFn: <#T>(c: U8)    // as template
+    // use '#' to indicate use of a template param
+    // use a special '#<<' syntax?
+    #<< Stub#T : #T
+    loop c
+        #<<     fld#c: Str
+    // or a compiler pragma?
+    #gen Stub#T : #T
+    loop c
+        #gen     fld#c: Str
+    
+    // implicit return value?
+
+// function returns generated text?
+txt = genFn<MyStruct>(2)
+// StubMyStruct : MyStruct
+//     fld1: Str
+//     fld2: Str
+```
+
+---
+
+## Asynchronous Functions
+
+> .NET compatibility for async/await.
+
+Closures / Futures / Promises?
+
+```csharp
+// same async/await keywords as in C#?
+// Use .NET Task<T>
+async fnAsync: (): Task<U8>
+    x = await workAsync()
+    return x + 42
+
+// async is implicit by using await?
+// should be ok
+fnAsync: (): Task<U8>
+    x = await workAsync()
+    return x + 42
+
+// await is implicit by using async?
+// nah - not enough control
+async fnAsync: (): Task<U8>
+    x = workAsync()
+    return x + 42
+
+// multiple tasks parallel
+fnAsync: (): Task<U8>
+    t1 = work1Async()
+    t2 = work2Async()
+    return await t1 + await t2
+```
 
 ---
 
@@ -955,14 +1213,11 @@ Perhaps a 'service' function type uses this principle but calls it a 'message' (
 - simulate properties? thru type-bound functions?
 Get\<T> / Set\<T> / Notify\<T> / Watch\<T[]>
 
-- tag interrupt service routines (for analysis - volatile) as a simplified interface?
-functions that do not return?
-
-- intrinsic functions (operator implementations) - extensions?
+- extensions on intrinsic functions (operator implementations)?
 
 - inline functions?
 
-- top-level function calls/one-time initialization at first access of module.
+- top-level function calls/one-time initialization at first access of module (static constructor).
 
 - How to define the entry point of a program? (Main)
 Decorator? Fixed Name?
@@ -972,9 +1227,11 @@ Decorator? Fixed Name?
 declarative code: see if we can find a syntax that would make it easy to call lots of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
 https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md
 
+> not having to use `()` on function calls with one parameter could be a help here.
+
 ---
 
-Allow functions that have no literal implementation but a generator is called during compilation to supply the implementation. Works with decorators and weak functions references?
+Allow functions that have no literal implementation but a generator is called during compilation to supply the implementation. Works with decorators and weak functions references? (Same as Roslyn Source Generators)
 
 ```csharp
 {FnGenerator}

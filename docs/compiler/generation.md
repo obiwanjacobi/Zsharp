@@ -10,3 +10,5 @@ You could even generate binary data.
 - Multiple strings or files can be generated.
 - Comparison if generated (file) content has changed.
 - Extend generated code with custom file content (partial).
+
+Use a special (compile-time) syntax to output strings? (think razor engine and T4 and the like)

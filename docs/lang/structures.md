@@ -270,6 +270,7 @@ anoStructFn: (s: Record)    // other name for struct?
 anoStructFn: (s: {U8, Str}) // tuple like
 anoStructFn: (s: (U8, Str)) // not an object, => definition
 // What about the tuple field names?
+anoStructFn: (s: (number: U8, name: Str))
 ```
 
 Or repeat the struct fields...
@@ -379,4 +380,10 @@ MapStruct1Struct2: Transform<Struct1, Struct2>
     #Struct1 <=> #Struct2
 ```
 
-If no mapping rule structure is defined the field names are matched on a 1:1 basis in both directions.
+If no mapping rule structure is defined the field names are matched on a 1:1 basis in both directions using [Identifier](..\lexical\identifiers.md) name matching rules.
+
+---
+
+> TBD
+
+- Allow YAML to be used inline for declaring hierarchical data? Not sure how to separate the YAML syntax from the Z# syntax.

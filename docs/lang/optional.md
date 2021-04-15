@@ -68,3 +68,9 @@ s = MyStruct
 
 o = s.f1?.f1?.f2  // first non-value optional will stop navigation of path, result in _
 ```
+
+> It is not recommended to use optional in general data structures because it does not clarify WHEN that data will or will not be available.
+
+---
+
+Adding or removing optional to an existing declaration is a breaking change, when at a logical level it should be considered a compatible change in most cases... How could we fix that?

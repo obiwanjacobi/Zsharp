@@ -211,7 +211,9 @@ We are simply calling a dedicated constructor function with the literal value.
 
 There is an easy way to create data types to differentiate data at a type level. By using different types the purpose of the data become even more clear.
 
-> Only simple data types can used as base type.
+The idea here that you can define the information your application deals with without any context. These information definitions can be combined to form larger concepts (e.g. Person).
+
+> Only simple data types can used as base type. ?Is this still needed? Why?
 
 ```csharp
 Age: U8 _           // no rules
@@ -461,6 +463,8 @@ Err<T>: T or Error _
 
 `Ptr` is discussed in more detail [here](pointers.md).
 
+> Can we supply a hash code on Immutable types automatically?
+
 ### Operators
 
 ```csharp
@@ -505,6 +509,26 @@ s2 = s <= { fld1 = 42 }     // special operator3
 > TBD: type validation after construction? This is a general issue...
 
 In all these cases the period of time that the new instance is mutable (when a new instance is created and the old and the new values are copied in) is managed by the compiler and shielded from the developer.
+
+A Custom Constructor Function for these immutable types has to take a partial type parameter.
+
+```csharp
+MyStruct
+    fld1: U8
+    fld2: Str
+
+// normal constructor function
+MyStruct: (p1: U8, p2: Str): MyStruct
+    ...
+
+// all fields optional
+MyStructOpt : Opt<MyStruct>
+
+MyStruct: (Imm<MyStruct> self, Imm<MyStructOpt> change): Imm<MyStruct>
+    ...
+```
+
+If no custom constructor is defined for these immutable object manipulations, the compiler will generate one that performs the merging of `self` and the `change`s into a new instance.
 
 ## Type Alias
 
@@ -689,6 +713,8 @@ MyReadOnlyStruct: ^MyStruct
 // fld2: ^U16
 ```
 
+Using `Imm<T>` and `Opt<T>` on the base type applies to all fields.
+
 Make an instance read-only:
 
 ```csharp
@@ -711,6 +737,36 @@ o.fld1 = _        // field is 'nulled'
 
 //-or-  cast will convert
 o: MyOptionalStruct = s
+```
+
+There can be special syntax for manipulating instances of (for instance) optional types and their fields?
+
+```csharp
+MyStruct
+    fld1: U8
+    fld2: Str
+
+MyStructOpt : Opt<MyStruct>
+
+s = MyStruct
+    fld1 = 42
+    fld2 = "101"
+
+o = MyStructOpt
+    fld2 = "42"     // partial init
+
+x = s + o
+// x => MyStruct
+// x.fld1 = 42
+// x.fld2 = "42"
+
+p = MyStructOpt
+    fld1 = 101     // partial init
+
+y = o + p
+// y => MyStructOpt
+// y.fld1 = 101
+// y.fld2 = "42"
 ```
 
 ---
@@ -905,15 +961,7 @@ v = match a
 // v => U8!
 ```
 
----
-
-## Variant Type
-
-> Do we need a variant type?
-
-A storage type that contains a type indication of the data.
-
-See also Union/Constrained Variant Types.
+> TODO: check C++ std::any
 
 ---
 

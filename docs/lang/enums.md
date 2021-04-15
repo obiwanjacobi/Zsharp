@@ -134,4 +134,29 @@ MyFunc(opt2)    // MyEnum.opt2
 MyFunc(.opt2)   // MyEnum.opt2
 ```
 
+If `opt2` is ambiguous the type needs to be specified to resolve it.
+
 ---
+
+> Have validation functions on Enums to verify if values are in range. In .NET any (casted) integer is valid for an Enum.
+
+> For .NET interop on enum base types that are not supported by .NET a (record) class is generated with the options as static fields (and a private constructor).
+
+```csharp
+// C#
+public  // if exported
+sealed class MyEnum : IEquatable<MyEnum>, IComparable<MyEnum>
+{
+    private readonly string _value;
+    private MyEnum(string value)
+        => _value = value;
+
+    public static MyEnum opt1 = new MyEnum("opt1");
+    public static MyEnum opt2 = new MyEnum("opt2");
+
+    public static implicit operator string(MyEnum myEnum)
+        => myEnum._value;
+    
+    // IEquatable, IComparable implementation
+}
+```

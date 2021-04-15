@@ -3,10 +3,9 @@
     public class AstFunctionDefinitionIntrinsic : AstFunctionDefinition
     {
         public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic selfParameter, AstTypeDefinitionIntrinsic toReturn)
+            : this(typeIdentifier, toReturn)
         {
-            SetIdentifier(typeIdentifier);
             SetSelfParameter(selfParameter);
-            SetTypeReference(toReturn);
         }
 
         public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic toReturn)

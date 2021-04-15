@@ -226,9 +226,7 @@ namespace Zsharp.Semantics
             {
                 if (function.FunctionDefinition == null)
                 {
-                    var success = function.TryResolve();
-
-                    if (!success)
+                    if (!function.TryResolve())
                     {
                         if (function.IsTemplate)
                         {
