@@ -1,7 +1,7 @@
 ﻿using System;
 using Zsharp.AST;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public class EmitExpression : AstVisitor
     {

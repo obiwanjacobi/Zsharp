@@ -1,7 +1,7 @@
 ﻿using Mono.Cecil;
 using System;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public class DotNet
     {

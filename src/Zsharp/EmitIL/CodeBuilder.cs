@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public class CodeBuilder
     {

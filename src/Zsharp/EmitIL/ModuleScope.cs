@@ -1,4 +1,4 @@
-﻿namespace Zsharp.Emit
+﻿namespace Zsharp.EmitIL
 {
     public sealed class ModuleScope : Scope
     {

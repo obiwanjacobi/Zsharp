@@ -5,7 +5,7 @@ using System.Linq;
 using Zsharp.AST;
 using Zsharp.Semantics;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public sealed class ClassBuilder : IDisposable
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Zsharp.Emit;
+using Zsharp.EmitIL;
 
 namespace Zsharp.Dgml
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public abstract class Scope : IDisposable
     {

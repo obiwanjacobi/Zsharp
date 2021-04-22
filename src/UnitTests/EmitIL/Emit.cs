@@ -5,10 +5,10 @@ using System.Linq;
 using System.Reflection;
 using Zsharp;
 using Zsharp.AST;
-using Zsharp.Emit;
+using Zsharp.EmitIL;
 using Zsharp.Semantics;
 
-namespace UnitTests.Emit
+namespace UnitTests.EmitIL
 {
     internal static class Emit
     {

@@ -1,6 +1,6 @@
 ﻿using Mono.Cecil;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public sealed class FunctionScope : Scope
     {

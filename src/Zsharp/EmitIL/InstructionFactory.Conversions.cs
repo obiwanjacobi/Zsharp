@@ -1,6 +1,6 @@
 ﻿using Mono.Cecil.Cil;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     partial class InstructionFactory
     {

@@ -3,7 +3,7 @@ using Mono.Cecil.Cil;
 using System;
 using System.Collections.Generic;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public partial class InstructionFactory
     {

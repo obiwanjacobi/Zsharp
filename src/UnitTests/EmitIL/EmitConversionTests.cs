@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using Zsharp.Emit;
+using Zsharp.EmitIL;
 
-namespace UnitTests.Emit
+namespace UnitTests.EmitIL
 {
     [TestClass]
     public class EmitConversionTests

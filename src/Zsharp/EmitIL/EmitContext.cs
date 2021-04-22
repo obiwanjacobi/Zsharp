@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Zsharp.AST;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public sealed partial class EmitContext
     {

@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using Zsharp.AST;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public class EmitCode : AstVisitor
     {

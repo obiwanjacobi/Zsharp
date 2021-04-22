@@ -2,7 +2,7 @@
 using Mono.Collections.Generic;
 using System.Linq;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     public static class CecilExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Zsharp.AST;
 
-namespace Zsharp.Emit
+namespace Zsharp.EmitIL
 {
     // hard-coded compiler intrinsic function implementations
     internal sealed class EmitIntrinsic : EmitExpression
