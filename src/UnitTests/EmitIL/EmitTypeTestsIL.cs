@@ -5,7 +5,7 @@ using Zsharp.EmitIL;
 namespace UnitTests.EmitIL
 {
     [TestClass]
-    public class EmitTypeTests
+    public class EmitTypeTestsIL
     {
         [TestMethod]
         public void TypeEnum()

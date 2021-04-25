@@ -5,7 +5,7 @@ using Zsharp.EmitIL;
 namespace UnitTests.EmitIL
 {
     [TestClass]
-    public class EmitModuleTests
+    public class EmitModuleTestsIL
     {
         [TestMethod]
         public void AssemblyModule()

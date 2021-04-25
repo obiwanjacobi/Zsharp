@@ -148,6 +148,9 @@ namespace Zsharp.AST
             return FindEntry(identifierSite.Identifier!.CanonicalName, kind);
         }
 
+        public IEnumerable<AstSymbolEntry> FindEntries(AstSymbolKind symbolKind)
+            => _table.Values.Where(s => s.SymbolKind == symbolKind);
+
         internal void Delete(AstSymbolEntry symbolEntry)
         {
             _table.Remove(symbolEntry.Key);

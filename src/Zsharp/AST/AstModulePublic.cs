@@ -5,7 +5,8 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstModulePublic : AstModule
+    public class AstModulePublic : AstModule,
+        IAstSymbolEntrySite
     {
         private readonly List<Statement_moduleContext> _contexts = new();
         private readonly List<Statement_exportContext> _exports = new();
@@ -25,7 +26,7 @@ namespace Zsharp.AST
         {
             if (moduleCtx != null)
             {
-                Ast.Guard(Name == moduleCtx.module_name().GetText(), "Not the same module.");
+                Ast.Guard(Identifier.Name == moduleCtx.module_name().GetText(), "Not the same module.");
                 _contexts.Add(moduleCtx);
             }
         }
@@ -55,5 +56,19 @@ namespace Zsharp.AST
                 file.Accept(visitor);
             }
         }
+
+        private AstSymbolEntry? _symbol;
+        public AstSymbolEntry? Symbol => _symbol;
+
+        public bool TrySetSymbol(AstSymbolEntry symbolEntry)
+            => Ast.SafeSet(ref _symbol, symbolEntry);
+
+        public void SetSymbol(AstSymbolEntry symbolEntry)
+        {
+            if (!TrySetSymbol(symbolEntry))
+                throw new InvalidOperationException("Symbol is already set or null.");
+        }
+
+        public virtual bool TryResolve() => true;
     }
 }

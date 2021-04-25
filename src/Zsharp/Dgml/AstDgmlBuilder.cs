@@ -30,7 +30,7 @@ namespace Zsharp.Dgml
             var module = (AstModule)(file.Parent);
             if (module != null)
             {
-                moduleName = module.Name;
+                moduleName = module.Identifier.Name;
             }
 
             var node = CreateNode(moduleName, file.NodeType);

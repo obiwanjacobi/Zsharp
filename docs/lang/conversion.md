@@ -61,5 +61,28 @@ o: Opt<U8>
 v = o       // error: o could be nothing
 
 // without checking first
-if o => v = o
+if o? => v = o
+```
+
+## Expressions
+
+```csharp
+// error: expression type > U8
+v: U8 = 1000 / 200
+
+// ok, converted
+v: U8 = U8(1000 / 200)
+
+// TBD: alternate syntax
+v: U8 = (1000 / 200).U8()
+```
+
+----
+
+## Try Convert
+
+Return type is an `Opt<T>` of the target type.
+
+```csharp
+TryTargetType(self: SourceType, ...): TargetType?
 ```

@@ -83,7 +83,11 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_module(Statement_moduleContext context)
         {
-            _builderContext.CompilerContext.Modules.AddModule(context);
+            var module = _builderContext.CompilerContext.Modules.AddModule(context);
+
+            var symbolTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            symbolTable.Symbols.Add(module);
+
             return base.VisitChildren(context);
         }
 
@@ -110,7 +114,7 @@ namespace Zsharp.AST
                 if (entry == null)
                 {
                     _builderContext.CompilerContext.AddError(module, context,
-                        $"Symbol '{dotName.Symbol}' was not found in Module '{module.Name}'.");
+                        $"Symbol '{dotName.Symbol}' was not found in Module '{module.Identifier.Name}'.");
                     return null;
                 }
 
@@ -124,7 +128,7 @@ namespace Zsharp.AST
             }
             else
             {
-                var entry = symbols.AddSymbol(module.Name, AstSymbolKind.Module, module);
+                var entry = symbols.AddSymbol(module.Identifier.Name, AstSymbolKind.Module, module);
                 entry.SymbolLocality = AstSymbolLocality.Imported;
             }
             return null;

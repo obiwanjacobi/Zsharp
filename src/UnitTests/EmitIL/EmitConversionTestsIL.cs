@@ -6,7 +6,7 @@ using Zsharp.EmitIL;
 namespace UnitTests.EmitIL
 {
     [TestClass]
-    public class EmitConversionTests
+    public class EmitConversionTestsIL
     {
         [TestMethod]
         public void Conversion()

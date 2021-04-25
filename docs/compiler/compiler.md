@@ -48,3 +48,7 @@
 > TBD: Compiler reports each 'issue' based on config. A compiler-profile can make an 'issue' a warning or error etc.
 
 > TBD: Macros/meta programming based on AST of compiler.
+
+---
+
+> TBD: Compile (transpile) to C# and use the Roslyn compiler to get to IL. This would save a lot of work and we would get the benefits of a real compiler, something I cannot hope to better.

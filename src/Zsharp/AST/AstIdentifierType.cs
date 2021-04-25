@@ -3,6 +3,7 @@
     public enum AstIdentifierType
     {
         Unknown,
+        Module,
         Type,
         Variable,
         Parameter,

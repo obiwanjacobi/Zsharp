@@ -230,9 +230,6 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-
-            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
-
             var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
             entry.SymbolKind.Should().Be(AstSymbolKind.Field);
             // make sure we get the reference, not the definition

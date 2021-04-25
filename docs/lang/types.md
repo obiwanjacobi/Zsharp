@@ -320,7 +320,26 @@ Length: I16
 > overload/override value setter (assignment operator?) to do custom validation? Can this code be generated at compile-time by the compiler?
 
 > Physical units problem. Can we use Custom Data Types to define a physical units library? Example: `acceleration = speed * time-squared` (composition?). Also `1000m = 1km` (prefixes on dimensions)
-Units (m) with value(quantity)-scope (minutes), scaled units (km)
+Units (m) with value(quantity)-scope (minutes), scaled units (km). Perhaps we call these Semantic Types and will have a value, a scale and a unit...?
+
+```csharp
+// these mappings could also be enums?
+ScaleKilo:
+    #1000 => kilo
+    #100 => hecto
+    #10 => deca
+    #0.1 => deci
+    #0.001 => milli
+    #0.000001 => micro
+UnitMeter:
+    #m => meter
+MeterValue: SemanticType<ScaleKilo, UnitMeter>
+
+scale: (val: MeterValue, scale: ScaleKilo): MeterValue
+    ...
+
+// ??
+```
 
 ### Literal Values
 

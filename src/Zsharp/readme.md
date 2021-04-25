@@ -29,12 +29,15 @@
     Lambda's?
 - TypeReferences of built-in types are added to root SymbolTable that contains definition.
     Need to see if this is a problem when multiple files are compiled using the same root symbol table.
+- Namespace on AstSymbolEntry is wrong for imported module functions. 
+    It should be the name of the external module but is the name of the local symbol table it is refered in.
+- Add AssemblyManager to ExternalModuleLoader to hide Cecil implementation use.
 
 ---
 
 ## Optimizations
 
-- Struct field init is always done using a secondary instance - not always necessary (ctor).
+- [IL] Struct field init is always done using a secondary instance - not always necessary (ctor).
 
 ## Resources
 

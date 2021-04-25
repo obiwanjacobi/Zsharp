@@ -18,7 +18,7 @@ namespace Zsharp.EmitIL
         {
             if (Context == null)
             {
-                Context = EmitContext.Create(module.Name);
+                Context = EmitContext.Create(module.Identifier.Name);
             }
 
             using var scope = Context.AddModule(module);

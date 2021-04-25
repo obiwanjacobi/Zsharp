@@ -55,6 +55,12 @@ For Custom Data Types like `MyType: U8` where a struct derives from a native Typ
 
 ## TODO
 
+First problem is the .NET Reference and Value Types. Although initially Z# aimed to favor structs as value types, it might be a good idea to implement struct as C# records, that is reference types with value semantics.
+
+Related to this is Z#'s notion of the `Ptr<T>` wrapper type. I cannot see a good way to manage object references per variable reference when .NET attaches this semantic to the (reference) type. A variable to a reference type cannot ever not-be a reference (pointer). A value type can be passed by reference though.
+
+The second problem is error handling. Z# has no support for exceptions (as of yet) and translating that to method based error handling on function return values is problematic. We may be forced to support exception and try-catch-finally.
+
 - expressions
 - error handling (exceptions/Error/Err\<T>)
 - defer
@@ -64,7 +70,7 @@ For Custom Data Types like `MyType: U8` where a struct derives from a native Typ
 - Bit\<n>
 - Ptr\<T>
 - Range/Iter/Slice (Span\<T>)
-- Union Types may be difficult
+- Union Types may be difficult (OneOf library on github?)
 - name/identifier matching and representation (case insensitive)
 - Memory Heap Allocation. Could be as simple as a wrapper `class HeapAlloc<T> where T : struct` to get a struct on the heap. Look into Boxing. There only need to be a (simple) way to indicate a heap target.
 

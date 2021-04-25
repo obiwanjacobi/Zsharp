@@ -42,7 +42,7 @@ namespace UnitTests.AST
             var builder = new AstBuilder(context);
             builder.Build(Parser.ParseFile(code), "UnitTests");
             var mod = context.Modules.Modules.First();
-            mod.Name.Should().Be("mymod");
+            mod.Identifier.Name.Should().Be("mymod");
         }
 
         [TestMethod]

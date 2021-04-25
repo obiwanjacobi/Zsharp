@@ -6,7 +6,7 @@ using Zsharp.EmitIL;
 namespace UnitTests.EmitIL
 {
     [TestClass]
-    public class EmitBranchTests
+    public class EmitBranchTestsIL
     {
         [TestMethod]
         public void BranchIfTrue()

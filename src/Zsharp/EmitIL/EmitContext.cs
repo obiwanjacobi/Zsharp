@@ -69,8 +69,8 @@ namespace Zsharp.EmitIL
 
         public IDisposable AddModule(AstModulePublic module)
         {
-            if (Module.Types.Find(module.Name) != null)
-                throw new ArgumentException($"ModuleClass for {module.Name} already exists.");
+            if (Module.Types.Find(module.Identifier.Name) != null)
+                throw new ArgumentException($"ModuleClass for {module.Identifier.Name} already exists.");
             if (Scopes.Count > 0)
                 throw new InvalidOperationException("A Module must be added first.");
 

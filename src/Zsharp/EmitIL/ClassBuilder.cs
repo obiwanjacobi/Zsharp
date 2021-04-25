@@ -22,7 +22,7 @@ namespace Zsharp.EmitIL
         public static ClassBuilder Create(EmitContext context, AstModulePublic module)
         {
             var typeDef = CreateType(
-                context.Module, context.Module.Name, module.Name, ToTypeAttributes(module));
+                context.Module, context.Module.Name, module.Identifier.Name, ToTypeAttributes(module));
             context.Module.Types.Add(typeDef);
             return new ClassBuilder(context, typeDef);
         }

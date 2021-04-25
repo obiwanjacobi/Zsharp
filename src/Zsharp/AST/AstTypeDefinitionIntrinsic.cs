@@ -6,7 +6,7 @@ namespace Zsharp.AST
     public class AstTypeDefinitionIntrinsic : AstTypeDefinition,
         IAstTemplateSite
     {
-        public AstTypeDefinitionIntrinsic(AstIdentifier identifier, Type? systemType,
+        public AstTypeDefinitionIntrinsic(AstIdentifier identifier, Type systemType,
             AstTemplateParameterDefinition? templateParameter = null, bool isUnsigned = false)
             : base(identifier)
         {
@@ -21,7 +21,7 @@ namespace Zsharp.AST
 
         public override bool IsUnsigned { get; }
 
-        public Type? SystemType { get; private set; }
+        public Type SystemType { get; private set; }
 
         public static readonly AstTypeDefinitionIntrinsic U8 = new(AstIdentifierIntrinsic.U8, typeof(Byte), isUnsigned: true);
         public static readonly AstTypeDefinitionIntrinsic U16 = new(AstIdentifierIntrinsic.U16, typeof(UInt16), isUnsigned: true);

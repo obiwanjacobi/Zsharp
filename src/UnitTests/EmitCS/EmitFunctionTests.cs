@@ -1,13 +1,30 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using Zsharp.EmitIL;
+using System;
+using System.IO;
+using Zsharp.AST;
+using Zsharp.EmitCS;
+using Emit = UnitTests.EmitCS.Emit;
 
-namespace UnitTests.EmitIL
+namespace UnitTests.EmitCs
 {
     [TestClass]
     public class EmitFunctionTests
     {
+        private static EmitCode RunEmit(string code, string testName, IAstModuleLoader moduleLoader = null)
+        {
+            var emit = Emit.Create(code, moduleLoader);
+
+            emit.SaveAs($@".\{testName}\{testName}.cs");
+
+            Console.WriteLine(emit.ToString());
+
+            var targetPath = Emit.Build(testName);
+
+            File.Exists(targetPath).Should().BeTrue();
+            return emit;
+        }
+
         [TestMethod]
         public void Function()
         {
@@ -17,14 +34,7 @@ namespace UnitTests.EmitIL
                 Tokens.Indent1 + "return" + Tokens.NewLine
                 ;
 
-            var emit = Emit.Create(code);
-
-            var moduleClass = emit.Context.Module.Types.Find("test");
-            var fn = moduleClass.Methods.First();
-            fn.Name.Should().Be("fn");
-            fn.Body.Instructions.Should().HaveCount(1);
-
-            emit.SaveAs("Function.dll");
+            RunEmit(code, "Function");
         }
 
         [TestMethod]
@@ -32,18 +42,11 @@ namespace UnitTests.EmitIL
         {
             const string code =
                 "module test" + Tokens.NewLine +
-                "fn: (p: U8)" + Tokens.NewLine +
+                "fn: (p: I32)" + Tokens.NewLine +
                 Tokens.Indent1 + "fn(p + 1)" + Tokens.NewLine
                 ;
 
-            var emit = Emit.Create(code);
-
-            var moduleClass = emit.Context.Module.Types.Find("test");
-            var fn = moduleClass.Methods.First();
-            fn.Name.Should().Be("fn");
-            fn.Body.Instructions.Should().HaveCount(5);
-
-            emit.SaveAs("FunctionCallParameter.dll");
+            RunEmit(code, "FunctionCallParameter");
         }
 
         [TestMethod]
@@ -56,11 +59,10 @@ namespace UnitTests.EmitIL
                 Tokens.Indent1 + "Print(\"Hello Z# World\")" + Tokens.NewLine
                 ;
 
-            var moduleLoader = Emit.CreateModuleLoader();
-            var emit = Emit.Create(code, moduleLoader);
-            emit.Should().NotBeNull();
+            // TODO: the name space of the imported System.Console.WriteLine is wrong.
 
-            emit.SaveAs("ExternalFunctionCallParameterAlias_Run.dll");
+            var moduleLoader = Emit.CreateModuleLoader();
+            RunEmit(code, "ExternalFunctionCallParameterAlias_Run", moduleLoader);
 
             Emit.InvokeStatic("ExternalFunctionCallParameterAlias_Run", "EmitCodeTests", "Main");
         }
@@ -76,10 +78,7 @@ namespace UnitTests.EmitIL
                 ;
 
             var moduleLoader = Emit.CreateModuleLoader();
-            var emit = Emit.Create(code, moduleLoader);
-            emit.Should().NotBeNull();
-
-            emit.SaveAs("ExternalFunctionCallParameter_Run.dll");
+            RunEmit(code, "ExternalFunctionCallParameter_Run", moduleLoader);
 
             Emit.InvokeStatic("ExternalFunctionCallParameter_Run", "EmitCodeTests", "Main");
         }
@@ -95,10 +94,6 @@ namespace UnitTests.EmitIL
 
             var emit = Emit.Create(code);
 
-            var moduleClass = emit.Context.Module.Types.Find("test");
-            var fn = moduleClass.Methods.First();
-            fn.Name.Should().Be("fn");
-            fn.Body.Instructions.Should().HaveCount(4);
 
             emit.SaveAs("FunctionCallParameterReturn.dll");
         }
@@ -116,6 +111,7 @@ namespace UnitTests.EmitIL
                 ;
 
             var emit = Emit.Create(code, Emit.CreateModuleLoader());
+
             emit.SaveAs("FunctionCallResult_Run.dll");
 
             Emit.InvokeStatic("FunctionCallResult_Run", "test", "Main");
