@@ -1,17 +1,19 @@
-﻿namespace Zsharp.AST
+﻿using System.Linq;
+
+namespace Zsharp.AST
 {
     public class AstFunctionDefinitionIntrinsic : AstFunctionDefinition
     {
-        public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic selfParameter, AstTypeDefinitionIntrinsic toReturn)
-            : this(typeIdentifier, toReturn)
-        {
-            SetSelfParameter(selfParameter);
-        }
-
         public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic toReturn)
         {
             SetIdentifier(typeIdentifier);
             SetTypeReference(toReturn);
+        }
+
+        public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic selfParameter, AstTypeDefinitionIntrinsic toReturn)
+            : this(typeIdentifier, toReturn)
+        {
+            SetSelfParameter(selfParameter);
         }
 
         public void AddParameter(string name, AstTypeDefinition astType)
@@ -22,6 +24,7 @@
 
         public void SetSelfParameter(AstTypeDefinitionIntrinsic type)
         {
+            Ast.Guard(!Parameters.Any(), "A Self parameter has to be first.");
             var parameter = new AstFunctionParameterDefinition(AstIdentifierIntrinsic.Self);
             parameter.SetTypeReference(AstTypeReference.From(type));
             AddParameter(parameter);
@@ -59,6 +62,6 @@
             => SetTypeReference(AstTypeReference.From(type));
 
         public override void Accept(AstVisitor visitor)
-            => throw new System.NotImplementedException("Must not Visit Intrinsic Function Definition.");
+            => throw new System.InvalidOperationException("Must not Visit Intrinsic Function Definition.");
     }
 }

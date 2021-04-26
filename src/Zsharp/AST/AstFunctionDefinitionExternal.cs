@@ -2,10 +2,10 @@
 
 namespace Zsharp.AST
 {
-    public class AstFunctionExternal : AstFunctionDefinition,
+    public class AstFunctionDefinitionExternal : AstFunctionDefinition,
         IAstExternalNameSite
     {
-        public AstFunctionExternal(MethodDefinition method, bool hasSelfParameter)
+        public AstFunctionDefinitionExternal(MethodDefinition method, bool hasSelfParameter)
         {
             MethodDefinition = method;
             HasSelfParameter = hasSelfParameter;

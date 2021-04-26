@@ -47,7 +47,7 @@ namespace Zsharp.AST
             }
         }
 
-        public void AddFunction(AstFunctionExternal function)
+        public void AddFunction(AstFunctionDefinitionExternal function)
         {
             var entry = Symbols.Add(function);
             entry.SymbolLocality = AstSymbolLocality.Imported;

@@ -41,7 +41,19 @@ namespace Zsharp.AST
         public string Source { get; set; }
 
         private (int Line, int Column)? _location;
-        public (int Line, int Column) Location => _location ?? (Context!.Start.Line, Context.Start.Column + 1);
+        public (int Line, int Column) Location
+        {
+            get
+            {
+                if (_location != null)
+                    return _location.Value;
+
+                if (Context != null)
+                    return (Context.Start.Line, Context.Start.Column + 1);
+
+                return (0, 0);
+            }
+        }
 
         public Exception? Error => Context?.exception;
 

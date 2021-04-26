@@ -32,7 +32,8 @@ namespace Zsharp.AST
             _typeOrigin = typeOrigin;
         }
 
-        public AstTypeDefinition? TypeDefinition => Symbol?.DefinitionAs<AstTypeDefinition>();
+        public AstTypeDefinition? TypeDefinition
+            => Symbol?.DefinitionAs<AstTypeDefinition>();
 
         public bool IsOptional { get; protected set; }
 

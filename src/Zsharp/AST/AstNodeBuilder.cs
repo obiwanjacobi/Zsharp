@@ -184,6 +184,17 @@ namespace Zsharp.AST
             _ = VisitChildrenExcept(context, identifier, templateParams);
             _builderContext.RevertCurrent();
 
+            if (function.TypeReference == null)
+            {
+                var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
+                function.SetTypeReference(typeRef);
+
+                var typeName = typeRef.Identifier.CanonicalName;
+                var entry = symbolTable.Symbols.FindEntry(typeName, AstSymbolKind.Type);
+                if (entry == null)
+                    entry = symbolTable.AddSymbol(typeName, AstSymbolKind.Type, typeRef);
+                typeRef.SetSymbol(entry);
+            }
             return function;
         }
 

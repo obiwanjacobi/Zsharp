@@ -108,10 +108,13 @@ namespace Zsharp.EmitCS
 
                 if (astType is AstTypeDefinitionIntrinsic typeDef)
                 {
-                    return typeDef.SystemType.FullName;
+                    if (typeDef.SystemType != null)
+                        return typeDef.SystemType.FullName;
+
+                    return "void";
                 }
 
-                return astType.Identifier!.CanonicalName;
+                return astType!.Identifier!.CanonicalName;
             }
             return "void";
         }

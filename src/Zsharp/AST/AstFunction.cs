@@ -68,7 +68,7 @@ namespace Zsharp.AST
         }
 
         public string OverloadKey =>
-            String.Join(String.Empty, _parameters.Select(p => p.TypeReference.Identifier.CanonicalName));
+            String.Join(String.Empty, _parameters.Select(p => p.TypeReference?.Identifier?.CanonicalName));
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;

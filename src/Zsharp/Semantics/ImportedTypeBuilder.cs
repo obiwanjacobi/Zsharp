@@ -9,7 +9,7 @@ namespace Zsharp.Semantics
 {
     public class ImportedTypeBuilder
     {
-        private readonly List<AstFunctionExternal> _functions = new();
+        private readonly List<AstFunctionDefinitionExternal> _functions = new();
         private readonly Dictionary<string, string> _aliases = new();
         private readonly ExternalTypeRepository _typeRepository;
 
@@ -44,7 +44,7 @@ namespace Zsharp.Semantics
 
         public AstTypeDefinitionExternal? StructType { get; private set; }
 
-        public IEnumerable<AstFunctionExternal> Functions => _functions;
+        public IEnumerable<AstFunctionDefinitionExternal> Functions => _functions;
 
         public IEnumerable<KeyValuePair<string, string>> Aliases => _aliases;
 
@@ -111,9 +111,9 @@ namespace Zsharp.Semantics
                 typeDefinition.Methods.Any(m => !m.IsStatic && m.IsPublic);
         }
 
-        private AstFunctionExternal CreateFunction(MethodDefinition method)
+        private AstFunctionDefinitionExternal CreateFunction(MethodDefinition method)
         {
-            var function = new AstFunctionExternal(method, !method.IsStatic);
+            var function = new AstFunctionDefinitionExternal(method, !method.IsStatic);
             // TODO: get_/set_ and .ctor handling
             function.SetIdentifier(new AstIdentifier(method.Name, AstIdentifierType.Function));
 

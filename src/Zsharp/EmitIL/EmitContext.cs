@@ -99,7 +99,7 @@ namespace Zsharp.EmitIL
 
         public MethodReference GetFunctionReference(AstFunctionDefinition function)
         {
-            if (function is AstFunctionExternal externalFunction)
+            if (function is AstFunctionDefinitionExternal externalFunction)
             {
                 return Module.ImportReference(externalFunction.MethodDefinition);
             }
