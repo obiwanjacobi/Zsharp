@@ -16,12 +16,12 @@ namespace Zsharp.Semantics
         public ImportedTypeBuilder(ExternalTypeRepository typeRepository)
         {
             _typeRepository = typeRepository;
-            Namespace = String.Empty;
+            ModuleName = String.Empty;
         }
 
         public void Build(TypeDefinition typeDefinition)
         {
-            Namespace = typeDefinition.Namespace;
+            ModuleName = typeDefinition.FullName;
 
             if (typeDefinition.IsEnum)
             {
@@ -40,13 +40,13 @@ namespace Zsharp.Semantics
                     $"No implementation for Type {typeDefinition.FullName}");
         }
 
+        public string ModuleName { get; private set; }
+
         public AstTypeDefinitionExternal? StructType { get; private set; }
 
         public IEnumerable<AstFunctionExternal> Functions => _functions;
 
         public IEnumerable<KeyValuePair<string, string>> Aliases => _aliases;
-
-        public string Namespace { get; internal set; }
 
         private void BuildEnum(TypeDefinition typeDefinition)
         {
@@ -60,15 +60,12 @@ namespace Zsharp.Semantics
 
         private void BuildClass(TypeDefinition typeDefinition)
         {
-            if (IsStructType(typeDefinition))
+            if (IsInstanceType(typeDefinition))
             {
-                StructType = new AstTypeDefinitionExternal(typeDefinition.Name,
+                StructType = new AstTypeDefinitionExternal(
+                    typeDefinition.Namespace,
+                    typeDefinition.Name,
                     _typeRepository.GetTypeReference(typeDefinition.BaseType));
-            }
-            else
-            {
-                // full name for static classes
-                Namespace = typeDefinition.FullName;
             }
 
             foreach (var methodGroup in typeDefinition.Methods
@@ -106,7 +103,7 @@ namespace Zsharp.Semantics
             }
         }
 
-        private bool IsStructType(TypeDefinition typeDefinition)
+        private bool IsInstanceType(TypeDefinition typeDefinition)
         {
             return
                 !(typeDefinition.IsAbstract && typeDefinition.IsSealed) &&
@@ -116,8 +113,9 @@ namespace Zsharp.Semantics
 
         private AstFunctionExternal CreateFunction(MethodDefinition method)
         {
-            var function = new AstFunctionExternal(method);
-            function.SetIdentifier(new AstIdentifierExternal(method.Name, AstIdentifierType.Function));
+            var function = new AstFunctionExternal(method, !method.IsStatic);
+            // TODO: get_/set_ and .ctor handling
+            function.SetIdentifier(new AstIdentifier(method.Name, AstIdentifierType.Function));
 
             // TODO: special Void handling
             var typeRef = _typeRepository.GetTypeReference(method.ReturnType);
@@ -132,7 +130,7 @@ namespace Zsharp.Semantics
 
             foreach (var p in method.Parameters)
             {
-                funcParam = CreateParameter(new AstIdentifierExternal(p.Name, AstIdentifierType.Parameter), p.ParameterType);
+                funcParam = CreateParameter(new AstIdentifier(p.Name, AstIdentifierType.Parameter), p.ParameterType);
                 function.TryAddParameter(funcParam);
             }
 

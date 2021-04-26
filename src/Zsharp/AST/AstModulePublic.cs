@@ -13,8 +13,10 @@ namespace Zsharp.AST
         private readonly List<AstFile> _files = new();
 
         public AstModulePublic(string moduleName)
-            : base(moduleName, AstModuleLocality.Public)
-        { }
+            : base(AstModuleLocality.Public)
+        {
+            SetIdentifier(new AstIdentifier(moduleName, AstIdentifierType.Module));
+        }
 
         public IEnumerable<AstFile> Files => _files;
 

@@ -14,8 +14,8 @@ namespace Zsharp.Semantics
             if (!_typeReferences.ContainsKey(key))
             {
                 var typeRef = new AstTypeReferenceExternal(typeReference);
-                typeRef.SetIdentifier(new AstIdentifierExternal(
-                    ToZsharpName(typeReference.Name), typeReference.Name, AstIdentifierType.Type));
+                typeRef.SetIdentifier(new AstIdentifier(
+                    ToZsharpName(typeReference.Name), AstIdentifierType.Type));
                 _typeReferences.Add(key, typeRef);
             }
 

@@ -88,14 +88,11 @@ namespace UnitTests.EmitCs
         {
             const string code =
                 "module test" + Tokens.NewLine +
-                "fn: (p: U8): U8" + Tokens.NewLine +
+                "fn: (p: I32): I32" + Tokens.NewLine +
                 Tokens.Indent1 + "return p + 1" + Tokens.NewLine
                 ;
 
-            var emit = Emit.Create(code);
-
-
-            emit.SaveAs("FunctionCallParameterReturn.dll");
+            RunEmit(code, "FunctionCallParameterReturn");
         }
 
         [TestMethod]
@@ -110,9 +107,8 @@ namespace UnitTests.EmitCs
                 Tokens.Indent1 + "WriteLine(fn())" + Tokens.NewLine
                 ;
 
-            var emit = Emit.Create(code, Emit.CreateModuleLoader());
-
-            emit.SaveAs("FunctionCallResult_Run.dll");
+            var moduleLoader = Emit.CreateModuleLoader();
+            RunEmit(code, "FunctionCallResult_Run", moduleLoader);
 
             Emit.InvokeStatic("FunctionCallResult_Run", "test", "Main");
         }

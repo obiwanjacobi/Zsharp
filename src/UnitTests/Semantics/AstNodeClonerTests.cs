@@ -234,7 +234,6 @@ namespace UnitTests.Semantics
             cloned.Context.Should().BeEquivalentTo(origin.Context);
 
             cloned.EnforceReturnValueUse.Should().Be(origin.EnforceReturnValueUse);
-            cloned.IsIntrinsic.Should().Be(origin.IsIntrinsic);
             cloned.OverloadKey.Should().Be(origin.OverloadKey);
             cloned.Parameters.Should().BeEquivalentTo(origin.Parameters);
 

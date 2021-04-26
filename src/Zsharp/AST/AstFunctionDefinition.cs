@@ -21,6 +21,10 @@ namespace Zsharp.AST
             return false;
         }
 
+        public virtual bool IsIntrinsic => false;
+
+        public virtual bool IsExternal => false;
+
         public override string? ToString()
         {
             var txt = new StringBuilder();

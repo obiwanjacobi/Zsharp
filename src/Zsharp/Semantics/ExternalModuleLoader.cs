@@ -40,11 +40,10 @@ namespace Zsharp.Semantics
             var builder = new ImportedTypeBuilder(_typeRepository);
             builder.Build(type);
 
-            var moduleName = builder.Namespace;
-            if (!_modules.TryGetValue(moduleName, out AstModuleExternal? module))
+            if (!_modules.TryGetValue(builder.ModuleName, out AstModuleExternal? module))
             {
-                module = new AstModuleExternal(moduleName);
-                _modules.Add(moduleName, module);
+                module = new AstModuleExternal(type.Namespace, builder.ModuleName);
+                _modules.Add(builder.ModuleName, module);
             }
 
             builder.AddTo(module);

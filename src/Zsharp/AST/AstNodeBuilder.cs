@@ -106,31 +106,14 @@ namespace Zsharp.AST
                 return null;
             }
 
-            var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
             if (!String.IsNullOrEmpty(alias))
             {
-                // lookup the symbol in the external module
-                var entry = module.Symbols.FindEntry(dotName.Symbol, AstSymbolKind.Unknown);
-                if (entry == null)
-                {
-                    _builderContext.CompilerContext.AddError(module, context,
-                        $"Symbol '{dotName.Symbol}' was not found in Module '{module.Identifier.Name}'.");
-                    return null;
-                }
-
-                if (entry.HasOverloads)
-                    entry = symbols.Symbols.AddSymbol(dotName.Symbol, entry.SymbolKind, entry.Overloads.ToArray());
-                else
-                    entry = symbols.Symbols.AddSymbol(dotName.Symbol, entry.SymbolKind, entry.Definition);
-
-                entry.SymbolLocality = AstSymbolLocality.Imported;
-                entry.AddAlias(alias);
+                module.AddAlias(dotName.Symbol, alias);
             }
-            else
-            {
-                var entry = symbols.AddSymbol(module.Identifier.Name, AstSymbolKind.Module, module);
-                entry.SymbolLocality = AstSymbolLocality.Imported;
-            }
+
+            var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            var entryMod = symbols.AddSymbol(module.Identifier.Name, AstSymbolKind.Module, module);
+            entryMod.SymbolLocality = AstSymbolLocality.Imported;
             return null;
         }
 

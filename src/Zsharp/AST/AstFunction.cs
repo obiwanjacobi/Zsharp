@@ -20,8 +20,6 @@ namespace Zsharp.AST
 
         public uint Indent { get; set; }
 
-        public virtual bool IsIntrinsic => false;
-
         public IEnumerable<ParamT> Parameters => _parameters;
 
         public bool TryAddParameter(ParamT param)

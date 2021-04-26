@@ -133,6 +133,7 @@ namespace Zsharp.EmitCS
         {
             WriteIndent();
             _writer.Write(branch.ToCode());
+            _writer.Write(" ");
         }
 
         /// <summary>

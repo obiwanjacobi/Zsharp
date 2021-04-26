@@ -2,17 +2,24 @@
 
 namespace Zsharp.AST
 {
-    public class AstFunctionExternal : AstFunctionDefinition
+    public class AstFunctionExternal : AstFunctionDefinition,
+        IAstExternalNameSite
     {
-        public AstFunctionExternal(MethodDefinition method)
+        public AstFunctionExternal(MethodDefinition method, bool hasSelfParameter)
         {
             MethodDefinition = method;
-            HasSelfParameter = !method.IsStatic;
+            HasSelfParameter = hasSelfParameter;
+            ExternalName = new AstExternalName(
+                method.DeclaringType.Namespace, method.Name, method.DeclaringType.Name);
         }
 
-        public MethodDefinition MethodDefinition { get; }
+        internal MethodDefinition MethodDefinition { get; }
+
+        public override bool IsExternal => true;
 
         public bool HasSelfParameter { get; }
+
+        public AstExternalName ExternalName { get; }
 
         public override void Accept(AstVisitor visitor)
         {

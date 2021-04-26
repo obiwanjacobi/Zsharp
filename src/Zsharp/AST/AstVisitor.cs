@@ -107,11 +107,6 @@ namespace Zsharp.AST
             VisitChildren(type);
         }
 
-        public virtual void VisitTypeDefinitionExternal(AstTypeDefinitionExternal external)
-        {
-            VisitChildren(external);
-        }
-
         public virtual void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
         {
             VisitChildren(enumType);

@@ -1,19 +1,23 @@
 ﻿namespace Zsharp.AST
 {
-    public class AstTypeDefinitionExternal : AstTypeDefinition
+    public class AstTypeDefinitionExternal : AstTypeDefinition,
+        IAstExternalNameSite
     {
-        public AstTypeDefinitionExternal(string typeName, AstTypeReference? baseType)
-            : base(new AstIdentifierExternal(typeName, AstIdentifierType.Type))
+        public AstTypeDefinitionExternal(string @namespace, string typeName, AstTypeReference? baseType)
+            : base(new AstIdentifier(typeName, AstIdentifierType.Type))
         {
+            ExternalName = new AstExternalName(@namespace, typeName);
             if (baseType != null)
                 SetBaseType(baseType);
         }
 
         public override bool IsExternal => true;
 
+        public AstExternalName ExternalName { get; }
+
         public override void Accept(AstVisitor visitor)
         {
-            visitor.VisitTypeDefinitionExternal(this);
+            // external types are not visited
         }
     }
 }

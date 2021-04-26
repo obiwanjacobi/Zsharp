@@ -9,8 +9,10 @@ namespace Zsharp.AST
         public AstTypeReferenceExternal(TypeReference typeReference)
         {
             _typeReference = typeReference;
-
+            ExternalName = new AstExternalName(typeReference.Namespace, typeReference.Name);
             IsOptional = typeReference.IsByReference;
         }
+
+        public AstExternalName ExternalName { get; }
     }
 }

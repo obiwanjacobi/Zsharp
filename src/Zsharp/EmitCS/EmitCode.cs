@@ -31,7 +31,15 @@ namespace Zsharp.EmitCS
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            Context.CodeBuilder.CsBuilder.Append($"{function.Identifier.CanonicalName}(");
+            var functionDef = function.FunctionDefinition;
+            var name = functionDef.Identifier.CanonicalName;
+
+            if (functionDef.IsExternal)
+            {
+                name = ((AstFunctionExternal)functionDef).ExternalName.FullName;
+            }
+
+            Context.CodeBuilder.CsBuilder.Append($"{name}(");
 
             VisitChildren(function);
 

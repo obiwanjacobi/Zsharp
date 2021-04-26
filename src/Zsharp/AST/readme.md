@@ -12,14 +12,14 @@ and symbol tables are organized in a hierarchy.
 
 Intrinsic Symbols
 |
--- Module Symbols
+-- File Symbols
     |
     -- Function Symbols
         |
         -- Code Block Symbols
 
 - Intrinsic Symbols contain the built-in compiler types and functions.
-- Module Symbols contain all the globals of a code module, including imported external symbols.
+- File Symbols contain all the globals of a code file, including imported external symbols.
 - Function Symbols contain all the symbols defined inside a function.
 - Code Block Symbols contain the symbols defined in a scope of code (inside a function).
 

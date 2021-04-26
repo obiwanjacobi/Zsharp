@@ -56,16 +56,7 @@ namespace Zsharp.EmitCS
 
             foreach (var module in modules)
             {
-                CsBuilder.Using(module.Identifier.Name);
-            }
-
-            // aliases
-            foreach (var entry in symbolTable.Entries)
-            {
-                foreach (var alias in entry.Aliases)
-                {
-                    CsBuilder.Using(entry.FullName, alias);
-                }
+                CsBuilder.Using(module.Namespace);
             }
         }
 

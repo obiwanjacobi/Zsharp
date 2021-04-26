@@ -32,6 +32,7 @@
 - Namespace on AstSymbolEntry is wrong for imported module functions. 
     It should be the name of the external module but is the name of the local symbol table it is refered in.
 - Add AssemblyManager to ExternalModuleLoader to hide Cecil implementation use.
+- TrySetIdentifier should check if IdentifierType matches AstNodeType.
 
 ---
 

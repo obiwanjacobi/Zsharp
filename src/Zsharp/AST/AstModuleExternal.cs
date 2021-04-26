@@ -5,12 +5,20 @@ namespace Zsharp.AST
     public class AstModuleExternal : AstModule
     {
         public AstModuleExternal(string moduleName)
-            : base(moduleName, AstModuleLocality.External)
+            : this(moduleName, moduleName)
+        { }
+
+        public AstModuleExternal(string ns, string moduleName)
+            : base(AstModuleLocality.External)
         {
+            Namespace = ns;
             Symbols = new AstSymbolTable(moduleName);
+            SetIdentifier(new AstIdentifier(moduleName, AstIdentifierType.Module));
         }
 
         public AstSymbolTable Symbols { get; }
+
+        public string Namespace { get; }
 
         public override void Accept(AstVisitor visitor)
         {
@@ -28,12 +36,14 @@ namespace Zsharp.AST
             if (!String.IsNullOrEmpty(symbol))
             {
                 var entry = Symbols.FindEntry(symbol, AstSymbolKind.Unknown);
-                entry.AddAlias(alias);
+                Ast.Guard(entry, $"No symbol for '{symbol}' was found in external module {Identifier.Name}.");
+                entry!.AddAlias(alias);
             }
             else
             {
                 // TODO: Module name alias
-                throw new NotSupportedException("Module Name aliases are not supported yet.");
+                throw new NotSupportedException(
+                    "Module Name aliases are not supported yet.");
             }
         }
 
