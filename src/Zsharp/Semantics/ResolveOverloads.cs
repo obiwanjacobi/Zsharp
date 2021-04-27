@@ -17,14 +17,18 @@ namespace Zsharp.Semantics
             if (function.Symbol!.FindOverloadDefinition(function) != null)
                 return;
 
-            var overloadDef = ResolveOverload(function);
-            if (overloadDef == null)
+            // intrinsic functions are handled during emit phase
+            if (!function.FunctionDefinition.IsIntrinsic)
             {
-                _errorSite.OverloadNotFound(function);
-                return;
-            }
+                var overloadDef = ResolveOverload(function);
+                if (overloadDef == null)
+                {
+                    _errorSite.OverloadNotFound(function);
+                    return;
+                }
 
-            function.Symbol.SetOverload(function, overloadDef);
+                function.Symbol.SetOverload(function, overloadDef);
+            }
         }
 
         private AstFunctionDefinition? ResolveOverload(AstFunctionReference function)

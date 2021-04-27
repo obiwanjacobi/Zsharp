@@ -10,6 +10,12 @@ namespace Zsharp.AST
             : base(context)
         { }
 
+        public AstTemplateParameterReference(AstTypeReference typeReference)
+            : base(null)
+        {
+            SetTypeReference(typeReference);
+        }
+
         private AstTypeReference? _typeReference;
         public AstTypeReference? TypeReference => _typeReference;
 
@@ -25,10 +31,10 @@ namespace Zsharp.AST
 
         public override bool TryResolve()
         {
-            // TODO: Cannot resolve a single Template Parameter.
-            // We need parent template (ref) context and
+            // TODO: We need parent template (ref) context and
             // check the template definition.
-            throw new InvalidOperationException();
+            throw new InvalidOperationException(
+                "Cannot resolve a single Template Parameter.");
         }
 
         public override void Accept(AstVisitor visitor)

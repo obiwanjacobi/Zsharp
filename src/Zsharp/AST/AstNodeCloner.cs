@@ -11,8 +11,8 @@ namespace Zsharp.AST
     public class AstNodeCloner : AstVisitor
     {
         private readonly AstBuilderContext _context;
-        private readonly Dictionary<string, string> _typeMap
-            = new Dictionary<string, string>();
+        private readonly Dictionary<string, AstTypeReference> _typeMap = new();
+        private readonly List<AstTypeReference> _typeList = new();
 
         public AstNodeCloner(CompilerContext context, uint indent = 0)
         {
@@ -69,8 +69,9 @@ namespace Zsharp.AST
 
                 _typeMap.Add(
                     defParam.Identifier.CanonicalName,
-                    refParam.TypeReference.Identifier.CanonicalName
+                    refParam.TypeReference
                 );
+                _typeList.Add(refParam.TypeReference);
             }
         }
 
@@ -391,13 +392,28 @@ namespace Zsharp.AST
         private AstTypeReference CloneTypeReference(AstTypeReference type)
         {
             AstTypeReference typeRef;
+            var symbols = _context.GetCurrent<IAstSymbolTableSite>();
 
-            if (_typeMap.TryGetValue(type.Identifier.CanonicalName, out string newTypeName))
+            if (_typeMap.TryGetValue(type.Identifier.CanonicalName, out AstTypeReference? newType))
             {
-                var symbols = _context.GetCurrent<IAstSymbolTableSite>();
-                var newSymbol = symbols.Symbols.FindEntry(newTypeName, AstSymbolKind.Type);
+                typeRef = newType.MakeProxy();
+            }
+            else if (type.TypeDefinition is IAstTemplateSite templateDef &&
+                templateDef.IsTemplate)
+            {
+                typeRef = AstTypeReference.From(type.TypeDefinition);
 
-                typeRef = AstTypeReference.From(newSymbol.DefinitionAs<AstTypeDefinition>());
+                foreach (AstTemplateParameterDefinition templParamDef in templateDef.TemplateParameters)
+                {
+                    if (_typeMap.TryGetValue(templParamDef.Identifier.CanonicalName, out AstTypeReference? paramType))
+                    {
+                        var templParam = new AstTemplateParameterReference(paramType.MakeProxy());
+                        typeRef.AddTemplateParameter(templParam);
+                    }
+                    else
+                        throw new ZsharpException(
+                            $"Template Parameter '{templParamDef.Identifier.Name}' could not be resolved.");
+                }
             }
             else
                 typeRef = type.MakeProxy();

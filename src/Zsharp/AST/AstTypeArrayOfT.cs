@@ -1,5 +1,6 @@
 ﻿namespace Zsharp.AST
 {
+    // Not used at the moment, probably not needed.
     public class AstTypeArrayOfT : AstTypeDefinition
     {
         AstTypeArrayOfT()

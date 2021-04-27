@@ -12,6 +12,8 @@ namespace Zsharp.AST
             Context = templateDefinition.Context;
         }
 
+        public override bool IsIntrinsic => TemplateDefinition.IsIntrinsic;
+
         public AstFunctionDefinition TemplateDefinition { get; }
 
         public override void Accept(AstVisitor visitor)
