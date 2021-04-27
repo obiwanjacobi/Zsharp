@@ -5,6 +5,9 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
+    /// <summary>
+    /// Clones templated code into an instantiation.
+    /// </summary>
     public class AstNodeCloner : AstVisitor
     {
         private readonly AstBuilderContext _context;
@@ -16,26 +19,32 @@ namespace Zsharp.AST
             _context = new AstBuilderContext(context, indent);
         }
 
-        public void Clone(AstFunctionReference functionRef, AstFunctionDefinition functionDef, AstTemplateInstanceFunction templateFunction)
+        public void Clone(AstFunctionReference functionRef,
+            AstFunctionDefinition templateFunctionDef, AstTemplateInstanceFunction instanceFunction)
         {
-            if (functionDef is AstFunctionDefinitionImpl functionDefImpl)
+            if (templateFunctionDef is AstFunctionDefinition functionDef)
             {
-                CreateTypeMap(functionRef, functionDefImpl);
+                CreateTypeMap(functionRef, functionDef);
 
-                _context.SetCurrent(templateFunction);
-                VisitChildren(functionDefImpl);
+                _context.SetCurrent(instanceFunction);
+                VisitChildren(functionDef);
                 _context.RevertCurrent();
 
-                templateFunction.SetIdentifier(functionRef.Identifier);
+                instanceFunction.SetIdentifier(functionRef.Identifier);
 
-                // use template def itself to access symbol-tree
-                var symbols = (IAstSymbolTableSite)functionDef;
-                templateFunction.CreateSymbols(symbols.Symbols);
-            }
-            else if (functionDef.IsIntrinsic)
-            {
-                throw new NotImplementedException(
-                    "Intrinsic Function not implemented yet.");
+                AstSymbolTable symbols;
+                if (templateFunctionDef is IAstSymbolTableSite symbolSite)
+                {
+                    // registered in impl function defs symbol table
+                    symbols = symbolSite.Symbols;
+                }
+                else
+                {
+                    // intrinsics are registered in root symbol table
+                    symbols = functionRef.Symbol!.SymbolTable.GetRootTable();
+                }
+
+                instanceFunction.CreateSymbols(symbols);
             }
             else
             {
@@ -44,11 +53,12 @@ namespace Zsharp.AST
             }
         }
 
-        private void CreateTypeMap(AstFunctionReference functionRef, AstFunctionDefinitionImpl functionDef)
+        private void CreateTypeMap(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
         {
             var defTemplateParams = functionDef.TemplateParameters.ToArray();
             var refTemplateParams = functionRef.TemplateParameters.ToArray();
 
+            // TODO: default template parameter values
             Ast.Guard(refTemplateParams.Length == defTemplateParams.Length,
                 "Inconsistent number of template parameters between definition and instantiation.");
 
@@ -66,7 +76,7 @@ namespace Zsharp.AST
 
         public T? Clone<T>(T node) where T : AstNode, IAstCodeBlockItem
         {
-            var cb = new AstCodeBlock("Test", _context.CompilerContext.IntrinsicSymbols);
+            var cb = new AstCodeBlock("Clone", _context.CompilerContext.IntrinsicSymbols);
             _context.SetCurrent(cb);
             Visit(node);
             _context.RevertCurrent();
@@ -130,8 +140,7 @@ namespace Zsharp.AST
                 _ => new AstFunctionParameterDefinition(parameter.Identifier)
             };
 
-            paramDef.SetIdentifier(parameter.Identifier);
-
+            paramDef.TrySetIdentifier(parameter.Identifier);
 
             var fnDef = _context.GetCurrent<AstFunctionDefinition>();
             fnDef.AddParameter(paramDef);

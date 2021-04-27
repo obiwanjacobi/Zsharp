@@ -4,6 +4,26 @@ namespace Zsharp.AST
 {
     public static class AstSymbolTableExtensions
     {
+        public static AstSymbolTable GetRootTable(this AstSymbolTable symbolTable)
+        {
+            var previousParent = symbolTable.ParentTable;
+            var parent = symbolTable;
+
+            if (previousParent == null)
+                throw new InvalidOperationException(
+                    "Don't call GetRootTable on the Intriniscs Table.");
+
+            while (parent != null)
+            {
+                previousParent = parent;
+                parent = parent.ParentTable;
+            }
+
+            // The real root contains the intrinsics
+            // we return the module/file symbol table
+            return previousParent;
+        }
+
         public static T? FindDefinition<T>(this AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
             where T : class
         {
