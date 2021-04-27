@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Zsharp.Semantics
+namespace Zsharp.External
 {
     public class AssemblyManager
     {

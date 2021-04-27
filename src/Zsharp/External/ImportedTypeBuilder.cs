@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Zsharp.AST;
 
-namespace Zsharp.Semantics
+namespace Zsharp.External
 {
     public class ImportedTypeBuilder
     {

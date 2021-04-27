@@ -2,7 +2,7 @@
 using System.Linq;
 using Zsharp;
 using Zsharp.AST;
-using Zsharp.Semantics;
+using Zsharp.External;
 
 namespace UnitTests.Semantics
 {
@@ -26,7 +26,7 @@ namespace UnitTests.Semantics
         {
             var compiler = new Compiler(moduleLoader ?? new ModuleLoader());
             var errors = compiler.Compile("UnitTests", "ResolveTypeTests", code);
-            
+
             errors.PrintErrors();
             errors.Should().BeEmpty();
 

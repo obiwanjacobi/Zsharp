@@ -6,7 +6,7 @@ using System.Reflection;
 using Zsharp;
 using Zsharp.AST;
 using Zsharp.EmitCS;
-using Zsharp.Semantics;
+using Zsharp.External;
 
 namespace UnitTests.EmitCS
 {

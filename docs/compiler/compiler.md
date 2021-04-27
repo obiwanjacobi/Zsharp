@@ -15,7 +15,7 @@
 
 > Compiler as Language Server (LSP)
 
-> Compiler as (remote) debugger. How to interface with the hardware? See also Z80 In-Circuit-Emulation (ICE).
+> Compiler as (remote) debugger.
 
 > Compiler as (remote) console. Coded/hashed errors are transmitted (Serial) to the compiler that can translate it into readable diagnostic text. This way the debug binary does not explode with debugging strings.
 

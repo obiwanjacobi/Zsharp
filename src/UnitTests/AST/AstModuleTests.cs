@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Zsharp.Semantics;
+using Zsharp.External;
 
 namespace UnitTests.AST
 {
