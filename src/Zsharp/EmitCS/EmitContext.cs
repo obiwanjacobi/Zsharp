@@ -84,39 +84,17 @@ namespace Zsharp.EmitCS
             if (Scopes.Count == 0)
                 throw new InvalidOperationException("A Module must be added first.");
 
-            var retType = GetCodeTypeName(function.TypeReference);
+            var retType = function.TypeReference.ToCode();
             var access = function.Symbol!.SymbolLocality == AstSymbolLocality.Exported ? AccessModifiers.Public : AccessModifiers.Private;
             var modifiers = MethodModifiers.Static;
             var parameters = function.Parameters
-                .Select(p => (name: p.Identifier!.CanonicalName, type: GetCodeTypeName(p.TypeReference)))
+                .Select(p => (name: p.Identifier!.CanonicalName, type: p.TypeReference.ToCode()))
                 .ToArray();
             var scope = new FunctionScope(this);
             scope.CodeBuilder.StartMethod(access, modifiers, retType, function.Identifier!.CanonicalName, parameters);
 
             Scopes.Push(scope);
             return scope;
-        }
-
-        public string GetCodeTypeName(AstType? astType)
-        {
-            if (astType != null)
-            {
-                if (astType is AstTypeReference typeRef)
-                {
-                    astType = typeRef.TypeDefinition;
-                }
-
-                if (astType is AstTypeDefinitionIntrinsic typeDef)
-                {
-                    if (typeDef.SystemType != null)
-                        return typeDef.SystemType.FullName;
-
-                    return "void";
-                }
-
-                return astType!.Identifier!.CanonicalName;
-            }
-            return "void";
         }
     }
 }

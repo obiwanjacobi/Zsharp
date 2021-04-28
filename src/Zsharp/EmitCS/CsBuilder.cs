@@ -65,13 +65,50 @@ namespace Zsharp.EmitCS
         /// <param name="access">Access modifiers</param>
         /// <param name="modifiers">Class modifiers</param>
         /// <param name="className">Class name</param>
-        /// <param name="baseNames">Base class and or interface names.</param>
+        /// <param name="baseNames">Base class and/or interface names.</param>
         public void StartClass(AccessModifiers access, ClassModifiers modifiers, string className, params string[]? baseNames)
         {
+            StartClass(access, modifiers, "class", className, baseNames);
+        }
+
+        /// <summary>
+        /// <paramref name="access"/> <paramref name="modifiers"/> record <paramref name="className"/> : <paramref name="baseNames"/>
+        /// {
+        /// </summary>
+        /// <param name="access">Access modifiers</param>
+        /// <param name="className">Class name</param>
+        /// <param name="baseNames">Base class and/or interface names.</param>
+        public void StartRecord(AccessModifiers access, string className, params string[]? baseNames)
+        {
+            StartClass(access, ClassModifiers.None, "record", className, baseNames);
+        }
+
+        private void StartClass(AccessModifiers access, ClassModifiers modifiers, string keyword, string className, params string[]? baseNames)
+        {
             WriteIndent();
-            _writer.Write($"{access.ToCode()} {modifiers.ToCode()} class {className}");
+            _writer.Write($"{access.ToCode()} {modifiers.ToCode()} {keyword} {className}");
             if (baseNames != null && baseNames.Length > 0)
                 _writer.Write($" : {String.Join(", ", baseNames)}");
+            _writer.WriteLine();
+            WriteIndent();
+            _writer.WriteLine("{");
+            IncrementIndent();
+        }
+
+
+        /// <summary>
+        /// <paramref name="access"/>> enum <paramref name="enumName"/> [: <paramref name="baseName"/>]
+        /// {
+        /// </summary>
+        /// <param name="access">Access modifiers</param>
+        /// <param name="enumName">Name of the enum</param>
+        /// <param name="baseName">optional base type name</param>
+        public void StartEnum(AccessModifiers access, string enumName, string? baseName)
+        {
+            WriteIndent();
+            _writer.Write($"{access.ToCode()} enum {enumName}");
+            if (!String.IsNullOrEmpty(baseName))
+                _writer.Write($" : {baseName}");
             _writer.WriteLine();
             WriteIndent();
             _writer.WriteLine("{");
@@ -99,6 +136,12 @@ namespace Zsharp.EmitCS
             WriteIndent();
             _writer.WriteLine("{");
             IncrementIndent();
+        }
+
+        public void Property(AccessModifiers access, string typeName, string fieldName)
+        {
+            WriteIndent();
+            _writer.Write($"{access.ToCode()} {typeName} {fieldName} {{ get; set; }}");
         }
 
         /// <summary>
@@ -196,7 +239,7 @@ namespace Zsharp.EmitCS
             => access == AccessModifiers.None ? String.Empty : access.ToString().ToLowerInvariant();
 
         public static string ToCode(this ClassModifiers modifiers)
-            => modifiers == ClassModifiers.Static ? "static partial" : "sealed partial";
+            => modifiers == ClassModifiers.Static ? "static partial" : "partial";
 
         public static string ToCode(this MethodModifiers modifiers)
             => modifiers == MethodModifiers.None ? String.Empty : modifiers.ToString().ToLowerInvariant();

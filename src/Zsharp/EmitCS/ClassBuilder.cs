@@ -20,24 +20,16 @@ namespace Zsharp.EmitCS
 
             var access = module.HasExports ? AccessModifiers.Public : AccessModifiers.Internal;
             var modifiers = ClassModifiers.Static;
-            builder.CsBuilder.StartClass(access, modifiers, module.Identifier.Name);
+            builder.CsBuilder.StartClass(access, modifiers, module.Identifier!.Name);
 
             return builder;
-        }
-
-        public void AddTypeStruct(AstTypeDefinitionStruct structType)
-        {
-        }
-
-        public void AddTypeEnum(AstTypeDefinitionEnum enumType)
-        {
         }
 
         public void AddField(AstVariableDefinition variable)
         {
             var access = AccessModifiers.Private;
             var modifiers = FieldModifiers.Static;
-            CsBuilder.StartField(access, modifiers, variable.Identifier.CanonicalName, variable.TypeReference.Identifier.CanonicalName);
+            CsBuilder.StartField(access, modifiers, variable.Identifier!.CanonicalName, variable.TypeReference.Identifier.CanonicalName);
             CsBuilder.EndLine();
         }
 

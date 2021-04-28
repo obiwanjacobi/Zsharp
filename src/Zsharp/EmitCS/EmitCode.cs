@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Zsharp.AST;
 
 namespace Zsharp.EmitCS
@@ -15,7 +16,7 @@ namespace Zsharp.EmitCS
         public override void VisitModulePublic(AstModulePublic module)
         {
             // usings / imports
-            Context.Imports(module.Symbol.SymbolTable);
+            Context.Imports(module.Symbol!.SymbolTable);
 
             using var scope = Context.AddModule(module);
 
@@ -31,19 +32,19 @@ namespace Zsharp.EmitCS
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            var functionDef = function.FunctionDefinition;
-            var name = functionDef.Identifier.CanonicalName;
+            var functionDef = function.FunctionDefinition!;
+            var name = functionDef.Identifier!.CanonicalName;
 
             if (functionDef.IsExternal)
             {
                 name = ((AstFunctionDefinitionExternal)functionDef).ExternalName.FullName;
             }
 
-            Context.CodeBuilder.CsBuilder.Append($"{name}(");
+            Context.CsBuilder.Append($"{name}(");
 
             VisitChildren(function);
 
-            Context.CodeBuilder.CsBuilder.EndLine(")");
+            Context.CsBuilder.EndLine(")");
         }
 
         public override void VisitVariableDefinition(AstVariableDefinition variable)
@@ -187,10 +188,55 @@ namespace Zsharp.EmitCS
             => new EmitExpression(Context).VisitExpression(expression);
 
         public override void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
-            => Context.ModuleClass.AddTypeEnum(enumType);
+        {
+            var access = enumType.Symbol!.SymbolLocality == AstSymbolLocality.Exported
+                ? AccessModifiers.Public : AccessModifiers.Private;
+
+            Ast.Guard(enumType.BaseType, "Enum has no base type.");
+            Context.CsBuilder.StartEnum(access, enumType.Identifier!.CanonicalName, enumType.BaseType.ToCode());
+
+            VisitChildren(enumType);
+
+            Context.CsBuilder.EndScope();
+        }
+
+        public override void VisitTypeDefinitionEnumOption(AstTypeDefinitionEnumOption enumOption)
+        {
+            Context.CsBuilder.WriteIndent();
+            Context.CsBuilder.Append(enumOption.Identifier!.CanonicalName);
+            if (enumOption.Expression != null)
+            {
+                Context.CsBuilder.Append(" = ");
+                VisitExpression(enumOption.Expression);
+            }
+            Context.CsBuilder.AppendLine(",");
+        }
 
         public override void VisitTypeDefinitionStruct(AstTypeDefinitionStruct structType)
-            => Context.ModuleClass.AddTypeStruct(structType);
+        {
+            var access = structType.Symbol!.SymbolLocality == AstSymbolLocality.Exported
+                ? AccessModifiers.Public : AccessModifiers.Private;
+
+            List<string> baseTypes = new();
+            if (structType.BaseType != null)
+            {
+                baseTypes.Add(structType.BaseType.ToCode());
+            }
+
+            Context.CsBuilder.StartRecord(access, structType.Identifier!.CanonicalName, baseTypes.ToArray());
+
+            VisitChildren(structType);
+
+            Context.CsBuilder.EndScope();
+        }
+
+        public override void VisitTypeDefinitionStructField(AstTypeDefinitionStructField structField)
+        {
+            var access = AccessModifiers.Public;
+            var typeName = structField.TypeReference.ToCode();
+            var fieldName = structField.Identifier!.CanonicalName;
+            Context.CsBuilder.Property(access, typeName, fieldName);
+        }
 
         public void SaveAs(string filePath)
         {
