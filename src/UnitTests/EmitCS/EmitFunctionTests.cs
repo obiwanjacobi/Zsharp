@@ -1,9 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.IO;
-using Zsharp.AST;
-using Zsharp.EmitCS;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Emit = UnitTests.EmitCS.Emit;
 
 namespace UnitTests.EmitCs
@@ -11,20 +6,6 @@ namespace UnitTests.EmitCs
     [TestClass]
     public class EmitFunctionTests
     {
-        private static EmitCode RunEmit(string code, string testName, IAstModuleLoader moduleLoader = null)
-        {
-            var emit = Emit.Create(code, moduleLoader);
-
-            emit.SaveAs($@".\{testName}\{testName}.cs");
-
-            Console.WriteLine(emit.ToString());
-
-            var targetPath = Emit.Build(testName);
-
-            File.Exists(targetPath).Should().BeTrue();
-            return emit;
-        }
-
         [TestMethod]
         public void Function()
         {
@@ -34,7 +15,7 @@ namespace UnitTests.EmitCs
                 Tokens.Indent1 + "return" + Tokens.NewLine
                 ;
 
-            RunEmit(code, "Function");
+            Emit.Run(code, "Function");
         }
 
         [TestMethod]
@@ -46,7 +27,7 @@ namespace UnitTests.EmitCs
                 Tokens.Indent1 + "fn(p + 1)" + Tokens.NewLine
                 ;
 
-            RunEmit(code, "FunctionCallParameter");
+            Emit.Run(code, "FunctionCallParameter");
         }
 
         [TestMethod]
@@ -62,7 +43,7 @@ namespace UnitTests.EmitCs
             // TODO: the name space of the imported System.Console.WriteLine is wrong.
 
             var moduleLoader = Emit.CreateModuleLoader();
-            RunEmit(code, "ExternalFunctionCallParameterAlias_Run", moduleLoader);
+            Emit.Run(code, "ExternalFunctionCallParameterAlias_Run", moduleLoader);
 
             Emit.InvokeStatic("ExternalFunctionCallParameterAlias_Run", "EmitCodeTests", "Main");
         }
@@ -78,7 +59,7 @@ namespace UnitTests.EmitCs
                 ;
 
             var moduleLoader = Emit.CreateModuleLoader();
-            RunEmit(code, "ExternalFunctionCallParameter_Run", moduleLoader);
+            Emit.Run(code, "ExternalFunctionCallParameter_Run", moduleLoader);
 
             Emit.InvokeStatic("ExternalFunctionCallParameter_Run", "EmitCodeTests", "Main");
         }
@@ -92,7 +73,7 @@ namespace UnitTests.EmitCs
                 Tokens.Indent1 + "return p + 1" + Tokens.NewLine
                 ;
 
-            RunEmit(code, "FunctionCallParameterReturn");
+            Emit.Run(code, "FunctionCallParameterReturn");
         }
 
         [TestMethod]
@@ -108,7 +89,7 @@ namespace UnitTests.EmitCs
                 ;
 
             var moduleLoader = Emit.CreateModuleLoader();
-            RunEmit(code, "FunctionCallResult_Run", moduleLoader);
+            Emit.Run(code, "FunctionCallResult_Run", moduleLoader);
 
             Emit.InvokeStatic("FunctionCallResult_Run", "test", "Main");
         }

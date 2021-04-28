@@ -133,7 +133,6 @@ namespace Zsharp.EmitCS
         {
             WriteIndent();
             _writer.Write(branch.ToCode());
-            _writer.Write(" ");
         }
 
         /// <summary>
@@ -146,6 +145,20 @@ namespace Zsharp.EmitCS
                 _writer.Write(post);
 
             _writer.WriteLine(";");
+        }
+
+        /// <summary>
+        /// <paramref name="post"/> {
+        /// </summary>
+        /// <param name="post">optional text befor {</param>
+        public void StartScope(string? post = null)
+        {
+            if (!String.IsNullOrEmpty(post))
+                _writer.WriteLine(post);
+
+            WriteIndent();
+            _writer.WriteLine("{");
+            IncrementIndent();
         }
 
         /// <summary>
@@ -192,7 +205,7 @@ namespace Zsharp.EmitCS
             => modifiers == FieldModifiers.None ? String.Empty : modifiers.ToString().ToLowerInvariant();
 
         public static string ToCode(this BranchStatement branch)
-            => branch.ToString().ToLowerInvariant();
+            => $"{branch.ToString().ToLowerInvariant()} ";
     }
 
     public enum AccessModifiers

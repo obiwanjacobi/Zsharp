@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Zsharp.AST;
 
 namespace UnitTests.Semantics
 {
@@ -13,7 +15,8 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code);
-
+            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            assign.Expression.RHS.FunctionReference.Should().NotBeNull();
         }
     }
 }

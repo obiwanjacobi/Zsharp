@@ -64,6 +64,20 @@ namespace UnitTests.EmitCS
             return compiler.Project.TargetPath;
         }
 
+        public static EmitCode Run(string code, string testName, IAstModuleLoader moduleLoader = null)
+        {
+            var emit = Emit.Create(code, moduleLoader);
+
+            emit.SaveAs($@".\{testName}\{testName}.cs");
+
+            Console.WriteLine(emit.ToString());
+
+            var targetPath = Emit.Build(testName);
+
+            File.Exists(targetPath).Should().BeTrue();
+            return emit;
+        }
+
         private static bool OutputHasErrors(string output)
             => output.Contains("Build FAILED.");
 

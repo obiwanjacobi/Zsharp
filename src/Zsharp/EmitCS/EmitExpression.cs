@@ -59,7 +59,7 @@ namespace Zsharp.EmitCS
                     $"Unrecognized Arithmetic Expression Operator {expression.Operator}"),
             };
 
-            EmitContext.CsBuilder.Append(instruction);
+            AppendOperator(instruction);
         }
 
         private void EmitBitwiseOperation(AstExpression expression)
@@ -80,7 +80,7 @@ namespace Zsharp.EmitCS
                     $"Unrecognized Bitwise Expression Operator {expression.Operator}"),
             };
 
-            EmitContext.CsBuilder.Append(instruction);
+            AppendOperator(instruction);
         }
 
         private void EmitComparisonOperation(AstExpression expression)
@@ -97,7 +97,7 @@ namespace Zsharp.EmitCS
                         $"Unrecognized Comparison Expression Operator {expression.Operator}")
             };
 
-            EmitContext.CsBuilder.Append(instruction);
+            AppendOperator(instruction);
         }
 
         private void EmitLogicOperation(AstExpression expression)
@@ -111,12 +111,12 @@ namespace Zsharp.EmitCS
                     $"Unrecognized Logic Expression Operator {expression.Operator}"),
             };
 
-            EmitContext.CsBuilder.Append(instruction);
+            AppendOperator(instruction);
         }
 
         public override void VisitLiteralBoolean(AstLiteralBoolean literalBool)
         {
-            EmitContext.CsBuilder.Append(literalBool.Value.ToString());
+            EmitContext.CsBuilder.Append(literalBool.Value ? "true" : "false");
         }
 
         public override void VisitLiteralNumeric(AstLiteralNumeric numeric)
@@ -143,6 +143,13 @@ namespace Zsharp.EmitCS
             VisitChildren(function);
 
             EmitContext.CsBuilder.Append(")");
+        }
+
+        private void AppendOperator(string op)
+        {
+            EmitContext.CsBuilder.Append(" ");
+            EmitContext.CsBuilder.Append(op);
+            EmitContext.CsBuilder.Append(" ");
         }
     }
 }

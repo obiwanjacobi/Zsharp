@@ -152,34 +152,35 @@ namespace Zsharp.EmitCS
 
         public override void VisitBranchConditional(AstBranchConditional branch)
         {
-            //if (branch.HasExpression)
-            //{
-            //    Visit(branch.Expression!);
+            if (branch.HasExpression)
+            {
+                Context.CodeBuilder.StartBranch(branch);
+                Context.CsBuilder.Append("(");
 
-            //    CodeBlock nextBlock;
-            //    var builder = Context.CodeBuilder;
-            //    if (branch.ParentAs<AstBranchConditional>() == null)
-            //    {
-            //        nextBlock = builder.BranchConditional(
-            //            builder.NewBlockLabel(), builder.NewBlockLabel());
-            //    }
-            //    else    // sub-branch
-            //    {
-            //        nextBlock = builder.Branch(builder.NewBlockLabel());
-            //    }
+                Visit(branch.Expression!);
 
-            //    Visit(branch.CodeBlock!);
+                Context.CsBuilder.StartScope(")");
 
-            //    builder.CodeBlock = nextBlock;
+                Visit(branch.CodeBlock!);
 
-            //    if (branch.HasSubBranch)
-            //    {
-            //        // TODO: the sub-branch's nextBlock should be the root's nextBlock...
-            //        Visit(branch.SubBranch!);
-            //    }
-            //}
-            //else
-            //    Visit(branch.CodeBlock!);
+                Context.CsBuilder.EndScope();
+
+                if (branch.HasSubBranch)
+                {
+                    var subHasExpression = branch.SubBranch!.HasExpression;
+                    Context.CsBuilder.StartBranch(BranchStatement.Else);
+
+                    if (!subHasExpression)
+                        Context.CsBuilder.StartScope();
+
+                    Visit(branch.SubBranch!);
+
+                    if (!subHasExpression)
+                        Context.CsBuilder.EndScope();
+                }
+            }
+            else
+                Visit(branch.CodeBlock!);
         }
 
         public override void VisitExpression(AstExpression expression)

@@ -411,7 +411,7 @@ namespace Zsharp.AST
                         typeRef.AddTemplateParameter(templParam);
                     }
                     else
-                        throw new ZsharpException(
+                        throw new AstException(
                             $"Template Parameter '{templParamDef.Identifier.Name}' could not be resolved.");
                 }
             }
