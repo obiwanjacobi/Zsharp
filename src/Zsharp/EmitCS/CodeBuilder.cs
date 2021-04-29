@@ -2,22 +2,20 @@
 
 namespace Zsharp.EmitCS
 {
-    public class CodeBuilder
+    internal sealed class CodeBuilder
     {
         private readonly CsBuilder _csBuilder;
-        private bool _closeScope;
 
-        public CodeBuilder(CsBuilder csBuilder)
+        internal CodeBuilder(CsBuilder csBuilder)
         {
             _csBuilder = csBuilder;
         }
 
-        public CsBuilder CsBuilder => _csBuilder;
+        internal CsBuilder CsBuilder => _csBuilder;
 
         public void AddVariable(AstVariableDefinition variable)
         {
-            _csBuilder.StartVariable(variable.TypeReference.Identifier.CanonicalName, variable.Identifier.CanonicalName);
-            _csBuilder.EndLine();
+            _csBuilder.StartVariable(variable.TypeReference.ToCode(), variable.Identifier!.CanonicalName);
         }
 
         public void StartBranch(AstBranchExpression branch)
@@ -33,21 +31,9 @@ namespace Zsharp.EmitCS
             _csBuilder.StartBranch(br);
         }
 
-        public void Apply()
-        {
-            if (_closeScope)
-                _csBuilder.EndScope();
-        }
-
         public override string ToString()
         {
             return _csBuilder.ToString();
-        }
-
-        internal void StartMethod(AccessModifiers access, MethodModifiers modifiers, string retType, string methodName, params (string name, string type)[] parameters)
-        {
-            _csBuilder.StartMethod(access, modifiers, retType, methodName, parameters);
-            _closeScope = true;
         }
     }
 }

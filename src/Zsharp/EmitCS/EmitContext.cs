@@ -9,19 +9,16 @@ namespace Zsharp.EmitCS
     {
         private readonly string _assemblyName;
         private readonly Version _version;
-        private readonly CsBuilder _builder;
+        private readonly CSharp.Namespace _namespace;
 
-        private EmitContext(string assemblyName, Version? version)
+        public EmitContext(string assemblyName, Version? version)
         {
             _assemblyName = assemblyName;
             _version = version ?? new Version(1, 0, 0, 0);
-            _builder = new CsBuilder();
+            _namespace = new CSharp.Namespace(assemblyName);
         }
 
-        public static EmitContext Create(string assemblyName, Version? version = null)
-        {
-            return new EmitContext(assemblyName, version);
-        }
+        internal CSharp.Namespace Namespace => _namespace;
 
         internal Stack<Scope> Scopes { get; } = new Stack<Scope>();
 
@@ -42,13 +39,11 @@ namespace Zsharp.EmitCS
 
         internal FunctionScope FunctionScope => (FunctionScope)Scopes.Peek();
 
-        public ClassBuilder ModuleClass => ModuleScope.ClassBuilder;
+        internal ClassBuilder ModuleClass => ModuleScope.ClassBuilder;
 
-        public CodeBuilder CodeBuilder => FunctionScope.CodeBuilder;
+        internal CodeBuilder CodeBuilder => FunctionScope.CodeBuilder;
 
-        internal CsBuilder CsBuilder => _builder;
-
-        public void Imports(AstSymbolTable symbolTable)
+        internal void Imports(AstSymbolTable symbolTable)
         {
             var modules = symbolTable.FindEntries(AstSymbolKind.Module)
                 .Select(s => s.Definition)
@@ -56,7 +51,7 @@ namespace Zsharp.EmitCS
 
             foreach (var module in modules)
             {
-                CsBuilder.Using(module.Namespace);
+                Namespace.AddUsing(module.Namespace);
             }
         }
 
@@ -70,12 +65,17 @@ namespace Zsharp.EmitCS
             var modScope = new ModuleScope(this, classBuilder);
             Scopes.Push(modScope);
 
-            var funScope = new FunctionScope(this, new CsBuilder(_builder.Indent));
             // static constructor
-            funScope.CodeBuilder.StartMethod(AccessModifiers.None, MethodModifiers.Static, String.Empty, module.Identifier.Name);
+            var method = new CSharp.Method(module.Identifier!.CanonicalName)
+            {
+                AccessModifiers = AccessModifiers.None,
+                MethodModifiers = MethodModifiers.Static,
+                TypeName = String.Empty,
+            };
+            classBuilder.ModuleClass.AddMethod(method);
 
+            var funScope = new FunctionScope(this, method.Body);
             Scopes.Push(funScope);
-
             return new LinkedScopes(funScope, modScope);
         }
 
@@ -84,15 +84,9 @@ namespace Zsharp.EmitCS
             if (Scopes.Count == 0)
                 throw new InvalidOperationException("A Module must be added first.");
 
-            var retType = function.TypeReference.ToCode();
-            var access = function.Symbol!.SymbolLocality == AstSymbolLocality.Exported ? AccessModifiers.Public : AccessModifiers.Private;
-            var modifiers = MethodModifiers.Static;
-            var parameters = function.Parameters
-                .Select(p => (name: p.Identifier!.CanonicalName, type: p.TypeReference.ToCode()))
-                .ToArray();
-            var scope = new FunctionScope(this);
-            scope.CodeBuilder.StartMethod(access, modifiers, retType, function.Identifier!.CanonicalName, parameters);
+            var method = ModuleClass.AddFunction(function);
 
+            var scope = new FunctionScope(this, method.Body);
             Scopes.Push(scope);
             return scope;
         }

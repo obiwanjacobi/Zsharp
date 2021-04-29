@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Zsharp.EmitCS
 {
-    public sealed class CsBuilder
+    internal sealed class CsBuilder
     {
         private readonly TextWriter _writer;
 
@@ -59,34 +59,18 @@ namespace Zsharp.EmitCS
         }
 
         /// <summary>
-        /// <paramref name="access"/> <paramref name="modifiers"/> class <paramref name="className"/> : <paramref name="baseNames"/>
+        /// <paramref name="access"/> <paramref name="modifiers"/> <paramref name="keyword"/> <paramref name="className"/> [: <paramref name="baseNames"/>]
         /// {
         /// </summary>
         /// <param name="access">Access modifiers</param>
-        /// <param name="modifiers">Class modifiers</param>
+        /// <param name="modifiers">class modifiers</param>
+        /// <param name="keyword">class, record or struct</param>
         /// <param name="className">Class name</param>
         /// <param name="baseNames">Base class and/or interface names.</param>
-        public void StartClass(AccessModifiers access, ClassModifiers modifiers, string className, params string[]? baseNames)
-        {
-            StartClass(access, modifiers, "class", className, baseNames);
-        }
-
-        /// <summary>
-        /// <paramref name="access"/> <paramref name="modifiers"/> record <paramref name="className"/> : <paramref name="baseNames"/>
-        /// {
-        /// </summary>
-        /// <param name="access">Access modifiers</param>
-        /// <param name="className">Class name</param>
-        /// <param name="baseNames">Base class and/or interface names.</param>
-        public void StartRecord(AccessModifiers access, string className, params string[]? baseNames)
-        {
-            StartClass(access, ClassModifiers.None, "record", className, baseNames);
-        }
-
-        private void StartClass(AccessModifiers access, ClassModifiers modifiers, string keyword, string className, params string[]? baseNames)
+        public void StartClass(AccessModifiers access, ClassModifiers modifiers, ClassKeyword keyword, string className, params string[]? baseNames)
         {
             WriteIndent();
-            _writer.Write($"{access.ToCode()} {modifiers.ToCode()} {keyword} {className}");
+            _writer.Write($"{access.ToCode()} {modifiers.ToCode()} {keyword.ToCode()} {className}");
             if (baseNames != null && baseNames.Length > 0)
                 _writer.Write($" : {String.Join(", ", baseNames)}");
             _writer.WriteLine();
@@ -94,7 +78,6 @@ namespace Zsharp.EmitCS
             _writer.WriteLine("{");
             IncrementIndent();
         }
-
 
         /// <summary>
         /// <paramref name="access"/>> enum <paramref name="enumName"/> [: <paramref name="baseName"/>]
@@ -233,25 +216,7 @@ namespace Zsharp.EmitCS
         }
     }
 
-    public static class CsBuilderExtensions
-    {
-        public static string ToCode(this AccessModifiers access)
-            => access == AccessModifiers.None ? String.Empty : access.ToString().ToLowerInvariant();
-
-        public static string ToCode(this ClassModifiers modifiers)
-            => modifiers == ClassModifiers.Static ? "static partial" : "partial";
-
-        public static string ToCode(this MethodModifiers modifiers)
-            => modifiers == MethodModifiers.None ? String.Empty : modifiers.ToString().ToLowerInvariant();
-
-        public static string ToCode(this FieldModifiers modifiers)
-            => modifiers == FieldModifiers.None ? String.Empty : modifiers.ToString().ToLowerInvariant();
-
-        public static string ToCode(this BranchStatement branch)
-            => $"{branch.ToString().ToLowerInvariant()} ";
-    }
-
-    public enum AccessModifiers
+    internal enum AccessModifiers
     {
         None,
         Private,
@@ -260,13 +225,20 @@ namespace Zsharp.EmitCS
         Public
     }
 
-    public enum ClassModifiers
+    internal enum ClassKeyword
+    {
+        Class,
+        Record,
+        Struct
+    }
+
+    internal enum ClassModifiers
     {
         None,
         Static,
     }
 
-    public enum MethodModifiers
+    internal enum MethodModifiers
     {
         None,
         Virtual,
@@ -274,14 +246,14 @@ namespace Zsharp.EmitCS
         Static
     }
 
-    public enum FieldModifiers
+    internal enum FieldModifiers
     {
         None,
         ReadOnly,
         Static
     }
 
-    public enum BranchStatement
+    internal enum BranchStatement
     {
         Return,
         Continue,

@@ -1,41 +1,121 @@
-﻿using System;
-using Zsharp.AST;
+﻿using Zsharp.AST;
 
 namespace Zsharp.EmitCS
 {
-    public sealed class ClassBuilder : IDisposable
+    internal sealed class ClassBuilder
     {
         private readonly EmitContext _context;
+        private readonly CSharp.Class _moduleClass;
 
-        private ClassBuilder(EmitContext context)
+        private ClassBuilder(EmitContext context, CSharp.Class moduleClass)
         {
             _context = context;
+            _moduleClass = moduleClass;
         }
-
-        internal CsBuilder CsBuilder => _context.CsBuilder;
 
         public static ClassBuilder Create(EmitContext context, AstModulePublic module)
         {
-            var builder = new ClassBuilder(context);
+            var moduleClass = new CSharp.Class(module.Identifier!.CanonicalName, ClassKeyword.Class)
+            {
+                AccessModifiers = module.HasExports
+                    ? AccessModifiers.Public
+                    : AccessModifiers.Internal,
+                ClassModifiers = ClassModifiers.Static,
+            };
+            context.Namespace.AddClass(moduleClass);
 
-            var access = module.HasExports ? AccessModifiers.Public : AccessModifiers.Internal;
-            var modifiers = ClassModifiers.Static;
-            builder.CsBuilder.StartClass(access, modifiers, module.Identifier!.Name);
-
-            return builder;
+            return new ClassBuilder(context, moduleClass);
         }
+
+        public CSharp.Class ModuleClass => _moduleClass;
 
         public void AddField(AstVariableDefinition variable)
         {
-            var access = AccessModifiers.Private;
-            var modifiers = FieldModifiers.Static;
-            CsBuilder.StartField(access, modifiers, variable.Identifier!.CanonicalName, variable.TypeReference.Identifier.CanonicalName);
-            CsBuilder.EndLine();
+            var field = new CSharp.Field()
+            {
+                AccessModifiers = AccessModifiers.Private,
+                FieldModifiers = FieldModifiers.Static,
+                Name = variable.Identifier!.CanonicalName,
+                TypeName = variable.TypeReference.ToCode(),
+            };
+
+            _moduleClass.AddField(field);
         }
 
-        public void Dispose()
+        public CSharp.Enum AddEnum(AstTypeDefinitionEnum enumDef)
         {
-            CsBuilder.EndScope();
+            var enumType = new CSharp.Enum()
+            {
+                AccessModifiers = enumDef.Symbol!.SymbolLocality == AstSymbolLocality.Exported
+                    ? AccessModifiers.Public : AccessModifiers.Private,
+                BaseTypeName = enumDef.BaseType.ToCode(),
+                Name = enumDef.Identifier!.CanonicalName,
+            };
+
+            foreach (var field in enumDef.Fields)
+            {
+                var option = new CSharp.EnumOption()
+                {
+                    Name = field.Identifier!.CanonicalName,
+                    Value = field.Expression.ToCode()
+                };
+
+                enumType.AddOption(option);
+            }
+
+            _moduleClass.AddEnum(enumType);
+
+            return enumType;
+        }
+
+        public CSharp.Class AddStruct(AstTypeDefinitionStruct structDef)
+        {
+            var recordType = new CSharp.Class(structDef.Identifier!.CanonicalName, ClassKeyword.Record)
+            {
+                AccessModifiers = structDef.Symbol!.SymbolLocality == AstSymbolLocality.Exported
+                    ? AccessModifiers.Public : AccessModifiers.Private,
+                ClassModifiers = ClassModifiers.None,
+                BaseTypeName = structDef.BaseType.ToCode(),
+            };
+
+            foreach (var field in structDef.Fields)
+            {
+                var property = new CSharp.Property
+                {
+                    AccessModifiers = AccessModifiers.Public,
+                    Name = field.Identifier!.CanonicalName,
+                    TypeName = field.TypeReference.ToCode(),
+                };
+                recordType.AddProperty(property);
+            }
+
+            _moduleClass.AddClass(recordType);
+
+            return recordType;
+        }
+
+        public CSharp.Method AddFunction(AstFunctionDefinition function)
+        {
+            var method = new CSharp.Method(function.Identifier!.CanonicalName)
+            {
+                AccessModifiers = function.Symbol!.SymbolLocality == AstSymbolLocality.Exported
+                    ? AccessModifiers.Public : AccessModifiers.Private,
+                MethodModifiers = MethodModifiers.Static,
+                TypeName = function.TypeReference.ToCode(),
+            };
+
+            foreach (var parameter in function.Parameters)
+            {
+                method.AddParameter(new CSharp.Parameter
+                {
+                    Name = parameter.Identifier!.CanonicalName,
+                    TypeName = parameter.TypeReference.ToCode()
+                });
+            }
+
+            _moduleClass.AddMethod(method);
+
+            return method;
         }
     }
 }

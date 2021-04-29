@@ -5,14 +5,12 @@ namespace Zsharp.EmitCS
 {
     public class EmitExpression : AstVisitor
     {
-        private readonly EmitContext _context;
+        private readonly CsBuilder _builder;
 
-        public EmitExpression(EmitContext context)
+        internal EmitExpression(CsBuilder builder)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _builder = builder;
         }
-
-        protected EmitContext EmitContext => _context;
 
         public override void VisitExpression(AstExpression expression)
         {
@@ -34,10 +32,6 @@ namespace Zsharp.EmitCS
             {
                 EmitLogicOperation(expression);
             }
-            //else
-            //{
-            //    VisitChildren(expression);
-            //}
 
             expression.RHS?.Accept(this);
         }
@@ -116,40 +110,40 @@ namespace Zsharp.EmitCS
 
         public override void VisitLiteralBoolean(AstLiteralBoolean literalBool)
         {
-            EmitContext.CsBuilder.Append(literalBool.Value ? "true" : "false");
+            _builder.Append(literalBool.Value ? "true" : "false");
         }
 
         public override void VisitLiteralNumeric(AstLiteralNumeric numeric)
         {
-            EmitContext.CsBuilder.Append(numeric.Value.ToString());
+            _builder.Append(numeric.Value.ToString());
         }
 
         public override void VisitLiteralString(AstLiteralString literalString)
         {
-            EmitContext.CsBuilder.Append($"\"{literalString.Value}\"");
+            _builder.Append($"\"{literalString.Value}\"");
         }
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
-            var name = variable.Identifier.CanonicalName;
-            EmitContext.CsBuilder.Append(name);
+            var name = variable.Identifier!.CanonicalName;
+            _builder.Append(name);
         }
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            EmitContext.CsBuilder.WriteIndent();
-            EmitContext.CsBuilder.Append($"{function.Identifier.CanonicalName}(");
+            _builder.WriteIndent();
+            _builder.Append($"{function.Identifier!.CanonicalName}(");
 
             VisitChildren(function);
 
-            EmitContext.CsBuilder.Append(")");
+            _builder.Append(")");
         }
 
         private void AppendOperator(string op)
         {
-            EmitContext.CsBuilder.Append(" ");
-            EmitContext.CsBuilder.Append(op);
-            EmitContext.CsBuilder.Append(" ");
+            _builder.Append(" ");
+            _builder.Append(op);
+            _builder.Append(" ");
         }
     }
 }

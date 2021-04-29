@@ -11,8 +11,8 @@ namespace Zsharp.EmitCS
 
         };
 
-        public EmitIntrinsic(EmitContext context)
-            : base(context)
+        public EmitIntrinsic(CsBuilder builder)
+            : base(builder)
         { }
 
         public void EmitFunction(AstFunctionReference function, AstFunctionDefinitionIntrinsic functionDef)

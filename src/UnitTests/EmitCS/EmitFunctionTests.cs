@@ -108,7 +108,7 @@ namespace UnitTests.EmitCs
             var emitCode = Emit.Run(code, "FunctionCallResult_Run", moduleLoader);
             var csCode = emitCode.ToString();
             csCode.Should().Contain("private static System.String fn()")
-                .And.Contain("System.Console.WriteLine(        fn());");
+                .And.Contain("System.Console.WriteLine(fn());");
 
             Emit.InvokeStatic("FunctionCallResult_Run", "test", "Main");
         }

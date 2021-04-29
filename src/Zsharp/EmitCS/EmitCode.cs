@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using Zsharp.AST;
 
 namespace Zsharp.EmitCS
@@ -8,7 +7,7 @@ namespace Zsharp.EmitCS
     {
         public EmitCode(string assemblyName)
         {
-            Context = EmitContext.Create(assemblyName);
+            Context = new EmitContext(assemblyName, null);
         }
 
         public EmitContext Context { get; private set; }
@@ -40,11 +39,11 @@ namespace Zsharp.EmitCS
                 name = ((AstFunctionDefinitionExternal)functionDef).ExternalName.FullName;
             }
 
-            Context.CsBuilder.Append($"{name}(");
+            Context.CodeBuilder.CsBuilder.Append($"{name}(");
 
             VisitChildren(function);
 
-            Context.CsBuilder.EndLine(")");
+            Context.CodeBuilder.CsBuilder.EndLine(")");
         }
 
         public override void VisitVariableDefinition(AstVariableDefinition variable)
@@ -59,8 +58,24 @@ namespace Zsharp.EmitCS
             }
         }
 
+        public override void VisitVariableReference(AstVariableReference variable)
+        {
+            var expressionVisitor = new EmitExpression(Context.CodeBuilder.CsBuilder);
+            expressionVisitor.VisitVariableReference(variable);
+        }
+
         public override void VisitAssignment(AstAssignment assign)
         {
+            if (assign.Variable is AstVariableDefinition varDef)
+            {
+                VisitVariableDefinition(varDef);
+            }
+            else
+            {
+                Context.CodeBuilder.CsBuilder.WriteIndent();
+                VisitVariableReference((AstVariableReference)assign.Variable!);
+            }
+
             if (assign.HasFields)
             {
                 Ast.Guard(assign.Variable!.TypeReference!.TypeDefinition!.IsStruct, "Expect Struct.");
@@ -70,14 +85,11 @@ namespace Zsharp.EmitCS
 
             if (assign.Expression != null)
             {
-                Context.CsBuilder.WriteIndent();
-                Context.CsBuilder.Append(assign.Variable!.TypeReference.ToCode());
-                Context.CsBuilder.Append(" ");
-                Context.CsBuilder.Append(assign.Variable!.Identifier!.CanonicalName);
-                Context.CsBuilder.Append(" = ");
+                Context.CodeBuilder.CsBuilder.Append(" = ");
                 VisitExpression(assign.Expression);
-                Context.CsBuilder.EndLine();
             }
+
+            Context.CodeBuilder.CsBuilder.EndLine();
         }
 
         public override void VisitTypeFieldInitialization(AstTypeFieldInitialization field)
@@ -118,28 +130,28 @@ namespace Zsharp.EmitCS
             if (branch.HasExpression)
             {
                 Context.CodeBuilder.StartBranch(branch);
-                Context.CsBuilder.Append("(");
+                Context.CodeBuilder.CsBuilder.Append("(");
 
                 Visit(branch.Expression!);
 
-                Context.CsBuilder.StartScope(")");
+                Context.CodeBuilder.CsBuilder.StartScope(")");
 
                 Visit(branch.CodeBlock!);
 
-                Context.CsBuilder.EndScope();
+                Context.CodeBuilder.CsBuilder.EndScope();
 
                 if (branch.HasSubBranch)
                 {
                     var subHasExpression = branch.SubBranch!.HasExpression;
-                    Context.CsBuilder.StartBranch(BranchStatement.Else);
+                    Context.CodeBuilder.CsBuilder.StartBranch(BranchStatement.Else);
 
                     if (!subHasExpression)
-                        Context.CsBuilder.StartScope();
+                        Context.CodeBuilder.CsBuilder.StartScope();
 
                     Visit(branch.SubBranch!);
 
                     if (!subHasExpression)
-                        Context.CsBuilder.EndScope();
+                        Context.CodeBuilder.CsBuilder.EndScope();
                 }
             }
             else
@@ -147,58 +159,13 @@ namespace Zsharp.EmitCS
         }
 
         public override void VisitExpression(AstExpression expression)
-            => new EmitExpression(Context).VisitExpression(expression);
+            => new EmitExpression(Context.CodeBuilder.CsBuilder).VisitExpression(expression);
 
         public override void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
-        {
-            var access = enumType.Symbol!.SymbolLocality == AstSymbolLocality.Exported
-                ? AccessModifiers.Public : AccessModifiers.Private;
-
-            Ast.Guard(enumType.BaseType, "Enum has no base type.");
-            Context.CsBuilder.StartEnum(access, enumType.Identifier!.CanonicalName, enumType.BaseType.ToCode());
-
-            VisitChildren(enumType);
-
-            Context.CsBuilder.EndScope();
-        }
-
-        public override void VisitTypeDefinitionEnumOption(AstTypeDefinitionEnumOption enumOption)
-        {
-            Context.CsBuilder.WriteIndent();
-            Context.CsBuilder.Append(enumOption.Identifier!.CanonicalName);
-            if (enumOption.Expression != null)
-            {
-                Context.CsBuilder.Append(" = ");
-                VisitExpression(enumOption.Expression);
-            }
-            Context.CsBuilder.AppendLine(",");
-        }
+            => Context.ModuleClass.AddEnum(enumType);
 
         public override void VisitTypeDefinitionStruct(AstTypeDefinitionStruct structType)
-        {
-            var access = structType.Symbol!.SymbolLocality == AstSymbolLocality.Exported
-                ? AccessModifiers.Public : AccessModifiers.Private;
-
-            List<string> baseTypes = new();
-            if (structType.BaseType != null)
-            {
-                baseTypes.Add(structType.BaseType.ToCode());
-            }
-
-            Context.CsBuilder.StartRecord(access, structType.Identifier!.CanonicalName, baseTypes.ToArray());
-
-            VisitChildren(structType);
-
-            Context.CsBuilder.EndScope();
-        }
-
-        public override void VisitTypeDefinitionStructField(AstTypeDefinitionStructField structField)
-        {
-            var access = AccessModifiers.Public;
-            var typeName = structField.TypeReference.ToCode();
-            var fieldName = structField.Identifier!.CanonicalName;
-            Context.CsBuilder.Property(access, typeName, fieldName);
-        }
+            => Context.ModuleClass.AddStruct(structType);
 
         public void SaveAs(string filePath)
         {
@@ -206,12 +173,12 @@ namespace Zsharp.EmitCS
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            File.WriteAllText(filePath, Context.CsBuilder.ToString());
+            File.WriteAllText(filePath, ToString());
         }
 
         public override string ToString()
         {
-            return Context.CsBuilder.ToString();
+            return Context.Namespace.ToCode();
         }
     }
 }

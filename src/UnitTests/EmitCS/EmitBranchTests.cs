@@ -69,7 +69,7 @@ namespace UnitTests.EmitCS
             var emitCode = Emit.Run(code, "BranchIfElseIf");
             var csCode = emitCode.ToString();
             csCode.Should().Contain("if (")
-                .And.Contain("else         if");
+                .And.Contain("else if");
         }
     }
 }
