@@ -21,22 +21,39 @@ namespace Zsharp.Semantics
 
             if (expression.TypeReference == null)
             {
-                AstTypeReference? leftTypeRef = expression.LHS?.TypeReference;
-                AstTypeReference? rightTypeRef = expression.RHS?.TypeReference;
-
                 AstTypeReference? typeRef = null;
-                if (leftTypeRef != null)
-                {
-                    typeRef = leftTypeRef;
-                }
-                else if (rightTypeRef != null)
-                {
-                    typeRef = rightTypeRef;
-                }
 
-                Ast.Guard(typeRef, "Expression yielded no Type.");
-                // TODO: depending on the operator the type may need to be enlarged.
-                expression.SetTypeReference(typeRef!);
+                // comparison operators have bool result
+                if ((expression.Operator & AstExpressionOperator.MaskComparison) != 0)
+                {
+                    var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
+                        AstIdentifierIntrinsic.Bool.CanonicalName, AstSymbolKind.Type);
+                    typeRef = AstTypeReference.From(typeDef!);
+                    SymbolTable!.Add(typeRef);
+
+                    expression.SetTypeReference(typeRef!);
+
+                    // resolve new created type
+                    VisitTypeReference(typeRef);
+                }
+                else
+                {
+                    AstTypeReference? leftTypeRef = expression.LHS?.TypeReference;
+                    AstTypeReference? rightTypeRef = expression.RHS?.TypeReference;
+
+                    if (leftTypeRef != null)
+                    {
+                        typeRef = leftTypeRef;
+                    }
+                    else if (rightTypeRef != null)
+                    {
+                        typeRef = rightTypeRef;
+                    }
+
+                    Ast.Guard(typeRef, "Expression yielded no Type.");
+                    // TODO: depending on the operator the type may need to be enlarged.
+                    expression.SetTypeReference(typeRef!);
+                }
             }
         }
 
@@ -256,6 +273,7 @@ namespace Zsharp.Semantics
         {
             VisitChildren(parameter);
 
+            // TODO: take parameter type from definition?
             if (parameter.TypeReference == null)
             {
                 parameter.SetTypeReference(parameter.Expression.TypeReference.MakeProxy());

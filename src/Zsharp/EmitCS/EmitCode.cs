@@ -61,61 +61,23 @@ namespace Zsharp.EmitCS
 
         public override void VisitAssignment(AstAssignment assign)
         {
-            //var name = assign.Variable.Identifier.CanonicalName;
+            if (assign.HasFields)
+            {
+                Ast.Guard(assign.Variable!.TypeReference!.TypeDefinition!.IsStruct, "Expect Struct.");
 
-            //if (assign.HasFields)
-            //{
-            //    Ast.Guard(assign.Variable.TypeReference.TypeDefinition.IsStruct, "Expect Struct.");
+                base.VisitAssignment(assign);
+            }
 
-            //    TypeReference tempTypeRef;
-            //    var tempName = CodeBuilder.BuildInitName(name);
-            //    if (!Context.CodeBuilder.HasVariable(tempName))
-            //    {
-            //        tempTypeRef = Context.ToTypeReference(assign.Variable.TypeReference);
-            //        Context.CodeBuilder.AddVariable(tempName, tempTypeRef);
-            //    }
-
-            //    var tempVarDef = Context.CodeBuilder.GetVariable(tempName);
-
-            //    Context.CodeBuilder.CodeBlock.Add(
-            //        Context.InstructionFactory.LoadVariableAddress(tempVarDef));
-            //    Context.CodeBuilder.CodeBlock.Add(
-            //        Context.InstructionFactory.InitObject(tempVarDef.VariableType));
-
-            //    base.VisitAssignment(assign);
-
-            //    Context.CodeBuilder.CodeBlock.Add(
-            //        Context.InstructionFactory.LoadVariable(tempVarDef));
-            //}
-            //else
-            //    base.VisitAssignment(assign);
-
-            //if (assign.IsTopLevel())
-            //{
-            //    FieldDefinition field;
-
-            //    if (Context.ModuleClass.HasField(name))
-            //        field = Context.ModuleClass.GetField(name);
-            //    else
-            //    {
-            //        var varDef = assign.Variable as AstVariableDefinition;
-            //        if (varDef == null)
-            //        {
-            //            var varRef = (AstVariableReference)assign.Variable;
-            //            varDef = varRef.VariableDefinition;
-            //        }
-            //        field = Context.ModuleClass.AddField(name,
-            //            Context.ToTypeReference(varDef.TypeReference));
-            //    }
-            //    Context.CodeBuilder.CodeBlock.Add(
-            //        Context.InstructionFactory.StoreField(field));
-            //}
-            //else
-            //{
-            //    var varDef = Context.CodeBuilder.GetVariable(name);
-            //    Context.CodeBuilder.CodeBlock.Add(
-            //        Context.InstructionFactory.StoreVariable(varDef));
-            //}
+            if (assign.Expression != null)
+            {
+                Context.CsBuilder.WriteIndent();
+                Context.CsBuilder.Append(assign.Variable!.TypeReference.ToCode());
+                Context.CsBuilder.Append(" ");
+                Context.CsBuilder.Append(assign.Variable!.Identifier!.CanonicalName);
+                Context.CsBuilder.Append(" = ");
+                VisitExpression(assign.Expression);
+                Context.CsBuilder.EndLine();
+            }
         }
 
         public override void VisitTypeFieldInitialization(AstTypeFieldInitialization field)

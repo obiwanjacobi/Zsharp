@@ -7,7 +7,6 @@ using static Zsharp.Parser.ZsharpParser;
 namespace Zsharp.AST
 {
     public class AstFunctionReference : AstFunction<AstFunctionParameterReference, AstTemplateParameterReference>
-
     {
         public AstFunctionReference(ParserRuleContext context)
         {

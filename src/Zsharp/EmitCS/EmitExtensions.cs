@@ -8,7 +8,8 @@ namespace Zsharp.EmitCS
         {
             if (astType != null)
             {
-                if (astType is AstTypeReference typeRef)
+                if (astType is AstTypeReference typeRef &&
+                    typeRef.TypeDefinition != null)
                 {
                     astType = typeRef.TypeDefinition;
                 }
@@ -21,7 +22,7 @@ namespace Zsharp.EmitCS
                     return "void";
                 }
 
-                return astType!.Identifier!.CanonicalName;
+                return astType.Identifier!.CanonicalName;
             }
             return "void";
         }

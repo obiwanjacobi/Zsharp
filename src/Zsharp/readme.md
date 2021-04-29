@@ -33,6 +33,7 @@
     It should be the name of the external module but is the name of the local symbol table it is refered in.
 - Add AssemblyManager to ExternalModuleLoader to hide Cecil implementation use.
 - TrySetIdentifier should check if IdentifierType matches AstNodeType.
+- TypeReference result of a comparison expression is not a Bool (but U8).
 
 ---
 

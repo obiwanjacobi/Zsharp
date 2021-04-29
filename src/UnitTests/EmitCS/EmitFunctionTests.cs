@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Emit = UnitTests.EmitCS.Emit;
 
 namespace UnitTests.EmitCs
@@ -15,7 +16,10 @@ namespace UnitTests.EmitCs
                 Tokens.Indent1 + "return" + Tokens.NewLine
                 ;
 
-            Emit.Run(code, "Function");
+            var emitCode = Emit.Run(code, "TypeEnumExport");
+            var csCode = emitCode.ToString();
+            csCode.Should().Contain("private static void fn()")
+                .And.Contain("return ;");
         }
 
         [TestMethod]
@@ -27,7 +31,10 @@ namespace UnitTests.EmitCs
                 Tokens.Indent1 + "fn(p + 1)" + Tokens.NewLine
                 ;
 
-            Emit.Run(code, "FunctionCallParameter");
+            var emitCode = Emit.Run(code, "FunctionCallParameter");
+            var csCode = emitCode.ToString();
+            csCode.Should().Contain("private static void fn(System.Int32 p)")
+                .And.Contain("fn(p + 1);");
         }
 
         [TestMethod]
@@ -40,10 +47,13 @@ namespace UnitTests.EmitCs
                 Tokens.Indent1 + "Print(\"Hello Z# World\")" + Tokens.NewLine
                 ;
 
-            // TODO: the name space of the imported System.Console.WriteLine is wrong.
+            // TODO: the namespace of the imported System.Console.WriteLine is wrong.
 
             var moduleLoader = Emit.CreateModuleLoader();
-            Emit.Run(code, "ExternalFunctionCallParameterAlias_Run", moduleLoader);
+            var emitCode = Emit.Run(code, "ExternalFunctionCallParameterAlias_Run", moduleLoader);
+            var csCode = emitCode.ToString();
+            csCode.Should().Contain("public static void Main()")
+                .And.Contain("System.Console.WriteLine(\"Hello Z# World\");");
 
             Emit.InvokeStatic("ExternalFunctionCallParameterAlias_Run", "EmitCodeTests", "Main");
         }
@@ -59,7 +69,10 @@ namespace UnitTests.EmitCs
                 ;
 
             var moduleLoader = Emit.CreateModuleLoader();
-            Emit.Run(code, "ExternalFunctionCallParameter_Run", moduleLoader);
+            var emitCode = Emit.Run(code, "ExternalFunctionCallParameter_Run", moduleLoader);
+            var csCode = emitCode.ToString();
+            csCode.Should().Contain("public static void Main()")
+                .And.Contain("System.Console.WriteLine(\"Hello Z# World\");");
 
             Emit.InvokeStatic("ExternalFunctionCallParameter_Run", "EmitCodeTests", "Main");
         }
@@ -73,7 +86,10 @@ namespace UnitTests.EmitCs
                 Tokens.Indent1 + "return p + 1" + Tokens.NewLine
                 ;
 
-            Emit.Run(code, "FunctionCallParameterReturn");
+            var emitCode = Emit.Run(code, "FunctionCallParameterReturn");
+            var csCode = emitCode.ToString();
+            csCode.Should().Contain("private static System.Int32 fn(System.Int32 p)")
+                .And.Contain("return p + 1;");
         }
 
         [TestMethod]
@@ -89,7 +105,10 @@ namespace UnitTests.EmitCs
                 ;
 
             var moduleLoader = Emit.CreateModuleLoader();
-            Emit.Run(code, "FunctionCallResult_Run", moduleLoader);
+            var emitCode = Emit.Run(code, "FunctionCallResult_Run", moduleLoader);
+            var csCode = emitCode.ToString();
+            csCode.Should().Contain("private static System.String fn()")
+                .And.Contain("System.Console.WriteLine(        fn());");
 
             Emit.InvokeStatic("FunctionCallResult_Run", "test", "Main");
         }

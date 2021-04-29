@@ -88,7 +88,11 @@ namespace Zsharp.AST
 
             var typeRef = new AstTypeReference();
             typeRef.SetIdentifier(typeDef.Identifier!);
-            typeRef.TrySetSymbol(typeDef.Symbol!);
+            if (typeDef.Symbol != null)
+            {
+                typeRef.TrySetSymbol(typeDef.Symbol);
+                typeDef.Symbol.AddNode(typeRef);
+            }
             return typeRef;
         }
 

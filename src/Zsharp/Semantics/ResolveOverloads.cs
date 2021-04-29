@@ -17,8 +17,8 @@ namespace Zsharp.Semantics
             if (function.Symbol!.FindOverloadDefinition(function) != null)
                 return;
 
-            // intrinsic functions are handled during emit phase
-            if (!function.FunctionDefinition.IsIntrinsic)
+            // TODO: intrinsic functions are handled during emit phase
+            //if (!function.FunctionDefinition.IsIntrinsic)
             {
                 var overloadDef = ResolveOverload(function);
                 if (overloadDef == null)
