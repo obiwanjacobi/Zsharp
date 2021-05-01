@@ -17,7 +17,7 @@ namespace UnitTests.EmitCS
 
             var emitCode = Emit.Run(code, "Conversion");
             var csCode = emitCode.ToString();
-            csCode.Should().Contain("return (System.UInt16)p;");
+            csCode.Should().Contain("return Zsharp.Runtime.Conversion.U16(p);");
         }
     }
 }

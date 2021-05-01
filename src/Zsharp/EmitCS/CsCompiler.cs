@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace Zsharp.EmitCS
 {
@@ -36,11 +37,11 @@ namespace Zsharp.EmitCS
 
         private string Build(string path)
         {
-            var config = Debug ? "Debug" : "Release";
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"build -c {config}",
+                Arguments = BuildCommandLine(),
                 WorkingDirectory = path,
                 RedirectStandardOutput = true,
             };
@@ -49,7 +50,17 @@ namespace Zsharp.EmitCS
             return proc.StandardOutput.ReadToEnd();
         }
 
-        private string GetProjectPath()
+        private string BuildCommandLine()
+        {
+            var config = Debug ? "Debug" : "Release";
+            var cmdLine = new StringBuilder();
+
+            cmdLine.Append($"build -c {config}");
+
+            return cmdLine.ToString();
+        }
+
+        public string GetProjectPath()
         {
             if (Path.IsPathRooted(ProjectPath))
                 return ProjectPath;

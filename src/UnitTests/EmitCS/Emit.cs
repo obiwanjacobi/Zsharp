@@ -12,6 +12,7 @@ namespace UnitTests.EmitCS
 {
     internal static class Emit
     {
+        private const string ZsharpRuntime = "Zsharp.Runtime.dll";
         private const string AssemblyName = "EmitCsCodeTest";
 
         public static AssemblyManager LoadTestAssemblies()
@@ -53,15 +54,34 @@ namespace UnitTests.EmitCS
                 ProjectPath = projectPath,
             };
 
-            //compiler.Project.AddReference
+            var runtimePath = Path.Combine(
+                // [test] net5.0/debug/bin/UnitTest/src
+                "..", "..", "..", "..", "..",
+                "Zsharp.Runtime",
+                "bin",
+                compiler.Debug ? "Debug" : "Release",
+                compiler.Project.TargetFrameworkMoniker,
+                ZsharpRuntime);
 
-            var output = String.Join(Environment.NewLine, compiler.Compile(AssemblyName));
+            compiler.Project.AddReference(runtimePath);
+
+            var output = compiler.Compile(AssemblyName);
             Console.WriteLine(output);
 
             if (OutputHasErrors(output))
                 throw new ZsharpException($"Build Failed: {projectPath}");
 
             return compiler.Project.TargetPath;
+        }
+
+        private static void CopyZsharpRuntimeTo(string targetDir)
+        {
+            var debug = true;
+            var path = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                ZsharpRuntime);
+
+            File.Copy(path, Path.Combine(targetDir, ZsharpRuntime), overwrite: true);
         }
 
         public static EmitCode Run(string code, string testName, IAstModuleLoader moduleLoader = null)

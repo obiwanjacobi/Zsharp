@@ -21,7 +21,8 @@ namespace Zsharp.EmitCS
         {
             public override void Build(CsBuilder builder, AstFunctionDefinition functionDef)
             {
-                builder.Append($"({functionDef.TypeReference.ToCode()})");
+                var conversion = "Conversion";
+                builder.Append($"Zsharp.Runtime.{conversion}.{functionDef.Identifier!.CanonicalName}");
             }
         }
     }

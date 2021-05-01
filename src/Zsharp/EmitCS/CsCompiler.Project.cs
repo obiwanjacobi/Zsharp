@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 
 namespace Zsharp.EmitCS
@@ -55,7 +57,10 @@ namespace Zsharp.EmitCS
                 foreach (var reference in _references)
                 {
                     writer.WriteStartElement("Reference");
-                    writer.WriteAttributeString("Include", reference);
+                    writer.WriteAttributeString("Include", Path.GetFileNameWithoutExtension(reference));
+                    var path = Path.GetDirectoryName(reference);
+                    if (!String.IsNullOrEmpty(path))
+                        writer.WriteElementString("HintPath", reference);
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();

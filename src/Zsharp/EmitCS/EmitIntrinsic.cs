@@ -42,7 +42,9 @@ namespace Zsharp.EmitCS
                     $"No intrinsic code provider for {functionDef.Identifier!.CanonicalName} ({key}).");
 
             codeProvider.Build(this.CsBuilder, functionDef);
+            this.CsBuilder.Append("(");
             VisitChildren(function);
+            this.CsBuilder.Append(")");
         }
     }
 }

@@ -34,7 +34,7 @@
 - Add AssemblyManager to ExternalModuleLoader to hide Cecil implementation use.
 - TrySetIdentifier should check if IdentifierType matches AstNodeType.
 - TypeReference result of a comparison expression is not a Bool (but U8).
-- Intrinsic function impls in Zsharp.Runtime library (aggressive inlining).
+- AstFunctionDefinitionIntrinsic.TrySetSymbol should not be called?
 
 ---
 
