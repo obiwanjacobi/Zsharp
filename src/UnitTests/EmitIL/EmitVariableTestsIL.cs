@@ -26,6 +26,7 @@ namespace UnitTests.EmitIL
         }
 
         [TestMethod]
+        [Ignore("TODO")]
         public void TopVariableAssignment_VariableRef()
         {
             const string code =

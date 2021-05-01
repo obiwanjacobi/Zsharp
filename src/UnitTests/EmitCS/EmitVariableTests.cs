@@ -24,13 +24,13 @@ namespace UnitTests.EmitCS
         {
             const string code =
                 "module test" + Tokens.NewLine +
-                "x = 42" + Tokens.NewLine +
+                "x: I32 = 42" + Tokens.NewLine +
                 "a = x + 42" + Tokens.NewLine
                 ;
 
             var emitCode = Emit.Run(code, "TopVariableAssignment_VariableRef");
             var csCode = emitCode.ToString();
-            csCode.Should().Contain("private static System.Byte x = 42;");
+            csCode.Should().Contain("private static System.Int32 x = 42;");
         }
 
         [TestMethod]
@@ -67,13 +67,13 @@ namespace UnitTests.EmitCS
             const string code =
                 "module test" + Tokens.NewLine +
                 "fn: ()" + Tokens.NewLine +
-                Tokens.Indent1 + "x: U8" + Tokens.NewLine +
+                Tokens.Indent1 + "x: I32" + Tokens.NewLine +
                 Tokens.Indent1 + "a = x + 1" + Tokens.NewLine
                 ;
 
             var emitCode = Emit.Run(code, "VariableAssignment_ExpressionVariableRef");
             var csCode = emitCode.ToString();
-            csCode.Should().Contain("System.Byte a = x + 1;");
+            csCode.Should().Contain("System.Int32 a = x + 1;");
         }
 
         [TestMethod]
@@ -92,9 +92,9 @@ namespace UnitTests.EmitCS
 
             var emitCode = Emit.Run(code, "VariableAssignment_StructFieldInit");
             var csCode = emitCode.ToString();
-            csCode.Should().Contain("MyStruct s = new MyStruct")
-                .And.Contain("Id = 42")
-                .And.Contain("Name = \"Hello\"");
+            csCode.Should().Contain("Mystruct s = new Mystruct")
+                .And.Contain("Id = 42,")
+                .And.Contain("Name = \"Hello\",");
         }
     }
 }
