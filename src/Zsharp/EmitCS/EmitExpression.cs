@@ -5,12 +5,13 @@ namespace Zsharp.EmitCS
 {
     public class EmitExpression : AstVisitor
     {
-        private readonly CsBuilder _builder;
-
         internal EmitExpression(CsBuilder builder)
         {
             _builder = builder;
         }
+
+        private readonly CsBuilder _builder;
+        internal CsBuilder CsBuilder => _builder;
 
         public override void VisitExpression(AstExpression expression)
         {
@@ -131,6 +132,13 @@ namespace Zsharp.EmitCS
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
+            if (function.FunctionDefinition is AstFunctionDefinitionIntrinsic intrinsicDef)
+            {
+                var emitter = new EmitIntrinsic(_builder);
+                emitter.EmitFunction(function, intrinsicDef);
+                return;
+            }
+
             _builder.Append($"{function.Identifier!.CanonicalName}(");
 
             VisitChildren(function);

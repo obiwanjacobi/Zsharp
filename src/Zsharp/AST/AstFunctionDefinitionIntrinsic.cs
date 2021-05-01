@@ -4,6 +4,19 @@ namespace Zsharp.AST
 {
     public class AstFunctionDefinitionIntrinsic : AstFunctionDefinition
     {
+        public static readonly AstFunctionDefinitionIntrinsic ConvertU8ToU16 = new(
+                AstIdentifierIntrinsic.U16, AstTypeDefinitionIntrinsic.U8, AstTypeDefinitionIntrinsic.U16);
+        public static readonly AstFunctionDefinitionIntrinsic ConvertU8ToU32 = new(
+            AstIdentifierIntrinsic.U32, AstTypeDefinitionIntrinsic.U8, AstTypeDefinitionIntrinsic.U32);
+        public static readonly AstFunctionDefinitionIntrinsic ConvertU16ToU32 = new(
+            AstIdentifierIntrinsic.U32, AstTypeDefinitionIntrinsic.U16, AstTypeDefinitionIntrinsic.U32);
+        public static readonly AstFunctionDefinitionIntrinsic ConvertU8ToU64 = new(
+            AstIdentifierIntrinsic.U64, AstTypeDefinitionIntrinsic.U8, AstTypeDefinitionIntrinsic.U64);
+        public static readonly AstFunctionDefinitionIntrinsic ConvertU16ToU64 = new(
+            AstIdentifierIntrinsic.U64, AstTypeDefinitionIntrinsic.U16, AstTypeDefinitionIntrinsic.U64);
+        public static readonly AstFunctionDefinitionIntrinsic ConvertU32ToU64 = new(
+            AstIdentifierIntrinsic.U64, AstTypeDefinitionIntrinsic.U32, AstTypeDefinitionIntrinsic.U64);
+
         public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic toReturn)
         {
             SetIdentifier(typeIdentifier);
@@ -34,25 +47,12 @@ namespace Zsharp.AST
 
         public static void AddAll(AstSymbolTable symbols)
         {
-            var convertU8ToU16 = new AstFunctionDefinitionIntrinsic(
-                AstIdentifierIntrinsic.U16, AstTypeDefinitionIntrinsic.U8, AstTypeDefinitionIntrinsic.U16);
-            var convertU8ToU32 = new AstFunctionDefinitionIntrinsic(
-                AstIdentifierIntrinsic.U32, AstTypeDefinitionIntrinsic.U8, AstTypeDefinitionIntrinsic.U32);
-            var convertU16ToU32 = new AstFunctionDefinitionIntrinsic(
-                AstIdentifierIntrinsic.U32, AstTypeDefinitionIntrinsic.U16, AstTypeDefinitionIntrinsic.U32);
-            var convertU8ToU64 = new AstFunctionDefinitionIntrinsic(
-                AstIdentifierIntrinsic.U64, AstTypeDefinitionIntrinsic.U8, AstTypeDefinitionIntrinsic.U64);
-            var convertU16ToU64 = new AstFunctionDefinitionIntrinsic(
-                AstIdentifierIntrinsic.U64, AstTypeDefinitionIntrinsic.U16, AstTypeDefinitionIntrinsic.U64);
-            var convertU32ToU64 = new AstFunctionDefinitionIntrinsic(
-                AstIdentifierIntrinsic.U64, AstTypeDefinitionIntrinsic.U32, AstTypeDefinitionIntrinsic.U64);
-
-            AddIntrinsicSymbol(symbols, convertU8ToU16);
-            AddIntrinsicSymbol(symbols, convertU8ToU32);
-            AddIntrinsicSymbol(symbols, convertU16ToU32);
-            AddIntrinsicSymbol(symbols, convertU8ToU64);
-            AddIntrinsicSymbol(symbols, convertU16ToU64);
-            AddIntrinsicSymbol(symbols, convertU32ToU64);
+            AddIntrinsicSymbol(symbols, ConvertU8ToU16);
+            AddIntrinsicSymbol(symbols, ConvertU8ToU32);
+            AddIntrinsicSymbol(symbols, ConvertU16ToU32);
+            AddIntrinsicSymbol(symbols, ConvertU8ToU64);
+            AddIntrinsicSymbol(symbols, ConvertU16ToU64);
+            AddIntrinsicSymbol(symbols, ConvertU32ToU64);
         }
 
         private static void AddIntrinsicSymbol(AstSymbolTable symbols, AstFunctionDefinitionIntrinsic function)
@@ -62,6 +62,6 @@ namespace Zsharp.AST
             => SetTypeReference(AstTypeReference.From(type));
 
         public override void Accept(AstVisitor visitor)
-            => throw new System.InvalidOperationException("Must not Visit Intrinsic Function Definition.");
+            => throw new ZsharpException("Must not Visit Intrinsic Function Definition.");
     }
 }
