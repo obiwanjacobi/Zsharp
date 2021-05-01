@@ -109,7 +109,6 @@ namespace Zsharp.EmitCS
         /// <param name="parameters">Optional parameters.</param>
         public void StartMethod(AccessModifiers access, MethodModifiers modifiers, string retType, string methodName, params (string name, string type)[]? parameters)
         {
-            WriteIndent();
             _writer.Write($"{access.ToCode()} {modifiers.ToCode()} {retType} {methodName}(");
             if (parameters != null && parameters.Length > 0)
             {
@@ -124,7 +123,7 @@ namespace Zsharp.EmitCS
         public void Property(AccessModifiers access, string typeName, string fieldName)
         {
             WriteIndent();
-            _writer.Write($"{access.ToCode()} {typeName} {fieldName} {{ get; set; }}");
+            _writer.WriteLine($"{access.ToCode()} {typeName} {fieldName} {{ get; set; }}");
         }
 
         /// <summary>
@@ -157,7 +156,6 @@ namespace Zsharp.EmitCS
         /// <param name="branch">Type of branch statement</param>
         public void StartBranch(BranchStatement branch)
         {
-            WriteIndent();
             _writer.Write(branch.ToCode());
         }
 
@@ -176,7 +174,7 @@ namespace Zsharp.EmitCS
         /// <summary>
         /// <paramref name="post"/> {
         /// </summary>
-        /// <param name="post">optional text befor {</param>
+        /// <param name="post">optional text before {</param>
         public void StartScope(string? post = null)
         {
             if (!String.IsNullOrEmpty(post))
@@ -202,12 +200,12 @@ namespace Zsharp.EmitCS
             _writer.Write(new String(' ', Indent));
         }
 
-        private void IncrementIndent()
+        public void IncrementIndent()
         {
             Indent += 4;
         }
 
-        private void DecrementIndent()
+        public void DecrementIndent()
         {
             if (Indent == 0)
                 throw new InvalidOperationException("Unbalanced Indent.");

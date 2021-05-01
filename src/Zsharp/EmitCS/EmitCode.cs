@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using Zsharp.AST;
 
 namespace Zsharp.EmitCS
@@ -56,6 +58,12 @@ namespace Zsharp.EmitCS
             {
                 Context.CodeBuilder.AddVariable(variable);
             }
+
+            if (variable.ParentAs<AstAssignment>() == null)
+            {
+                // prevent 'use of unassigned variable' error
+                Context.CodeBuilder.CsBuilder.EndLine(" = default");
+            }
         }
 
         public override void VisitVariableReference(AstVariableReference variable)
@@ -66,13 +74,21 @@ namespace Zsharp.EmitCS
 
         public override void VisitAssignment(AstAssignment assign)
         {
+            IDisposable? builderScope = null;
+
             if (assign.Variable is AstVariableDefinition varDef)
             {
                 VisitVariableDefinition(varDef);
+                if (assign.IsTopLevel())
+                {
+                    var field = Context.ModuleClass.ModuleClass.Fields
+                        .Single(f => f.Name == varDef.Identifier!.CanonicalName);
+
+                    builderScope = Context.SetBuilder(field.ValueBuilder);
+                }
             }
             else
             {
-                Context.CodeBuilder.CsBuilder.WriteIndent();
                 VisitVariableReference((AstVariableReference)assign.Variable!);
             }
 
@@ -80,7 +96,17 @@ namespace Zsharp.EmitCS
             {
                 Ast.Guard(assign.Variable!.TypeReference!.TypeDefinition!.IsStruct, "Expect Struct.");
 
-                base.VisitAssignment(assign);
+                Context.CodeBuilder.CsBuilder.AppendLine(
+                    $" = new {assign.Variable.TypeReference.ToCode()}");
+                Context.CodeBuilder.CsBuilder.WriteIndent();
+                Context.CodeBuilder.CsBuilder.StartScope();
+
+                foreach (var field in assign.Fields)
+                {
+                    VisitTypeFieldInitialization(field);
+                }
+
+                Context.CodeBuilder.CsBuilder.EndScope();
             }
 
             if (assign.Expression != null)
@@ -90,31 +116,25 @@ namespace Zsharp.EmitCS
             }
 
             Context.CodeBuilder.CsBuilder.EndLine();
+
+            builderScope?.Dispose();
         }
 
         public override void VisitTypeFieldInitialization(AstTypeFieldInitialization field)
         {
-            //var assign = field.ParentAs<AstAssignment>();
-            //if (assign != null)
-            //{
-            //    var varName = CodeBuilder.BuildInitName(assign.Variable.Identifier.CanonicalName);
-            //    var varDef = Context.CodeBuilder.GetVariable(varName);
-
-            //    Context.CodeBuilder.CodeBlock.Add(
-            //        Context.InstructionFactory.LoadVariableAddress(varDef));
-
-            //    VisitChildren(field);
-
-            //    var typeDef = Context.GetTypeDefinition(assign.Variable.TypeReference);
-            //    var fieldDef = typeDef.Fields.Find(field.Identifier.CanonicalName);
-
-            //    Context.CodeBuilder.CodeBlock.Add(
-            //        Context.InstructionFactory.StoreField(fieldDef));
-            //}
+            var assign = field.ParentAs<AstAssignment>();
+            if (assign != null)
+            {
+                Context.CodeBuilder.CsBuilder.Append(
+                    $"{field.Identifier!.CanonicalName} = ");
+                VisitChildren(field);
+                Context.CodeBuilder.CsBuilder.AppendLine(",");
+            }
         }
 
         public override void VisitBranchExpression(AstBranchExpression branch)
         {
+            Context.CodeBuilder.CsBuilder.WriteIndent();
             Context.CodeBuilder.StartBranch(branch);
 
             if (branch.HasExpression)

@@ -45,6 +45,7 @@ namespace Zsharp.EmitCS
                 RedirectStandardOutput = true,
             };
             using var proc = Process.Start(startInfo);
+            proc.WaitForExit();
             return proc.StandardOutput.ReadToEnd();
         }
 

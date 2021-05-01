@@ -7,10 +7,15 @@ namespace Zsharp.EmitCS.CSharp
         public Method(string name)
         {
             Name = name;
-            Body = new CsBuilder();
         }
 
-        public CsBuilder Body { get; }
+        private CsBuilder? _body;
+        public CsBuilder GetBody(int indent)
+        {
+            if (_body == null)
+                _body = new CsBuilder(indent);
+            return _body;
+        }
 
         public AccessModifiers AccessModifiers { get; set; }
 

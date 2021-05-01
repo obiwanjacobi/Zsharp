@@ -60,6 +60,10 @@ namespace Zsharp.EmitCS
             foreach (var field in @class.Fields)
             {
                 builder.StartField(field.AccessModifiers, field.FieldModifiers, field.TypeName, field.Name);
+
+                var initExpr = field.InitExpression;
+                if (!String.IsNullOrEmpty(initExpr))
+                    builder.Append(initExpr);
             }
 
             foreach (var property in @class.Properties)
@@ -72,8 +76,10 @@ namespace Zsharp.EmitCS
                 var parameters = method.Parameters
                     .Select(p => (name: p.Name, type: p.TypeName))
                     .ToArray();
+                builder.WriteIndent();
                 builder.StartMethod(method.AccessModifiers, method.MethodModifiers, method.TypeName, method.Name, parameters);
-                builder.AppendLine(method.Body.ToString());
+                builder.WriteIndent();
+                builder.AppendLine(method.GetBody(0).ToString());
                 builder.EndScope();
             }
 
@@ -83,10 +89,11 @@ namespace Zsharp.EmitCS
 
                 foreach (var option in @enum.Options)
                 {
+                    builder.WriteIndent();
                     builder.Append($"{option.Name}");
                     if (!String.IsNullOrEmpty(option.Value))
                         builder.Append($" = {option.Value}");
-                    builder.Append(",");
+                    builder.AppendLine(",");
                 }
 
                 builder.EndScope();

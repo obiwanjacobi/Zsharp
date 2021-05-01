@@ -131,7 +131,6 @@ namespace Zsharp.EmitCS
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            _builder.WriteIndent();
             _builder.Append($"{function.Identifier!.CanonicalName}(");
 
             VisitChildren(function);

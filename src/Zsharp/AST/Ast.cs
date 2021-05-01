@@ -29,7 +29,12 @@ namespace Zsharp.AST
         }
 
         public static bool IsTopLevel(this AstNode node)
-            => node?.ParentAs<AstCodeBlock>()?.ParentAs<AstFile>() != null;
+        {
+            if (node.ParentAs<AstAssignment>() != null)
+                node = node.Parent!;
+
+            return node?.ParentAs<AstCodeBlock>()?.ParentAs<AstFile>() != null;
+        }
 
         [Conditional("DEBUG")]
         public static void Guard<T>(object? instance)

@@ -41,7 +41,22 @@ namespace Zsharp.EmitCS
 
         internal ClassBuilder ModuleClass => ModuleScope.ClassBuilder;
 
-        internal CodeBuilder CodeBuilder => FunctionScope.CodeBuilder;
+        private CodeBuilder? _codeBuilder;
+        internal CodeBuilder CodeBuilder
+            => _codeBuilder ?? FunctionScope.CodeBuilder;
+
+        // pass null to reset
+        internal IDisposable? SetBuilder(CsBuilder? builder)
+        {
+            if (builder == null)
+            {
+                _codeBuilder = null;
+                return null;
+            }
+
+            _codeBuilder = new CodeBuilder(builder);
+            return new BuilderScope(this);
+        }
 
         internal void Imports(AstSymbolTable symbolTable)
         {
@@ -74,7 +89,7 @@ namespace Zsharp.EmitCS
             };
             classBuilder.ModuleClass.AddMethod(method);
 
-            var funScope = new FunctionScope(this, method.Body);
+            var funScope = new FunctionScope(this, method.GetBody(8));
             Scopes.Push(funScope);
             return new LinkedScopes(funScope, modScope);
         }
@@ -86,7 +101,7 @@ namespace Zsharp.EmitCS
 
             var method = ModuleClass.AddFunction(function);
 
-            var scope = new FunctionScope(this, method.Body);
+            var scope = new FunctionScope(this, method.GetBody(8));
             Scopes.Push(scope);
             return scope;
         }

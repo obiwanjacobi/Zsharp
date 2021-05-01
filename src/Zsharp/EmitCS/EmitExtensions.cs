@@ -1,4 +1,5 @@
-﻿using Zsharp.AST;
+﻿using System;
+using Zsharp.AST;
 
 namespace Zsharp.EmitCS
 {
@@ -24,7 +25,7 @@ namespace Zsharp.EmitCS
 
                 return astType.Identifier!.CanonicalName;
             }
-            return "void";
+            return String.Empty;
         }
     }
 }
