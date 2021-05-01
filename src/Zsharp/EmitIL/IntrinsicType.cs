@@ -39,7 +39,7 @@ namespace Zsharp.EmitIL
             }
 
             throw new InvalidOperationException(
-                $"Intrinsic Type {intrinsicType.Identifier.Name} not found.");
+                $"Intrinsic Type {intrinsicType.Identifier!.Name} not found.");
         }
     }
 }

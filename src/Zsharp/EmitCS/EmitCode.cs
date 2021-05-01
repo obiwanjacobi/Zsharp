@@ -191,7 +191,7 @@ namespace Zsharp.EmitCS
         {
             var dir = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(dir!);
 
             File.WriteAllText(filePath, ToString());
         }

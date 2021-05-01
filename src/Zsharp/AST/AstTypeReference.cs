@@ -100,11 +100,11 @@ namespace Zsharp.AST
         public bool IsTemplateParameter { get; set; }
         // true when type is a template instantiation
         public bool IsTemplate
-            => TypeOrigin?.IsTemplate ?? _templateParameters.Count > 0;
+            => TypeOrigin?.IsTemplate ?? _templateParameters!.Count > 0;
 
         private readonly List<AstTemplateParameterReference>? _templateParameters;
         public IEnumerable<AstTemplateParameter> TemplateParameters
-            => TypeOrigin?.TemplateParameters ?? _templateParameters;
+            => TypeOrigin?.TemplateParameters ?? _templateParameters!;
 
         public bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
         {

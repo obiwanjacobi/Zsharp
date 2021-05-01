@@ -74,16 +74,6 @@ namespace UnitTests.EmitCS
             return compiler.Project.TargetPath;
         }
 
-        private static void CopyZsharpRuntimeTo(string targetDir)
-        {
-            var debug = true;
-            var path = Path.Combine(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                ZsharpRuntime);
-
-            File.Copy(path, Path.Combine(targetDir, ZsharpRuntime), overwrite: true);
-        }
-
         public static EmitCode Run(string code, string testName, IAstModuleLoader moduleLoader = null)
         {
             var emit = Emit.Create(code, moduleLoader);

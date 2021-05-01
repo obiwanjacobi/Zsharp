@@ -69,8 +69,8 @@ namespace Zsharp.EmitIL
 
         public IDisposable AddModule(AstModulePublic module)
         {
-            if (Module.Types.Find(module.Identifier.Name) != null)
-                throw new ArgumentException($"ModuleClass for {module.Identifier.Name} already exists.");
+            if (Module.Types.Find(module.Identifier!.CanonicalName) != null)
+                throw new ArgumentException($"ModuleClass for {module.Identifier!.Name} already exists.");
             if (Scopes.Count > 0)
                 throw new InvalidOperationException("A Module must be added first.");
 
@@ -116,13 +116,13 @@ namespace Zsharp.EmitIL
             //    return Module.ImportReference(externalType.??);
             //}
 
-            var nameParts = typeReference.Symbol.FullName.Split('.');
+            var nameParts = typeReference.Symbol!.FullName.Split('.');
             if (nameParts.Length == 0)
                 throw new ArgumentException(
                     "[Emit] Type (symbol) name was empty.", nameof(typeReference));
 
             var types = Module.Types;
-            TypeDefinition typeDef = null;
+            TypeDefinition? typeDef = null;
             foreach (var name in nameParts)
             {
                 typeDef = types.Find(name);
@@ -130,7 +130,7 @@ namespace Zsharp.EmitIL
 
                 types = typeDef!.NestedTypes;
             }
-            return typeDef;
+            return typeDef!;
         }
 
         internal TypeReference ToTypeReference(AstTypeReference typeReference)
@@ -141,7 +141,7 @@ namespace Zsharp.EmitIL
                 return Module.TypeSystem.Void;
             }
 
-            if (typeReference.TypeDefinition.IsIntrinsic)
+            if (typeReference.TypeDefinition!.IsIntrinsic)
             {
                 // Map intrinsic data types to .NET data types
                 var type = ((AstTypeDefinitionIntrinsic)typeReference.TypeDefinition).SystemType;
@@ -156,7 +156,7 @@ namespace Zsharp.EmitIL
             IMetadataScope? metadataScope = null;
 
             var typeRef = new TypeReference("Todo",
-                typeReference.TypeDefinition.Identifier.CanonicalName,
+                typeReference.TypeDefinition!.Identifier!.CanonicalName,
                 Module,
                 metadataScope, true);
 

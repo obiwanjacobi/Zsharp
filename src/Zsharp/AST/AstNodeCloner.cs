@@ -30,7 +30,7 @@ namespace Zsharp.AST
                 VisitChildren(functionDef);
                 _context.RevertCurrent();
 
-                instanceFunction.SetIdentifier(functionRef.Identifier);
+                instanceFunction.SetIdentifier(functionRef.Identifier!);
 
                 AstSymbolTable symbols;
                 if (templateFunctionDef is IAstSymbolTableSite symbolSite)
@@ -68,10 +68,10 @@ namespace Zsharp.AST
                 var refParam = refTemplateParams[i];
 
                 _typeMap.Add(
-                    defParam.Identifier.CanonicalName,
-                    refParam.TypeReference
+                    defParam.Identifier!.CanonicalName,
+                    refParam.TypeReference!
                 );
-                _typeList.Add(refParam.TypeReference);
+                _typeList.Add(refParam.TypeReference!);
             }
         }
 
@@ -103,7 +103,7 @@ namespace Zsharp.AST
         public override void VisitCodeBlock(AstCodeBlock codeBlock)
         {
             var cb = new AstCodeBlock(
-                codeBlock.Symbols.Name, codeBlock.Symbols.ParentTable, codeBlock.Context);
+                codeBlock.Symbols.Name, codeBlock.Symbols!.ParentTable!, codeBlock.Context);
 
             var site = _context.GetCurrent<IAstCodeBlockSite>();
             site.SetCodeBlock(cb);
@@ -118,7 +118,7 @@ namespace Zsharp.AST
             if (function is AstFunctionDefinitionImpl functionDef)
             {
                 var fnDef = new AstFunctionDefinitionImpl((Function_defContext)functionDef.Context!);
-                fnDef.SetIdentifier(functionDef.Identifier);
+                fnDef.SetIdentifier(functionDef.Identifier!);
 
                 var codeBlock = _context.GetCurrent<AstCodeBlock>();
                 codeBlock.AddItem(fnDef);
@@ -138,10 +138,10 @@ namespace Zsharp.AST
             {
                 Function_parameterContext ctx => new AstFunctionParameterDefinition(ctx),
                 Function_parameter_selfContext ctx => new AstFunctionParameterDefinition(ctx),
-                _ => new AstFunctionParameterDefinition(parameter.Identifier)
+                _ => new AstFunctionParameterDefinition(parameter.Identifier!)
             };
 
-            paramDef.TrySetIdentifier(parameter.Identifier);
+            paramDef.TrySetIdentifier(parameter.Identifier!);
 
             var fnDef = _context.GetCurrent<AstFunctionDefinition>();
             fnDef.AddParameter(paramDef);
@@ -155,9 +155,9 @@ namespace Zsharp.AST
 
         public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
         {
-            var paramRef = new AstFunctionParameterReference((Function_param_useContext)parameter.Context);
+            var paramRef = new AstFunctionParameterReference((Function_param_useContext)parameter.Context!);
             // param ref usually has no Identifier
-            paramRef.TrySetIdentifier(parameter.Identifier);
+            paramRef.TrySetIdentifier(parameter.Identifier!);
 
             var fnRef = _context.GetCurrent<AstFunctionReference>();
             fnRef.AddParameter(paramRef);
@@ -172,8 +172,8 @@ namespace Zsharp.AST
 
         private AstFunctionReference CloneFunctionReference(AstFunctionReference function)
         {
-            var fnRef = new AstFunctionReference(function.Context);
-            fnRef.SetIdentifier(function.Identifier);
+            var fnRef = new AstFunctionReference(function.Context!);
+            fnRef.SetIdentifier(function.Identifier!);
 
             _context.SetCurrent(fnRef);
             VisitChildren(function);
@@ -187,7 +187,7 @@ namespace Zsharp.AST
 
         private AstExpression CloneExpression(AstExpression expression)
         {
-            var expr = new AstExpression(expression.Context)
+            var expr = new AstExpression(expression.Context!)
             {
                 Operator = expression.Operator
             };
@@ -204,7 +204,7 @@ namespace Zsharp.AST
 
         public override void VisitExpressionOperand(AstExpressionOperand operand)
         {
-            AstNode child = null;
+            AstNode? child = null;
 
             if (operand.Expression != null)
                 child = CloneExpression(operand.Expression);
@@ -227,8 +227,9 @@ namespace Zsharp.AST
             if (operand.VariableReference != null)
                 child = CloneVariableReference(operand.VariableReference);
 
-            var op = new AstExpressionOperand(child);
-            op.SetTypeReference(CloneTypeReference(operand.TypeReference));
+            Ast.Guard(child, "Expression Operand yielded no AstNode.");
+            var op = new AstExpressionOperand(child!);
+            op.SetTypeReference(CloneTypeReference(operand.TypeReference!));
 
             var exp = _context.GetCurrent<AstExpression>();
             exp.Add(op);
@@ -260,10 +261,10 @@ namespace Zsharp.AST
 
             _context.SetCurrent(a);
 
-            var v = CloneVariable(assign.Variable);
+            var v = CloneVariable(assign.Variable!);
             a.SetVariable(v);
 
-            VisitExpression(assign.Expression);
+            VisitExpression(assign.Expression!);
             _context.RevertCurrent();
         }
 
@@ -287,11 +288,11 @@ namespace Zsharp.AST
 
         private AstVariableDefinition CloneVariableDefinition(AstVariableDefinition variable)
         {
-            var varDef = new AstVariableDefinition(variable.Context)
+            var varDef = new AstVariableDefinition(variable.Context!)
             {
                 Indent = variable.Indent
             };
-            varDef.SetIdentifier(variable.Identifier);
+            varDef.SetIdentifier(variable.Identifier!);
 
             _context.SetCurrent(varDef);
             VisitChildren(variable);
@@ -308,8 +309,8 @@ namespace Zsharp.AST
 
         private AstVariableReference CloneVariableReference(AstVariableReference variable)
         {
-            var varRef = new AstVariableReference(variable.Context);
-            varRef.SetIdentifier(variable.Identifier);
+            var varRef = new AstVariableReference(variable.Context!);
+            varRef.SetIdentifier(variable.Identifier!);
 
             _context.SetCurrent(varRef);
             VisitChildren(variable);
@@ -392,9 +393,8 @@ namespace Zsharp.AST
         private AstTypeReference CloneTypeReference(AstTypeReference type)
         {
             AstTypeReference typeRef;
-            var symbols = _context.GetCurrent<IAstSymbolTableSite>();
 
-            if (_typeMap.TryGetValue(type.Identifier.CanonicalName, out AstTypeReference? newType))
+            if (_typeMap.TryGetValue(type.Identifier!.CanonicalName, out AstTypeReference? newType))
             {
                 typeRef = newType.MakeProxy();
             }
@@ -405,7 +405,7 @@ namespace Zsharp.AST
 
                 foreach (AstTemplateParameterDefinition templParamDef in templateDef.TemplateParameters)
                 {
-                    if (_typeMap.TryGetValue(templParamDef.Identifier.CanonicalName, out AstTypeReference? paramType))
+                    if (_typeMap.TryGetValue(templParamDef.Identifier!.CanonicalName, out AstTypeReference? paramType))
                     {
                         var templParam = new AstTemplateParameterReference(paramType.MakeProxy());
                         typeRef.AddTemplateParameter(templParam);
@@ -429,9 +429,9 @@ namespace Zsharp.AST
             AstBranch br;
 
             if (branch.BranchType == AstBranchType.ExitIteration)
-                br = new AstBranch((Statement_continueContext)branch.Context);
+                br = new AstBranch((Statement_continueContext)branch.Context!);
             else if (branch.BranchType == AstBranchType.ExitLoop)
-                br = new AstBranch((Statement_breakContext)branch.Context);
+                br = new AstBranch((Statement_breakContext)branch.Context!);
             else
                 throw new InvalidOperationException("Unknown Branch Type.");
 
@@ -445,7 +445,7 @@ namespace Zsharp.AST
 
         public override void VisitBranchConditional(AstBranchConditional branch)
         {
-            var br = new AstBranchConditional(branch.Context);
+            var br = new AstBranchConditional(branch.Context!);
 
             var cb = _context.GetCurrent<AstCodeBlock>();
             cb.AddItem(br);
@@ -457,7 +457,7 @@ namespace Zsharp.AST
 
         public override void VisitBranchExpression(AstBranchExpression branch)
         {
-            var br = new AstBranchExpression((Statement_returnContext)branch.Context);
+            var br = new AstBranchExpression((Statement_returnContext)branch.Context!);
 
             var cb = _context.GetCurrent<AstCodeBlock>();
             cb.AddItem(br);

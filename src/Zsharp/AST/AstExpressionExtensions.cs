@@ -1,9 +1,8 @@
 ﻿using System;
-using Zsharp.AST;
 
-namespace Zsharp.Dgml
+namespace Zsharp.AST
 {
-    public static class AstExtensions
+    public static class AstExpressionExtensions
     {
         public static string AsString(this AstExpressionOperator op)
         {

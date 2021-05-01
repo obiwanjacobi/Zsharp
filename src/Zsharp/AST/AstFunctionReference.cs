@@ -20,7 +20,7 @@ namespace Zsharp.AST
         {
             get
             {
-                Ast.Guard(Symbol, $"No Symbol is set for Function reference {Identifier.Name}.");
+                Ast.Guard(Symbol, $"No Symbol is set for Function reference {Identifier!.Name}.");
                 var entry = Symbol!;
 
                 if (entry.HasOverloads)
@@ -52,7 +52,7 @@ namespace Zsharp.AST
         {
             var txt = new StringBuilder();
 
-            txt.Append(Identifier.Name);
+            txt.Append(Identifier!.Name);
             txt.Append(": (");
 
             for (int i = 0; i < Parameters.Count(); i++)

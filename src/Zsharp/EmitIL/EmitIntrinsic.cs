@@ -16,9 +16,9 @@ namespace Zsharp.EmitIL
 
             // conversion
             var target = ((AstTypeDefinitionIntrinsic)
-                    functionDef.TypeReference.TypeDefinition).ToIntrinsicType();
+                    functionDef.TypeReference!.TypeDefinition!).ToIntrinsicType();
             var source = ((AstTypeDefinitionIntrinsic)
-                functionDef.Parameters.First().TypeReference.TypeDefinition).ToIntrinsicType();
+                functionDef.Parameters.First().TypeReference!.TypeDefinition!).ToIntrinsicType();
 
             EmitContext.CodeBuilder.CodeBlock.Add(
                 EmitContext.InstructionFactory.Convert(target, source));

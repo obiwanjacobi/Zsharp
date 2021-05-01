@@ -4,13 +4,19 @@ namespace Zsharp.EmitCS.CSharp
 {
     internal class Field
     {
+        public Field(string name, string typeName)
+        {
+            Name = name;
+            TypeName = typeName;
+        }
+
         public AccessModifiers AccessModifiers { get; set; }
 
         public FieldModifiers FieldModifiers { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public string TypeName { get; set; }
+        public string TypeName { get; }
 
         public string InitExpression
         {

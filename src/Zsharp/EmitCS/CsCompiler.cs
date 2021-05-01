@@ -46,8 +46,13 @@ namespace Zsharp.EmitCS
                 RedirectStandardOutput = true,
             };
             using var proc = Process.Start(startInfo);
-            proc.WaitForExit();
-            return proc.StandardOutput.ReadToEnd();
+            if (proc != null)
+            {
+                proc.WaitForExit();
+                return proc.StandardOutput.ReadToEnd();
+            }
+
+            return "Build FAILED - process could not be started.";
         }
 
         private string BuildCommandLine()

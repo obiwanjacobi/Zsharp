@@ -112,7 +112,7 @@ namespace Zsharp.AST
             }
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var entryMod = symbols.AddSymbol(module.Identifier.Name, AstSymbolKind.Module, module);
+            var entryMod = symbols.AddSymbol(module.Identifier!.CanonicalName, AstSymbolKind.Module, module);
             entryMod.SymbolLocality = AstSymbolLocality.Imported;
             return null;
         }
@@ -189,7 +189,7 @@ namespace Zsharp.AST
                 var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
                 function.SetTypeReference(typeRef);
 
-                var typeName = typeRef.Identifier.CanonicalName;
+                var typeName = typeRef.Identifier!.CanonicalName;
                 var entry = symbolTable.Symbols.FindEntry(typeName, AstSymbolKind.Type);
                 if (entry == null)
                     entry = symbolTable.AddSymbol(typeName, AstSymbolKind.Type, typeRef);
@@ -556,7 +556,7 @@ namespace Zsharp.AST
                 }
                 else
                 {
-                    value = (int)field.Expression.RHS.LiteralNumeric.Value;
+                    value = (int)field.Expression!.RHS!.LiteralNumeric!.Value;
                 }
                 value++;
             }

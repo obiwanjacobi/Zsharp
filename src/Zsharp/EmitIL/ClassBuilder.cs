@@ -22,7 +22,7 @@ namespace Zsharp.EmitIL
         public static ClassBuilder Create(EmitContext context, AstModulePublic module)
         {
             var typeDef = CreateType(
-                context.Module, context.Module.Name, module.Identifier.Name, ToTypeAttributes(module));
+                context.Module, context.Module.Name, module.Identifier!.CanonicalName, ToTypeAttributes(module));
             context.Module.Types.Add(typeDef);
             return new ClassBuilder(context, typeDef);
         }
@@ -62,16 +62,16 @@ namespace Zsharp.EmitIL
         public MethodDefinition AddFunction(AstFunctionDefinition function)
         {
             var methodDef = new MethodDefinition(
-                function.Identifier.CanonicalName,
+                function.Identifier!.CanonicalName,
                 ToMethodAttibutes(function),
-                _context.ToTypeReference(function.TypeReference));
+                _context.ToTypeReference(function.TypeReference!));
 
             foreach (var p in function.Parameters)
             {
                 methodDef.Parameters.Add(new ParameterDefinition(
-                    p.Identifier.CanonicalName,
+                    p.Identifier!.CanonicalName,
                     ToParameterAttributes(p),
-                    _context.ToTypeReference(p.TypeReference)
+                    _context.ToTypeReference(p.TypeReference!)
                     ));
             }
 
@@ -81,13 +81,13 @@ namespace Zsharp.EmitIL
 
         public TypeDefinition AddTypeStruct(AstTypeDefinitionStruct structType)
         {
-            var typeDef = CreateType(String.Empty, structType.Identifier.CanonicalName, ToTypeAttributes(structType), EmitContext.DotNet.ValueType);
+            var typeDef = CreateType(String.Empty, structType.Identifier!.CanonicalName, ToTypeAttributes(structType), EmitContext.DotNet.ValueType);
 
             foreach (var field in structType.Fields)
             {
-                var typeRef = _context.ToTypeReference(field.TypeReference);
+                var typeRef = _context.ToTypeReference(field.TypeReference!);
                 var fieldAttrs = FieldAttributes.Public;
-                var fieldDef = new FieldDefinition(field.Identifier.CanonicalName, fieldAttrs, typeRef);
+                var fieldDef = new FieldDefinition(field.Identifier!.CanonicalName, fieldAttrs, typeRef);
                 typeDef.Fields.Add(fieldDef);
             }
 
@@ -97,7 +97,7 @@ namespace Zsharp.EmitIL
 
         public TypeDefinition AddTypeEnum(AstTypeDefinitionEnum enumType)
         {
-            var typeDef = CreateType(String.Empty, enumType.Identifier.CanonicalName, ToTypeAttributes(enumType), EmitContext.DotNet.EnumType);
+            var typeDef = CreateType(String.Empty, enumType.Identifier!.CanonicalName, ToTypeAttributes(enumType), EmitContext.DotNet.EnumType);
             var typeRef = _context.ToTypeReference(enumType.BaseType!);
 
             var fieldAttrs = FieldAttributes.Public | FieldAttributes.SpecialName | FieldAttributes.RTSpecialName;
@@ -107,9 +107,9 @@ namespace Zsharp.EmitIL
             foreach (var field in enumType.Fields)
             {
                 fieldAttrs = FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.Literal;
-                fieldDef = new FieldDefinition(field.Identifier.CanonicalName, fieldAttrs, typeDef)
+                fieldDef = new FieldDefinition(field.Identifier!.CanonicalName, fieldAttrs, typeDef)
                 {
-                    Constant = field.Expression.ConstantValue()
+                    Constant = field.Expression!.ConstantValue()
                 };
                 typeDef.Fields.Add(fieldDef);
             }
@@ -156,7 +156,7 @@ namespace Zsharp.EmitIL
         private static TypeAttributes ToTypeAttributes(AstTypeDefinitionStruct typeDefinition)
         {
             var attrs = TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.SequentialLayout | TypeAttributes.BeforeFieldInit;
-            attrs |= typeDefinition.Symbol.SymbolLocality == AstSymbolLocality.Exported
+            attrs |= typeDefinition.Symbol!.SymbolLocality == AstSymbolLocality.Exported
                 ? TypeAttributes.NestedPublic
                 : TypeAttributes.NestedPrivate;
             return attrs;
@@ -165,7 +165,7 @@ namespace Zsharp.EmitIL
         private static TypeAttributes ToTypeAttributes(AstTypeDefinitionEnum typeDefinition)
         {
             var attrs = TypeAttributes.Class | TypeAttributes.Sealed;
-            attrs |= typeDefinition.Symbol.SymbolLocality == AstSymbolLocality.Exported
+            attrs |= typeDefinition.Symbol!.SymbolLocality == AstSymbolLocality.Exported
                 ? TypeAttributes.NestedPublic
                 : TypeAttributes.NestedPrivate;
             return attrs;
@@ -175,7 +175,7 @@ namespace Zsharp.EmitIL
         {
             var attrs = MethodAttributes.Static | MethodAttributes.HideBySig;
 
-            attrs |= (function.Symbol.SymbolLocality == AstSymbolLocality.Exported)
+            attrs |= (function.Symbol!.SymbolLocality == AstSymbolLocality.Exported)
                 ? MethodAttributes.Public : MethodAttributes.Private;
 
             return attrs;
@@ -185,7 +185,7 @@ namespace Zsharp.EmitIL
         {
             var attrs = ParameterAttributes.In;
 
-            if (p.TypeReference.IsOptional)
+            if (p.TypeReference!.IsOptional)
                 attrs |= ParameterAttributes.Optional;
 
             return attrs;

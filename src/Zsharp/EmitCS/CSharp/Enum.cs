@@ -4,9 +4,14 @@ namespace Zsharp.EmitCS.CSharp
 {
     internal class Enum
     {
+        public Enum(string name)
+        {
+            Name = name;
+        }
+
         public AccessModifiers AccessModifiers { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
         public string? BaseTypeName { get; set; }
 
@@ -21,7 +26,11 @@ namespace Zsharp.EmitCS.CSharp
 
     internal class EnumOption
     {
-        public string Name { get; set; }
+        public EnumOption(string name)
+        {
+            Name = name;
+        }
+        public string Name { get; }
         public string? Value { get; set; }
     }
 }

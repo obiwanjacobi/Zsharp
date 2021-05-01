@@ -4,9 +4,10 @@ namespace Zsharp.EmitCS.CSharp
 {
     internal class Method
     {
-        public Method(string name)
+        public Method(string name, string typeName)
         {
             Name = name;
+            TypeName = typeName;
         }
 
         private CsBuilder? _body;
@@ -21,9 +22,9 @@ namespace Zsharp.EmitCS.CSharp
 
         public MethodModifiers MethodModifiers { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public string TypeName { get; set; }
+        public string TypeName { get; }
 
         private readonly List<Parameter> _parameters = new();
         public IEnumerable<Parameter> Parameters => _parameters;
@@ -36,7 +37,13 @@ namespace Zsharp.EmitCS.CSharp
 
     internal class Parameter
     {
-        public string Name { get; set; }
-        public string TypeName { get; set; }
+        public Parameter(string name, string typeName)
+        {
+            Name = name;
+            TypeName = typeName;
+        }
+
+        public string Name { get; }
+        public string TypeName { get; }
     }
 }

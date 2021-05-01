@@ -66,7 +66,7 @@ namespace Zsharp.AST
             Symbols.Add((AstTemplateParameterDefinition)templateParameter);
             _templateParameters.Add(templateParameter);
 
-            Identifier.TemplateParameterCount = _templateParameters.Count;
+            Identifier!.TemplateParameterCount = _templateParameters.Count;
             return true;
         }
 

@@ -10,6 +10,7 @@ namespace Zsharp.EmitCS
         internal Project()
         {
             TargetFrameworkMoniker = "net5.0";
+            TargetPath = String.Empty;
         }
 
         public SdkType Sdk { get; set; }

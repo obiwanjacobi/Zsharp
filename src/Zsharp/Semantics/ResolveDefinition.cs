@@ -228,7 +228,7 @@ namespace Zsharp.Semantics
         {
             VisitChildren(enumOption);
 
-            if (enumOption.Symbol.Definition == null &&
+            if (enumOption.Symbol!.Definition == null &&
                 !enumOption.TryResolve())
             {
                 _context.UndefinedEnumeration(enumOption);
@@ -248,10 +248,10 @@ namespace Zsharp.Semantics
                         if (function.IsTemplate)
                         {
                             var entry = function.Symbol;
-                            var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinition>(
-                                function.Identifier.TemplateDefinitionName, AstSymbolKind.Function);
+                            var templateFunction = entry!.SymbolTable.FindDefinition<AstFunctionDefinition>(
+                                function.Identifier!.TemplateDefinitionName, AstSymbolKind.Function);
 
-                            var typeDef = new AstTemplateInstanceFunction(templateFunction);
+                            var typeDef = new AstTemplateInstanceFunction(templateFunction!);
 
                             typeDef.Instantiate(_context, function);
                             entry.AddNode(typeDef);
@@ -276,7 +276,7 @@ namespace Zsharp.Semantics
             // TODO: take parameter type from definition?
             if (parameter.TypeReference == null)
             {
-                parameter.SetTypeReference(parameter.Expression.TypeReference.MakeProxy());
+                parameter.SetTypeReference(parameter.Expression!.TypeReference!.MakeProxy());
             }
         }
 
@@ -296,10 +296,10 @@ namespace Zsharp.Semantics
                     if (type.IsTemplate)
                     {
                         var entry = type.Symbol;
-                        var templateType = entry.SymbolTable.FindDefinition<AstTypeDefinitionStruct>(
-                            type.Identifier.TemplateDefinitionName, AstSymbolKind.Type);
+                        var templateType = entry!.SymbolTable.FindDefinition<AstTypeDefinitionStruct>(
+                            type.Identifier!.TemplateDefinitionName, AstSymbolKind.Type);
 
-                        var typeDef = new AstTemplateInstanceStruct(templateType);
+                        var typeDef = new AstTemplateInstanceStruct(templateType!);
                         typeDef.Instantiate(type);
                         entry.AddNode(typeDef);
                         Ast.Guard(entry.Definition, "Invalid Template Definition.");

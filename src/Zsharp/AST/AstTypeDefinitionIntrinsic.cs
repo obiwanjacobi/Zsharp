@@ -98,10 +98,9 @@ namespace Zsharp.AST
                 templateParameter is not AstTemplateParameterDefinition)
                 return false;
 
-            //Symbols.Add((AstTemplateParameterDefinition)templateParameter);
             _templateParameters.Add(templateParameter);
 
-            Identifier.TemplateParameterCount = _templateParameters.Count;
+            Identifier!.TemplateParameterCount = _templateParameters.Count;
             return true;
         }
 

@@ -64,11 +64,11 @@ namespace Zsharp.EmitIL
 
         public override void VisitAssignment(AstAssignment assign)
         {
-            var name = assign.Variable.Identifier.CanonicalName;
+            var name = assign.Variable!.Identifier!.CanonicalName;
 
             if (assign.HasFields)
             {
-                Ast.Guard(assign.Variable.TypeReference.TypeDefinition.IsStruct, "Expect Struct.");
+                Ast.Guard(assign.Variable!.TypeReference!.TypeDefinition!.IsStruct, "Expect Struct.");
 
                 TypeReference tempTypeRef;
                 var tempName = CodeBuilder.BuildInitName(name);
@@ -108,7 +108,7 @@ namespace Zsharp.EmitIL
                         varDef = varRef.VariableDefinition;
                     }
                     field = Context.ModuleClass.AddField(name,
-                        Context.ToTypeReference(varDef.TypeReference));
+                        Context.ToTypeReference(varDef!.TypeReference!));
                 }
                 Context.CodeBuilder.CodeBlock.Add(
                     Context.InstructionFactory.StoreField(field));
@@ -126,7 +126,7 @@ namespace Zsharp.EmitIL
             var assign = field.ParentAs<AstAssignment>();
             if (assign != null)
             {
-                var varName = CodeBuilder.BuildInitName(assign.Variable.Identifier.CanonicalName);
+                var varName = CodeBuilder.BuildInitName(assign.Variable!.Identifier!.CanonicalName);
                 var varDef = Context.CodeBuilder.GetVariable(varName);
 
                 Context.CodeBuilder.CodeBlock.Add(
@@ -134,11 +134,11 @@ namespace Zsharp.EmitIL
 
                 VisitChildren(field);
 
-                var typeDef = Context.GetTypeDefinition(assign.Variable.TypeReference);
-                var fieldDef = typeDef.Fields.Find(field.Identifier.CanonicalName);
+                var typeDef = Context.GetTypeDefinition(assign.Variable!.TypeReference!);
+                var fieldDef = typeDef.Fields.Find(field.Identifier!.CanonicalName);
 
                 Context.CodeBuilder.CodeBlock.Add(
-                    Context.InstructionFactory.StoreField(fieldDef));
+                    Context.InstructionFactory.StoreField(fieldDef!));
             }
         }
 

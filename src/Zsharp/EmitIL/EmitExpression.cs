@@ -46,7 +46,7 @@ namespace Zsharp.EmitIL
             var errTxt = $"Arithmetic Expression Operator {expression.Operator} is not implemented yet.";
             var il = EmitContext.InstructionFactory;
 
-            bool isUnsigned = expression.TypeReference.TypeDefinition.IsUnsigned;
+            bool isUnsigned = expression.TypeReference!.TypeDefinition!.IsUnsigned;
 
             var instruction = expression.Operator switch
             {
@@ -188,7 +188,7 @@ namespace Zsharp.EmitIL
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
-            var name = variable.Identifier.CanonicalName;
+            var name = variable.Identifier!.CanonicalName;
             var il = EmitContext.InstructionFactory;
 
             if (variable.VariableDefinition != null)
@@ -217,7 +217,7 @@ namespace Zsharp.EmitIL
         public override void VisitFunctionReference(AstFunctionReference function)
         {
             var functionDef = function.FunctionDefinition;
-            if (functionDef.IsIntrinsic)
+            if (functionDef!.IsIntrinsic)
             {
                 var intrinsic = new EmitIntrinsic(EmitContext);
                 intrinsic.EmitFunction(function, (AstFunctionDefinitionIntrinsic)functionDef);

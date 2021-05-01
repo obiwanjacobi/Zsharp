@@ -4,13 +4,13 @@ using Zsharp.EmitIL;
 
 namespace Zsharp.Dgml
 {
-    public class EmitDgmlBuilder : DgmlBuilder
+    public class EmitDgmlBuilderIL : DgmlBuilder
     {
         private const string InstructionsCategory = "Instructions";
 
         public static void Save(CodeBuilder codeBuilder, string filePath = "codeBlocks.dgml")
         {
-            var builder = new EmitDgmlBuilder();
+            var builder = new EmitDgmlBuilderIL();
             builder.CreateCommon();
             _ = builder.WriteCodeBuilder(codeBuilder);
             builder.SaveAs(filePath);
@@ -37,17 +37,17 @@ namespace Zsharp.Dgml
 
                 // TODO: another way to detect 1st block? (no incoming links?)
                 if (blockLabel == "__entry")
-                    CreateLink(node.Id, blockNode.Id);
+                    CreateLink(node.Id!, blockNode.Id!);
 
                 if (!String.IsNullOrEmpty(codeBlock.NextBlock))
                 {
                     var nextNode = blockNodes[codeBlock.NextBlock];
-                    _ = CreateLink(blockNode.Id, nextNode.Id);
+                    _ = CreateLink(blockNode.Id!, nextNode.Id!);
                 }
                 if (!String.IsNullOrEmpty(codeBlock.NextBlockAlt))
                 {
                     var nextNode = blockNodes[codeBlock.NextBlockAlt];
-                    var link = CreateLink(blockNode.Id, nextNode.Id);
+                    var link = CreateLink(blockNode.Id!, nextNode.Id!);
                     link.Label = "alt";
                 }
             }
@@ -66,7 +66,7 @@ namespace Zsharp.Dgml
             {
                 var instrNode = CreateNode("Instructions", instructions);
                 instrNode.Category = InstructionsCategory;
-                var link = CreateLink(node.Id, instrNode.Id);
+                var link = CreateLink(node.Id!, instrNode.Id!);
                 link.Category = ContainsCategory;
                 node.Group = DefaultGroup;
             }

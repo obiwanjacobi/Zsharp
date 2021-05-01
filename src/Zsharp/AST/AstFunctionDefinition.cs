@@ -15,7 +15,7 @@ namespace Zsharp.AST
                     ((AstTemplateParameterDefinition)templateParameter).Identifier?.CanonicalName) == null &&
                 base.TryAddTemplateParameter(templateParameter))
             {
-                Identifier.TemplateParameterCount = TemplateParameters.Count();
+                Identifier!.TemplateParameterCount = TemplateParameters.Count();
                 return true;
             }
             return false;
@@ -29,7 +29,7 @@ namespace Zsharp.AST
         {
             var txt = new StringBuilder();
 
-            txt.Append(Identifier.Name);
+            txt.Append(Identifier!.Name);
             txt.Append(": ");
 
             if (IsTemplate)
@@ -41,7 +41,7 @@ namespace Zsharp.AST
                         txt.Append(", ");
 
                     var p = TemplateParameters.ElementAt(i);
-                    txt.Append(p.Identifier.Name);
+                    txt.Append(p.Identifier!.Name);
                 }
                 txt.Append(">");
             }
@@ -53,9 +53,9 @@ namespace Zsharp.AST
                     txt.Append(", ");
 
                 var p = Parameters.ElementAt(i);
-                txt.Append(p.Identifier.Name);
+                txt.Append(p.Identifier!.Name);
                 txt.Append(": ");
-                txt.Append(p.TypeReference.Identifier.Name);
+                txt.Append(p.TypeReference!.Identifier!.Name);
             }
             txt.Append(")");
 

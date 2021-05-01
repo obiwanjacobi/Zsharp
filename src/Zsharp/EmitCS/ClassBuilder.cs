@@ -31,12 +31,10 @@ namespace Zsharp.EmitCS
 
         public void AddField(AstVariableDefinition variable)
         {
-            var field = new CSharp.Field()
+            var field = new CSharp.Field(variable.Identifier!.CanonicalName, variable.TypeReference.ToCode())
             {
                 AccessModifiers = AccessModifiers.Private,
                 FieldModifiers = FieldModifiers.Static,
-                Name = variable.Identifier!.CanonicalName,
-                TypeName = variable.TypeReference.ToCode(),
             };
 
             _moduleClass.AddField(field);
@@ -44,19 +42,17 @@ namespace Zsharp.EmitCS
 
         public CSharp.Enum AddEnum(AstTypeDefinitionEnum enumDef)
         {
-            var enumType = new CSharp.Enum()
+            var enumType = new CSharp.Enum(enumDef.Identifier!.CanonicalName)
             {
                 AccessModifiers = enumDef.Symbol!.SymbolLocality == AstSymbolLocality.Exported
                     ? AccessModifiers.Public : AccessModifiers.Private,
                 BaseTypeName = enumDef.BaseType.ToCode(),
-                Name = enumDef.Identifier!.CanonicalName,
             };
 
             foreach (var field in enumDef.Fields)
             {
-                var option = new CSharp.EnumOption()
+                var option = new CSharp.EnumOption(field.Identifier!.CanonicalName)
                 {
-                    Name = field.Identifier!.CanonicalName,
                     Value = field.Expression.ToCode()
                 };
 
@@ -80,11 +76,9 @@ namespace Zsharp.EmitCS
 
             foreach (var field in structDef.Fields)
             {
-                var property = new CSharp.Property
+                var property = new CSharp.Property(field.Identifier!.CanonicalName, field.TypeReference.ToCode())
                 {
                     AccessModifiers = AccessModifiers.Public,
-                    Name = field.Identifier!.CanonicalName,
-                    TypeName = field.TypeReference.ToCode(),
                 };
                 recordType.AddProperty(property);
             }
@@ -96,21 +90,21 @@ namespace Zsharp.EmitCS
 
         public CSharp.Method AddFunction(AstFunctionDefinition function)
         {
-            var method = new CSharp.Method(function.Identifier!.CanonicalName)
+            var method = new CSharp.Method(function.Identifier!.CanonicalName, function.TypeReference.ToCode())
             {
                 AccessModifiers = function.Symbol!.SymbolLocality == AstSymbolLocality.Exported
                     ? AccessModifiers.Public : AccessModifiers.Private,
                 MethodModifiers = MethodModifiers.Static,
-                TypeName = function.TypeReference.ToCode(),
             };
 
             foreach (var parameter in function.Parameters)
             {
-                method.AddParameter(new CSharp.Parameter
-                {
-                    Name = parameter.Identifier!.CanonicalName,
-                    TypeName = parameter.TypeReference.ToCode()
-                });
+                method.AddParameter(
+                    new CSharp.Parameter(
+                        parameter.Identifier!.CanonicalName,
+                        parameter.TypeReference.ToCode()
+                    )
+                );
             }
 
             _moduleClass.AddMethod(method);

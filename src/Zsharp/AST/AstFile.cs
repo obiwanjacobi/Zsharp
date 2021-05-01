@@ -26,7 +26,7 @@ namespace Zsharp.AST
         public AstCodeBlock? CodeBlock => _codeBlock;
 
         public bool HasExports
-            => _codeBlock.Symbols.Entries.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);
+            => _codeBlock!.Symbols.Entries.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);
 
         public bool TrySetCodeBlock(AstCodeBlock codeBlock) => this.SafeSetParent(ref _codeBlock, codeBlock);
 

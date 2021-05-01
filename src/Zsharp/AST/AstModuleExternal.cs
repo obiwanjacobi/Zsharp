@@ -27,7 +27,7 @@ namespace Zsharp.AST
 
         public void AddTypeDefinition(AstTypeDefinitionExternal typeDefinition)
         {
-            var entry = Symbols.AddSymbol(typeDefinition.Identifier.CanonicalName, AstSymbolKind.Type, typeDefinition);
+            var entry = Symbols.AddSymbol(typeDefinition.Identifier!.CanonicalName, AstSymbolKind.Type, typeDefinition);
             entry.SymbolLocality = AstSymbolLocality.Imported;
         }
 
@@ -36,7 +36,7 @@ namespace Zsharp.AST
             if (!String.IsNullOrEmpty(symbol))
             {
                 var entry = Symbols.FindEntry(symbol, AstSymbolKind.Unknown);
-                Ast.Guard(entry, $"No symbol for '{symbol}' was found in external module {Identifier.Name}.");
+                Ast.Guard(entry, $"No symbol for '{symbol}' was found in external module {Identifier!.Name}.");
                 entry!.AddAlias(alias);
             }
             else
