@@ -86,3 +86,12 @@ Return type is an `Opt<T>` of the target type.
 ```csharp
 TryTargetType(self: SourceType, ...): TargetType?
 ```
+
+## Force Convert
+
+Force a conversion even if the meaning of the result changes.
+
+```csharp
+ForceTargetType(self: SourceType, ...): TargetType
+DoTargetType(self: SourceType, ...): TargetType
+```

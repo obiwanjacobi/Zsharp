@@ -36,7 +36,7 @@ if a = myFunc()      // error!
 
 ## Chaining
 
-> FIX: Clashes with comparison is equal!
+> FIXME: Clashes with comparison is equal! (use parens around comparison?)
 
 The assignment can be chained across multiple variables (left operand) that all get assigned the same value (right operand). Type inference works as expected and the inferred type is applied to all untyped vars.
 
@@ -59,7 +59,7 @@ a = b = c: U24 = 42
 Assigning structures works the same as primitive values. A new copy is made for the target.
 
 ```csharp
-s: Struct
+s: MyStruct
     fld1 = 42
     fld2 = "42"
 
@@ -79,12 +79,12 @@ Instead of an `if` statement, use the `??=` operator for use with optional value
 ```csharp
 a: U8?
 a ??= 42
-// a= 42
+// a = 42
 
 a: U8?
 a = 42
 a ??= 101
-// a= 42
+// a = 42
 ```
 
 ---
@@ -226,6 +226,29 @@ func5(...arr)    // or with 5 params?
 // what if the param count does not match array item count?
 ```
 
+> Research: Functor/Nomads?
+
+Function 'repeat' to process collections with functions that process one item (at a time), the result is another collection with the results in the same order as the input collection.
+
+```csharp
+fn: (p: U8): Str
+    return p.Str()
+
+arr = [1, 2, 3, 4, 5]
+// what syntax to indicate this?
+lst = fn...arr
+
+// or use a library function?
+lst = Map(arr, fn)
+// lst: Array<Str> = ["1", "2", "3", "4", "5"]
+
+// Map returns the same type of collection
+// as is input but with items of the return type of 'fn'
+// Can we express that in templates?
+```
+
+- Map, Apply, Bind ?? What are the names to use here? https://fsharpforfunandprofit.com/series/map-and-bind-and-apply-oh-my/
+
 Deconstructing a structure:
 
 ```C#
@@ -237,13 +260,14 @@ MyStruct
 s = MyStruct
     ...
 
+// by name
 (field1, field3) = s
 // field1: U8 = <value of s.field1>
 // field3: U8 = <value of s.field3>
 // <value of s.field2> is not used
 
 (a, b) = s      // error! field names must match (case insensitive)
-// or do we allow in-order?
+// or when in-order - all fields must be specified
 ```
 
 > Is there a need to override how deconstruction is done on a (custom) type?
@@ -254,6 +278,8 @@ Swap scalar variables (unlike structs)
 x = 42
 y = 101
 
+// left = deconstruct '()'
+// right = anonymous struct '{}'
 (x, y) = {y, x}
 
 // x = 101

@@ -164,3 +164,11 @@ ObjectInterface<S, T>
     fn1: (self: S, p1: U16): U8 _
     fn2: (self: T, p1: U16): U8 _
 ```
+
+---
+
+>TBD
+
+Interfaces as traits. Traits are aspects or attributes of an object.
+
+`IHandleMessages`, `IProvideConfiguration`, `IConvertToString`, `ISerialize`...

@@ -167,7 +167,7 @@ someFn: (p: U8)
     ...
 ```
 
-## Memory Layout
+## Structure Layout
 
 The fields of a structure are layed out in the order of their definition starting at the base structure type. No alignment or filler bytes are added.
 

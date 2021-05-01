@@ -812,13 +812,27 @@ weakFn()
 
 A pure function is a function that returns the exact same result given the same inputs without any side effects.
 
-A pure function -without side-effects- can be recognized by the lack of mutable captures and the presence of immutable (only in-) parameters. It also has to have a return value.
+A pure function -without side-effects- can be recognized by the lack of (mutable?) captures and the presence of immutable (only in-) parameters. It also has to have a return value.
+
+> This is not always true (a database read function may return different results for the same inputs - even if we explicitly capture the non-mutable database connection) so we may need to introduce special syntax to indicate pure functional functions...
 
 ```csharp
 // has imm param but potentially writes to globalVar
 sideEffect: [globalVar.Ptr()](p: Ptr<Imm<U8>>)
 // takes two params and produces result - no side effects
 pureFn: (x: U8, y: U8): U16
+
+// seems ok because capture is immutable
+// but what if it is a database connection?
+// then the function can still return different results for the same args
+pureFnMaybe: [globalVar](x: U8, y: U8): U16
+
+// special syntax to promise purity?
+// on the return type?
+pureFnMaybe: [globalVar](x: U8, y: U8): Pure<U16>
+// with a 'pure' keyword?
+pure pureFnMaybe: [globalVar](x: U8, y: U8): U16
+
 ```
 
 A higher order function is a function that takes or returns another function (or both).
@@ -874,6 +888,8 @@ compFn(42)
 ```
 
 > Can you take a reference/pointer to a composite function? If you do, you create an actual function stub with the composition compiled.
+
+> TODO: look into monads. I don't understand them yet.
 
 ---
 

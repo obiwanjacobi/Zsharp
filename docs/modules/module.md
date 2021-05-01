@@ -81,3 +81,20 @@ globalVar: U8 = 42  // accessible by all files in module?
 
 - private modules?
 - explicit namespace handling?
+
+---
+
+> TBD
+
+Module as a boundary for implementing 'services'?
+
+A service would be an 'object' that communicates via messaging - the original OO concept.
+
+Services as single threaded and concurrent. No additional threads allowed inside a service.
+
+Exported functions are the public API for the service and the function parameters are the fields inside the request-message it receives.
+The return value (which can be a tuple) is the response message the client receives.
+
+Async/await is a separate concern and is mainly used as a .NET interop feature.
+
+A runtime framework is needed to host these services. Something like ASPNET core would do nicely. I don't think HTTP would be a good fit. Something like gRPC would do better perhaps?

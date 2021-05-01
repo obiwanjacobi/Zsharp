@@ -2,10 +2,14 @@
 
 Templates are processed at compile time. A template has one or more template parameters inside `< >`.
 
+> In light of supporting .NET generics the type names for templates are to be prefixed with a `#` on the definition to indicate compile-time processing, where as .NET generics are not prefixed - to indicate runtime processing. Note that this is not consistently applied throughout the documentation yet.
+
+None-Type template parameters are always processed at compile-time.
+
 ## Template Structures
 
 ```C#
-MyStruct<T>
+MyStruct<#T>
     f: T
 
 s = MyStruct<U8>
@@ -15,7 +19,7 @@ s = MyStruct<U8>
 This will also work:
 
 ```C#
-MyStruct<T>: T
+MyStruct<#T>: T
     ...
 
 s = MyStruct<OtherStruct>
@@ -26,7 +30,7 @@ s = MyStruct<OtherStruct>
 ## Template Functions
 
 ```C#
-typedFn: <T>(p: T)
+typedFn: <#T>(p: T)
     ...
 
 // type inferred
@@ -37,7 +41,7 @@ typedFn<U8>(42)
 
 ```csharp
 // return values
-typedRet: <T>(): T
+typedRet: <#T>(): T
     ...
 
 x = typedRet<U8>()
@@ -53,6 +57,8 @@ Template parameters are applied at compile time. A parameter name (first char) _
 
 > If Templates are nested `MyStruct<Array<U8> >` there __must__ be a space between each closing `>` angle bracket. Otherwise the current parser will interpret it as a `>>` bit shift right operator.
 
+Is this ^^ still a problem?
+
 ### Restricting Template Parameters
 
 You might want to use a template with type restriction instead of a normal functions or struct with just the type, in order to keep the specific type without having to cast. For instance in case of a function return type or a structure field.
@@ -63,7 +69,7 @@ MyStruct
 OtherStruct: MyStruct       // derive from MyStruct
     ...
 
-typedFn: <T: MyStruct>(p: T)  // accept type (derived from) MyStruct
+typedFn: <#T: MyStruct>(p: T)  // accept type (derived from) MyStruct
     ...
 
 o = OtherStruct             // instantiate
@@ -78,7 +84,7 @@ Restricting the allowed types for a template parameter by using a constrained va
 
 ```csharp
 Choice: U8 or U16 or U24
-tfn: <T: Choice>(p: T): U8
+tfn: <#T: Choice>(p: T): U8
     ...
 
 a = tfn(42)     // ok, U8
@@ -90,18 +96,19 @@ Restrict the template parameter based on metadata.
 ```csharp
 // restricting on metadata?
 // Type rules syntax? See Custom Data Types
-TemplateType<T#bits=8>  // '=' conflicts with parameter default
+// Two '#' chars looks weird
+TemplateType<#T#bits=8>  // '=' conflicts with parameter default
     field: T
 
 // in combination with parameter default
-TemplateType<T#bits(8)=U8>  // not same as type rules syntax
+TemplateType<#T#bits(8)=U8>  // not same as type rules syntax
     field: T
 
 // special custom data type syntax?
 ParamType: _
     #bits = 8
 // apply rules to T and have parameter default (U8)
-TemplateType<T: ParamType=U8>
+TemplateType<#T: ParamType=U8>
     field: T
 ```
 
@@ -110,7 +117,7 @@ TemplateType<T: ParamType=U8>
 Type parameters can be inferred from the context they're used in.
 
 ```csharp
-templateFn: <S, T, R>(s: S, p: T): R
+templateFn: <#S, #T, #R>(s: S, p: T): R
     ...
 
 // try partial ? => Error
@@ -132,7 +139,7 @@ Although template parameters are usually types, it can be anything.
 
 ```C#
 // non-type template params
-FixedArray<T, count: U8>
+FixedArray<#T, count: U8>
     arr: Array<T>(count)
 ```
 
@@ -231,24 +238,7 @@ templateFn:<Bool, T>(s: Bool, t: T): Str
 
 ---
 
-> TBD
-
-Allow for multiple/nested levels of type params?
-
-```csharp
-MyType<M<T>>    // requires M to have one T
-    ...         // use M and T?
-```
-
-With restrictions:
-
-```csharp
-MyType<M: Struct<T: OtherStruct>>
-```
-
----
-
-> TBD
+## Generics
 
 For .NET interoperability we need to distinguish between .NET generics and Z# compile-time templates.
 
@@ -265,5 +255,19 @@ template<#T>
 hybrid<#T, G>
     ...
 ```
-
 ---
+
+> TBD
+
+Allow for multiple/nested levels of type params?
+
+```csharp
+MyType<M<T>>    // requires M to have one T
+    ...         // use M and T?
+```
+
+With restrictions:
+
+```csharp
+MyType<M: Struct<T: OtherStruct>>
+```
