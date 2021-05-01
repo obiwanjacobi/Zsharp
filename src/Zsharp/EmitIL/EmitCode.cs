@@ -12,13 +12,13 @@ namespace Zsharp.EmitIL
             Context = EmitContext.Create(assemblyName);
         }
 
-        public EmitContext? Context { get; private set; }
+        public EmitContext Context { get; private set; }
 
         public override void VisitModulePublic(AstModulePublic module)
         {
             if (Context == null)
             {
-                Context = EmitContext.Create(module.Identifier.Name);
+                Context = EmitContext.Create(module.Identifier!.Name);
             }
 
             using var scope = Context.AddModule(module);
@@ -37,27 +37,27 @@ namespace Zsharp.EmitIL
         {
             VisitChildren(function);
 
-            var method = Context.GetFunctionReference(function.FunctionDefinition);
+            var method = Context.GetFunctionReference(function.FunctionDefinition!);
             var call = Context.InstructionFactory.Call(method);
             Context.CodeBuilder.CodeBlock.Add(call);
         }
 
         public override void VisitVariableDefinition(AstVariableDefinition variable)
         {
-            var name = variable.Identifier.CanonicalName;
+            var name = variable.Identifier!.CanonicalName;
 
             if (variable.IsTopLevel())
             {
                 if (!Context.ModuleClass.HasField(name))
                 {
-                    Context.ModuleClass.AddField(name, Context.ToTypeReference(variable.TypeReference));
+                    Context.ModuleClass.AddField(name, Context.ToTypeReference(variable.TypeReference!));
                 }
             }
             else
             {
                 if (!Context.CodeBuilder.HasVariable(name))
                 {
-                    Context.CodeBuilder.AddVariable(name, Context.ToTypeReference(variable.TypeReference));
+                    Context.CodeBuilder.AddVariable(name, Context.ToTypeReference(variable.TypeReference!));
                 }
             }
         }

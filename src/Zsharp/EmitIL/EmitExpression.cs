@@ -193,7 +193,7 @@ namespace Zsharp.EmitIL
 
             if (variable.VariableDefinition != null)
             {
-                if (variable.IsTopLevel())
+                if (variable.VariableDefinition.IsTopLevel())
                 {
                     var field = EmitContext.ModuleClass.GetField(name);
                     EmitContext.CodeBuilder.CodeBlock.Add(

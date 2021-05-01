@@ -28,7 +28,7 @@ namespace Zsharp.AST
         {
             if (moduleCtx != null)
             {
-                Ast.Guard(Identifier.Name == moduleCtx.module_name().GetText(), "Not the same module.");
+                Ast.Guard(Identifier!.Name == moduleCtx.module_name().GetText(), "Not the same module.");
                 _contexts.Add(moduleCtx);
             }
         }
@@ -49,7 +49,8 @@ namespace Zsharp.AST
             _files.Add(file);
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitModulePublic(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitModulePublic(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {
