@@ -14,6 +14,9 @@ namespace Zsharp.Semantics
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
+            if (function.FunctionDefinition != null)
+                return;
+
             if (function.Symbol!.FindOverloadDefinition(function) != null)
                 return;
 
