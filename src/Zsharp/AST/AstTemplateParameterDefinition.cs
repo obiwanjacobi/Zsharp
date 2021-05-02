@@ -26,13 +26,13 @@ namespace Zsharp.AST
                     "Identifier is already set or null.");
         }
 
-        public bool TrySetIdentifier(AstIdentifier identifier)
+        public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
 
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
 
-        public bool TrySetSymbol(AstSymbolEntry symbolEntry)
+        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public void SetSymbol(AstSymbolEntry symbolEntry)

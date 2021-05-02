@@ -141,7 +141,7 @@ namespace Zsharp.AST
                 _ => new AstFunctionParameterDefinition(parameter.Identifier!)
             };
 
-            paramDef.TrySetIdentifier(parameter.Identifier!);
+            paramDef.TrySetIdentifier(parameter.Identifier);
 
             var fnDef = _context.GetCurrent<AstFunctionDefinition>();
             fnDef.AddParameter(paramDef);
@@ -157,7 +157,7 @@ namespace Zsharp.AST
         {
             var paramRef = new AstFunctionParameterReference((Function_param_useContext)parameter.Context!);
             // param ref usually has no Identifier
-            paramRef.TrySetIdentifier(parameter.Identifier!);
+            paramRef.TrySetIdentifier(parameter.Identifier);
 
             var fnRef = _context.GetCurrent<AstFunctionReference>();
             fnRef.AddParameter(paramRef);

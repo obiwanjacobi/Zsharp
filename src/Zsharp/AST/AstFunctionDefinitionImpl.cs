@@ -17,7 +17,7 @@ namespace Zsharp.AST
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
 
-        public bool TrySetCodeBlock(AstCodeBlock codeBlock)
+        public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
         {
             if (this.SafeSetParent(ref _codeBlock, codeBlock))
             {
@@ -57,11 +57,11 @@ namespace Zsharp.AST
             return Symbols!.AddSymbol(symbolName, kind, node);
         }
 
-        public override bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
+        public override bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
         {
             if (base.TryAddTemplateParameter(templateParameter))
             {
-                Symbols.Add((AstTemplateParameterDefinition)templateParameter);
+                Symbols.Add((AstTemplateParameterDefinition)templateParameter!);
                 return true;
             }
             return false;

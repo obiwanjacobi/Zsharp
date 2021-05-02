@@ -64,7 +64,7 @@ namespace Zsharp.AST
         public override void Accept(AstVisitor visitor)
             => throw new ZsharpException("Must not Visit Intrinsic Function Definition.");
 
-        public override bool TrySetSymbol(AstSymbolEntry symbolEntry)
+        public override bool TrySetSymbol(AstSymbolEntry? symbolEntry)
         {
             // Intrinsic Function Definitions are static and have no reference to the Symbol Table.
             return true;    // fake success

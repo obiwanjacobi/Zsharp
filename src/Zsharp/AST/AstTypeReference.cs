@@ -106,7 +106,7 @@ namespace Zsharp.AST
         public IEnumerable<AstTemplateParameter> TemplateParameters
             => TypeOrigin?.TemplateParameters ?? _templateParameters!;
 
-        public bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
+        public bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
         {
             if (TypeOrigin != null || _templateParameters == null)
                 throw new InvalidOperationException(

@@ -46,7 +46,7 @@ namespace Zsharp.AST
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public bool TrySetExpression(AstExpression expression)
+        public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
 
         public void SetExpression(AstExpression expression)
@@ -72,7 +72,7 @@ namespace Zsharp.AST
 
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool TrySetTypeReference(AstTypeReference typeReference)
+        public bool TrySetTypeReference(AstTypeReference? typeReference)
             => Ast.SafeSet(ref _typeRef, typeReference);
 
         public void SetTypeReference(AstTypeReference typeReference)

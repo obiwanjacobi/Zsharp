@@ -16,7 +16,7 @@ namespace Zsharp.AST
             return false;
         }
 
-        public static bool SafeSetParent<P, T>(this P? parent, ref T? storage, T value)
+        public static bool SafeSetParent<P, T>(this P? parent, ref T? storage, T? value)
             where T : AstNode
             where P : AstNode
         {

@@ -23,14 +23,14 @@ namespace Zsharp.AST
                 throw new InvalidOperationException("Type Reference already set or null.");
         }
 
-        public bool TrySetTypeReference(AstTypeReference typeReference)
+        public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);
 
         private AstSymbolEntry? _symbol;
 
         public AstSymbolEntry? Symbol => _symbol;
 
-        public bool TrySetSymbol(AstSymbolEntry symbolEntry)
+        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public void SetSymbol(AstSymbolEntry symbolEntry)

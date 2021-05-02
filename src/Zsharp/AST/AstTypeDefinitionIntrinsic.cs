@@ -92,7 +92,7 @@ namespace Zsharp.AST
                     "TemplateParameter is already set or null.");
         }
 
-        public bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
+        public bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
         {
             if (templateParameter == null ||
                 templateParameter is not AstTemplateParameterDefinition)
@@ -112,7 +112,7 @@ namespace Zsharp.AST
         protected static void AddIntrinsicSymbol(AstSymbolTable symbols, AstTypeDefinitionIntrinsic type)
             => symbols.AddSymbol(type.Identifier!.CanonicalName, AstSymbolKind.Type, type);
 
-        public override bool TrySetSymbol(AstSymbolEntry symbolEntry)
+        public override bool TrySetSymbol(AstSymbolEntry? symbolEntry)
         {
             throw new InvalidOperationException(
                 "Intrinsic Type Definitions are static and have no reference to the Symbol Table.");

@@ -11,7 +11,7 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool TrySetIdentifier(AstIdentifier identifier)
+        public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
@@ -24,7 +24,7 @@ namespace Zsharp.AST
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool TrySetTypeReference(AstTypeReference typeReference)
+        public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeRef, typeReference);
 
         public void SetTypeReference(AstTypeReference typeReference)

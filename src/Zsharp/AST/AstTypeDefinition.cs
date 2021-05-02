@@ -19,7 +19,7 @@ namespace Zsharp.AST
         private AstTypeReference? _baseType;
         public AstTypeReference? BaseType => _baseType;
 
-        public bool TrySetBaseType(AstTypeReference typeReference)
+        public bool TrySetBaseType(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _baseType, typeReference);
 
         public void SetBaseType(AstTypeReference typeReference)
@@ -31,7 +31,7 @@ namespace Zsharp.AST
 
         AstTypeReference? IAstTypeReferenceSite.TypeReference => _baseType;
 
-        bool IAstTypeReferenceSite.TrySetTypeReference(AstTypeReference typeReference)
+        bool IAstTypeReferenceSite.TrySetTypeReference(AstTypeReference? typeReference)
             => TrySetBaseType(typeReference);
 
         void IAstTypeReferenceSite.SetTypeReference(AstTypeReference typeReference)

@@ -31,11 +31,11 @@ namespace Zsharp.AST
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
 
-        public bool TrySetCodeBlock(AstCodeBlock codeBlock)
+        public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
         {
             if (this.SafeSetParent(ref _codeBlock, codeBlock))
             {
-                codeBlock.Indent = Indent + 1;
+                codeBlock!.Indent = Indent + 1;
                 return true;
             }
             return false;
@@ -53,7 +53,7 @@ namespace Zsharp.AST
 
         public bool HasSubBranch => _subBranch != null;
 
-        public bool TryAddSubBranch(AstBranchConditional subBranch)
+        public bool TryAddSubBranch(AstBranchConditional? subBranch)
         {
             if (this.SafeSetParent(ref _subBranch, subBranch))
             {

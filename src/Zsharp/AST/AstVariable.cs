@@ -9,7 +9,7 @@ namespace Zsharp.AST
         protected AstVariable(AstTypeReference? typeReference = null)
             : base(AstNodeType.Variable)
         {
-            TrySetTypeReference(typeReference!);
+            TrySetTypeReference(typeReference);
         }
 
         public ParserRuleContext? Context { get; protected set; }
@@ -17,7 +17,7 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool TrySetIdentifier(AstIdentifier identifier)
+        public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
@@ -30,7 +30,7 @@ namespace Zsharp.AST
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
 
-        public bool TrySetSymbol(AstSymbolEntry symbolEntry)
+        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public void SetSymbol(AstSymbolEntry symbolEntry)
@@ -54,7 +54,7 @@ namespace Zsharp.AST
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;
 
-        public bool TrySetTypeReference(AstTypeReference typeReference)
+        public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeRef, typeReference);
 
         public void SetTypeReference(AstTypeReference typeReference)

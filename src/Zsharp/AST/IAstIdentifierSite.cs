@@ -5,7 +5,7 @@ namespace Zsharp.AST
     public interface IAstIdentifierSite
     {
         AstIdentifier? Identifier { get; }
-        bool TrySetIdentifier(AstIdentifier identifier);
+        bool TrySetIdentifier(AstIdentifier? identifier);
         void SetIdentifier(AstIdentifier identifier);
 
         public void ThrowIfIdentifierNotSet()

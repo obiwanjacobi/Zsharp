@@ -17,7 +17,7 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool TrySetIdentifier(AstIdentifier identifier)
+        public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
 
         public void SetIdentifier(AstIdentifier identifier)
@@ -30,7 +30,7 @@ namespace Zsharp.AST
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
 
-        public bool TrySetSymbol(AstSymbolEntry symbolEntry)
+        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public void SetSymbol(AstSymbolEntry symbolEntry)

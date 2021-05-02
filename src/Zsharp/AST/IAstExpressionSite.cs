@@ -5,7 +5,7 @@ namespace Zsharp.AST
     public interface IAstExpressionSite
     {
         AstExpression? Expression { get; }
-        bool TrySetExpression(AstExpression expression);
+        bool TrySetExpression(AstExpression? expression);
         void SetExpression(AstExpression expression);
 
         public void ThrowIfExpressionNotSet()

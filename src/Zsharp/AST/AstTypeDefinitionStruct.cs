@@ -21,12 +21,12 @@ namespace Zsharp.AST
 
         public AstSymbolTable Symbols { get; }
 
-        public override bool TrySetIdentifier(AstIdentifier identifier)
+        public override bool TrySetIdentifier(AstIdentifier? identifier)
         {
             var success = base.TrySetIdentifier(identifier);
 
             if (success)
-                Symbols.SetName(identifier.CanonicalName);
+                Symbols.SetName(identifier!.CanonicalName);
 
             return success;
         }
@@ -57,7 +57,7 @@ namespace Zsharp.AST
                     "TemplateParameter is already set or null.");
         }
 
-        public bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
+        public bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
         {
             if (templateParameter == null ||
                 templateParameter is not AstTemplateParameterDefinition)

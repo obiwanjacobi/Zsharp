@@ -5,7 +5,7 @@ namespace Zsharp.AST
     public interface IAstTypeReferenceSite
     {
         AstTypeReference? TypeReference { get; }
-        bool TrySetTypeReference(AstTypeReference typeReference);
+        bool TrySetTypeReference(AstTypeReference? typeReference);
         void SetTypeReference(AstTypeReference typeReference);
 
         public void ThrowIfTypeReferenceNotSet()

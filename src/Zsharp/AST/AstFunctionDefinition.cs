@@ -9,10 +9,10 @@ namespace Zsharp.AST
         public new IEnumerable<AstTemplateParameterDefinition> TemplateParameters
             => base.TemplateParameters.Cast<AstTemplateParameterDefinition>();
 
-        public override bool TryAddTemplateParameter(AstTemplateParameter templateParameter)
+        public override bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
         {
             if (TemplateParameters.SingleOrDefault(p => p.Identifier?.CanonicalName ==
-                    ((AstTemplateParameterDefinition)templateParameter).Identifier?.CanonicalName) == null &&
+                    ((AstTemplateParameterDefinition?)templateParameter)?.Identifier?.CanonicalName) == null &&
                 base.TryAddTemplateParameter(templateParameter))
             {
                 Identifier!.TemplateParameterCount = TemplateParameters.Count();

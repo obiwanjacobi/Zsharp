@@ -23,15 +23,14 @@
 - Add Custom Data Types (and export)
 - Function Parameters are readonly variables. Add IsReadonly to AstVariableDefinition.
 - `_ = fn()` results in an Assignment without a Variable...
-- Can we move ParserRuleContext Context property to AstNode?
-- Add SymbolEntrySite to TypeDefinition?
+- Add SymbolEntrySite to TypeDefinition/FunctionDefinition?
 - May need to split Function Type ([template] params + retval) from function definition name.
     Lambda's?
 - TypeReferences of built-in types are added to root SymbolTable that contains definition.
     Need to see if this is a problem when multiple files are compiled using the same root symbol table.
 - Namespace on AstSymbolEntry is wrong for imported module functions. 
     It should be the name of the external module but is the name of the local symbol table it is refered in.
-- Add AssemblyManager to ExternalModuleLoader to hide Cecil implementation use.
+- Merge AssemblyManager into ExternalModuleLoader to hide Cecil implementation use.
 - TrySetIdentifier should check if IdentifierType matches AstNodeType.
 - TypeReference result of a comparison expression is not a Bool (but U8).
 - AstFunctionDefinitionIntrinsic.TrySetSymbol should not be called?

@@ -5,7 +5,7 @@ namespace Zsharp.AST
     public interface IAstTypeInitializeSite
     {
         IEnumerable<AstTypeFieldInitialization> Fields { get; }
-        bool TryAddFieldInit(AstTypeFieldInitialization field);
+        bool TryAddFieldInit(AstTypeFieldInitialization? field);
         void AddFieldInit(AstTypeFieldInitialization field);
     }
 }

@@ -39,7 +39,7 @@ namespace Zsharp.AST
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public bool TrySetExpression(AstExpression expression)
+        public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
 
         public void SetExpression(AstExpression expression)
@@ -53,7 +53,7 @@ namespace Zsharp.AST
 
         public AstVariable? Variable => _variable;
 
-        public bool TrySetVariable(AstVariable variable)
+        public bool TrySetVariable(AstVariable? variable)
             => this.SafeSetParent(ref _variable, variable);
 
         public void SetVariable(AstVariable variable)
@@ -81,7 +81,7 @@ namespace Zsharp.AST
 
         public bool HasFields => _fields.Count > 0;
 
-        public bool TryAddFieldInit(AstTypeFieldInitialization field)
+        public bool TryAddFieldInit(AstTypeFieldInitialization? field)
         {
             if (field != null &&
                 field.TrySetParent(this))
