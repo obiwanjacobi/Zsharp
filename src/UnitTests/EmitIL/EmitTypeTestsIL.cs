@@ -18,7 +18,7 @@ namespace UnitTests.EmitIL
 
             var emit = Emit.Create(code);
 
-            var moduleClass = emit.Context.Module.Types.Find("TypeEnum");
+            var moduleClass = emit.Context.Module.Types.Find("Typeenum");
             var typeEnum = moduleClass.NestedTypes.Find("Myenum");
             typeEnum.Fields.Should().HaveCount(1 + 1);
 
@@ -39,7 +39,7 @@ namespace UnitTests.EmitIL
 
             var emit = Emit.Create(code);
 
-            var moduleClass = emit.Context.Module.Types.Find("TypeEnumExport");
+            var moduleClass = emit.Context.Module.Types.Find("Typeenumexport");
             var typeEnum = moduleClass.NestedTypes.Find("Count");
             typeEnum.Fields.Should().HaveCount(4 + 1);
 
@@ -57,7 +57,7 @@ namespace UnitTests.EmitIL
 
             var emit = Emit.Create(code);
 
-            var moduleClass = emit.Context.Module.Types.Find("TypeEnumBaseType");
+            var moduleClass = emit.Context.Module.Types.Find("Typeenumbasetype");
             var typeEnum = moduleClass.NestedTypes.Find("Myenum");
             typeEnum.Fields.Should().HaveCount(1 + 1);
 
@@ -76,7 +76,7 @@ namespace UnitTests.EmitIL
 
             var emit = Emit.Create(code);
 
-            var moduleClass = emit.Context.Module.Types.Find("TypeStructExport");
+            var moduleClass = emit.Context.Module.Types.Find("Typestructexport");
             var typeStruct = moduleClass.NestedTypes.Find("Mystruct");
             typeStruct.Fields.Should().HaveCount(2);
 

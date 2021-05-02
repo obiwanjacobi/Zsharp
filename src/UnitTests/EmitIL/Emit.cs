@@ -49,7 +49,8 @@ namespace UnitTests.EmitIL
             var path = Path.GetDirectoryName(thisAssembly.Location);
 
             var assembly = Assembly.LoadFile(Path.Combine(path, assemblyName + ".dll"));
-            var type = assembly.ExportedTypes.Single(t => t.Name == typeName);
+            var canonicalName = AstDotName.FromText(typeName).ToString();
+            var type = assembly.ExportedTypes.Single(t => t.Name == canonicalName);
             var method = type.GetMethods().Single(m => m.Name == methodName);
             method.Invoke(null, null);
         }
