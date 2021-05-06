@@ -10,6 +10,8 @@
 - Move all Semantic errors to CheckRules.
 - Need a (source file) Location class around Antlr Context.
 - Identifier.CanonicalName for template (function) reference is wrong (type starts with lower case).
+- Canonical Name should preserve casing of character following a '.' (period).
+    System.Console now becomes System.console
 - Validate Template instantiation parameters with template definition.
 - AstTemplateInstanceFunction has duplicate code with AstFunctionDefinitionImpl 
     and does not support partial templates (missing TemplateParameters).
@@ -31,9 +33,13 @@
 - Namespace on AstSymbolEntry is wrong for imported module functions. 
     It should be the name of the external module but is the name of the local symbol table it is refered in.
 - Merge AssemblyManager into ExternalModuleLoader to hide Cecil implementation use.
-- TrySetIdentifier should check if IdentifierType matches AstNodeType.
+- Replace ExternalTypeRepository with a Symbol Table?
+- TrySetIdentifier should check if IdentifierType matches the AstNodeType.
 - TypeReference result of a comparison expression is not a Bool (but U8).
+- Assign initial TypeReference to SymbolTable (entry) and MakeProxy for all other references?
 - AstFunctionDefinitionIntrinsic.TrySetSymbol should not be called?
+- Function Overloads handling: Currently based on function name are all in the same SymbolEntry.
+    Function can have FunctionDefinition that is not correct.
 
 ---
 

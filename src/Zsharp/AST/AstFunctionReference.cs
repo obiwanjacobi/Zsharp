@@ -28,7 +28,12 @@ namespace Zsharp.AST
                     return entry.FindOverloadDefinition(this);
                 }
 
-                return entry.DefinitionAs<AstFunctionDefinition>();
+                var functionDef = entry.DefinitionAs<AstFunctionDefinition>();
+
+                if (functionDef?.OverloadKey == OverloadKey)
+                    return functionDef;
+
+                return null;
             }
         }
 

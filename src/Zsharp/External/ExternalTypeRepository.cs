@@ -10,6 +10,8 @@ namespace Zsharp.External
 
         public AstTypeReference GetTypeReference(TypeReference typeReference)
         {
+            Ast.Guard(typeReference, "TypeReference (cecil) is null.");
+
             var key = typeReference.FullName;
             if (!_typeReferences.ContainsKey(key))
             {

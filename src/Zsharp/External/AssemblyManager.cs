@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Zsharp.External
 {
@@ -24,7 +25,7 @@ namespace Zsharp.External
             if (File.Exists(assemblyPath))
             {
                 assemblyDef = AssemblyDefinition.ReadAssembly(assemblyPath);
-                _assemblies.Add(assemblyDef);
+                AddAssembly(assemblyDef);
                 return assemblyDef;
             }
 
@@ -34,12 +35,29 @@ namespace Zsharp.External
                 if (File.Exists(path))
                 {
                     assemblyDef = AssemblyDefinition.ReadAssembly(path);
-                    _assemblies.Add(assemblyDef);
+                    AddAssembly(assemblyDef);
                     return assemblyDef;
                 }
             }
 
             throw new ArgumentException($"Assembly '{assemblyPath}' could not be loaded.", nameof(assemblyPath));
+        }
+
+        private void AddAssembly(AssemblyDefinition assemblyDef)
+        {
+            if (_assemblies.SingleOrDefault(a => a.FullName == assemblyDef.FullName) != null)
+                return;
+
+            _assemblies.Add(assemblyDef);
+
+            foreach (var mod in assemblyDef.Modules)
+            {
+                foreach (var dep in mod.AssemblyReferences)
+                {
+                    var depAssembly = mod.AssemblyResolver.Resolve(dep);
+                    AddAssembly(depAssembly);
+                }
+            }
         }
     }
 }

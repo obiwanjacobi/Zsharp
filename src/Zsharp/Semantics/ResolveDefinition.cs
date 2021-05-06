@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Zsharp.AST;
 
 namespace Zsharp.Semantics
@@ -239,33 +240,48 @@ namespace Zsharp.Semantics
         {
             VisitChildren(function);
 
-            if (function.TypeReference == null)
+            if (function.FunctionDefinition == null)
             {
-                if (function.FunctionDefinition == null)
+                if (!function.TryResolve())
                 {
-                    if (!function.TryResolve())
+                    if (function.IsTemplate)
                     {
-                        if (function.IsTemplate)
-                        {
-                            var entry = function.Symbol;
-                            var templateFunction = entry!.SymbolTable.FindDefinition<AstFunctionDefinition>(
-                                function.Identifier!.TemplateDefinitionName, AstSymbolKind.Function);
+                        var entry = function.Symbol!;
+                        var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinition>(
+                            function.Identifier!.TemplateDefinitionName, AstSymbolKind.Function);
 
-                            var typeDef = new AstTemplateInstanceFunction(templateFunction!);
+                        var typeDef = new AstTemplateInstanceFunction(templateFunction!);
 
-                            typeDef.Instantiate(_context, function);
-                            entry.AddNode(typeDef);
-                        }
-                        else
-                            _context.UndefinedFunction(function);
+                        typeDef.Instantiate(_context, function);
+                        entry.AddNode(typeDef);
+
+                        Visit(typeDef);
                     }
                 }
 
-                if (function.FunctionDefinition?.TypeReference != null)
+                // in case of overloads, TryResolve may succeed (finding the correct SymbolEntry)
+                // but FunctionDefinition may still be null (FunctionReference.OverloadKey does not match functionDef)
+                if (function.FunctionDefinition == null)
                 {
-                    function.SetTypeReference(
-                        function.FunctionDefinition.TypeReference.MakeProxy());
+                    var overloadDef = ResolveOverload(function);
+                    if (overloadDef == null)
+                    {
+                        _context.UndefinedFunction(function);
+                    }
+                    else
+                    {
+                        function.Symbol!.SetOverload(function, overloadDef);
+                        Visit(overloadDef);
+                    }
                 }
+            }
+
+            if (function.TypeReference == null &&
+                function.FunctionDefinition?.TypeReference != null)
+            {
+                var typeRef = function.FunctionDefinition.TypeReference.MakeProxy();
+                function.SetTypeReference(typeRef);
+                Visit(typeRef);
             }
         }
 
@@ -355,7 +371,7 @@ namespace Zsharp.Semantics
             if (bitCount % 8 > 0)
                 index++;
 
-            Ast.Guard(index <= 32, "Numeric Type too large.");
+            Ast.Guard(index <= 64, "Numeric Type too large.");
             string typeName = sign == AstNumericSign.Signed ? "I" : "U";
 
             typeName = index switch
@@ -374,5 +390,11 @@ namespace Zsharp.Semantics
 
         private static AstTypeDefinition? FindTypeDefinition(AstSymbolTable symbols, string typeName)
             => symbols.FindDefinition<AstTypeDefinition>(typeName, AstSymbolKind.Type);
+
+        private AstFunctionDefinition? ResolveOverload(AstFunctionReference function)
+        {
+            // TODO: more elaborate overload resolution here...
+            return function.Symbol!.Overloads.SingleOrDefault(def => def.OverloadKey == function.OverloadKey);
+        }
     }
 }

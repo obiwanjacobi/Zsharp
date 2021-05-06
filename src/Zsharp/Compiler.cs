@@ -11,16 +11,14 @@ namespace Zsharp
     public class Compiler
     {
         private readonly AstBuilder _astBuilder;
-        private readonly ResolveDefinition _resolveTypes;
-        private readonly ResolveOverloads _resolveOverloads;
+        private readonly ResolveDefinition _resolveDefinition;
         private readonly CheckRules _checkRules;
 
         public Compiler(IAstModuleLoader moduleLoader)
         {
             Context = new CompilerContext(moduleLoader);
             _astBuilder = new AstBuilder(Context);
-            _resolveTypes = new ResolveDefinition(Context);
-            _resolveOverloads = new ResolveOverloads(Context);
+            _resolveDefinition = new ResolveDefinition(Context);
             _checkRules = new CheckRules(Context);
         }
 
@@ -43,6 +41,7 @@ namespace Zsharp
                 return _astBuilder.Errors;
             }
 
+            ResolveExternals();
             ApplySemantics(astFile);
 
             return Context.Errors;
@@ -51,9 +50,19 @@ namespace Zsharp
         private void ApplySemantics(AstFile file)
         {
             // Note: processing is in order
-            _resolveTypes.Visit(file);
-            _resolveOverloads.Visit(file);
+            _resolveDefinition.Visit(file);
             _checkRules.Visit(file);
+        }
+
+        private void ResolveExternals()
+        {
+            var modules = Context.Modules.Modules
+                .OfType<AstModuleExternal>();
+
+            foreach (var module in modules)
+            {
+                module.TryResolve(Context.IntrinsicSymbols);
+            }
         }
 
         private ZsharpParser CreateParser(string sourceName, string code)

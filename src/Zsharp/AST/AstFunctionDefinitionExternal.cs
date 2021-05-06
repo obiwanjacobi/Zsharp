@@ -20,10 +20,5 @@ namespace Zsharp.AST
         public bool HasSelfParameter { get; }
 
         public AstExternalName ExternalName { get; }
-
-        public override void Accept(AstVisitor visitor)
-        {
-            // no-op
-        }
     }
 }

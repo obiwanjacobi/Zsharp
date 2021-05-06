@@ -67,9 +67,6 @@ namespace Zsharp.AST
             return false;
         }
 
-        public override void Accept(AstVisitor visitor)
-            => visitor.VisitFunctionDefinition(this);
-
         public override void VisitChildren(AstVisitor visitor)
         {
             base.VisitChildren(visitor);

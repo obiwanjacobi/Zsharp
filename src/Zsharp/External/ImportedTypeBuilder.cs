@@ -35,6 +35,10 @@ namespace Zsharp.External
             {
                 BuildClass(typeDefinition);
             }
+            else if (typeDefinition.IsInterface)
+            {
+                BuildInterface(typeDefinition);
+            }
             else
                 throw new NotImplementedException(
                     $"No implementation for Type {typeDefinition.FullName}");
@@ -47,6 +51,11 @@ namespace Zsharp.External
         public IEnumerable<AstFunctionDefinitionExternal> Functions => _functions;
 
         public IEnumerable<KeyValuePair<string, string>> Aliases => _aliases;
+
+        private void BuildInterface(TypeDefinition typeDefinition)
+        {
+
+        }
 
         private void BuildEnum(TypeDefinition typeDefinition)
         {

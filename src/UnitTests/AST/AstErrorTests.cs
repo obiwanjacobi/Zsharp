@@ -93,7 +93,7 @@ namespace UnitTests.AST
 
             var compiler = Compile(code);
             var error = compiler.Context.Errors.Single();
-            error.Text.Should().Contain("No overload was found");
+            error.Text.Should().Contain("undefined Function");
         }
 
         [TestMethod]

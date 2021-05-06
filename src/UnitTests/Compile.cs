@@ -4,7 +4,7 @@ using Zsharp;
 using Zsharp.AST;
 using Zsharp.External;
 
-namespace UnitTests.Semantics
+namespace UnitTests
 {
     internal static class Compile
     {

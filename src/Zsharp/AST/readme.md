@@ -12,7 +12,7 @@ and symbol tables are organized in a hierarchy.
 
 Intrinsic Symbols
 |
--- File Symbols
+-- File Symbols --> External Module Symbols
     |
     -- Function Symbols
         |
@@ -22,6 +22,7 @@ Intrinsic Symbols
 - File Symbols contain all the globals of a code file, including imported external symbols.
 - Function Symbols contain all the symbols defined inside a function.
 - Code Block Symbols contain the symbols defined in a scope of code (inside a function).
+- External Module Symbols contain all symbols for imported modules in a file.
 
 `AstSymbolEntry` instances are put in the symbol table where the symbol is defined.
 For example a function definition will be placed in the module's symbol table. 
@@ -34,4 +35,7 @@ The symbol entries are rearranged (merged) to add the reference to the definitio
 
 The Z# `import` keyword pulls in an external module.
 External can mean any .NET assembly or a Z# (compiled) module.
+
+The symbols of the external module are stored in a separate Symbol Table inside the external module.
+In the File-level symbol table (where the import statements are declared) each external module is added as a 'Module' symbol entry.
 

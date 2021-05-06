@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using Zsharp.AST;
 using Zsharp.External;
 
 namespace UnitTests.AST
@@ -30,15 +32,15 @@ namespace UnitTests.AST
             assemblies.Assemblies.Should().HaveCount(1);
         }
 
-        //[TestMethod]
-        //public void LoadExternal_System()
-        //{
-        //    var loader = CreateModuleLoader();
+        [TestMethod]
+        public void LoadExternal_System()
+        {
+            var loader = CreateModuleLoader();
 
-        //    var system = loader.LoadExternal("System");
-        //    system.Should().NotBeNull();
-        //    system.Symbols.Namespace.Should().Be("System");
-        //    system.Symbols.Entries.All(e => e.SymbolLocality == AstSymbolLocality.Imported).Should().BeTrue();
-        //}
+            var system = loader.LoadExternal("System");
+            system.Should().NotBeNull();
+            system.Symbols.Namespace.Should().Be("System");
+            system.Symbols.Entries.All(e => e.SymbolLocality == AstSymbolLocality.Imported).Should().BeTrue();
+        }
     }
 }

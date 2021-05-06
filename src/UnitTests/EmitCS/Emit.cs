@@ -99,7 +99,8 @@ namespace UnitTests.EmitCS
             Console.WriteLine("---------------------------------------------------------");
 
             var assembly = Assembly.LoadFile(Path.Combine(path, assemblyName + ".dll"));
-            var type = assembly.ExportedTypes.Single(t => t.Name == typeName);
+            var canonicalName = AstDotName.ToCanonical(typeName);
+            var type = assembly.ExportedTypes.Single(t => t.Name == canonicalName);
             var method = type.GetMethods().Single(m => m.Name == methodName);
             method.Invoke(null, null);
         }

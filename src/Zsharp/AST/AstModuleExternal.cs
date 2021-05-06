@@ -21,8 +21,26 @@ namespace Zsharp.AST
         public string Namespace { get; }
 
         public override void Accept(AstVisitor visitor)
+        { /* no-op  */ }
+
+        public bool TryResolve(AstSymbolTable symbolTable)
         {
-            // no-op
+            foreach (var symbol in Symbols.Entries)
+            {
+                if (symbol.HasOverloads)
+                {
+                    foreach (var overload in symbol.Overloads)
+                    {
+
+                    }
+                }
+                else
+                {
+
+                }
+            }
+
+            return true;
         }
 
         public void AddTypeDefinition(AstTypeDefinitionExternal typeDefinition)
@@ -49,6 +67,13 @@ namespace Zsharp.AST
 
         public void AddFunction(AstFunctionDefinitionExternal function)
         {
+            if (function.TypeReference == null)
+            {
+                var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
+                function.SetTypeReference(typeRef);
+                Symbols.Add(typeRef);
+            }
+
             var entry = Symbols.Add(function);
             entry.SymbolLocality = AstSymbolLocality.Imported;
         }

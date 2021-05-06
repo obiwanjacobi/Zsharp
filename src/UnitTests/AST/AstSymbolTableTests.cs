@@ -42,6 +42,21 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void ImportModuleName()
+        {
+            const string code =
+                "import System.Console" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code, Compile.CreateModuleLoader());
+            var symbols = file.Symbols;
+            symbols.Entries.Any(e => e == null).Should().BeFalse();
+
+            var mod = symbols.FindEntries(AstSymbolKind.Module).Single();
+            mod.SymbolName.Should().Be("System.console");
+        }
+
+        [TestMethod]
         public void ExportFunctionName()
         {
             const string code =

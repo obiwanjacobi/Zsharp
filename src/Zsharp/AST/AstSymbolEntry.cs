@@ -8,11 +8,10 @@ namespace Zsharp.AST
     [DebuggerDisplay("{SymbolName} ({SymbolKind})")]
     public class AstSymbolEntry
     {
-        private readonly List<AstNode> _definitions = new List<AstNode>();
-        private readonly List<AstNode> _references = new List<AstNode>();
-        private readonly List<string> _aliases = new List<string>();
-        private readonly Dictionary<AstFunctionReference, AstFunctionDefinition> _overloads
-            = new Dictionary<AstFunctionReference, AstFunctionDefinition>();
+        private readonly List<AstNode> _definitions = new();
+        private readonly List<AstNode> _references = new();
+        private readonly List<string> _aliases = new();
+        private readonly Dictionary<AstFunctionReference, AstFunctionDefinition> _overloads = new();
 
         public AstSymbolEntry(AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
         {

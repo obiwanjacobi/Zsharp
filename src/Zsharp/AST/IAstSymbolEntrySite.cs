@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public interface IAstSymbolEntrySite
     {
@@ -8,8 +6,5 @@ namespace Zsharp.AST
         bool TrySetSymbol(AstSymbolEntry? symbolEntry);
         void SetSymbol(AstSymbolEntry symbolEntry);
         bool TryResolve();
-
-        public void ThrowIfSymbolNotSet()
-            => _ = Symbol ?? throw new InvalidOperationException("Symbol is not set.");
     }
 }

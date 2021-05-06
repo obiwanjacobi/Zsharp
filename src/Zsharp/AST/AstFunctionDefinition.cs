@@ -25,6 +25,11 @@ namespace Zsharp.AST
 
         public virtual bool IsExternal => false;
 
+        public override void Accept(AstVisitor visitor)
+        {
+            visitor.VisitFunctionDefinition(this);
+        }
+
         public override string? ToString()
         {
             var txt = new StringBuilder();
