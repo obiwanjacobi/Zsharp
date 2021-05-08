@@ -123,10 +123,11 @@ namespace Zsharp.AST
         public void CreateSymbols(AstSymbolTable symbols)
         {
             if (TypeReference != null &&
-                TypeReference.Symbol == null)
+                TypeReference!.Symbol == null)
             {
                 symbols.Add(TypeReference);
             }
+
             foreach (var parameter in Parameters)
             {
                 if (parameter.TypeReference != null &&
@@ -135,10 +136,9 @@ namespace Zsharp.AST
                     symbols.Add(parameter.TypeReference);
                 }
             }
-            if (Symbol == null)
-            {
-                symbols.Add(this);
-            }
+
+            Ast.Guard(Symbol == null, "Symbol already set. Call CreateSymbols only once.");
+            symbols.Add(this);
         }
 
         public override void VisitChildren(AstVisitor visitor)

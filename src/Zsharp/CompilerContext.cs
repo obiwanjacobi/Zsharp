@@ -7,7 +7,7 @@ namespace Zsharp
         public CompilerContext(IAstModuleLoader moduleLoader)
         {
             IntrinsicSymbols = CreateIntrinsicSymbols();
-            Modules = new AstModuleManager(moduleLoader);
+            Modules = new AstModuleManager(IntrinsicSymbols, moduleLoader);
         }
 
         public AstModuleManager Modules { get; }

@@ -20,11 +20,12 @@ namespace Zsharp.External
 
         public AssemblyDefinition LoadAssembly(string assemblyPath)
         {
-            AssemblyDefinition? assemblyDef = null;
+            AssemblyDefinition? assemblyDef;
 
             if (File.Exists(assemblyPath))
             {
                 assemblyDef = AssemblyDefinition.ReadAssembly(assemblyPath);
+                AddDependenciesOf(assemblyDef);
                 AddAssembly(assemblyDef);
                 return assemblyDef;
             }
@@ -35,6 +36,7 @@ namespace Zsharp.External
                 if (File.Exists(path))
                 {
                     assemblyDef = AssemblyDefinition.ReadAssembly(path);
+                    AddDependenciesOf(assemblyDef);
                     AddAssembly(assemblyDef);
                     return assemblyDef;
                 }
@@ -43,21 +45,27 @@ namespace Zsharp.External
             throw new ArgumentException($"Assembly '{assemblyPath}' could not be loaded.", nameof(assemblyPath));
         }
 
+        private void AddDependenciesOf(AssemblyDefinition assembly)
+        {
+            foreach (var dependency in GetDependenciesOf(assembly))
+            {
+                AddAssembly(dependency);
+            }
+        }
+
+        private static IEnumerable<AssemblyDefinition> GetDependenciesOf(AssemblyDefinition assemblyDefinition)
+        {
+            return assemblyDefinition.Modules.SelectMany(module =>
+                module.AssemblyReferences.Select(r =>
+                    module.AssemblyResolver.Resolve(r)));
+        }
+
         private void AddAssembly(AssemblyDefinition assemblyDef)
         {
             if (_assemblies.SingleOrDefault(a => a.FullName == assemblyDef.FullName) != null)
                 return;
 
             _assemblies.Add(assemblyDef);
-
-            foreach (var mod in assemblyDef.Modules)
-            {
-                foreach (var dep in mod.AssemblyReferences)
-                {
-                    var depAssembly = mod.AssemblyResolver.Resolve(dep);
-                    AddAssembly(depAssembly);
-                }
-            }
         }
     }
 }

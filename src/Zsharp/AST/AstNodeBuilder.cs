@@ -177,9 +177,7 @@ namespace Zsharp.AST
             var symbolTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
             function.CreateSymbols(symbolTable.Symbols);
             if (context.Parent is Statement_export_inlineContext)
-            {
                 function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
-            }
 
             _ = VisitChildrenExcept(context, identifier, templateParams);
             _builderContext.RevertCurrent();
@@ -188,13 +186,9 @@ namespace Zsharp.AST
             {
                 var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
                 function.SetTypeReference(typeRef);
-
-                var typeName = typeRef.Identifier!.CanonicalName;
-                var entry = symbolTable.Symbols.FindEntry(typeName, AstSymbolKind.Type);
-                if (entry == null)
-                    entry = symbolTable.AddSymbol(typeName, AstSymbolKind.Type, typeRef);
-                typeRef.SetSymbol(entry);
+                symbolTable.Symbols.Add(typeRef);
             }
+
             return function;
         }
 
@@ -256,6 +250,13 @@ namespace Zsharp.AST
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
             function.CreateSymbols(symbols.Symbols);
 
+            // too early to set void
+            //if (function.TypeReference == null)
+            //{
+            //    var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
+            //    function.SetTypeReference(typeRef);
+            //    symbols.Symbols.Add(typeRef);
+            //}
             return function;
         }
 

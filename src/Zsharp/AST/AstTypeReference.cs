@@ -23,7 +23,7 @@ namespace Zsharp.AST
             _templateParameters = new();
         }
 
-        private AstTypeReference(AstTypeReference typeOrigin)
+        protected AstTypeReference(AstTypeReference typeOrigin)
             : base(AstNodeType.Type)
         {
             Context = typeOrigin.Context;
@@ -38,6 +38,8 @@ namespace Zsharp.AST
         public bool IsOptional { get; protected set; }
 
         public bool IsError { get; protected set; }
+
+        public virtual bool IsExternal => false;
 
         public override bool IsEqual(AstType type)
         {
@@ -67,7 +69,7 @@ namespace Zsharp.AST
 
         public bool IsProxy => _typeOrigin != null;
 
-        public AstTypeReference MakeProxy()
+        public virtual AstTypeReference MakeProxy()
         {
             AstTypeReference typeRef;
 

@@ -41,7 +41,6 @@ namespace Zsharp
                 return _astBuilder.Errors;
             }
 
-            ResolveExternals();
             ApplySemantics(astFile);
 
             return Context.Errors;
@@ -52,17 +51,6 @@ namespace Zsharp
             // Note: processing is in order
             _resolveDefinition.Visit(file);
             _checkRules.Visit(file);
-        }
-
-        private void ResolveExternals()
-        {
-            var modules = Context.Modules.Modules
-                .OfType<AstModuleExternal>();
-
-            foreach (var module in modules)
-            {
-                module.TryResolve(Context.IntrinsicSymbols);
-            }
         }
 
         private ZsharpParser CreateParser(string sourceName, string code)

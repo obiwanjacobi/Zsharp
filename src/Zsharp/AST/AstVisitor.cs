@@ -62,24 +62,14 @@ namespace Zsharp.AST
             VisitChildren(parameter);
         }
 
-        public virtual void VisitTemplateInstanceFunction(AstTemplateInstanceFunction templateFunction)
-        {
-            VisitChildren(templateFunction);
-        }
-
-        public virtual void VisitTypeFieldDefinition(AstTypeFieldDefinition field)
-        {
-            VisitChildren(field);
-        }
-
-        public virtual void VisitTypeFieldInitialization(AstTypeFieldInitialization field)
-        {
-            VisitChildren(field);
-        }
-
         public virtual void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
         {
             VisitChildren(parameter);
+        }
+
+        public virtual void VisitModuleExternal(AstModuleExternal module)
+        {
+            VisitChildren(module);
         }
 
         public virtual void VisitModulePublic(AstModulePublic module)
@@ -100,6 +90,21 @@ namespace Zsharp.AST
         public virtual void VisitLiteralString(AstLiteralString literalString)
         {
             VisitChildren(literalString);
+        }
+
+        public virtual void VisitTemplateInstanceFunction(AstTemplateInstanceFunction templateFunction)
+        {
+            VisitChildren(templateFunction);
+        }
+
+        public virtual void VisitTypeFieldDefinition(AstTypeFieldDefinition field)
+        {
+            VisitChildren(field);
+        }
+
+        public virtual void VisitTypeFieldInitialization(AstTypeFieldInitialization field)
+        {
+            VisitChildren(field);
         }
 
         public virtual void VisitTypeReference(AstTypeReference type)

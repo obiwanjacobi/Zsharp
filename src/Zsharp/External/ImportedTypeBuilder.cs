@@ -16,11 +16,13 @@ namespace Zsharp.External
         public ImportedTypeBuilder(ExternalTypeRepository typeRepository)
         {
             _typeRepository = typeRepository;
+            Namespace = String.Empty;
             ModuleName = String.Empty;
         }
 
         public void Build(TypeDefinition typeDefinition)
         {
+            Namespace = ModuleName = typeDefinition.Namespace;
             ModuleName = typeDefinition.FullName;
 
             if (typeDefinition.IsEnum)
@@ -43,6 +45,8 @@ namespace Zsharp.External
                 throw new NotImplementedException(
                     $"No implementation for Type {typeDefinition.FullName}");
         }
+
+        public string Namespace { get; private set; }
 
         public string ModuleName { get; private set; }
 

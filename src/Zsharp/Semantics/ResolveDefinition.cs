@@ -13,6 +13,24 @@ namespace Zsharp.Semantics
             _context = context;
         }
 
+        public override void VisitFile(AstFile file)
+        {
+            var symbolTable = SetSymbolTable(_context.Modules.SymbolTable);
+
+            var externals = file.Symbols.FindEntries(AstSymbolKind.Module)
+                .Select(s => s.DefinitionAs<AstModuleExternal>())
+                .Where(m => m != null);
+
+            foreach (var mod in externals)
+            {
+                VisitModuleExternal(mod!);
+            }
+
+            SetSymbolTable(symbolTable);
+
+            base.VisitFile(file);
+        }
+
         public override void VisitExpression(AstExpression expression)
         {
             if (expression.TypeReference != null)
@@ -281,6 +299,9 @@ namespace Zsharp.Semantics
             {
                 var typeRef = function.FunctionDefinition.TypeReference.MakeProxy();
                 function.SetTypeReference(typeRef);
+                // if type is intrinsic the symbol may not be set.
+                if (typeRef.Symbol == null)
+                    function.Symbol!.SymbolTable.Add(typeRef);
                 Visit(typeRef);
             }
         }
@@ -320,8 +341,11 @@ namespace Zsharp.Semantics
                         entry.AddNode(typeDef);
                         Ast.Guard(entry.Definition, "Invalid Template Definition.");
                     }
-                    else
+                    else if (!type.IsExternal)
+                    {
+                        // TODO: for now unresolved external references are ignored.
                         _context.UndefinedType(type);
+                    }
                 }
             }
             VisitChildren(type!);

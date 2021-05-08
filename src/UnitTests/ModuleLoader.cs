@@ -8,13 +8,18 @@ namespace UnitTests
     {
         public List<AstModuleExternal> Modules { get; } = new List<AstModuleExternal>();
 
+        public AstSymbolTable SymbolTable { get; private set; }
+
+        public void Initialize(AstSymbolTable symbolTable)
+            => SymbolTable = symbolTable;
+
         public AstModuleExternal LoadExternal(string moduleName)
         {
             var mod = Modules.FirstOrDefault(m => m.Identifier.Name == moduleName);
 
             if (mod == null)
             {
-                mod = new AstModuleExternal(moduleName);
+                mod = new AstModuleExternal(moduleName, SymbolTable);
                 Modules.Add(mod);
             }
             return mod;

@@ -8,15 +8,8 @@ namespace Zsharp.AST
     {
         private readonly Dictionary<string, AstSymbolEntry> _table = new();
 
-        public AstSymbolTable(string name = "")
+        public AstSymbolTable(string name = "", AstSymbolTable? parentTable = null)
         {
-            Name = name;
-        }
-
-        public AstSymbolTable(string name, AstSymbolTable parentTable)
-        {
-            Ast.Guard(parentTable, "Parent SymbolTable is null.");
-
             Name = name;
             ParentTable = parentTable;
         }

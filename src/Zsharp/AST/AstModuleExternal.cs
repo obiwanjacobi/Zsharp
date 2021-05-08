@@ -4,15 +4,15 @@ namespace Zsharp.AST
 {
     public class AstModuleExternal : AstModule
     {
-        public AstModuleExternal(string moduleName)
-            : this(moduleName, moduleName)
+        public AstModuleExternal(string moduleName, AstSymbolTable? parentTable = null)
+            : this(moduleName, moduleName, parentTable)
         { }
 
-        public AstModuleExternal(string ns, string moduleName)
+        public AstModuleExternal(string ns, string moduleName, AstSymbolTable? parentTable = null)
             : base(AstModuleLocality.External)
         {
             Namespace = ns;
-            Symbols = new AstSymbolTable(moduleName);
+            Symbols = new AstSymbolTable(moduleName, parentTable);
             SetIdentifier(new AstIdentifier(moduleName, AstIdentifierType.Module));
         }
 
@@ -21,31 +21,35 @@ namespace Zsharp.AST
         public string Namespace { get; }
 
         public override void Accept(AstVisitor visitor)
-        { /* no-op  */ }
+            => visitor.VisitModuleExternal(this);
 
-        public bool TryResolve(AstSymbolTable symbolTable)
+        public override void VisitChildren(AstVisitor visitor)
         {
             foreach (var symbol in Symbols.Entries)
             {
-                if (symbol.HasOverloads)
+                if (symbol.HasDefinition)
                 {
-                    foreach (var overload in symbol.Overloads)
+                    if (symbol.HasOverloads)
                     {
-
+                        foreach (var overload in symbol.Overloads)
+                        {
+                            visitor.Visit(overload);
+                        }
                     }
+                    else
+                        visitor.Visit(symbol.Definition!);
                 }
-                else
-                {
 
+                foreach (var reference in symbol.References)
+                {
+                    visitor.Visit(reference);
                 }
             }
-
-            return true;
         }
 
         public void AddTypeDefinition(AstTypeDefinitionExternal typeDefinition)
         {
-            var entry = Symbols.AddSymbol(typeDefinition.Identifier!.CanonicalName, AstSymbolKind.Type, typeDefinition);
+            var entry = Symbols.Add(typeDefinition);
             entry.SymbolLocality = AstSymbolLocality.Imported;
         }
 
@@ -71,11 +75,10 @@ namespace Zsharp.AST
             {
                 var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
                 function.SetTypeReference(typeRef);
-                Symbols.Add(typeRef);
             }
 
-            var entry = Symbols.Add(function);
-            entry.SymbolLocality = AstSymbolLocality.Imported;
+            function.CreateSymbols(Symbols);
+            function.Symbol!.SymbolLocality = AstSymbolLocality.Imported;
         }
     }
 }

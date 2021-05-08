@@ -25,7 +25,7 @@ namespace UnitTests
         public static AstFile File(string code, IAstModuleLoader moduleLoader = null)
         {
             var compiler = new Compiler(moduleLoader ?? new ModuleLoader());
-            var errors = compiler.Compile("UnitTests", "ResolveTypeTests", code);
+            var errors = compiler.Compile("UnitTests", "UnitTests", code);
 
             errors.PrintErrors();
             errors.Should().BeEmpty();

@@ -28,7 +28,7 @@ namespace Zsharp.AST
         {
             if (moduleCtx != null)
             {
-                Ast.Guard(Identifier!.Name == moduleCtx.module_name().GetText(), "Not the same module.");
+                Ast.Guard(Identifier!.CanonicalName == AstDotName.ToCanonical(moduleCtx.module_name().GetText()), "Not the same module.");
                 _contexts.Add(moduleCtx);
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -6,19 +7,24 @@ namespace Zsharp.AST
     public class AstModuleManager
     {
         private readonly Dictionary<string, AstModule> _modules = new();
+        private readonly AstSymbolTable _externalSymbolTable;
         private readonly IAstModuleLoader _moduleLoader;
 
-        public AstModuleManager(IAstModuleLoader moduleLoader)
+        public AstModuleManager(AstSymbolTable intrinsicSymbols, IAstModuleLoader moduleLoader)
         {
             _moduleLoader = moduleLoader;
+            _externalSymbolTable = new AstSymbolTable(String.Empty, intrinsicSymbols);
+            _moduleLoader.Initialize(_externalSymbolTable);
         }
+
+        public AstSymbolTable SymbolTable => _externalSymbolTable;
 
         public IEnumerable<AstModule> Modules => _modules.Values;
 
         public AstModulePublic AddModule(Statement_moduleContext moduleCtx)
         {
             Ast.Guard(moduleCtx, "Context is null.");
-            var moduleName = moduleCtx.module_name().GetText();
+            var moduleName = AstDotName.ToCanonical(moduleCtx.module_name().GetText());
 
             var module = FindModule<AstModulePublic>(moduleName);
             if (module == null)
@@ -56,7 +62,10 @@ namespace Zsharp.AST
             {
                 module = _moduleLoader.LoadExternal(moduleName);
                 if (module != null)
+                {
                     _modules.Add(moduleName, module);
+                    _externalSymbolTable.Add(module);
+                }
             }
             return module;
         }

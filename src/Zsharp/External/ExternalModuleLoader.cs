@@ -9,11 +9,11 @@ namespace Zsharp.External
     {
         private readonly Dictionary<string, AstModuleExternal> _modules = new();
         private readonly ExternalTypeRepository _typeRepository = new();
+        private readonly AssemblyManager _assemblies;
 
         public ExternalModuleLoader(AssemblyManager assemblies)
         {
-            Assemblies = assemblies;
-            CreateExternalModules(assemblies.Assemblies);
+            _assemblies = assemblies;
         }
 
         private void CreateExternalModules(IEnumerable<AssemblyDefinition> assemblies)
@@ -40,18 +40,30 @@ namespace Zsharp.External
             var builder = new ImportedTypeBuilder(_typeRepository);
             builder.Build(type);
 
-            if (!_modules.TryGetValue(builder.ModuleName, out AstModuleExternal? module))
-            {
-                module = new AstModuleExternal(type.Namespace, builder.ModuleName);
-                _modules.Add(builder.ModuleName, module);
-            }
-
+            var module = GetModule(builder.Namespace, builder.ModuleName);
             builder.AddTo(module);
         }
 
-        public AssemblyManager Assemblies { get; }
+        private AstModuleExternal GetModule(string ns, string moduleName)
+        {
+            if (!_modules.TryGetValue(moduleName, out AstModuleExternal? module))
+            {
+                module = new AstModuleExternal(ns, moduleName, SymbolTable);
+                _modules.Add(moduleName, module);
+            }
+
+            return module;
+        }
 
         public IEnumerable<AstModuleExternal> Modules => _modules.Values;
+
+        public AstSymbolTable SymbolTable { get; private set; }
+
+        public void Initialize(AstSymbolTable symbolTable)
+        {
+            SymbolTable = symbolTable;
+            CreateExternalModules(_assemblies.Assemblies);
+        }
 
         public AstModuleExternal? LoadExternal(string moduleName)
         {
