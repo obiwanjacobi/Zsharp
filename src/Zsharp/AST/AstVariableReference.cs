@@ -31,8 +31,8 @@ namespace Zsharp.AST
         public AstVariableDefinition? VariableDefinition
             => Symbol?.DefinitionAs<AstVariableDefinition>();
 
-        public AstFunctionParameter? ParameterDefinition
-            => Symbol?.DefinitionAs<AstFunctionParameter>();
+        public AstFunctionParameterDefinition? ParameterDefinition
+            => Symbol?.DefinitionAs<AstFunctionParameterDefinition>();
 
         private AstTypeFieldReference? _fieldRef;
         public AstTypeFieldReference? Field => _fieldRef;

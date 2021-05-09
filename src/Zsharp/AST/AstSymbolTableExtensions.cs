@@ -48,6 +48,7 @@ namespace Zsharp.AST
                 AstNodeType.Struct => AstSymbolKind.Type,
                 AstNodeType.Type => AstSymbolKind.Type,
                 AstNodeType.Module => AstSymbolKind.Module,
+                AstNodeType.FunctionParameter => AstSymbolKind.Variable,
                 AstNodeType.Variable => AstSymbolKind.Variable,
                 AstNodeType.Field => AstSymbolKind.Field,
                 AstNodeType.EnumOption => AstSymbolKind.Field,

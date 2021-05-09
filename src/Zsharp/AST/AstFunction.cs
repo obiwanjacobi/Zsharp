@@ -120,12 +120,14 @@ namespace Zsharp.AST
             return false;
         }
 
-        public void CreateSymbols(AstSymbolTable symbols)
+        public virtual void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
+            var contextSymbols = parentSymbols ?? functionSymbols;
+
             if (TypeReference != null &&
                 TypeReference!.Symbol == null)
             {
-                symbols.Add(TypeReference);
+                contextSymbols.Add(TypeReference);
             }
 
             foreach (var parameter in Parameters)
@@ -133,12 +135,12 @@ namespace Zsharp.AST
                 if (parameter.TypeReference != null &&
                     parameter.TypeReference.Symbol == null)
                 {
-                    symbols.Add(parameter.TypeReference);
+                    functionSymbols.Add(parameter.TypeReference);
                 }
             }
 
             Ast.Guard(Symbol == null, "Symbol already set. Call CreateSymbols only once.");
-            symbols.Add(this);
+            contextSymbols.Add(this);
         }
 
         public override void VisitChildren(AstVisitor visitor)

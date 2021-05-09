@@ -111,7 +111,33 @@ namespace UnitTests.AST
             var symbols = file.Symbols;
             symbols.Entries.Any(e => e == null).Should().BeFalse();
 
+            symbols.Entries.Should().HaveCount(2);
             var fn = symbols.FindEntry("fn", AstSymbolKind.Function);
+            fn.SymbolKind.Should().Be(AstSymbolKind.Function);
+
+            symbols = fn.DefinitionAs<AstFunctionDefinitionImpl>()!.Symbols;
+            symbols.Entries.Should().HaveCount(1);
+            symbols.FindEntry("v", AstSymbolKind.Variable).Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void FunctionMultipleTop()
+        {
+            const string code =
+                "fn: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn2()" + Tokens.NewLine +
+                "fn2: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "return" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var symbols = file.Symbols;
+
+            symbols.Entries.Should().HaveCount(3);
+            var fn = symbols.FindEntry("fn", AstSymbolKind.Function);
+            fn.SymbolKind.Should().Be(AstSymbolKind.Function);
+
+            fn = symbols.FindEntry("fn2", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
         }
 

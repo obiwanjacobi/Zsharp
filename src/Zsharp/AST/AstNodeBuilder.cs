@@ -157,10 +157,10 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_def(Function_defContext context)
         {
-            var file = _builderContext.GetCurrent<AstFile>();
+            var codeBlock = _builderContext.GetCodeBlock(context);
             var function = new AstFunctionDefinitionImpl(context);
 
-            file.AddFunction(function);
+            codeBlock.AddItem(function);
             _builderContext.SetCurrent(function);
 
             // process identifier first (needed for symbol)
@@ -168,26 +168,28 @@ namespace Zsharp.AST
             VisitIdentifier_func(identifier);
             Ast.Guard(function.Identifier, "Function Identifier is not set.");
 
+            // template params also determines identifier
             var templateParams = context.template_param_list();
             if (templateParams != null)
             {
                 VisitTemplate_param_list(templateParams);
             }
 
-            var symbolTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            function.CreateSymbols(symbolTable.Symbols);
+            _ = VisitChildrenExcept(context, identifier, templateParams);
+
+            var functionTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
+            function.CreateSymbols(functionTable.Symbols, codeBlock.Symbols);
             if (context.Parent is Statement_export_inlineContext)
                 function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
-
-            _ = VisitChildrenExcept(context, identifier, templateParams);
-            _builderContext.RevertCurrent();
 
             if (function.TypeReference == null)
             {
                 var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
                 function.SetTypeReference(typeRef);
-                symbolTable.Symbols.Add(typeRef);
+                codeBlock.Symbols.Add(typeRef);
             }
+
+            _builderContext.RevertCurrent();
 
             return function;
         }
@@ -195,27 +197,31 @@ namespace Zsharp.AST
         public override object? VisitFunction_parameter(Function_parameterContext context)
         {
             var parameter = new AstFunctionParameterDefinition(context);
-            var function = _builderContext.GetCurrent<AstFunctionDefinitionImpl>();
-            function.TryAddParameter(parameter);
 
-            _builderContext.SetCurrent(parameter);
-            _ = VisitChildren(context);
-            _builderContext.RevertCurrent();
+            VisitFunctionParameter(parameter);
 
             return parameter;
         }
 
         public override object? VisitFunction_parameter_self(Function_parameter_selfContext context)
         {
-            var function = _builderContext.GetCurrent<AstFunctionDefinitionImpl>();
             var parameter = new AstFunctionParameterDefinition(context);
             parameter.SetIdentifier(AstIdentifierIntrinsic.Self);
+
+            VisitFunctionParameter(parameter);
+
+            return parameter;
+        }
+
+        private void VisitFunctionParameter(AstFunctionParameterDefinition parameter)
+        {
+            var function = _builderContext.GetCurrent<AstFunctionDefinitionImpl>();
+            // TODO: why try?
             function.TryAddParameter(parameter);
 
             _builderContext.SetCurrent(parameter);
-            _ = VisitChildren(context);
+            _ = VisitChildren(parameter.Context);
             _builderContext.RevertCurrent();
-            return parameter;
         }
 
         public override object? VisitFunction_call(Function_callContext context)
@@ -690,13 +696,13 @@ namespace Zsharp.AST
             trSite.SetTypeReference(typeRef);
 
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbolsSite.Symbols.Find(typeRef);
-            if (entry != null)
-            {
-                entry.AddNode(typeRef);
-                typeRef.SetSymbol(entry);
-            }
-            else
+            //var entry = symbolsSite.Symbols.Find(typeRef);
+            //if (entry != null)
+            //{
+            //    entry.AddNode(typeRef);
+            //    typeRef.SetSymbol(entry);
+            //}
+            //else
             {
                 symbolsSite.Symbols.Add(typeRef);
             }

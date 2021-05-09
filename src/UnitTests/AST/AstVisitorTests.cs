@@ -49,6 +49,7 @@ namespace UnitTests.AST
             var typeResolver = new ResolveDefinition(context);
             typeResolver.Visit(file);
 
+            context.Errors.PrintErrors();
             context.HasErrors.Should().BeFalse();
 
             var checker = new AstTypeChecker();

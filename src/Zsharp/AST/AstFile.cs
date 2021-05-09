@@ -7,8 +7,6 @@ namespace Zsharp.AST
 {
     public class AstFile : AstNode, IAstSymbolTableSite, IAstCodeBlockSite
     {
-        private readonly List<AstFunctionDefinitionImpl> _functions = new();
-
         public AstFile(string scopeName, AstSymbolTable parentTable, FileContext context)
             : base(AstNodeType.File)
         {
@@ -18,7 +16,10 @@ namespace Zsharp.AST
 
         public FileContext Context { get; }
 
-        public IEnumerable<AstFunctionDefinitionImpl> Functions => _functions;
+        public IEnumerable<AstFunctionDefinitionImpl> Functions
+            => Symbols.FindEntries(AstSymbolKind.Function)
+                .Select(s => s.DefinitionAs<AstFunctionDefinitionImpl>())
+                .Where(f => f != null)!;
 
         public AstSymbolTable Symbols => CodeBlock!.Symbols;
 
@@ -38,17 +39,10 @@ namespace Zsharp.AST
                     "CodeBlock is already set or null.");
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitFile(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitFile(this);
 
         public override void VisitChildren(AstVisitor visitor)
-        {
-            CodeBlock?.Accept(visitor);
-        }
-
-        public void AddFunction(AstFunctionDefinitionImpl function)
-        {
-            CodeBlock!.AddItem(function);
-            _functions.Add(function);
-        }
+            => CodeBlock?.Accept(visitor);
     }
 }

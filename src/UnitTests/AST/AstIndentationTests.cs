@@ -74,5 +74,22 @@ namespace UnitTests.AST
             ret.BranchType.Should().Be(AstBranchType.ExitFunction);
             ret.Indent.Should().Be(2);
         }
+
+        [TestMethod]
+        public void FunctionMultipleTop()
+        {
+            const string code =
+                "fn1: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "fn2()" + Tokens.NewLine +
+                "fn2: ()" + Tokens.NewLine +
+                Tokens.Indent1 + "return" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn1 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            fn1.Should().NotBeNull();
+            var fn2 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(1);
+            fn2.Should().NotBeNull();
+        }
     }
 }
