@@ -28,6 +28,9 @@ namespace Zsharp.AST
             if (context == null)
                 return 0;
 
+            if (context is Function_defContext)
+                return 0;
+
             var indentCtx = context switch
             {
                 Statement_returnContext ctx => ctx.indent(),

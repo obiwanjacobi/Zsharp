@@ -153,7 +153,8 @@ namespace Zsharp.AST
         {
             var entry = FindEntryLocal(name, kind);
 
-            if (ParentTable != null && entry == null)
+            if (ParentTable != null &&
+                entry == null)
             {
                 entry = ParentTable.FindEntry(name, kind);
             }
