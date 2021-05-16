@@ -49,6 +49,10 @@ MyBigEnum: U16
 
 > Flags are just enums with their value carefully controlled.
 
+> How to detect `[Flags]` for .NET interop?
+
+> Do we want additional validation on operators applied to enums and allow only Flags to use the bitwise operators?
+
 You can even specify a string:
 
 ```C#
@@ -134,13 +138,13 @@ MyFunc(opt2)    // MyEnum.opt2
 MyFunc(.opt2)   // MyEnum.opt2
 ```
 
-If `opt2` is ambiguous the type needs to be specified to resolve it.
+If `opt2` is ambiguous the type needs to be specified to resolve it. (how can it be ambiguous?)
 
 ---
 
 > Have validation functions on Enums to verify if values are in range. In .NET any (casted) integer is valid for an Enum.
 
-> For .NET interop on enum base types that are not supported by .NET a (record) class is generated with the options as static fields (and a private constructor).
+> For .NET interop on enum base types that are not supported by .NET, a (record) class is generated with the options as static fields (and a private constructor).
 
 ```csharp
 // C#
@@ -160,3 +164,11 @@ sealed class MyEnum : IEquatable<MyEnum>, IComparable<MyEnum>
     // IEquatable, IComparable implementation
 }
 ```
+
+---
+
+TBD
+
+Extend enum to be more like Rust enums?
+https://doc.rust-lang.org/rust-by-example/custom_types/enum.html
+

@@ -94,19 +94,21 @@ In principle all .NET Exceptions are to be translated to `Error` object represen
 
 All .NET constructors, methods, properties and events will be marked as `Err<T>` (`Err<Void>`?), identifying that a potential exception could be thrown there. That will make imported .NET code very verbose to work with.
 
+Having a less strict error handling policy may help here.
+
 Z# does not have any constructs for catching exceptions specifically - based on type - but it does have a `catch` keyword that will work.
 
 We could translate a `match` on an `Err<T>` return into a typed catch clause.
 
 The `try` keyword is on a per function-call basis. That is not optimal for working with exceptions.
 
-The `defer` keyword can be used as a finally handler, although this also is on a per call basis.
+The `defer` keyword can be used as a finally handler, although this also is on a per call basis. Also deferred calls are determined at runtime. So the finally implementation needs to work down a list. The `errdefer` keyword registers (also at runtime) the calls to execute on any exception.
 
 > Perhaps we could introduce syntax that allows these keywords (`try`, `catch`, `defer`) to be used on a scope?
 
 Throwing an exception from Z# code is passing an instance in the `Error` functions which will see its an `Exception` and throw it. The code _should_ be generated in such a way that the stack trace represent the position where the exception was passed into Error - not Error itself.
 
-## Classes
+## Classes and Structs
 
 > How to deal with Classes/Objects and inheritance?
 (calling and implementing)
@@ -127,7 +129,7 @@ Public extension methods are represented as self-bound (this) functions (if we c
 
 Call the Constructor function: `o: MyObj = MyObj(42)`.
 
-> We need some distinction between the reference types of .NET and the 'structs' of Z#. (`ref` keyword or `Ref<T>` type?)
+> We need some distinction between the reference types of .NET and the 'structs' of Z#. (`ref` keyword or `Ref<T>` type?) Or do we make them the same thing: Z# structs are C# classes?
 
 ```csharp
 import System
@@ -137,6 +139,8 @@ o: Ref<Object> = Object()
 ```
 
 We probably don't need a `Ref<T>` if we handle Reference Types and Value Types the same based on the presence of a `Ptr<T>` or not.
+
+`Ptr<T>` may be removed...
 
 ```csharp
 o = Object()    // ref type
@@ -176,7 +180,7 @@ MyType: (self: MyType, p: U8)
     ...
 ```
 
-Refer to [Type Constructors](/lang/types.md#Type-Constructors) to see how to call base class constructors. For .NET classes the call to the base class constructor function must come first.
+Refer to [Type Constructors](/lang/types.md#Type-Constructors) to see how to call base class constructors. Calling base class constructors must be the first line. Base-class constructors without extra parameters can be called automatically. Perhaps even when the parameter name/types line up? You cannot skip base-classes like in C++.
 
 > Polymorphic Class
 
@@ -208,9 +212,9 @@ s = o.ToString()    // calls ToString on MyStruct
 ```
 
 - what if the overridden method is not virtual (error?)
-- what if calling base method is not available or not the direct base class (but deeper)? (error?)
+- what if calling base method is not available or not the direct base class (but deeper)? => Error!
 
-Implementing a (C#) `new` function to replace an old function on a class is not supported. Simply give the new function a (slightly) different name.
+Implementing a (C#) `new` function to replace an old function on a class is not supported. Simply give the new function a (slightly) different name. Or allow it implicitly or give a warning or add keyword/decorator?
 
 > .NET class method overloads.
 
@@ -231,7 +235,7 @@ This may cause confusion an we may want to change the syntax for generics or tem
 
 ## Delegates and Events
 
-A delegate is a wrapper around an instance pointer and a function pointer.
+A delegate is a wrapper around an instance pointer and a function pointer. It is also linked to other delegates which all can be invoked.
 
 A `Delegate` type will be introduced to represent the C# delegate constructs. This `Delegate` type contains a function pointer for a specific (`self`-bound) function prototype and an optional instance/self pointer.
 
@@ -241,7 +245,7 @@ Events are a standardized delegate signature (sender, args) and a 'property' mec
 
 ## Lambdas
 
-...
+TODO ...
 
 ---
 

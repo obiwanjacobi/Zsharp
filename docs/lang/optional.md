@@ -79,7 +79,7 @@ Adding or removing optional to an existing declaration is a breaking change, whe
 
 Functional implication?
 
-> .NET Interop: we could have Linq functions (`Select`, `SelectMany` etc) overloads for `Opt<T>` types so the can be used in function composition/flow.
+> .NET Interop: we could have Linq functions (`Select`, `SelectMany` etc) overloads for `Opt<T>` types so the optional value can be used in function composition/flow.
 
 ```csharp
 // Opt<T> promotes to Opt<R> by 'selector'
@@ -91,10 +91,10 @@ Select: <T, R>(self: Opt<T>, selector: Fn<T, R>): Opt<R>
 
 // handle 'nothing' case
 Match: <T, R>(self: Opt<T>, none: R, some: Fn<T, R>)
-    return self.hasItem ? some(self.Item) : None
+    return self.hasItem ? some(self.Item) : none
 ```
 
-`Opt<T>` does not expose any public properties to access the contained item `T` or an indication if the item is set. Any work is done inside the Linq `Select` or `SelectMany`...
+`Opt<T>` does not expose any public properties to access the contained item `T` or an indication if the item is set - except for the boolean `?` convertor syntax. Any work is done inside the Linq `Select` or `SelectMany`...
 
 ```csharp
 date: Opt<DateTime> = TryGetDate(...)

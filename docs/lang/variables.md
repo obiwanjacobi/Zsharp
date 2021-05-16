@@ -90,7 +90,7 @@ See also [Immutable Types](types.md#Immutable-Types).
 
 ## Global Variables
 
-Because only immutable variables can be exported, only immutable variable can be thought of as being accessible globally.
+Because only immutable variables can be exported, only immutable variables can be thought of as being accessible globally.
 
 The lifetime of any variable can be global, in the sense that the variable maintains its state, but always within the scope of the file it is defined in.
 
@@ -106,7 +106,7 @@ See this as local dependency injection for functions.
 
 This helps with passing necessary but non-informative parameters.
 
-`with` keyword starts a scope that contain the specified type instances. A list of instance can be specified separated by a comma (default list separator).
+`with` keyword starts a scope that contain the specified type instances. A list of instances can be specified separated by a comma (default list separator).
 
 > What happens when multiple of the same type are specified? Compile Error? Match Array\<T>?
 
@@ -121,9 +121,10 @@ s = MyStruct
 v = 42
 
 with s, v
-    // matches parameters on type
-    // specified overrule context
+with (s, v)     // use '()' for lists?
+    // matches parameters on type (U8)
     if pred()
+        // specified U8 -> overrule context
         fn(101)
 ```
 

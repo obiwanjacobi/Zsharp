@@ -155,7 +155,7 @@ Having default parameter values does not explain at the calling site what is hap
 
 ### Named Parameter
 
-Function Parameters can be specified by name at the calling site.
+Function Parameters can be specified by name at the call site.
 
 ```C#
 namedFn: (p: U8, p2: U16)
@@ -224,28 +224,38 @@ allowedFn(editable = true)
 allowedFn(editable = false)
 ```
 
-> Another potential problem is passing `Bit<n>` as parameter in that the number of bits will be rounded up to a byte boundary.
+> Another 'issue' is passing `Bit<n>` as parameter in that the number of bits will be rounded up to a byte boundary.
 
 ---
 
 ## Return values
 
-Returning multiple values from a function is only possible using a (custom) structure type. There are no out parameters and no tuples (actually there are now...).
+Returning multiple values from a function is only possible using a (custom) structure type or a tuple/anonymous structure.
 
-```C#
+```csharp
 MyStruct
     field1: U8
     field2: U16
 
+// use an explicit struct for retval
 MyFunc(p: U8, p2: U16): MyStruct
     return Mystruct
         field1 = p
         field2 = p2
 ```
 
-> Compiler will check if a ptr is returned, it is not pointing at a stack variable.
+```csharp
+// use a tuple/anonymous struct for retval
+MyFunc(p: U8, p2: U16): (field1: U8, field2: U16)
+    return {
+        field1 = p
+        field2 = p2
+    }
+```
 
-Return values are also passed by value, so in the example above, two values (U8 and U16) would be copied to the caller.
+> Compiler will check if a ptr is returned, it is not pointing at a stack variable. (not a concern in .NET)
+
+Return values are also passed by value, so in the examples above, the structure reference is copied to the caller.
 
 The caller has to handle the return value (just like with Error). There is a syntax to explicitly ignore the return value.
 
@@ -371,7 +381,7 @@ aliasFn(42)
 
 Aliases are syntactic sugar and are resolved at compile time.
 
-The alias syntax is also used for function composition. In that case the function body of the composite function  (alias) is not compiled into code but used as a composition template.
+The alias syntax is also used for function composition. In that case the function body of the composite function (alias) is not compiled into code but used as a composition template.
 
 ```csharp
 fn: (p: U8, s: Str)
@@ -1022,6 +1032,25 @@ Lambda-captures may outlive the function they're declared in. Not sure how point
 
 Block-captures work as functions would.
 
+```csharp
+x = 42
+fn: [x](p: U8): Bool
+    return x = p
+
+// no capture has to be specified in call
+sameAsX = fn(42)   // true
+```
+
+### Capture Aliases
+
+Like all Aliases, using the assignment operator will rename the capture for the function scope.
+
+```csharp
+x = 42
+fn: [x=y](p: U8): Bool
+    return y = p
+```
+
 ---
 
 ## Piping Operator
@@ -1036,11 +1065,7 @@ b = fn3(42) |> fn2() |> fn1()
 b = 42 |> fn3 |> fn2 |> fn1
 ```
 
-Evaluate LeftHandSide, parse RightHandSide and inject left result into right parse tree.
-
-Subsequent function calls (after `|>`) will have their 1st param missing. That looks a bit strange (but no different than bound functions?).
-
-Does this only work for functions? (concatenation?)
+Subsequent function calls (after `|>`) will have their 1st param missing. That looks a bit strange (but no different than bound functions?). `()` can be omitted when a function has zero or one parameter?
 
 ```csharp
 [0..5] |> fn()  // passed in array
@@ -1052,7 +1077,7 @@ Could also have a 'backward' piping operator? `<|` going the other way...
 fn1() <| fn2() <| fn3() <| 42
 ```
 
-As concatenation?
+Does this only work for functions? (string and list concatenation?)
 
 ```csharp
 // C++ style output?
@@ -1063,7 +1088,7 @@ outStream <| "Hello " <| yourName
 inStream |> yourName
 ```
 
-or use a different syntax
+... or use a different syntax?
 
 ```csharp
 // C++ style output?
@@ -1072,6 +1097,14 @@ outStream +| "Hello " +| yourName
 
 // C++ style input?
 inStream =| yourName
+```
+
+Concat lists?
+
+```csharp
+l1 = (1, 2, 3, 4)
+l2 = l1 |> (5, 6, 7, 8)
+// l2 = (1, 2, 3, 4, 5, 6, 7, 8)
 ```
 
 ---
@@ -1090,13 +1123,15 @@ For more information refer to [Lexical Operators](../lexical/operators.md).
 
 ### Custom operators
 
-> Can custom operators be implemented?
+> Can custom operators be implemented? (like in F#)
 
 ```csharp
 // '.>>.' is the operator. () used to escape the chars.
 (.>>.): <T>(left: T, right: T): T
     ...
 ```
+
+> How are the operator rules identified the compiler checks implementations for? We could have some decorators for common operator behaviors.
 
 ---
 
@@ -1138,10 +1173,18 @@ A function that can be called to generate simple string based code at compile ti
     // implicit return value?
 
 // function returns generated text?
-txt = genFn<MyStruct>(2)
+txt = #genFn<MyStruct>(2)
 // StubMyStruct : MyStruct
 //     fld1: Str
 //     fld2: Str
+```
+
+These functions only run during the build and there for need some orchestration. Perhaps extend the syntax in the [assembly](../modules/assembly.md) file, although the generator functions should be run before build composition in order to include their output.
+
+Some compiler functions to manipulate files would come in handy.
+
+```csharp
+
 ```
 
 ---
@@ -1222,7 +1265,7 @@ Will there be an automatic overload of `fn` (using an immutable ptr to the param
 
 Function params are specified in order at call-site, we are steering away from by-order for tuples/deconstruction. That would mean that function parameters are to be specified by name only, which can get very verbose.
 
-Perhaps a 'service' function type uses this principle but calls it a 'message' (like gRPC). Would also return a message in that case.
+Perhaps a 'service' function type uses this principle but calls it a 'message' (like gRPC). Would also return a message in that case. Implementation could be gRPC for interop.
 
 ---
 
@@ -1231,7 +1274,7 @@ Get\<T> / Set\<T> / Notify\<T> / Watch\<T[]>
 
 - extensions on intrinsic functions (operator implementations)?
 
-- inline functions?
+- inline functions? use alias syntax?
 
 - top-level function calls/one-time initialization at first access of module (static constructor).
 
@@ -1255,3 +1298,12 @@ Fn: <T>(): T _
 ```
 
 This could be how mapping gets implemented.
+
+---
+
+> TBD
+
+Temporal coupling to function execution (scheduler).
+
+Run this function every 30 seconds.
+Call this function after this timeout has elapsed.

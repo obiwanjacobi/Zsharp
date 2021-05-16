@@ -33,11 +33,12 @@ Every operator can be specialized (overloaded) for a specific type. These functi
 The name and prototype of the function that implements an operator overload is bound to specific rules, otherwise it cannot be resolved.
 
 ```csharp
-[name]: ([params]): [ret]
+[name]: ([self], [params]): [ret]
 ```
 
 - `[name]` Each [operator](../lexical/operators.md#Operator-Symbols) has an associated function name.
-- `[params]` The left-hand-side operand is defined as a self parameter. The right-hand-side operator is the second parameter. For unary operators only the right-hand-side parameter is defined as a self parameter. Based on the type of this self parameter an initial match is made. A secondary match is made on the exact type of the second parameter - if available.
+- `[self]` The left-hand-side operand is defined as a self parameter. For unary operators only the right-hand-side parameter is defined as a self parameter.
+- `[params]` The right-hand-side of the operator is the second parameter. Based on the type of this self parameter an initial match is made. A secondary match is made on the exact type of the second parameter - if available. If the type is an `Array<T>` it can be passed multiple values at once for syntax like `a += (1, 42, 101)`.
 - `[ret]` The resulting type of the operator function. Usually this is the same type as the self parameter, but it can be different. The compiler will respect this type for further processing. For comparison and logical operators the return type is always `Bool`.
 
 ```csharp
@@ -46,8 +47,10 @@ Vector
     y: I32
     z: I32
 
+// '-' operator
 Negate: (self: Vector): Vector
     return { x = -self.x, y = -self.y, z = -self.z }
+// '=' operator
 IsEqual: (self: Vector, other: Vector): Bool
     return self.x = other.x and
             self.y = other.y and

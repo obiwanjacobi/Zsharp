@@ -137,3 +137,11 @@ There is a syntax for specifying literal arrays of basic types:
 ```C#
 arr = [1, 2, 3, 4, 5]           // 5 elements of U8
 ```
+
+---
+
+> TBD
+
+- Regex literals `regEx = #"$[0-9]^"` (syntax?)
+- Literal syntax for custom data types and units?
+- Data Structure literals `{}` and lists `()`.

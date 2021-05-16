@@ -102,3 +102,36 @@ obj.MyFunction(42)
 ```
 
 Only needed when function call may include namespace/module parts...
+
+---
+
+## Prefixes
+
+Identifier prefixes are special 'keywords' that signify a special meaning to the construct identified.
+
+Identifier prefixes are only used at the definition not for the reference.
+
+To interop with .NET properties the `get_` and `set_` prefixes are used to target property setters and getters.
+
+```csharp
+// static property
+get_MyProp: (): U8
+    return 42
+
+// instance property
+get_MyProp: (self: MyStruct): U8
+    return self.field1
+
+// call static property
+p = MyProp      // no () required?
+```
+
+Prefix | .NET | Description
+--|--|--
+`get_` | property get | Implements a property getter.
+`set_` | property set | Implements a property setter.
+`checked_` | - | Z# operator checked implementation.
+`unchecked_` | - | Z# operator unchecked implementation.
+`op_` | - | Z# operator implementation (neither checked/unchecked)?
+
+> Perhaps start the prefix with a `_` to indicate that part is hidden?

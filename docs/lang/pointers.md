@@ -2,6 +2,8 @@
 
 > In light of moving to .NET the Pointer concept may be retired. It no longer refers to an actual (unsafe) pointer and make the difference between value and reference type even more vague.
 
+There may still be a place for Ptr's as a synonym for C#'s `ref` - a way to replace a parameter value. Z#'s `ref` would then be used to pass by immutable reference.
+
 ## Pointer Types
 
 The template type `Ptr<T>` is used to represent a pointer.

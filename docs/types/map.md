@@ -47,17 +47,37 @@ fn: (p1: U8, p2: Str)
     ...
 
 // use tuple syntax to create maps?
+// How is this not a struct?
 m = {p1 = 42, p2 = "42"}
+// special syntax?
+m = {p1 <= 42, p2 <= "42"}
 fn(m)
 
-fn2: (p1: U8, p2: Str, p3: Opt<U16>)
+fn2: (p1: U8, p2: Str, p3: U16?)
     ...
 
 // ok, optional p3 is not specified (Nothing)
 fn2(m)
 ```
 
-> Keys MUST match field (struct) or parameter (function) names!
+> Keys MUST match field (struct) or parameter (function) names! (cannot fully check at comiletime)
+
+---
+
+Allow map syntax to be equal to object syntax - as a dynamic object.
+
+```csharp
+// use list syntax to create maps?
+m = (a = 42, b = "42")
+// or special object syntax?
+m = {p1 <= 42, p2 <= "42"}
+
+// what is the syntax for accessing dynamic properties?
+x = m.a
+m.a = 101
+// creates a new entry in the map
+m.x = x
+```
 
 ---
 

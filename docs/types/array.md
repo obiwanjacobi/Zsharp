@@ -56,7 +56,7 @@ Reading values from an array is similar:
 arr = [1, 2, 3, 4, 5]       // 5 x U8
 x = arr[3]                  // x = 4
 l = arr[-1]                 // l = 5
-s = arr[0..3]               // s = 1st, 2nd and 3rd
+s = arr[0..3]               // s = [1, 2, 3]
 arr2 = arr[..]              // arr2 = all elements (slice, not a copy!)
 ```
 
@@ -164,3 +164,9 @@ arr2D.At(3, 2) = 42     // last position
 arr3D = Array<U8>(4, 3, 2)
 
 ```
+
+---
+
+> TBD
+
+Reuse F# libraries to implement immutable array/list/dictionary sharing algortithms?

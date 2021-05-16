@@ -4,7 +4,7 @@ Most operators are syntactic sugar over a set of wellknown functions.
 
 Of these wellknown functions there are two flavors: unchecked and checked implementations. The unchecked flavor is used in the final program and its implementation is optimized to the fullest extend. The checked version implements extra validation and 'checking' to help make sure the code is correct.
 
-> Operators never allocate memory!
+> Use identifier prefixes to identify checked/unchecked operator functions. (`checked_` / `unchecked_`?)
 
 ## Operator Symbols
 
@@ -18,14 +18,14 @@ Arithmetic, bitwise and logical operators.
 | `/` | Divide | Division
 | `%` | Remainder | Remainder
 | `**` | Power | Power
-| `( )` | - | Math Precedence
+| `( )` | - | Math Precedence, Function Call, List Literal
 | `=` | IsEqual | Equals
 | `<>` | IsNotEqual | Not Equals
 | `>` | IsGreaterThan | Greater than
 | `<` | IsLesserThan | Smaller than
 | `>=` | IsGreaterEqual | Greater or Equal
 | `=<` | IsLesserEqual | Smaller or Equal
-| `? :` | - | Ternary Conditional
+| `? :` | - | Ternary Conditional (if-else)
 | `and` | LogicAnd | Logical And
 | `or` | LogicOr | Logical Or
 | `not` | LogicNot | Logical Negation
@@ -54,7 +54,7 @@ Arithmetic, bitwise and logical operators.
 | `:` | (Sub)Type Specifier
 | `;` | Line separator
 | `< >` | Type Parameter
-| `( )` | Function / Array/List initialization
+| `( )` | Function / Tuple / Array/List initialization
 | `" "` | String
 | `' '` | Character
 | `@` | Disable String formatting features / Compiler Function?
@@ -88,16 +88,21 @@ Arithmetic, bitwise and logical operators.
 | `\` | reserved
 | `$` | reserved
 | `=>` | used in mapping / some sort of (forward) assignment?
-| `<=` | map structure (also arithmetic) / assign struct properties
+| `<=` | map structure / assign struct properties
 | `()` | Function Object operator
 | `|>` | Parameter pipe?
 | `<|` | Reverse parameter pipe?
-| `:=` | Reserved for variable assignment with type inference.
 | `<=>` | Swap operator
+| `::` | reserved
 
 ---
 
 ## Short-hand Operators
+
+All these operators work as follows:
+_Read left, [op] right to left, write left_
+
+These operators cannot be overloaded, they simply use the standard operators.
 
 | Operator | Description
 |---|---
@@ -105,6 +110,7 @@ Arithmetic, bitwise and logical operators.
 | `-=` | read - subtract - write
 | `*=` | read - multiply - write
 | `/=` | read - divide - write
+| 1) | See note 1
 | `?=` | read - test - write (locking?)
 | `!=` | read - ?? - write
 | `%=` | read - ?? - write
@@ -112,7 +118,10 @@ Arithmetic, bitwise and logical operators.
 | `$=` | read - ?? - write
 | `^=` | read - ?? - write
 
-> TBD: do we allow a list of right values?
+1) The following operators can also be used:
+`%`, `**`, `>>`, `<<`, `>|`, `|<`
+
+Do we allow a list of right values? (yes)
 
 ```csharp
 a = 42

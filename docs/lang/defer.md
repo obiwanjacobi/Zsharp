@@ -54,3 +54,10 @@ createResourceFn: (): Resource!
     // <= if Err then executes errdefer statement
     return a
 ```
+
+---
+
+> TBD
+
+Can we use `defer` for other deferred execution?
+Linq does deferred execution and it is common in functional programming to defer actual execution of (composed) functions until a value is requested (a function the returns an 'infinite' set of values, but only providing one value at a time).

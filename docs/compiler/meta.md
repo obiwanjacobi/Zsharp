@@ -4,7 +4,7 @@ Allow to write Z# code that executes at compile time in order to shift the workl
 
 ## Intrinsic Attributes
 
-The compiler will allow accessing intrinsic attributes of the compiled code. These attributes are constants whose value was determined by the compiler at compile time and they do not take up any storage in the program.
+The compiler will allow accessing intrinsic attributes of the compiled code. These attributes are constants whose value was determined by the compiler at compile time.
 
 A special operator is used to access them: `#`
 
@@ -22,9 +22,9 @@ A special operator is used to access them: `#`
 | `#mask` | Mask for retrieving a bit field value.
 | `#offset` | Byte offset from the start of a structure to a field.
 
-- `#typeid` is a U16 hash value over (part of) the module name and type name.
+- `#typeid` is a U16 hash value over (part of) the module name and type name (Not really needed for .NET).
 
-- `#type` is only available in a compile-time function that is tagged with a `#!`.
+- `#type` is only available in a compile-time function that is tagged with a `#!` (restriction not needed for .NET).
 
 Not all types support all attributes. The compiler will give an error when the code accesses an attribute that is not supported by the type in question.
 
@@ -49,7 +49,7 @@ Bit<3>#max  // 7
 Bit<3>#name // 'Bit3'
 ```
 
-> Perhaps have a very short version of `#name` for it will be used most often.
+> Perhaps have a very short version of `#name` (no space) for it will be used most often.
 
 ```csharp
 a = 42
@@ -58,7 +58,7 @@ a = 42
 #MyFunction     // 'MyFunction'
 ```
 
-(this may be conflicting with pragmas)
+This may be conflicting with pragmas. Symbol must be in scope, resolvement will be up to parent scopes as usual.
 
 ## Pragmas
 
@@ -122,14 +122,13 @@ m = MyStruct
     loop f in t.fields
         "field: {f.name} of type {f.type.name}"
 
-#! compTimeFn(m)  // ok, call at compile time
-compTimeFn(m)     // ok, call at compile-time
+# compTimeFn(m)   // ok, call at compile time
 
 // normal runtime function included in the binary
 runtimeFn: <T>(m: T)
     ...
 
-#! runtimeFn(m) // call at compile time. Error if function body cannot be run at compile-time.
+# runtimeFn(m) // call at compile time. Error if function body cannot be run at compile-time.
 runtimeFn(m)      // call at runtime.
 
 // alternate: use a #run pragma to run any code at compile time.
@@ -141,6 +140,33 @@ runtimeFn(m)      // call at runtime.
 > Some `#` compiler attributes may require the code to be `#!` compile time code. An example is the full `#type` information which is only available at compile time.
 
 Not true anymore for .NET.
+
+---
+
+## Compiler Functions
+
+The compiler supplies a set of functions that allows interaction with- and modification of the generated code. There is also contextual information available for formatting diagnostic messages.
+
+| Function | Note
+|--|--
+| line() | the current source code line number
+| col() | the current source code column number
+| file() | the current source code file name
+| module() | the current module the source code is part of
+| name() | the name of current function or type being compiled
+| location() | Fully formatted file/name/line/col text.
+
+```csharp
+msg = "Error in '{#file()}' at line {#line()}: {#name()} is invalid."
+```
+
+> What syntax/operator to use? `#` is a pragma and not a compiler function. Is there a difference between pragma's and compile time functions? `!#` is compile-time execution (declaration) but the name could collide with custom functions. Using `@` could be good alternative?
+
+```csharp
+msg = "Error in '{@file()}' at line {@line()}: {@name()} is invalid."
+```
+
+---
 
 ## Type Information
 
@@ -162,12 +188,10 @@ A lot of the `IsXxxx` properties on the .NET `Type` class are traits.
 ```csharp
 fn: <T>()
     // special syntax?
-    T::IsInteger
-    T::IsConstant
+    T::IsIntegral
     T::IsImmutable
     // traits as common template functions
     IsIntegral<T>()
-    IsConstant<T>()
     IsImmutable<T>()
 
 // custom trait
@@ -176,30 +200,6 @@ fn: <T>()
 ```
 
 All traits are compile time functions.
-
----
-
-## Compiler Functions
-
-The compiler supplies a set of functions that allows interaction with- and modification of the generated code. There is also contextual information available for formatting diagnostic messages.
-
-| Function | Note
-|--|--
-| line() | the current source code line number
-| col() | the current source code column number
-| file() | the current source code file name
-| module() | the current module the source code is part of
-| name() | the name of current function or type being compiled
-
-```csharp
-msg = "Error in '{#file()}' at line {#line()}: {#name()} is invalid."
-```
-
-> What syntax/operator to use? `#` is a pragma and not a compiler function. `!#` is compile-time execution but the name could collide with custom functions. Using `@` could be good alternative?
-
-```csharp
-msg = "Error in '{@file()}' at line {@line()}: {@name()} is invalid."
-```
 
 ---
 
@@ -213,10 +213,14 @@ Syntax?
 inlineFn: (p: U8): Bool => p = 42
 ```
 
+> The function alias syntax `=` could be used for inline functions...
+
 | Hint | Description
 |--|--
 | `inline` | duplicate function body at each call site (before optimization)
 | `align x` | line struct up at a memory address that is a multiple of specified value
+
+Use standard .NET code attributes for align? (I think those only work on .NET structs and not on classes)
 
 ---
 
@@ -231,7 +235,23 @@ MyStruct
 s = MyStruct
     ...
 
-if s?field1     // does 'field1' exist at compile time?
+// does 'field1' exist at compile time?
 if s?#field1
     ...
+
+// does 'field1' exist at runtime (dynamic)?
+if s?field1
+    ...
 ```
+
+---
+
+> TBD
+
+Are pragma's, Compile-time functions and compiler functions all the same?
+
+Pragma's and compiler functions are the same and custom compile-time functions are simply a way to add 'pragma's'...?
+
+Invocation always uses `#` to indicate the compile-time nature of the result (you can `#`-call runtime functions if they can be evaluated at compile time). Compile-time functions are declared with `#!` to indicate they should not end up in the binary.
+
+Problem here is that some pragma's start a new scope and others don't. How to fix that?

@@ -7,9 +7,11 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 | `loop` | Loop statement
 | `break` | Break out of a loop
 | `continue` | Skip to next iteration
+| `cont` | Alternative continue?
 | `if` | Conditional branch
 | `else` | Opposite of conditional branch
 | `return` | Exit a Function
+| `ret` | Alternative return?
 | `yield` | Exits a Coroutine Function
 | `in` | Iterating values
 | `self` | A bound Type
@@ -35,11 +37,14 @@ Keyword | Description
 `defer` | defers execution until end of scope
 `errdefer` | defers execution till exit with error
 `out` | opposite of in?
-`var` | ?
+`var` | thread local?
 `ref` | explicit reference? / read-only pointer?
+`deref` | unpack a reference
 `use` | inline module imports?
-`any` | a type that can be anything
+`any` | a type that can be anything (object)
 `asm` | inline assembly (IL?)
 `with` | context variables
 `async` | async execution
 `await` | awaiting async execution
+
+> Use `var` to make mutable variables and normal syntax is always immutable?

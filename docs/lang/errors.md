@@ -1,10 +1,13 @@
 # Errors
 
-The error mechanism in Z# is not based on exceptions. This would be a load too heavy for the smaller and simpler CPUs. On the other hand, naked error value passing is tedious, error prone and does not guarantee handling of the error.
+> In light of .NET support we may have to switch to using Exceptions. We could allow use of the error mechanism for Z# code only as an alternative to exceptions although exceptions will always be part of the possible error conditions. A .NET assembly will see the `Err<T>` type as a 'OneOf<T>' of the Z# Error object and T.
+
+The error mechanism in Z# is not based on exceptions.
+On the other hand, naked error value passing is tedious, error prone and does not guarantee handling of the error.
 
 To create a robust error handling mechanism, it has been incorporated into the language. There are two keywords that deal with handling errors and syntax to specify errors can be returned from a function.
 
-Errors are values returned from a function that cannot be ignored by the caller.
+Errors are values returned from a function that cannot be ignored by the caller (When .NET exceptions are used, this becomes a problem).
 
 The story starts when an error condition is detected and a function returns an error:
 
@@ -13,7 +16,7 @@ errorFn: (): U8!
     return Error("Failed")
 ```
 
-This indicates that you should pay attention, because this function can return an error!
+The `!` on the return type indicates that you should pay attention, because this function can return an error!
 
 Details on using the `Error` type can be read [here]('../types/error.md')
 
@@ -59,7 +62,7 @@ It takes away some of the noise of simple error handling.
 
 The explicit keywords `catch` and `try` -and in a lesser sense `match` are explicitly chosen to make it clear how these errors are handled in the code.
 
-Note that both `catch` and `try` strip of the `Err<T>` part from the return value of the function. So variable has no `Err<T>` component/decorator type, it's just its plain Type.
+Note that both `catch` and `try` strip of the `Err<T>` part from the return value of the function. So variable has no `Err<T>` component/decorator type, it's just its plain Type (`T`).
 
 The `catch` and `try` keywords can only be used on functions that actually return errors.
 
@@ -111,7 +114,54 @@ fn: (): U8!     // can return Error
         // capture error code
 ```
 
+Alternate idea:
+The `Err<T>` type is not used at all. `try` is not used on a per function basis but as a scope (typical try-catch usage) optionally used as a capture block.
+`catch` can be still per function or as a try-handler - implicitly wrapping the function call in a try-block. The 'finally' block is implicit by using the defer keyword.
+
+```csharp
+try     // starts scope (optionally a capture)
+    // catch with exception type for local handling
+    handle = File.Open("file.txt") catch => (err: FileNotFoundException)
+        ...
+    // schedule to close file
+    defer File.Close(handle)
+    txt = File.ReadAll(handle)
+
+catch => (err: Exception)     // allow?
+    ...
+    // errdefer list executed here
+catch => (err: EndOfFileException)
+    ...
+    // errdefer list executed here
+
+// => defer list executed here
+```
+
+Do we allow multiple catch blocks or use `match` to sort out the exception type? Or allow both?
+
+If using match the code must propagate the exception explicitly if not handled. Using multiple catch blocks, .NET will handle exception dispatch.
+
+```csharp
+try
+    ...
+catch => (err)  // err: Exception
+    v = match err
+        FileNotFoundException => "File not found"
+        EndOfFileException => "File is at its end"
+        _ => _
+
+    if v?
+        return v
+    
+    // propagate exception
+    Error(err)      // throw (difference with Error?)
+    err.Throw()     // throw as method on Exception
+    exit err        // as exit statement?
+```
+
 ## Error Handlers
+
+> We'll probably drop this for it does not add any value in a .NET context.
 
 Use `catch` with a handler function instead of an inline handler? Function Interface needed for the error-handler function.
 
@@ -167,7 +217,7 @@ v = match errorFn(42)
 
 ## Fatal Errors
 
-What some call 'panic' also known as exit()
+What some call 'panic' also known as exit().
 
 For some type of errors you want to crash and have diagnostics.
 

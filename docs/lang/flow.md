@@ -205,26 +205,16 @@ exit(co)            // exits coroutine (yield)
 exit(iter)          // exits current iteration (continue)
 exit(loop)          // exits loop (break)
 exit(..)            // exits current scope (1 up)
-```
-
-Or this syntax? (_ is discard...)
-
-```csharp
-exit_app
-exit_fn
-exit_co
-exit_iter
-exit_loop
-exit
+exit(err)           // throw exception
 ```
 
 ```csharp
 fn: (p: U8): U8
-    if p == 0 => exit()     // abort program
+    if p == 0 -> exit()     // abort program
     c: U8
     loop n in [0..p]
-        if n == 42 => exit(iter)    // continue
-        if n == 101 => exit(loop)   // break
+        if n = 42 -> exit(iter)    // continue
+        if n = 101 -> exit(loop)   // break
         c += 1
 
     exit(fn) c  // return c
@@ -240,6 +230,6 @@ fn: (p: U8): U8
 fn: (p: U8)
     lp1: loop n in [0..p]   // label the loop?
         loop i in [0..9]
-            if n + i == 42 => exit(n)       // continue
-            if n + i == 101 => exit(lp1)    // break outer
+            if n + i = 42 -> exit(n)       // continue
+            if n + i = 101 -> exit(lp1)    // break outer
 ```
