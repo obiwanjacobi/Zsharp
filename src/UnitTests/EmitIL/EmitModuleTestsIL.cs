@@ -11,7 +11,7 @@ namespace UnitTests.EmitIL
         public void AssemblyModule()
         {
             const string code =
-                "module test" + Tokens.NewLine
+                "module AssemblyModule" + Tokens.NewLine
                 ;
 
             var emit = Emit.Create(code);
@@ -24,12 +24,12 @@ namespace UnitTests.EmitIL
         public void ModuleClass()
         {
             const string code =
-                "module test" + Tokens.NewLine
+                "module ModuleClass" + Tokens.NewLine
                 ;
 
             var emit = Emit.Create(code);
 
-            emit.Context.Module.Types.Find("test").Should().NotBeNull();
+            emit.Context.Module.Types.Find("Moduleclass").Should().NotBeNull();
         }
     }
 }

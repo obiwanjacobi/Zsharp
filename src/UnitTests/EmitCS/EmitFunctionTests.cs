@@ -55,7 +55,7 @@ namespace UnitTests.EmitCs
             csCode.Should().Contain("public static void Main()")
                 .And.Contain("System.Console.WriteLine(\"Hello Z# World\");");
 
-            Emit.InvokeStatic("ExternalFunctionCallParameterAlias_Run", "EmitCodeTests", "Main");
+            Emit.InvokeStatic("ExternalFunctionCallParameterAlias_Run");
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace UnitTests.EmitCs
             csCode.Should().Contain("public static void Main()")
                 .And.Contain("System.Console.WriteLine(\"Hello Z# World\");");
 
-            Emit.InvokeStatic("ExternalFunctionCallParameter_Run", "EmitCodeTests", "Main");
+            Emit.InvokeStatic("ExternalFunctionCallParameter_Run");
         }
 
         [TestMethod]
@@ -110,7 +110,7 @@ namespace UnitTests.EmitCs
             csCode.Should().Contain("private static System.String fn()")
                 .And.Contain("System.Console.WriteLine(fn());");
 
-            Emit.InvokeStatic("FunctionCallResult_Run", "test", "Main");
+            Emit.InvokeStatic("FunctionCallResult_Run");
         }
     }
 }

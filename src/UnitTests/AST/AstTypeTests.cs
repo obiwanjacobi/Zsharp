@@ -57,6 +57,27 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void FunctionParameterTypeTwo()
+        {
+            const string code =
+                "fn: (p: U8, s: Str)" + Tokens.NewLine +
+                Tokens.Indent1 + "return" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var t = fn.Parameters.ElementAt(0).TypeReference;
+            t.IsOptional.Should().BeFalse();
+            t.IsError.Should().BeFalse();
+            t.Identifier.Name.Should().Be("U8");
+
+            t = fn.Parameters.ElementAt(1).TypeReference;
+            t.IsOptional.Should().BeFalse();
+            t.IsError.Should().BeFalse();
+            t.Identifier.Name.Should().Be("Str");
+        }
+
+        [TestMethod]
         public void FunctionParameterCustomType()
         {
             const string code =

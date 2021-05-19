@@ -91,8 +91,13 @@ namespace UnitTests.EmitCS
         private static bool OutputHasErrors(string output)
             => output.Contains("Build FAILED.");
 
-        public static void InvokeStatic(string assemblyName, string typeName, string methodName)
+        public static void InvokeStatic(string assemblyName, string typeName = null, string methodName = null)
         {
+            if (String.IsNullOrEmpty(typeName))
+                typeName = assemblyName;
+            if (String.IsNullOrEmpty(methodName))
+                methodName = "Main";
+
             var thisAssembly = Assembly.GetExecutingAssembly();
             var path = Path.GetDirectoryName(thisAssembly.Location);
 

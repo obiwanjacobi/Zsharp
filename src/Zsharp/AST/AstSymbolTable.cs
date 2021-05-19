@@ -117,37 +117,37 @@ namespace Zsharp.AST
         private static bool HasDefinition(AstSymbolEntry? entry)
             => entry?.HasDefinition ?? false;
 
-        public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
+        public T? FindDefinition<T>(string symbolName, AstSymbolKind symbolKind)
+            where T : class
         {
-            var entry = FindEntryRecursive(name, kind);
+            var entry = FindEntryLocal(symbolName, symbolKind);
+            var symbolDef = entry?.DefinitionAs<T>();
 
-            if (entry == null)
-            {
-                var dotName = new AstDotName(name);
-                if (dotName.IsDotName)
-                {
-                    entry = FindEntryDotName(dotName, kind);
-                }
-            }
-            return entry;
+            if (ParentTable != null &&
+                symbolDef == null)
+                symbolDef = ParentTable.FindDefinition<T>(symbolName, symbolKind);
+
+            return symbolDef;
         }
 
-        public AstSymbolEntry? FindEntry(AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
-            => FindEntry(identifier.CanonicalName, kind);
-
-        public AstSymbolEntry? FindEntry(IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
+        public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
-            identifierSite.ThrowIfIdentifierNotSet();
-            return FindEntry(identifierSite.Identifier!.CanonicalName, kind);
+            var dotName = new AstDotName(name);
+            AstSymbolEntry? entry;
+
+            if (dotName.IsDotName)
+                entry = FindEntryDotName(dotName, kind);
+            else
+                entry = FindEntryRecursive(name, kind);
+
+            return entry;
         }
 
         public IEnumerable<AstSymbolEntry> FindEntries(AstSymbolKind symbolKind)
             => _table.Values.Where(s => s.SymbolKind == symbolKind);
 
         internal void Delete(AstSymbolEntry symbolEntry)
-        {
-            _table.Remove(symbolEntry.Key);
-        }
+            => _table.Remove(symbolEntry.Key);
 
         private AstSymbolEntry? FindEntryRecursive(string name, AstSymbolKind kind)
         {

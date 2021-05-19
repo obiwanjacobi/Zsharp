@@ -24,20 +24,18 @@ namespace Zsharp.AST
             return previousParent;
         }
 
-        public static T? FindDefinition<T>(this AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
-            where T : class
-        {
-            var entry = symbolTable.FindEntry(symbolName, symbolKind);
-            if (entry != null)
-            {
-                return entry.DefinitionAs<T>();
-            }
-            return null;
-        }
-
         public static AstSymbolEntry? Find<T>(this AstSymbolTable symbolTable, T node)
             where T : AstNode, IAstIdentifierSite
-            => symbolTable.FindEntry(node, node.NodeType.ToSymbolKind());
+            => symbolTable.Find(node, node.NodeType.ToSymbolKind());
+
+        public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
+            => symbolTable.FindEntry(identifier.CanonicalName, kind);
+
+        public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
+        {
+            identifierSite.ThrowIfIdentifierNotSet();
+            return symbolTable.FindEntry(identifierSite.Identifier!.CanonicalName, kind);
+        }
 
         public static AstSymbolKind ToSymbolKind(this AstNodeType nodeType)
         {

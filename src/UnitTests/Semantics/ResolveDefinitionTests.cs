@@ -125,6 +125,20 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
+        public void FunctionReturnTypeReferenceIntrinsic()
+        {
+            const string code =
+                "fn: (): Str" + Tokens.NewLine +
+                Tokens.Indent1 + "return \"Hello Z#\"" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code);
+
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            fn.TypeReference.TypeDefinition.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void FunctionReference()
         {
             const string code =
@@ -182,6 +196,31 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
+        public void FunctionParameterReferenceTwo()
+        {
+            const string code =
+                "fn: (p: U8, s: Str)" + Tokens.NewLine +
+                Tokens.Indent1 + "x = s" + Tokens.NewLine +
+                Tokens.Indent1 + "y = p" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code);
+
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var a = fn.CodeBlock.ItemAt<AstAssignment>(0);
+            var v = a.Variable as AstVariableDefinition;
+            var p = a.Expression.RHS.VariableReference.ParameterDefinition;
+            p.Should().NotBeNull();
+            v.TypeReference.Identifier.Name.Should().Be(p.TypeReference.Identifier.Name);
+
+            a = fn.CodeBlock.ItemAt<AstAssignment>(1);
+            v = a.Variable as AstVariableDefinition;
+            p = a.Expression.RHS.VariableReference.ParameterDefinition;
+            p.Should().NotBeNull();
+            v.TypeReference.Identifier.Name.Should().Be(p.TypeReference.Identifier.Name);
+        }
+
+        [TestMethod]
         public void ImportFunctionNameAlias()
         {
             const string code =
@@ -231,10 +270,9 @@ namespace UnitTests.Semantics
             var v = a.Variable;
             v.Symbol.Definition.Should().NotBeNull();
             var id = a.Fields.First();
-            // TODO:
-            //id.Expression.TypeReference.TypeDefinition.Should().NotBeNull();
+            id.Expression.TypeReference.TypeDefinition.Should().NotBeNull();
 
-            var typeSymbol = v.Symbol.SymbolTable.FindEntry(v.TypeReference.Identifier, AstSymbolKind.Type);
+            var typeSymbol = v.Symbol.SymbolTable.Find(v.TypeReference.Identifier, AstSymbolKind.Type);
             var typeDef = typeSymbol.DefinitionAs<AstTemplateInstanceStruct>();
             typeDef.TemplateDefinition.Should().Be(template);
         }

@@ -271,10 +271,13 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
+            // gives symbol of enum option definition (dot-name)
             var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
             entry.SymbolKind.Should().Be(AstSymbolKind.Field);
-            // make sure we get the reference, not the definition
-            entry.References.Count().Should().Be(1);
+            entry.Definition.Should().NotBeNull();
+            // reference not resolved yet
+            var assign = file.CodeBlock.ItemAt<AstAssignment>(1);
+            assign.Expression.RHS.FieldReference.Symbol.References.Should().HaveCount(1);
         }
     }
 }
