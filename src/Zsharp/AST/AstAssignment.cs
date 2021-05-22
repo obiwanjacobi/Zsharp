@@ -1,5 +1,4 @@
 using Antlr4.Runtime;
-using System;
 using System.Collections.Generic;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -52,7 +51,7 @@ namespace Zsharp.AST
         public void SetVariable(AstVariable variable)
         {
             if (!TrySetVariable(variable))
-                throw new InvalidOperationException(
+                throw new InternalErrorException(
                     "Variable is already set or null.");
         }
 
@@ -64,12 +63,12 @@ namespace Zsharp.AST
             _variable = null;
             if (!this.SafeSetParent(ref _variable, variableDefinition))
             {
-                throw new InvalidOperationException(
+                throw new InternalErrorException(
                     "SetParent failed in AstAssignment.SetVariableDefinition.");
             }
         }
 
-        private readonly List<AstTypeFieldInitialization> _fields = new List<AstTypeFieldInitialization>();
+        private readonly List<AstTypeFieldInitialization> _fields = new();
         public IEnumerable<AstTypeFieldInitialization> Fields => _fields;
 
         public bool HasFields => _fields.Count > 0;

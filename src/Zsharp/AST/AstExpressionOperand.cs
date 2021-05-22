@@ -26,7 +26,7 @@ namespace Zsharp.AST
                 FunctionReference == null &&
                 FieldReference == null)
             {
-                throw new ArgumentException(
+                throw new InternalErrorException(
                     $"Node type {node.GetType().Name} is not an expression operand.");
             }
 

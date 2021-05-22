@@ -5,8 +5,9 @@ using System.Linq;
 
 namespace Zsharp.AST
 {
-    public abstract class AstFunction<ParamT, TemplateParamT> : AstNode, IAstCodeBlockItem,
-        IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolEntrySite, IAstTemplateSite
+    public abstract class AstFunction<ParamT, TemplateParamT> : AstNode,
+        IAstCodeBlockItem, IAstIdentifierSite, IAstTypeReferenceSite,
+        IAstSymbolEntrySite, IAstTemplateSite
         where ParamT : AstFunctionParameter
         where TemplateParamT : AstTemplateParameter
     {
@@ -40,7 +41,7 @@ namespace Zsharp.AST
         public void AddParameter(ParamT param)
         {
             if (!TryAddParameter(param))
-                throw new InvalidOperationException("Parameter was already set or null.");
+                throw new InternalErrorException("Parameter was already set or null.");
         }
 
         // true when type is a template instantiation

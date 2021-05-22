@@ -19,7 +19,7 @@ namespace Zsharp.AST
         public void SetName(string name)
         {
             if (!String.IsNullOrEmpty(Name))
-                throw new InvalidOperationException(
+                throw new InternalErrorException(
                     "Name is already set");
             Name = name;
         }
@@ -34,7 +34,7 @@ namespace Zsharp.AST
             {
                 if (!String.IsNullOrEmpty(ParentTable?.Name))
                 {
-                    return ParentTable.Namespace + "." + Name;
+                    return $"{ParentTable.Namespace}.{Name}";
                 }
                 return Name;
             }

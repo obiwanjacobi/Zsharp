@@ -115,8 +115,8 @@ namespace Zsharp.AST
         public void AddAlias(string alias)
         {
             if (!TryAddAlias(alias))
-                throw new ArgumentException(
-                    $"Alias '{alias}' is alread present for symbol {SymbolName}.", nameof(alias));
+                throw new InternalErrorException(
+                    $"Alias '{alias}' is alread present for symbol {SymbolName}.");
         }
 
         internal void Delete()

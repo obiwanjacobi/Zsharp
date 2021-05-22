@@ -50,7 +50,7 @@ namespace Zsharp.EmitCS
                 AstExpressionOperator.Modulo => "%",
                 AstExpressionOperator.Power => throw new NotImplementedException(errTxt),
                 AstExpressionOperator.Negate => "-",
-                _ => throw new ZsharpException(
+                _ => throw new InternalErrorException(
                     $"Unrecognized Arithmetic Expression Operator {expression.Operator}"),
             };
 
@@ -71,7 +71,7 @@ namespace Zsharp.EmitCS
                 AstExpressionOperator.BitShiftRight => ">>",
                 AstExpressionOperator.BitRollLeft => throw new NotImplementedException(errTxt),
                 AstExpressionOperator.BitRollRight => throw new NotImplementedException(errTxt),
-                _ => throw new ZsharpException(
+                _ => throw new InternalErrorException(
                     $"Unrecognized Bitwise Expression Operator {expression.Operator}"),
             };
 
@@ -88,7 +88,7 @@ namespace Zsharp.EmitCS
                 AstExpressionOperator.NotEqual => "!=",
                 AstExpressionOperator.GreaterEqual => ">=",
                 AstExpressionOperator.SmallerEqual => "<=",
-                _ => throw new ZsharpException(
+                _ => throw new InternalErrorException(
                         $"Unrecognized Comparison Expression Operator {expression.Operator}")
             };
 
@@ -102,7 +102,7 @@ namespace Zsharp.EmitCS
                 AstExpressionOperator.And => "&&",
                 AstExpressionOperator.Or => "||",
                 AstExpressionOperator.Not => "!",
-                _ => throw new ZsharpException(
+                _ => throw new InternalErrorException(
                     $"Unrecognized Logic Expression Operator {expression.Operator}"),
             };
 

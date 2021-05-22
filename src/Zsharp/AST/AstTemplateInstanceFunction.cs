@@ -50,7 +50,7 @@ namespace Zsharp.AST
                 }
 
                 var site = ParentAs<IAstSymbolTableSite>() ??
-                    throw new InvalidOperationException("Function Parent not a SymbolTable Site.");
+                    throw new InternalErrorException("Function Parent not a SymbolTable Site.");
                 return site.Symbols;
             }
         }

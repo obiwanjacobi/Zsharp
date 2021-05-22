@@ -107,7 +107,7 @@ namespace Zsharp.AST
 
         public override bool TrySetSymbol(AstSymbolEntry? symbolEntry)
         {
-            throw new InvalidOperationException(
+            throw new InternalErrorException(
                 "Intrinsic Type Definitions are static and have no reference to the Symbol Table.");
         }
     }

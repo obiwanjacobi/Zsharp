@@ -3,7 +3,8 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstBranch : AstNode, IAstCodeBlockItem
+    public class AstBranch : AstNode,
+        IAstCodeBlockItem
     {
         public AstBranch(Statement_breakContext context)
             : base(AstNodeType.Branch)
@@ -31,16 +32,22 @@ namespace Zsharp.AST
 
         public AstBranchType BranchType { get; }
 
-        public bool IsExpression => BranchType == AstBranchType.ExitFunction || IsConditional;
+        public bool IsExpression
+            => BranchType == AstBranchType.ExitFunction || IsConditional;
 
-        public AstBranchExpression? ToExpression() => IsExpression ? (AstBranchExpression)this : null;
+        public AstBranchExpression? ToExpression()
+            => IsExpression ? (AstBranchExpression)this : null;
 
-        public bool HasCode => BranchType == AstBranchType.Conditional;
+        public bool HasCode
+            => BranchType == AstBranchType.Conditional;
 
-        public bool IsConditional => BranchType == AstBranchType.Conditional;
+        public bool IsConditional
+            => BranchType == AstBranchType.Conditional;
 
-        public AstBranchConditional? ToConditional() => IsConditional ? (AstBranchConditional)this : null;
+        public AstBranchConditional? ToConditional()
+            => IsConditional ? (AstBranchConditional)this : null;
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitBranch(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitBranch(this);
     }
 }

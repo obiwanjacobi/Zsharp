@@ -11,7 +11,7 @@
         public static void SetTypeReference(this IAstTypeReferenceSite typeReferenceSite, AstTypeReference typeReference)
         {
             if (!typeReferenceSite.TrySetTypeReference(typeReference))
-                throw new ZsharpException(
+                throw new InternalErrorException(
                     "TypeReference is already set or null.");
         }
     }

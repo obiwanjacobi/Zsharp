@@ -12,8 +12,14 @@
         public static void SetSymbol(this IAstSymbolEntrySite symbolEntrySite, AstSymbolEntry symbolEntry)
         {
             if (!symbolEntrySite.TrySetSymbol(symbolEntry))
-                throw new ZsharpException(
+                throw new InternalErrorException(
                     "SymbolEntry is already set or null.");
+        }
+
+        public static void ThrowIfSymbolEntryNotSet(this IAstSymbolEntrySite symbolEntrySite)
+        {
+            if (symbolEntrySite.Symbol == null)
+                throw new InternalErrorException("Symbol Entry not set.");
         }
     }
 }

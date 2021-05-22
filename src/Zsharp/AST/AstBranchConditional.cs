@@ -1,10 +1,10 @@
 ﻿using Antlr4.Runtime;
-using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstBranchConditional : AstBranchExpression, IAstCodeBlockSite
+    public class AstBranchConditional : AstBranchExpression,
+        IAstCodeBlockSite
     {
         public AstBranchConditional(Statement_ifContext context)
             : base(AstBranchType.Conditional)
@@ -59,7 +59,7 @@ namespace Zsharp.AST
         public void AddSubBranch(AstBranchConditional subBranch)
         {
             if (!TryAddSubBranch(subBranch))
-                throw new InvalidOperationException(
+                throw new InternalErrorException(
                     "SubBranch is already set or null.");
         }
 

@@ -13,7 +13,7 @@ namespace Zsharp.AST
         public static void AddFieldInit(this IAstTypeInitializeSite typeInitializeSite, AstTypeFieldInitialization field)
         {
             if (!typeInitializeSite.TryAddFieldInit(field))
-                throw new ZsharpException(
+                throw new InternalErrorException(
                     "TypeField is already set or null.");
         }
     }

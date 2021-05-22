@@ -14,7 +14,7 @@ namespace Zsharp.AST
         public static void AddTemplateParameter(this IAstTemplateSite templateSite, AstTemplateParameter templateParameter)
         {
             if (!templateSite.TryAddTemplateParameter(templateParameter))
-                throw new ZsharpException(
+                throw new InternalErrorException(
                     "TemplateParameter is already set or null.");
         }
     }

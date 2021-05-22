@@ -11,7 +11,7 @@
         public static void SetExpression(this IAstExpressionSite expressionSite, AstExpression expression)
         {
             if (!expressionSite.TrySetExpression(expression))
-                throw new ZsharpException(
+                throw new InternalErrorException(
                     "Expression is already set or null.");
         }
     }

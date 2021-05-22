@@ -1,5 +1,3 @@
-using System;
-
 namespace Zsharp.AST
 {
 
@@ -21,7 +19,7 @@ namespace Zsharp.AST
         public void SetParent(AstNode parent)
         {
             if (!TrySetParent(parent))
-                throw new InvalidOperationException(
+                throw new InternalErrorException(
                     "Parent Node is already set or null.");
         }
 

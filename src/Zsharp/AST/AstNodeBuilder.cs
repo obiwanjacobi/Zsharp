@@ -696,16 +696,7 @@ namespace Zsharp.AST
             trSite.SetTypeReference(typeRef);
 
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            //var entry = symbolsSite.Symbols.Find(typeRef);
-            //if (entry != null)
-            //{
-            //    entry.AddNode(typeRef);
-            //    typeRef.SetSymbol(entry);
-            //}
-            //else
-            {
-                symbolsSite.Symbols.Add(typeRef);
-            }
+            symbolsSite.Symbols.Add(typeRef);
 
             return typeRef;
         }

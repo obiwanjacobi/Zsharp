@@ -13,12 +13,12 @@ namespace Zsharp.AST
         public static void SetIdentifier(this IAstIdentifierSite identifierSite, AstIdentifier identifier)
         {
             if (!identifierSite.TrySetIdentifier(identifier))
-                throw new InvalidOperationException(
+                throw new InternalErrorException(
                     "Identifier is already set or null.");
         }
 
         public static void ThrowIfIdentifierNotSet(this IAstIdentifierSite identifierSite)
             => _ = identifierSite.Identifier ??
-                throw new ZsharpException("Identifier is not set.");
+                throw new InternalErrorException("Identifier is not set.");
     }
 }

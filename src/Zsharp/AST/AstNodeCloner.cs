@@ -235,10 +235,10 @@ namespace Zsharp.AST
             exp.Add(op);
         }
 
-        private AstLiteralBoolean CloneLiteralBoolean(AstLiteralBoolean literal)
-            => new AstLiteralBoolean((Literal_boolContext)literal.Context);
+        private static AstLiteralBoolean CloneLiteralBoolean(AstLiteralBoolean literal)
+            => new((Literal_boolContext)literal.Context);
 
-        private AstLiteralNumeric CloneLiteralNumeric(AstLiteralNumeric literal)
+        private static AstLiteralNumeric CloneLiteralNumeric(AstLiteralNumeric literal)
         {
             if (literal.Context == null)
                 return new AstLiteralNumeric(literal.Value);
@@ -246,8 +246,8 @@ namespace Zsharp.AST
             return AstLiteralNumeric.Create((NumberContext)literal.Context);
         }
 
-        private AstLiteralString CloneLiteralString(AstLiteralString literal)
-            => new AstLiteralString((StringContext)literal.Context);
+        private static AstLiteralString CloneLiteralString(AstLiteralString literal)
+            => new((StringContext)literal.Context);
 
         public override void VisitAssignment(AstAssignment assign)
         {
@@ -274,7 +274,7 @@ namespace Zsharp.AST
             {
                 AstVariableDefinition varDef => CloneVariableDefinition(varDef),
                 AstVariableReference varRef => CloneVariableReference(varRef),
-                _ => throw new InvalidOperationException("AstVariable sub type not implemented.")
+                _ => throw new InternalErrorException("AstVariable sub type not implemented.")
             };
         }
 
@@ -382,7 +382,7 @@ namespace Zsharp.AST
             {
                 AstTypeFieldReferenceStructField => new AstTypeFieldReferenceStructField((Variable_field_refContext)fieldReference.Context),
                 AstTypeFieldReferenceEnumOption => new AstTypeFieldReferenceEnumOption((Enum_option_useContext)fieldReference.Context),
-                _ => throw new InvalidOperationException(
+                _ => throw new InternalErrorException(
                     $"AstNodeCloner does not implement this FieldReference Type: {fieldReference.GetType().Name}")
             };
         }
@@ -411,7 +411,7 @@ namespace Zsharp.AST
                         typeRef.AddTemplateParameter(templParam);
                     }
                     else
-                        throw new AstException(
+                        throw new InternalErrorException(
                             $"Template Parameter '{templParamDef.Identifier.Name}' could not be resolved.");
                 }
             }
@@ -433,7 +433,7 @@ namespace Zsharp.AST
             else if (branch.BranchType == AstBranchType.ExitLoop)
                 br = new AstBranch((Statement_breakContext)branch.Context!);
             else
-                throw new InvalidOperationException("Unknown Branch Type.");
+                throw new InternalErrorException("Unknown Branch Type.");
 
             var cb = _context.GetCurrent<AstCodeBlock>();
             cb.AddItem(br);

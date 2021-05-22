@@ -38,7 +38,7 @@ namespace Zsharp.EmitCS
             var key = BuildKey(functionDef);
 
             if (!Providers.TryGetValue(key, out CodeProvider? codeProvider))
-                throw new ZsharpException(
+                throw new InternalErrorException(
                     $"No intrinsic code provider for {functionDef.Identifier!.CanonicalName} ({key}).");
 
             codeProvider.Build(this.CsBuilder, functionDef);

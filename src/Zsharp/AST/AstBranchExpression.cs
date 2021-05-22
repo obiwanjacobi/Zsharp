@@ -27,8 +27,6 @@ namespace Zsharp.AST
             => visitor.VisitBranchExpression(this);
 
         public override void VisitChildren(AstVisitor visitor)
-        {
-            Expression?.Accept(visitor);
-        }
+            => Expression?.Accept(visitor);
     }
 }

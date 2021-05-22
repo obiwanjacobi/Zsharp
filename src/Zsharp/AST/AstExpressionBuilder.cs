@@ -15,19 +15,13 @@ namespace Zsharp.AST
         { }
 
         public AstExpression? Build(Expression_valueContext context)
-        {
-            return Build(context, () => new AstExpression(context));
-        }
+            => Build(context, () => new AstExpression(context));
 
         public AstExpression? Build(Expression_logicContext context)
-        {
-            return Build(context, () => new AstExpression(context));
-        }
+            => Build(context, () => new AstExpression(context));
 
         public AstExpression? Build(Comptime_expression_valueContext context)
-        {
-            return Build(context, () => new AstExpression(context));
-        }
+            => Build(context, () => new AstExpression(context));
 
         private AstExpression? Build(ParserRuleContext context, Func<AstExpression> createExpression)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using static Zsharp.Parser.ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -26,7 +25,7 @@ namespace Zsharp.AST
         {
             // TODO: We need parent template (ref) context and
             // check the template definition.
-            throw new InvalidOperationException(
+            throw new InternalErrorException(
                 "Cannot resolve a single Template Parameter.");
         }
 

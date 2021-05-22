@@ -20,7 +20,7 @@ namespace Zsharp.AST
         {
             get
             {
-                Ast.Guard(Symbol, $"No Symbol is set for Function reference {Identifier!.Name}.");
+                this.ThrowIfSymbolEntryNotSet();
                 var entry = Symbol!;
 
                 if (entry.HasOverloads)
@@ -51,7 +51,8 @@ namespace Zsharp.AST
             return false;
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitFunctionReference(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitFunctionReference(this);
 
         public override string? ToString()
         {

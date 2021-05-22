@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -111,7 +110,7 @@ namespace Zsharp.AST
         public bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
         {
             if (TypeOrigin != null || _templateParameters == null)
-                throw new InvalidOperationException(
+                throw new InternalErrorException(
                     "Cannot add Template Parameter onto a TypeReference Proxy.");
 
             if (templateParameter is AstTemplateParameterReference parameter)

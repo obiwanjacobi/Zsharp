@@ -62,7 +62,7 @@ namespace Zsharp.AST
             => this.SetTypeReference(AstTypeReference.From(type));
 
         public override void Accept(AstVisitor visitor)
-            => throw new ZsharpException("Must not Visit Intrinsic Function Definition.");
+            => throw new InternalErrorException("Must not Visit Intrinsic Function Definition.");
 
         public override bool TrySetSymbol(AstSymbolEntry? symbolEntry)
         {

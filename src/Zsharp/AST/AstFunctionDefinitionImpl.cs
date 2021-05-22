@@ -49,7 +49,7 @@ namespace Zsharp.AST
 
         public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node = null)
         {
-            Ast.Guard(Symbols != null, "SymbolTable not set.");
+            this.ThrowIfSymbolTableNotSet();
             return Symbols!.AddSymbol(symbolName, kind, node);
         }
 

@@ -11,7 +11,7 @@
         public static void SetCodeBlock(this IAstCodeBlockSite codeBlockSite, AstCodeBlock codeBlock)
         {
             if (!codeBlockSite.TrySetCodeBlock(codeBlock))
-                throw new ZsharpException(
+                throw new InternalErrorException(
                     "CodeBlock is already set or null.");
         }
     }

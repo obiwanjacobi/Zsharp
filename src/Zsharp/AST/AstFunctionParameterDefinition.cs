@@ -3,7 +3,8 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstFunctionParameterDefinition : AstFunctionParameter, IAstSymbolEntrySite
+    public class AstFunctionParameterDefinition : AstFunctionParameter,
+        IAstSymbolEntrySite
     {
         public AstFunctionParameterDefinition(Function_parameterContext context)
         {

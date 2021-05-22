@@ -4,7 +4,8 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstFile : AstNode, IAstSymbolTableSite, IAstCodeBlockSite
+    public class AstFile : AstNode,
+        IAstSymbolTableSite, IAstCodeBlockSite
     {
         public AstFile(string scopeName, AstSymbolTable parentTable, FileContext context)
             : base(AstNodeType.File)

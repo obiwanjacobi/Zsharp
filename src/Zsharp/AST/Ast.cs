@@ -2,7 +2,7 @@
 
 namespace Zsharp.AST
 {
-    public static class Ast
+    internal static class Ast
     {
         public static bool SafeSet<T>(ref T? storage, T? value)
             where T : class
@@ -26,14 +26,6 @@ namespace Zsharp.AST
                 return true;
             }
             return false;
-        }
-
-        public static bool IsTopLevel(this AstNode node)
-        {
-            if (node.ParentAs<AstAssignment>() != null)
-                node = node.Parent!;
-
-            return node?.ParentAs<AstCodeBlock>()?.ParentAs<AstFile>() != null;
         }
 
         [Conditional("DEBUG")]

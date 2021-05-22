@@ -8,7 +8,8 @@ namespace Zsharp.AST
     {
         private readonly List<AstMessage> _messages = new();
 
-        public IEnumerable<AstMessage> Errors => _messages.Where(m => m.MessageType == AstMessageType.Error);
+        public IEnumerable<AstMessage> Errors
+            => _messages.Where(m => m.MessageType == AstMessageType.Error);
 
         public bool HasErrors => Errors.Any();
 
@@ -20,6 +21,7 @@ namespace Zsharp.AST
             };
             return AddMessage(error);
         }
+
         public AstMessage AddError(ParserRuleContext context, string text)
             => AddError(text, context);
 

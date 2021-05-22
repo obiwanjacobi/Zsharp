@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Zsharp.AST
 {
@@ -25,7 +24,7 @@ namespace Zsharp.AST
         public void SetBaseType(AstTypeReference typeReference)
         {
             if (!TrySetBaseType(typeReference))
-                throw new InvalidOperationException(
+                throw new InternalErrorException(
                     "Base Type Reference already set or null.");
         }
 
@@ -59,7 +58,7 @@ namespace Zsharp.AST
         public void AddField(AstTypeFieldDefinition field)
         {
             if (!TryAddField(field))
-                throw new InvalidOperationException(
+                throw new InternalErrorException(
                     "Type Field was already added or null.");
         }
 

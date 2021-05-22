@@ -26,7 +26,7 @@ namespace Zsharp.EmitCS
                 AstBranchType.ExitLoop => BranchStatement.Break,
                 AstBranchType.ExitIteration => BranchStatement.Continue,
                 AstBranchType.Conditional => BranchStatement.If,
-                _ => throw new ZsharpException("No BranchType set!")
+                _ => throw new InternalErrorException("No BranchType set!")
             };
             _csBuilder.StartBranch(br);
         }
