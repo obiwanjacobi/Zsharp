@@ -39,13 +39,6 @@ namespace Zsharp.AST
             return false;
         }
 
-        public void SetCodeBlock(AstCodeBlock codeBlock)
-        {
-            if (!TrySetCodeBlock(codeBlock))
-                throw new InvalidOperationException(
-                    "CodeBlock is already set or null.");
-        }
-
         public AstSymbolTable Symbols
         {
             get

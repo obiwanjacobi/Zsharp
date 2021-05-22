@@ -24,7 +24,7 @@ namespace Zsharp.AST
             Ast.Guard(type.TemplateParameters.Count() == TemplateDefinition.TemplateParameters.Count(),
                 $"The number of template parameters do not match the TemplateDefinition {TemplateDefinition.Identifier!.Name}");
 
-            SetIdentifier(new AstIdentifier(type.Identifier!.Name, type.Identifier.IdentifierType));
+            this.SetIdentifier(new AstIdentifier(type.Identifier!.Name, type.Identifier.IdentifierType));
 
             foreach (var field in TemplateDefinition.Fields)
             {

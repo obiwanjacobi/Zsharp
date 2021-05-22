@@ -1,14 +1,18 @@
-﻿using System;
-
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public interface IAstExpressionSite
     {
         AstExpression? Expression { get; }
         bool TrySetExpression(AstExpression? expression);
-        void SetExpression(AstExpression expression);
+    }
 
-        public void ThrowIfExpressionNotSet()
-            => _ = Expression ?? throw new InvalidOperationException("Expression is not set.");
+    public static class AstExpressionSiteExtensions
+    {
+        public static void SetExpression(this IAstExpressionSite expressionSite, AstExpression expression)
+        {
+            if (!expressionSite.TrySetExpression(expression))
+                throw new ZsharpException(
+                    "Expression is already set or null.");
+        }
     }
 }

@@ -6,7 +6,7 @@
 
         public AstTemplateParameterDefinitionIntrinsic(AstIdentifier identifier)
         {
-            SetIdentifier(identifier);
+            this.SetIdentifier(identifier);
         }
 
         public override bool IsIntrinsic => true;

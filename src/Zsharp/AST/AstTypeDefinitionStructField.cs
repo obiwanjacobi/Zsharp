@@ -17,12 +17,6 @@ namespace Zsharp.AST
         private AstTypeReference? _typeReference;
         public AstTypeReference? TypeReference => _typeReference;
 
-        public void SetTypeReference(AstTypeReference typeReference)
-        {
-            if (!TrySetTypeReference(typeReference))
-                throw new InvalidOperationException("Type Reference already set or null.");
-        }
-
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);
 
@@ -32,12 +26,6 @@ namespace Zsharp.AST
 
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
-
-        public void SetSymbol(AstSymbolEntry symbolEntry)
-        {
-            if (!TrySetSymbol(symbolEntry))
-                throw new InvalidOperationException("Symbol was already set or null.");
-        }
 
         public bool TryResolve()
         {

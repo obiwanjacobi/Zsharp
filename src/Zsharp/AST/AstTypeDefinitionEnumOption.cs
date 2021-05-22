@@ -1,5 +1,4 @@
-﻿using System;
-using static Zsharp.Parser.ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -15,13 +14,6 @@ namespace Zsharp.AST
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public void SetExpression(AstExpression expression)
-        {
-            if (!TrySetExpression(expression))
-                throw new InvalidOperationException(
-                    "Expression was already set or null.");
-        }
-
         public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
 
@@ -30,12 +22,6 @@ namespace Zsharp.AST
 
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
-
-        public void SetSymbol(AstSymbolEntry symbolEntry)
-        {
-            if (!TrySetSymbol(symbolEntry))
-                throw new InvalidOperationException("Symbol was already set or null.");
-        }
 
         public bool TryResolve()
         {

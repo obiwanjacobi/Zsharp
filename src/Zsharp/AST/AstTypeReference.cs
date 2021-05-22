@@ -27,7 +27,7 @@ namespace Zsharp.AST
             : base(AstNodeType.Type)
         {
             Context = typeOrigin.Context;
-            SetIdentifier(typeOrigin.Identifier!);
+            this.SetIdentifier(typeOrigin.Identifier!);
             TrySetSymbol(typeOrigin.Symbol!);
             _typeOrigin = typeOrigin;
         }
@@ -122,13 +122,6 @@ namespace Zsharp.AST
                 return true;
             }
             return false;
-        }
-
-        public void AddTemplateParameter(AstTemplateParameter templateParameter)
-        {
-            if (!TryAddTemplateParameter(templateParameter))
-                throw new InvalidOperationException(
-                    "TemplateParameter is already set or null.");
         }
 
         public override void Accept(AstVisitor visitor)

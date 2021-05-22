@@ -19,7 +19,7 @@ namespace Zsharp.AST
 
         public AstFunctionDefinitionIntrinsic(AstIdentifierIntrinsic typeIdentifier, AstTypeDefinitionIntrinsic toReturn)
         {
-            SetIdentifier(typeIdentifier);
+            this.SetIdentifier(typeIdentifier);
             SetTypeReference(toReturn);
         }
 
@@ -59,7 +59,7 @@ namespace Zsharp.AST
             => function.CreateSymbols(symbols);
 
         private void SetTypeReference(AstTypeDefinitionIntrinsic type)
-            => SetTypeReference(AstTypeReference.From(type));
+            => this.SetTypeReference(AstTypeReference.From(type));
 
         public override void Accept(AstVisitor visitor)
             => throw new ZsharpException("Must not Visit Intrinsic Function Definition.");

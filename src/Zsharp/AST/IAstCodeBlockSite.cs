@@ -1,14 +1,18 @@
-﻿using System;
-
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public interface IAstCodeBlockSite
     {
         AstCodeBlock? CodeBlock { get; }
         bool TrySetCodeBlock(AstCodeBlock? codeBlock);
-        void SetCodeBlock(AstCodeBlock codeBlock);
+    }
 
-        public void ThrowIfCodeBlockNotSet()
-            => _ = CodeBlock ?? throw new InvalidOperationException("CodeBlock is not set.");
+    public static class AstCodeBlockSiteExtension
+    {
+        public static void SetCodeBlock(this IAstCodeBlockSite codeBlockSite, AstCodeBlock codeBlock)
+        {
+            if (!codeBlockSite.TrySetCodeBlock(codeBlock))
+                throw new ZsharpException(
+                    "CodeBlock is already set or null.");
+        }
     }
 }

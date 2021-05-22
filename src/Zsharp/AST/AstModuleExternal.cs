@@ -13,7 +13,7 @@ namespace Zsharp.AST
         {
             Namespace = ns;
             Symbols = new AstSymbolTable(moduleName, parentTable);
-            SetIdentifier(new AstIdentifier(moduleName, AstIdentifierType.Module));
+            this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierType.Module));
         }
 
         public AstSymbolTable Symbols { get; }

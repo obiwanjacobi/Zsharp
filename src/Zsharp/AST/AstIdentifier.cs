@@ -91,11 +91,13 @@ namespace Zsharp.AST
             {
                 if (_templateParameterCount > 0)
                     return CanonicalName;
+
                 if (Name.Contains(ParameterDelimiter))
                 {
                     var parts = Name.Split(ParameterDelimiter);
                     return $"{parts[0]}{TemplateDelimiter}{parts.Length - 1}";
                 }
+
                 return String.Empty;
             }
         }

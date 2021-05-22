@@ -6,6 +6,15 @@ namespace Zsharp.AST
     {
         IEnumerable<AstTypeFieldInitialization> Fields { get; }
         bool TryAddFieldInit(AstTypeFieldInitialization? field);
-        void AddFieldInit(AstTypeFieldInitialization field);
+    }
+
+    public static class AstTypeInitializeSiteExtensions
+    {
+        public static void AddFieldInit(this IAstTypeInitializeSite typeInitializeSite, AstTypeFieldInitialization field)
+        {
+            if (!typeInitializeSite.TryAddFieldInit(field))
+                throw new ZsharpException(
+                    "TypeField is already set or null.");
+        }
     }
 }

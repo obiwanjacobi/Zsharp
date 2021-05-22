@@ -1,5 +1,3 @@
-using System;
-
 namespace Zsharp.AST
 {
     public enum AstModuleLocality
@@ -24,12 +22,5 @@ namespace Zsharp.AST
 
         public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
-
-        public void SetIdentifier(AstIdentifier identifier)
-        {
-            if (!TrySetIdentifier(identifier))
-                throw new InvalidOperationException(
-                    "Identifier is already set or null.");
-        }
     }
 }

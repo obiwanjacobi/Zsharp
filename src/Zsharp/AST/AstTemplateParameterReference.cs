@@ -13,7 +13,7 @@ namespace Zsharp.AST
         public AstTemplateParameterReference(AstTypeReference typeReference)
             : base(null)
         {
-            SetTypeReference(typeReference);
+            this.SetTypeReference(typeReference);
         }
 
         private AstTypeReference? _typeReference;
@@ -21,13 +21,6 @@ namespace Zsharp.AST
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);
-
-        public void SetTypeReference(AstTypeReference typeReference)
-        {
-            if (!TrySetTypeReference(typeReference))
-                throw new InvalidOperationException(
-                    "TypeReference is already set or null.");
-        }
 
         public override bool TryResolve()
         {

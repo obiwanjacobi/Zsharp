@@ -1,5 +1,4 @@
 ﻿using Antlr4.Runtime;
-using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -20,7 +19,7 @@ namespace Zsharp.AST
 
         public AstFunctionParameterDefinition(AstIdentifier identifier)
         {
-            SetIdentifier(identifier);
+            this.SetIdentifier(identifier);
             IsSelf = identifier.IsEqual(AstIdentifierIntrinsic.Self);
         }
 
@@ -36,13 +35,6 @@ namespace Zsharp.AST
 
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
-
-        public void SetSymbol(AstSymbolEntry symbolEntry)
-        {
-            if (!TrySetSymbol(symbolEntry))
-                throw new InvalidOperationException(
-                    "SymbolEntry is already set or null.");
-        }
 
         public bool TryResolve()
         {

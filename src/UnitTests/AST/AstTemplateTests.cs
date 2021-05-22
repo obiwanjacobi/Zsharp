@@ -57,6 +57,19 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void TemplateIntrinsicTypeUsage()
+        {
+            const string code =
+                "s = Array<U8>" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+
+            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
+            a.Expression.RHS.TypeReference.Identifier.CanonicalName.Should().Be("");
+        }
+
+        [TestMethod]
         public void TemplateFunctionDefinition()
         {
             const string code =

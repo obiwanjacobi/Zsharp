@@ -77,13 +77,6 @@ namespace Zsharp.AST
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => Ast.SafeSet(ref _typeRef, typeReference);
 
-        public void SetTypeReference(AstTypeReference typeReference)
-        {
-            if (!TrySetTypeReference(typeReference))
-                throw new InvalidOperationException(
-                    "TypeReference is already set or null.");
-        }
-
         public bool Add(AstExpressionOperand op)
         {
             if (_rhs == null)

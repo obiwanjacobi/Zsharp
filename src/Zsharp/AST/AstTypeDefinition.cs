@@ -34,13 +34,6 @@ namespace Zsharp.AST
         bool IAstTypeReferenceSite.TrySetTypeReference(AstTypeReference? typeReference)
             => TrySetBaseType(typeReference);
 
-        void IAstTypeReferenceSite.SetTypeReference(AstTypeReference typeReference)
-        {
-            if (!TrySetBaseType(typeReference))
-                throw new InvalidOperationException(
-                    "Base Type Reference already set or null.");
-        }
-
         public virtual bool IsIntrinsic => false;
 
         public virtual bool IsExternal => false;

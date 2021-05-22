@@ -1,14 +1,18 @@
-﻿using System;
-
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public interface IAstTypeReferenceSite
     {
         AstTypeReference? TypeReference { get; }
         bool TrySetTypeReference(AstTypeReference? typeReference);
-        void SetTypeReference(AstTypeReference typeReference);
+    }
 
-        public void ThrowIfTypeReferenceNotSet()
-            => _ = TypeReference ?? throw new InvalidOperationException("TypeReference is not set.");
+    public static class AstTypeReferenceSiteExtensions
+    {
+        public static void SetTypeReference(this IAstTypeReferenceSite typeReferenceSite, AstTypeReference typeReference)
+        {
+            if (!typeReferenceSite.TrySetTypeReference(typeReference))
+                throw new ZsharpException(
+                    "TypeReference is already set or null.");
+        }
     }
 }

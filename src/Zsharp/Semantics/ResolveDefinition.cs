@@ -336,10 +336,15 @@ namespace Zsharp.Semantics
                         var templateType = entry!.SymbolTable.FindDefinition<AstTypeDefinitionStruct>(
                             type.Identifier!.TemplateDefinitionName, AstSymbolKind.Type);
 
-                        var typeDef = new AstTemplateInstanceStruct(templateType!);
-                        typeDef.Instantiate(type);
-                        entry.AddNode(typeDef);
-                        Ast.Guard(entry.Definition, "Invalid Template Definition.");
+                        if (templateType != null)
+                        {
+                            var typeDef = new AstTemplateInstanceStruct(templateType!);
+                            typeDef.Instantiate(type);
+                            entry.AddNode(typeDef);
+                            Ast.Guard(entry.Definition, "Invalid Template Definition.");
+                        }
+                        else
+                            _context.UndefinedType(type);
                     }
                     else if (!type.IsExternal)
                     {

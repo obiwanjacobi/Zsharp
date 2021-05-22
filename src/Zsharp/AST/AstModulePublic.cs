@@ -15,7 +15,7 @@ namespace Zsharp.AST
         public AstModulePublic(string moduleName)
             : base(AstModuleLocality.Public)
         {
-            SetIdentifier(new AstIdentifier(moduleName, AstIdentifierType.Module));
+            this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierType.Module));
         }
 
         public IEnumerable<AstFile> Files => _files;
@@ -65,12 +65,6 @@ namespace Zsharp.AST
 
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
-
-        public void SetSymbol(AstSymbolEntry symbolEntry)
-        {
-            if (!TrySetSymbol(symbolEntry))
-                throw new InvalidOperationException("Symbol is already set or null.");
-        }
 
         public virtual bool TryResolve() => true;
     }

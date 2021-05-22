@@ -50,13 +50,6 @@ namespace Zsharp.AST
         private readonly List<AstTemplateParameter> _templateParameters = new();
         public IEnumerable<AstTemplateParameter> TemplateParameters => _templateParameters;
 
-        public void AddTemplateParameter(AstTemplateParameter templateParameter)
-        {
-            if (!TryAddTemplateParameter(templateParameter))
-                throw new InvalidOperationException(
-                    "TemplateParameter is already set or null.");
-        }
-
         public bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
         {
             if (templateParameter == null ||
