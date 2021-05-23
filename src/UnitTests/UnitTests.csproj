@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Zsharp.Runtime\Zsharp.Runtime.csproj" />
     <ProjectReference Include="..\Zsharp\Zsharp.csproj" />
   </ItemGroup>
 

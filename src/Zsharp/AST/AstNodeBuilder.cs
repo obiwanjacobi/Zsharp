@@ -108,7 +108,7 @@ namespace Zsharp.AST
 
             if (!String.IsNullOrEmpty(alias))
             {
-                module.AddAlias(dotName.Symbol, alias);
+                module.AddAlias(dotName.Symbol, alias, AstSymbolKind.Unknown);
             }
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();

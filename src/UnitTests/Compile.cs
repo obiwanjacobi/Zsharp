@@ -8,18 +8,12 @@ namespace UnitTests
 {
     internal static class Compile
     {
-        private static AssemblyManager LoadTestAssemblies()
+        public static IAstModuleLoader CreateModuleLoader()
         {
-            var assemblies = new AssemblyManager();
-            assemblies.LoadAssembly(@"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Console.dll");
-            return assemblies;
-        }
-
-        public static ExternalModuleLoader CreateModuleLoader()
-        {
-            var assemblies = LoadTestAssemblies();
-            var loader = new ExternalModuleLoader(assemblies);
-            return loader;
+            return new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .AddSystemConsole()
+                .ToModuleLoader();
         }
 
         public static AstFile File(string code, IAstModuleLoader moduleLoader = null)
@@ -31,6 +25,27 @@ namespace UnitTests
             errors.Should().BeEmpty();
 
             return ((AstModulePublic)compiler.Context.Modules.Modules.First()).Files.First();
+        }
+    }
+
+    internal class AssemblyManagerBuilder
+    {
+        private readonly AssemblyManager _assemblyManager = new();
+        public AssemblyManager AssemblyManager => _assemblyManager;
+
+        public IAstModuleLoader ToModuleLoader()
+            => new ExternalModuleLoader(_assemblyManager);
+
+        public AssemblyManagerBuilder AddZsharpRuntime()
+        {
+            _assemblyManager.LoadAssembly("Zsharp.Runtime.dll");
+            return this;
+        }
+
+        public AssemblyManagerBuilder AddSystemConsole()
+        {
+            _assemblyManager.LoadAssembly(@"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Console.dll");
+            return this;
         }
     }
 }

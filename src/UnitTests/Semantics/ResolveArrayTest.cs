@@ -14,7 +14,7 @@ namespace UnitTests.Semantics
                 "arr = Array<U8>(10)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code);
+            var file = Compile.File(code, Compile.CreateModuleLoader());
             var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
             assign.Expression.RHS.FunctionReference.Should().NotBeNull();
         }

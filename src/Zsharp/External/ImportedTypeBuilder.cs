@@ -10,7 +10,7 @@ namespace Zsharp.External
     public class ImportedTypeBuilder
     {
         private readonly List<AstFunctionDefinitionExternal> _functions = new();
-        private readonly Dictionary<string, string> _aliases = new();
+        private readonly Dictionary<string, KeyValuePair<string, AstSymbolKind>> _aliases = new();
         private readonly ExternalTypeRepository _typeRepository;
 
         public ImportedTypeBuilder(ExternalTypeRepository typeRepository)
@@ -54,7 +54,7 @@ namespace Zsharp.External
 
         public IEnumerable<AstFunctionDefinitionExternal> Functions => _functions;
 
-        public IEnumerable<KeyValuePair<string, string>> Aliases => _aliases;
+        public IEnumerable<KeyValuePair<string, KeyValuePair<string, AstSymbolKind>>> Aliases => _aliases;
 
         private void BuildInterface(TypeDefinition typeDefinition)
         {
@@ -93,7 +93,10 @@ namespace Zsharp.External
                     {
                         // TODO: get_/set_ property methods name handling
                         _aliases.TryAdd(function.Identifier!.CanonicalName,
-                            $"{typeDefinition.Name}{function.Identifier!.CanonicalName}");
+                            KeyValuePair.Create(
+                            $"{typeDefinition.Name}{function.Identifier!.CanonicalName}",
+                                AstSymbolKind.Function)
+                        );
                     }
                 }
             }
@@ -112,7 +115,7 @@ namespace Zsharp.External
             }
             foreach (var alias in Aliases)
             {
-                module.AddAlias(alias.Key, alias.Value);
+                module.AddAlias(alias.Key, alias.Value.Key, alias.Value.Value);
             }
         }
 

@@ -53,11 +53,11 @@ namespace Zsharp.AST
             entry.SymbolLocality = AstSymbolLocality.Imported;
         }
 
-        public void AddAlias(string symbol, string alias)
+        public void AddAlias(string symbol, string alias, AstSymbolKind symbolKind)
         {
             if (!String.IsNullOrEmpty(symbol))
             {
-                var entry = Symbols.FindEntry(symbol, AstSymbolKind.Unknown);
+                var entry = Symbols.FindEntry(symbol, symbolKind);
                 Ast.Guard(entry, $"No symbol for '{symbol}' was found in external module {Identifier!.Name}.");
                 entry!.AddAlias(alias);
             }
