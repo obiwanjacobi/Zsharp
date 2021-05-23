@@ -2,19 +2,14 @@
 
 namespace Zsharp.AST
 {
-    public abstract class AstTypeFieldDefinition : AstNode,
-        IAstIdentifierSite
+    public abstract class AstTypeFieldDefinition : AstTypeField
     {
-        protected AstTypeFieldDefinition(AstNodeType nodeType = AstNodeType.Field)
-            : base(nodeType)
+        protected AstTypeFieldDefinition()
+            : base(AstNodeType.Field)
         { }
 
-        public ParserRuleContext? Context { get; protected set; }
-
-        private AstIdentifier? _identifier;
-        public AstIdentifier? Identifier => _identifier;
-
-        public bool TrySetIdentifier(AstIdentifier? identifier)
-            => Ast.SafeSet(ref _identifier, identifier);
+        protected AstTypeFieldDefinition(ParserRuleContext context, AstNodeType nodeType = AstNodeType.Field)
+            : base(context, nodeType)
+        { }
     }
 }

@@ -3,14 +3,13 @@
 namespace Zsharp.AST
 {
     public class AstTemplateParameterDefinition : AstTemplateParameter,
-        IAstIdentifierSite, IAstSymbolEntrySite
+        IAstIdentifierSite
     {
         public AstTemplateParameterDefinition(Template_param_anyContext context)
             : base(context)
         { }
 
         protected AstTemplateParameterDefinition()
-            : base(null)
         { }
 
         public virtual bool IsIntrinsic => false;
@@ -20,12 +19,6 @@ namespace Zsharp.AST
 
         public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
-
-        private AstSymbolEntry? _symbol;
-        public AstSymbolEntry? Symbol => _symbol;
-
-        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
-            => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTemplateParameterDefinition(this);

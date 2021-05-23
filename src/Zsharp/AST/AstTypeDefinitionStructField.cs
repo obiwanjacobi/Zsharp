@@ -3,28 +3,20 @@
 namespace Zsharp.AST
 {
     public class AstTypeDefinitionStructField : AstTypeFieldDefinition,
-        IAstTypeReferenceSite, IAstSymbolEntrySite
+        IAstTypeReferenceSite
     {
         public AstTypeDefinitionStructField()
         { }
 
         public AstTypeDefinitionStructField(Struct_field_defContext context)
-        {
-            Context = context;
-        }
+            : base(context)
+        { }
 
         private AstTypeReference? _typeReference;
         public AstTypeReference? TypeReference => _typeReference;
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);
-
-        private AstSymbolEntry? _symbol;
-
-        public AstSymbolEntry? Symbol => _symbol;
-
-        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
-            => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTypeDefinitionStructField(this);

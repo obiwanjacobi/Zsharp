@@ -1,7 +1,7 @@
 ﻿namespace Zsharp.AST
 {
     public abstract class AstFunctionParameter : AstNode,
-        IAstIdentifierSite, IAstTypeReferenceSite
+        IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolEntrySite
     {
         protected AstFunctionParameter()
             : base(AstNodeType.FunctionParameter)
@@ -18,6 +18,12 @@
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeRef, typeReference);
+
+        private AstSymbolEntry? _symbol;
+        public AstSymbolEntry? Symbol => _symbol;
+
+        public virtual bool TrySetSymbol(AstSymbolEntry? symbolEntry)
+            => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public override void VisitChildren(AstVisitor visitor)
         {

@@ -3,25 +3,17 @@
 namespace Zsharp.AST
 {
     public class AstTypeDefinitionEnumOption : AstTypeFieldDefinition,
-        IAstExpressionSite, IAstSymbolEntrySite
+        IAstExpressionSite
     {
         public AstTypeDefinitionEnumOption(Enum_option_defContext context)
-            : base(AstNodeType.EnumOption)
-        {
-            Context = context;
-        }
+            : base(context, AstNodeType.EnumOption)
+        { }
 
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
         public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
-
-        private AstSymbolEntry? _symbol;
-        public AstSymbolEntry? Symbol => _symbol;
-
-        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
-            => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTypeDefinitionEnumOption(this);

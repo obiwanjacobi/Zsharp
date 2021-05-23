@@ -12,19 +12,13 @@ namespace Zsharp.AST
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public AstTypeFieldDefinition FieldDefinition => Symbol!.DefinitionAs<AstTypeFieldDefinition>()!;
-
         public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
 
         public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitTypeFieldInitialization(this);
-        }
+            => visitor.VisitTypeFieldInitialization(this);
 
         public override void VisitChildren(AstVisitor visitor)
-        {
-            Expression?.Accept(visitor);
-        }
+            => Expression?.Accept(visitor);
     }
 }

@@ -9,8 +9,6 @@ namespace Zsharp.AST
         { }
 
         public override void Accept(AstVisitor visitor)
-        {
-            visitor.VisitTypeFieldReferenceEnumOption(this);
-        }
+            => visitor.VisitTypeFieldReferenceEnumOption(this);
     }
 }

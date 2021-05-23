@@ -36,6 +36,7 @@ namespace Zsharp.AST
 
         public bool TryResolve()
         {
+            this.ThrowIfSymbolEntryNotSet();
             var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
             if (entry != null)
             {

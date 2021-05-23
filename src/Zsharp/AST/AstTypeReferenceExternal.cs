@@ -4,7 +4,7 @@ namespace Zsharp.AST
 {
     public class AstTypeReferenceExternal : AstTypeReference
     {
-        private readonly TypeReference _typeReference;
+        private readonly TypeReference? _typeReference;
 
         protected AstTypeReferenceExternal(AstTypeReference typeOrigin)
             : base(typeOrigin)
@@ -20,9 +20,9 @@ namespace Zsharp.AST
         public new AstTypeReferenceExternal? TypeOrigin
             => (AstTypeReferenceExternal?)base.TypeOrigin;
 
-        private readonly AstExternalName _externalName;
+        private readonly AstExternalName? _externalName;
         public AstExternalName ExternalName
-            => TypeOrigin?.ExternalName ?? _externalName;
+            => TypeOrigin?.ExternalName ?? _externalName!;
 
         public override bool IsExternal => true;
 
