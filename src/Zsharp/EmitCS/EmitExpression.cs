@@ -132,14 +132,15 @@ namespace Zsharp.EmitCS
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            if (function.FunctionDefinition is AstFunctionDefinitionIntrinsic intrinsicDef)
+            var functionDef = function.FunctionDefinition!;
+            var name = functionDef.Identifier!.CanonicalName;
+
+            if (functionDef.IsExternal)
             {
-                var emitter = new EmitIntrinsic(_builder);
-                emitter.EmitFunction(function, intrinsicDef);
-                return;
+                name = ((AstFunctionDefinitionExternal)functionDef).ExternalName.FullName;
             }
 
-            _builder.Append($"{function.Identifier!.CanonicalName}(");
+            _builder.Append($"{name}(");
 
             VisitChildren(function);
 

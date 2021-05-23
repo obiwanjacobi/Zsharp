@@ -1,44 +1,30 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Zsharp.External;
+using System.Linq;
+using Zsharp.AST;
 
 namespace UnitTests.AST
 {
     [TestClass]
     public class AstModuleTests
     {
-        private static AssemblyManager LoadTestAssemblies()
-        {
-            var assemblies = new AssemblyManager();
-            assemblies.LoadAssembly(@"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Console.dll");
-            return assemblies;
-        }
-
-        private static ExternalModuleLoader CreateModuleLoader()
-        {
-            var assemblies = LoadTestAssemblies();
-            var loader = new ExternalModuleLoader(assemblies);
-            //loader.Modules.Should().HaveCount(2);
-            return loader;
-        }
-
         [TestMethod]
-        public void LoadExternalAssembly()
+        public void LoadExternal_System()
         {
-            var assemblies = LoadTestAssemblies();
+            var symbolTable = new AstSymbolTable();
+            var loader = Compile.CreateModuleLoader();
+            loader.Initialize(symbolTable);
 
-            assemblies.Assemblies.Should().HaveCount(3);
+            var sysMods = loader.LoadAll("System");
+            sysMods.Should().NotBeEmpty();
+            sysMods.All(m => m.Symbols.Namespace.StartsWith("System"))
+                .Should().BeTrue();
+            sysMods.All(m => m.Symbols.FindEntries(AstSymbolKind.Function)
+                                .All(e => e.SymbolLocality == AstSymbolLocality.Imported))
+                .Should().BeTrue();
+            sysMods.All(m => m.Symbols.FindEntries(AstSymbolKind.Type).Where(s => s.HasDefinition)
+                                .All(e => e.SymbolLocality == AstSymbolLocality.Imported))
+                .Should().BeTrue();
         }
-
-        //[TestMethod]
-        //public void LoadExternal_System()
-        //{
-        //    var loader = CreateModuleLoader();
-
-        //    var system = loader.LoadExternal("System");
-        //    system.Should().NotBeNull();
-        //    system.Symbols.Namespace.Should().Be("System");
-        //    system.Symbols.Entries.All(e => e.SymbolLocality == AstSymbolLocality.Imported).Should().BeTrue();
-        //}
     }
 }

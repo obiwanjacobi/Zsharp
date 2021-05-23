@@ -15,6 +15,13 @@ namespace Zsharp.AST
             _moduleLoader = moduleLoader;
             _externalSymbolTable = new AstSymbolTable(String.Empty, intrinsicSymbols);
             _moduleLoader.Initialize(_externalSymbolTable);
+
+            var runtimeModules = _moduleLoader.LoadAll("Zsharp.Runtime");
+            foreach (var rtMod in runtimeModules)
+            {
+                var entry = intrinsicSymbols.Add(rtMod);
+                entry.SymbolLocality = AstSymbolLocality.Imported;
+            }
         }
 
         public AstSymbolTable SymbolTable => _externalSymbolTable;
@@ -60,7 +67,7 @@ namespace Zsharp.AST
             var module = FindModule<AstModuleExternal>(moduleName);
             if (module == null)
             {
-                module = _moduleLoader.LoadExternal(moduleName);
+                module = _moduleLoader.LoadExact(moduleName);
                 if (module != null)
                 {
                     _modules.Add(moduleName, module);

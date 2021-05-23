@@ -216,20 +216,12 @@ namespace Zsharp.EmitIL
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            var functionDef = function.FunctionDefinition;
-            if (functionDef!.IsIntrinsic)
-            {
-                var intrinsic = new EmitIntrinsic(EmitContext);
-                intrinsic.EmitFunction(function, (AstFunctionDefinitionIntrinsic)functionDef);
-            }
-            else
-            {
-                VisitChildren(function);
+            VisitChildren(function);
 
-                var method = EmitContext.GetFunctionReference(functionDef);
-                EmitContext.CodeBuilder.CodeBlock.Add(
-                    EmitContext.InstructionFactory.Call(method));
-            }
+            var functionDef = function.FunctionDefinition;
+            var method = EmitContext.GetFunctionReference(functionDef!);
+            EmitContext.CodeBuilder.CodeBlock.Add(
+                EmitContext.InstructionFactory.Call(method));
         }
     }
 }

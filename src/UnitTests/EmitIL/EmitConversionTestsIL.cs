@@ -17,7 +17,7 @@ namespace UnitTests.EmitIL
                 Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
                 ;
 
-            var emit = Emit.Create(code);
+            var emit = Emit.Create(code, Emit.CreateModuleLoader());
 
             var moduleClass = emit.Context.Module.Types.Find("test");
             var fn = moduleClass.Methods.First();

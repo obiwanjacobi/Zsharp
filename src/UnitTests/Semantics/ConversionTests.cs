@@ -16,9 +16,9 @@ namespace UnitTests.Semantics
                 Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code);
+            var file = Compile.File(code, Compile.CreateModuleLoader());
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var intrinsic = fn.Symbols.FindDefinition<AstFunctionDefinitionIntrinsic>("U16", AstSymbolKind.Function);
+            var intrinsic = fn.Symbols.FindDefinition<AstFunctionDefinition>("U16", AstSymbolKind.Function);
             intrinsic.Parameters.First().IsSelf.Should().BeTrue();
         }
 

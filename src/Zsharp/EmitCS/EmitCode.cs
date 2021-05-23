@@ -17,6 +17,7 @@ namespace Zsharp.EmitCS
         public override void VisitModulePublic(AstModulePublic module)
         {
             // usings / imports
+            Context.Imports(module.Symbol!.SymbolTable.GetRootTable());
             Context.Imports(module.Symbol!.SymbolTable);
 
             using var scope = Context.AddModule(module);

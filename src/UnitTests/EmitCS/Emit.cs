@@ -6,7 +6,6 @@ using System.Reflection;
 using Zsharp;
 using Zsharp.AST;
 using Zsharp.EmitCS;
-using Zsharp.External;
 
 namespace UnitTests.EmitCS
 {
@@ -15,20 +14,8 @@ namespace UnitTests.EmitCS
         private const string ZsharpRuntime = "Zsharp.Runtime.dll";
         private const string AssemblyName = "EmitCsCodeTest";
 
-        public static AssemblyManager LoadTestAssemblies()
-        {
-            var assemblies = new AssemblyManager();
-            assemblies.LoadAssembly(@"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Console.dll");
-            return assemblies;
-        }
-
-        public static ExternalModuleLoader CreateModuleLoader()
-        {
-            var assemblies = LoadTestAssemblies();
-            var loader = new ExternalModuleLoader(assemblies);
-            //loader.Modules.Should().HaveCount(2);
-            return loader;
-        }
+        public static IAstModuleLoader CreateModuleLoader()
+            => Compile.CreateModuleLoader();
 
         public static EmitCode Create(string code, IAstModuleLoader moduleLoader = null)
         {

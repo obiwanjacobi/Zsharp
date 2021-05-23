@@ -8,6 +8,19 @@ namespace UnitTests.Semantics
     public class ResolveExternalTests
     {
         [TestMethod]
+        public void ExternalZsharpConversion()
+        {
+            const string code =
+                "v = U16(42)" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code, Compile.CreateModuleLoader());
+
+            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            assign.Expression.RHS.FunctionReference.FunctionDefinition.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void ExternalFunctionVoidRet()
         {
             const string code =

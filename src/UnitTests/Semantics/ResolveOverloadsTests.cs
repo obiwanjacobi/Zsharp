@@ -91,7 +91,7 @@ namespace UnitTests.Semantics
                 "x = fn(42)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code);
+            var file = Compile.File(code, Compile.CreateModuleLoader());
             var a = file.CodeBlock.ItemAt<AstAssignment>(1);
             a.Expression.TypeReference.Should().NotBeNull();
             a.Variable.TypeReference.Should().NotBeNull();
@@ -105,7 +105,7 @@ namespace UnitTests.Semantics
                 Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code);
+            var file = Compile.File(code, Compile.CreateModuleLoader());
 
             var fn1 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var br = fn1.CodeBlock.ItemAt<AstBranchExpression>(0);
@@ -121,7 +121,7 @@ namespace UnitTests.Semantics
                 "x = U16(42)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code);
+            var file = Compile.File(code, Compile.CreateModuleLoader());
 
             var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
 

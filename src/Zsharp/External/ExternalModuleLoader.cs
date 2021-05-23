@@ -55,8 +55,6 @@ namespace Zsharp.External
             return module;
         }
 
-        public IEnumerable<AstModuleExternal> Modules => _modules.Values;
-
         public AstSymbolTable SymbolTable { get; private set; }
 
         public void Initialize(AstSymbolTable symbolTable)
@@ -65,10 +63,15 @@ namespace Zsharp.External
             CreateExternalModules(_assemblies.Assemblies);
         }
 
-        public AstModuleExternal? LoadExternal(string moduleName)
+        public AstModuleExternal? LoadExact(string fullModuleName)
         {
-            _modules.TryGetValue(moduleName, out AstModuleExternal? module);
+            _modules.TryGetValue(fullModuleName, out AstModuleExternal? module);
             return module;
         }
+
+        public IEnumerable<AstModuleExternal> LoadAll(string partialModuleName)
+            => _modules.Keys
+                .Where(k => k.StartsWith(partialModuleName))
+                .Select(k => _modules[k]);
     }
 }

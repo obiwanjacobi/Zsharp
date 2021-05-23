@@ -1,4 +1,6 @@
-﻿namespace Zsharp.AST
+﻿using System.Collections.Generic;
+
+namespace Zsharp.AST
 {
     public interface IAstModuleLoader
     {
@@ -6,6 +8,8 @@
 
         AstSymbolTable SymbolTable { get; }
 
-        AstModuleExternal? LoadExternal(string moduleName);
+        AstModuleExternal? LoadExact(string fullModuleName);
+
+        IEnumerable<AstModuleExternal> LoadAll(string partialModuleName);
     }
 }

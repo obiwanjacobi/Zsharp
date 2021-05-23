@@ -179,6 +179,7 @@ namespace Zsharp.AST
 
             var functionTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
             function.CreateSymbols(functionTable.Symbols, codeBlock.Symbols);
+
             if (context.Parent is Statement_export_inlineContext)
                 function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
 

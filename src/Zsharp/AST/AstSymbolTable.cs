@@ -123,9 +123,14 @@ namespace Zsharp.AST
             var entry = FindEntryLocal(symbolName, symbolKind);
             var symbolDef = entry?.DefinitionAs<T>();
 
-            if (ParentTable != null &&
-                symbolDef == null)
-                symbolDef = ParentTable.FindDefinition<T>(symbolName, symbolKind);
+            if (symbolDef == null)
+            {
+                entry = FindEntryInModules(symbolName, symbolKind);
+                symbolDef = entry?.DefinitionAs<T>();
+            }
+
+            if (symbolDef == null)
+                symbolDef = ParentTable?.FindDefinition<T>(symbolName, symbolKind);
 
             return symbolDef;
         }

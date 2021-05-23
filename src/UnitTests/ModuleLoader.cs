@@ -13,16 +13,19 @@ namespace UnitTests
         public void Initialize(AstSymbolTable symbolTable)
             => SymbolTable = symbolTable;
 
-        public AstModuleExternal LoadExternal(string moduleName)
+        public AstModuleExternal LoadExact(string fullModuleName)
         {
-            var mod = Modules.FirstOrDefault(m => m.Identifier.Name == moduleName);
+            var mod = Modules.FirstOrDefault(m => m.Identifier.Name == fullModuleName);
 
             if (mod == null)
             {
-                mod = new AstModuleExternal(moduleName, SymbolTable);
+                mod = new AstModuleExternal(fullModuleName, SymbolTable);
                 Modules.Add(mod);
             }
             return mod;
         }
+
+        public IEnumerable<AstModuleExternal> LoadAll(string partialModuleName)
+            => Modules.Where(m => m.Identifier.Name.StartsWith(partialModuleName));
     }
 }

@@ -3,8 +3,7 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstFunctionParameterDefinition : AstFunctionParameter,
-        IAstSymbolEntrySite
+    public class AstFunctionParameterDefinition : AstFunctionParameter
     {
         public AstFunctionParameterDefinition(Function_parameterContext context)
         {
@@ -30,12 +29,6 @@ namespace Zsharp.AST
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitFunctionParameterDefinition(this);
-
-        private AstSymbolEntry? _symbol;
-        public AstSymbolEntry? Symbol => _symbol;
-
-        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
-            => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public static AstFunctionParameterDefinition Create(string name, AstTypeDefinition astType)
         {

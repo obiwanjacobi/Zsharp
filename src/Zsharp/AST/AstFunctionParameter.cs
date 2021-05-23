@@ -26,8 +26,6 @@
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public override void VisitChildren(AstVisitor visitor)
-        {
-            TypeReference?.Accept(visitor);
-        }
+            => TypeReference?.Accept(visitor);
     }
 }
