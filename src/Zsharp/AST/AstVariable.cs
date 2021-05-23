@@ -20,21 +20,14 @@ namespace Zsharp.AST
             => Ast.SafeSet(ref _identifier, identifier);
 
         private AstSymbolEntry? _symbol;
-        public AstSymbolEntry? Symbol => _symbol;
+        public AstSymbolEntry? Symbol
+        {
+            get { return _symbol; }
+            protected set { _symbol = value; }
+        }
 
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
-
-        public bool TryResolve()
-        {
-            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
-            if (entry != null)
-            {
-                _symbol = entry;
-                return true;
-            }
-            return false;
-        }
 
         private AstTypeReference? _typeRef;
         public AstTypeReference? TypeReference => _typeRef;

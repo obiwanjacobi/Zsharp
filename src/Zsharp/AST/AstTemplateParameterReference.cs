@@ -21,14 +21,6 @@ namespace Zsharp.AST
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);
 
-        public override bool TryResolve()
-        {
-            // TODO: We need parent template (ref) context and
-            // check the template definition.
-            throw new InternalErrorException(
-                "Cannot resolve a single Template Parameter.");
-        }
-
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTemplateParameterReference(this);
     }

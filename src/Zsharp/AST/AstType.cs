@@ -9,12 +9,6 @@ namespace Zsharp.AST
             : base(nodeType)
         { }
 
-        protected AstType(AstIdentifier identifier)
-            : base(AstNodeType.Type)
-        {
-            TrySetIdentifier(identifier);
-        }
-
         public ParserRuleContext? Context { get; protected set; }
 
         private AstIdentifier? _identifier;
@@ -24,21 +18,14 @@ namespace Zsharp.AST
             => Ast.SafeSet(ref _identifier, identifier);
 
         private AstSymbolEntry? _symbol;
-        public AstSymbolEntry? Symbol => _symbol;
+        public AstSymbolEntry? Symbol
+        {
+            get { return _symbol; }
+            protected set { _symbol = value; }
+        }
 
         public virtual bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
-
-        public virtual bool TryResolve()
-        {
-            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
-            if (entry != null)
-            {
-                _symbol = entry;
-                return true;
-            }
-            return false;
-        }
 
         public virtual bool IsEqual(AstType type)
         {

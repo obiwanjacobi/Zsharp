@@ -19,6 +19,9 @@ namespace Zsharp.AST
         public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
 
+        public AstTypeFieldDefinition? FieldDefinition
+            => Symbol?.DefinitionAs<AstTypeFieldDefinition>();
+
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
 

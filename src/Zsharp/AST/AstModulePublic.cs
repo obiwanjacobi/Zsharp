@@ -65,7 +65,5 @@ namespace Zsharp.AST
 
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
-
-        public virtual bool TryResolve() => true;
     }
 }

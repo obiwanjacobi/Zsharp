@@ -23,11 +23,6 @@ namespace Zsharp.AST
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
-        public bool TryResolve()
-        {
-            return _symbol?.Definition == this;
-        }
-
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTypeDefinitionEnumOption(this);
 

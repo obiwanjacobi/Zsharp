@@ -11,7 +11,5 @@ namespace Zsharp.AST
         }
 
         public ParserRuleContext? Context { get; }
-
-        public abstract bool TryResolve();
     }
 }

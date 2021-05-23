@@ -4,7 +4,6 @@
     {
         AstSymbolEntry? Symbol { get; }
         bool TrySetSymbol(AstSymbolEntry? symbolEntry);
-        bool TryResolve();
     }
 
     public static class AstSymbolEntrySiteExtensions

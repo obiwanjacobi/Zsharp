@@ -1,5 +1,4 @@
-﻿using System;
-using static Zsharp.Parser.ZsharpParser;
+﻿using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -26,11 +25,6 @@ namespace Zsharp.AST
 
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
-
-        public bool TryResolve()
-        {
-            return _symbol?.Definition == this;
-        }
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTypeDefinitionStructField(this);

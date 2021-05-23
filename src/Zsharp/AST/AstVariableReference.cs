@@ -34,6 +34,17 @@ namespace Zsharp.AST
         public AstFunctionParameterDefinition? ParameterDefinition
             => Symbol?.DefinitionAs<AstFunctionParameterDefinition>();
 
+        public bool TryResolve()
+        {
+            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
+            if (entry != null)
+            {
+                Symbol = entry;
+                return true;
+            }
+            return false;
+        }
+
         private AstTypeFieldReference? _fieldRef;
         public AstTypeFieldReference? Field => _fieldRef;
 

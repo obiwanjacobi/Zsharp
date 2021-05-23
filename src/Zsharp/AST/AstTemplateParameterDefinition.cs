@@ -27,12 +27,6 @@ namespace Zsharp.AST
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
-        public override bool TryResolve()
-        {
-            // TODO: ??
-            return true;
-        }
-
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTemplateParameterDefinition(this);
     }

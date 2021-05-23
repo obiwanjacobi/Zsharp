@@ -34,6 +34,17 @@ namespace Zsharp.AST
         public AstTypeDefinition? TypeDefinition
             => Symbol?.DefinitionAs<AstTypeDefinition>();
 
+        public virtual bool TryResolve()
+        {
+            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
+            if (entry != null)
+            {
+                Symbol = entry;
+                return true;
+            }
+            return false;
+        }
+
         public bool IsOptional { get; protected set; }
 
         public bool IsError { get; protected set; }

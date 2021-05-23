@@ -37,17 +37,6 @@ namespace Zsharp.AST
         public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
-        public bool TryResolve()
-        {
-            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
-            if (entry != null)
-            {
-                _symbol = entry;
-                return true;
-            }
-            return false;
-        }
-
         public static AstFunctionParameterDefinition Create(string name, AstTypeDefinition astType)
         {
             var identifier = new AstIdentifier(name, AstIdentifierType.Parameter);

@@ -37,6 +37,17 @@ namespace Zsharp.AST
             }
         }
 
+        public bool TryResolve()
+        {
+            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
+            if (entry != null)
+            {
+                Symbol = entry;
+                return true;
+            }
+            return false;
+        }
+
         public new IEnumerable<AstTemplateParameterReference> TemplateParameters
             => base.TemplateParameters.Cast<AstTemplateParameterReference>();
 

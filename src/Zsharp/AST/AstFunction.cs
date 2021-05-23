@@ -77,21 +77,14 @@ namespace Zsharp.AST
             => this.SafeSetParent(ref _typeRef, typeReference);
 
         private AstSymbolEntry? _symbol;
-        public AstSymbolEntry? Symbol => _symbol;
+        public AstSymbolEntry? Symbol
+        {
+            get { return _symbol; }
+            protected set { _symbol = value; }
+        }
 
         public virtual bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
-
-        public bool TryResolve()
-        {
-            var entry = _symbol?.SymbolTable.ResolveDefinition(_symbol);
-            if (entry != null)
-            {
-                _symbol = entry;
-                return true;
-            }
-            return false;
-        }
 
         public virtual void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {

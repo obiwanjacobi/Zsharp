@@ -7,10 +7,6 @@ namespace Zsharp.AST
     {
         private readonly Dictionary<string, AstTypeFieldDefinition> _fields = new();
 
-        protected AstTypeDefinition(AstIdentifier identifier)
-            : base(identifier)
-        { }
-
         protected AstTypeDefinition(AstNodeType nodeType)
             : base(nodeType)
         { }

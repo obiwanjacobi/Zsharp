@@ -8,8 +8,9 @@ namespace Zsharp.AST
     {
         public AstTypeDefinitionIntrinsic(AstIdentifier identifier, Type? systemType,
             AstTemplateParameterDefinition? templateParameter = null, bool isUnsigned = false)
-            : base(identifier)
+            : base(AstNodeType.Type)
         {
+            this.SetIdentifier(identifier);
             IsUnsigned = isUnsigned;
             SystemType = systemType;
 
@@ -63,6 +64,7 @@ namespace Zsharp.AST
 
         public static void AddAll(AstSymbolTable symbols)
         {
+            AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.Array);
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.Bool);
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.F64);
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.F32);
@@ -76,7 +78,6 @@ namespace Zsharp.AST
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.U32);
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.U8);
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.Void);
-            AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.Array);
         }
 
         // true when type is a template definition
