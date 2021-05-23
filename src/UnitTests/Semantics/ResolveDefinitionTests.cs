@@ -157,6 +157,23 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
+        public void FunctionReferenceInferredTypeRef()
+        {
+            const string code =
+                "fn: (): Str" + Tokens.NewLine +
+                Tokens.Indent1 + "return \"Hello Z#\"" + Tokens.NewLine +
+                "s = fn()" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code);
+
+            var assign = file.CodeBlock.ItemAt<AstAssignment>(1);
+            assign.Expression.RHS.FunctionReference.TypeReference.Should().NotBeNull();
+            assign.Variable.TypeReference.TypeDefinition
+                .Should().BeEquivalentTo(assign.Expression.TypeReference.TypeDefinition);
+        }
+
+        [TestMethod]
         public void FunctionForwardReference()
         {
             const string code =

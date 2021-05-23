@@ -60,13 +60,13 @@ namespace UnitTests.AST
         public void TemplateIntrinsicTypeUsage()
         {
             const string code =
-                "s = Array<U8>" + Tokens.NewLine
+                "s: Array<U8>" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code);
+            var file = Compile.File(code);
 
-            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
-            a.Expression.RHS.TypeReference.Identifier.CanonicalName.Should().Be("");
+            var v = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
+            v.TypeReference.TypeDefinition.Should().NotBeNull();
         }
 
         [TestMethod]
