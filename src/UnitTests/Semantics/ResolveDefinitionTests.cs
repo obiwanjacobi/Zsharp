@@ -157,6 +157,22 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
+        public void FunctionReferenceByParameterType()
+        {
+            const string code =
+                "fn: (p: I32)" + Tokens.NewLine +
+                Tokens.Indent1 + "return" + Tokens.NewLine +
+                "fn(42)" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code);
+
+            var fnRef = file.CodeBlock.ItemAt<AstFunctionReference>(1);
+            fnRef.Should().NotBeNull();
+            fnRef.Symbol.Definition.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void FunctionReferenceInferredTypeRef()
         {
             const string code =

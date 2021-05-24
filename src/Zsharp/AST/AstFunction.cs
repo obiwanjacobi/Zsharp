@@ -7,7 +7,7 @@ namespace Zsharp.AST
 {
     public abstract class AstFunction<ParamT, TemplateParamT> : AstNode,
         IAstCodeBlockItem, IAstIdentifierSite, IAstTypeReferenceSite,
-        IAstSymbolEntrySite, IAstTemplateSite
+        IAstSymbolEntrySite, IAstTemplateSite<TemplateParamT>
         where ParamT : AstFunctionParameter
         where TemplateParamT : AstTemplateParameter
     {
@@ -48,9 +48,9 @@ namespace Zsharp.AST
         public bool IsTemplate => _templateParameters.Count > 0;
 
         private readonly List<TemplateParamT> _templateParameters = new();
-        public IEnumerable<AstTemplateParameter> TemplateParameters => _templateParameters;
+        public IEnumerable<TemplateParamT> TemplateParameters => _templateParameters;
 
-        public virtual bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
+        public virtual bool TryAddTemplateParameter(TemplateParamT templateParameter)
         {
             if (templateParameter is TemplateParamT parameter)
             {

@@ -52,12 +52,11 @@ namespace Zsharp.AST
         public new IEnumerable<AstTemplateParameterReference> TemplateParameters
             => base.TemplateParameters.Cast<AstTemplateParameterReference>();
 
-        public override bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
+        public override bool TryAddTemplateParameter(AstTemplateParameterReference templateParameter)
         {
             if (base.TryAddTemplateParameter(templateParameter))
             {
-                var templParamRef = (AstTemplateParameterReference)templateParameter!;
-                Identifier!.AddTemplateParameter(templParamRef.TypeReference!.Identifier!.Name);
+                Identifier!.AddTemplateParameter(templateParameter.TypeReference!.Identifier!.Name);
                 return true;
             }
             return false;

@@ -3,31 +3,11 @@
 namespace Zsharp.AST
 {
     public abstract class AstTypeDefinition : AstType,
-        IAstTypeReferenceSite
+        IAstTemplateSite<AstTemplateParameterDefinition>
     {
-        private readonly Dictionary<string, AstTypeFieldDefinition> _fields = new();
-
-        protected AstTypeDefinition(AstNodeType nodeType)
+        protected AstTypeDefinition(AstNodeType nodeType = AstNodeType.Type)
             : base(nodeType)
         { }
-
-        private AstTypeReference? _baseType;
-        public AstTypeReference? BaseType => _baseType;
-
-        public bool TrySetBaseType(AstTypeReference? typeReference)
-            => this.SafeSetParent(ref _baseType, typeReference);
-
-        public void SetBaseType(AstTypeReference typeReference)
-        {
-            if (!TrySetBaseType(typeReference))
-                throw new InternalErrorException(
-                    "Base Type Reference already set or null.");
-        }
-
-        AstTypeReference? IAstTypeReferenceSite.TypeReference => _baseType;
-
-        bool IAstTypeReferenceSite.TrySetTypeReference(AstTypeReference? typeReference)
-            => TrySetBaseType(typeReference);
 
         public virtual bool IsIntrinsic => false;
 
@@ -37,34 +17,21 @@ namespace Zsharp.AST
 
         public virtual bool IsStruct => false;
 
-        public IEnumerable<AstTypeFieldDefinition> Fields => _fields.Values;
+        // true when type is a template definition
+        public bool IsTemplate => _templateParameters.Count > 0;
 
-        public bool TryAddField(AstTypeFieldDefinition field)
+        private readonly List<AstTemplateParameterDefinition> _templateParameters = new();
+        public IEnumerable<AstTemplateParameterDefinition> TemplateParameters => _templateParameters;
+
+        public virtual bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
         {
-            if (field?.Identifier == null)
+            if (templateParameter == null)
                 return false;
 
-            if (_fields.TryAdd(field.Identifier.CanonicalName, field))
-            {
-                return field.TrySetParent(this);
-            }
-            return false;
-        }
+            _templateParameters.Add(templateParameter);
 
-        public void AddField(AstTypeFieldDefinition field)
-        {
-            if (!TryAddField(field))
-                throw new InternalErrorException(
-                    "Type Field was already added or null.");
-        }
-
-        public override void VisitChildren(AstVisitor visitor)
-        {
-            BaseType?.Accept(visitor);
-            foreach (var option in Fields)
-            {
-                option.Accept(visitor);
-            }
+            Identifier!.TemplateParameterCount = _templateParameters.Count;
+            return true;
         }
     }
 }

@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 namespace Zsharp.AST
 {
     public abstract class AstFunctionDefinition : AstFunction<AstFunctionParameterDefinition, AstTemplateParameterDefinition>
     {
-        public new IEnumerable<AstTemplateParameterDefinition> TemplateParameters
-            => base.TemplateParameters.Cast<AstTemplateParameterDefinition>();
+        public virtual bool IsIntrinsic => false;
 
-        public override bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
+        public virtual bool IsExternal => false;
+
+        public override bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
         {
             if (TemplateParameters.SingleOrDefault(p => p.Identifier?.CanonicalName ==
-                    ((AstTemplateParameterDefinition?)templateParameter)?.Identifier?.CanonicalName) == null &&
+                    templateParameter?.Identifier?.CanonicalName) == null &&
                 base.TryAddTemplateParameter(templateParameter))
             {
                 Identifier!.TemplateParameterCount = TemplateParameters.Count();
@@ -20,10 +20,6 @@ namespace Zsharp.AST
             }
             return false;
         }
-
-        public virtual bool IsIntrinsic => false;
-
-        public virtual bool IsExternal => false;
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitFunctionDefinition(this);

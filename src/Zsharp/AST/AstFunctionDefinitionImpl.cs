@@ -67,11 +67,11 @@ namespace Zsharp.AST
             }
         }
 
-        public override bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
+        public override bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
         {
             if (base.TryAddTemplateParameter(templateParameter))
             {
-                Symbols.Add((AstTemplateParameterDefinition)templateParameter!);
+                Symbols.Add(templateParameter);
                 return true;
             }
             return false;

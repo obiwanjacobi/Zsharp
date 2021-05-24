@@ -54,8 +54,11 @@ namespace UnitTests.Semantics
             if (origin is IAstIdentifierSite ids)
                 AssertIdentifier((IAstIdentifierSite)cloned, ids);
 
-            if (origin is IAstTemplateSite ts)
-                AssertTemplate((IAstTemplateSite)cloned, ts);
+            if (origin is IAstTemplateSite<AstTemplateParameterDefinition> tpd)
+                AssertTemplate((IAstTemplateSite<AstTemplateParameterDefinition>)cloned, tpd);
+
+            if (origin is IAstTemplateSite<AstTemplateParameterReference> tpr)
+                AssertTemplate((IAstTemplateSite<AstTemplateParameterReference>)cloned, tpr);
 
             if (origin is IAstTypeReferenceSite trs)
                 AssertEquivalent(((IAstTypeReferenceSite)cloned).TypeReference, trs.TypeReference);
@@ -76,7 +79,8 @@ namespace UnitTests.Semantics
             cloned.Identifier.Should().BeEquivalentTo(origin.Identifier);
         }
 
-        private void AssertTemplate(IAstTemplateSite cloned, IAstTemplateSite origin)
+        private void AssertTemplate<T>(IAstTemplateSite<T> cloned, IAstTemplateSite<T> origin)
+            where T : AstTemplateParameter
         {
             cloned.TemplateParameters.Should().BeEquivalentTo(origin.TemplateParameters);
             cloned.IsTemplate.Should().Be(origin.IsTemplate);

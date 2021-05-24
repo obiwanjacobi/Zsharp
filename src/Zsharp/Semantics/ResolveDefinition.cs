@@ -268,12 +268,22 @@ namespace Zsharp.Semantics
                         var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinition>(
                             function.Identifier!.TemplateDefinitionName, AstSymbolKind.Function);
 
-                        var typeDef = new AstTemplateInstanceFunction(templateFunction!);
+                        if (templateFunction != null)
+                        {
+                            if (!templateFunction.IsExternal)
+                            {
+                                var typeDef = new AstTemplateInstanceFunction(templateFunction!);
 
-                        typeDef.Instantiate(_context, function);
-                        entry.AddNode(typeDef);
+                                typeDef.Instantiate(_context, function);
+                                entry.AddNode(typeDef);
 
-                        Visit(typeDef);
+                                Visit(typeDef);
+                            }
+                            else
+                            {
+                                entry.AddNode(templateFunction);
+                            }
+                        }
                     }
                 }
 

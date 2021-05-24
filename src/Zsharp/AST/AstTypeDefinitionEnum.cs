@@ -4,7 +4,7 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstTypeDefinitionEnum : AstTypeDefinition,
+    public class AstTypeDefinitionEnum : AstTypeDefinitionWithFields,
         IAstCodeBlockItem, IAstSymbolTableSite
     {
         public AstTypeDefinitionEnum(Enum_defContext context, AstSymbolTable parentTable)
@@ -33,5 +33,8 @@ namespace Zsharp.AST
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTypeDefinitionEnum(this);
+
+        public override bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
+            => throw new InternalErrorException("Cannot add Template Parameters to an Enum.");
     }
 }

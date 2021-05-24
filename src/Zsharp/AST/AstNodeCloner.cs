@@ -398,7 +398,7 @@ namespace Zsharp.AST
             {
                 typeRef = newType.MakeProxy();
             }
-            else if (type.TypeDefinition is IAstTemplateSite templateDef &&
+            else if (type.TypeDefinition is IAstTemplateSite<AstTemplateParameterDefinition> templateDef &&
                 templateDef.IsTemplate)
             {
                 typeRef = AstTypeReference.From(type.TypeDefinition);

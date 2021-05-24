@@ -112,6 +112,11 @@ namespace Zsharp.AST
             VisitChildren(type);
         }
 
+        public virtual void VisitTypeDefinitionFunction(AstTypeDefinitionFunction function)
+        {
+            VisitChildren(function);
+        }
+
         public virtual void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
         {
             VisitChildren(enumType);

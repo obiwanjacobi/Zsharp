@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Zsharp.AST
 {
-    public class AstTypeDefinitionIntrinsic : AstTypeDefinition,
-        IAstTemplateSite
+    public class AstTypeDefinitionIntrinsic : AstTypeDefinition
     {
         public AstTypeDefinitionIntrinsic(AstIdentifier identifier, Type? systemType,
             AstTemplateParameterDefinition? templateParameter = null, bool isUnsigned = false)
-            : base(AstNodeType.Type)
         {
             this.SetIdentifier(identifier);
             IsUnsigned = isUnsigned;
@@ -78,24 +75,6 @@ namespace Zsharp.AST
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.U32);
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.U8);
             AddIntrinsicSymbol(symbols, AstTypeDefinitionIntrinsic.Void);
-        }
-
-        // true when type is a template definition
-        public bool IsTemplate => _templateParameters.Count > 0;
-
-        private readonly List<AstTemplateParameter> _templateParameters = new();
-        public IEnumerable<AstTemplateParameter> TemplateParameters => _templateParameters;
-
-        public bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
-        {
-            if (templateParameter == null ||
-                templateParameter is not AstTemplateParameterDefinition)
-                return false;
-
-            _templateParameters.Add(templateParameter);
-
-            Identifier!.TemplateParameterCount = _templateParameters.Count;
-            return true;
         }
 
         public override void Accept(AstVisitor visitor)

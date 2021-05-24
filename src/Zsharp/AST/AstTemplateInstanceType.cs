@@ -5,7 +5,6 @@ namespace Zsharp.AST
     public class AstTemplateInstanceType : AstTypeDefinition
     {
         public AstTemplateInstanceType(AstTypeDefinitionIntrinsic intrinsicTypeDef)
-            : base(AstNodeType.Type)
         {
             TypeDefinition = intrinsicTypeDef;
         }

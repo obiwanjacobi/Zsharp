@@ -6,7 +6,7 @@ namespace Zsharp.AST
 {
     [DebuggerDisplay("{Identifier}")]
     public class AstTypeReference : AstType,
-        IAstTemplateSite
+        IAstTemplateSite<AstTemplateParameterReference>
     {
         public AstTypeReference(Type_refContext context)
             : this()
@@ -116,10 +116,10 @@ namespace Zsharp.AST
             => TypeOrigin?.IsTemplate ?? _templateParameters!.Count > 0;
 
         private readonly List<AstTemplateParameterReference>? _templateParameters;
-        public IEnumerable<AstTemplateParameter> TemplateParameters
+        public IEnumerable<AstTemplateParameterReference> TemplateParameters
             => TypeOrigin?.TemplateParameters ?? _templateParameters!;
 
-        public bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
+        public bool TryAddTemplateParameter(AstTemplateParameterReference templateParameter)
         {
             if (TypeOrigin != null || _templateParameters == null)
                 throw new InternalErrorException(

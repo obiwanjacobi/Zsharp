@@ -658,7 +658,7 @@ namespace Zsharp.AST
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
 
-            var template = _builderContext.GetCurrent<IAstTemplateSite>();
+            var template = _builderContext.GetCurrent<IAstTemplateSite<AstTemplateParameterDefinition>>();
             template.AddTemplateParameter(templateParam);
 
             return templateParam;
@@ -672,7 +672,7 @@ namespace Zsharp.AST
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
 
-            var template = _builderContext.GetCurrent<IAstTemplateSite>();
+            var template = _builderContext.GetCurrent<IAstTemplateSite<AstTemplateParameterReference>>();
             template.AddTemplateParameter(templateParam);
 
             return templateParam;
@@ -686,7 +686,7 @@ namespace Zsharp.AST
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
 
-            var template = _builderContext.TryGetCurrent<IAstTemplateSite>();
+            var template = _builderContext.TryGetCurrent<IAstTemplateSite<AstTemplateParameterDefinition>>();
             if (template != null)
                 typeRef.IsTemplateParameter = template.TemplateParameters
                     .OfType<AstTemplateParameterDefinition>()

@@ -22,7 +22,7 @@ namespace UnitTests.AST
             s.Symbol.Definition.Should().Be(s);
             s.BaseType.Should().BeNull();
             s.IsTemplate.Should().BeTrue();
-            var tp = (AstTemplateParameterDefinition)s.TemplateParameters.First();
+            var tp = s.TemplateParameters.First();
             tp.Identifier.Name.Should().Be("T");
 
             var f = s.Fields.First();

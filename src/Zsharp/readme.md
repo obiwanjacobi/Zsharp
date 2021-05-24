@@ -9,7 +9,6 @@
 - grammar: Nested templates does not parse: `Struct<Array<U8>>`.
 - Move all Semantic errors to CheckRules.
 - Need a (source file) Location class around Antlr Context.
-- Rename AstModulePublic to AstModuleImpl (or something).
 - Identifier.CanonicalName for template (function) reference is wrong (type starts with lower case).
 - Canonical Name should preserve casing of character following a '.' (period).
     System.Console now becomes System.console
@@ -17,6 +16,8 @@
 - Add GenericParameters besides TemplateParameters (fix grammar #)
 - AstTemplateInstanceFunction has duplicate code with AstFunctionDefinitionImpl 
     and does not support partial templates (missing TemplateParameters).
+- AstFunctionParameterReference should not have a TypeReference for literal numeric.
+    Function resolvement also takes (template) parameters (and its types) to work.
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16).
     RetVal of operator overload determines resulting type.
     Type of target (variable) determines resulting type.
@@ -27,8 +28,6 @@
     Type Constructor functions are very similar - but without the self parameter.
 - Function Parameters are readonly variables. Add IsReadonly to AstVariableDefinition.
 - `_ = fn()` results in an Assignment without a Variable...
-- Add SymbolEntrySite to TypeDefinition/FunctionDefinition?
-    TryResolve only on references?
 - May need to split Function Type ([template] params + retval) from function definition name.
     Lambda's?
 - TypeReferences of built-in types are added to root SymbolTable that contains definition.

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Zsharp.AST
 {
-    public class AstTemplateInstanceStruct : AstTypeDefinition
+    public class AstTemplateInstanceStruct : AstTypeDefinitionWithFields
     {
         public AstTemplateInstanceStruct(AstTypeDefinitionStruct templateDefinition)
             : base(AstNodeType.Struct)
@@ -32,7 +32,7 @@ namespace Zsharp.AST
                 var fieldDef = new AstTypeDefinitionStructField();
                 fieldDef.SetIdentifier(new AstIdentifier(field.Identifier!.Name, field.Identifier.IdentifierType));
                 fieldDef.SetTypeReference(field.TypeReference!.MakeProxy());
-                AddField(fieldDef);
+                this.AddField(fieldDef);
 
                 type.Symbol!.SymbolTable.Add(fieldDef);
             }

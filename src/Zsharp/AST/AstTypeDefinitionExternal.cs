@@ -1,6 +1,6 @@
 ﻿namespace Zsharp.AST
 {
-    public class AstTypeDefinitionExternal : AstTypeDefinition,
+    public class AstTypeDefinitionExternal : AstTypeDefinitionWithFields,
         IAstExternalNameSite
     {
         public AstTypeDefinitionExternal(string @namespace, string typeName, AstTypeReference? baseType)

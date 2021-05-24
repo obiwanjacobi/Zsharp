@@ -2,16 +2,18 @@
 
 namespace Zsharp.AST
 {
-    public interface IAstTemplateSite
+    public interface IAstTemplateSite<T>
+        where T : AstTemplateParameter
     {
         bool IsTemplate { get; }
-        IEnumerable<AstTemplateParameter> TemplateParameters { get; }
-        bool TryAddTemplateParameter(AstTemplateParameter? templateParameter);
+        IEnumerable<T> TemplateParameters { get; }
+        bool TryAddTemplateParameter(T templateParameter);
     }
 
     public static class AstTemplateSiteExtensions
     {
-        public static void AddTemplateParameter(this IAstTemplateSite templateSite, AstTemplateParameter templateParameter)
+        public static void AddTemplateParameter<T>(this IAstTemplateSite<T> templateSite, T templateParameter)
+            where T : AstTemplateParameter
         {
             if (!templateSite.TryAddTemplateParameter(templateParameter))
                 throw new InternalErrorException(

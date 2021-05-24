@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstTypeDefinitionStruct : AstTypeDefinition,
-        IAstCodeBlockItem, IAstTemplateSite, IAstSymbolTableSite
+    public class AstTypeDefinitionStruct : AstTypeDefinitionWithFields,
+        IAstCodeBlockItem, IAstSymbolTableSite
     {
         public AstTypeDefinitionStruct(Struct_defContext context, AstSymbolTable parentTable)
             : base(AstNodeType.Struct)
@@ -44,23 +43,14 @@ namespace Zsharp.AST
             return success;
         }
 
-        // true when type is a template definition
-        public bool IsTemplate => _templateParameters.Count > 0;
-
-        private readonly List<AstTemplateParameter> _templateParameters = new();
-        public IEnumerable<AstTemplateParameter> TemplateParameters => _templateParameters;
-
-        public bool TryAddTemplateParameter(AstTemplateParameter? templateParameter)
+        public override bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
         {
-            if (templateParameter == null ||
-                templateParameter is not AstTemplateParameterDefinition)
-                return false;
-
-            Symbols.Add((AstTemplateParameterDefinition)templateParameter);
-            _templateParameters.Add(templateParameter);
-
-            Identifier!.TemplateParameterCount = _templateParameters.Count;
-            return true;
+            if (base.TryAddTemplateParameter(templateParameter))
+            {
+                Symbols.Add(templateParameter);
+                return true;
+            }
+            return false;
         }
 
         public override void Accept(AstVisitor visitor)
