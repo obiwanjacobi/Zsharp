@@ -9,6 +9,11 @@ namespace Zsharp.AST
             : base(context)
         { }
 
+        public AstTemplateParameterDefinition(AstIdentifier identifier)
+        {
+            this.SetIdentifier(identifier);
+        }
+
         protected AstTemplateParameterDefinition()
         { }
 

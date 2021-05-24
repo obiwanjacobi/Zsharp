@@ -17,14 +17,28 @@ namespace Zsharp.External
             {
                 var typeRef = new AstTypeReferenceExternal(typeReference);
                 typeRef.SetIdentifier(new AstIdentifier(
-                    ToZsharpName(typeReference.Name), AstIdentifierType.Type));
+                    ToZsharpName(typeReference), AstIdentifierType.Type));
                 _typeReferences.Add(key, typeRef);
             }
 
             return _typeReferences[key].MakeProxy();
         }
 
-        private static string ToZsharpName(string nativeName)
+        private static string ToZsharpName(TypeReference typeReference)
+        {
+            if (typeReference.IsArray)
+            {
+                if (typeReference.ContainsGenericParameter)
+                    return "Array%1";
+
+                var elementType = typeReference.GetElementType();
+                return $"Array;{ToZsharpScalarType(elementType.Name)}";
+            }
+
+            return ToZsharpScalarType(typeReference.Name);
+        }
+
+        private static string ToZsharpScalarType(string nativeName)
         {
             return nativeName switch
             {

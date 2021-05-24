@@ -150,6 +150,13 @@ namespace Zsharp.External
                 function.TryAddParameter(funcParam);
             }
 
+            foreach (var p in method.GenericParameters)
+            {
+                // TODO: GenericParameterConstraints
+                var templParam = CreateTemplateParameter(new AstIdentifier(p.Name, AstIdentifierType.Parameter));
+                function.AddTemplateParameter(templParam);
+            }
+
             return function;
         }
 
@@ -160,5 +167,8 @@ namespace Zsharp.External
             funcParam.SetTypeReference(typeRef);
             return funcParam;
         }
+
+        private static AstTemplateParameterDefinition CreateTemplateParameter(AstIdentifier identifier)
+            => new(identifier);
     }
 }
