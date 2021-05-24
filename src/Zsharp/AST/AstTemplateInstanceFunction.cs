@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public class AstTemplateInstanceFunction : AstFunctionDefinition,
         IAstCodeBlockSite, IAstSymbolTableSite
@@ -9,7 +7,6 @@ namespace Zsharp.AST
         {
             TemplateDefinition = templateDefinition;
             TrySetParent(templateDefinition.Parent);
-            Context = templateDefinition.Context;
         }
 
         public override bool IsIntrinsic => TemplateDefinition.IsIntrinsic;
@@ -21,6 +18,7 @@ namespace Zsharp.AST
 
         public void Instantiate(CompilerContext context, AstFunctionReference function)
         {
+            Context = function.Context;
             var cloner = new AstNodeCloner(context, TemplateDefinition.Indent);
             cloner.Clone(function, TemplateDefinition, this);
         }
@@ -53,12 +51,6 @@ namespace Zsharp.AST
                     throw new InternalErrorException("Function Parent not a SymbolTable Site.");
                 return site.Symbols;
             }
-        }
-
-        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node = null)
-        {
-            Ast.Guard(Symbols != null, "SymbolTable not set.");
-            return Symbols!.AddSymbol(symbolName, kind, node);
         }
 
         /// <summary>

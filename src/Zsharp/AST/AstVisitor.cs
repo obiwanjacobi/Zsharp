@@ -147,6 +147,11 @@ namespace Zsharp.AST
             VisitChildren(structTemplate);
         }
 
+        public virtual void VisitTemplateInstanceType(AstTemplateInstanceType typeTemplate)
+        {
+            VisitChildren(typeTemplate);
+        }
+
         public virtual void VisitTemplateParameterDefinition(AstTemplateParameterDefinition templateParameter)
         {
             VisitChildren(templateParameter);

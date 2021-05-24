@@ -10,7 +10,6 @@ namespace Zsharp.AST
         { }
 
         public AstTemplateParameterReference(AstTypeReference typeReference)
-            : base(null)
         {
             this.SetTypeReference(typeReference);
         }

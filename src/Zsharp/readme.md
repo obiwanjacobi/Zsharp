@@ -33,6 +33,7 @@
     Need to see if this is a problem when multiple files are compiled using the same root symbol table.
 - Namespace on AstSymbolEntry is wrong for imported module functions. 
     It should be the name of the external module but is the name of the local symbol table it is refered in.
+- Importing External modules does not find nested public classes (Zsharp.Runtime.Conversion.Checked).
 - Replace ExternalTypeRepository with a Symbol Table?
 - TrySetIdentifier should check if IdentifierType matches the AstNodeType.
 - TypeReference result of a comparison expression is not a Bool (but U8).

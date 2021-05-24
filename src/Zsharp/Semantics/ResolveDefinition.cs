@@ -333,12 +333,19 @@ namespace Zsharp.Semantics
                     if (type.IsTemplate)
                     {
                         var entry = type.Symbol;
-                        var templateType = entry!.SymbolTable.FindDefinition<AstTypeDefinitionStruct>(
+                        var typeTemplate = entry!.SymbolTable.FindDefinition<AstTypeDefinition>(
                             type.Identifier!.TemplateDefinitionName, AstSymbolKind.Type);
 
-                        if (templateType != null)
+                        if (typeTemplate is AstTypeDefinitionStruct structTemplate)
                         {
-                            var typeDef = new AstTemplateInstanceStruct(templateType!);
+                            var typeDef = new AstTemplateInstanceStruct(structTemplate);
+                            typeDef.Instantiate(type);
+                            entry.AddNode(typeDef);
+                            Ast.Guard(entry.Definition, "Invalid Template Definition.");
+                        }
+                        else if (typeTemplate is AstTypeDefinitionIntrinsic intrinsicTemplate)
+                        {
+                            var typeDef = new AstTemplateInstanceType(intrinsicTemplate);
                             typeDef.Instantiate(type);
                             entry.AddNode(typeDef);
                             Ast.Guard(entry.Definition, "Invalid Template Definition.");
@@ -353,6 +360,7 @@ namespace Zsharp.Semantics
                     }
                 }
             }
+
             VisitChildren(type!);
         }
 
