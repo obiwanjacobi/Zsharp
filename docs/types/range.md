@@ -169,3 +169,14 @@ arr = (1, 2, 3, 4, 5)
 loop v in arr[1..-2]    // 2, 3
     ...
 ```
+
+---
+
+> TBD
+
+Add a negative sign to do a reverse range?
+
+```csharp
+loop n in -[0..8]
+    for_n_7_6_5_4_3_2_1_0
+```

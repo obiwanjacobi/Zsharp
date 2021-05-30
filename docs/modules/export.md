@@ -15,22 +15,24 @@ The following types of identifiers can be exported:
 Here is an example of exporting a function:
 
 ```C#
+# export MyFunction
+// -or-
 # export
     MyFunction
     // more functions here...
-// -or-
-# export MyFunction
 
 MyFunction: ()
-    implementation_here
+    ...
 ```
 
 The `export` pragma can also be applied directly to the code identifier to be made publicly available:
 
 ```C#
 # export MyFunction: ()
-    implementation_here
+    ...
 ```
+
+> How we make clear(er) this is not a compile-time function?
 
 ## Aliasing
 

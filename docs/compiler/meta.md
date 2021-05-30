@@ -107,6 +107,21 @@ At the end of the scope the options are `pop`ed automatically and previous setti
 
 ---
 
+> TBD
+
+Add a pragma that provides the compilation context and the project settings (think Visual Studio macros).
+
+Project Setting | Description
+--|--
+`#project.targetPath` | Full path to the generated assembly.
+`#project.configuration` | Debug or Release
+
+---
+
+Compiler context are the current file, line, column, symbol etc functions?
+
+---
+
 ## Compile-Time Code
 
 _Any_ Z# code can be executed at compile-time. By placing a `#!` in front of the function, the compiler knows it is not to be included in the binary. The use of this symbol does not introduce an extra scope.
@@ -199,7 +214,7 @@ fn: <T>()
     ...
 ```
 
-All traits are compile time functions.
+All traits are compile time functions. (You may want this at runtime?)
 
 ---
 
@@ -252,6 +267,6 @@ Are pragma's, Compile-time functions and compiler functions all the same?
 
 Pragma's and compiler functions are the same and custom compile-time functions are simply a way to add 'pragma's'...?
 
-Invocation always uses `#` to indicate the compile-time nature of the result (you can `#`-call runtime functions if they can be evaluated at compile time). Compile-time functions are declared with `#!` to indicate they should not end up in the binary.
+Invocation always uses `#` to indicate the compile-time nature of the result (you can `#`-call runtime functions if they can be evaluated at compile time). Compile-time functions are declared with `#!` to indicate they should not end up in the binary. But that could also just be a `#`...
 
 Problem here is that some pragma's start a new scope and others don't. How to fix that?

@@ -148,7 +148,7 @@ catch => (err)  // err: Exception
     v = match err
         FileNotFoundException => "File not found"
         EndOfFileException => "File is at its end"
-        _ => _
+        _ => _  // throw?
 
     if v?
         return v

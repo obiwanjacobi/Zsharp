@@ -18,7 +18,7 @@ ptr: Ptr<U8>        // pointer to an U8
 Create a pointer:
 
 ```C#
-v = 42;
+v = 42
 ptr = v.Ptr()       // explicit call to make ptr
 ```
 
@@ -52,7 +52,7 @@ Pointer variables need to be initialized when declared or they must be made opti
 p: Ptr<U8>      // error! must have value or be optional
 p: Ptr<U8>?     // ok, no value - so optional
 
-a = 42;
+a = 42
 p: Ptr<U8> = a.Ptr()    // ok, ptr has value
 ```
 
@@ -206,9 +206,11 @@ When the code has a pointer to a function, it can be called by specifying the `(
 
 A function without implementation is called a function declaration or [Function Interface](interfaces.md).
 
+> Taking a function pointer by just using the name `fn = myFunction` clashes with the idea of leaving off the `()` for function calls to function with one parameter or less (poor man's properties and functional).
+
 ### Function Pointers in Structures
 
-Use function pointers in a structure fields as a way to simulate an (OO) object (by hand).
+Use function pointers in a structure fields as a way to simulate an (OO) object (by hand). Could be used to make virtual functions and implement polymorphism at the object level.
 
 Normal (data) fields can still be added - but are publicly accessible.
 
@@ -237,8 +239,6 @@ f: File
 p = f.open("path/to/file.txt")
 f.close(p)
 ```
-
-Could be used to make virtual functions (by hand) and implement polymorphism at the object level.
 
 ## Untyped Pointer
 
@@ -303,4 +303,4 @@ Reference Counted Pointer
 
 Weak Pointer
 
-Garbage Collected Pointer
+Garbage Collected Pointer (Reference)

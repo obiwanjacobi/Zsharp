@@ -4,9 +4,21 @@ Templates are processed at compile time. A template has one or more template par
 
 > In light of supporting .NET generics the type names for templates are to be prefixed with a `#` on the definition to indicate compile-time processing, where as .NET generics are not prefixed - to indicate runtime processing. Note that this is not consistently applied throughout the documentation yet.
 
-None-Type template parameters are always processed at compile-time.
+Naming Convention for template parameters:
 
-## Template Structures
+| Name | Application | Description
+|--|--|--
+| R | Return Type | Return type of a function
+| S | Self Type | Self function parameter type
+| T | Item Type | Use when only a single template parameter.
+
+All other template parameter names start with a capital letter and end with `T` (for types).
+
+`transform<#InputT, #OutputT>(input: InputT, output: OutputT)`
+
+None-Type template parameters are always processed at compile-time and do not have to be prefixed with a `#`.
+
+## Structure Templates
 
 ```C#
 MyStruct<#T>
@@ -27,7 +39,7 @@ s = MyStruct<OtherStruct>
 
 ---
 
-## Template Functions
+## Function Templates
 
 ```C#
 typedFn: <#T>(p: T)
@@ -54,10 +66,6 @@ z = typedRet()      // Error! cannot determine type
 ## Template Parameters
 
 Template parameters are applied at compile time. A parameter name (first char) _MUST_ be capitalized when it is used as a Type.
-
-> If Templates are nested `MyStruct<Array<U8> >` there __must__ be a space between each closing `>` angle bracket. Otherwise the current parser will interpret it as a `>>` bit shift right operator.
-
-Is this ^^ still a problem?
 
 ### Restricting Template Parameters
 
@@ -91,7 +99,7 @@ a = tfn(42)     // ok, U8
 a = tfn("42")   // error, Str not in Choice
 ```
 
-Restrict the template parameter based on metadata.
+Restrict the template parameter based on metadata (traits?).
 
 ```csharp
 // restricting on metadata?
@@ -105,11 +113,28 @@ TemplateType<#T#bits(8)=U8>  // not same as type rules syntax
     field: T
 
 // special custom data type syntax?
-ParamType: _
+ParamType:
     #bits = 8
 // apply rules to T and have parameter default (U8)
 TemplateType<#T: ParamType=U8>
     field: T
+```
+
+Require a parameterless constructor function.
+
+```csharp
+// require parameterless construction
+factory<#T: ()>()
+    return T()      // the type constructor function must exist
+
+// require specific type (or derived) with parameterless construction
+create<#T: MyStruct()>()
+    return T()
+
+// function U8() must exist
+f = factory<U8>()       // f: U8 (0 = default)
+// function MyStruct() must exist
+c = create<MyStruct>()  // c: MyStruct (all fields default)
 ```
 
 ### Type Template Parameter Inference
@@ -131,61 +156,62 @@ r = templateFn<U8, U8, U16>(42, 101)
 
 // ok, parameters and return type inferred
 r: U16 = templateFn(42, 101)
+
+// explicitly name the template param?
+r = templateFn<R=U8>(42, 101)
 ```
 
 ### Non-Type Template Parameters
 
-Although template parameters are usually types, it can be anything.
-
-```C#
-// non-type template params
-FixedArray<#T, count: U8>
-    arr: Array<T>(count)
-```
-
-We also allow function pointers to be specified as template parameters.
+Template parameters that are not type parameters can be specified in a similar fashion as a regular function parameter. However, the value is applied to the code (replaced if you will) at compile time. The name does not have to be capitalized.
 
 ```csharp
-call<fn: Fn<(I32): I32>>(p: I32)
-    return fn(p)
+fn<#T, ret: T>(): T
+    return ret
 
-negate: (i: I32): I32
-    ...
-absolute: (i: I32): I32
-    ...
-
-a = 42
-b = call<negate>(a)     // -42
-c = call<absolute>(a)   // 42
+// Can we infer T?
+n = fn<42>()        // n: U8 = 42
+s = fn<"Hello">()   // s: Str = 'Hello'
 ```
+
+Dimensioning data structures.
+
+```csharp
+DataStruct<count: U16>:
+    Names: Str[count]   // <= TDB
+```
+
+> We don't have syntax for statically dimensioning an array (list), yet!
 
 ### Code Template Parameters (inlining)
 
-Have a code block be substituted for a template parameter.
+> TBD
+
+Have a code block be substituted for a (non-type) template parameter.
 For that we need a compile-time code reference / function pointer.
 
-The goal is to insert code into a template that is compiled as a new whole.
+The goal is to insert code into a template that is compiled as a new whole. The function will (probably) be inserted into the template instantiation as a local function.
 
 ```csharp
-// takes a void-function with an U8 param 'as code' (#)
-repeat: <fn: #Fn<Void, U8>>(c: U8)
+// takes a function template parameter 'as code'
+repeat: <fn: Fn<U8>>(c: U8)
     loop n in [0..c]
-        fn(n)           // <= syntax to be determined
+        fn(n)   // need '#'?
 
 // use #! to not emit the fn in the binary
 #! doThisFn: (p: U8)
     ...             // <= body is inserted into the template
 
 // compiled as a new function (body)
-repeat<doThisFn>(42);
+repeat<doThisFn>(42)
 // will execute doThisFn (body) 42 times (p=0-41)
 ```
 
-The special syntax `#` (TBD) on the template parameter makes a distinction between passing in a function pointer (`Fn<T>`) -resulting in a function call- and copying in the code (`#Fn<T>`) which is basically inlining explicitly. Inlining allows the compiler to optimize the resulting code as a whole.
+---
 
 ### Template Parameter Defaults
 
-As with function parameters, template parameters can be set to a default value that can be overridden at the 'call site'.
+Template parameters can be set to a default value that can be overridden at the 'call site'.
 
 ```C#
 TemplateType<T=U8>
@@ -218,21 +244,28 @@ When use of specific template parameter values require specific code.
 typedFn: <T>(p: T)
     ...
 // Identified to be a specialization by name and function type (pattern).
-typedFn: <Bool>(p: Bool)
+typedFn: <Bool>(p: Bool)    // repeat '<Bool>'?
+typedFn: (p: Bool)          // or not?
     ...
 
 typedFn(42)         // generic typedFn<T> called
 typedFn(true)       // specialization typedFn<Bool> called
 ```
 
+When all template parameters are specialized a concrete type or function is created that is used as a template instantiation.
+
 ### Partial Specialization
 
+Partial specialization means partly specifying the template parameters (not all of them). The result is another template.
+
+Comparable to how function composition works where partially specifying function parameters yields another function.
+
 ```csharp
-templateFn: <S, T>(s: S, t: T): Str
+templateFn: <#S, #T>(s: S, t: T): Str
     ...
 
 // specialized for first parameter of Bool.
-templateFn:<Bool, T>(s: Bool, t: T): Str
+templateFn:<Bool, #T>(s: Bool, t: T): Str
     ...
 ```
 
@@ -244,17 +277,48 @@ For .NET interoperability we need to distinguish between .NET generics and Z# co
 
 ```csharp
 // run time
-generic<T>
+generic<G>      // emits 'generic<G>'
     ...
 
 // compile time
-template<#T>
+template<#T>    // emits 'template'
     ...
 
 // combination
-hybrid<#T, G>
+hybrid<#T, G>   // emits 'hybrid<G>'
     ...
 ```
+
+The .NET `where` constraints can be specified on generic parameter as restrictions in the same way as on template parameters.
+
+---
+
+## Duck Typing
+
+As an example here's a template that requires the type to have a property `Name` but it does not matter what Type it is specifically.
+
+```csharp
+// template function
+GetNameFrom: <S>(self: S): Str
+    return self.Name
+
+MyStruct
+    Name: Str
+
+s = MyStruct
+    Name = "Name"
+n = GetNameFrom(s)  // ok, name field
+
+// anonymous struct
+a = { Name = "MyName" }
+n = GetNameFrom(a)  // ok, name field
+
+x = 42
+n = GetNameFrom(x)  // Error - no Name field
+```
+
+This allows a sort of duck-typing. As long as the `self` parameter has a `Name` field the code can be compiled.
+
 ---
 
 > TBD

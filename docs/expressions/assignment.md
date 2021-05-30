@@ -1,8 +1,8 @@
 # Assignment Expressions
 
 | Operator | Function
-|-------|------
-| = | Assign value
+|--|--
+| = | Assign value (right to left)
 
 > The left operand of an assignment expression can not be a literal value.
 
@@ -34,9 +34,29 @@ if a = myFunc()      // error!
     ...
 ```
 
-## Chaining
+## Boolean Assignment
 
-> FIXME: Clashes with comparison is equal! (use parens around comparison?)
+> Assignment clashes with comparison is-equal operator!
+
+Use parenthesis around comparison.
+
+`[var] = (<bool expression>)`
+
+```csharp
+x = 42
+// unclear syntax
+a = x = 42
+
+// use () for comparison expression
+a = (x = 42)
+// a: Bool = true
+
+// make it a rule for all bool expressions?
+a = (x > 101)
+// a: Bool = false
+```
+
+## Assignment Chaining
 
 The assignment can be chained across multiple variables (left operand) that all get assigned the same value (right operand). Type inference works as expected and the inferred type is applied to all untyped vars.
 
@@ -63,11 +83,33 @@ s: MyStruct
     fld1 = 42
     fld2 = "42"
 
-// this will make a new copy of Struct
+// reference passing
 x = s
-x.fld1 = 101    // only changes x, not s
+// this will make a new copy of Struct
+x <= s
 
-b = s.fld1 = 42 // b = true
+// only changes x, not s
+x.fld1 = 101
+
+b = (s.fld1 = 42)
+// b = true
+```
+
+More on the `<=` operator:
+
+```csharp
+s: MyStruct
+    ...
+
+// copy same type
+x <= s  // x: MyStruct
+
+YourStruct
+    fld1: U8
+    fld2: Str
+
+// map / transform (default by field names)
+y: YourStruct <= s  // y: YourStruct -mapped
 ```
 
 ---
@@ -86,6 +128,8 @@ a = 42
 a ??= 101
 // a = 42
 ```
+
+> Or simply use `?=`
 
 ---
 
@@ -120,6 +164,9 @@ a: Atom<U8> = 42
 
 a.Lock()
 defer a.Unlock()    // defer keyword
+
+// compact syntax?
+a.Lock() -> defer .Unlock()
 
 a = 101
 
@@ -169,7 +216,7 @@ a: &U8 = 42
 
 > TBD
 
-## Deconstructing
+## Deconstruction
 
 > Use `()`
 

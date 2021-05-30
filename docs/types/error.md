@@ -36,7 +36,7 @@ So to return an `Error` from a function:
 
 ```C#
 couldErr: (p: U8): U8!
-    return Error("Failed for value {p}.");
+    return Error("Failed for value {p}.")
 ```
 
 As the example shows, a formatted string can be used to reveal extra information about the context where the error occurred in.
@@ -71,7 +71,7 @@ Wrap this construction code into a function for ease of use:
 MyError: (msg: Str, p: U8): MyError
     err = MyError
         err.f1 = p
-    return Error(msg, err);
+    return Error(msg, err)
 
 couldErr(p: U8): U8!
     return MyError("Failed.", p)    // custom fn

@@ -4,7 +4,9 @@ Most operators are syntactic sugar over a set of wellknown functions.
 
 Of these wellknown functions there are two flavors: unchecked and checked implementations. The unchecked flavor is used in the final program and its implementation is optimized to the fullest extend. The checked version implements extra validation and 'checking' to help make sure the code is correct.
 
-> Use identifier prefixes to identify checked/unchecked operator functions. (`checked_` / `unchecked_`?)
+> Use identifier prefixes to identify checked/unchecked operator functions implementations. (`checked_` / `unchecked_`?)
+
+Note that `checked` and `unchecked` do not refer to the .NET variants. It only means that any conversion the operator does is checked to be correct (or not checked).
 
 ## Operator Symbols
 
@@ -12,12 +14,12 @@ Arithmetic, bitwise and logical operators.
 
 | Operator | Fn Name | Description
 |--|--|--
-| `+` | Add | Addition / Absolute? (unary)
-| `-` | Subtract, Negate | Subtraction / Negation (unary)
-| `*` | Multiply | Multiplication
-| `/` | Divide | Division
-| `%` | Remainder | Remainder
-| `**` | Power | Power
+| `+` | ArithmeticAdd | Addition / Absolute? (unary)
+| `-` | ArithmeticSubtract, ArithmeticNegate | Subtraction / Negation (unary)
+| `*` | ArithmeticMultiply | Multiplication
+| `/` | ArithmeticDivide | Division
+| `%` | ArithmeticRemainder | Remainder
+| `**` | ArithmeticPower | Power
 | `( )` | - | Math Precedence, Function Call, List Literal
 | `=` | IsEqual | Equals
 | `<>` | IsNotEqual | Not Equals
@@ -28,6 +30,7 @@ Arithmetic, bitwise and logical operators.
 | `? :` | - | Ternary Conditional (if-else)
 | `and` | LogicAnd | Logical And
 | `or` | LogicOr | Logical Or
+| `xor` | LogicXor | Logical Xor
 | `not` | LogicNot | Logical Negation
 | `&` | - | Bitwise And
 | `|` | - | Bitwise Or
@@ -37,38 +40,41 @@ Arithmetic, bitwise and logical operators.
 | `<<` | - | Bitwise Shift Left
 | `>|` | - | Bitwise Rotate Right
 | `|<` | - | Bitwise Rotate Left
+| `->>` | - | sign extend (arithmetic) bit shift right
 | `=` | - | Value Assignment
 | `:=` | - | Value Assignment with inferred Type
 
 > Ternary operators cannot contain other ternary operators. No nesting of `? :` for readability.
 
+Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `nxor`?
+
 ## Other Symbols
 
 | Symbol | Description
 |---|---
-| `_` | Unused / Discard
+| `_` | Unused / Discard / Hidden
 | `.` | Members Access
 | `..` | Range operator
 | `...` | Spread operator
 | `,` | List Separator
 | `:` | (Sub)Type Specifier
-| `;` | Line separator
+| `;` | Line break/separator
 | `< >` | Type Parameter
 | `( )` | Function / Tuple / Array/List initialization
-| `" "` | String
-| `' '` | Character
-| `@` | Disable String formatting features / Compiler Function?
+| `" "` | String Literal
+| `' '` | Character Literal
+| `@` | Disable String formatting features / keyword escape
 | `{ }` | String formatting parameter / Code Decorator / Object construction
 | `[ ]` | Index / Slice / Range / Capture
 | `!` | Possible Error (return type)
-| `?` | Optional variable or parameter/return value
+| `?` | Optional variable or parameter/return value (boolean operator)
 | `??` | Optional variable fallback
 | `??=` | Optional variable conditional assignment
-| `#` | Pragma / Attribute Access
-| `#!` | Compile-Time Code
+| `#` | Pragma / Attribute access / Execute at compile-time
+| `#!` | Compile-time code definition
 | `->` | Line continuation (instead of indent)
 
-> Are there others like conditional assignment `??=`?
+> Are there others like conditional assignment `??=`? Can any (applicable) operator be made conditional by prefixing `??` to it?
 
 ## Type operators
 
@@ -94,6 +100,8 @@ Arithmetic, bitwise and logical operators.
 | `<|` | Reverse parameter pipe?
 | `<=>` | Swap operator
 | `::` | reserved
+| `<-` | reserved
+| `''` | Delimiters for a symbol name with special characters.
 
 ---
 
@@ -110,16 +118,21 @@ These operators cannot be overloaded, they simply use the standard operators.
 | `-=` | read - subtract - write
 | `*=` | read - multiply - write
 | `/=` | read - divide - write
-| 1) | See note 1
+| `%=` | read - modulo/remainder - write
+| `**=` | read - power - write
+| `>>=` | read - shift right - write
+| `<<=` | read - shift left - write
+| `>|=` | read - roll right - write
+| `|<=` | read - roll left - write
 | `?=` | read - test - write (locking?)
 | `!=` | read - ?? - write
-| `%=` | read - ?? - write
-| `&=` | read - ?? - write
+| `&=` | read - bit and - write
+| `|=` | read - bit or - write
+| `^=` | read - bit xor - write
 | `$=` | read - ?? - write
-| `^=` | read - ?? - write
-
-1) The following operators can also be used:
-`%`, `**`, `>>`, `<<`, `>|`, `|<`
+| `^=` | read - 'immutable' ?? - write
+| `|>=` | ?
+| `<|=` | ? (or `=<|`)
 
 Do we allow a list of right values? (yes)
 
@@ -127,6 +140,8 @@ Do we allow a list of right values? (yes)
 a = 42
 a += (12, 23, 34)
 // a = a + 12 + 23 + 34
+
+a += (x, y, z)
 ```
 
 ---
@@ -150,16 +165,33 @@ ptr =* a    // ptr: Ptr<U8>
 imm =^ a    // imm: Imm<U8>
 ```
 
+> Or are these conversions implicit?
+
 ---
 
 > What if operators cause overflow (or underflow)? A bitwise shift `<<` can shift out bits - sort of the point. Does every operator determine for itself if overflow is a problem or is there a general principle?
+
+> What syntax to specifically use/call checked or unchecked operator implementations? How to ignore overflow?
+
+```csharp
+a = 42
+// checked on U16 target by default
+x: U16 = a ** a
+
+// use explicit conversion overload?
+x: U16 = U16(a ** a, .Unchecked)
+
+// use explicit conversion function?
+x: U16 = U16unchecked(a ** a)
+
+// unchecked operator?
+x: U16 = $(a ** a)
+```
 
 ---
 
 > TBD
 
-- using two single quotes for a character `'x'` is nice and symmetrical but also redundant. Is there a shorter way to specify characters: `'x`? Only really need to address this if we want to use `'` for something else...
-
 - an operator to test for 'nothing' (optional) or 'default'?
 
-- allow custom defined operators? `.>>.`, `|<<` etc. Requires identifiers to be less strict.
+- allow custom defined operators? `.>>.`, `|<<` etc. Requires identifiers to be less strict. Also requires escape characters in function definition symbol: `''.>>.'': (...): Bool`

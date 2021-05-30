@@ -52,13 +52,31 @@ if (42 = 42)    // if statement (+ space)
 if(42)          // function call (no space)
 ```
 
-Note that `if` is a reserved keyword and no named language element can have the same name as a reserved keyword.
+Note that `if` is a reserved keyword and no named language element can have the same name as a reserved keyword. Maybe have an escape character?
 
 ---
 
 ## Return
 
 todo
+
+### Return Expressions
+
+> TBD
+
+The idea here is that the last expression value in the function body is automatically the return (type and) value.
+See this used in functional languages, but also Rust.
+
+```csharp
+fn1: (): Bool
+    true
+
+fn2: (p: U8): Bool
+    p = 42
+
+fn3: (): Bool
+    fn1()
+```
 
 ---
 
@@ -84,13 +102,16 @@ A 'while loop' just adds a condition to the statement:
 ```C#
 loop false
     never_get_here
+
+loop true
+    endless_loop
 ```
 
 A 'for' or 'for-each' loop is constructed using a `Range`.
 
 ```C#
 loop n in [0..10]
-    foreach_n_1_to_9
+    foreach_n_0_to_9
 ```
 
 Loop a number of times
@@ -101,13 +122,20 @@ loop 42
 
 c = 42
 loop c
-    do_this_42_times    // is c available - and what value?
+    do_this_42_times    // is c available (value=42)
+```
+
+Reverse loop
+
+```csharp
+loop n in -[0..5]
+    n_from_4_to_0
 ```
 
 > TODO: loop with more than one range? Hard to control behavior.
 
 ```csharp
-loop w in [5..0], h in [0..10]
+loop w in -[0..5], h in [0..10]
     w_makes_two_rounds_and_h_one
 ```
 
@@ -134,6 +162,12 @@ loop [0..10] -> LogInt
 ```
 
 > TBD Functional loops. Pass in a function or a lambda as a loop body.
+
+```csharp
+// iterator function
+loop n in Iter()
+    work_with_n
+```
 
 ---
 
@@ -204,9 +238,11 @@ exit(fn)            // exits function (return)
 exit(co)            // exits coroutine (yield)
 exit(iter)          // exits current iteration (continue)
 exit(loop)          // exits loop (break)
-exit(..)            // exits current scope (1 up)
+exit(scope)         // exits current scope (1 up)
 exit(err)           // throw exception
 ```
+
+`fn`, `co`, `iter` etc.. are enum values.
 
 ```csharp
 fn: (p: U8): U8
@@ -220,6 +256,8 @@ fn: (p: U8): U8
     exit(fn) c  // return c
 ```
 
+Downside is that this does not work with nested loops for instance.
+
 > use `leave` instead of `exit`?
 
 ---
@@ -227,9 +265,15 @@ fn: (p: U8): U8
 > TBD: a way to continue or break a specific outer loop in case of nested loops - or - specifying `exit()` with a variable / symbol name that identifies the instance of what to exit
 
 ```csharp
-fn: (p: U8)
+loopFn: (p: U8)
     lp1: loop n in [0..p]   // label the loop?
         loop i in [0..9]
             if n + i = 42 -> exit(n)       // continue
             if n + i = 101 -> exit(lp1)    // break outer
+            // alternate syntax - no labels required
+            if n + i = 101 -> exit(loop n) // break outer
+        if n = 42
+            exit(loopFn)    // return from function
+        if n = 101
+            exit(Error("Too large")) // throw exception
 ```

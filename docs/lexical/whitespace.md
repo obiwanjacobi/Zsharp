@@ -60,33 +60,32 @@ global-scope        // exports
 
 As a general rule: broken up lines continue on the next line one indent further than a new (child) scope would be: a double indent.
 
+Use the line break `;`.
+
+```csharp
+
+```
+
 ## Merging lines
 
-To merge separate lines onto a single one, use the `,` to separate each 'line'.
+Use the `->` operator to continue a line of code.
 
 ```csharp
 fn: ()
-    if true, doStuff(), else, doNothing()
-```
+    // you cannot write this
+    if true doStuff() -> else doNothing()
+    // use this instead
+    true ? doStuff() : doNothing()
 
-> TBD I may want to introduce a 'single statement' rule that would also make lambda's and `match` easier. It would allow one single statement to be specified on the same line.
+    a = 42
+    // useful for match case continuation
+    x = match a
+        Error -> "This is an error"
+        U8 -> "This is an unsigned 8-bit.
+        _ -> "I don't know what this is"
 
-Our example would lose a comma or two:
-
-```csharp
-fn: ()
-    if true doStuff(), else doNothing()
-    // or
-    if true => doStuff(), else => doNothing()
-    // mixup with lambdas?
-    if (true) => doStuff(), else => doNothing()
-```
-
-> Also may decide to use `;` instead of `,`
-
-```csharp
-fn: ()
-    if true doStuff(); else doNothing()
+    // also used for lambda's
+    spaces = x.Where((c) -> c = ' ')
 ```
 
 ### Literal Strings
@@ -123,4 +122,20 @@ function_with_params_but_no_commas: (
         p5: Str
 )
     ...
+```
+
+> The `()` are becoming the list delimiters. Does not using commas also apply to general lists?
+
+```csharp
+lst = (
+        1
+        2
+        3
+        4
+        5
+        6
+)
+
+// would be the same as
+lst = (1, 2, 3, 4, 5, 6)
 ```

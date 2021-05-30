@@ -104,6 +104,8 @@ byref(v.Ptr())            // call with ptr to value
 
 > TBD: it would be nice to be able to see if a variable or parameter was an literal value. Then specific logic could be applied in these cases. For instance, when a parameter is a literal, the result of the function could be made immutable?
 
+- Require specifying the parameter name when a literal is used?
+
 Allow function overloads with some sort of special syntax for literal values?
 
 Function Pointer as function argument syntax:
@@ -503,6 +505,8 @@ fn: (p: U8): U8
 fnStruct: (self: Struct1) = fn(self.fld1)
 ```
 
+> `.NET`: When the type of the `self` parameter is being compiled, the function is generated as a class method. If the `self` type is external the function is generated as an extension method.
+
 ### Overriding Self Bound Functions
 
 > TBD: How would that work?
@@ -579,7 +583,7 @@ A function with the same name as a (struct) type is considered a Type Constructo
 The return type of the function is the type being constructed. A Type constructor or conversion function can have any number of parameters of any type including the type being constructed (which makes it a copy-constructor).
 
 If both the return type as well as the first parameter type are the same and immutable, the constructor function will be called whenever the 'with' syntax (not the context variables) is encountered for that immutable type. See [Immutable Types](types.md#Immutable-Types).
-If multiple overloads exist, standard overload reolution is applied to choose the correct function to call.
+If multiple overloads exist, standard overload resolution is applied to choose the correct function to call.
 
 More information on [Type Constructors](types.md#Type-Constructors) and [Conversions](conversions.md).
 
@@ -591,10 +595,10 @@ A local function is a function that is defined inside another function and is lo
 
 In other aspects they are no different from other functions.
 
-```C#
+```csharp
 MyFunc: (): U8
     LocalFun: (p: U8): U8
-        return p << 1;
+        return p << 1
 
     return LocalFun(42)
 ```
@@ -670,7 +674,7 @@ import
 
 // Fn => (): Void
 l = List<Fn>(10)
-loop c in [0, 10]
+loop c in [0..10]
     l.Add([c]() -> Print(c))
 for fn in l
     fn();   // what does it print?
@@ -784,6 +788,8 @@ ReportProgress(self, ProgressEvent progressEvent)
     progressEvent(self, progress)
 ```
 
+> `.NET`: delegates and events?
+
 ---
 
 ## Weak Functions
@@ -826,6 +832,11 @@ A pure function -without side-effects- can be recognized by the lack of (mutable
 
 > This is not always true (a database read function may return different results for the same inputs - even if we explicitly capture the non-mutable database connection) so we may need to introduce special syntax to indicate pure functional functions...
 
+Pure functions can only call other pure functions. Impure functions (with side-effects) can also call pure functions.
+Pure functions cannot call impure functions, ever.
+
+> The question is can the compiler detect that.
+
 ```csharp
 // has imm param but potentially writes to globalVar
 sideEffect: [globalVar.Ptr()](p: Ptr<Imm<U8>>)
@@ -838,11 +849,12 @@ pureFn: (x: U8, y: U8): U16
 pureFnMaybe: [globalVar](x: U8, y: U8): U16
 
 // special syntax to promise purity?
-// on the return type?
+// on the return type? (haskal uses IO for impure)
 pureFnMaybe: [globalVar](x: U8, y: U8): Pure<U16>
 // with a 'pure' keyword?
 pure pureFnMaybe: [globalVar](x: U8, y: U8): U16
-
+// with a 'fun' keyword?
+fun pureFnMaybe: [globalVar](x: U8, y: U8): U16
 ```
 
 A higher order function is a function that takes or returns another function (or both).
@@ -863,13 +875,13 @@ See also [Piping Operator](#Piping-Operator).
 
 > Composition and value piping are different concepts. Function Composition is building functions from other functions at compile time. Value piping chains (result) values between multiple function calls (result of one function is parameter for next function).
 
-Due to our choices in syntax most of these functional principles has to be spelled out. We could make an exception for not having to specify the `()` [when there is only one (or no) parameter?].
+Due to our choices in syntax most of these functional principles has to be spelled out. We could make an exception for not having to specify the `()` [when there is only one (or no - for poor man's property syntax) parameter?].
 
 ```csharp
 add: (p1: U8, p2: U8): U16
     return p1 + p2
 // partial application by hand
-add42: (p: U8): U16
+add42= (p: U8): U16
     return add(42, p)
 ```
 
@@ -882,7 +894,7 @@ fn: (p1: U8, p2: Str): Fn<(U8): U8>
     return internalFn
 ```
 
-> TBD: a syntax that allows function composition in a way that inlined at compile time. Basically a template function with functional template parameters.
+> TBD: a syntax that allows function composition in a way that inlined at compile time. Basically a template function with functional template parameters. Use function alias syntax.
 
 ```csharp
 fn: (p: U8, s: Str)
@@ -897,7 +909,31 @@ compFn(42)
 // fn(42, "42")
 ```
 
+How about (inline) partial application?
+
+Partial application results in an anonymous function that may be compiled to an function impl.
+
+```csharp
+fn: (p: U8, s: Str)
+    ...
+
+// what syntax to indicate partial application
+// instead of trying to call a potential overload?
+partialFn = fn(42,)
+partialFn("42") // calls fn(42, "42")
+
+// also good
+partialFn = fn(,"42")
+partialFn(42) // calls fn(42, "42")
+
+// by name? (still need syntax to differentiate overloads)
+partialFn = fn(s="42")
+partialFn("42") // calls fn(42, "42")
+```
+
 > Can you take a reference/pointer to a composite function? If you do, you create an actual function stub with the composition compiled.
+
+> `.NET`: Functions with captures (lambdas) and partial application will probably result in function classes that have members for the captured data and/or the applied (partial) function parameters.
 
 > TODO: look into monads. I don't understand them yet.
 
@@ -1014,11 +1050,15 @@ Captures also may be used as a synchronization mechanism for shared data. At the
 
 In case of a mutable capture, it's value is written back to the original storage when the block of code is completed.
 
+> Should mutable captures be renamed/aliased? `[x = y.Ptr()]`
+
 That would also suggest that capture blocks themselves could be multi-threading / execute separately from other parts of the function if the dependencies would allow it. Not sure if this 'feature' would be desirable for it would make reasoning about the code harder.
 
 > How do we allow to opt-in for all these different capture behaviors?
 
 > We do need a mechanism to handle conflicts when writing back captured data? Or is this managed by using the correct Data type wrapper (`Atom<T>`)?
+
+> Add syntax/semantics for auto-disposing captured vars?
 
 > Perhaps as an optimization, immutable captures (in general) could be passed as references to a parent stack frame?
 
@@ -1081,7 +1121,7 @@ Does this only work for functions? (string and list concatenation?)
 
 ```csharp
 // C++ style output?
-yourName = "Arthur";
+yourName = "Arthur"
 outStream <| "Hello " <| yourName
 
 // C++ style input?
@@ -1092,7 +1132,7 @@ inStream |> yourName
 
 ```csharp
 // C++ style output?
-yourName = "Arthur";
+yourName = "Arthur"
 outStream +| "Hello " +| yourName
 
 // C++ style input?

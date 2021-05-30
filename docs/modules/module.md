@@ -27,29 +27,7 @@ In a sense, the module name is also the namespace of the code in the file.
 
 > Should the module statements `module` and `import` only be used at the top of the file, or can they appear anywhere?
 
-> TBD: Circular references?
-
----
-
-> A way to import modules into a local scope?
-
-```csharp
-fn: ()
-    use mod1        // load at runtime?
-    # import mod1   // load at compile-time?
-    s = Struct1     // from mod1
-        ...
-```
-
-Does loading at runtime (`use`) require the containing function to have an `Err<T>` return type? Will the program be aborted when the module is not found or can it be handled gracefully?
-
-```csharp
-fn: ()
-    use mod1 catch err
-        // handle loading error
-```
-
-Does `use` return a type that represents the loaded module? Something like `Err<Ptr<ModuleInfo>>`
+> TBD: Circular references are not supported.
 
 ---
 

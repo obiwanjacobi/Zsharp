@@ -12,7 +12,7 @@ arr = [1, 2, 3, 4, 5]#imm               // 5 x U8
 arr: Imm<Array<U16>> = [1, 2, 3, 4, 5]  // 5 x U16
 
 arr[0] = 42                     // error!
-arr: Array<U16> = [1, 2, 3, 4, 5]#imm  // error! arr is not imm
+arr: Array<U16> = [1, 2, 3, 4, 5]#imm  // error! arr is not Imm<T>
 ```
 
 A mutable array has its size specified up front, but the contents of its elements can be changed dynamically in code.
@@ -26,6 +26,15 @@ arr = Array<U8>([1, 2, 3, 4])   // 4 x U8
 arr = Array<U8>(10)             // 10 x U8 (all 0)
 
 arr[0] = 42                     // first element now has value 42
+```
+
+> What is the syntax to specify a fixed array in a structure?
+
+```csharp
+MyStruct:
+    arr: Array<U8>(10)
+    arr: U8[10]
+    arr: U8(10)
 ```
 
 There are two ways to select array elements:
@@ -69,6 +78,8 @@ arr2 = arr[..]              // arr2 = all elements (slice, not a copy!)
 ```csharp
 Array<T> : T[]     // variable length at compile time
 ```
+
+---
 
 ## Array Pointers
 

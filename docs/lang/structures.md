@@ -87,7 +87,6 @@ s = MyContainer
 > This needs to be revised for .NET interop.
 
 A structure can contain bit fields using the `Bit<T>` type.
-All fields using the bit data type will be grouped together.
 
 So the following example will only take up 1 byte:
 
@@ -98,9 +97,7 @@ MyStruct
     field3: Bit<3>      // bit 5-7
 ```
 
-When the total number of bits exceed a byte the rest of the bits is packed into a new byte. Bit fields never cross byte boundaries.
-
-When bit fields are combined with other types, the bit fields are grouped to optimize byte usage.
+Bit fields can be combined with other types.
 
 ```C#
 MyStruct
@@ -116,17 +113,7 @@ The resulting structure has 3 bytes worth of bit fields and one byte for the oth
 
 > What will be the #offset for a bit field? (byte-offset/bit-offset)
 
-When a larger (than 8-bit-based) bit field type is needed the structure can be derived from an unsigned built-in data type. But the structure can no longer be mixed with non-bit field fields.
-
-```C#
-MyStruct: U16
-    field1: Bit<2>      // bit 0-1
-    field2: Bit<4>      // bit 2-5
-    field3: Bit<4>      // bit 6-9
-    field4: Bit<4>      // bit 10-13
-    field5: Bit<4>      // error! cannot overflow
-    other: U8           // error! only bit fields
-```
+> Should this be a union type?
 
 ## Nested Declaration
 
@@ -152,7 +139,7 @@ Struct
     name: Str
 ```
 
-Nested inside a function?
+Nested inside a function? (yes)
 
 ```csharp
 someFn: (p: U8)
@@ -171,6 +158,8 @@ someFn: (p: U8)
 
 The fields of a structure are layed out in the order of their definition starting at the base structure type. No alignment or filler bytes are added.
 
+> `.NET` does the actual layout in memory.
+
 ## Tables
 
 > Find a way to allow to easily define tables of data using struct types in an array.
@@ -180,10 +169,10 @@ MyStruct
     fld1: U8
     fld2: Str
 
-arr: Array<MyStruct> = [
+arr: Array<MyStruct> = (
     { fld1 = 42, fld2 = "42" },     // by name
     { 101, "101" },                 // in field order
-]
+)
 ```
 
 If we allow this, then we can also move towards easy structure instantiation (ala JS/Json).
@@ -226,7 +215,9 @@ v: MyStruct1 =
 
 Also known as Tuples.
 
-> Use `{}`
+> `.NET` makes a distinction between (two types of) tuples and anonymous types - Z# does not. We do need to choose how Z# is going to leverage these .NET Tuples in the code generation.
+
+> Use `{}` for object creation syntax.
 
 ```csharp
 a = { Fld1 = 42, Fld2 = "42" }
@@ -239,59 +230,39 @@ y = a.Fld2  // Str
 (fld1, fld2) = a
 // build new tuple from vars
 b = { fld1, fld2 }
+
+same = (a = b)
+// true: compared on value semantics
 ```
 
 Preferred is to use field names for tuples, but even those can be omitted but then deconstruction has to be used to unpack.
 
 ```csharp
-// no structure type, no field names
+// no structure type name, no field names
 x = { 42, "42" }
-// C# does this:
+// C# does this (not for ValueTuple though):
 x.Item1 // Error: Item1 does not exist
 
-// to use, deconstruct in order
+// to use, must deconstruct in order
 (n, s) = x
 // n = 42 (U8)
 // s = "42" (Str)
 ```
 
-> We want to line up the syntax (and semantics) with the parameters of a function call. Adopting a global rule that 'field-lists' (tuples, function params, deconstructs etc) can be build in-order or named or a combination (see function parameters). Array initialization too? `arr = (1, 2, 3, 4)`
-
-> TBD: What is the syntax (type) for an anonymous structure?
+This is how you reference anonymous types in code.
 
 ```csharp
-anoStructFn: (s)        // no type
-anoStructFn: (s: Any)   // suggests passing a Str is valid
-anoStructFn: (s: Dyn)   // indicates the runtime aspect of discovering fields
-anoStructFn: (s: Struct)    // must be a struct
-anoStructFn: (s: Record)    // other name for struct?
-
-// this is most correct, albeit somewhat verbose
-anoStructFn: (s: {U8, Str}) // tuple like
-anoStructFn: (s: (U8, Str)) // not an object, => definition
-// What about the tuple field names?
+// have to repeat the structure of the type
 anoStructFn: (s: (number: U8, name: Str))
+// if the anonymous type also has no field names
+anoStructFn: (s: (U8, Str))
 ```
 
-Or repeat the struct fields...
+> We want to line up the syntax (and semantics) with the parameters of a function call. Adopting a global rule that 'field-lists' (tuples, function params, deconstructs etc) can be build in-order or named or a combination (see function parameters). Array initialization too? `arr = (1, 2, 3, 4)` - has no field names!
 
 ---
 
-This is more a template thing...
-
-```csharp
-// template function
-PropGetFn: <S>(self: S): Str
-    return self.Name
-
-// anonymous struct
-s = { Name = "MyName" }
-p = PropGetFn(s)
-```
-
-This allows a sort of duck-typing. As long as the `self` parameter has a `Name` field the code can be compiled.
-
-## Mapping
+## Transformation (Mapping)
 
 > TBD
 
@@ -312,23 +283,28 @@ s2: Struct2 <= s1
 
 Transform using a custom Type and rules/constraints?
 
+Requires some library plumbing code.
+
 ```csharp
-// Transform would be a compiler supported type.
+// marker type for compiler
+Transform<T1, T2>
+    ...
+// these functions are templates where the mapping rules are compiled into
+transform: <T1, T2>(self: Transform<T1, T2>, source: T1): T2
+    ...
+reverseTransform: <T1, T2>(self: Transform<T1, T2>, source: T2): T1
+    ...
+```
+
+```csharp
+// Transform is the compiler supported marker type.
 MapS1ToS2: Transform<Struct1, Struct2>
     #Struct2.fld1 = #Struct1.x
     #Struct2.fld2 = #Struct1.y
 
-// call as function object '()' operator?
-s2 = MapS1ToS2(s1)
-// as (overloaded) function on `Transform` type?
-s2 = s1.Transform()
-// reverse mapping
-s1 = s2.Transform()
-// as operator?
-s1 <= s2
+s2 = MapS1ToS2.transform(s1)
+s1 = MapS1ToS2.reverseTransform(s2)
 ```
-
-How does the `Transform()` function access the mapping when the `self` parameter is one of the source/destination types?
 
 ```csharp
 // Transform could support all kinds of hooks (overrides)
@@ -346,12 +322,15 @@ MapStruct1Struct2: Transform<Struct1, Struct2>
     #Struct2.fld1 <= #Struct1.x     // src => dest
     #Struct2.fld2 <=> #Struct1.y    // src => dest and reverse
     #Struct2.fld3 => #Struct1.z     // dest => src
-
-// reverse transformation
-s1 = s2.Transform();
 ```
 
-More complex mappings? Like splitting or joining fields? Conditional mapping/logic? External dependencies? Calling helpers for transformation? Nested objects/object trees?
+> TBD: More complex mappings:
+
+- Splitting or joining fields?
+- Conditional mapping/logic?
+- External dependencies?
+- Calling helpers for transformation?
+- Nested objects/object trees?
 
 ```csharp
 CustomFn1: (Struct1 self): U16
@@ -376,7 +355,7 @@ MapStruct1Struct2: Transform<Struct1, Struct2>
 
 ```csharp
 MapStruct1Struct2: Transform<Struct1, Struct2>
-    // match fields by name
+    // match fields by name (2-way)
     #Struct1 <=> #Struct2
 ```
 
@@ -386,4 +365,4 @@ If no mapping rule structure is defined the field names are matched on a 1:1 bas
 
 > TBD
 
-- Allow YAML to be used inline for declaring hierarchical data? Not sure how to separate the YAML syntax from the Z# syntax.
+- Allow YAML/JSON/XAML/XML to be used inline for declaring hierarchical data? Not sure how to separate the YAML/JSON/XAML/XML syntax from the Z# syntax.

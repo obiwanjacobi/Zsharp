@@ -60,4 +60,23 @@ createResourceFn: (): Resource!
 > TBD
 
 Can we use `defer` for other deferred execution?
-Linq does deferred execution and it is common in functional programming to defer actual execution of (composed) functions until a value is requested (a function the returns an 'infinite' set of values, but only providing one value at a time).
+Linq does deferred execution and it is common in functional programming to defer actual execution of (composed) functions until a value is requested (a function that returns an 'infinite' set of values, but only providing one value at a time).
+
+---
+
+Can we tag functions that require `defer` to cleanup resource acquired by another (tagged) function?
+
+```csharp
+// how??
+Open: (identity: Str): Resource
+    ...
+Close: (resource: Resource)
+    ...
+
+// mark as a defer candidate
+Close: (resource: Resource) defer
+
+d: Dispose<Resource> = Open("...")
+defer d.Dispose()       // implicit
+// calls Dispose(self: Resource) on exit
+```

@@ -38,13 +38,15 @@ Keyword | Description
 `errdefer` | defers execution till exit with error
 `out` | opposite of in?
 `var` | thread local?
+`def` | default? (looks like define!)
 `ref` | explicit reference? / read-only pointer?
-`deref` | unpack a reference
+`deref` | unpack a reference (too similar to defer)
 `use` | inline module imports?
 `any` | a type that can be anything (object)
 `asm` | inline assembly (IL?)
 `with` | context variables
 `async` | async execution
 `await` | awaiting async execution
+`fun` | for pure functions?
 
 > Use `var` to make mutable variables and normal syntax is always immutable?

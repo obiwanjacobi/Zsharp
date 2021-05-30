@@ -100,6 +100,8 @@ s = "This will print `{braces`}"
 
 Using the `{}` characters as is in a string literal, requires the escape sequence `.
 
+> More on formatting floats, dates, etc.
+
 > What character to use to disable string features like formatting? `@`
 
 ```C#
@@ -135,7 +137,17 @@ Characters are interpreted as a single unsigned byte, assuming ASCII.
 There is a syntax for specifying literal arrays of basic types:
 
 ```C#
-arr = [1, 2, 3, 4, 5]           // 5 elements of U8
+arr = (1, 2, 3, 4, 5)           // 5 elements of U8
+```
+
+## Immutable (Constant) Literal
+
+Syntax for inferring literals to an `Imm<T>` type. There is an operator for that: `^`.
+
+```csharp
+a = 42              // U8
+a =^ 42             // Imm<U8>
+s =^ "Constant"     // Imm<Str>
 ```
 
 ---

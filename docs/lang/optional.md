@@ -10,8 +10,11 @@ valueMaybe: (): U8?
 // fallback when there is no value
 v = valueMaybe() ?? 42
 
-// optional can be used in a logical expression
-if v
+// cascade ?? operators
+x = v ?? valueMaybe() ?? 101
+
+// optional can be used in a logical expression: '?'
+if v?
     use(v)
 else
     // no var value
@@ -71,6 +74,27 @@ o = s.f1?.f1?.f2  // first non-value optional will stop navigation of path, resu
 
 > It is not recommended to use optional in general data structures because it does not clarify WHEN that data will or will not be available.
 
+## Option Matching
+
+Have a helper for matching optional values.
+
+> `map<R>(self: Opt<T>, fn: Fn<(v: T):R>): Opt<R>`
+
+```csharp
+o: Opt<U8>
+
+// maps Nothing => Nothing
+// calls lambda with value, return result
+x = o.map(v -> v + v)
+// x: Opt<U16>
+```
+
+The map function is the same as the .NET Select method.
+
+Do we also need a `Bind` (SelectMany) function?
+
+> `bind<R>(self: Opt<T>, fn: Fn<(v: T):Opt<R>>): Opt<R>`
+
 ---
 
 Adding or removing optional to an existing declaration is a breaking change, when at a logical level it should be considered a compatible change in most cases... How could we fix that?
@@ -87,10 +111,10 @@ Select: <T, R>(self: Opt<T>, selector: Fn<T, R>): Opt<R>
     if self.hasItem
         return Opt<R>(selector(self.Item))
     else
-        return new Opt<R>()   // empty
+        return Opt<R>()   // empty
 
 // handle 'nothing' case
-Match: <T, R>(self: Opt<T>, none: R, some: Fn<T, R>)
+Match: <T, R>(self: Opt<T>, none: R, some: Fn<T, R>): R
     return self.hasItem ? some(self.Item) : none
 ```
 
@@ -106,3 +130,8 @@ endDate: Opt<DateTime> =
     // what if days Opt is not set?
     date.Select(d => d.AddDays(days))
 ```
+
+---
+
+All .NET Try-methods are to be wrapped in an extension method that returns an `Opt<T>`.
+Perhaps also make duplicates for XxxxOrDefault() as XxxxxOrNothing() returning an `Opt<T>`...?
