@@ -11,28 +11,28 @@ namespace Zsharp.Runtime.UnitTests
         public void RT_Opt_RefType_NotNothing()
         {
             var opt = new Opt<string>("42");
-            opt.ToString().Should().NotBe(Opt.Nothing);
+            opt.ToString().Should().NotBe(Opt.NothingText);
         }
 
         [TestMethod]
         public void RT_Opt_RefType_Nothing()
         {
             var opt = new Opt<string>();
-            opt.ToString().Should().Be(Opt.Nothing);
+            opt.ToString().Should().Be(Opt.NothingText);
         }
 
         [TestMethod]
         public void RT_Opt_ValueType_NotNothing()
         {
             var opt = new Opt<int>(42);
-            opt.ToString().Should().NotBe(Opt.Nothing);
+            opt.ToString().Should().NotBe(Opt.NothingText);
         }
 
         [TestMethod]
         public void RT_Opt_ValueType_Nothing()
         {
             var opt = new Opt<int>();
-            opt.ToString().Should().Be(Opt.Nothing);
+            opt.ToString().Should().Be(Opt.NothingText);
         }
 
         [TestMethod]

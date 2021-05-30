@@ -11,7 +11,9 @@ Type Conversion functions are implemented in checked and unchecked versions.
 
 ## Types
 
-- Array<T> implemented a constructor function using generics.
+- `Array<T>` implemented a constructor function using generics.
+
+- `Opt<T>` the optional (maybe) type.
 
 ---
 
