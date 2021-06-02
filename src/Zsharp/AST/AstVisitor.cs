@@ -127,6 +127,11 @@ namespace Zsharp.AST
             VisitChildren(enumOption);
         }
 
+        public virtual void VisitTypeReferenceFunction(AstTypeReferenceFunction function)
+        {
+            VisitChildren(function);
+        }
+
         public virtual void VisitTypeFieldReferenceEnumOption(AstTypeFieldReferenceEnumOption enumOption)
         {
             VisitChildren(enumOption);

@@ -19,7 +19,7 @@ namespace Zsharp.AST
         public void AddParameter(string name, AstTypeDefinition astType)
         {
             var parameter = AstFunctionParameterDefinition.Create(name, astType);
-            AddParameter(parameter);
+            this.AddParameter(parameter);
         }
 
         public void SetSelfParameter(AstTypeDefinitionIntrinsic type)
@@ -27,13 +27,14 @@ namespace Zsharp.AST
             Ast.Guard(!Parameters.Any(), "A Self parameter has to be first.");
             var parameter = new AstFunctionParameterDefinition(AstIdentifierIntrinsic.Self);
             parameter.SetTypeReference(AstTypeReference.From(type));
-            AddParameter(parameter);
+            this.AddParameter(parameter);
         }
 
         public override bool IsIntrinsic => true;
 
         public static void AddAll(AstSymbolTable symbols)
         {
+            // no intrinsic compiler generated functions at this time.
         }
 
         private static void AddIntrinsicSymbol(AstSymbolTable symbols, AstFunctionDefinitionIntrinsic function)

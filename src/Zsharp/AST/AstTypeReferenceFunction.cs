@@ -2,19 +2,19 @@
 
 namespace Zsharp.AST
 {
-    public class AstTypeDefinitionFunction : AstTypeDefinition,
+    public class AstTypeReferenceFunction : AstTypeReference,
         IAstTypeReferenceSite,
-        IAstFunctionParameters<AstFunctionParameterDefinition>
+        IAstFunctionParameters<AstFunctionParameterReference>
     {
-        public AstTypeDefinitionFunction()
+        public AstTypeReferenceFunction()
         {
 
         }
 
-        private readonly List<AstFunctionParameterDefinition> _parameters = new();
-        public IEnumerable<AstFunctionParameterDefinition> Parameters => _parameters;
+        private readonly List<AstFunctionParameterReference> _parameters = new();
+        public IEnumerable<AstFunctionParameterReference> Parameters => _parameters;
 
-        public bool TryAddParameter(AstFunctionParameterDefinition param)
+        public bool TryAddParameter(AstFunctionParameterReference param)
         {
             if (param != null &&
                 param.TrySetParent(this))
@@ -36,6 +36,6 @@ namespace Zsharp.AST
             => this.SafeSetParent(ref _typeReference, typeReference);
 
         public override void Accept(AstVisitor visitor)
-            => visitor.VisitTypeDefinitionFunction(this);
+            => visitor.VisitTypeReferenceFunction(this);
     }
 }

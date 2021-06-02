@@ -1,5 +1,4 @@
 ﻿using Antlr4.Runtime;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using static Zsharp.Parser.ZsharpParser;
@@ -48,9 +47,6 @@ namespace Zsharp.AST
             }
             return false;
         }
-
-        public new IEnumerable<AstTemplateParameterReference> TemplateParameters
-            => base.TemplateParameters.Cast<AstTemplateParameterReference>();
 
         public override bool TryAddTemplateParameter(AstTemplateParameterReference templateParameter)
         {

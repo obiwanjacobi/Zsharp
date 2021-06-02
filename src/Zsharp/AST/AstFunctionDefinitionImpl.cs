@@ -47,12 +47,6 @@ namespace Zsharp.AST
             }
         }
 
-        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, AstNode? node = null)
-        {
-            this.ThrowIfSymbolTableNotSet();
-            return Symbols!.AddSymbol(symbolName, kind, node);
-        }
-
         public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
             base.CreateSymbols(functionSymbols, parentSymbols);

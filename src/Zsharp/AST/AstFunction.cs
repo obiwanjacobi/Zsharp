@@ -6,13 +6,13 @@ using System.Linq;
 namespace Zsharp.AST
 {
     public abstract class AstFunction<ParamT, TemplateParamT> : AstNode,
-        IAstCodeBlockItem, IAstIdentifierSite, IAstTypeReferenceSite,
-        IAstSymbolEntrySite, IAstTemplateSite<TemplateParamT>
+        IAstCodeBlockItem, IAstIdentifierSite, IAstSymbolEntrySite,
+        IAstTypeReferenceSite,
+        IAstTemplateSite<TemplateParamT>,
+        IAstFunctionParameters<ParamT>
         where ParamT : AstFunctionParameter
         where TemplateParamT : AstTemplateParameter
     {
-        private readonly List<ParamT> _parameters = new();
-
         protected AstFunction()
             : base(AstNodeType.Function)
         { }
@@ -21,6 +21,7 @@ namespace Zsharp.AST
 
         public uint Indent { get; set; }
 
+        private readonly List<ParamT> _parameters = new();
         public IEnumerable<ParamT> Parameters => _parameters;
 
         public bool TryAddParameter(ParamT param)
@@ -36,12 +37,6 @@ namespace Zsharp.AST
                 return true;
             }
             return false;
-        }
-
-        public void AddParameter(ParamT param)
-        {
-            if (!TryAddParameter(param))
-                throw new InternalErrorException("Parameter was already set or null.");
         }
 
         // true when type is a template instantiation
