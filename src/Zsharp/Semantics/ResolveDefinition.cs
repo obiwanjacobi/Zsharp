@@ -266,7 +266,7 @@ namespace Zsharp.Semantics
                     {
                         var entry = function.Symbol!;
                         var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinition>(
-                            function.Identifier!.TemplateDefinitionName, AstSymbolKind.Function);
+                            function.Identifier!.SymbolName.TemplateDefinitionName, AstSymbolKind.Function);
 
                         if (templateFunction is not null)
                         {
@@ -344,7 +344,7 @@ namespace Zsharp.Semantics
                     {
                         var entry = type.Symbol;
                         var typeTemplate = entry!.SymbolTable.FindDefinition<AstTypeDefinition>(
-                            type.Identifier!.TemplateDefinitionName, AstSymbolKind.Type);
+                            type.Identifier!.SymbolName.TemplateDefinitionName, AstSymbolKind.Type);
 
                         if (typeTemplate is AstTypeDefinitionStruct structTemplate)
                         {

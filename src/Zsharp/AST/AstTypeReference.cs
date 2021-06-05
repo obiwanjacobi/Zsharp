@@ -124,7 +124,7 @@ namespace Zsharp.AST
                 _templateParameters.Add(parameter);
 
                 if (Identifier is not null)
-                    Identifier.AddTemplateParameter(parameter.TypeReference?.Identifier?.Name);
+                    Identifier.SymbolName.AddTemplateParameter(parameter.TypeReference?.Identifier?.Name);
                 return true;
             }
             return false;

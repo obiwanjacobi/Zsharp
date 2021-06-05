@@ -67,62 +67,6 @@ namespace Zsharp.AST
 
         public AstIdentifierType IdentifierType { get; }
 
-        //public void Append(string? name)
-        //{
-        //    if (!String.IsNullOrEmpty(name))
-        //    {
-        //        Name += name;
-        //        CanonicalName = AstDotName.ToCanonical(Name);
-        //    }
-        //}
-
-        // for template definition
-        private int _templateParameterCount;
-        public int TemplateParameterCount
-        {
-            get { return _templateParameterCount; }
-            set
-            {
-                _templateParameterCount = value;
-                SymbolName.SetTemplateParameterCount(value);
-                //var parts = Name.Split(TemplateDelimiter);
-                //if (_templateParameterCount > 0)
-                //    Name = $"{parts[0]}{TemplateDelimiter}{_templateParameterCount}";
-                //else
-                //    Name = parts[0];
-                //CanonicalName = AstDotName.ToCanonical(Name);
-            }
-        }
-
-        // 'MyTemplate%1'
-        public string TemplateDefinitionName
-            => SymbolName.TemplateDefinitionName;
-        //{
-        //    get
-        //    {
-        //        if (_templateParameterCount > 0)
-        //            return CanonicalName;
-
-        //        if (Name.Contains(ParameterDelimiter))
-        //        {
-        //            var parts = Name.Split(ParameterDelimiter);
-        //            return $"{parts[0]}{TemplateDelimiter}{parts.Length - 1}";
-        //        }
-
-        //        return String.Empty;
-        //    }
-        //}
-
-        // for template usage
-        public void AddTemplateParameter(string? name)
-        {
-            Ast.Guard(name, "Parameter name is null.");
-
-            SymbolName.AddTemplateParameter(name);
-            //Name += ParameterDelimiter + name;
-            //CanonicalName = AstDotName.ToCanonical(Name);
-        }
-
         public bool IsEqual(AstIdentifier? that)
         {
             if (that is null)
