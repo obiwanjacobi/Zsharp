@@ -23,11 +23,11 @@ namespace Zsharp.AST
             var modCtx = ToStatementModule(fileCtx);
             if (modCtx is not null)
             {
-                moduleName = AstDotName.ToCanonical(modCtx.module_name().identifier_module().GetText());
+                moduleName = AstSymbolName.ToCanonical(modCtx.module_name().identifier_module().GetText());
             }
             else
             {
-                moduleName = AstDotName.ToCanonical(moduleName);
+                moduleName = AstSymbolName.ToCanonical(moduleName);
                 var mod = _context.CompilerContext.Modules.GetOrAddModule(moduleName);
                 _context.SetCurrent(mod);
             }

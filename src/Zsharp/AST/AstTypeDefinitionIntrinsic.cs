@@ -38,7 +38,7 @@ namespace Zsharp.AST
 
         public static AstTypeDefinitionIntrinsic? Lookup(string typeName)
         {
-            return AstDotName.ToCanonical(typeName) switch
+            return AstSymbolName.ToCanonical(typeName) switch
             {
                 "U8" => U8,
                 "U16" => U16,

@@ -93,11 +93,11 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_import(Statement_importContext context)
         {
-            var dotName = AstDotName.FromText(context.module_name().GetText());
+            var symbolName = AstSymbolName.Parse(context.module_name().GetText());
             var alias = context.alias_module()?.GetText();
 
             // if alias then last part of dot name is symbol.
-            var moduleName = String.IsNullOrEmpty(alias) ? dotName.ToString() : dotName.ModuleName;
+            var moduleName = String.IsNullOrEmpty(alias) ? symbolName.ToString() : symbolName.ModuleName;
             var module = _builderContext.CompilerContext.Modules.Import(moduleName);
             if (module is null)
             {
@@ -108,7 +108,7 @@ namespace Zsharp.AST
 
             if (!String.IsNullOrEmpty(alias))
             {
-                module.AddAlias(dotName.Symbol, alias);
+                module.AddAlias(symbolName.Symbol, alias);
             }
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();

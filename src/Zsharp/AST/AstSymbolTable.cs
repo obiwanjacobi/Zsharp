@@ -93,13 +93,13 @@ namespace Zsharp.AST
             if (symbolEntry.HasOverloads || symbolEntry.Definition is not null)
                 return symbolEntry;
 
-            var dotName = new AstDotName(symbolEntry.SymbolName);
+            var symbolName = AstSymbolName.Parse(symbolEntry.SymbolName);
             var table = this;
             while (table is not null)
             {
                 var entry = table.FindEntryLocal(symbolEntry.SymbolName, symbolEntry.SymbolKind);
-                if (!HasDefinition(entry) && dotName.IsDotName)
-                    entry = table.FindEntryDotName(dotName, symbolEntry.SymbolKind);
+                if (!HasDefinition(entry) && symbolName.IsDotName)
+                    entry = table.FindEntry(symbolName, symbolEntry.SymbolKind);
                 if (!HasDefinition(entry))
                     entry = table.FindEntryInModules(symbolEntry.SymbolName, symbolEntry.SymbolKind);
 
@@ -137,11 +137,11 @@ namespace Zsharp.AST
 
         public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
-            var dotName = new AstDotName(name);
+            var symbolName = AstSymbolName.Parse(name);
             AstSymbolEntry? entry;
 
-            if (dotName.IsDotName)
-                entry = FindEntryDotName(dotName, kind);
+            if (symbolName.IsDotName)
+                entry = FindEntry(symbolName, kind);
             else
                 entry = FindEntryRecursive(name, kind);
 
@@ -191,13 +191,13 @@ namespace Zsharp.AST
             return entry;
         }
 
-        private AstSymbolEntry? FindEntryDotName(AstDotName dotName, AstSymbolKind kind)
+        private AstSymbolEntry? FindEntry(AstSymbolName symbolName, AstSymbolKind kind)
         {
             AstSymbolEntry? entry = null;
             var table = this;
-            foreach (var namePart in dotName)
+            foreach (var namePart in symbolName)
             {
-                var isLast = namePart == dotName.Symbol;
+                var isLast = namePart == symbolName.Symbol;
 
                 var kindPart = isLast ? kind : AstSymbolKind.Unknown;
                 entry = table.FindEntryRecursive(namePart, kindPart);

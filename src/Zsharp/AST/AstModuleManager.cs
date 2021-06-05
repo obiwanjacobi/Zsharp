@@ -31,7 +31,7 @@ namespace Zsharp.AST
         public AstModulePublic AddModule(Statement_moduleContext moduleCtx)
         {
             Ast.Guard(moduleCtx, "Context is null.");
-            var moduleName = AstDotName.ToCanonical(moduleCtx.module_name().GetText());
+            var moduleName = AstSymbolName.ToCanonical(moduleCtx.module_name().GetText());
 
             var module = FindModule<AstModulePublic>(moduleName);
             if (module is null)

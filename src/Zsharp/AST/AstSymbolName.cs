@@ -37,10 +37,13 @@ namespace Zsharp.AST
             }
 
             if (toCanonical)
-                parts = parts.Select(ToCanonical).ToArray();
+                parts = parts.Select(PartToCanonical).ToArray();
 
             return new AstSymbolName(parts, templatePostfix, toCanonical);
         }
+
+        public static string ToCanonical(string text)
+            => Parse(text, toCanonical: true).ToString();
 
         public bool IsCanonical { get; }
 
@@ -116,11 +119,11 @@ namespace Zsharp.AST
             if (IsCanonical)
                 return this;
 
-            var parts = _parts.Select(ToCanonical).ToArray();
+            var parts = _parts.Select(PartToCanonical).ToArray();
             return new AstSymbolName(parts, TemplatePostfix, isCanonical: true);
         }
 
-        private static string ToCanonical(string symbolName)
+        private static string PartToCanonical(string symbolName)
         {
             if (String.IsNullOrEmpty(symbolName))
                 return symbolName;
