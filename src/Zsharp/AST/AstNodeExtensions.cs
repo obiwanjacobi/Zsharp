@@ -4,10 +4,10 @@
     {
         public static bool IsTopLevel(this AstNode node)
         {
-            if (node.ParentAs<AstAssignment>() != null)
+            if (node.ParentAs<AstAssignment>() is not null)
                 node = node.Parent!;
 
-            return node?.ParentAs<AstCodeBlock>()?.ParentAs<AstFile>() != null;
+            return node?.ParentAs<AstCodeBlock>()?.ParentAs<AstFile>() is not null;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Zsharp.AST
         }
 
         public bool HasDefinition
-            => VariableDefinition != null || ParameterDefinition != null;
+            => VariableDefinition is not null || ParameterDefinition is not null;
 
         public AstVariableDefinition? VariableDefinition
             => Symbol?.DefinitionAs<AstVariableDefinition>();
@@ -38,7 +38,7 @@ namespace Zsharp.AST
         {
             this.ThrowIfSymbolEntryNotSet();
             var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
-            if (entry != null)
+            if (entry is not null)
             {
                 Symbol = entry;
                 return true;

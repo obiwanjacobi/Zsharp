@@ -27,7 +27,7 @@ namespace Zsharp.AST
         {
             var operand = VisitChildren(context);
 
-            if (operand != null)
+            if (operand is not null)
             {
                 if (operand is AstExpressionOperand expressionOperand)
                     _values.Push(expressionOperand);
@@ -49,7 +49,7 @@ namespace Zsharp.AST
 
         private AstExpression? Cast(object? result)
         {
-            if (result == null)
+            if (result is null)
                 return BuildExpression(0);
             return result as AstExpression;
         }
@@ -69,7 +69,7 @@ namespace Zsharp.AST
             {
                 var retVal = child.Accept(this);
 
-                if (retVal == null)
+                if (retVal is null)
                     continue;
                 if (retVal is AstExpressionOperator op)
                 {
@@ -144,9 +144,9 @@ namespace Zsharp.AST
                 _values.Pop();
             }
 
-            if (expr.LHS == null &&
+            if (expr.LHS is null &&
                 expr.Operator == AstExpressionOperator.None &&
-                expr.RHS?.LiteralNumeric != null)
+                expr.RHS?.LiteralNumeric is not null)
             {
                 // expression used as a number wrapper
                 expr.Operator = AstExpressionOperator.Number;
@@ -169,7 +169,7 @@ namespace Zsharp.AST
                 }
             }
 
-            if (expr == null &&
+            if (expr is null &&
                 _values.Count > 0)
             {
                 expr = new AstExpression(_values.Pop());
@@ -181,7 +181,7 @@ namespace Zsharp.AST
 
         protected override object? AggregateResult(object? aggregate, object? nextResult)
         {
-            if (nextResult == null)
+            if (nextResult is null)
             {
                 return aggregate;
             }
@@ -200,7 +200,7 @@ namespace Zsharp.AST
         public override object? VisitArithmetic_operand(Arithmetic_operandContext context)
         {
             var node = (AstNode?)base.VisitChildren(context);
-            if (node != null)
+            if (node is not null)
                 return new AstExpressionOperand(node);
             return null;
         }
@@ -208,7 +208,7 @@ namespace Zsharp.AST
         public override object? VisitLogic_operand(Logic_operandContext context)
         {
             var node = (AstNode?)base.VisitChildren(context);
-            if (node != null)
+            if (node is not null)
                 return new AstExpressionOperand(node);
             return null;
         }
@@ -216,7 +216,7 @@ namespace Zsharp.AST
         public override object? VisitComparison_operand(Comparison_operandContext context)
         {
             var node = (AstNode?)base.VisitChildren(context);
-            if (node != null)
+            if (node is not null)
                 return new AstExpressionOperand(node);
             return null;
         }
@@ -268,83 +268,83 @@ namespace Zsharp.AST
 
         public override object? VisitOperator_arithmetic(Operator_arithmeticContext context)
         {
-            if (context.DIV() != null)
+            if (context.DIV() is not null)
                 return AstExpressionOperator.Divide;
-            if (context.MINUS_NEG() != null)
+            if (context.MINUS_NEG() is not null)
                 return AstExpressionOperator.Minus;
-            if (context.MOD() != null)
+            if (context.MOD() is not null)
                 return AstExpressionOperator.Modulo;
-            if (context.MULT_PTR() != null)
+            if (context.MULT_PTR() is not null)
                 return AstExpressionOperator.Multiply;
-            if (context.PLUS() != null)
+            if (context.PLUS() is not null)
                 return AstExpressionOperator.Plus;
-            if (context.POW() != null)
+            if (context.POW() is not null)
                 return AstExpressionOperator.Power;
             return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_arithmetic_unary(Operator_arithmetic_unaryContext context)
         {
-            if (context.MINUS_NEG() != null)
+            if (context.MINUS_NEG() is not null)
                 return AstExpressionOperator.Negate;
             return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_logic(Operator_logicContext context)
         {
-            if (context.AND() != null)
+            if (context.AND() is not null)
                 return AstExpressionOperator.And;
-            if (context.OR() != null)
+            if (context.OR() is not null)
                 return AstExpressionOperator.Or;
             return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_logic_unary(Operator_logic_unaryContext context)
         {
-            if (context.NOT() != null)
+            if (context.NOT() is not null)
                 return AstExpressionOperator.Not;
             return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_comparison(Operator_comparisonContext context)
         {
-            if (context.EQ_ASSIGN() != null)
+            if (context.EQ_ASSIGN() is not null)
                 return AstExpressionOperator.Equal;
-            if (context.GREAT_ANGLEclose() != null)
+            if (context.GREAT_ANGLEclose() is not null)
                 return AstExpressionOperator.Greater;
-            if (context.GREQ() != null)
+            if (context.GREQ() is not null)
                 return AstExpressionOperator.GreaterEqual;
-            if (context.NEQ() != null)
+            if (context.NEQ() is not null)
                 return AstExpressionOperator.NotEqual;
-            if (context.SMALL_ANGLEopen() != null)
+            if (context.SMALL_ANGLEopen() is not null)
                 return AstExpressionOperator.Smaller;
-            if (context.SMEQ() != null)
+            if (context.SMEQ() is not null)
                 return AstExpressionOperator.SmallerEqual;
             return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_bits(Operator_bitsContext context)
         {
-            if (context.BIT_AND() != null)
+            if (context.BIT_AND() is not null)
                 return AstExpressionOperator.BitAnd;
-            if (context.BIT_OR() != null)
+            if (context.BIT_OR() is not null)
                 return AstExpressionOperator.BitOr;
-            if (context.BIT_ROLL() != null)
+            if (context.BIT_ROLL() is not null)
                 return AstExpressionOperator.BitRollLeft;
-            if (context.BIT_ROLR() != null)
+            if (context.BIT_ROLR() is not null)
                 return AstExpressionOperator.BitRollRight;
-            if (context.BIT_SHL() != null)
+            if (context.BIT_SHL() is not null)
                 return AstExpressionOperator.BitShiftLeft;
-            if (context.BIT_SHR() != null)
+            if (context.BIT_SHR() is not null)
                 return AstExpressionOperator.BitShiftRight;
-            if (context.BIT_XOR_IMM() != null)
+            if (context.BIT_XOR_IMM() is not null)
                 return AstExpressionOperator.BitXor;
             return AstExpressionOperator.None;
         }
 
         public override object? VisitOperator_bits_unary(Operator_bits_unaryContext context)
         {
-            if (context.BIT_NOT() != null)
+            if (context.BIT_NOT() is not null)
                 return AstExpressionOperator.BitNegate;
             return AstExpressionOperator.None;
         }

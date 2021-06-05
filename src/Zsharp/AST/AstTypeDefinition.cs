@@ -25,7 +25,7 @@ namespace Zsharp.AST
 
         public virtual bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
         {
-            if (templateParameter == null)
+            if (templateParameter is null)
                 return false;
 
             _templateParameters.Add(templateParameter);

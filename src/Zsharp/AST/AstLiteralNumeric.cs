@@ -49,37 +49,37 @@ namespace Zsharp.AST
         private static ulong GetNumberValue(NumberContext context)
         {
             string txt;
-            if (context.NUMBERbin() != null)
+            if (context.NUMBERbin() is not null)
             {
                 txt = context.NUMBERbin().GetText();
                 return ParseNumber(2, 2, txt);
             }
 
-            if (context.NUMBERoct() != null)
+            if (context.NUMBERoct() is not null)
             {
                 txt = context.NUMBERoct().GetText();
                 return ParseNumber(2, 8, txt);
             }
 
-            if (context.NUMBERdec() != null)
+            if (context.NUMBERdec() is not null)
             {
                 txt = context.NUMBERdec().GetText();
                 return ParseNumber(0, 10, txt);
             }
 
-            if (context.NUMBERdec_prefix() != null)
+            if (context.NUMBERdec_prefix() is not null)
             {
                 txt = context.NUMBERdec_prefix().GetText();
                 return ParseNumber(2, 10, txt);
             }
 
-            if (context.NUMBERhex() != null)
+            if (context.NUMBERhex() is not null)
             {
                 txt = context.NUMBERhex().GetText();
                 return ParseNumber(2, 16, txt);
             }
 
-            if (context.CHARACTER() != null)
+            if (context.CHARACTER() is not null)
             {
                 txt = context.CHARACTER().GetText();
                 return (UInt64)txt[0];

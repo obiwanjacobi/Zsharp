@@ -23,12 +23,12 @@ namespace UnitTests.Semantics
         private bool AssertNull<T>(T cloned, T origin)
             where T : class
         {
-            if (cloned == null)
+            if (cloned is null)
             {
                 origin.Should().BeNull();
                 return true;
             }
-            if (origin == null)
+            if (origin is null)
             {
                 cloned.Should().BeNull();
                 return true;

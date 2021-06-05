@@ -48,7 +48,7 @@ namespace Zsharp.EmitCS
         // pass null to reset
         internal IDisposable? SetBuilder(CsBuilder? builder)
         {
-            if (builder == null)
+            if (builder is null)
             {
                 _codeBuilder = null;
                 return null;

@@ -11,10 +11,10 @@ namespace Zsharp
         {
             var errors = new List<AstMessage>();
 
-            if (ctx.exception != null)
+            if (ctx.exception is not null)
                 errors.Add(new AstMessage(AstMessageType.Error, ctx));
 
-            if (ctx.children != null)
+            if (ctx.children is not null)
             {
                 foreach (var c in ctx.children
                     .OfType<ParserRuleContext>())

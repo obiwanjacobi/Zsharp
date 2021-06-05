@@ -28,7 +28,7 @@ namespace Zsharp.AST
             get
             {
                 var codeBlock = CodeBlock;
-                if (codeBlock != null)
+                if (codeBlock is not null)
                 {
                     return codeBlock.Symbols;
                 }
@@ -52,8 +52,8 @@ namespace Zsharp.AST
 
             foreach (var parameter in FunctionType.Parameters)
             {
-                if (parentSymbols != null &&
-                    parameter.Symbol == null)
+                if (parentSymbols is not null &&
+                    parameter.Symbol is null)
                 {
                     functionSymbols.Add(parameter);
                 }

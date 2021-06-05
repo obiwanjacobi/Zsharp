@@ -45,7 +45,7 @@ namespace Zsharp.AST
             var exOrImported = FindEntry(symbolName, AstSymbolKind.NotSet);
             var entry = FindEntryLocal(symbolName, kind);
 
-            if (entry == null)
+            if (entry is null)
             {
                 entry = new AstSymbolEntry(this, symbolName, kind);
                 if (exOrImported?.SymbolTable == this)
@@ -58,11 +58,11 @@ namespace Zsharp.AST
                 _table[entry.Key] = entry;
             }
 
-            if (nodes != null)
+            if (nodes is not null)
             {
                 foreach (var node in nodes)
                 {
-                    if (node != null)
+                    if (node is not null)
                         entry.AddNode(node);
                 }
             }
@@ -88,14 +88,14 @@ namespace Zsharp.AST
 
         public AstSymbolEntry? ResolveDefinition(AstSymbolEntry symbolEntry)
         {
-            if (symbolEntry == null)
+            if (symbolEntry is null)
                 return null;
-            if (symbolEntry.HasOverloads || symbolEntry.Definition != null)
+            if (symbolEntry.HasOverloads || symbolEntry.Definition is not null)
                 return symbolEntry;
 
             var dotName = new AstDotName(symbolEntry.SymbolName);
             var table = this;
-            while (table != null)
+            while (table is not null)
             {
                 var entry = table.FindEntryLocal(symbolEntry.SymbolName, symbolEntry.SymbolKind);
                 if (!HasDefinition(entry) && dotName.IsDotName)
@@ -123,13 +123,13 @@ namespace Zsharp.AST
             var entry = FindEntryLocal(symbolName, symbolKind);
             var symbolDef = entry?.DefinitionAs<T>();
 
-            if (symbolDef == null)
+            if (symbolDef is null)
             {
                 entry = FindEntryInModules(symbolName, symbolKind);
                 symbolDef = entry?.DefinitionAs<T>();
             }
 
-            if (symbolDef == null)
+            if (symbolDef is null)
                 symbolDef = ParentTable?.FindDefinition<T>(symbolName, symbolKind);
 
             return symbolDef;
@@ -158,8 +158,8 @@ namespace Zsharp.AST
         {
             var entry = FindEntryLocal(name, kind);
 
-            if (ParentTable != null &&
-                entry == null)
+            if (ParentTable is not null &&
+                entry is null)
             {
                 entry = ParentTable.FindEntry(name, kind);
             }
@@ -202,13 +202,13 @@ namespace Zsharp.AST
                 var kindPart = isLast ? kind : AstSymbolKind.Unknown;
                 entry = table.FindEntryRecursive(namePart, kindPart);
 
-                if (entry == null)
+                if (entry is null)
                     return null;
 
                 if (!isLast)
                 {
                     var tableSite = entry.DefinitionAs<IAstSymbolTableSite>();
-                    if (tableSite == null)
+                    if (tableSite is null)
                         return null;
 
                     table = tableSite.Symbols;
@@ -227,7 +227,7 @@ namespace Zsharp.AST
             foreach (var symbols in moduleSymbols)
             {
                 var entry = symbols.FindEntryLocal(symbolName, symbolKind);
-                if (entry != null)
+                if (entry is not null)
                     return entry;
             }
             return null;

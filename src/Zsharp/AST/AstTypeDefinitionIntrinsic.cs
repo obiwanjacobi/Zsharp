@@ -11,7 +11,7 @@ namespace Zsharp.AST
             IsUnsigned = isUnsigned;
             SystemType = systemType;
 
-            if (templateParameter != null)
+            if (templateParameter is not null)
                 this.AddTemplateParameter(templateParameter);
         }
 

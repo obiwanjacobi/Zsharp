@@ -18,7 +18,7 @@ namespace Zsharp.AST
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;
 
-        public bool HasExpression => _expression != null;
+        public bool HasExpression => _expression is not null;
 
         public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);

@@ -7,8 +7,8 @@ namespace Zsharp.AST
         public static bool SafeSet<T>(ref T? storage, T? value)
             where T : class
         {
-            if (storage == null &&
-                value != null)
+            if (storage is null &&
+                value is not null)
             {
                 storage = value;
                 return true;
@@ -32,7 +32,7 @@ namespace Zsharp.AST
         public static void Guard<T>(object? instance)
             where T : class
         {
-            if (instance == null)
+            if (instance is null)
                 throw new InternalErrorException(
                     $"Object not of the expected type ({typeof(T).Name}) because it was null.");
             if (!(instance is T))
@@ -50,7 +50,7 @@ namespace Zsharp.AST
         public static void Guard<T>(T? instance, string message)
             where T : class
         {
-            if (instance == null)
+            if (instance is null)
                 throw new InternalErrorException($"{typeof(T).Name} is null: {message}");
         }
     }

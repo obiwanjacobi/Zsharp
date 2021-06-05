@@ -49,7 +49,7 @@ namespace Zsharp.AST
 
         public static string AsString(this AstExpression expression)
         {
-            if (expression == null)
+            if (expression is null)
             { return String.Empty; }
 
             var lhs = expression.LHS;
@@ -60,31 +60,31 @@ namespace Zsharp.AST
 
         public static string AsString(this AstExpressionOperand? operand)
         {
-            if (operand == null)
+            if (operand is null)
             { return String.Empty; }
 
             var expr = operand.Expression;
-            if (expr != null)
+            if (expr is not null)
             { return AsString(expr); }
 
             var num = operand.LiteralNumeric;
-            if (num != null)
+            if (num is not null)
             { return AsString(num); }
 
             var bl = operand.LiteralBoolean;
-            if (bl != null)
+            if (bl is not null)
             { return bl.Value.ToString(); }
 
             var str = operand.LiteralString;
-            if (str != null)
+            if (str is not null)
             { return str.Value; }
 
             var varRef = operand.VariableReference;
-            if (varRef != null)
+            if (varRef is not null)
             { return AsString(varRef); }
 
             var funRef = operand.FunctionReference;
-            if (funRef != null)
+            if (funRef is not null)
             { return funRef.AsString(); }
 
             return String.Empty;

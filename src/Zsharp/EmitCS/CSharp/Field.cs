@@ -28,7 +28,7 @@ namespace Zsharp.EmitCS.CSharp
         {
             get
             {
-                if (_valueBuilder == null)
+                if (_valueBuilder is null)
                     _valueBuilder = new CsBuilder();
                 return _valueBuilder;
             }

@@ -25,7 +25,7 @@ namespace Zsharp.AST
 
         public UInt32 CheckIndent(ParserRuleContext context)
         {
-            if (context == null)
+            if (context is null)
                 return 0;
 
             if (context is Function_defContext)
@@ -49,7 +49,7 @@ namespace Zsharp.AST
                 _ => null
             };
 
-            if (indentCtx == null)
+            if (indentCtx is null)
                 return CheckIndent((ParserRuleContext)context.Parent);
 
             return CheckIndent(context, indentCtx);
@@ -57,7 +57,7 @@ namespace Zsharp.AST
 
         public UInt32 CheckIndent(ParserRuleContext context, IndentContext indentCtx)
         {
-            if (indentCtx == null)
+            if (indentCtx is null)
                 return 0;
 
             var indent = (UInt32)indentCtx.GetText().Length;
@@ -134,7 +134,7 @@ namespace Zsharp.AST
         public bool TryAddIdentifier(AstIdentifier? identifier)
         {
             var namedObj = GetCurrent<IAstIdentifierSite>();
-            if (namedObj != null)
+            if (namedObj is not null)
             {
                 return namedObj.TrySetIdentifier(identifier);
             }

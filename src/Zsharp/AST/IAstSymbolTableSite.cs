@@ -12,7 +12,7 @@
 
         public static void ThrowIfSymbolTableNotSet(this IAstSymbolTableSite symbolTableSite)
         {
-            if (symbolTableSite.Symbols == null)
+            if (symbolTableSite.Symbols is null)
                 throw new InternalErrorException("Symbol Table was not set.");
         }
     }

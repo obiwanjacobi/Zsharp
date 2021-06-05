@@ -39,7 +39,7 @@ namespace Zsharp.AST
         {
             this.ThrowIfSymbolEntryNotSet();
             var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
-            if (entry != null)
+            if (entry is not null)
             {
                 Symbol = entry;
                 return true;
@@ -60,8 +60,8 @@ namespace Zsharp.AST
             var typeDef = TypeDefinition;
             var thatTypeDef = typedThat.TypeDefinition;
 
-            if (typeDef != null &&
-                thatTypeDef != null)
+            if (typeDef is not null &&
+                thatTypeDef is not null)
             {
                 return typeDef.IsEqual(thatTypeDef);
             }
@@ -72,13 +72,13 @@ namespace Zsharp.AST
         // points to the origin of this 'proxy'.
         public AstTypeReference? TypeOrigin => _typeOrigin;
 
-        public bool IsProxy => _typeOrigin != null;
+        public bool IsProxy => _typeOrigin is not null;
 
         public virtual AstTypeReference MakeProxy()
         {
             AstTypeReference typeRef;
 
-            if (TypeOrigin != null)
+            if (TypeOrigin is not null)
                 typeRef = new AstTypeReference(TypeOrigin);
             else
                 typeRef = new AstTypeReference(this);
@@ -90,12 +90,12 @@ namespace Zsharp.AST
 
         public static AstTypeReference From(AstTypeDefinition typeDef)
         {
-            Ast.Guard(typeDef != null, "TypeDefinition is null.");
-            Ast.Guard(typeDef!.Identifier != null, "TypeDefinition has no Identifier.");
+            Ast.Guard(typeDef is not null, "TypeDefinition is null.");
+            Ast.Guard(typeDef!.Identifier is not null, "TypeDefinition has no Identifier.");
 
             var typeRef = new AstTypeReference();
             typeRef.SetIdentifier(typeDef.Identifier!);
-            if (typeDef.Symbol != null)
+            if (typeDef.Symbol is not null)
             {
                 typeRef.TrySetSymbol(typeDef.Symbol);
                 typeDef.Symbol.AddNode(typeRef);
@@ -115,7 +115,7 @@ namespace Zsharp.AST
 
         public bool TryAddTemplateParameter(AstTemplateParameterReference templateParameter)
         {
-            if (TypeOrigin != null || _templateParameters == null)
+            if (TypeOrigin is not null || _templateParameters is null)
                 throw new InternalErrorException(
                     "Cannot add Template Parameter onto a TypeReference Proxy.");
 
@@ -135,7 +135,7 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            if (_templateParameters != null)
+            if (_templateParameters is not null)
             {
                 foreach (var param in _templateParameters)
                 {

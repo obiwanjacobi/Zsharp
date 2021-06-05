@@ -43,7 +43,7 @@
             get
             {
                 var codeBlock = CodeBlock;
-                if (codeBlock != null)
+                if (codeBlock is not null)
                 {
                     return codeBlock.Symbols;
                 }

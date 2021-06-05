@@ -39,7 +39,7 @@ namespace Zsharp.Dgml
                 Id = id + NextId().ToString(),
                 Label = label
             };
-            if (typeName != null)
+            if (typeName is not null)
             {
                 node.TypeName = typeName;
             }
@@ -55,7 +55,7 @@ namespace Zsharp.Dgml
                 Source = sourceId,
                 Target = targetId
             };
-            if (category != null)
+            if (category is not null)
             {
                 link.Category = category;
             }

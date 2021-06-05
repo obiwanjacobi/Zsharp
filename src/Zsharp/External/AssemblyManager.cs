@@ -62,7 +62,7 @@ namespace Zsharp.External
 
         private void AddAssembly(AssemblyDefinition assemblyDef)
         {
-            if (_assemblies.SingleOrDefault(a => a.FullName == assemblyDef.FullName) != null)
+            if (_assemblies.SingleOrDefault(a => a.FullName == assemblyDef.FullName) is not null)
                 return;
 
             _assemblies.Add(assemblyDef);

@@ -26,7 +26,7 @@ namespace Zsharp.AST
 
         public void AddModule(Statement_moduleContext moduleCtx)
         {
-            if (moduleCtx != null)
+            if (moduleCtx is not null)
             {
                 Ast.Guard(Identifier!.CanonicalName == AstDotName.ToCanonical(moduleCtx.module_name().GetText()), "Not the same module.");
                 _contexts.Add(moduleCtx);
@@ -35,7 +35,7 @@ namespace Zsharp.AST
 
         public void AddExport(Statement_exportContext exportCtx)
         {
-            if (exportCtx == null)
+            if (exportCtx is null)
                 throw new ArgumentNullException(nameof(exportCtx));
 
             _exports.Add(exportCtx);
@@ -43,7 +43,7 @@ namespace Zsharp.AST
 
         public void AddFile(AstFile file)
         {
-            if (file == null)
+            if (file is null)
                 throw new ArgumentNullException(nameof(file));
 
             _files.Add(file);

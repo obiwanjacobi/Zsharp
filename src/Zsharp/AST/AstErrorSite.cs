@@ -40,7 +40,7 @@ namespace Zsharp.AST
         private AstMessage AddMessage(AstMessage message)
         {
             var duplicate = FindDuplicate(message);
-            if (duplicate == null)
+            if (duplicate is null)
             {
                 _messages.Add(message);
                 return message;

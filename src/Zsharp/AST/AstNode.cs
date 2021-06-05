@@ -30,10 +30,10 @@ namespace Zsharp.AST
             where T : class
         {
             var parent = _parent;
-            if (parent != null)
+            if (parent is not null)
             {
                 var typedParent = ParentAs<T>();
-                if (typedParent != null)
+                if (typedParent is not null)
                     return typedParent;
 
                 return parent.ParentRecursiveAs<T>();

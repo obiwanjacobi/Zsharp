@@ -19,7 +19,7 @@ namespace Zsharp.AST
         public IEnumerable<AstFunctionDefinitionImpl> Functions
             => Symbols.FindEntries(AstSymbolKind.Function)
                 .Select(s => s.DefinitionAs<AstFunctionDefinitionImpl>())
-                .Where(f => f != null)!;
+                .Where(f => f is not null)!;
 
         public AstSymbolTable Symbols => CodeBlock!.Symbols;
 

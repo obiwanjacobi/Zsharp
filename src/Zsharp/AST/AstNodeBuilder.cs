@@ -48,7 +48,7 @@ namespace Zsharp.AST
 
         protected override object? AggregateResult(object? aggregate, object? nextResult)
         {
-            if (nextResult == null)
+            if (nextResult is null)
             {
                 return aggregate;
             }
@@ -59,7 +59,7 @@ namespace Zsharp.AST
         protected override bool ShouldVisitNextChild(IRuleNode node, object? currentResult)
         {
             if (node is ParserRuleContext context &&
-                context.exception != null)
+                context.exception is not null)
             {
                 _builderContext.CompilerContext.SyntaxError(context);
                 // usually pointless to continue
@@ -99,7 +99,7 @@ namespace Zsharp.AST
             // if alias then last part of dot name is symbol.
             var moduleName = String.IsNullOrEmpty(alias) ? dotName.ToString() : dotName.ModuleName;
             var module = _builderContext.CompilerContext.Modules.Import(moduleName);
-            if (module == null)
+            if (module is null)
             {
                 _builderContext.CompilerContext.AddError(context,
                         $"Module '{moduleName}' was not found in an external Assembly.");
@@ -137,7 +137,7 @@ namespace Zsharp.AST
 
             var cbSite = _builderContext.GetCurrent<IAstCodeBlockSite>();
             var parent = cbSite as AstFunctionDefinition;
-            if (parent?.Identifier != null)
+            if (parent?.Identifier is not null)
             {
                 scopeName = parent.Identifier.CanonicalName;
             }
@@ -171,7 +171,7 @@ namespace Zsharp.AST
 
             // template params also determines identifier
             var templateParams = context.template_param_list();
-            if (templateParams != null)
+            if (templateParams is not null)
             {
                 VisitTemplate_param_list(templateParams);
             }
@@ -184,7 +184,7 @@ namespace Zsharp.AST
             if (context.Parent is Statement_export_inlineContext)
                 function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
 
-            if (function.FunctionType.TypeReference == null)
+            if (function.FunctionType.TypeReference is null)
             {
                 var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
                 function.FunctionType.SetTypeReference(typeRef);
@@ -261,7 +261,7 @@ namespace Zsharp.AST
             function.CreateSymbols(symbols.Symbols);
 
             // too early to set void
-            //if (function.TypeReference == null)
+            //if (function.TypeReference is null)
             //{
             //    var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
             //    function.SetTypeReference(typeRef);
@@ -322,7 +322,7 @@ namespace Zsharp.AST
             VisitChildren(context);
             BuilderContext.RevertCurrent();
 
-            if (context.SELF() != null)
+            if (context.SELF() is not null)
                 varRef.SetIdentifier(AstIdentifierIntrinsic.Self);
 
             var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
@@ -334,7 +334,7 @@ namespace Zsharp.AST
         public override object? VisitVariable_assign_value(Variable_assign_valueContext context)
         {
             var assign = new AstAssignment(context);
-            AstVariable variable = context.type_ref_use() == null
+            AstVariable variable = context.type_ref_use() is null
                 ? new AstVariableReference(context)
                 : new AstVariableDefinition(context);
 
@@ -518,7 +518,7 @@ namespace Zsharp.AST
         {
             var builder = new AstExpressionBuilder(_builderContext, _namespace);
             var expr = buildFn(builder);
-            if (expr != null)
+            if (expr is not null)
             {
                 var site = _builderContext.GetCurrent<IAstExpressionSite>();
                 site.SetExpression(expr);
@@ -543,7 +543,7 @@ namespace Zsharp.AST
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
 
-            if (typeDef.BaseType == null)
+            if (typeDef.BaseType is null)
             {
                 var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.I32);
                 symbolsSite.Symbols.Add(typeRef);
@@ -561,7 +561,7 @@ namespace Zsharp.AST
             int value = 0;
             foreach (var field in typeDef.Fields)
             {
-                if (field.Expression == null)
+                if (field.Expression is null)
                 {
                     field.SetExpression(AstExpressionBuilder.CreateLiteral(value));
                 }
@@ -690,7 +690,7 @@ namespace Zsharp.AST
             _builderContext.RevertCurrent();
 
             var template = _builderContext.TryGetCurrent<IAstTemplateSite<AstTemplateParameterDefinition>>();
-            if (template != null)
+            if (template is not null)
                 typeRef.IsTemplateParameter = template.TemplateParameters
                     .OfType<AstTemplateParameterDefinition>()
                     .Any(p =>

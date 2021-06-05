@@ -21,7 +21,7 @@ namespace Zsharp.AST
         {
             // look ahead
             var modCtx = ToStatementModule(fileCtx);
-            if (modCtx != null)
+            if (modCtx is not null)
             {
                 moduleName = AstDotName.ToCanonical(modCtx.module_name().identifier_module().GetText());
             }
@@ -34,7 +34,7 @@ namespace Zsharp.AST
 
             var file = BuildFile(moduleName, fileCtx);
 
-            if (modCtx == null)
+            if (modCtx is null)
             {
                 // remove the AstModule we added.
                 _context.RevertCurrent();
@@ -55,7 +55,7 @@ namespace Zsharp.AST
         private static Statement_moduleContext? ToStatementModule(FileContext fileCtx)
             => fileCtx.header()
                 .Select(h => h.module_statement())
-                .Where(m => m?.statement_module() != null)
+                .Where(m => m?.statement_module() is not null)
                 .Select(m => m.statement_module())
                 .SingleOrDefault()
                 ;

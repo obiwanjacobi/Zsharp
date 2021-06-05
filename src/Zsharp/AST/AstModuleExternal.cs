@@ -76,7 +76,7 @@
 
         public void AddFunction(AstFunctionDefinitionExternal function)
         {
-            if (function.FunctionType.TypeReference == null)
+            if (function.FunctionType.TypeReference is null)
             {
                 var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
                 function.FunctionType.SetTypeReference(typeRef);

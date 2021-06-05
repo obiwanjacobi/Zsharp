@@ -17,7 +17,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e == null).Should().BeFalse();
+            symbols.Entries.Any(e => e is null).Should().BeFalse();
 
             var v = symbols.FindEntry("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
@@ -34,7 +34,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e == null).Should().BeFalse();
+            symbols.Entries.Any(e => e is null).Should().BeFalse();
 
             var v = symbols.FindEntry("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
@@ -50,7 +50,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code, Compile.CreateModuleLoader());
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e == null).Should().BeFalse();
+            symbols.Entries.Any(e => e is null).Should().BeFalse();
 
             var mod = symbols.FindEntries(AstSymbolKind.Module).Single();
             mod.SymbolName.Should().Be("System.console");
@@ -67,7 +67,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e == null).Should().BeFalse();
+            symbols.Entries.Any(e => e is null).Should().BeFalse();
 
             var fn = symbols.FindEntry("fn", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
@@ -109,7 +109,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e == null).Should().BeFalse();
+            symbols.Entries.Any(e => e is null).Should().BeFalse();
 
             symbols.Entries.Should().HaveCount(2);
             var fn = symbols.FindEntry("fn", AstSymbolKind.Function);

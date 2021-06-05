@@ -29,11 +29,11 @@ namespace Zsharp.AST
 
         public virtual bool IsEqual(AstType type)
         {
-            if (type == null)
+            if (type is null)
                 return false;
-            if (Identifier == null)
+            if (Identifier is null)
                 return false;
-            if (type.Identifier == null)
+            if (type.Identifier is null)
                 return false;
 
             return Identifier.IsEqual(type.Identifier);

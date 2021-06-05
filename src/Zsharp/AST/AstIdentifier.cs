@@ -122,7 +122,7 @@ namespace Zsharp.AST
 
         public bool IsEqual(AstIdentifier? that)
         {
-            if (that == null)
+            if (that is null)
                 return false;
 
             return CanonicalName == that.CanonicalName &&

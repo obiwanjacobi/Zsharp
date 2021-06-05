@@ -17,7 +17,7 @@ namespace UnitTests
         {
             var mod = Modules.FirstOrDefault(m => m.Identifier.Name == fullModuleName);
 
-            if (mod == null)
+            if (mod is null)
             {
                 mod = new AstModuleExternal(fullModuleName, SymbolTable);
                 Modules.Add(mod);

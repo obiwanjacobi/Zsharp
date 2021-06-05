@@ -59,7 +59,7 @@ namespace Zsharp.Runtime
         // linq support
         public Opt<R> Select<R>(Func<T, R> selector)
         {
-            if (selector == null)
+            if (selector is null)
                 throw new ArgumentNullException(nameof(selector));
 
             if (HasValue)
@@ -70,7 +70,7 @@ namespace Zsharp.Runtime
 
         public IEnumerable<R> SelectMany<R>(Func<T, IEnumerable<R>> selector)
         {
-            if (selector == null)
+            if (selector is null)
                 throw new ArgumentNullException(nameof(selector));
 
             if (HasValue)
@@ -81,7 +81,7 @@ namespace Zsharp.Runtime
 
         public Opt<T> Where(Func<T, bool> predicate)
         {
-            if (predicate == null)
+            if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
             if (HasValue && predicate(_value))
@@ -96,7 +96,7 @@ namespace Zsharp.Runtime
 
         public Opt<R> Bind<R>(Func<T, Opt<R>> selector)
         {
-            if (selector == null)
+            if (selector is null)
                 throw new ArgumentNullException(nameof(selector));
 
             if (HasValue)
@@ -115,7 +115,7 @@ namespace Zsharp.Runtime
 
         // operator overloads
         public static implicit operator Opt<T>(T value)
-            => value != null ? new(value) : new();
+            => value is not null ? new(value) : new();
         public static explicit operator T(Opt<T> option)
             => option.Value;
         public static bool operator true(Opt<T> opt)
@@ -140,14 +140,14 @@ namespace Zsharp.Runtime
 
         public bool Equals(Opt<T>? other)
         {
-            if (other != null && HasValue && other.HasValue)
+            if (other is not null && HasValue && other.HasValue)
                 return _value.Equals(other.Value);
             return false;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (obj is null)
                 return !HasValue;
             if (obj is Opt<T> option)
                 return Equals(option);

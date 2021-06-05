@@ -184,7 +184,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_file; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFile(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFile(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -268,7 +268,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_header; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitHeader(this);
+			if (typedVisitor is not null) return typedVisitor.VisitHeader(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -332,7 +332,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_source; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSource(this);
+			if (typedVisitor is not null) return typedVisitor.VisitSource(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -420,7 +420,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_codeblock; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCodeblock(this);
+			if (typedVisitor is not null) return typedVisitor.VisitCodeblock(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -508,7 +508,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_module_statement; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitModule_statement(this);
+			if (typedVisitor is not null) return typedVisitor.VisitModule_statement(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -569,7 +569,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_module_name; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitModule_name(this);
+			if (typedVisitor is not null) return typedVisitor.VisitModule_name(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -646,7 +646,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_module; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_module(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_module(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -698,7 +698,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_import; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_import(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_import(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -758,7 +758,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_export; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_export(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_export(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -822,7 +822,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_export_inline; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_export_inline(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_export_inline(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -902,7 +902,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_flow_statement; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFlow_statement(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFlow_statement(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -989,7 +989,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_return; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_return(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_return(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1050,7 +1050,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_if; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_if(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_if(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1099,7 +1099,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_else; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_else(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_else(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1154,7 +1154,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_elseif; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_elseif(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_elseif(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1199,7 +1199,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_break; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_break(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_break(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1238,7 +1238,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_continue; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_continue(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_continue(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1288,7 +1288,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_loop; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_loop(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_loop(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1339,7 +1339,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_loop_infinite; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_loop_infinite(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_loop_infinite(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1378,7 +1378,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_statement_loop_while; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement_loop_while(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStatement_loop_while(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1435,7 +1435,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_definition_top; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitDefinition_top(this);
+			if (typedVisitor is not null) return typedVisitor.VisitDefinition_top(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1517,7 +1517,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_definition; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitDefinition(this);
+			if (typedVisitor is not null) return typedVisitor.VisitDefinition(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1593,7 +1593,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_expression_value; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpression_value(this);
+			if (typedVisitor is not null) return typedVisitor.VisitExpression_value(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1693,7 +1693,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_comptime_expression_value; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitComptime_expression_value(this);
+			if (typedVisitor is not null) return typedVisitor.VisitComptime_expression_value(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1778,7 +1778,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_expression_arithmetic; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpression_arithmetic(this);
+			if (typedVisitor is not null) return typedVisitor.VisitExpression_arithmetic(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1913,7 +1913,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_arithmetic_operand; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitArithmetic_operand(this);
+			if (typedVisitor is not null) return typedVisitor.VisitArithmetic_operand(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1986,7 +1986,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_expression_logic; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpression_logic(this);
+			if (typedVisitor is not null) return typedVisitor.VisitExpression_logic(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2083,7 +2083,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_logic_operand; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLogic_operand(this);
+			if (typedVisitor is not null) return typedVisitor.VisitLogic_operand(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2147,7 +2147,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_expression_comparison; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpression_comparison(this);
+			if (typedVisitor is not null) return typedVisitor.VisitExpression_comparison(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2243,7 +2243,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_comparison_operand; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitComparison_operand(this);
+			if (typedVisitor is not null) return typedVisitor.VisitComparison_operand(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2310,7 +2310,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_expression_bool; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpression_bool(this);
+			if (typedVisitor is not null) return typedVisitor.VisitExpression_bool(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2384,7 +2384,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_def; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_def(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_def(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2469,7 +2469,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_parameter_list; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_parameter_list(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_parameter_list(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2540,7 +2540,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_parameter; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_parameter(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_parameter(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2579,7 +2579,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_parameter_self; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_parameter_self(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_parameter_self(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2617,7 +2617,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_return_type; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_return_type(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_return_type(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2663,7 +2663,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_use; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_use(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_use(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2739,7 +2739,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_call; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_call(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_call(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2817,7 +2817,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_parameter_uselist; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_parameter_uselist(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_parameter_uselist(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2870,7 +2870,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_param_use; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_param_use(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_param_use(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2916,7 +2916,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_call_retval_unused; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_call_retval_unused(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_call_retval_unused(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2974,7 +2974,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_function_call_self; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunction_call_self(this);
+			if (typedVisitor is not null) return typedVisitor.VisitFunction_call_self(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3019,7 +3019,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_variable_def_top; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariable_def_top(this);
+			if (typedVisitor is not null) return typedVisitor.VisitVariable_def_top(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3083,7 +3083,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_variable_def; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariable_def(this);
+			if (typedVisitor is not null) return typedVisitor.VisitVariable_def(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3145,7 +3145,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_variable_def_typed; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariable_def_typed(this);
+			if (typedVisitor is not null) return typedVisitor.VisitVariable_def_typed(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3198,7 +3198,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_variable_assign_value; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariable_assign_value(this);
+			if (typedVisitor is not null) return typedVisitor.VisitVariable_assign_value(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3267,7 +3267,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_variable_assign_struct; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariable_assign_struct(this);
+			if (typedVisitor is not null) return typedVisitor.VisitVariable_assign_struct(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3326,7 +3326,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_variable_ref; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariable_ref(this);
+			if (typedVisitor is not null) return typedVisitor.VisitVariable_ref(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3381,7 +3381,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_variable_field_ref; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariable_field_ref(this);
+			if (typedVisitor is not null) return typedVisitor.VisitVariable_field_ref(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3432,7 +3432,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_struct_def; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStruct_def(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStruct_def(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3493,7 +3493,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_struct_field_def_list; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStruct_field_def_list(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStruct_field_def_list(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3558,7 +3558,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_struct_field_def; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStruct_field_def(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStruct_field_def(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3612,7 +3612,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_struct_field_init; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStruct_field_init(this);
+			if (typedVisitor is not null) return typedVisitor.VisitStruct_field_init(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3667,7 +3667,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_enum_def; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEnum_def(this);
+			if (typedVisitor is not null) return typedVisitor.VisitEnum_def(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3746,7 +3746,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_enum_option_def_listline; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEnum_option_def_listline(this);
+			if (typedVisitor is not null) return typedVisitor.VisitEnum_option_def_listline(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3822,7 +3822,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_enum_option_def_list; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEnum_option_def_list(this);
+			if (typedVisitor is not null) return typedVisitor.VisitEnum_option_def_list(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3883,7 +3883,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_enum_option_def; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEnum_option_def(this);
+			if (typedVisitor is not null) return typedVisitor.VisitEnum_option_def(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3936,7 +3936,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_enum_option_value; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEnum_option_value(this);
+			if (typedVisitor is not null) return typedVisitor.VisitEnum_option_value(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -3980,7 +3980,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_enum_option_use; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEnum_option_use(this);
+			if (typedVisitor is not null) return typedVisitor.VisitEnum_option_use(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4030,7 +4030,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_type_def; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitType_def(this);
+			if (typedVisitor is not null) return typedVisitor.VisitType_def(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4095,7 +4095,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_type_alias; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitType_alias(this);
+			if (typedVisitor is not null) return typedVisitor.VisitType_alias(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4149,7 +4149,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_type_ref_use; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitType_ref_use(this);
+			if (typedVisitor is not null) return typedVisitor.VisitType_ref_use(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4190,7 +4190,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_type_ref; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitType_ref(this);
+			if (typedVisitor is not null) return typedVisitor.VisitType_ref(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4249,7 +4249,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_type_name; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitType_name(this);
+			if (typedVisitor is not null) return typedVisitor.VisitType_name(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4309,7 +4309,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_template_param_list_use; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTemplate_param_list_use(this);
+			if (typedVisitor is not null) return typedVisitor.VisitTemplate_param_list_use(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4376,7 +4376,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_template_param_use; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTemplate_param_use(this);
+			if (typedVisitor is not null) return typedVisitor.VisitTemplate_param_use(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4427,7 +4427,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_template_param_list_use_number; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTemplate_param_list_use_number(this);
+			if (typedVisitor is not null) return typedVisitor.VisitTemplate_param_list_use_number(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4468,7 +4468,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_template_param_list_use_type; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTemplate_param_list_use_type(this);
+			if (typedVisitor is not null) return typedVisitor.VisitTemplate_param_list_use_type(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4520,7 +4520,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_template_param_list; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTemplate_param_list(this);
+			if (typedVisitor is not null) return typedVisitor.VisitTemplate_param_list(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4578,7 +4578,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_template_param_var; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTemplate_param_var(this);
+			if (typedVisitor is not null) return typedVisitor.VisitTemplate_param_var(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4619,7 +4619,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_template_param_any; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTemplate_param_any(this);
+			if (typedVisitor is not null) return typedVisitor.VisitTemplate_param_any(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4670,7 +4670,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_alias_module; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAlias_module(this);
+			if (typedVisitor is not null) return typedVisitor.VisitAlias_module(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4705,7 +4705,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_identifier_template_param; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifier_template_param(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIdentifier_template_param(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4740,7 +4740,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_identifier_type; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifier_type(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIdentifier_type(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4775,7 +4775,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_identifier_var; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifier_var(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIdentifier_var(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4810,7 +4810,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_identifier_param; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifier_param(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIdentifier_param(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4846,7 +4846,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_identifier_func; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifier_func(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIdentifier_func(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4891,7 +4891,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_identifier_field; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifier_field(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIdentifier_field(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4936,7 +4936,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_identifier_enumoption; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifier_enumoption(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIdentifier_enumoption(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4981,7 +4981,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_identifier_module; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifier_module(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIdentifier_module(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5025,7 +5025,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_identifier_unused; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifier_unused(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIdentifier_unused(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5061,7 +5061,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_literal_bool; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLiteral_bool(this);
+			if (typedVisitor is not null) return typedVisitor.VisitLiteral_bool(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5110,7 +5110,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_literal; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLiteral(this);
+			if (typedVisitor is not null) return typedVisitor.VisitLiteral(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5169,7 +5169,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_number; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNumber(this);
+			if (typedVisitor is not null) return typedVisitor.VisitNumber(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5218,7 +5218,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_operator_arithmetic; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOperator_arithmetic(this);
+			if (typedVisitor is not null) return typedVisitor.VisitOperator_arithmetic(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5262,7 +5262,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_operator_arithmetic_unary; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOperator_arithmetic_unary(this);
+			if (typedVisitor is not null) return typedVisitor.VisitOperator_arithmetic_unary(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5298,7 +5298,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_operator_logic; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOperator_logic(this);
+			if (typedVisitor is not null) return typedVisitor.VisitOperator_logic(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5342,7 +5342,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_operator_logic_unary; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOperator_logic_unary(this);
+			if (typedVisitor is not null) return typedVisitor.VisitOperator_logic_unary(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5382,7 +5382,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_operator_comparison; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOperator_comparison(this);
+			if (typedVisitor is not null) return typedVisitor.VisitOperator_comparison(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5432,7 +5432,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_operator_bits; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOperator_bits(this);
+			if (typedVisitor is not null) return typedVisitor.VisitOperator_bits(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5476,7 +5476,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_operator_bits_unary; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOperator_bits_unary(this);
+			if (typedVisitor is not null) return typedVisitor.VisitOperator_bits_unary(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5511,7 +5511,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_operator_assignment; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOperator_assignment(this);
+			if (typedVisitor is not null) return typedVisitor.VisitOperator_assignment(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5550,7 +5550,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_empty_line; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEmpty_line(this);
+			if (typedVisitor is not null) return typedVisitor.VisitEmpty_line(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5616,7 +5616,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_newline; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNewline(this);
+			if (typedVisitor is not null) return typedVisitor.VisitNewline(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5672,7 +5672,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_comment; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitComment(this);
+			if (typedVisitor is not null) return typedVisitor.VisitComment(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5718,7 +5718,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_string; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitString(this);
+			if (typedVisitor is not null) return typedVisitor.VisitString(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -5753,7 +5753,7 @@ public partial class ZsharpParser : Parser {
 		public override int RuleIndex { get { return RULE_indent; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IZsharpVisitor<TResult> typedVisitor = visitor as IZsharpVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIndent(this);
+			if (typedVisitor is not null) return typedVisitor.VisitIndent(this);
 			else return visitor.VisitChildren(this);
 		}
 	}

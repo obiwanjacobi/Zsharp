@@ -27,22 +27,22 @@ namespace Zsharp.AST
 
             var contextSymbols = parentSymbols ?? functionSymbols;
 
-            if (FunctionType.TypeReference != null &&
-                FunctionType.TypeReference!.Symbol == null)
+            if (FunctionType.TypeReference is not null &&
+                FunctionType.TypeReference!.Symbol is null)
             {
                 contextSymbols.Add(FunctionType.TypeReference);
             }
 
             foreach (var parameter in FunctionType.Parameters)
             {
-                if (parameter.TypeReference != null &&
-                    parameter.TypeReference.Symbol == null)
+                if (parameter.TypeReference is not null &&
+                    parameter.TypeReference.Symbol is null)
                 {
                     functionSymbols.Add(parameter.TypeReference);
                 }
             }
 
-            Ast.Guard(Symbol == null, "Symbol already set. Call CreateSymbols only once.");
+            Ast.Guard(Symbol is null, "Symbol already set. Call CreateSymbols only once.");
             contextSymbols.Add(this);
         }
 

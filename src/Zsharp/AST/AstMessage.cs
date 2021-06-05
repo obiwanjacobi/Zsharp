@@ -45,10 +45,10 @@ namespace Zsharp.AST
         {
             get
             {
-                if (_location != null)
+                if (_location is not null)
                     return _location.Value;
 
-                if (Context != null)
+                if (Context is not null)
                     return (Context.Start.Line, Context.Start.Column + 1);
 
                 return (0, 0);
@@ -59,7 +59,7 @@ namespace Zsharp.AST
 
         public bool Equals(AstMessage? other)
         {
-            if (other != null)
+            if (other is not null)
             {
                 return
                     Object.ReferenceEquals(Context, other.Context) &&

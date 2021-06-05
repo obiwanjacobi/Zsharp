@@ -9,11 +9,11 @@ namespace Zsharp.AST
             var previousParent = symbolTable.ParentTable;
             var parent = symbolTable;
 
-            if (previousParent == null)
+            if (previousParent is null)
                 throw new InternalErrorException(
                     "Don't call GetRootTable on the Intriniscs Table.");
 
-            while (parent != null)
+            while (parent is not null)
             {
                 previousParent = parent;
                 parent = parent.ParentTable;

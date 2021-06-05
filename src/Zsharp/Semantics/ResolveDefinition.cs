@@ -19,7 +19,7 @@ namespace Zsharp.Semantics
 
             var externals = file.Symbols.FindEntries(AstSymbolKind.Module)
                 .Select(s => s.DefinitionAs<AstModuleExternal>())
-                .Where(m => m != null);
+                .Where(m => m is not null);
 
             foreach (var mod in externals)
             {
@@ -33,12 +33,12 @@ namespace Zsharp.Semantics
 
         public override void VisitExpression(AstExpression expression)
         {
-            if (expression.TypeReference != null)
+            if (expression.TypeReference is not null)
                 return;
 
             VisitChildren(expression);
 
-            if (expression.TypeReference == null)
+            if (expression.TypeReference is null)
             {
                 AstTypeReference? typeRef = null;
 
@@ -60,11 +60,11 @@ namespace Zsharp.Semantics
                     AstTypeReference? leftTypeRef = expression.LHS?.TypeReference;
                     AstTypeReference? rightTypeRef = expression.RHS?.TypeReference;
 
-                    if (leftTypeRef != null)
+                    if (leftTypeRef is not null)
                     {
                         typeRef = leftTypeRef;
                     }
-                    else if (rightTypeRef != null)
+                    else if (rightTypeRef is not null)
                     {
                         typeRef = rightTypeRef;
                     }
@@ -78,13 +78,13 @@ namespace Zsharp.Semantics
 
         public override void VisitExpressionOperand(AstExpressionOperand operand)
         {
-            if (operand.TypeReference != null)
+            if (operand.TypeReference is not null)
                 return;
 
             VisitChildren(operand);
 
             var expr = operand.Expression;
-            if (expr != null)
+            if (expr is not null)
             {
                 Ast.Guard(expr.TypeReference, "AstExpression.TypeReference not set.");
                 operand.SetTypeReference(expr.TypeReference!);
@@ -92,7 +92,7 @@ namespace Zsharp.Semantics
             }
 
             var litBool = operand.LiteralBoolean;
-            if (litBool != null)
+            if (litBool is not null)
             {
                 Ast.Guard(SymbolTable, "No SymbolTable set.");
 
@@ -104,7 +104,7 @@ namespace Zsharp.Semantics
             }
 
             var numeric = operand.LiteralNumeric;
-            if (numeric != null)
+            if (numeric is not null)
             {
                 Ast.Guard(SymbolTable, "No SymbolTable set.");
 
@@ -115,7 +115,7 @@ namespace Zsharp.Semantics
             }
 
             var litString = operand.LiteralString;
-            if (litString != null)
+            if (litString is not null)
             {
                 Ast.Guard(SymbolTable, "No SymbolTable set.");
 
@@ -127,34 +127,34 @@ namespace Zsharp.Semantics
             }
 
             var var = operand.VariableReference;
-            if (var != null)
+            if (var is not null)
             {
                 Ast.Guard(SymbolTable, "No SymbolTable was set.");
                 Ast.Guard(var.Identifier, "Variable has no Identifier");
 
-                if (var.TypeReference == null)
+                if (var.TypeReference is null)
                 {
                     var def = (IAstTypeReferenceSite?)var.VariableDefinition
                         ?? (IAstTypeReferenceSite?)var.ParameterDefinition;
 
                     var typeRef = def?.TypeReference ?? FindTypeReference(var);
-                    if (typeRef != null)
+                    if (typeRef is not null)
                     {
                         var.SetTypeReference(typeRef.MakeProxy());
                     }
                 }
 
-                if (var.TypeReference != null)
+                if (var.TypeReference is not null)
                 {
                     operand.SetTypeReference(var.TypeReference);
                 }
             }
 
             var fld = operand.FieldReference;
-            if (fld?.Symbol?.Definition != null)
+            if (fld?.Symbol?.Definition is not null)
             {
                 var enumOptDef = fld.Symbol.DefinitionAs<AstTypeDefinitionEnumOption>();
-                if (enumOptDef != null)
+                if (enumOptDef is not null)
                 {
                     var enumDef = enumOptDef.ParentAs<AstTypeDefinitionEnum>();
                     operand.SetTypeReference(AstTypeReference.From(enumDef!));
@@ -162,7 +162,7 @@ namespace Zsharp.Semantics
             }
 
             var fn = operand.FunctionReference;
-            if (fn?.FunctionType.TypeReference != null)
+            if (fn?.FunctionType.TypeReference is not null)
             {
                 operand.SetTypeReference(fn.FunctionType.TypeReference.MakeProxy());
             }
@@ -172,7 +172,7 @@ namespace Zsharp.Semantics
         {
             var typeRef = AstTypeReference.From(typeDef);
             var entry = typeRef.Symbol ?? SymbolTable!.Add(typeRef);
-            if (entry.Definition == null)
+            if (entry.Definition is null)
                 entry.AddNode(typeDef);
 
             operand.SetTypeReference(typeRef);
@@ -184,7 +184,7 @@ namespace Zsharp.Semantics
             VisitChildren(assign);
 
             if (assign.Variable is AstVariableReference varRef &&
-                varRef.VariableDefinition == null)
+                varRef.VariableDefinition is null)
             {
                 var entry = varRef.Symbol;
 
@@ -200,7 +200,7 @@ namespace Zsharp.Semantics
                 VisitChildren(assign);
             }
 
-            if (assign.Variable!.TypeReference == null)
+            if (assign.Variable!.TypeReference is null)
             {
                 // typeless assign of var (x = 42)
                 var expr = assign.Expression;
@@ -214,7 +214,7 @@ namespace Zsharp.Semantics
                 Ast.Guard(entry, "AstSymbolEntry was not set on Variable.");
 
                 var def = entry!.DefinitionAs<AstTypeDefinition>();
-                if (def != null)
+                if (def is not null)
                 {
                     typeRef = AstTypeReference.From(def);
                     assign.Variable.SetTypeReference(typeRef);
@@ -236,7 +236,7 @@ namespace Zsharp.Semantics
                 var success = variable.TryResolveSymbol();
 
                 if (!success &&
-                    variable.ParentAs<AstAssignment>() == null)
+                    variable.ParentAs<AstAssignment>() is null)
                 {
                     _context.UndefinedVariable(variable);
                 }
@@ -247,7 +247,7 @@ namespace Zsharp.Semantics
         {
             VisitChildren(enumOption);
 
-            if (enumOption.Symbol!.Definition == null &&
+            if (enumOption.Symbol!.Definition is null &&
                 !enumOption.TryResolveSymbol())
             {
                 _context.UndefinedEnumeration(enumOption);
@@ -258,7 +258,7 @@ namespace Zsharp.Semantics
         {
             VisitChildren(function);
 
-            if (function.FunctionDefinition == null)
+            if (function.FunctionDefinition is null)
             {
                 if (!function.TryResolveSymbol())
                 {
@@ -268,7 +268,7 @@ namespace Zsharp.Semantics
                         var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinition>(
                             function.Identifier!.TemplateDefinitionName, AstSymbolKind.Function);
 
-                        if (templateFunction != null)
+                        if (templateFunction is not null)
                         {
                             if (!templateFunction.IsExternal)
                             {
@@ -289,7 +289,7 @@ namespace Zsharp.Semantics
 
                 // in case of overloads, TryResolve may succeed (finding the correct SymbolEntry)
                 // but FunctionDefinition may still be null (FunctionReference.OverloadKey does not match functionDef)
-                if (function.FunctionDefinition == null)
+                if (function.FunctionDefinition is null)
                 {
                     var overloadDef = ResolveOverload(function);
                     if (overloadDef is not null)
@@ -304,13 +304,13 @@ namespace Zsharp.Semantics
                 }
             }
 
-            if (function.FunctionType.TypeReference == null &&
-                function.FunctionDefinition?.FunctionType.TypeReference != null)
+            if (function.FunctionType.TypeReference is null &&
+                function.FunctionDefinition?.FunctionType.TypeReference is not null)
             {
                 var typeRef = function.FunctionDefinition.FunctionType.TypeReference.MakeProxy();
                 function.FunctionType.SetTypeReference(typeRef);
                 // if type is intrinsic the symbol may not be set.
-                if (typeRef.Symbol == null)
+                if (typeRef.Symbol is null)
                     function.Symbol!.SymbolTable.Add(typeRef);
                 Visit(typeRef);
             }
@@ -321,7 +321,7 @@ namespace Zsharp.Semantics
             VisitChildren(parameter);
 
             // TODO: take parameter type from definition?
-            if (parameter.TypeReference == null)
+            if (parameter.TypeReference is null)
             {
                 parameter.SetTypeReference(parameter.Expression!.TypeReference!.MakeProxy());
             }
@@ -329,7 +329,7 @@ namespace Zsharp.Semantics
 
         public override void VisitTypeReference(AstTypeReference type)
         {
-            if (type.TypeDefinition != null)
+            if (type.TypeDefinition is not null)
                 return;
 
             Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
@@ -376,7 +376,7 @@ namespace Zsharp.Semantics
 
         private AstTypeReference? FindTypeReference(AstNode? node)
         {
-            if (node == null)
+            if (node is null)
                 return null;
 
             if (node is AstTypeReference typeRefNode)
@@ -402,7 +402,7 @@ namespace Zsharp.Semantics
             // up to parent
             var parent = node.Parent;
 
-            if (parent != null && typeRef == null)
+            if (parent is not null && typeRef is null)
             {
                 typeRef = FindTypeReference(parent);
             }

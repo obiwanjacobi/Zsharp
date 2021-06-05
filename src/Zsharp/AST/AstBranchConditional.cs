@@ -44,7 +44,7 @@ namespace Zsharp.AST
         private AstBranchConditional? _subBranch;
         public AstBranchConditional? SubBranch => _subBranch;
 
-        public bool HasSubBranch => _subBranch != null;
+        public bool HasSubBranch => _subBranch is not null;
 
         public bool TryAddSubBranch(AstBranchConditional? subBranch)
         {

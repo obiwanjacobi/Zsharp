@@ -9,7 +9,7 @@ namespace Zsharp.AST
             : base(AstNodeType.Literal)
         {
             Context = context;
-            Value = context.TRUE() != null;
+            Value = context.TRUE() is not null;
         }
 
         public ParserRuleContext Context { get; }

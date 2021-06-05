@@ -27,7 +27,7 @@ namespace Zsharp.Semantics
 
         protected AstSymbolTable? SetSymbolTable(AstSymbolTable? symbolTable)
         {
-            if (_globalSymbols == null)
+            if (_globalSymbols is null)
             {
                 _globalSymbols = symbolTable;
             }

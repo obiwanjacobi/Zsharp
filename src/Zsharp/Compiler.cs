@@ -82,7 +82,7 @@ namespace Zsharp
                 IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
             {
                 AstMessage err;
-                if (e != null)
+                if (e is not null)
                 {
                     err = _context.AddError((ParserRuleContext)e.Context, $"Syntax Error: {msg}");
                 }

@@ -26,7 +26,7 @@ namespace Zsharp.EmitCS
 
         public static string ToCode(this AstExpression? expression)
         {
-            if (expression == null)
+            if (expression is null)
                 return String.Empty;
 
             var builder = new CsBuilder();

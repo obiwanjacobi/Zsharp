@@ -71,7 +71,7 @@ namespace Zsharp.EmitCS
         {
             WriteIndent();
             _writer.Write($"{access.ToCode()} {modifiers.ToCode()} {keyword.ToCode()} {className}");
-            if (baseNames != null && baseNames.Length > 0)
+            if (baseNames is not null && baseNames.Length > 0)
                 _writer.Write($" : {String.Join(", ", baseNames)}");
             _writer.WriteLine();
             WriteIndent();
@@ -110,7 +110,7 @@ namespace Zsharp.EmitCS
         public void StartMethod(AccessModifiers access, MethodModifiers modifiers, string retType, string methodName, params (string name, string type)[]? parameters)
         {
             _writer.Write($"{access.ToCode()} {modifiers.ToCode()} {retType} {methodName}(");
-            if (parameters != null && parameters.Length > 0)
+            if (parameters is not null && parameters.Length > 0)
             {
                 _writer.Write(String.Join(", ", parameters.Select(p => $"{p.type} {p.name}")));
             }

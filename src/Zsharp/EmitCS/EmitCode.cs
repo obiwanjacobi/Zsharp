@@ -60,7 +60,7 @@ namespace Zsharp.EmitCS
                 Context.CodeBuilder.AddVariable(variable);
             }
 
-            if (variable.ParentAs<AstAssignment>() == null)
+            if (variable.ParentAs<AstAssignment>() is null)
             {
                 // prevent 'use of unassigned variable' error
                 Context.CodeBuilder.CsBuilder.EndLine(" = default");
@@ -110,7 +110,7 @@ namespace Zsharp.EmitCS
                 Context.CodeBuilder.CsBuilder.EndScope();
             }
 
-            if (assign.Expression != null)
+            if (assign.Expression is not null)
             {
                 Context.CodeBuilder.CsBuilder.Append(" = ");
                 VisitExpression(assign.Expression);
@@ -124,7 +124,7 @@ namespace Zsharp.EmitCS
         public override void VisitTypeFieldInitialization(AstTypeFieldInitialization field)
         {
             var assign = field.ParentAs<AstAssignment>();
-            if (assign != null)
+            if (assign is not null)
             {
                 Context.CodeBuilder.CsBuilder.Append(
                     $"{field.Identifier!.CanonicalName} = ");

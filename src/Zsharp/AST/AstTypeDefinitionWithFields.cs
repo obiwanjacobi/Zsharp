@@ -33,7 +33,7 @@ namespace Zsharp.AST
 
         public bool TryAddField(AstTypeFieldDefinition field)
         {
-            if (field?.Identifier == null)
+            if (field?.Identifier is null)
                 return false;
 
             if (_fields.TryAdd(field.Identifier.CanonicalName, field))

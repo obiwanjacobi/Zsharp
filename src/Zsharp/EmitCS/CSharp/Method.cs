@@ -13,7 +13,7 @@ namespace Zsharp.EmitCS.CSharp
         private CsBuilder? _body;
         public CsBuilder GetBody(int indent)
         {
-            if (_body == null)
+            if (_body is null)
                 _body = new CsBuilder(indent);
             return _body;
         }

@@ -26,7 +26,7 @@ namespace Zsharp.AST
 
         public bool TryAddParameter(AstFunctionParameterDefinition param)
         {
-            if (param != null &&
+            if (param is not null &&
                 param.TrySetParent(this))
             {
                 // always make sure 'self' is first param
@@ -95,7 +95,7 @@ namespace Zsharp.AST
             }
             txt.Append(")");
 
-            if (TypeReference?.Identifier != null)
+            if (TypeReference?.Identifier is not null)
             {
                 txt.Append(": ");
                 txt.Append(TypeReference.Identifier.Name);

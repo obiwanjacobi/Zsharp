@@ -47,7 +47,7 @@ namespace Zsharp.AST
 
         public void PromoteToDefinition(AstNode definitionNode, AstNode referenceNode)
         {
-            Ast.Guard(Definition == null, "Symbol already has a definition.");
+            Ast.Guard(Definition is null, "Symbol already has a definition.");
             Ast.Guard(_references.IndexOf(referenceNode) != -1, "Specified reference Node was not found in the References.");
 
             _references.Remove(referenceNode);
@@ -85,7 +85,7 @@ namespace Zsharp.AST
                 node is AstTypeFieldDefinition ||
                 node is AstTemplateParameterDefinition)
             {
-                Ast.Guard(Definition == null, "Definition is already set.");
+                Ast.Guard(Definition is null, "Definition is already set.");
                 _definitions.Add(node);
             }
             else if (SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinition)

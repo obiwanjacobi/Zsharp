@@ -29,7 +29,7 @@ namespace Zsharp.AST
         {
             AstTypeReferenceExternal typeRef;
 
-            if (TypeOrigin != null)
+            if (TypeOrigin is not null)
                 typeRef = new AstTypeReferenceExternal(TypeOrigin);
             else
                 typeRef = new AstTypeReferenceExternal(this);

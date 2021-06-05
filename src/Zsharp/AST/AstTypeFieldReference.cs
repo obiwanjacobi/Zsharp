@@ -15,7 +15,7 @@ namespace Zsharp.AST
         {
             this.ThrowIfSymbolEntryNotSet();
             var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
-            if (entry != null)
+            if (entry is not null)
             {
                 Symbol = entry;
                 return true;

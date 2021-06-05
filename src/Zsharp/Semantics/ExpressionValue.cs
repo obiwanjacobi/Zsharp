@@ -54,21 +54,21 @@ namespace Zsharp.Semantics
             if ((expression.Operator & AstExpressionOperator.MaskComparison) > 0)
             {
                 Int64 rhs = PopInt();
-                Int64 lhs = expression.LHS != null ? PopInt() : 0;
+                Int64 lhs = expression.LHS is not null ? PopInt() : 0;
 
                 value = PerformComparisonOperation(lhs, expression.Operator, rhs);
             }
             else if ((expression.Operator & AstExpressionOperator.MaskLogic) > 0)
             {
                 bool rhs = PopBool();
-                bool lhs = expression.LHS != null && PopBool();
+                bool lhs = expression.LHS is not null && PopBool();
 
                 value = PerformLogicalOperation(lhs, expression.Operator, rhs);
             }
             else // arithmetic and bitwise
             {
                 Int64 rhs = PopInt();
-                Int64 lhs = expression.LHS != null ? PopInt() : 0;
+                Int64 lhs = expression.LHS is not null ? PopInt() : 0;
 
                 value = PerformNumericalOperation(lhs, expression.Operator, rhs);
             }

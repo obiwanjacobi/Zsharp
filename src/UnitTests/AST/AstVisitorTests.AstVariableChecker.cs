@@ -14,9 +14,9 @@ namespace UnitTests.AST
             }
             public override void VisitExpressionOperand(AstExpressionOperand operand)
             {
-                if (operand.Expression == null &&
-                    operand.LiteralNumeric == null &&
-                    operand.FunctionReference == null)
+                if (operand.Expression is null &&
+                    operand.LiteralNumeric is null &&
+                    operand.FunctionReference is null)
                 {
                     operand.VariableReference.Should().NotBeNull();
                 }

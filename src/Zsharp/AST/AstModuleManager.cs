@@ -34,7 +34,7 @@ namespace Zsharp.AST
             var moduleName = AstDotName.ToCanonical(moduleCtx.module_name().GetText());
 
             var module = FindModule<AstModulePublic>(moduleName);
-            if (module == null)
+            if (module is null)
             {
                 module = new AstModulePublic(moduleName);
                 _modules.Add(moduleName, module);
@@ -65,10 +65,10 @@ namespace Zsharp.AST
         public AstModuleExternal? Import(string moduleName)
         {
             var module = FindModule<AstModuleExternal>(moduleName);
-            if (module == null)
+            if (module is null)
             {
                 module = _moduleLoader.LoadExact(moduleName);
-                if (module != null)
+                if (module is not null)
                 {
                     _modules.Add(moduleName, module);
                     _externalSymbolTable.Add(module);

@@ -8,7 +8,7 @@
         {
             this.SetIdentifier(new AstIdentifier(typeName, AstIdentifierType.Type));
             ExternalName = new AstExternalName(@namespace, typeName);
-            if (baseType != null)
+            if (baseType is not null)
                 SetBaseType(baseType);
         }
 

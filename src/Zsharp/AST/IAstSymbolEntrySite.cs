@@ -17,7 +17,7 @@
 
         public static void ThrowIfSymbolEntryNotSet(this IAstSymbolEntrySite symbolEntrySite)
         {
-            if (symbolEntrySite.Symbol == null)
+            if (symbolEntrySite.Symbol is null)
                 throw new InternalErrorException("Symbol Entry not set.");
         }
     }

@@ -75,7 +75,7 @@ namespace Zsharp.AST
 
         public bool TryAddFieldInit(AstTypeFieldInitialization? field)
         {
-            if (field != null &&
+            if (field is not null &&
                 field.TrySetParent(this))
             {
                 _fields.Add(field);

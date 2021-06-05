@@ -28,7 +28,7 @@ namespace Zsharp.Dgml
         {
             string moduleName = String.Empty;
             var module = (AstModule)(file.Parent);
-            if (module != null)
+            if (module is not null)
             {
                 moduleName = module.Identifier.Name;
             }
@@ -144,7 +144,7 @@ namespace Zsharp.Dgml
             var name = assignment.Variable.Identifier.Name;
             var typeName = assignment.Variable.TypeReference?.Identifier.Name;
             var nodeName = $"{name}: {typeName}";
-            if (assignment.Expression != null)
+            if (assignment.Expression is not null)
                 nodeName += " = " + assignment.Expression.AsString();
 
             var node = CreateNode(nodeName, assignment.NodeType);
@@ -166,19 +166,19 @@ namespace Zsharp.Dgml
             _ = CreateLink(parentId, node.Id);
 
             var conditional = branch.ToConditional();
-            if (conditional != null)
+            if (conditional is not null)
             {
                 var expression = conditional.Expression;
-                if (expression != null)
+                if (expression is not null)
                 {
                     node.Label = conditional.Expression.AsString();
                 }
 
                 var code = conditional.CodeBlock;
-                if (code != null)
+                if (code is not null)
                 {
                     var blockNode = WriteCodeBlock(code, node.Id);
-                    if (expression != null)
+                    if (expression is not null)
                     {
                         var link = FindLink(node.Id, blockNode.Id);
                         link.Label = "if";
@@ -186,7 +186,7 @@ namespace Zsharp.Dgml
                 }
 
                 var subBranch = conditional.SubBranch;
-                if (subBranch != null)
+                if (subBranch is not null)
                 {
                     var subNode = WriteBranch(subBranch, node.Id);
                     var link = FindLink(node.Id, subNode.Id);

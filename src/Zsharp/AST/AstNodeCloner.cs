@@ -213,25 +213,25 @@ namespace Zsharp.AST
         {
             AstNode? child = null;
 
-            if (operand.Expression != null)
+            if (operand.Expression is not null)
                 child = CloneExpression(operand.Expression);
 
-            if (operand.FieldReference != null)
+            if (operand.FieldReference is not null)
                 child = CloneFieldReference(operand.FieldReference);
 
-            if (operand.FunctionReference != null)
+            if (operand.FunctionReference is not null)
                 child = CloneFunctionReference(operand.FunctionReference);
 
-            if (operand.LiteralBoolean != null)
+            if (operand.LiteralBoolean is not null)
                 child = CloneLiteralBoolean(operand.LiteralBoolean);
 
-            if (operand.LiteralNumeric != null)
+            if (operand.LiteralNumeric is not null)
                 child = CloneLiteralNumeric(operand.LiteralNumeric);
 
-            if (operand.LiteralString != null)
+            if (operand.LiteralString is not null)
                 child = CloneLiteralString(operand.LiteralString);
 
-            if (operand.VariableReference != null)
+            if (operand.VariableReference is not null)
                 child = CloneVariableReference(operand.VariableReference);
 
             Ast.Guard(child, "Expression Operand yielded no AstNode.");
@@ -247,7 +247,7 @@ namespace Zsharp.AST
 
         private static AstLiteralNumeric CloneLiteralNumeric(AstLiteralNumeric literal)
         {
-            if (literal.Context == null)
+            if (literal.Context is null)
                 return new AstLiteralNumeric(literal.Value);
 
             return AstLiteralNumeric.Create((NumberContext)literal.Context);

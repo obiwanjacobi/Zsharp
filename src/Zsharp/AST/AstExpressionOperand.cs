@@ -18,13 +18,13 @@ namespace Zsharp.AST
             FunctionReference = node as AstFunctionReference;
             FieldReference = node as AstTypeFieldReference;
 
-            if (Expression == null &&
-                LiteralBoolean == null &&
-                LiteralNumeric == null &&
-                LiteralString == null &&
-                VariableReference == null &&
-                FunctionReference == null &&
-                FieldReference == null)
+            if (Expression is null &&
+                LiteralBoolean is null &&
+                LiteralNumeric is null &&
+                LiteralString is null &&
+                VariableReference is null &&
+                FunctionReference is null &&
+                FieldReference is null)
             {
                 throw new InternalErrorException(
                     $"Node type {node.GetType().Name} is not an expression operand.");
@@ -33,7 +33,7 @@ namespace Zsharp.AST
             node.SetParent(this);
 
             if (node is IAstTypeReferenceSite typeRefSite &&
-                typeRefSite.TypeReference != null)
+                typeRefSite.TypeReference is not null)
                 this.SetTypeReference(typeRefSite.TypeReference.MakeProxy());
         }
 

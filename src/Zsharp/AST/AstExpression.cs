@@ -79,14 +79,14 @@ namespace Zsharp.AST
 
         public bool Add(AstExpressionOperand op)
         {
-            if (_rhs == null)
+            if (_rhs is null)
             {
                 op.SetParent(this);
                 _rhs = op;
                 return true;
             }
 
-            if (_lhs == null &&
+            if (_lhs is null &&
                 !IsOperator(AstExpressionOperator.MaskUnary))
             {
                 op.SetParent(this);

@@ -7,17 +7,17 @@ namespace Zsharp.EmitCS
     {
         public static string ToCode(this AstType? astType)
         {
-            if (astType != null)
+            if (astType is not null)
             {
                 if (astType is AstTypeReference typeRef &&
-                    typeRef.TypeDefinition != null)
+                    typeRef.TypeDefinition is not null)
                 {
                     astType = typeRef.TypeDefinition;
                 }
 
                 if (astType is AstTypeDefinitionIntrinsic typeDef)
                 {
-                    if (typeDef.SystemType != null)
+                    if (typeDef.SystemType is not null)
                         return typeDef.SystemType.FullName!;
 
                     return "void";
