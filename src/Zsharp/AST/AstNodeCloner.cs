@@ -26,8 +26,10 @@ namespace Zsharp.AST
             {
                 CreateTypeMap(functionRef, functionDef);
 
+                _context.SetCurrent(instanceFunction.FunctionType);
                 _context.SetCurrent(instanceFunction);
                 VisitChildren(functionDef);
+                _context.RevertCurrent();
                 _context.RevertCurrent();
 
                 instanceFunction.SetIdentifier(functionRef.Identifier!);
@@ -53,28 +55,6 @@ namespace Zsharp.AST
             }
         }
 
-        private void CreateTypeMap(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
-        {
-            var defTemplateParams = functionDef.TemplateParameters.ToArray();
-            var refTemplateParams = functionRef.TemplateParameters.ToArray();
-
-            // TODO: default template parameter values
-            Ast.Guard(refTemplateParams.Length == defTemplateParams.Length,
-                "Inconsistent number of template parameters between definition and instantiation.");
-
-            for (int i = 0; i < functionDef.TemplateParameters.Count(); i++)
-            {
-                var defParam = defTemplateParams[i];
-                var refParam = refTemplateParams[i];
-
-                _typeMap.Add(
-                    defParam.Identifier!.CanonicalName,
-                    refParam.TypeReference!
-                );
-                _typeList.Add(refParam.TypeReference!);
-            }
-        }
-
         public T? Clone<T>(T node) where T : AstNode, IAstCodeBlockItem
         {
             var cb = new AstCodeBlock("Clone", _context.CompilerContext.IntrinsicSymbols);
@@ -86,6 +66,28 @@ namespace Zsharp.AST
             result?.Orphan();
 
             return result;
+        }
+
+        private void CreateTypeMap(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
+        {
+            var defTemplateParams = functionDef.FunctionType.TemplateParameters.ToArray();
+            var refTemplateParams = functionRef.FunctionType.TemplateParameters.ToArray();
+
+            // TODO: default template parameter values
+            Ast.Guard(refTemplateParams.Length == defTemplateParams.Length,
+                "Inconsistent number of template parameters between definition and instantiation.");
+
+            for (int i = 0; i < functionDef.FunctionType.TemplateParameters.Count(); i++)
+            {
+                var defParam = defTemplateParams[i];
+                var refParam = refTemplateParams[i];
+
+                _typeMap.Add(
+                    defParam.Identifier!.CanonicalName,
+                    refParam.TypeReference!
+                );
+                _typeList.Add(refParam.TypeReference!);
+            }
         }
 
         //---------------------------------------------------------------------
@@ -123,8 +125,10 @@ namespace Zsharp.AST
                 var codeBlock = _context.GetCurrent<AstCodeBlock>();
                 codeBlock.AddItem(fnDef);
 
+                _context.SetCurrent(fnDef.FunctionType);
                 _context.SetCurrent(fnDef);
                 VisitChildren(functionDef);
+                _context.RevertCurrent();
                 _context.RevertCurrent();
 
                 var symbols = _context.GetCurrent<IAstSymbolTableSite>();
@@ -144,7 +148,7 @@ namespace Zsharp.AST
             paramDef.TrySetIdentifier(parameter.Identifier);
 
             var fnDef = _context.GetCurrent<AstFunctionDefinition>();
-            fnDef.AddParameter(paramDef);
+            fnDef.FunctionType.AddParameter(paramDef);
 
             _context.SetCurrent(paramDef);
             VisitChildren(parameter);
@@ -160,7 +164,7 @@ namespace Zsharp.AST
             paramRef.TrySetIdentifier(parameter.Identifier);
 
             var fnRef = _context.GetCurrent<AstFunctionReference>();
-            fnRef.AddParameter(paramRef);
+            fnRef.FunctionType.AddParameter(paramRef);
 
             _context.SetCurrent(paramRef);
             VisitChildren(parameter);
@@ -172,11 +176,14 @@ namespace Zsharp.AST
 
         private AstFunctionReference CloneFunctionReference(AstFunctionReference function)
         {
-            var fnRef = new AstFunctionReference(function.Context!);
+            Ast.Guard(function.Context, "No FunctionReference Context set.");
+            var fnRef = new AstFunctionReference((Function_callContext)function.Context!);
             fnRef.SetIdentifier(function.Identifier!);
 
+            _context.SetCurrent(fnRef.FunctionType);
             _context.SetCurrent(fnRef);
             VisitChildren(function);
+            _context.RevertCurrent();
             _context.RevertCurrent();
 
             return fnRef;

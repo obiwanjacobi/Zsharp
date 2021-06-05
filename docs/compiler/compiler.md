@@ -51,4 +51,4 @@
 
 ---
 
-> TBD: Compile (transpile) to C# and use the Roslyn compiler to get to IL. This would save a lot of work and we would get the benefits of a real compiler, something I cannot hope to better.
+> Rethink these wild ideas in light of supporting .NET.

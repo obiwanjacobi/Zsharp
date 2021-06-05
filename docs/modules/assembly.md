@@ -129,6 +129,30 @@ An Assembly file can also contain compile time code and other `#` directives.
 
 ---
 
+## Assembly Entry Point
+
+If the assembly is an executable the entry point of the program is listed in the assembly file.
+
+```csharp
+# assembly Name.OfMy.Assembly
+# execute MyEntryPointFn
+```
+
+If `#execute` is not specified the assembly is a (dynamic link) library.
+
+The function specified must be present in one of the included modules.
+
+The declaration of the entry point function must be one of:
+
+```csharp
+main: ()
+main: (): I32
+main: (args: IEnumerable<CommandLineArgument>)
+main: (args: IEnumerable<CommandLineArgument>): I32
+```
+
+---
+
 > TBD
 
 Clearly this is nowhere near the information for a full project management and build system. Do we try to force everything we need into an assembly file, or do we introduce another (project) file?

@@ -30,7 +30,9 @@ namespace Zsharp.AST
 
             _templateParameters.Add(templateParameter);
 
-            Identifier!.TemplateParameterCount = _templateParameters.Count;
+            if (Identifier is not null)
+                Identifier.TemplateParameterCount = _templateParameters.Count;
+
             return true;
         }
     }

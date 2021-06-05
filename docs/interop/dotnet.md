@@ -1,9 +1,7 @@
 # Z\# to .NET
 
-> TBD: Should we drop generating IL and simply transpile to C# and use Roslyn (and all the updates it gets) to do the real work?
-Are there any features that do not map to C# in any way?
-
 How are the various Z# language constructs represented in .NET.
+Are there any features that do not map to C# in any way?
 
 Z# | .NET (C#) | Parent
 --|--|--
@@ -30,8 +28,6 @@ function self parameter | this parameter | static method
 
 ---
 
-> .NET `struct` (heap) vs `ref struct` (stack). Z# does not control the stack/heap choice by type but per case instance... How?
-
 Hidden function prefixes:
 
 - `get_` Property getter.
@@ -55,7 +51,7 @@ For Custom Data Types like `MyType: U8` where a struct derives from a native Typ
 
 ## TODO
 
-First problem is the .NET Reference and Value Types. Although initially Z# aimed to favor structs as value types, it might be a good idea to implement struct as C# records, that is reference types with value semantics.
+First problem is the .NET Reference and Value Types. Although initially Z# aimed to favor structs as value types, it might be a good idea to implement a Z# struct as C# records, that is reference types with value semantics.
 
 Related to this is Z#'s notion of the `Ptr<T>` wrapper type. I cannot see a good way to manage object references per variable reference when .NET attaches this semantic to the (reference) type. A variable to a reference type cannot ever not-be a reference (pointer). A value type can be passed by reference though.
 
@@ -87,3 +83,7 @@ fn: ()
 ```
 
 Cannot reuse `Ptr<T>` type operator `*` because a Z# struct is also a `struct` in .NET (what if we used record?). A pointer to a struct would be a `ref struct`. A pointer to a heap-allocated instance would simply be a .NET managed reference.
+
+---
+
+> See if we can favor Span<T> in order to make it easy to use constructs that promote performance.

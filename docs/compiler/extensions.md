@@ -1,10 +1,21 @@
 # Extensions
 
+> `.NET` Code Attributes are objects, decorators are functions. How to make these meet? Also we may need to rethink some of the extension points.
+
 > TBD: compiler extensions. plugins that supply code. Don't allow language extension, but do allow compile-time function extensions.
 
 > A meta extension: implement a custom # tag. Register C++ code with the compiler to be called when the `#` tag is encountered. The extension either manipulates the Abstract Syntax Tree or emits Machine Code Representation.
 
 > A 'code attribute' or 'decorator' extension. Annotated code that gets in the loop for generating the code for that scope. This, for instance, allows implementation of detailed entry and exit tracing and function interception etc.
+
+```csharp
+// Syntax??
+{Decorator}
+[[Decorator]]
+decoratedFn: ()
+```
+
+> I like the `[[]]` syntax for it doesn't interfere with the object syntax `{}`.
 
 ```C#
 // function code attributes
@@ -26,14 +37,19 @@ myFunction: (p: U8) Bool
 {: CodeAttr}
 {CodeAttr1, CodeAttr2}      // for function
 myFunction: (p: U8) Bool
+
+// concat
+{p: CodeAttr, : CodeAttr, CodeAttr1, CodeAttr2}
+myFunction: (p: U8) Bool
 ```
 
 Code attributes with parameters:
 
 ```C#
-{CodeAttr(param)}           // func(param)
+// func(param)
+{CodeAttr("Parameter")}
 // multiple params
-{CodeAttr(param1, param2)}
+{CodeAttr(42, "42")}
 ```
 
 ## Decorator Functions

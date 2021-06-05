@@ -79,8 +79,8 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            fn.IsTemplate.Should().BeTrue();
-            var tp = fn.TemplateParameters.First();
+            fn.FunctionType.IsTemplate.Should().BeTrue();
+            var tp = fn.FunctionType.TemplateParameters.First();
             tp.Identifier.Name.Should().Be("T");
         }
 
@@ -93,8 +93,8 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionReference>(0);
-            fn.IsTemplate.Should().BeTrue();
-            var tp = fn.TemplateParameters.First();
+            fn.FunctionType.IsTemplate.Should().BeTrue();
+            var tp = fn.FunctionType.TemplateParameters.First();
             tp.TypeReference.Identifier.Name.Should().Be("U8");
         }
     }

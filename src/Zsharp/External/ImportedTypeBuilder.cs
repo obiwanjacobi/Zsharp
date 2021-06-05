@@ -10,7 +10,7 @@ namespace Zsharp.External
     public class ImportedTypeBuilder
     {
         private readonly List<AstFunctionDefinitionExternal> _functions = new();
-        private readonly Dictionary<string, KeyValuePair<string, AstSymbolKind>> _aliases = new();
+        private readonly Dictionary<AstNode, string> _aliases = new();
         private readonly ExternalTypeRepository _typeRepository;
 
         public ImportedTypeBuilder(ExternalTypeRepository typeRepository)
@@ -52,10 +52,6 @@ namespace Zsharp.External
 
         public AstTypeDefinitionExternal? StructType { get; private set; }
 
-        public IEnumerable<AstFunctionDefinitionExternal> Functions => _functions;
-
-        public IEnumerable<KeyValuePair<string, KeyValuePair<string, AstSymbolKind>>> Aliases => _aliases;
-
         private void BuildInterface(TypeDefinition typeDefinition)
         {
 
@@ -92,11 +88,8 @@ namespace Zsharp.External
                     if (method.IsStatic)
                     {
                         // TODO: get_/set_ property methods name handling
-                        _aliases.TryAdd(function.Identifier!.CanonicalName,
-                            KeyValuePair.Create(
-                            $"{typeDefinition.Name}{function.Identifier!.CanonicalName}",
-                                AstSymbolKind.Function)
-                        );
+                        _aliases.TryAdd(function,
+                            $"{typeDefinition.Name}{function.Identifier!.CanonicalName}");
                     }
                 }
             }
@@ -109,13 +102,13 @@ namespace Zsharp.External
             {
                 module.AddTypeDefinition(StructType);
             }
-            foreach (var function in Functions)
+            foreach (var function in _functions)
             {
                 module.AddFunction(function);
             }
-            foreach (var alias in Aliases)
+            foreach (var alias in _aliases)
             {
-                module.AddAlias(alias.Key, alias.Value.Key, alias.Value.Value);
+                module.AddAlias(alias.Key, alias.Value);
             }
         }
 
@@ -135,26 +128,26 @@ namespace Zsharp.External
 
             // TODO: special Void handling
             var typeRef = _typeRepository.GetTypeReference(method.ReturnType);
-            function.SetTypeReference(typeRef);
+            function.FunctionType.SetTypeReference(typeRef);
 
             AstFunctionParameterDefinition funcParam;
             if (!method.IsStatic)
             {
                 funcParam = CreateParameter(AstIdentifierIntrinsic.Self, method.DeclaringType);
-                function.TryAddParameter(funcParam);
+                function.FunctionType.TryAddParameter(funcParam);
             }
 
             foreach (var p in method.Parameters)
             {
                 funcParam = CreateParameter(new AstIdentifier(p.Name, AstIdentifierType.Parameter), p.ParameterType);
-                function.TryAddParameter(funcParam);
+                function.FunctionType.TryAddParameter(funcParam);
             }
 
             foreach (var p in method.GenericParameters)
             {
                 // TODO: GenericParameterConstraints
                 var templParam = CreateTemplateParameter(new AstIdentifier(p.Name, AstIdentifierType.Parameter));
-                function.AddTemplateParameter(templParam);
+                function.FunctionType.AddTemplateParameter(templParam);
             }
 
             return function;

@@ -40,6 +40,39 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void FunctionTemplateDefinitionName()
+        {
+            const string code =
+                "fn: <T>()" + Tokens.NewLine +
+                Tokens.Indent1 + "return" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var id = fn.Identifier;
+
+            id.Should().NotBeNull();
+            id.Name.Should().Be("fn%1");
+            id.CanonicalName.Should().Be("fn%1");
+        }
+
+        [TestMethod]
+        public void FunctionTemplateReferenceName()
+        {
+            const string code =
+                "fn<U8>()" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.CodeBlock.ItemAt<AstFunctionReference>(0);
+            var id = fn.Identifier;
+
+            id.Should().NotBeNull();
+            id.Name.Should().Be("fn;U8");
+            id.CanonicalName.Should().Be("fn;U8");
+        }
+
+        [TestMethod]
         public void FunctionParameterName()
         {
             const string code =
@@ -49,7 +82,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var p = fn.Parameters.FirstOrDefault();
+            var p = fn.FunctionType.Parameters.FirstOrDefault();
             var id = p.Identifier;
 
             id.Should().NotBeNull();
@@ -66,7 +99,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var p = fn.Parameters.FirstOrDefault();
+            var p = fn.FunctionType.Parameters.FirstOrDefault();
             p.TypeReference.Should().NotBeNull();
             p.Identifier.Name.Should().Be("self");
         }

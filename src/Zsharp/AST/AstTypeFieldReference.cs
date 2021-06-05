@@ -11,7 +11,7 @@ namespace Zsharp.AST
         public AstTypeFieldDefinition? FieldDefinition
             => Symbol?.DefinitionAs<AstTypeFieldDefinition>();
 
-        public bool TryResolve()
+        public bool TryResolveSymbol()
         {
             this.ThrowIfSymbolEntryNotSet();
             var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);

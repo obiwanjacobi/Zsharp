@@ -20,12 +20,12 @@ namespace UnitTests.AST
             }
             public override void VisitFunctionDefinition(AstFunctionDefinition function)
             {
-                function.TypeReference.Should().NotBeNull();
+                function.FunctionType.TypeReference.Should().NotBeNull();
                 VisitChildren(function);
             }
             public override void VisitFunctionReference(AstFunctionReference function)
             {
-                function.TypeReference.Should().NotBeNull();
+                function.FunctionType.TypeReference.Should().NotBeNull();
                 VisitChildren(function);
             }
             public override void VisitFunctionParameterDefinition(AstFunctionParameterDefinition parameter)

@@ -27,6 +27,8 @@ d = 0d7_654_321     // 7,654,321
 h = 0xFF_FF
 ```
 
+> TBD I am thinking of defaulting to Int64 for all literal numbers.
+
 ### Floating Point
 
 Floating point literals can be specified in different ways. Mainly the use of the decimal separator `.` is an indication that the value is a floating point value. Only a decimal format is supported (no prefix).

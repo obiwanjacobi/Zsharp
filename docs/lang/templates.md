@@ -12,11 +12,12 @@ Naming Convention for template parameters:
 | S | Self Type | Self function parameter type
 | T | Item Type | Use when only a single template parameter.
 
-All other template parameter names start with a capital letter and end with `T` (for types).
+All other template and generic parameter names start with a capital letter and end with `T` (for types).
 
+Example:
 `transform<#InputT, #OutputT>(input: InputT, output: OutputT)`
 
-None-Type template parameters are always processed at compile-time and do not have to be prefixed with a `#`.
+None-Type template parameters are always processed at compile-time and are not prefixed with a `#`.
 
 ## Structure Templates
 
@@ -80,7 +81,7 @@ OtherStruct: MyStruct       // derive from MyStruct
 typedFn: <#T: MyStruct>(p: T)  // accept type (derived from) MyStruct
     ...
 
-o = OtherStruct             // instantiate
+o = OtherStruct             // instantiate struct
     ...
 
 typedFn(o)                  // type inferred and checked
@@ -148,7 +149,7 @@ templateFn: <#S, #T, #R>(s: S, p: T): R
 // try partial ? => Error
 r = templateFn<U16, U8>(42, 101)    // unclear what types are specified
 
-// parameters inferred, return type specified? Error?
+// Error, parameters inferred, but what type is specified?
 r = templateFn<U16>(42, 101)
 
 // ok, specified explicitly
@@ -157,7 +158,7 @@ r = templateFn<U8, U8, U16>(42, 101)
 // ok, parameters and return type inferred
 r: U16 = templateFn(42, 101)
 
-// explicitly name the template param?
+// ok, explicitly name the template param
 r = templateFn<R=U8>(42, 101)
 ```
 
@@ -273,7 +274,7 @@ templateFn:<Bool, #T>(s: Bool, t: T): Str
 
 ## Generics
 
-For .NET interoperability we need to distinguish between .NET generics and Z# compile-time templates.
+For .NET interoperability we need to distinguish between .NET generics and Z# compile-time template parameters.
 
 ```csharp
 // run time
@@ -291,11 +292,13 @@ hybrid<#T, G>   // emits 'hybrid<G>'
 
 The .NET `where` constraints can be specified on generic parameter as restrictions in the same way as on template parameters.
 
+Depending on our choice of how to represent Z# structs in .NET - which will probably be `record`s, a `class` constraint will be added by default. If the compiler can determine it is safe for value types as well (for example in Z# structs), it can be omitted (only when no explicit type restriction was specified).
+
 ---
 
 ## Duck Typing
 
-As an example here's a template that requires the type to have a property `Name` but it does not matter what Type it is specifically.
+As an example here's a template that requires the type to have a property `Name` but it does not matter what Type it is specifically. Dependencies in templates are not formalized but are deferred until actual compilation.
 
 ```csharp
 // template function
@@ -326,12 +329,20 @@ This allows a sort of duck-typing. As long as the `self` parameter has a `Name` 
 Allow for multiple/nested levels of type params?
 
 ```csharp
-MyType<M<T>>    // requires M to have one T
+MyType<#M<#T>>    // requires M to have one T
     ...         // use M and T?
 ```
 
 With restrictions:
 
 ```csharp
-MyType<M: Struct<T: OtherStruct>>
+MyType<#M: Struct<#T: OtherStruct>>
 ```
+
+---
+
+The source code of any templated functions and types that are public (exported) are stored as a resources in the resulting assembly. This way the source code can be reused by the Z# compiler when an external module tries to use the templated function or type.
+
+Instead of the actual source code, we could also store the serialized AST for performance.
+
+Perhaps also generate a class with loader methods for each symbol name that can have custom code attributes for the Z# compiler to discover.

@@ -64,7 +64,7 @@ fn: [c] InterfaceName
 fn: InterfaceName [c.Ptr()]<T>(p: T): Bool
 ```
 
-> How to differentiate `fn: InterfaceName` from object construction? => Has no field names.
+> How to differentiate `fn: InterfaceName` from struct construction? => Has no field names.
 
 ---
 
@@ -121,16 +121,17 @@ filter: (predicate: Fn<U8, Bool>)
 
 ### Optional Parameters
 
-Optional function parameters can be specified using the optional symbol `?`.
+Optional function parameters can be specified using the optional symbol `?` or `Opt<T>`.
 
 ```C#
+hasParam: (p: Opt<U8>): Bool
 hasParam: (p: U8?): Bool
     return p ? true : false
     return p    // error! implicit cast not allowed
     return p?   // but there is a special syntax
 ```
 
-> TBD: cancel calling a function when parameter is not available?
+> TBD: cancel calling a function when parameter is not available? (`Opt<T>` chaining)
 
 ```csharp
 fn: (p: U8)
@@ -138,8 +139,9 @@ fn: (p: U8)
 
 v: Opt<U8>  // not set
 
-fn(v?)      // do not call function if v is not set.
-?fn(v)
+// do not call function if v is not set.
+fn(v?)  // control on which param
+?fn(v)  // any and all params
 
 // shorthand for
 if v?
@@ -152,6 +154,8 @@ if v?
 
 Functions should have unique names with well-defined parameters.
 Having default parameter values does not explain at the calling site what is happening.
+
+> We may have to allow this for .NET compatibility.
 
 > See note in [Template Parameters](./templates.md#Template-Parameter-Defaults) about supporting a default value for (template) parameters.
 
@@ -171,15 +175,22 @@ namedFn(0x4242, p = 42)         // ok, unnamed is only one left
 
 ### Variable number of parameters
 
-Not really supported but you can fake it with an Array: all of same type. We don't have an 'object' type that is the basis of all. (do we need to?)
+Not really supported but you can fake it with an Array: all of same type. For .NET interop an `Any` (object) type is available.
 
 ```C#
-varFunc: <T>(p: U8, varP: Array<T>)
+varFunc: (p: U8, varP: Array<Any>)
+    ...
+varFuncTempl: <#T>(p: U8, varP: Array<T>)
     ...
 
-// requires (easy) syntax for specifying
-varFunc(42, [1, 2, 3, 4, 5, 6])
+// different types allowed for 'Any'
+varFunc(42, (1, 3.14, "42"))
+
+// same types (or derived) for template
+varFuncTempl(42, (1, 2, 3, 4, 5, 6))
 ```
+
+Because the syntax for specifying a list is very simple we do not have a `params` keyword like C# does.
 
 ### Immutable Parameters
 
@@ -226,8 +237,6 @@ allowedFn(editable = true)
 allowedFn(editable = false)
 ```
 
-> Another 'issue' is passing `Bit<n>` as parameter in that the number of bits will be rounded up to a byte boundary.
-
 ---
 
 ## Return values
@@ -255,11 +264,7 @@ MyFunc(p: U8, p2: U16): (field1: U8, field2: U16)
     }
 ```
 
-> Compiler will check if a ptr is returned, it is not pointing at a stack variable. (not a concern in .NET)
-
-Return values are also passed by value, so in the examples above, the structure reference is copied to the caller.
-
-The caller has to handle the return value (just like with Error). There is a syntax to explicitly ignore the return value.
+The caller has to handle the return value (just like with Error). There is syntax to explicitly ignore the return value.
 
 ```C#
 retFunc: (): Bool
@@ -273,7 +278,7 @@ _ = retFunc()       // ok, explicitly not interested in retval
 
 > Could the compiler have an opinion about where the return statement is located? Only allow early exits inside and `if` and as last statement in the function. What about only one inside a loop?
 
-> TBD: could we also support covariant return types (function overloads)?
+> TBD: Want to support covariant return types (function overloads)?
 
 ### Error
 
@@ -284,6 +289,8 @@ The return type of a function can contain an error `Err<T>`, Refer to [Errors](e
 The return type of a function can be optional `Opt<T>`. Refer to [Optional](optional.md) for more details.
 
 ### Void
+
+> In light of .NET interop we need to rethink this.
 
 Z# doesn't have a Void type in the typical conventional sense. It adopts the functional `Unit` type that can have only one value (itself). That way there need to be no difference between functions that return nothing and functions that do return something. If a function has nothing to return, its return-type is implicit `Unit`.
 
@@ -322,23 +329,21 @@ The true purpose is to not have to distinct between function with or without a r
 
 Function overloading means that there are multiple functions with the same name but different parameter (or return) types. The compiler picks the best fit for what overloaded function is actually called.
 
-But in Z#, only type-bound functions can the `self` parameter be used to overload the function name. The type of `self` is the only thing allowed to change for functions with the same name.
-
-> Not sure if this is actually required. More that resolvement will only be based on the self parameter's Type.
-
-> Would be a problem for interop with existing .NET code. Not having these restrictions makes interacting with existing .NET code a lot less hassle.
-
-> Would also obstruct partial function application.
-
-Give all other functions a unique name.
-
 ```csharp
-fn(self: Struct1, p: U8)
-fn(self: Struct2, p: U8)
-fn(self: Struct1)  // error
+fn: ()
+fn: (p: U8)
+fn: (p: U8, s: Str): Bool
 ```
 
-One exception to this rule are the Type Constructor functions. See Also [Types](./types.md).
+Self/Type-bound functions can also be overloaded - by type and/or by parameters.
+
+```csharp
+fn: (self: Struct1)
+fn: (self: Struct1, p: U8)
+fn: (self: Struct2, p: U8)
+```
+
+[Type Constructor functions](./types.md#Type-Constructors) can also be overloaded.
 
 ---
 
@@ -350,7 +355,9 @@ A recursive function is a function that (eventually) calls itself.
 
 > Can the compiler analyze how deep the recursion will go?
 
-> TBD: add explicit syntax to allow a function to be called recursively. Add syntax for marking `fn` as recursive to guard against accidental type or function name mismatches. Is it a function Type annotation or a function Name annotation?
+> TBD: add explicit syntax to allow a function to be called recursively. Add syntax for marking `fn` as recursive to guard against accidental type or function name mismatches.
+
+Is it a function Type annotation or a function Name annotation?
 
 ```csharp
 {Recursive}                 // decorator
@@ -359,7 +366,7 @@ recurseFn: @(p: U8): U8     // syntax (on Type)
 @recurseFn: (p: U8): U8     // syntax (on Name)
 rec recurseFn: (p: U8): U8     // syntax keyword
         // exit condition here...
-        return recurseFn(p)     // no extra syntax on call
+        return recurseFn(p)     // no extra syntax on call?
 ```
 
 > What if multiple functions are involved in the recursion? All should be marked?
@@ -381,9 +388,11 @@ aliasFn= fn
 aliasFn(42)
 ```
 
-Aliases are syntactic sugar and are resolved at compile time.
+Aliases are syntactic sugar that are resolved at compile time.
 
-The alias syntax is also used for function composition. In that case the function body of the composite function (alias) is not compiled into code but used as a composition template.
+## Partial Application
+
+The alias syntax is also used for partial application. In this case the function body of the composite function (alias) is not compiled into code but used as a composition template.
 
 ```csharp
 fn: (p: U8, s: Str)
@@ -404,7 +413,7 @@ fnPartial("42")
 Using the `self` keyword as the (name of the) first parameter, a function can be bound to a type. In this example the function is bound to (a pointer to) the MyStruct type.
 
 ```C#
-boundFn: (self: Ptr<MyStruct>)
+boundFn: (self: MyStruct)
     ...
 
 s = MyStruct
@@ -414,7 +423,9 @@ s.boundFn()
 boundFn(s)
 ```
 
-When calling a bound function, the 'self' parameter can be used as an 'object' using a dot-notation or simply passed as a first parameter. Normal function rules apply, so for a struct it is usually a good idea to declare a `Ptr<T>` in order to avoid copying and be able to change the fields of the structure. Matching type-bound functions to their types is done as follows:
+When calling a bound function, the 'self' parameter can be used as an 'object' using a dot-notation or simply passed as a first parameter. Matching type-bound functions to their types is done as follows:
+
+> TBD
 
 |Var Type | Self Type | Note
 |---|---|---
@@ -444,6 +455,8 @@ e = MyEnum.MagicValue
 b = e.IsMagicValue()        // true
 ```
 
+---
+
 > TBD: Allow leaving of `()` when bound function has no other parameters?
 
 ```csharp
@@ -458,17 +471,7 @@ v = s.fn    // calls fn(s)
 
 We call this the poor-man's property syntax. Do we require the function name to begin with `get_`/`set_` to match .NET properties? Or can we infer them?
 
-> Allow specifying the self-Type explicitly for readability?
-
-```csharp
-Struct
-    ...
-fn: (self: Struct): U8
-    ...
-
-s: Struct
-v = Struct.fn(s)
-```
+---
 
 Auto fluent-functions on self type with void return type.
 
@@ -493,6 +496,8 @@ s.fn1()     // normal function call
 
 If return type is not `Void`, the actual return type is used to determine if the next function call is valid (self type). See also Fluent Functions (below).
 
+---
+
 > TBD: Allow attaching existing functions to a struct??
 
 ```csharp
@@ -501,8 +506,14 @@ Struct1
 // stand alone fn
 fn: (p: U8): U8
     ...
-// function alias? inline function?
+// function alias syntax for inline function
 fnStruct: (self: Struct1) = fn(self.fld1)
+
+s: Struct1
+    ...
+
+// calls fn(s.fld1)
+s.fnStruct()
 ```
 
 > `.NET`: When the type of the `self` parameter is being compiled, the function is generated as a class method. If the `self` type is external the function is generated as an extension method.
@@ -568,7 +579,8 @@ fn: (self: Struct1)
     ...
 
 // special '()' operator impl.
-(): (self: Struct1)
+// double single quotes to escape special chars
+''()'': (self: Struct1)
     ...
 FunctionCall: (self: Struct1)   // or operator by name
     ...
@@ -614,9 +626,7 @@ OuterFn: (p: U8)
         ...
 ```
 
-> Can Local Functions be declared at the end of the containing function?
-
-> Limit on how many nesting levels? Yes, no local functions in local functions.
+Local Functions can be declared at the end of the containing function. It is not allowed to declare local functions inside local functions.
 
 ---
 
@@ -625,20 +635,6 @@ OuterFn: (p: U8)
 A lambda is a nameless function declared inline at the place where it is called, usually through a function pointer callback on another function.
 
 It follows the same makeup as a normal function except that there is no function name.
-
-It all starts with the ability to create a (typed) function pointer.
-
-```csharp
-// alternate (anonymous) function interface syntax
-// using a type (no names, just types)
-fn: Fn<(U8): U8>    // complex Type
-fn: Fn<U8, U8>      // one param, retval
-fn: Fn<U8, Str, U8> // two params, retval, etc
-fn: Act<U8>         // one param, no retval
-fn: Fn<U8, Void>
-fn: Act<U8, Str>    // two params, no retval, etc
-fn: Fn<U8, Str, Void>
-```
 
 ```csharp
 // typical lambda syntax
@@ -664,23 +660,6 @@ Call([sum.Ptr()](p)
     ...
 )
 ```
-
-> How does capture work inside loops?
-
-```csharp
-import
-    Fn
-    Print
-
-// Fn => (): Void
-l = List<Fn>(10)
-loop c in [0..10]
-    l.Add([c]() -> Print(c))
-for fn in l
-    fn();   // what does it print?
-```
-
-`[c]` is capturing by value, so it should print 0-9.
 
 ---
 
@@ -1035,7 +1014,25 @@ Captures are snapshots (copies) or references to contextual state -like local va
 
 Function can use captures to be able to reference global variables in their body.
 
+```csharp
+x = 42
+fn: [x](p: U8): Bool
+    return p = x        // true if p = 42
+```
+
 Lambda's can use captures to be able to reference data in their vicinity to use during execution of the lambda.
+
+```csharp
+fn: (p: U8, predicate: Fn<(U8): Bool>)
+    if predicate(p)
+        ...
+
+x = 42
+// lambda captures x to compare with
+fn(42, [x](p) -> p = x)
+```
+
+> This is not function related - needs its own chapter.
 
 An additional syntax is considered for capturing dependencies of any code block. This may be a valuable feature when refactoring code.
 
@@ -1081,14 +1078,33 @@ fn: [x](p: U8): Bool
 sameAsX = fn(42)   // true
 ```
 
+---
+
+> How does capture work inside loops?
+
+```csharp
+import
+    Fn
+    Print
+
+// Fn => (): Void
+l = List<Fn>(10)
+loop c in [0..10]
+    l.Add([c]() -> Print(c))
+for fn in l
+    fn();   // what does it print?
+```
+
+`[c]` is capturing by value, so it should print 0-9.
+
 ### Capture Aliases
 
-Like all Aliases, using the assignment operator will rename the capture for the function scope.
+Like all Aliases, using the assignment operator will rename the capture for (inside) the function scope.
 
 ```csharp
 x = 42
 fn: [x=y](p: U8): Bool
-    return y = p
+    return y = p    // true if p = 42
 ```
 
 ---
@@ -1166,12 +1182,31 @@ For more information refer to [Lexical Operators](../lexical/operators.md).
 > Can custom operators be implemented? (like in F#)
 
 ```csharp
-// '.>>.' is the operator. () used to escape the chars.
-(.>>.): <T>(left: T, right: T): T
+// .>>. is the operator. '' used to escape the chars.
+''.>>.'': <T>(left: T, right: T): T
     ...
 ```
 
 > How are the operator rules identified the compiler checks implementations for? We could have some decorators for common operator behaviors.
+
+---
+
+## Top-Level Functions
+
+Any function can be executed as a module is first accessed by placing the call at the top-level in a module file.
+
+Code in the top-level will be executed in order of appearance (top to bottom). This code is placed in a static C# constructor for the module type.
+
+```csharp
+#module MyMod
+
+x = 42
+// will be called at first access
+initFn(x)
+
+initFn: (p: U8)
+    ...
+```
 
 ---
 
@@ -1223,10 +1258,6 @@ These functions only run during the build and there for need some orchestration.
 
 Some compiler functions to manipulate files would come in handy.
 
-```csharp
-
-```
-
 ---
 
 ## Asynchronous Functions
@@ -1263,11 +1294,11 @@ fnAsync: (): Task<U8>
 
 ---
 
+> TBD
+
 Interpret the function parameters `(param: U8)` as a tuple. That means that all functions only have only one actual param, which is a single tuple and is passed by reference (as an optimization), but by value conceptually.
 
 All the parameters need to be read-only (which is a bit odd because they may not use the `Imm<T>` type). This does not mean you cannot pass a pointer and change the content that it points too - that still works.
-
-What is the overhead in building the tuple at the call-site?
 
 We could auto-generate a struct for each function's parameters and allow that struct to be created, initialized and used as the function's only parameter. Although that would encourage functions with a large number of parameters - something we don't want...
 
@@ -1295,15 +1326,13 @@ fn(p)
 fn(42, "42")
 ```
 
+> Also support list (ordered), map (key-value) and stack as a parameters object?
+
 Will there be an automatic overload of `fn` (using an immutable ptr to the parameter structure instance) or does the compiler unpack the structure at the call site to call the original function?
 
 > Will overloaded functions share one parameter structure with all the parameters - or - each have an individual parameter structure?
 
 > The compiler generated option should allow being mapped from a real object.
-
----
-
-Function params are specified in order at call-site, we are steering away from by-order for tuples/deconstruction. That would mean that function parameters are to be specified by name only, which can get very verbose.
 
 Perhaps a 'service' function type uses this principle but calls it a 'message' (like gRPC). Would also return a message in that case. Implementation could be gRPC for interop.
 
@@ -1312,18 +1341,9 @@ Perhaps a 'service' function type uses this principle but calls it a 'message' (
 - simulate properties? thru type-bound functions?
 Get\<T> / Set\<T> / Notify\<T> / Watch\<T[]>
 
-- extensions on intrinsic functions (operator implementations)?
-
-- inline functions? use alias syntax?
-
-- top-level function calls/one-time initialization at first access of module (static constructor).
-
-- How to define the entry point of a program? (Main)
-Decorator? Fixed Name?
-
 ---
 
-declarative code: see if we can find a syntax that would make it easy to call lots of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
+Declarative code: see if we can find a syntax that would make it easy to call lots of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
 https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md
 
 > not having to use `()` on function calls with one parameter could be a help here.
@@ -1347,3 +1367,30 @@ Temporal coupling to function execution (scheduler).
 
 Run this function every 30 seconds.
 Call this function after this timeout has elapsed.
+
+---
+
+> TBD
+
+Type Functions
+
+Functions that live inside the namespace of a type.
+Static methods in C#.
+
+```csharp
+MyStruct
+    ...
+
+// use 'namespace' syntax?
+MyStruct.Fn: (p: U8): Bool
+    ...
+
+// call
+b = MyStruct.Fn(42)
+```
+
+---
+
+> TBD
+
+- Map, Apply, Bind ?? What are the names to use here? https://fsharpforfunandprofit.com/series/map-and-bind-and-apply-oh-my/

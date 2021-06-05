@@ -7,9 +7,8 @@ namespace Zsharp.AST
         IAstCodeBlockSite, IAstSymbolTableSite
     {
         public AstFunctionDefinitionImpl(Function_defContext functionCtx)
-        {
-            Context = functionCtx;
-        }
+            : base(functionCtx)
+        { }
 
         private AstCodeBlock? _codeBlock;
         public AstCodeBlock? CodeBlock => _codeBlock;
@@ -51,7 +50,7 @@ namespace Zsharp.AST
         {
             base.CreateSymbols(functionSymbols, parentSymbols);
 
-            foreach (var parameter in Parameters)
+            foreach (var parameter in FunctionType.Parameters)
             {
                 if (parentSymbols != null &&
                     parameter.Symbol == null)
@@ -59,16 +58,11 @@ namespace Zsharp.AST
                     functionSymbols.Add(parameter);
                 }
             }
-        }
 
-        public override bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
-        {
-            if (base.TryAddTemplateParameter(templateParameter))
+            foreach (var templParam in FunctionType.TemplateParameters)
             {
-                Symbols.Add(templateParameter);
-                return true;
+                Symbols.Add(templParam);
             }
-            return false;
         }
 
         public override void VisitChildren(AstVisitor visitor)

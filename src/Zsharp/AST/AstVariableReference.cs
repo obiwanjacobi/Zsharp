@@ -34,7 +34,7 @@ namespace Zsharp.AST
         public AstFunctionParameterDefinition? ParameterDefinition
             => Symbol?.DefinitionAs<AstFunctionParameterDefinition>();
 
-        public bool TryResolve()
+        public bool TryResolveSymbol()
         {
             this.ThrowIfSymbolEntryNotSet();
             var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);

@@ -15,8 +15,8 @@ namespace Zsharp.Semantics
         {
             if (function.EnforceReturnValueUse &&
                 function.ParentAs<AstCodeBlock>() != null &&
-                function.TypeReference != null &&
-                function.TypeReference?.TypeDefinition?.Identifier != AstIdentifierIntrinsic.Void)
+                function.FunctionType.TypeReference != null &&
+                function.FunctionType.TypeReference?.TypeDefinition?.Identifier != AstIdentifierIntrinsic.Void)
             {
                 _errorSite.FunctionReturnValueNotUsed(function);
             }

@@ -4,6 +4,7 @@
         IAstCodeBlockSite, IAstSymbolTableSite
     {
         public AstTemplateInstanceFunction(AstFunctionDefinition templateDefinition)
+            : base(new AstTypeDefinitionFunction())
         {
             TemplateDefinition = templateDefinition;
             TrySetParent(templateDefinition.Parent);
@@ -58,7 +59,7 @@
         /// </summary>
         private void AddFunctionSymbols()
         {
-            foreach (var param in Parameters)
+            foreach (var param in FunctionType.Parameters)
             {
                 // function parameters are registered as variables
                 var entry = Symbols.AddSymbol(param.Identifier!.CanonicalName, AstSymbolKind.Variable, param);

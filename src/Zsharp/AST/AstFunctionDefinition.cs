@@ -1,70 +1,58 @@
-﻿using System.Linq;
-using System.Text;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
-    public abstract class AstFunctionDefinition : AstFunction<AstFunctionParameterDefinition, AstTemplateParameterDefinition>
+    public abstract class AstFunctionDefinition : AstFunction
     {
+        protected AstFunctionDefinition(AstTypeDefinitionFunction functionType)
+        {
+            FunctionType = functionType;
+        }
+
+        protected AstFunctionDefinition(ParserRuleContext context)
+        {
+            Context = context;
+            FunctionType = new AstTypeDefinitionFunction(context);
+        }
+
         public virtual bool IsIntrinsic => false;
 
         public virtual bool IsExternal => false;
 
-        public override bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
+        public AstTypeDefinitionFunction FunctionType { get; protected set; }
+
+        public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
-            if (TemplateParameters.SingleOrDefault(p => p.Identifier?.CanonicalName ==
-                    templateParameter?.Identifier?.CanonicalName) == null &&
-                base.TryAddTemplateParameter(templateParameter))
+            Identifier?.Append(FunctionType?.Identifier?.CanonicalName);
+
+            var contextSymbols = parentSymbols ?? functionSymbols;
+
+            if (FunctionType.TypeReference != null &&
+                FunctionType.TypeReference!.Symbol == null)
             {
-                Identifier!.TemplateParameterCount = TemplateParameters.Count();
-                return true;
+                contextSymbols.Add(FunctionType.TypeReference);
             }
-            return false;
+
+            foreach (var parameter in FunctionType.Parameters)
+            {
+                if (parameter.TypeReference != null &&
+                    parameter.TypeReference.Symbol == null)
+                {
+                    functionSymbols.Add(parameter.TypeReference);
+                }
+            }
+
+            Ast.Guard(Symbol == null, "Symbol already set. Call CreateSymbols only once.");
+            contextSymbols.Add(this);
         }
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitFunctionDefinition(this);
 
-        public override string? ToString()
-        {
-            var txt = new StringBuilder();
+        public override void VisitChildren(AstVisitor visitor)
+            => FunctionType.Accept(visitor);
 
-            txt.Append(Identifier!.Name);
-            txt.Append(": ");
-
-            if (IsTemplate)
-            {
-                txt.Append("<");
-                for (int i = 0; i < TemplateParameters.Count(); i++)
-                {
-                    if (i > 0)
-                        txt.Append(", ");
-
-                    var p = TemplateParameters.ElementAt(i);
-                    txt.Append(p.Identifier!.Name);
-                }
-                txt.Append(">");
-            }
-
-            txt.Append("(");
-            for (int i = 0; i < Parameters.Count(); i++)
-            {
-                if (i > 0)
-                    txt.Append(", ");
-
-                var p = Parameters.ElementAt(i);
-                txt.Append(p.Identifier!.Name);
-                txt.Append(": ");
-                txt.Append(p.TypeReference!.Identifier!.Name);
-            }
-            txt.Append(")");
-
-            if (TypeReference?.Identifier != null)
-            {
-                txt.Append(": ");
-                txt.Append(TypeReference.Identifier.Name);
-            }
-
-            return txt.ToString();
-        }
+        public override string ToString()
+            => $"{Identifier?.CanonicalName}{FunctionType}";
     }
 }

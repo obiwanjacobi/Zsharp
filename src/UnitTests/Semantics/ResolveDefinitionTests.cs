@@ -135,7 +135,7 @@ namespace UnitTests.Semantics
             var file = Compile.File(code);
 
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            fn.TypeReference.TypeDefinition.Should().NotBeNull();
+            fn.FunctionType.TypeReference.TypeDefinition.Should().NotBeNull();
         }
 
         [TestMethod]
@@ -184,7 +184,7 @@ namespace UnitTests.Semantics
             var file = Compile.File(code);
 
             var assign = file.CodeBlock.ItemAt<AstAssignment>(1);
-            assign.Expression.RHS.FunctionReference.TypeReference.Should().NotBeNull();
+            assign.Expression.RHS.FunctionReference.FunctionType.TypeReference.Should().NotBeNull();
             assign.Variable.TypeReference.TypeDefinition
                 .Should().BeEquivalentTo(assign.Expression.TypeReference.TypeDefinition);
         }
@@ -283,7 +283,7 @@ namespace UnitTests.Semantics
 
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var call = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
-            var p = call.Parameters.First();
+            var p = call.FunctionType.Parameters.First();
             p.TypeReference.Should().NotBeNull();
         }
 

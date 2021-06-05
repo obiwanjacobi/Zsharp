@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Antlr4.Runtime;
+using System.Collections.Generic;
 using System.Diagnostics;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -9,16 +10,16 @@ namespace Zsharp.AST
         IAstTemplateSite<AstTemplateParameterReference>
     {
         public AstTypeReference(Type_refContext context)
-            : this()
-        {
-            Context = context;
-            IsOptional = context.QUESTION() != null;
-            IsError = context.ERROR() != null;
-        }
-
-        protected AstTypeReference()
             : base(AstNodeType.Type)
         {
+            Context = context;
+            _templateParameters = new();
+        }
+
+        protected AstTypeReference(ParserRuleContext? context = null)
+            : base(AstNodeType.Type)
+        {
+            Context = context;
             _templateParameters = new();
         }
 
@@ -34,7 +35,7 @@ namespace Zsharp.AST
         public AstTypeDefinition? TypeDefinition
             => Symbol?.DefinitionAs<AstTypeDefinition>();
 
-        public virtual bool TryResolve()
+        public virtual bool TryResolveSymbol()
         {
             this.ThrowIfSymbolEntryNotSet();
             var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
@@ -45,10 +46,6 @@ namespace Zsharp.AST
             }
             return false;
         }
-
-        public bool IsOptional { get; protected set; }
-
-        public bool IsError { get; protected set; }
 
         public virtual bool IsExternal => false;
 
@@ -66,10 +63,7 @@ namespace Zsharp.AST
             if (typeDef != null &&
                 thatTypeDef != null)
             {
-                return
-                    typeDef.IsEqual(thatTypeDef) &&
-                    IsError == typedThat.IsError &&
-                    IsOptional == typedThat.IsOptional;
+                return typeDef.IsEqual(thatTypeDef);
             }
             return false;
         }
@@ -129,7 +123,8 @@ namespace Zsharp.AST
             {
                 _templateParameters.Add(parameter);
 
-                Identifier!.AddTemplateParameter(parameter.TypeReference?.Identifier?.Name);
+                if (Identifier is not null)
+                    Identifier.AddTemplateParameter(parameter.TypeReference?.Identifier?.Name);
                 return true;
             }
             return false;

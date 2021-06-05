@@ -18,25 +18,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
-            var t = fn.TypeReference;
-            t.IsOptional.Should().BeFalse();
-            t.IsError.Should().BeFalse();
-            t.Identifier.Name.Should().Be("U8");
-        }
-
-        [TestMethod]
-        public void FunctionOptionalErrorType()
-        {
-            const string code =
-                "fn: (): U8!?" + Tokens.NewLine +
-                Tokens.Indent1 + "return" + Tokens.NewLine
-                ;
-
-            var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
-            var t = fn.TypeReference;
-            t.IsOptional.Should().BeTrue();
-            t.IsError.Should().BeTrue();
+            var t = fn.FunctionType.TypeReference;
             t.Identifier.Name.Should().Be("U8");
         }
 
@@ -50,9 +32,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var t = fn.Parameters.First().TypeReference;
-            t.IsOptional.Should().BeFalse();
-            t.IsError.Should().BeFalse();
+            var t = fn.FunctionType.Parameters.First().TypeReference;
             t.Identifier.Name.Should().Be("U8");
         }
 
@@ -66,14 +46,10 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var t = fn.Parameters.ElementAt(0).TypeReference;
-            t.IsOptional.Should().BeFalse();
-            t.IsError.Should().BeFalse();
+            var t = fn.FunctionType.Parameters.ElementAt(0).TypeReference;
             t.Identifier.Name.Should().Be("U8");
 
-            t = fn.Parameters.ElementAt(1).TypeReference;
-            t.IsOptional.Should().BeFalse();
-            t.IsError.Should().BeFalse();
+            t = fn.FunctionType.Parameters.ElementAt(1).TypeReference;
             t.Identifier.Name.Should().Be("Str");
         }
 
@@ -87,25 +63,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var t = fn.Parameters.First().TypeReference;
-            t.IsOptional.Should().BeFalse();
-            t.IsError.Should().BeFalse();
-            t.Identifier.Name.Should().Be("SomeType");
-        }
-
-        [TestMethod]
-        public void FunctionParameterOptionalCustomType()
-        {
-            const string code =
-                "fn: (p: SomeType?)" + Tokens.NewLine +
-                Tokens.Indent1 + "return" + Tokens.NewLine
-                ;
-
-            var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var t = fn.Parameters.First().TypeReference;
-            t.IsOptional.Should().BeTrue();
-            t.IsError.Should().BeFalse();
+            var t = fn.FunctionType.Parameters.First().TypeReference;
             t.Identifier.Name.Should().Be("SomeType");
         }
 
@@ -119,8 +77,6 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var a = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
             var t = a.TypeReference;
-            t.IsOptional.Should().BeFalse();
-            t.IsError.Should().BeFalse();
             t.Identifier.Name.Should().Be("U8");
         }
 

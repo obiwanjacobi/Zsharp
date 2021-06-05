@@ -201,8 +201,6 @@ namespace UnitTests.Semantics
                 return;
 
             cloned.Context.Should().BeEquivalentTo(origin.Context);
-            cloned.IsError.Should().Be(origin.IsError);
-            cloned.IsOptional.Should().Be(origin.IsOptional);
             cloned.IsTemplateParameter.Should().Be(origin.IsTemplateParameter);
             cloned.TypeDefinition.Should().BeEquivalentTo(origin.TypeDefinition);
 
@@ -226,8 +224,8 @@ namespace UnitTests.Semantics
 
             cloned.Context.Should().BeEquivalentTo(origin.Context);
             cloned.IsIntrinsic.Should().Be(origin.IsIntrinsic);
-            cloned.OverloadKey.Should().Be(origin.OverloadKey);
-            cloned.Parameters.Should().BeEquivalentTo(origin.Parameters);
+            cloned.FunctionType.OverloadKey.Should().Be(origin.FunctionType.OverloadKey);
+            cloned.FunctionType.Parameters.Should().BeEquivalentTo(origin.FunctionType.Parameters);
         }
 
         private void AssertEquivalent(AstFunctionReference cloned, AstFunctionReference origin)
@@ -238,8 +236,8 @@ namespace UnitTests.Semantics
             cloned.Context.Should().BeEquivalentTo(origin.Context);
 
             cloned.EnforceReturnValueUse.Should().Be(origin.EnforceReturnValueUse);
-            cloned.OverloadKey.Should().Be(origin.OverloadKey);
-            cloned.Parameters.Should().BeEquivalentTo(origin.Parameters);
+            cloned.FunctionType.OverloadKey.Should().Be(origin.FunctionType.OverloadKey);
+            cloned.FunctionType.Parameters.Should().BeEquivalentTo(origin.FunctionType.Parameters);
 
             AssertEquivalent(cloned.FunctionDefinition, origin.FunctionDefinition);
         }

@@ -42,6 +42,8 @@ Use parenthesis around comparison.
 
 `[var] = (<bool expression>)`
 
+`[var] = (<bool expression>)?`
+
 ```csharp
 x = 42
 // unclear syntax
@@ -76,7 +78,7 @@ a = b = c: U24 = 42
 
 ### Structure Assignment
 
-Assigning structures works the same as primitive values. A new copy is made for the target.
+Assigning structures works the same as scalar values but for structures only the reference is copied.
 
 ```csharp
 s: MyStruct
@@ -117,6 +119,8 @@ y: YourStruct <= s  // y: YourStruct -mapped
 ## Conditional Assignment
 
 Instead of an `if` statement, use the `??=` operator for use with optional values.
+
+The `??=` operator only assigns the value to the left operand if it does not already have a value.
 
 ```csharp
 a: U8?
@@ -168,6 +172,7 @@ defer a.Unlock()    // defer keyword
 // compact syntax?
 a.Lock() -> defer .Unlock()
 
+// atomic assignment
 a = 101
 
 // end of scope unlocks
@@ -194,11 +199,11 @@ Volatile is used when the contents of a variable (memory location) can be change
 If we are able to tag ISR's in the language, we can automatically tag all used variables as volatile.
 Memory mapped IO is harder to auto detect.
 
-> A 3-letter abbreviation that means volatile?
+> What 3-letter abbreviation means volatile?
 
 ```csharp
 // we may want to save IO for language supported Input/Output instructions.
-a: IO<U8> = 42
+a: IO<U8> = 42          // used in functional (impure)
 a: Volatile<U8> = 42    // too long?
 a: Vol<U8> = 42         // unclear?
 a: Weak<U8> = 42        // save for ptrs?
@@ -210,11 +215,9 @@ a: Soft<U8> = 42
 a: &U8 = 42
 ```
 
-> TBD: Memory Fences!
+> TBD: Memory Fences! => default .NET
 
 ---
-
-> TBD
 
 ## Deconstruction
 
@@ -222,11 +225,11 @@ a: &U8 = 42
 
 - `[]` says arrays
 - `{}` says objects/structs
-- `()` used for functions but otherwise ok `<=`
+- `()` used for functions and lists but otherwise ok `<=`
 
 > This is not the same as a tuple!
 
-> Deconstruction is _copying_ the value into a variable. But referencing (using the var as an alias to the original source) could be an optimization - but that would also make it more complex (for the compiler).
+Deconstruction is _copying_ the value into a variable.
 
 ```csharp
 (a, b) = ...
@@ -273,51 +276,38 @@ func5(...arr)    // or with 5 params?
 // what if the param count does not match array item count?
 ```
 
-> Research: Functor/Nomads?
-
-Function 'repeat' to process collections with functions that process one item (at a time), the result is another collection with the results in the same order as the input collection.
-
-```csharp
-fn: (p: U8): Str
-    return p.Str()
-
-arr = [1, 2, 3, 4, 5]
-// what syntax to indicate this?
-lst = fn...arr
-
-// or use a library function?
-lst = Map(arr, fn)
-// lst: Array<Str> = ["1", "2", "3", "4", "5"]
-
-// Map returns the same type of collection
-// as is input but with items of the return type of 'fn'
-// Can we express that in templates?
-```
-
-- Map, Apply, Bind ?? What are the names to use here? https://fsharpforfunandprofit.com/series/map-and-bind-and-apply-oh-my/
-
 Deconstructing a structure:
 
 ```C#
 MyStruct
-    field1: U8
-    field2: U8
-    field3: U8
+    Field1: U8
+    Field2: U8
+    Field3: U8
 
 s = MyStruct
     ...
 
-// by name
+// partial by name
 (field1, field3) = s
-// field1: U8 = <value of s.field1>
-// field3: U8 = <value of s.field3>
-// <value of s.field2> is not used
+// field1: U8 = <value of s.Field1>
+// field3: U8 = <value of s.Field3>
+// <value of s.Field2> is not used
 
 (a, b) = s      // error! field names must match (case insensitive)
-// or when in-order - all fields must be specified
+// or when in-order - all fields must be specified (or ignored)
+
+(a, _) = s
+// a: U8 = <value of s.Field1>
+// <value of s.Field2 and s.Field3> are ignored
+(_, _, a) = s
+// a: U8 = <value of s.Field3>
+// <value of s.Field1 and s.Field2> are ignored
+
 ```
 
-> Is there a need to override how deconstruction is done on a (custom) type?
+> Is there a need to override how deconstruction is done on a (custom) type? => yes
+
+---
 
 Swap scalar variables (unlike structs)
 
@@ -328,7 +318,6 @@ y = 101
 // left = deconstruct '()'
 // right = anonymous struct '{}'
 (x, y) = {y, x}
-
 // x = 101
 // y = 42
 

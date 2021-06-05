@@ -108,7 +108,7 @@ namespace Zsharp.AST
 
             if (!String.IsNullOrEmpty(alias))
             {
-                module.AddAlias(dotName.Symbol, alias, AstSymbolKind.Unknown);
+                module.AddAlias(dotName.Symbol, alias);
             }
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
@@ -161,6 +161,7 @@ namespace Zsharp.AST
             var function = new AstFunctionDefinitionImpl(context);
 
             codeBlock.AddItem(function);
+            _builderContext.SetCurrent(function.FunctionType);
             _builderContext.SetCurrent(function);
 
             // process identifier first (needed for symbol)
@@ -183,15 +184,15 @@ namespace Zsharp.AST
             if (context.Parent is Statement_export_inlineContext)
                 function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
 
-            if (function.TypeReference == null)
+            if (function.FunctionType.TypeReference == null)
             {
                 var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
-                function.SetTypeReference(typeRef);
+                function.FunctionType.SetTypeReference(typeRef);
                 codeBlock.Symbols.Add(typeRef);
             }
 
             _builderContext.RevertCurrent();
-
+            _builderContext.RevertCurrent();
             return function;
         }
 
@@ -218,7 +219,7 @@ namespace Zsharp.AST
         {
             var function = _builderContext.GetCurrent<AstFunctionDefinitionImpl>();
             // TODO: why try?
-            function.TryAddParameter(parameter);
+            function.FunctionType.TryAddParameter(parameter);
 
             _builderContext.SetCurrent(parameter);
             _ = VisitChildren(parameter.Context);
@@ -242,7 +243,7 @@ namespace Zsharp.AST
             var expression = new AstExpression(new AstExpressionOperand(varRef));
             var param = new AstFunctionParameterReference(expression);
             param.SetIdentifier(AstIdentifierIntrinsic.Self);
-            fnRef.AddParameter(param);
+            fnRef.FunctionType.AddParameter(param);
 
             return fnRef;
         }
@@ -250,8 +251,10 @@ namespace Zsharp.AST
         protected AstFunctionReference CreateFunctionReference(Function_callContext context)
         {
             var function = new AstFunctionReference(context);
+            _builderContext.SetCurrent(function.FunctionType);
             _builderContext.SetCurrent(function);
             _ = VisitChildren(context);
+            _builderContext.RevertCurrent();
             _builderContext.RevertCurrent();
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
@@ -271,7 +274,7 @@ namespace Zsharp.AST
         {
             var parameter = new AstFunctionParameterReference(context);
             var function = _builderContext.GetCurrent<AstFunctionReference>();
-            function.AddParameter(parameter);
+            function.FunctionType.AddParameter(parameter);
 
             _builderContext.SetCurrent(parameter);
             _ = VisitChildren(context);

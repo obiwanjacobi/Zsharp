@@ -47,7 +47,7 @@ namespace Zsharp.Dgml
             var node = CreateNode(name, function.NodeType);
             _ = CreateLink(parentId, node.Id);
 
-            var paramNames = String.Join(", ", function.Parameters
+            var paramNames = String.Join(", ", function.FunctionType.Parameters
                 .Select(p => $"{p.Identifier.Name}: {p.TypeReference.Identifier.Name}"));
             if (paramNames.Length > 0)
             {

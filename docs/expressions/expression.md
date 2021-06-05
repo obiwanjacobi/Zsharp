@@ -62,7 +62,7 @@ v = Vector
     z = 101
 
 notV = -v       // calls Negate operator overload function
-areEq = v = notV    // calls IsEqual operator overload function
+areEq = (v = notV)  // calls IsEqual operator overload function
 ```
 
 These operator overload functions can also be called directly if one prefers the explicit nature of them.

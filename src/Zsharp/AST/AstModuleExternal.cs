@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public class AstModuleExternal : AstModule
     {
@@ -53,28 +51,35 @@ namespace Zsharp.AST
             entry.SymbolLocality = AstSymbolLocality.Imported;
         }
 
-        public void AddAlias(string symbol, string alias, AstSymbolKind symbolKind)
+        public void AddAlias(AstNode source, string alias)
         {
-            if (!String.IsNullOrEmpty(symbol))
+            var identifier = ((IAstIdentifierSite)source).Identifier!;
+            var entry = Symbols.Find(identifier);
+            Ast.Guard(entry, $"No symbol for '{identifier!.CanonicalName}' was found in external module {Identifier!.Name}.");
+
+            if (source is AstFunctionDefinition functionDef)
             {
-                var entry = Symbols.FindEntry(symbol, symbolKind);
-                Ast.Guard(entry, $"No symbol for '{symbol}' was found in external module {Identifier!.Name}.");
-                entry!.AddAlias(alias);
+                entry!.TryAddAlias(alias + functionDef.FunctionType!.Identifier!.CanonicalName);
             }
             else
             {
-                // TODO: Module name alias
-                throw new NotSupportedException(
-                    "Module Name aliases are not supported yet.");
+                entry!.TryAddAlias(alias);
             }
+        }
+
+        public void AddAlias(string symbol, string alias)
+        {
+            var entry = Symbols.FindEntry(symbol, AstSymbolKind.Unknown);
+            Ast.Guard(entry, $"No symbol for '{symbol}' was found in external module {Identifier!.Name}.");
+            entry!.TryAddAlias(alias);
         }
 
         public void AddFunction(AstFunctionDefinitionExternal function)
         {
-            if (function.TypeReference == null)
+            if (function.FunctionType.TypeReference == null)
             {
                 var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
-                function.SetTypeReference(typeRef);
+                function.FunctionType.SetTypeReference(typeRef);
             }
 
             function.CreateSymbols(Symbols);

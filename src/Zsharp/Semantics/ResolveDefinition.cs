@@ -162,9 +162,9 @@ namespace Zsharp.Semantics
             }
 
             var fn = operand.FunctionReference;
-            if (fn?.TypeReference != null)
+            if (fn?.FunctionType.TypeReference != null)
             {
-                operand.SetTypeReference(fn.TypeReference.MakeProxy());
+                operand.SetTypeReference(fn.FunctionType.TypeReference.MakeProxy());
             }
         }
 
@@ -233,7 +233,7 @@ namespace Zsharp.Semantics
                 var entry = variable.Symbol;
                 Ast.Guard(entry, "Variable has no Symbol.");
 
-                var success = variable.TryResolve();
+                var success = variable.TryResolveSymbol();
 
                 if (!success &&
                     variable.ParentAs<AstAssignment>() == null)
@@ -248,7 +248,7 @@ namespace Zsharp.Semantics
             VisitChildren(enumOption);
 
             if (enumOption.Symbol!.Definition == null &&
-                !enumOption.TryResolve())
+                !enumOption.TryResolveSymbol())
             {
                 _context.UndefinedEnumeration(enumOption);
             }
@@ -260,9 +260,9 @@ namespace Zsharp.Semantics
 
             if (function.FunctionDefinition == null)
             {
-                if (!function.TryResolve())
+                if (!function.TryResolveSymbol())
                 {
-                    if (function.IsTemplate)
+                    if (function.FunctionType.IsTemplate)
                     {
                         var entry = function.Symbol!;
                         var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinition>(
@@ -292,23 +292,23 @@ namespace Zsharp.Semantics
                 if (function.FunctionDefinition == null)
                 {
                     var overloadDef = ResolveOverload(function);
-                    if (overloadDef == null)
-                    {
-                        _context.UndefinedFunction(function);
-                    }
-                    else
+                    if (overloadDef is not null)
                     {
                         function.Symbol!.SetOverload(function, overloadDef);
                         Visit(overloadDef);
                     }
+                    else
+                    {
+                        _context.UndefinedFunction(function);
+                    }
                 }
             }
 
-            if (function.TypeReference == null &&
-                function.FunctionDefinition?.TypeReference != null)
+            if (function.FunctionType.TypeReference == null &&
+                function.FunctionDefinition?.FunctionType.TypeReference != null)
             {
-                var typeRef = function.FunctionDefinition.TypeReference.MakeProxy();
-                function.SetTypeReference(typeRef);
+                var typeRef = function.FunctionDefinition.FunctionType.TypeReference.MakeProxy();
+                function.FunctionType.SetTypeReference(typeRef);
                 // if type is intrinsic the symbol may not be set.
                 if (typeRef.Symbol == null)
                     function.Symbol!.SymbolTable.Add(typeRef);
@@ -337,7 +337,7 @@ namespace Zsharp.Semantics
 
             if (!type!.IsTemplateParameter)
             {
-                var success = type!.TryResolve();
+                var success = type!.TryResolveSymbol();
                 if (!success)
                 {
                     if (type.IsTemplate)
@@ -441,7 +441,8 @@ namespace Zsharp.Semantics
         private AstFunctionDefinition? ResolveOverload(AstFunctionReference function)
         {
             // TODO: more elaborate overload resolution here...
-            return function.Symbol!.Overloads.SingleOrDefault(def => def.OverloadKey == function.OverloadKey);
+            return function.Symbol!.Overloads.SingleOrDefault(
+                def => def.FunctionType.OverloadKey == function.FunctionType.OverloadKey);
         }
     }
 }

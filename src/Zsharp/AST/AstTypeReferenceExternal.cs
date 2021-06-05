@@ -14,7 +14,6 @@ namespace Zsharp.AST
         {
             _typeReference = typeReference;
             _externalName = new AstExternalName(typeReference.Namespace, typeReference.Name);
-            IsOptional = typeReference.IsByReference;
         }
 
         public new AstTypeReferenceExternal? TypeOrigin

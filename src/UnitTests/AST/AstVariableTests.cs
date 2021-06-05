@@ -55,7 +55,7 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionReference>(3);
             fn.Should().NotBeNull();
-            fn.Parameters.First().Identifier
+            fn.FunctionType.Parameters.First().Identifier
                 .Should().Be(AstIdentifierIntrinsic.Self);
         }
     }

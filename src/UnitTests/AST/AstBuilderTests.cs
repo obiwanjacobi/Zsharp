@@ -136,7 +136,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var func = file.Functions.First().CodeBlock.ItemAt<AstFunctionReference>(0);
-            var p = func.Parameters.First();
+            var p = func.FunctionType.Parameters.First();
             p.Expression.Should().NotBeNull();
         }
 

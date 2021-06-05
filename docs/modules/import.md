@@ -105,3 +105,15 @@ Or more C# like - always specify .NET namespaces (`.*`) or specific type / Z# mo
 ```
 
 ---
+
+> TBD
+
+Allow import from a remote location?
+
+```csharp
+#import https://user.github.com/master/package1
+
+#import alias = https://user.github.com/master/package2
+```
+
+What format should the file be that is being imported? Is it an assembly file or something else. Should these 'modules' or 'packages' be hosted on a specific package manager's site?

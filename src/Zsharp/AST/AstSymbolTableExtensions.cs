@@ -29,11 +29,20 @@ namespace Zsharp.AST
             => symbolTable.Find(node, node.NodeType.ToSymbolKind());
 
         public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
-            => symbolTable.FindEntry(identifier.CanonicalName, kind);
+        {
+            if (kind == AstSymbolKind.NotSet)
+                kind = identifier!.IdentifierType.ToSymbolKind();
+
+            return symbolTable.FindEntry(identifier.CanonicalName, kind);
+        }
 
         public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
             identifierSite.ThrowIfIdentifierNotSet();
+
+            if (kind == AstSymbolKind.NotSet)
+                kind = identifierSite.Identifier!.IdentifierType.ToSymbolKind();
+
             return symbolTable.FindEntry(identifierSite.Identifier!.CanonicalName, kind);
         }
 
@@ -51,6 +60,21 @@ namespace Zsharp.AST
                 AstNodeType.Field => AstSymbolKind.Field,
                 AstNodeType.EnumOption => AstSymbolKind.Field,
                 AstNodeType.TemplateParameter => AstSymbolKind.TemplateParameter,
+                _ => AstSymbolKind.Unknown
+            };
+        }
+
+        public static AstSymbolKind ToSymbolKind(this AstIdentifierType identifierType)
+        {
+            return identifierType switch
+            {
+                AstIdentifierType.Function => AstSymbolKind.Function,
+                AstIdentifierType.Type => AstSymbolKind.Type,
+                AstIdentifierType.Module => AstSymbolKind.Module,
+                AstIdentifierType.Variable => AstSymbolKind.Variable,
+                AstIdentifierType.Field => AstSymbolKind.Field,
+                AstIdentifierType.EnumOption => AstSymbolKind.Field,
+                AstIdentifierType.TemplateParameter => AstSymbolKind.TemplateParameter,
                 _ => AstSymbolKind.Unknown
             };
         }

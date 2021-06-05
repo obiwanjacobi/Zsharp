@@ -67,6 +67,15 @@ namespace Zsharp.AST
         public string CanonicalName { get; private set; }
         public AstIdentifierType IdentifierType { get; }
 
+        public void Append(string? canonicalName)
+        {
+            if (!String.IsNullOrEmpty(canonicalName))
+            {
+                Name += canonicalName;
+                CanonicalName = AstDotName.ToCanonical(Name);
+            }
+        }
+
         // for template definition
         private int _templateParameterCount;
         public int TemplateParameterCount

@@ -1,17 +1,9 @@
 using Antlr4.Runtime;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Zsharp.AST
 {
-    public abstract class AstFunction<ParamT, TemplateParamT> : AstNode,
-        IAstCodeBlockItem, IAstIdentifierSite, IAstSymbolEntrySite,
-        IAstTypeReferenceSite,
-        IAstTemplateSite<TemplateParamT>,
-        IAstFunctionParameters<ParamT>
-        where ParamT : AstFunctionParameter
-        where TemplateParamT : AstTemplateParameter
+    public abstract class AstFunction : AstNode,
+        IAstCodeBlockItem, IAstIdentifierSite, IAstSymbolEntrySite
     {
         protected AstFunction()
             : base(AstNodeType.Function)
@@ -21,55 +13,11 @@ namespace Zsharp.AST
 
         public uint Indent { get; set; }
 
-        private readonly List<ParamT> _parameters = new();
-        public IEnumerable<ParamT> Parameters => _parameters;
-
-        public bool TryAddParameter(ParamT param)
-        {
-            if (param != null &&
-                param.TrySetParent(this))
-            {
-                // always make sure 'self' is first param
-                if (param.Identifier == AstIdentifierIntrinsic.Self)
-                    _parameters.Insert(0, param);
-                else
-                    _parameters.Add(param);
-                return true;
-            }
-            return false;
-        }
-
-        // true when type is a template instantiation
-        public bool IsTemplate => _templateParameters.Count > 0;
-
-        private readonly List<TemplateParamT> _templateParameters = new();
-        public IEnumerable<TemplateParamT> TemplateParameters => _templateParameters;
-
-        public virtual bool TryAddTemplateParameter(TemplateParamT templateParameter)
-        {
-            if (templateParameter is TemplateParamT parameter)
-            {
-                _templateParameters.Add(parameter);
-                return true;
-            }
-
-            return false;
-        }
-
-        public string OverloadKey =>
-            String.Join(String.Empty, _parameters.Select(p => p.TypeReference?.Identifier?.CanonicalName));
-
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
         public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
-
-        private AstTypeReference? _typeRef;
-        public AstTypeReference? TypeReference => _typeRef;
-
-        public bool TrySetTypeReference(AstTypeReference? typeReference)
-            => this.SafeSetParent(ref _typeRef, typeReference);
 
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol
@@ -81,37 +29,6 @@ namespace Zsharp.AST
         public virtual bool TrySetSymbol(AstSymbolEntry? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
-        public virtual void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
-        {
-            var contextSymbols = parentSymbols ?? functionSymbols;
-
-            if (TypeReference != null &&
-                TypeReference!.Symbol == null)
-            {
-                contextSymbols.Add(TypeReference);
-            }
-
-            foreach (var parameter in Parameters)
-            {
-                if (parameter.TypeReference != null &&
-                    parameter.TypeReference.Symbol == null)
-                {
-                    functionSymbols.Add(parameter.TypeReference);
-                }
-            }
-
-            Ast.Guard(Symbol == null, "Symbol already set. Call CreateSymbols only once.");
-            contextSymbols.Add(this);
-        }
-
-        public override void VisitChildren(AstVisitor visitor)
-        {
-            foreach (var param in Parameters)
-            {
-                param.Accept(visitor);
-            }
-
-            TypeReference?.Accept(visitor);
-        }
+        public abstract void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null);
     }
 }

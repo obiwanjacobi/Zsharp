@@ -31,7 +31,7 @@ namespace UnitTests.Semantics
             var file = Compile.File(code, Compile.CreateModuleLoader());
 
             var fn = file.CodeBlock.ItemAt<AstFunctionReference>(0);
-            var typeRef = fn.TypeReference;
+            var typeRef = fn.FunctionType.TypeReference;
             typeRef.Symbol.Definition.Should().NotBeNull();
         }
     }

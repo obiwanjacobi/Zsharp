@@ -1,6 +1,6 @@
 # Logical Expressions
 
-Logical expressions evaluate boolean values. They are implemented lazily and only access the right operand when the left operand not already determines the result. This is pretty typical optimization for the `and` and `or` operators.
+Logical expressions evaluate boolean values. They are implemented lazily and only access the right operand when the left operand not already determines the result. This is pretty typical optimization for the `or` operator.
 
 | Operator | Function
 |-------|------

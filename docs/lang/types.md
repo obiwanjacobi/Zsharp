@@ -38,6 +38,10 @@ The built-in data type form the basic building blocks for creating structures.
 
 There are built-in types for integers, floating point, string and boolean.
 
+Other .NET types like `DateTime` are not a native part of Z# and can be used as an external library type.
+
+> .NET has other types in `System.Numerics` that may be of interest to include in the future as native Z# types.
+
 ### Integers
 
 The type names have been shortened to an absolute minimum. First:
@@ -51,78 +55,84 @@ followed by the width in the number of bits.
 
 - 8
 - 16
-- 24
 - 32
+- 64
 
 ```C#
-U8 U16 U24 U32
-I8 I16 I24 I32
+U8 U16 U32 U64
+I8 I16 I32 I64
 ```
 
-> TBD: Do we want an autoscaling `Int`eger type?
+These map to respective .NET types:
+
+- Unsigned: `byte`, `ushort`, 'uint' and `ulong`.
+- Signed: `sbyte`, `short`, 'int' and `long`.
+
+> TBD: Do we want an autoscaling `Int`eger type? (.NET `System.Numerics.BigInteger`)
 
 ### Floating Point
 
 The floating point data types are:
 
 ```C#
-F16 F32
+F16 F32, F96
 ```
+
+These map to respective .NET types: `float`, `double` and `decimal`.
 
 ### Strings
 
-A 'string' of characters of text.
+An 'string' of characters of text (UTF-16).
 
 ```C#
-Str
+Str         // mutable string: StringBuilder
+Imm<Str>    // immutable string: String
 ```
 
-A string is an `Array` of characters. There is no character data type, so `U8` is used as a character byte. Assumed here is that characters are ASCII based (see note below).
-
-An `Array` is fixed length, therefor `Str`'s are also fixed length, meaning that when a `Str` is constructed its length is known.
+This type maps to the .NET `string` or `StringBuilder` depending on if `Imm<Str> is used.
 
 ---
-
-> String Encoding is skipped over at this moment and ASCII is assumed. However eventually it _has_ to be addressed.
 
 I am thinking of making each encoding available in a dedicated type which can be converted to one another.
 
 ```csharp
+StrASCII    // 8-bit
 StrUtf7
 StrUtf8     // most common
-StrUtf16
+StrUtf16    // explicit .NET string
 StrWin1251
 StrWin1252
 StrIso8859
 ```
 
-Similar types would exist for `Text`.
+For these specialized string, no character type is available (other than U8/byte), they would basically encapsulate byte buffers and do not derive from `Str`.
 
-Encoding (decoding) is the act of interpreting an array of bytes into a string of characters using a specific set of rules (UTF8 etc).
+The encoding and decoding can be viewed as a conversion between different string types.
 
 ```csharp
-buffer: Array<U8>   // byte array
-// interpret at UTF8
-str = StrUtf8.Encode(buffer)    // option #1
-str = buffer.ToUtf8()           // option #2
-// str: StrUtf8
+s = "Hello World"   // Str (UTF16)
+s8 = s.StrUtf8()    // convert
 
-str = buffer.ToUtf8()      // option #2
+loop c in s
+    // use c: C16
+
+loop c in s8
+    // use c: U8
 ```
 
-### Text
+The conversion is done using the .NET Text Encoding types from the BCL.
 
-Just like `Str` is syntactic sugar for an `Array<U8>` in that same way `Text` is synonym for `List<U8>`. This means that the content data - the text itself - is stored using an allocator in some 'external' memory. The reference to that memory and some bookkeeping variables are stored on the stack in the Text structure.
+---
 
-```C#
-Text
+### Character
+
+A single character used in UTF-16 strings.
+
+```csharp
+C16
 ```
 
-> Conversion between Text and Str will be common. Aim to overload most Str/Text bound functions.
-
-> A TextBuilder will probably be required to efficiently create longer texts.
-
-> We could introduce a type that holds concatenated strings/texts as separate parts and read them using an iterator appearing to be one continuous text. That way no extra memory allocation is required putting the parts together - only some extra processing during read. An additional 'build' function could do all the allocations and return a single text at any point in time.
+This type maps to the .NET `char`.
 
 ---
 
@@ -136,6 +146,8 @@ Bool
 
 It can only have one of two values: `true` or `false`.
 
+This type maps to the .NET `bool`.
+
 ### Bits
 
 The `Bit` type is parameterized to specify the number of bits the value contains.
@@ -147,6 +159,8 @@ Bit<4>
 ```
 
 When `Bit`s are stored, the closest fitting data type is used. So a `Bit<6>` would take up a single byte `U8`, while a `Bit<12>` would take up two bytes `U16`. `Bit`s are always interpreted as unsigned and stored in the lower bits of the storage type. The upper unused bits are reset to zero.
+
+This type maps the .NET `System.Collections.BitArray` or `System.Collections.Specialized.BitVector32`. Possibly some of `System.Numerics.BitOperations` will be used for some of the operations.
 
 ### Function Type
 
@@ -176,7 +190,11 @@ makeFn(p: U8): Fn<(Str, U8): Bool>
 makeFn(p: U8): Fn<(U8)>
 ```
 
+This type will map to the .NET `Func<T>` and `Action<T>` types depending on the return type.
+
 ### Void
+
+> In light of .NET interop we need to rethink this.
 
 A special type to allow to be explicit when there is no (function return) Type. Acts as the functional `Unit` in that it has only one value: itself and therefor holds no information.
 
@@ -955,6 +973,8 @@ if d.MyFunc(42)
     ...
 ```
 
+> use of `#` in prop exists test is NOT at compile time - we should not use it.
+
 > What functions are available to which `Dyn` instances?
 
 Calling non-existent functions should raise an (runtime) Error.
@@ -982,6 +1002,14 @@ if d.MyFunc(42)
     ...
 
 d.MyFunc = _    // function is removed
+```
+
+> Parsing free data structures (json) into a dynamic type.
+
+```csharp
+d: Dyn <= "{ 'data':'hello world'}"
+if d?#data
+    // use d.data
 ```
 
 ## Object Type
