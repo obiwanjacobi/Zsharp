@@ -53,7 +53,7 @@ namespace UnitTests.AST
             symbols.Entries.Any(e => e is null).Should().BeFalse();
 
             var mod = symbols.FindEntries(AstSymbolKind.Module).Single();
-            mod.SymbolName.Should().Be("System.console");
+            mod.SymbolName.Should().Be("System.Console");
         }
 
         [TestMethod]

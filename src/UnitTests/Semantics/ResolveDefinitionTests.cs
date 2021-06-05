@@ -341,7 +341,7 @@ namespace UnitTests.Semantics
             var file = Compile.File(code);
 
             var symbols = file.Symbols;
-            var entry = symbols.FindEntry("fn;u8", AstSymbolKind.Function);
+            var entry = symbols.FindEntry("fn;U8", AstSymbolKind.Function);
             entry.Definition.Should().NotBeNull();
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(1);
