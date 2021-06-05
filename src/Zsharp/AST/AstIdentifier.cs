@@ -8,9 +8,6 @@ namespace Zsharp.AST
     [DebuggerDisplay("{Name}")]
     public class AstIdentifier
     {
-        private const string TemplateDelimiter = "%";
-        private const string ParameterDelimiter = ";";
-
         public AstIdentifier(Identifier_typeContext context)
             : this(context, AstIdentifierType.Type)
         { }

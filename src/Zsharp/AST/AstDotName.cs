@@ -63,9 +63,7 @@ namespace Zsharp.AST
         }
 
         public override string ToString()
-        {
-            return Join(0, _parts.Length);
-        }
+            => Join(0, _parts.Length);
 
         public static string ToCanonical(string symbolName)
         {
@@ -86,9 +84,7 @@ namespace Zsharp.AST
         }
 
         private string Join(int offset, int length)
-        {
-            return String.Join(Separator, _parts.Skip(offset).Take(length));
-        }
+            => String.Join(Separator, _parts.Skip(offset).Take(length));
 
         public IEnumerator<string> GetEnumerator()
         {
@@ -99,8 +95,6 @@ namespace Zsharp.AST
         }
 
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+            => GetEnumerator();
     }
 }

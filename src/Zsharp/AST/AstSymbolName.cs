@@ -101,9 +101,7 @@ namespace Zsharp.AST
         public string TemplatePostfix { get; internal set; }
 
         public void SetTemplateParameterCount(int count)
-        {
-            TemplatePostfix = $"{TemplateDelimiter}{count}";
-        }
+            => TemplatePostfix = $"{TemplateDelimiter}{count}";
 
         public void AddTemplateParameter(string? name)
         {
@@ -152,14 +150,10 @@ namespace Zsharp.AST
         }
 
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+            => GetEnumerator();
 
         private string Join(int offset, int length)
-        {
-            return String.Join(Separator, _parts.Skip(offset).Take(length));
-        }
+            => String.Join(Separator, _parts.Skip(offset).Take(length));
 
         private string ToString(string postfix)
             => Join(0, _parts.Length) + postfix;
