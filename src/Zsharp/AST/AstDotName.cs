@@ -76,7 +76,7 @@ namespace Zsharp.AST
             var prefix = String.Empty;
 
             // .NET property getters and setters
-            if (symbolName.StartsWith("_get") || symbolName.StartsWith("_set"))
+            if (symbolName.StartsWith("get_") || symbolName.StartsWith("set_"))
             {
                 prefix = simplified.Substring(0, 3);
                 simplified = simplified.Substring(3);

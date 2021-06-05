@@ -45,17 +45,14 @@ namespace Zsharp.AST
 
         public AstIdentifier(string name, AstIdentifierType identifierType)
         {
-            Name = name;
-            CanonicalName = AstDotName.ToCanonical(Name);
+            SymbolName = AstSymbolName.Parse(name);
             IdentifierType = identifierType;
         }
 
         protected AstIdentifier(ParserRuleContext context, AstIdentifierType identifierType)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
-            Name = context.GetText();
-            var dotName = AstDotName.FromText(Name);
-            CanonicalName = dotName.ToString();
+            SymbolName = AstSymbolName.Parse(context.GetText());
             IdentifierType = identifierType;
         }
 
@@ -63,18 +60,21 @@ namespace Zsharp.AST
 
         public virtual bool IsIntrinsic => false;
 
-        public string Name { get; private set; }
-        public string CanonicalName { get; private set; }
+        public AstSymbolName SymbolName { get; }
+        public string Name => SymbolName.FullName;
+        // TODO: add canonical instance
+        public string CanonicalName => SymbolName.ToCanonical().FullName;
+
         public AstIdentifierType IdentifierType { get; }
 
-        public void Append(string? canonicalName)
-        {
-            if (!String.IsNullOrEmpty(canonicalName))
-            {
-                Name += canonicalName;
-                CanonicalName = AstDotName.ToCanonical(Name);
-            }
-        }
+        //public void Append(string? name)
+        //{
+        //    if (!String.IsNullOrEmpty(name))
+        //    {
+        //        Name += name;
+        //        CanonicalName = AstDotName.ToCanonical(Name);
+        //    }
+        //}
 
         // for template definition
         private int _templateParameterCount;
@@ -84,40 +84,43 @@ namespace Zsharp.AST
             set
             {
                 _templateParameterCount = value;
-                var parts = Name.Split(TemplateDelimiter);
-                if (_templateParameterCount > 0)
-                    Name = $"{parts[0]}{TemplateDelimiter}{_templateParameterCount}";
-                else
-                    Name = parts[0];
-                CanonicalName = AstDotName.ToCanonical(Name);
+                SymbolName.SetTemplateParameterCount(value);
+                //var parts = Name.Split(TemplateDelimiter);
+                //if (_templateParameterCount > 0)
+                //    Name = $"{parts[0]}{TemplateDelimiter}{_templateParameterCount}";
+                //else
+                //    Name = parts[0];
+                //CanonicalName = AstDotName.ToCanonical(Name);
             }
         }
 
         // 'MyTemplate%1'
         public string TemplateDefinitionName
-        {
-            get
-            {
-                if (_templateParameterCount > 0)
-                    return CanonicalName;
+            => SymbolName.TemplateDefinitionName;
+        //{
+        //    get
+        //    {
+        //        if (_templateParameterCount > 0)
+        //            return CanonicalName;
 
-                if (Name.Contains(ParameterDelimiter))
-                {
-                    var parts = Name.Split(ParameterDelimiter);
-                    return $"{parts[0]}{TemplateDelimiter}{parts.Length - 1}";
-                }
+        //        if (Name.Contains(ParameterDelimiter))
+        //        {
+        //            var parts = Name.Split(ParameterDelimiter);
+        //            return $"{parts[0]}{TemplateDelimiter}{parts.Length - 1}";
+        //        }
 
-                return String.Empty;
-            }
-        }
+        //        return String.Empty;
+        //    }
+        //}
 
         // for template usage
         public void AddTemplateParameter(string? name)
         {
             Ast.Guard(name, "Parameter name is null.");
 
-            Name += ParameterDelimiter + name;
-            CanonicalName = AstDotName.ToCanonical(Name);
+            SymbolName.AddTemplateParameter(name);
+            //Name += ParameterDelimiter + name;
+            //CanonicalName = AstDotName.ToCanonical(Name);
         }
 
         public bool IsEqual(AstIdentifier? that)

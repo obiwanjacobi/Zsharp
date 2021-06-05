@@ -23,7 +23,7 @@ namespace Zsharp.AST
 
         public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
-            Identifier?.Append(FunctionType?.Identifier?.CanonicalName);
+            Identifier!.SymbolName.TemplatePostfix = FunctionType.Identifier!.CanonicalName;
 
             var contextSymbols = parentSymbols ?? functionSymbols;
 
