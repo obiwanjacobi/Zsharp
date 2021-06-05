@@ -5,6 +5,16 @@ using System.Linq;
 
 namespace Zsharp.AST
 {
+    public enum AstSymbolNameParseOptions
+    {
+        /// <summary>text is from source code</summary>
+        Source,
+        /// <summary>text is canonical format</summary>
+        IsCanonical,
+        /// <summary>convert source to to canonical format</summary>
+        ToCanonical,
+    }
+
     public class AstSymbolName : IEnumerable<string>
     {
         public const char Separator = '.';
@@ -18,9 +28,9 @@ namespace Zsharp.AST
             IsCanonical = isCanonical;
         }
 
-        public static AstSymbolName Parse(string text, bool toCanonical = false)
+        public static AstSymbolName Parse(string text, AstSymbolNameParseOptions options)
         {
-            var parts = text.Split(Separator).ToArray();
+            var parts = text.Split(Separator, StringSplitOptions.RemoveEmptyEntries).ToArray();
             var templatePostfix = String.Empty;
 
             var lastIndex = parts.Length - 1;
@@ -36,14 +46,14 @@ namespace Zsharp.AST
                 }
             }
 
-            if (toCanonical)
+            if (options == AstSymbolNameParseOptions.ToCanonical)
                 parts = parts.Select(PartToCanonical).ToArray();
 
-            return new AstSymbolName(parts, templatePostfix, toCanonical);
+            return new AstSymbolName(parts, templatePostfix, options != AstSymbolNameParseOptions.Source);
         }
 
         public static string ToCanonical(string text)
-            => Parse(text, toCanonical: true).ToString();
+            => Parse(text, AstSymbolNameParseOptions.ToCanonical).ToString();
 
         public bool IsCanonical { get; }
 
@@ -123,16 +133,16 @@ namespace Zsharp.AST
             return new AstSymbolName(parts, TemplatePostfix, isCanonical: true);
         }
 
-        private static string PartToCanonical(string symbolName)
+        private static string PartToCanonical(string part)
         {
-            if (String.IsNullOrEmpty(symbolName))
-                return symbolName;
+            if (String.IsNullOrEmpty(part))
+                return part;
 
-            var simplified = symbolName.Replace("_", String.Empty);
+            var simplified = part.Replace("_", String.Empty);
             var prefix = String.Empty;
 
             // .NET property getters and setters
-            if (symbolName.StartsWith("get_") || symbolName.StartsWith("set_"))
+            if (part.StartsWith("get_") || part.StartsWith("set_"))
             {
                 prefix = simplified.Substring(0, 3);
                 simplified = simplified.Substring(3);

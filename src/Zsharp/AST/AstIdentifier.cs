@@ -42,14 +42,14 @@ namespace Zsharp.AST
 
         public AstIdentifier(string name, AstIdentifierType identifierType)
         {
-            SymbolName = AstSymbolName.Parse(name);
+            SymbolName = AstSymbolName.Parse(name, AstSymbolNameParseOptions.Source);
             IdentifierType = identifierType;
         }
 
         protected AstIdentifier(ParserRuleContext context, AstIdentifierType identifierType)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
-            SymbolName = AstSymbolName.Parse(context.GetText());
+            SymbolName = AstSymbolName.Parse(context.GetText(), AstSymbolNameParseOptions.Source);
             IdentifierType = identifierType;
         }
 
@@ -59,7 +59,6 @@ namespace Zsharp.AST
 
         public AstSymbolName SymbolName { get; }
         public string Name => SymbolName.FullName;
-        // TODO: add canonical instance
         public string CanonicalName => SymbolName.ToCanonical().FullName;
 
         public AstIdentifierType IdentifierType { get; }

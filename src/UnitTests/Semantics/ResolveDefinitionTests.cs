@@ -79,7 +79,7 @@ namespace UnitTests.Semantics
             v.Parent.Should().Be(a);
             v.TypeReference.Should().NotBeNull();
 
-            var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.Name, AstSymbolKind.Variable);
+            var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.SymbolName.ToCanonical(), AstSymbolKind.Variable);
             sym.Definition.Should().NotBeNull();
         }
 

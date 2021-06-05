@@ -33,21 +33,23 @@ namespace Zsharp.AST
             get
             {
                 if (!String.IsNullOrEmpty(ParentTable?.Name))
-                {
                     return $"{ParentTable.Namespace}.{Name}";
-                }
                 return Name;
             }
         }
 
-        public AstSymbolEntry AddSymbol(string symbolName, AstSymbolKind kind, params AstNode?[]? nodes)
+        public AstSymbolEntry AddSymbol(string canonicalName, AstSymbolKind kind, params AstNode?[]? nodes)
+            => AddSymbol(AstSymbolName.Parse(canonicalName, AstSymbolNameParseOptions.IsCanonical), kind, nodes);
+
+        public AstSymbolEntry AddSymbol(AstSymbolName symbolName, AstSymbolKind kind, params AstNode?[]? nodes)
         {
+            Ast.Guard(symbolName.IsCanonical, "All symbol names must be a canonical name.");
             var exOrImported = FindEntry(symbolName, AstSymbolKind.NotSet);
-            var entry = FindEntryLocal(symbolName, kind);
+            var entry = FindEntryLocal(symbolName.FullName, kind);
 
             if (entry is null)
             {
-                entry = new AstSymbolEntry(this, symbolName, kind);
+                entry = new AstSymbolEntry(this, symbolName.FullName, kind);
                 if (exOrImported?.SymbolTable == this)
                 {
                     Ast.Guard(_table.ContainsValue(exOrImported), "Exported/Imported Symbol is not defined in this SymbolTable.");
@@ -93,7 +95,7 @@ namespace Zsharp.AST
             if (symbolEntry.HasOverloads || symbolEntry.Definition is not null)
                 return symbolEntry;
 
-            var symbolName = AstSymbolName.Parse(symbolEntry.SymbolName);
+            var symbolName = AstSymbolName.Parse(symbolEntry.SymbolName, AstSymbolNameParseOptions.IsCanonical);
             var table = this;
             while (table is not null)
             {
@@ -134,25 +136,24 @@ namespace Zsharp.AST
 
             return symbolDef;
         }
-
-        public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
-        {
-            var symbolName = AstSymbolName.Parse(name);
-            AstSymbolEntry? entry;
-
-            if (symbolName.IsDotName)
-                entry = FindEntry(symbolName, kind);
-            else
-                entry = FindEntryRecursive(name, kind);
-
-            return entry;
-        }
-
         public IEnumerable<AstSymbolEntry> FindEntries(AstSymbolKind symbolKind)
             => _table.Values.Where(s => s.SymbolKind == symbolKind);
 
-        internal void Delete(AstSymbolEntry symbolEntry)
-            => _table.Remove(symbolEntry.Key);
+        public AstSymbolEntry? FindEntry(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
+            => FindEntry(AstSymbolName.Parse(name, AstSymbolNameParseOptions.IsCanonical), kind);
+
+        public AstSymbolEntry? FindEntry(AstSymbolName symbolName, AstSymbolKind kind = AstSymbolKind.NotSet)
+        {
+            Ast.Guard(symbolName.IsCanonical, "All symbol names must be a canonical name.");
+            AstSymbolEntry? entry;
+
+            if (symbolName.IsDotName)
+                entry = FindEntryByPath(symbolName, kind);
+            else
+                entry = FindEntryRecursive(symbolName.FullName, kind);
+
+            return entry;
+        }
 
         private AstSymbolEntry? FindEntryRecursive(string name, AstSymbolKind kind)
         {
@@ -191,7 +192,7 @@ namespace Zsharp.AST
             return entry;
         }
 
-        private AstSymbolEntry? FindEntry(AstSymbolName symbolName, AstSymbolKind kind)
+        private AstSymbolEntry? FindEntryByPath(AstSymbolName symbolName, AstSymbolKind kind)
         {
             AstSymbolEntry? entry = null;
             var table = this;
@@ -232,5 +233,8 @@ namespace Zsharp.AST
             }
             return null;
         }
+
+        internal void Delete(AstSymbolEntry symbolEntry)
+            => _table.Remove(symbolEntry.Key);
     }
 }

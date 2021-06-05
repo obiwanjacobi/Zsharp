@@ -93,11 +93,12 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_import(Statement_importContext context)
         {
-            var symbolName = AstSymbolName.Parse(context.module_name().GetText());
+            var symbolName = AstSymbolName.Parse(context.module_name().GetText(), AstSymbolNameParseOptions.ToCanonical);
             var alias = context.alias_module()?.GetText();
+            var hasAlias = !String.IsNullOrEmpty(alias);
 
             // if alias then last part of dot name is symbol.
-            var moduleName = String.IsNullOrEmpty(alias) ? symbolName.ToString() : symbolName.ModuleName;
+            var moduleName = hasAlias ? symbolName.ModuleName : symbolName.FullName;
             var module = _builderContext.CompilerContext.Modules.Import(moduleName);
             if (module is null)
             {
@@ -106,9 +107,9 @@ namespace Zsharp.AST
                 return null;
             }
 
-            if (!String.IsNullOrEmpty(alias))
+            if (hasAlias)
             {
-                module.AddAlias(symbolName.Symbol, alias);
+                module.AddAlias(symbolName.Symbol, AstSymbolName.ToCanonical(alias!));
             }
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
@@ -123,7 +124,8 @@ namespace Zsharp.AST
             module.AddExport(context);
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var entry = symbols.Symbols.AddSymbol(context.identifier_func().GetText(), AstSymbolKind.NotSet, null);
+            var canonicalName = AstSymbolName.ToCanonical(context.identifier_func().GetText());
+            var entry = symbols.Symbols.AddSymbol(canonicalName, AstSymbolKind.NotSet, null);
             entry.SymbolLocality = AstSymbolLocality.Exported;
 
             return null;
@@ -260,13 +262,6 @@ namespace Zsharp.AST
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
             function.CreateSymbols(symbols.Symbols);
 
-            // too early to set void
-            //if (function.TypeReference is null)
-            //{
-            //    var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
-            //    function.SetTypeReference(typeRef);
-            //    symbols.Symbols.Add(typeRef);
-            //}
             return function;
         }
 

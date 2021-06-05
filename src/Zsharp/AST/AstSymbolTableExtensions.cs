@@ -33,7 +33,7 @@ namespace Zsharp.AST
             if (kind == AstSymbolKind.NotSet)
                 kind = identifier!.IdentifierType.ToSymbolKind();
 
-            return symbolTable.FindEntry(identifier.CanonicalName, kind);
+            return symbolTable.FindEntry(identifier.SymbolName.ToCanonical(), kind);
         }
 
         public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
@@ -43,7 +43,7 @@ namespace Zsharp.AST
             if (kind == AstSymbolKind.NotSet)
                 kind = identifierSite.Identifier!.IdentifierType.ToSymbolKind();
 
-            return symbolTable.FindEntry(identifierSite.Identifier!.CanonicalName, kind);
+            return symbolTable.FindEntry(identifierSite.Identifier!.SymbolName.ToCanonical(), kind);
         }
 
         public static AstSymbolKind ToSymbolKind(this AstNodeType nodeType)
@@ -89,7 +89,7 @@ namespace Zsharp.AST
             var name = identifierSite.Identifier?.CanonicalName
                 ?? throw new ArgumentException("No identifier name.", nameof(identifierSite));
 
-            // reference to a template parameter are detected as TypeReferences
+            // reference to a template parameter is detected as TypeReference
             if (symbolKind == AstSymbolKind.Type &&
                 node is AstTypeReference typeRef &&
                 typeRef.IsTemplateParameter)
