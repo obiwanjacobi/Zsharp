@@ -11,7 +11,6 @@ namespace Zsharp.AST
         private readonly List<AstNode> _definitions = new();
         private readonly List<AstNode> _references = new();
         private readonly List<string> _aliases = new();
-        private readonly Dictionary<AstFunctionReference, AstFunctionDefinition> _overloads = new();
 
         public AstSymbolEntry(AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
         {
@@ -56,23 +55,19 @@ namespace Zsharp.AST
 
         public bool HasOverloads => _definitions.Count > 1;
 
-        public IEnumerable<AstFunctionDefinition> Overloads => _definitions.Cast<AstFunctionDefinition>();
-
-        public AstFunctionDefinition? FindOverloadDefinition(AstFunctionReference overload)
+        public IEnumerable<AstFunctionDefinition> Overloads
         {
-            _overloads.TryGetValue(overload, out AstFunctionDefinition? functionDef);
-            return functionDef;
+            get
+            {
+                if (SymbolKind != AstSymbolKind.Function)
+                    return Enumerable.Empty<AstFunctionDefinition>();
+
+                return _definitions.Cast<AstFunctionDefinition>();
+            }
         }
 
-        public void SetOverload(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
-        {
-            Ast.Guard(functionRef, "Function Reference argument is null");
-            Ast.Guard(functionDef, "Function Definition argument is null");
-            Ast.Guard(_references.Contains(functionRef), "Function Reference argument does not belong to this symbol.");
-            Ast.Guard(_definitions.Contains(functionDef), "Function Definition argument does not belong to this symbol.");
-
-            _overloads.Add(functionRef, functionDef);
-        }
+        public AstFunctionDefinition? FindFunctionDefinition(AstFunctionReference overload)
+            => Overloads.SingleOrDefault(def => def.FunctionType.OverloadKey == overload.FunctionType.OverloadKey);
 
         public void AddNode(AstNode node)
         {
@@ -93,7 +88,7 @@ namespace Zsharp.AST
                 // TODO: check overloadKey
                 _definitions.Add(node);
             }
-            else
+            else if (!_references.Contains(node))
             {
                 _references.Add(node);
             }
@@ -124,6 +119,10 @@ namespace Zsharp.AST
             SymbolTable.Delete(this);
         }
 
-        internal static string MakeKey(string name, AstSymbolKind kind) => name + kind;
+        internal void RemoveReference(AstNode node)
+            => _references.Remove(node);
+
+        internal static string MakeKey(string name, AstSymbolKind kind)
+            => name + kind;
     }
 }

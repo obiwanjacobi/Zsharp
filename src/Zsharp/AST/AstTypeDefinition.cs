@@ -30,8 +30,8 @@ namespace Zsharp.AST
 
             _templateParameters.Add(templateParameter);
 
-            if (Identifier is not null)
-                Identifier.SymbolName.SetTemplateParameterCount(_templateParameters.Count);
+            Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
+            Identifier!.SymbolName.SetTemplateParameterCount(_templateParameters.Count);
 
             return true;
         }

@@ -29,7 +29,7 @@ namespace UnitTests.Semantics
             fn2.Symbol.SymbolName.Should().Be("fn2");
             fn2.Symbol.HasOverloads.Should().BeTrue();
             fn2.Symbol.References.Should().HaveCount(1);
-            fn2.Symbol.FindOverloadDefinition(fn2Ref).Should().Be(fn2);
+            fn2.Symbol.FindFunctionDefinition(fn2Ref).Should().Be(fn2);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace UnitTests.Semantics
             fn2.Symbol.SymbolName.Should().Be("fn2");
             fn2.Symbol.HasOverloads.Should().BeTrue();
             fn2.Symbol.References.Should().HaveCount(1);
-            fn2.Symbol.FindOverloadDefinition(fn2Ref).Should().Be(fn2);
+            fn2.Symbol.FindFunctionDefinition(fn2Ref).Should().Be(fn2);
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace UnitTests.Semantics
             fn2.Symbol.SymbolName.Should().Be("fn2");
             fn2.Symbol.HasOverloads.Should().BeTrue();
             fn2.Symbol.References.Should().HaveCount(1);
-            fn2.Symbol.FindOverloadDefinition(fn2Ref).Should().Be(fn2);
+            fn2.Symbol.FindFunctionDefinition(fn2Ref).Should().Be(fn2);
         }
 
         [TestMethod]

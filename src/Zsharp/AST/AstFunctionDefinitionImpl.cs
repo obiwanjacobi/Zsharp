@@ -52,16 +52,12 @@ namespace Zsharp.AST
 
             foreach (var parameter in FunctionType.Parameters)
             {
-                if (parentSymbols is not null &&
-                    parameter.Symbol is null)
-                {
-                    functionSymbols.Add(parameter);
-                }
+                functionSymbols.TryAdd(parameter);
             }
 
             foreach (var templParam in FunctionType.TemplateParameters)
             {
-                Symbols.Add(templParam);
+                Symbols.TryAdd(templParam);
             }
         }
 

@@ -19,6 +19,12 @@
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeRef, typeReference);
 
+        internal void OverrideTypeReference(AstTypeReference typeRef)
+        {
+            Ast.Guard(typeRef, "Parameter TypeReference is null.");
+            _typeRef = typeRef;
+        }
+
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
 

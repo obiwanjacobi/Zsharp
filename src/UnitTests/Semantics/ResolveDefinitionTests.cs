@@ -157,17 +157,17 @@ namespace UnitTests.Semantics
         }
 
         [TestMethod]
-        public void FunctionReferenceByParameterType()
+        public void FunctionReferenceByParameterType_Forward()
         {
             const string code =
+                "fn(42)" + Tokens.NewLine +
                 "fn: (p: I32)" + Tokens.NewLine +
-                Tokens.Indent1 + "return" + Tokens.NewLine +
-                "fn(42)" + Tokens.NewLine
+                Tokens.Indent1 + "return" + Tokens.NewLine
                 ;
 
             var file = Compile.File(code);
 
-            var fnRef = file.CodeBlock.ItemAt<AstFunctionReference>(1);
+            var fnRef = file.CodeBlock.ItemAt<AstFunctionReference>(0);
             fnRef.Should().NotBeNull();
             fnRef.Symbol.Definition.Should().NotBeNull();
         }
@@ -268,7 +268,7 @@ namespace UnitTests.Semantics
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var call = fn.CodeBlock.ItemAt<AstFunctionReference>(0);
 
-            call.Symbol.FindOverloadDefinition(call).Should().NotBeNull();
+            call.Symbol.FindFunctionDefinition(call).Should().NotBeNull();
         }
 
         [TestMethod]

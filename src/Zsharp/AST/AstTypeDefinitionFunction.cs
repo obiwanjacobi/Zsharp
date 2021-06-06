@@ -61,16 +61,31 @@ namespace Zsharp.AST
             TypeReference?.Accept(visitor);
         }
 
+        public void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
+        {
+            Ast.Guard(Symbol is null, "Symbol already set. Call CreateSymbols only once.");
+            var contextSymbols = parentSymbols ?? functionSymbols;
+
+            contextSymbols.TryAdd(TypeReference);
+            foreach (var parameter in Parameters)
+            {
+                functionSymbols.TryAdd(parameter.TypeReference);
+            }
+
+            var symbolName = AstSymbolName.Parse(ToString(), AstSymbolNameParseOptions.IsSource);
+            symbolName.TemplatePostfix = Identifier!.SymbolName.TemplatePostfix;
+            Identifier.SymbolName = symbolName;
+
+            //contextSymbols.Add(this);
+        }
+
         public override string ToString()
         {
             var txt = new StringBuilder();
 
-            //txt.Append(Identifier!.Name);
-            //txt.Append(": ");
-
             if (IsTemplate)
             {
-                txt.Append("<");
+                txt.Append('<');
                 for (int i = 0; i < TemplateParameters.Count(); i++)
                 {
                     if (i > 0)
@@ -79,10 +94,10 @@ namespace Zsharp.AST
                     var p = TemplateParameters.ElementAt(i);
                     txt.Append(p.Identifier!.Name);
                 }
-                txt.Append(">");
+                txt.Append('>');
             }
 
-            txt.Append("(");
+            txt.Append('(');
             for (int i = 0; i < Parameters.Count(); i++)
             {
                 if (i > 0)
@@ -93,7 +108,7 @@ namespace Zsharp.AST
                 txt.Append(": ");
                 txt.Append(p.TypeReference!.Identifier!.Name);
             }
-            txt.Append(")");
+            txt.Append(')');
 
             if (TypeReference?.Identifier is not null)
             {

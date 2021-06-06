@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Zsharp.AST
 {
@@ -29,29 +30,29 @@ namespace Zsharp.AST
         }
 
         [Conditional("DEBUG")]
-        public static void Guard<T>(object? instance)
+        public static void Guard<T>(object? instance, [CallerMemberName] string caller = "")
             where T : class
         {
             if (instance is null)
                 throw new InternalErrorException(
-                    $"Object not of the expected type ({typeof(T).Name}) because it was null.");
+                    $"Object not of the expected type ({typeof(T).Name}) because it was null. {caller}");
             if (!(instance is T))
                 throw new InternalErrorException($"Object of type '{instance.GetType().Name}' is not of the expected type: {typeof(T).Name}");
         }
 
         [Conditional("DEBUG")]
-        public static void Guard(bool trueIsValid, string message)
+        public static void Guard(bool trueIsValid, string message, [CallerMemberName] string caller = "")
         {
             if (!trueIsValid)
-                throw new InternalErrorException(message);
+                throw new InternalErrorException($"{message} {caller}");
         }
 
         [Conditional("DEBUG")]
-        public static void Guard<T>(T? instance, string message)
+        public static void Guard<T>(T? instance, string message, [CallerMemberName] string caller = "")
             where T : class
         {
             if (instance is null)
-                throw new InternalErrorException($"{typeof(T).Name} is null: {message}");
+                throw new InternalErrorException($"{typeof(T).Name} is null: {message}  {caller}");
         }
     }
 }

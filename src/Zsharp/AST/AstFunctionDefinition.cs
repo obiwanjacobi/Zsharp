@@ -23,26 +23,12 @@ namespace Zsharp.AST
 
         public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
-            Identifier!.SymbolName.TemplatePostfix = FunctionType.Identifier!.CanonicalName;
+            Ast.Guard(Symbol is null, "Symbol already set. Call CreateSymbols only once.");
+
+            FunctionType.CreateSymbols(functionSymbols, parentSymbols);
+            Identifier!.SymbolName.TemplatePostfix = FunctionType.Identifier!.SymbolName.TemplatePostfix;
 
             var contextSymbols = parentSymbols ?? functionSymbols;
-
-            if (FunctionType.TypeReference is not null &&
-                FunctionType.TypeReference!.Symbol is null)
-            {
-                contextSymbols.Add(FunctionType.TypeReference);
-            }
-
-            foreach (var parameter in FunctionType.Parameters)
-            {
-                if (parameter.TypeReference is not null &&
-                    parameter.TypeReference.Symbol is null)
-                {
-                    functionSymbols.Add(parameter.TypeReference);
-                }
-            }
-
-            Ast.Guard(Symbol is null, "Symbol already set. Call CreateSymbols only once.");
             contextSymbols.Add(this);
         }
 
@@ -53,6 +39,6 @@ namespace Zsharp.AST
             => FunctionType.Accept(visitor);
 
         public override string ToString()
-            => $"{Identifier?.CanonicalName}{FunctionType}";
+            => $"{Identifier?.CanonicalName}: {FunctionType}";
     }
 }

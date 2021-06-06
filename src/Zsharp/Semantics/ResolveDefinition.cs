@@ -291,11 +291,10 @@ namespace Zsharp.Semantics
                 // but FunctionDefinition may still be null (FunctionReference.OverloadKey does not match functionDef)
                 if (function.FunctionDefinition is null)
                 {
-                    var overloadDef = ResolveOverload(function);
-                    if (overloadDef is not null)
+                    if (MatchFunctionToDefinition(function))
                     {
-                        function.Symbol!.SetOverload(function, overloadDef);
-                        Visit(overloadDef);
+                        // make sure all new types are resolved.
+                        VisitChildren(function);
                     }
                     else
                     {
@@ -438,11 +437,42 @@ namespace Zsharp.Semantics
         private static AstTypeDefinition? FindTypeDefinition(AstSymbolTable symbols, string typeName)
             => symbols.FindDefinition<AstTypeDefinition>(typeName, AstSymbolKind.Type);
 
-        private AstFunctionDefinition? ResolveOverload(AstFunctionReference function)
+        private bool MatchFunctionToDefinition(AstFunctionReference function)
         {
-            // TODO: more elaborate overload resolution here...
-            return function.Symbol!.Overloads.SingleOrDefault(
-                def => def.FunctionType.OverloadKey == function.FunctionType.OverloadKey);
+            var entry = function.Symbol!;
+
+            if (!entry.HasDefinition)
+                return false;
+
+            //if (!entry.HasOverloads)
+            //{
+            //    SetToMatch(function, entry.DefinitionAs<AstFunctionDefinition>()!);
+            //    return true;
+            //}
+
+            // TODO: Find closest match of overloads...
+            return entry.FindFunctionDefinition(function) is not null;
+        }
+
+        // TODO: this needs more refinement than blindly overwriting types.
+        // - Only overwrite if no type was found
+        // - only overwrite if the current and new type are compatible / implicit convertable
+        private void SetToMatch(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
+        {
+            var oldTypeRefs =
+                functionRef.FunctionType.Parameters.Select(p => p.TypeReference!).ToList();
+
+            if (functionRef.FunctionType.TypeReference is not null)
+                oldTypeRefs.Add(functionRef.FunctionType.TypeReference!);
+
+            // remove the type-references from the symbol table that are about to be overwritten
+            functionRef.Symbol!.SymbolTable.RemoveReferences(oldTypeRefs);
+
+            functionRef.OverrideTypes(
+                functionDef.FunctionType.TypeReference,
+                functionDef.FunctionType.Parameters.Select(p => p.TypeReference!));
+
+            // TODO: ParameterRef.Expression can have different TypeReference than the parameter.
         }
     }
 }

@@ -26,13 +26,21 @@ Intrinsic Symbols
 - External Module Symbols contain all symbols for imported modules in a file.
 
 `AstSymbolEntry` instances are put in the symbol table where the symbol is defined.
-For example a function definition will be placed in the module's symbol table. That symbol entry will record any references to the function and/or defined aliases.
+For example a function definition will be placed in the file's symbol table. That symbol entry will record any references to the function and/or defined aliases.
 
-The `TryResolve` method on the `IAstSymbolEntrySite` interface is used to resolve the definition for a reference. The symbol entries are rearranged (merged) to add the reference to the definition's symbol entry.
+The `TryResolve` method on AstXxxxReference types is used to resolve the symbol entry with the definition for that reference. The symbol entries are rearranged (merged) to add the reference to the definition's symbol entry.
 
 ### TryResolve
 
 After the AST is built, the resolve-definition phase is started. This will walk (visitor) the AST tree and check if each AST node has a symbol definition. The `TryResolve` on an AST node (for a reference) searches the Symbol Table hierarchy for a symbol entry of the same name with a symbol definition set. When found the reference is merged into the symbol entry of the definition and deleted.
+
+### Resolve Function References
+
+Function References have to be matched to a Function Definition. However, not all type information can always be inferred from the function reference's location.
+
+The introduction of a 'FunctionType' isolates the template and function parameters as well as the return type. In order to match a function reference to its definition, assuming the identifiers match, only their FunctionTypes have to be compared in an 'open' and flexible way.
+
+When a match is found, the types on the Function Reference may have to be changed in order to match those of the function definition. Then the overload-keys will be equal and the `FunctionDefinition` will show up on the reference object.
 
 ## External Symbols
 

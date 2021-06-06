@@ -8,6 +8,7 @@ namespace UnitTests.Semantics
     public class ResolveArrayTest
     {
         [TestMethod]
+        [Ignore("Waiting for generics to be finished.")]
         public void ConstructorCapacity()
         {
             const string code =

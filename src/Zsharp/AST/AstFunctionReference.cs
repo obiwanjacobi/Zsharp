@@ -1,4 +1,5 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using System.Collections.Generic;
+using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -21,19 +22,7 @@ namespace Zsharp.AST
             get
             {
                 this.ThrowIfSymbolEntryNotSet();
-                var entry = Symbol!;
-
-                if (entry.HasOverloads)
-                {
-                    return entry.FindOverloadDefinition(this);
-                }
-
-                var functionDef = entry.DefinitionAs<AstFunctionDefinition>();
-
-                if (functionDef?.FunctionType.OverloadKey == FunctionType.OverloadKey)
-                    return functionDef;
-
-                return null;
+                return Symbol!.FindFunctionDefinition(this);
             }
         }
 
@@ -57,30 +46,22 @@ namespace Zsharp.AST
 
         public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
-            Identifier!.SymbolName.TemplatePostfix = FunctionType.Identifier!.CanonicalName;
+            Ast.Guard(Symbol is null, "Symbol already set. Call CreateSymbols only once.");
+
+            FunctionType.CreateSymbols(functionSymbols, parentSymbols);
+            Identifier!.SymbolName.TemplatePostfix = FunctionType.Identifier!.SymbolName.TemplatePostfix;
 
             var contextSymbols = parentSymbols ?? functionSymbols;
-
-            if (FunctionType.TypeReference is not null &&
-                FunctionType.TypeReference!.Symbol is null)
-            {
-                contextSymbols.Add(FunctionType.TypeReference);
-            }
-
-            foreach (var parameter in FunctionType.Parameters)
-            {
-                if (parameter.TypeReference is not null &&
-                    parameter.TypeReference.Symbol is null)
-                {
-                    functionSymbols.Add(parameter.TypeReference);
-                }
-            }
-
-            Ast.Guard(Symbol is null, "Symbol already set. Call CreateSymbols only once.");
             contextSymbols.Add(this);
         }
 
         public override string ToString()
-            => $"{Identifier?.CanonicalName}{FunctionType}";
+            => $"{Identifier?.CanonicalName}: {FunctionType}";
+
+        internal void OverrideTypes(AstTypeReference? returnType, IEnumerable<AstTypeReference> parameterTypes)
+        {
+            FunctionType.OverrideTypes(returnType, parameterTypes);
+            Identifier!.SymbolName.TemplatePostfix = FunctionType.Identifier!.CanonicalName;
+        }
     }
 }

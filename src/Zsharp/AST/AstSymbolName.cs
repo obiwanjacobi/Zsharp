@@ -8,7 +8,7 @@ namespace Zsharp.AST
     public enum AstSymbolNameParseOptions
     {
         /// <summary>text is from source code</summary>
-        Source,
+        IsSource,
         /// <summary>text is canonical format</summary>
         IsCanonical,
         /// <summary>convert source to to canonical format</summary>
@@ -49,7 +49,7 @@ namespace Zsharp.AST
             if (options == AstSymbolNameParseOptions.ToCanonical)
                 parts = parts.Select(PartToCanonical).ToArray();
 
-            return new AstSymbolName(parts, templatePostfix, options != AstSymbolNameParseOptions.Source);
+            return new AstSymbolName(parts, templatePostfix, options != AstSymbolNameParseOptions.IsSource);
         }
 
         public static string ToCanonical(string text)

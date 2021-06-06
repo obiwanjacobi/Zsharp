@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Zsharp.AST
 {
@@ -79,6 +80,18 @@ namespace Zsharp.AST
             };
         }
 
+        public static AstSymbolEntry? TryAdd<T>(this AstSymbolTable symbolTable, T? node)
+            where T : AstNode, IAstIdentifierSite
+        {
+            if (node is not null &&
+                (node as IAstSymbolEntrySite)?.Symbol is null)
+            {
+                return Add(symbolTable, node);
+            }
+
+            return null;
+        }
+
         public static AstSymbolEntry Add<T>(this AstSymbolTable symbolTable, T node)
             where T : AstNode, IAstIdentifierSite
             => AddSymbol(symbolTable, node, node.NodeType.ToSymbolKind(), node);
@@ -97,10 +110,24 @@ namespace Zsharp.AST
 
             var entry = symbolTable.AddSymbol(name, symbolKind, node);
 
-            if (node is IAstSymbolEntrySite symbolSite)
+            if (node is IAstSymbolEntrySite symbolSite &&
+                symbolSite.Symbol is null)
                 symbolSite.SetSymbol(entry);
 
             return entry;
+        }
+
+        internal static void RemoveReferences<T>(this AstSymbolTable symbolTable, IEnumerable<T> nodesToRemove)
+            where T : AstNode, IAstIdentifierSite
+        {
+            foreach (var node in nodesToRemove)
+            {
+                var entry = symbolTable.Find(node);
+                if (entry is not null)
+                {
+                    entry.RemoveReference(node);
+                }
+            }
         }
     }
 }

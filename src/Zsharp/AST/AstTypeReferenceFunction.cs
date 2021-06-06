@@ -58,22 +58,20 @@ namespace Zsharp.AST
             TypeReference?.Accept(visitor);
         }
 
-        public override string? ToString()
+        public override string ToString()
         {
             var txt = new StringBuilder();
 
-            //txt.Append(Identifier!.Name);
-            txt.Append(": (");
-
+            txt.Append('(');
             for (int i = 0; i < Parameters.Count(); i++)
             {
                 if (i > 0)
                     txt.Append(", ");
 
                 var p = Parameters.ElementAt(i);
-                txt.Append(p.Expression?.TypeReference?.Identifier?.Name);
+                txt.Append(p.TypeReference?.Identifier?.Name);
             }
-            txt.Append(")");
+            txt.Append(')');
 
             if (TypeReference?.Identifier is not null)
             {
@@ -82,6 +80,43 @@ namespace Zsharp.AST
             }
 
             return txt.ToString();
+        }
+
+        public void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
+        {
+            Ast.Guard(Symbol is null, "Symbol already set. Call CreateSymbols only once.");
+            var contextSymbols = parentSymbols ?? functionSymbols;
+
+            contextSymbols.TryAdd(TypeReference);
+            foreach (var parameter in Parameters)
+            {
+                functionSymbols.TryAdd(parameter.TypeReference);
+            }
+
+            var symbolName = AstSymbolName.Parse(ToString(), AstSymbolNameParseOptions.IsSource);
+            symbolName.TemplatePostfix = Identifier!.SymbolName.TemplatePostfix;
+            Identifier.SymbolName = symbolName;
+
+            contextSymbols.Add(this);
+        }
+
+        internal void OverrideTypes(AstTypeReference? returnType, IEnumerable<AstTypeReference> parameterTypes)
+        {
+            var paramTypes = parameterTypes.ToList();
+            Ast.Guard(paramTypes.Count == _parameters.Count, "Number of Parameters does not moatch.");
+
+            var symbolTable = Symbol!.SymbolTable;
+            for (int i = 0; i < _parameters.Count; i++)
+            {
+                var param = _parameters[i];
+                var typeRef = paramTypes[i].MakeProxy();
+                param.OverrideTypeReference(typeRef);
+                symbolTable.Add(typeRef);
+            }
+
+            _typeReference = returnType?.MakeProxy();
+            if (_typeReference is not null)
+                symbolTable.Add(_typeReference);
         }
     }
 }
