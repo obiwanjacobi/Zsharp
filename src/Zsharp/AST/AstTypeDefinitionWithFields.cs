@@ -2,7 +2,7 @@
 
 namespace Zsharp.AST
 {
-    public abstract class AstTypeDefinitionWithFields : AstTypeDefinition,
+    public abstract class AstTypeDefinitionWithFields : AstTypeDefinitionTemplate,
         IAstTypeReferenceSite,
         IAstTypeFields<AstTypeFieldDefinition>
     {

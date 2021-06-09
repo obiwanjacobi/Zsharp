@@ -70,14 +70,14 @@ namespace Zsharp.AST
 
         private void CreateTypeMap(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
         {
-            var defTemplateParams = functionDef.FunctionType.TemplateParameters.ToArray();
+            var defTemplateParams = functionDef.TemplateParameters.ToArray();
             var refTemplateParams = functionRef.FunctionType.TemplateParameters.ToArray();
 
             // TODO: default template parameter values
             Ast.Guard(refTemplateParams.Length == defTemplateParams.Length,
                 "Inconsistent number of template parameters between definition and instantiation.");
 
-            for (int i = 0; i < functionDef.FunctionType.TemplateParameters.Count(); i++)
+            for (int i = 0; i < functionDef.TemplateParameters.Count(); i++)
             {
                 var defParam = defTemplateParams[i];
                 var refParam = refTemplateParams[i];

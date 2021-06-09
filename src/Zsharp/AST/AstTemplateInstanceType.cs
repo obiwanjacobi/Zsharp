@@ -28,7 +28,7 @@ namespace Zsharp.AST
 
             foreach (AstTemplateParameterReference templateParam in type.TemplateParameters)
             {
-                AddTemplateParameter(templateParam.TypeReference);
+                AddTemplateParameter(templateParam.TypeReference!);
             }
         }
 

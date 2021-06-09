@@ -55,7 +55,7 @@ namespace Zsharp.AST
                 functionSymbols.TryAdd(parameter);
             }
 
-            foreach (var templParam in FunctionType.TemplateParameters)
+            foreach (var templParam in TemplateParameters)
             {
                 Symbols.TryAdd(templParam);
             }

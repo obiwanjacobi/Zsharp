@@ -147,7 +147,7 @@ namespace Zsharp.External
             {
                 // TODO: GenericParameterConstraints
                 var templParam = CreateTemplateParameter(new AstIdentifier(p.Name, AstIdentifierType.Parameter));
-                function.FunctionType.AddTemplateParameter(templParam);
+                function.AddTemplateParameter(templParam);
             }
 
             return function;

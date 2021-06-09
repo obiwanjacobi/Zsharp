@@ -2,7 +2,7 @@
 
 namespace Zsharp.AST
 {
-    public class AstTypeDefinitionIntrinsic : AstTypeDefinition
+    public class AstTypeDefinitionIntrinsic : AstTypeDefinitionTemplate
     {
         public AstTypeDefinitionIntrinsic(AstIdentifier identifier, Type? systemType,
             AstTemplateParameterDefinition? templateParameter = null, bool isUnsigned = false)

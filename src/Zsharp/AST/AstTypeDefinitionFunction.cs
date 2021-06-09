@@ -83,20 +83,6 @@ namespace Zsharp.AST
         {
             var txt = new StringBuilder();
 
-            if (IsTemplate)
-            {
-                txt.Append('<');
-                for (int i = 0; i < TemplateParameters.Count(); i++)
-                {
-                    if (i > 0)
-                        txt.Append(", ");
-
-                    var p = TemplateParameters.ElementAt(i);
-                    txt.Append(p.Identifier!.Name);
-                }
-                txt.Append('>');
-            }
-
             txt.Append('(');
             for (int i = 0; i < Parameters.Count(); i++)
             {
