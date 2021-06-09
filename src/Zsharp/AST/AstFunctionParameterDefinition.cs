@@ -34,7 +34,7 @@ namespace Zsharp.AST
         {
             var identifier = new AstIdentifier(name, AstIdentifierType.Parameter);
             var param = new AstFunctionParameterDefinition(identifier);
-            param.SetTypeReference(AstTypeReference.From(astType));
+            param.SetTypeReference(AstTypeReferenceType.From(astType));
             return param;
         }
     }

@@ -2,11 +2,11 @@
 
 namespace Zsharp.AST
 {
-    public class AstTypeReferenceExternal : AstTypeReference
+    public class AstTypeReferenceExternal : AstTypeReferenceType
     {
         private readonly TypeReference? _typeReference;
 
-        protected AstTypeReferenceExternal(AstTypeReference typeOrigin)
+        protected AstTypeReferenceExternal(AstTypeReferenceType typeOrigin)
             : base(typeOrigin)
         { }
 
@@ -27,16 +27,9 @@ namespace Zsharp.AST
 
         public override AstTypeReferenceExternal MakeProxy()
         {
-            AstTypeReferenceExternal typeRef;
-
-            if (TypeOrigin is not null)
-                typeRef = new AstTypeReferenceExternal(TypeOrigin);
-            else
-                typeRef = new AstTypeReferenceExternal(this);
-
-            typeRef.IsTemplateParameter = IsTemplateParameter;
-
-            return typeRef;
+            return (TypeOrigin is not null)
+                ? new AstTypeReferenceExternal(TypeOrigin)
+                : new AstTypeReferenceExternal(this);
         }
     }
 }

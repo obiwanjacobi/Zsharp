@@ -71,7 +71,7 @@ namespace Zsharp.AST
         private void CreateTypeMap(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
         {
             var defTemplateParams = functionDef.TemplateParameters.ToArray();
-            var refTemplateParams = functionRef.FunctionType.TemplateParameters.ToArray();
+            var refTemplateParams = functionRef.TemplateParameters.ToArray();
 
             // TODO: default template parameter values
             Ast.Guard(refTemplateParams.Length == defTemplateParams.Length,
@@ -394,7 +394,7 @@ namespace Zsharp.AST
             };
         }
 
-        public override void VisitTypeReference(AstTypeReference type)
+        public override void VisitTypeReferenceType(AstTypeReferenceType type)
             => CloneTypeReference(type);
 
         private AstTypeReference CloneTypeReference(AstTypeReference type)
@@ -408,19 +408,21 @@ namespace Zsharp.AST
             else if (type.TypeDefinition is IAstTemplateSite<AstTemplateParameterDefinition> templateDef &&
                 templateDef.IsTemplate)
             {
-                typeRef = AstTypeReference.From(type.TypeDefinition);
+                var typeRefType = AstTypeReferenceType.From(type.TypeDefinition);
 
                 foreach (AstTemplateParameterDefinition templParamDef in templateDef.TemplateParameters)
                 {
                     if (_typeMap.TryGetValue(templParamDef.Identifier!.CanonicalName, out AstTypeReference? paramType))
                     {
                         var templParam = new AstTemplateParameterReference(paramType.MakeProxy());
-                        typeRef.AddTemplateParameter(templParam);
+                        typeRefType.AddTemplateParameter(templParam);
                     }
                     else
                         throw new InternalErrorException(
                             $"Template Parameter '{templParamDef.Identifier.Name}' could not be resolved.");
                 }
+
+                typeRef = typeRefType;
             }
             else
                 typeRef = type.MakeProxy();

@@ -77,7 +77,7 @@ namespace UnitTests.AST
                 numeric.Parent.Should().NotBeNull();
                 VisitChildren(numeric);
             }
-            public override void VisitTypeReference(AstTypeReference type)
+            public override void VisitTypeReferenceType(AstTypeReferenceType type)
             {
                 type.Parent.Should().NotBeNull();
                 VisitChildren(type);

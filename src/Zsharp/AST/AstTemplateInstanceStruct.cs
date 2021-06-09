@@ -19,7 +19,7 @@ namespace Zsharp.AST
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTemplateInstanceStruct(this);
 
-        public void Instantiate(AstTypeReference type)
+        public void Instantiate(AstTypeReferenceType type)
         {
             Ast.Guard(type.TemplateParameters.Count() == TemplateDefinition.TemplateParameters.Count(),
                 $"The number of template parameters do not match the TemplateDefinition {TemplateDefinition.Identifier!.Name}");

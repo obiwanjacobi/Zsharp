@@ -21,7 +21,7 @@ namespace Zsharp.AST
             _templateParameters.Add(typeRef);
         }
 
-        public void Instantiate(AstTypeReference type)
+        public void Instantiate(AstTypeReferenceType type)
         {
             Context = type.Context;
             this.SetIdentifier(new AstIdentifier(type.Identifier!.Name, type.Identifier.IdentifierType));

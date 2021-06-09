@@ -38,7 +38,7 @@ namespace UnitTests.AST
                 parameter.TypeReference.Should().NotBeNull();
                 VisitChildren(parameter);
             }
-            public override void VisitTypeReference(AstTypeReference type)
+            public override void VisitTypeReferenceType(AstTypeReferenceType type)
             {
                 type.TypeDefinition.Should().NotBeNull();
                 VisitChildren(type);

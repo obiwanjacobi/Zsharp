@@ -10,8 +10,7 @@ namespace UnitTests.Semantics
     [TestClass]
     public class AstNodeClonerTests
     {
-        private readonly Compiler _compiler =
-            new Compiler(new ModuleLoader());
+        private readonly Compiler _compiler = new(new ModuleLoader());
 
         private T Clone<T>(T node) where T : AstNode, IAstCodeBlockItem
         {
@@ -201,12 +200,22 @@ namespace UnitTests.Semantics
                 return;
 
             cloned.Context.Should().BeEquivalentTo(origin.Context);
-            cloned.IsTemplateParameter.Should().Be(origin.IsTemplateParameter);
             cloned.TypeDefinition.Should().BeEquivalentTo(origin.TypeDefinition);
 
             // clone is proxied of origin
             //cloned.IsProxy.Should().Be(origin.IsProxy);
             //AssertEquivalent(cloned.TypeOrigin, origin.TypeOrigin);
+
+            AssertEquivalent(cloned as AstTypeReferenceTemplate, origin as AstTypeReferenceTemplate);
+        }
+
+        private void AssertEquivalent(AstTypeReferenceTemplate? cloned, AstTypeReferenceTemplate? origin)
+        {
+            if (cloned is not null &&
+                origin is not null)
+            {
+                cloned.IsTemplateParameter.Should().Be(origin.IsTemplateParameter);
+            }
         }
 
         private void AssertEquivalent(AstTypeFieldReference cloned, AstTypeFieldReference origin)

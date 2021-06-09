@@ -40,23 +40,24 @@ namespace Zsharp.Semantics
 
             if (expression.TypeReference is null)
             {
-                AstTypeReference? typeRef = null;
+
 
                 // comparison operators have bool result
                 if ((expression.Operator & AstExpressionOperator.MaskComparison) != 0)
                 {
                     var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
                         AstIdentifierIntrinsic.Bool.CanonicalName, AstSymbolKind.Type);
-                    typeRef = AstTypeReference.From(typeDef!);
-                    SymbolTable!.Add(typeRef);
+                    var typeRefType = AstTypeReferenceType.From(typeDef!);
+                    SymbolTable!.Add(typeRefType);
 
-                    expression.SetTypeReference(typeRef!);
+                    expression.SetTypeReference(typeRefType!);
 
                     // resolve new created type
-                    VisitTypeReference(typeRef);
+                    VisitTypeReferenceType(typeRefType);
                 }
                 else
                 {
+                    AstTypeReference? typeRef = null;
                     AstTypeReference? leftTypeRef = expression.LHS?.TypeReference;
                     AstTypeReference? rightTypeRef = expression.RHS?.TypeReference;
 
@@ -157,7 +158,7 @@ namespace Zsharp.Semantics
                 if (enumOptDef is not null)
                 {
                     var enumDef = enumOptDef.ParentAs<AstTypeDefinitionEnum>();
-                    operand.SetTypeReference(AstTypeReference.From(enumDef!));
+                    operand.SetTypeReference(AstTypeReferenceType.From(enumDef!));
                 }
             }
 
@@ -170,7 +171,7 @@ namespace Zsharp.Semantics
 
         private void AssignType(AstExpressionOperand operand, AstTypeDefinition typeDef)
         {
-            var typeRef = AstTypeReference.From(typeDef);
+            var typeRef = AstTypeReferenceType.From(typeDef);
             var entry = typeRef.Symbol ?? SymbolTable!.Add(typeRef);
             if (entry.Definition is null)
                 entry.AddNode(typeDef);
@@ -216,7 +217,7 @@ namespace Zsharp.Semantics
                 var def = entry!.DefinitionAs<AstTypeDefinition>();
                 if (def is not null)
                 {
-                    typeRef = AstTypeReference.From(def);
+                    typeRef = AstTypeReferenceType.From(def);
                     assign.Variable.SetTypeReference(typeRef);
                 }
                 else
@@ -262,7 +263,7 @@ namespace Zsharp.Semantics
             {
                 if (!function.TryResolveSymbol())
                 {
-                    if (function.FunctionType.IsTemplate)
+                    if (function.IsTemplate)
                     {
                         var entry = function.Symbol!;
                         var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinition>(
@@ -326,7 +327,7 @@ namespace Zsharp.Semantics
             }
         }
 
-        public override void VisitTypeReference(AstTypeReference type)
+        public override void VisitTypeReferenceType(AstTypeReferenceType type)
         {
             if (type.TypeDefinition is not null)
                 return;

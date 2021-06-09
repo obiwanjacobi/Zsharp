@@ -27,7 +27,7 @@ namespace Zsharp.AST
         {
             Ast.Guard(!FunctionType.Parameters.Any(), "A Self parameter has to be first.");
             var parameter = new AstFunctionParameterDefinition(AstIdentifierIntrinsic.Self);
-            parameter.SetTypeReference(AstTypeReference.From(type));
+            parameter.SetTypeReference(AstTypeReferenceType.From(type));
             FunctionType.AddParameter(parameter);
         }
 
@@ -42,7 +42,7 @@ namespace Zsharp.AST
             => function.CreateSymbols(symbols);
 
         private void SetTypeReference(AstTypeDefinitionIntrinsic type)
-            => FunctionType.SetTypeReference(AstTypeReference.From(type));
+            => FunctionType.SetTypeReference(AstTypeReferenceType.From(type));
 
         public override void Accept(AstVisitor visitor)
             => throw new InternalErrorException("Must not Visit Intrinsic Function Definition.");

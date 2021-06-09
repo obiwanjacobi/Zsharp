@@ -16,6 +16,10 @@ namespace Zsharp.AST
             this.SetIdentifier(new AstIdentifier(String.Empty, AstIdentifierType.Type));
         }
 
+        private AstTypeReferenceFunction(AstTypeReferenceFunction typeOrigin)
+            : base(typeOrigin)
+        { }
+
         private readonly List<AstFunctionParameterReference> _parameters = new();
         public IEnumerable<AstFunctionParameterReference> Parameters => _parameters;
 
@@ -37,6 +41,16 @@ namespace Zsharp.AST
         public string OverloadKey =>
             String.Join(String.Empty, _parameters.Select(p => p.TypeReference?.Identifier?.CanonicalName));
 
+        public new AstTypeReferenceFunction? TypeOrigin
+            => (AstTypeReferenceFunction?)base.TypeOrigin;
+
+        public override AstTypeReferenceFunction MakeProxy()
+        {
+            return (TypeOrigin is not null)
+                ? new AstTypeReferenceFunction(TypeOrigin)
+                : new AstTypeReferenceFunction(this);
+        }
+
         private AstTypeReference? _typeReference;
         public AstTypeReference? TypeReference => _typeReference;
 
@@ -48,8 +62,6 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            base.VisitChildren(visitor);
-
             foreach (var param in Parameters)
             {
                 param.Accept(visitor);

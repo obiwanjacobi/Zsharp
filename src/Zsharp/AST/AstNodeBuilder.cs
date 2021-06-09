@@ -188,7 +188,7 @@ namespace Zsharp.AST
 
             if (function.FunctionType.TypeReference is null)
             {
-                var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.Void);
+                var typeRef = AstTypeReferenceType.From(AstTypeDefinitionIntrinsic.Void);
                 function.FunctionType.SetTypeReference(typeRef);
                 codeBlock.Symbols.Add(typeRef);
             }
@@ -540,7 +540,7 @@ namespace Zsharp.AST
 
             if (typeDef.BaseType is null)
             {
-                var typeRef = AstTypeReference.From(AstTypeDefinitionIntrinsic.I32);
+                var typeRef = AstTypeReferenceType.From(AstTypeDefinitionIntrinsic.I32);
                 symbolsSite.Symbols.Add(typeRef);
 
                 typeDef.SetBaseType(typeRef);
@@ -678,7 +678,7 @@ namespace Zsharp.AST
 
         public override object? VisitType_ref(Type_refContext context)
         {
-            var typeRef = new AstTypeReference(context);
+            var typeRef = new AstTypeReferenceType(context);
 
             _builderContext.SetCurrent(typeRef);
             _ = VisitChildren(context);

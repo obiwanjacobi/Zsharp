@@ -104,7 +104,7 @@ namespace Zsharp.AST
 
             // reference to a template parameter is detected as TypeReference
             if (symbolKind == AstSymbolKind.Type &&
-                node is AstTypeReference typeRef &&
+                node is AstTypeReferenceType typeRef &&
                 typeRef.IsTemplateParameter)
                 symbolKind = AstSymbolKind.TemplateParameter;
 

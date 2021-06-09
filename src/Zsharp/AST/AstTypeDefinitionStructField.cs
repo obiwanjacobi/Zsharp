@@ -12,11 +12,12 @@ namespace Zsharp.AST
             : base(context)
         { }
 
-        private AstTypeReference? _typeReference;
-        public AstTypeReference? TypeReference => _typeReference;
+        private AstTypeReferenceType? _typeReference;
+        public AstTypeReferenceType? TypeReference => _typeReference;
+        AstTypeReference? IAstTypeReferenceSite.TypeReference => _typeReference;
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
-            => this.SafeSetParent(ref _typeReference, typeReference);
+            => this.SafeSetParent(ref _typeReference, (AstTypeReferenceType?)typeReference);
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTypeDefinitionStructField(this);

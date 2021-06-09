@@ -101,7 +101,34 @@ Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `n
 | `<=>` | Swap operator
 | `::` | reserved
 | `<-` | reserved
-| `''` | Delimiters for a symbol name with special characters.
+| `[[ ]]` | Alternate Decorators syntax (instead of `{}`)
+
+---
+
+## String Operator Symbols
+
+Operators for strings and characters.
+
+| Operator | Description
+|---|---
+| `''` | Delimiters for a symbol name with special characters (surround with double single-quotes).
+| `=~` | Case (and culture) insensitive equals.
+| `<>~` | Case (and culture) insensitive not-equals.
+| `>~` | Case (and culture) insensitive greater-than - sorting.
+| `<~` | Case (and culture) insensitive lesser-than  - sorting.
+| `>=~` | Case (and culture) insensitive greater-than-or-equal - sorting.
+| `=<~` | Case (and culture) insensitive lesser-than-or-equal - sorting.
+| `TBD` | Concat a string.
+
+```csharp
+// string concat operator?
+s = "Hello " <| "World"
+s = "Hello " <+ "World"
+s = "Hello " <& "World"
+s = "Hello " + "World"
+s = "Hello " & "World"
+s = "Hello " << "World"
+```
 
 ---
 

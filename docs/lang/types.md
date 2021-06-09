@@ -65,8 +65,8 @@ I8 I16 I32 I64
 
 These map to respective .NET types:
 
-- Unsigned: `byte`, `ushort`, 'uint' and `ulong`.
-- Signed: `sbyte`, `short`, 'int' and `long`.
+- Unsigned: `byte`, `ushort`, `uint` and `ulong`.
+- Signed: `sbyte`, `short`, `int` and `long`.
 
 > TBD: Do we want an autoscaling `Int`eger type? (.NET `System.Numerics.BigInteger`)
 
@@ -82,14 +82,14 @@ These map to respective .NET types: `float`, `double` and `decimal`.
 
 ### Strings
 
-An 'string' of characters of text (UTF-16).
+A 'string' of characters of text (UTF-16).
 
 ```C#
 Str         // mutable string: StringBuilder
 Imm<Str>    // immutable string: String
 ```
 
-This type maps to the .NET `string` or `StringBuilder` depending on if `Imm<Str> is used.
+This type maps to the .NET `string` or `StringBuilder` depending on if `Imm<Str>` is used.
 
 ---
 
@@ -121,6 +121,10 @@ loop c in s8
 ```
 
 The conversion is done using the .NET Text Encoding types from the BCL.
+
+#### Secure String
+
+> TBD (System.Security.SecureString)
 
 ---
 

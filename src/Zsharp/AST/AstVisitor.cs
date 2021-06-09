@@ -107,7 +107,7 @@ namespace Zsharp.AST
             VisitChildren(field);
         }
 
-        public virtual void VisitTypeReference(AstTypeReference type)
+        public virtual void VisitTypeReferenceType(AstTypeReferenceType type)
         {
             VisitChildren(type);
         }
