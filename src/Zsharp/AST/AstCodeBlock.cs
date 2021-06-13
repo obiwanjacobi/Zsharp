@@ -37,9 +37,9 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (AstNode item in Lines)
+            foreach (AstNode line in Lines)
             {
-                item.Accept(visitor);
+                line.Accept(visitor);
             }
         }
     }

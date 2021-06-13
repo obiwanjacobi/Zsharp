@@ -34,7 +34,6 @@ namespace Zsharp.Dgml
 
             //  <Nodes />
             writer.WriteStartElement("Nodes");
-            //writer.WriteEndElement();
             foreach (var node in Nodes)
             {
                 node.Write(writer);
@@ -43,7 +42,6 @@ namespace Zsharp.Dgml
 
             //  <Links />
             writer.WriteStartElement("Links");
-            //writer.WriteEndElement();
             foreach (var link in Links)
             {
                 link.Write(writer);
@@ -52,12 +50,10 @@ namespace Zsharp.Dgml
 
             //  <Categories />
             writer.WriteStartElement("Categories");
-            //writer.WriteEndElement();
             foreach (var category in Categories)
             {
                 category.Write(writer);
             }
-            //writer.WriteEndElement(/*"Categories"*/);
 
             //  <Styles />
 

@@ -90,26 +90,26 @@ namespace UnitTests.Semantics
             cloned.Context.Should().BeEquivalentTo(origin.Context);
             cloned.Indent.Should().Be(origin.Indent);
 
-            var clonedItems = cloned.Lines.ToArray();
-            var originItems = origin.Lines.ToArray();
-            for (int i = 0; i < originItems.Length; i++)
+            var clonedLines = cloned.Lines.ToArray();
+            var originLines = origin.Lines.ToArray();
+            for (int i = 0; i < originLines.Length; i++)
             {
-                var clonedItem = clonedItems[i];
-                var originItem = originItems[i];
+                var clonedLine = clonedLines[i];
+                var originLine = originLines[i];
 
-                AssertCodeBlockItem(clonedItem, originItem);
+                AssertCodeBlockItem(clonedLine, originLine);
 
-                if (originItem is AstAssignment a)
-                    AssertEquivalent((AstAssignment)clonedItem, a);
+                if (originLine is AstAssignment a)
+                    AssertEquivalent((AstAssignment)clonedLine, a);
 
-                if (originItem is AstFunctionDefinition fd)
-                    AssertEquivalent((AstFunctionDefinition)clonedItem, fd);
+                if (originLine is AstFunctionDefinition fd)
+                    AssertEquivalent((AstFunctionDefinition)clonedLine, fd);
 
-                if (originItem is AstBranch b)
-                    AssertEquivalent((AstBranch)clonedItem, b);
+                if (originLine is AstBranch b)
+                    AssertEquivalent((AstBranch)clonedLine, b);
 
-                if (originItem is AstVariableDefinition vd)
-                    AssertEquivalent((AstVariableDefinition)clonedItem, vd);
+                if (originLine is AstVariableDefinition vd)
+                    AssertEquivalent((AstVariableDefinition)clonedLine, vd);
 
                 //if (originItem is AstTypeDefinition td)
                 //    AssertEquivalent((AstTypeDefinition)clonedItem, td);

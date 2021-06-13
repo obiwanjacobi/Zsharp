@@ -71,9 +71,9 @@ namespace Zsharp.Dgml
             _ = CreateLink(parentId, node.Id);
 
             int i = 0;
-            foreach (AstNode item in codeBlock.Lines)
+            foreach (AstNode line in codeBlock.Lines)
             {
-                var itemNode = WriteCodeBlockItem(item, node.Id);
+                var itemNode = WriteCodeBlockItem(line, node.Id);
                 var link = FindLink(node.Id, itemNode.Id);
                 link.Label = i.ToString();
                 i++;
