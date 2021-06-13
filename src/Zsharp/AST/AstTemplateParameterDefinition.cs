@@ -22,8 +22,11 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool TrySetIdentifier(AstIdentifier? identifier)
-            => Ast.SafeSet(ref _identifier, identifier);
+        public bool TrySetIdentifier(AstIdentifier identifier)
+        {
+            Ast.Guard(identifier.IdentifierKind == AstIdentifierKind.TemplateParameter, "Identifier must be of kind TemplateParameter");
+            return Ast.SafeSet(ref _identifier, identifier);
+        }
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTemplateParameterDefinition(this);

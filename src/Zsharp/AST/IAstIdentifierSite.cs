@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public interface IAstIdentifierSite
     {
         AstIdentifier? Identifier { get; }
-        bool TrySetIdentifier(AstIdentifier? identifier);
+        bool TrySetIdentifier(AstIdentifier identifier);
     }
 
     public static class AstIdentifierSiteExtensions

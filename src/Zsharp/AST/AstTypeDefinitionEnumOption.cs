@@ -15,6 +15,9 @@ namespace Zsharp.AST
         public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
 
+        public override bool TrySetIdentifier(AstIdentifier identifier)
+            => TrySetIdentifier(identifier, AstIdentifierKind.EnumOption);
+
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTypeDefinitionEnumOption(this);
 

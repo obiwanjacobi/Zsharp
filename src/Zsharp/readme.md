@@ -29,7 +29,6 @@
 - Namespace on AstSymbolEntry is wrong for imported module functions. 
     It should be the name of the external module but is the name of the local symbol table it is refered in.
 - Importing External modules does not find nested public classes (Zsharp.Runtime.Conversion.Checked).
-- TrySetIdentifier should check if IdentifierType matches the AstNodeType.
 - Assign initial TypeReference to SymbolTable (entry) and MakeProxy for all other references?
 - AstFunctionDefinitionIntrinsic.TrySetSymbol should not be called?
 - Function Overloads handling: Currently based on function name are all in the same SymbolEntry.
@@ -42,9 +41,6 @@
 
 ---
 
-## Optimizations
-
-- [IL] Struct field init is always done using a secondary instance - not always necessary (ctor).
 
 ## Resources
 

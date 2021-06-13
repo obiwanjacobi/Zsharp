@@ -10,8 +10,11 @@
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool TrySetIdentifier(AstIdentifier? identifier)
-            => Ast.SafeSet(ref _identifier, identifier);
+        public bool TrySetIdentifier(AstIdentifier identifier)
+        {
+            Ast.Guard(identifier.IdentifierKind == AstIdentifierKind.Parameter, "Identifier must be of kind Parameter");
+            return Ast.SafeSet(ref _identifier, identifier);
+        }
 
         private AstTypeReference? _typeReference;
         public AstTypeReference? TypeReference => _typeReference;

@@ -20,7 +20,10 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public bool TrySetIdentifier(AstIdentifier? identifier)
-            => Ast.SafeSet(ref _identifier, identifier);
+        public bool TrySetIdentifier(AstIdentifier identifier)
+        {
+            Ast.Guard(identifier.IdentifierKind == AstIdentifierKind.Module, "Identifier must be of kind Module");
+            return Ast.SafeSet(ref _identifier, identifier);
+        }
     }
 }

@@ -146,7 +146,7 @@ namespace Zsharp.External
             foreach (var p in method.GenericParameters)
             {
                 // TODO: GenericParameterConstraints
-                var templParam = CreateTemplateParameter(new AstIdentifier(p.Name, AstIdentifierKind.Parameter));
+                var templParam = CreateTemplateParameter(new AstIdentifier(p.Name, AstIdentifierKind.TemplateParameter));
                 function.AddTemplateParameter(templParam);
             }
 

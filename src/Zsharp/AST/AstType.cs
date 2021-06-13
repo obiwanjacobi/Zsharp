@@ -14,8 +14,11 @@ namespace Zsharp.AST
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;
 
-        public virtual bool TrySetIdentifier(AstIdentifier? identifier)
-            => Ast.SafeSet(ref _identifier, identifier);
+        public virtual bool TrySetIdentifier(AstIdentifier identifier)
+        {
+            Ast.Guard(identifier.IdentifierKind == AstIdentifierKind.Type, "Identifier must be of kind Type");
+            return Ast.SafeSet(ref _identifier, identifier);
+        }
 
         private AstSymbol? _symbol;
         public AstSymbol? Symbol
