@@ -61,7 +61,7 @@ namespace Zsharp.AST
             }
         }
 
-        public T? Clone<T>(T node) where T : AstNode, IAstCodeBlockItem
+        public T? Clone<T>(T node) where T : AstNode, IAstCodeBlockLine
         {
             Ast.Guard(_context is not null, "Must construct with CompilerContext.");
             AstCodeBlock cb = new AstCodeBlock("Clone", _context!.CompilerContext.IntrinsicSymbols);
@@ -70,7 +70,7 @@ namespace Zsharp.AST
             Visit(node);
             _current.RevertCurrent();
 
-            var result = cb.ItemAt<T>(0);
+            var result = cb.LineAt<T>(0);
             result?.Orphan();
 
             return result;
@@ -131,7 +131,7 @@ namespace Zsharp.AST
                 fnDef.SetIdentifier(functionDef.Identifier!);
 
                 var codeBlock = _current.GetCurrent<AstCodeBlock>();
-                codeBlock.AddItem(fnDef);
+                codeBlock.AddLine(fnDef);
 
                 _current.SetCurrent(fnDef.FunctionType);
                 _current.SetCurrent(fnDef);
@@ -275,7 +275,7 @@ namespace Zsharp.AST
             };
 
             var codeBlock = _current.GetCurrent<AstCodeBlock>();
-            codeBlock.AddItem(a);
+            codeBlock.AddLine(a);
 
             _current.SetCurrent(a);
 
@@ -301,7 +301,7 @@ namespace Zsharp.AST
             var varDef = CloneVariableDefinition(variable);
 
             var codeBlock = _current.GetCurrent<AstCodeBlock>();
-            codeBlock.AddItem(varDef);
+            codeBlock.AddLine(varDef);
         }
 
         private AstVariableDefinition CloneVariableDefinition(AstVariableDefinition variable)
@@ -456,7 +456,7 @@ namespace Zsharp.AST
                 throw new InternalErrorException("Unknown Branch Type.");
 
             var cb = _current.GetCurrent<AstCodeBlock>();
-            cb.AddItem(br);
+            cb.AddLine(br);
 
             _current.SetCurrent(br);
             branch.VisitChildren(this);
@@ -468,7 +468,7 @@ namespace Zsharp.AST
             var br = new AstBranchConditional(branch.Context!);
 
             var cb = _current.GetCurrent<AstCodeBlock>();
-            cb.AddItem(br);
+            cb.AddLine(br);
 
             _current.SetCurrent(br);
             branch.VisitChildren(this);
@@ -480,7 +480,7 @@ namespace Zsharp.AST
             var br = new AstBranchExpression((Statement_returnContext)branch.Context!);
 
             var cb = _current.GetCurrent<AstCodeBlock>();
-            cb.AddItem(br);
+            cb.AddLine(br);
 
             _current.SetCurrent(br);
             branch.VisitChildren(this);

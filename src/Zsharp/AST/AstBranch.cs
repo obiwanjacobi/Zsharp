@@ -4,7 +4,7 @@ using static Zsharp.Parser.ZsharpParser;
 namespace Zsharp.AST
 {
     public class AstBranch : AstNode,
-        IAstCodeBlockItem
+        IAstCodeBlockLine
     {
         public AstBranch(Statement_breakContext context)
             : base(AstNodeKind.Branch)

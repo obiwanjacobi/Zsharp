@@ -21,10 +21,10 @@ namespace UnitTests.Semantics
 
             var file = Compile.File(code);
 
-            var fn1 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var fn2Ref = fn1.CodeBlock.ItemAt<AstFunctionReference>(0);
+            var fn1 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
+            var fn2Ref = fn1.CodeBlock.LineAt<AstFunctionReference>(0);
 
-            var fn2 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(1);
+            var fn2 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(1);
             fn2.Should().NotBeNull();
             fn2.Symbol.SymbolName.Should().Be("fn2");
             fn2.Symbol.HasOverloads.Should().BeTrue();
@@ -46,10 +46,10 @@ namespace UnitTests.Semantics
 
             var file = Compile.File(code);
 
-            var fn1 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var fn2Ref = fn1.CodeBlock.ItemAt<AstFunctionReference>(0);
+            var fn1 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
+            var fn2Ref = fn1.CodeBlock.LineAt<AstFunctionReference>(0);
 
-            var fn2 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(2);
+            var fn2 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(2);
             fn2.Should().NotBeNull();
             fn2.Symbol.SymbolName.Should().Be("fn2");
             fn2.Symbol.HasOverloads.Should().BeTrue();
@@ -71,10 +71,10 @@ namespace UnitTests.Semantics
 
             var file = Compile.File(code);
 
-            var fn1 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var fn2Ref = fn1.CodeBlock.ItemAt<AstFunctionReference>(0);
+            var fn1 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
+            var fn2Ref = fn1.CodeBlock.LineAt<AstFunctionReference>(0);
 
-            var fn2 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(2);
+            var fn2 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(2);
             fn2.Should().NotBeNull();
             fn2.Symbol.SymbolName.Should().Be("fn2");
             fn2.Symbol.HasOverloads.Should().BeTrue();
@@ -92,7 +92,7 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code, Compile.CreateModuleLoader());
-            var a = file.CodeBlock.ItemAt<AstAssignment>(1);
+            var a = file.CodeBlock.LineAt<AstAssignment>(1);
             a.Expression.TypeReference.Should().NotBeNull();
             a.Variable.TypeReference.Should().NotBeNull();
         }
@@ -107,8 +107,8 @@ namespace UnitTests.Semantics
 
             var file = Compile.File(code, Compile.CreateModuleLoader());
 
-            var fn1 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var br = fn1.CodeBlock.ItemAt<AstBranchExpression>(0);
+            var fn1 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
+            var br = fn1.CodeBlock.LineAt<AstBranchExpression>(0);
             var convRef = br.Expression.RHS.FunctionReference;
 
             convRef.FunctionDefinition.Should().NotBeNull();
@@ -123,7 +123,7 @@ namespace UnitTests.Semantics
 
             var file = Compile.File(code, Compile.CreateModuleLoader());
 
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
 
             assign.Expression.TypeReference.Should().NotBeNull();
         }

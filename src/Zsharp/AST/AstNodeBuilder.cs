@@ -162,7 +162,7 @@ namespace Zsharp.AST
             var codeBlock = _builderContext.GetCodeBlock(context);
             var function = new AstFunctionDefinitionImpl(context);
 
-            codeBlock.AddItem(function);
+            codeBlock.AddLine(function);
             _builderContext.SetCurrent(function.FunctionType);
             _builderContext.SetCurrent(function);
 
@@ -232,7 +232,7 @@ namespace Zsharp.AST
         {
             var function = CreateFunctionReference(context);
             var codeBlock = _builderContext.GetCodeBlock(context);
-            codeBlock!.AddItem(function);
+            codeBlock!.AddLine(function);
             return function;
         }
 
@@ -287,7 +287,7 @@ namespace Zsharp.AST
             var variable = new AstVariableDefinition(context);
             var codeBlock = _builderContext.GetCodeBlock(context);
 
-            codeBlock!.AddItem(variable);
+            codeBlock!.AddLine(variable);
 
             _builderContext.SetCurrent(variable);
             _ = VisitChildren(context);
@@ -352,7 +352,7 @@ namespace Zsharp.AST
         {
             var codeBlock = _builderContext.GetCodeBlock(context);
 
-            codeBlock.AddItem(assign);
+            codeBlock.AddLine(assign);
             _builderContext.SetCurrent(assign);
 
             assign.SetVariable(variable);
@@ -375,7 +375,7 @@ namespace Zsharp.AST
             var codeBlock = _builderContext.GetCodeBlock(context);
 
             var branch = new AstBranchConditional(context);
-            codeBlock.AddItem(branch);
+            codeBlock.AddLine(branch);
 
             _builderContext.SetCurrent(branch);
             _ = VisitChildren(context);
@@ -418,7 +418,7 @@ namespace Zsharp.AST
             var codeBlock = _builderContext.GetCodeBlock(context);
 
             var branch = new AstBranchExpression(context);
-            codeBlock.AddItem(branch);
+            codeBlock.AddLine(branch);
 
             _builderContext.SetCurrent(branch);
             _ = base.VisitChildren(context);
@@ -431,7 +431,7 @@ namespace Zsharp.AST
             var codeBlock = _builderContext.GetCodeBlock(context);
 
             var branch = new AstBranch(context);
-            codeBlock.AddItem(branch);
+            codeBlock.AddLine(branch);
             return branch;
         }
 
@@ -440,7 +440,7 @@ namespace Zsharp.AST
             var codeBlock = _builderContext.GetCodeBlock(context);
 
             var branch = new AstBranch(context);
-            codeBlock.AddItem(branch);
+            codeBlock.AddLine(branch);
             return branch;
         }
 
@@ -532,7 +532,7 @@ namespace Zsharp.AST
             var typeDef = new AstTypeDefinitionEnum(context, symbolsSite.Symbols);
 
             var codeBlock = _builderContext.GetCodeBlock(context);
-            codeBlock.AddItem(typeDef);
+            codeBlock.AddLine(typeDef);
 
             _builderContext.SetCurrent(typeDef);
             _ = VisitChildren(context);
@@ -598,7 +598,7 @@ namespace Zsharp.AST
             var typeDef = new AstTypeDefinitionStruct(context, symbolsSite.Symbols);
 
             var codeBlock = _builderContext.GetCodeBlock(context);
-            codeBlock.AddItem(typeDef);
+            codeBlock.AddLine(typeDef);
 
             _builderContext.SetCurrent(typeDef);
             _ = VisitChildren(context);

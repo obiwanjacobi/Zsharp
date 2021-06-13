@@ -19,7 +19,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.Functions.FirstOrDefault();
-            var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
+            var br = fn.CodeBlock.LineAt<AstBranchConditional>(0);
             br.Should().NotBeNull();
             br.BranchKind.Should().Be(AstBranchKind.Conditional);
             br.IsConditional.Should().BeTrue();
@@ -38,7 +38,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.Functions.FirstOrDefault();
-            var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
+            var br = fn.CodeBlock.LineAt<AstBranchConditional>(0);
             br.Should().NotBeNull();
             br.BranchKind.Should().Be(AstBranchKind.Conditional);
             br.IsConditional.Should().BeTrue();
@@ -59,7 +59,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.Functions.FirstOrDefault();
-            var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
+            var br = fn.CodeBlock.LineAt<AstBranchConditional>(0);
             br.HasSubBranch.Should().BeTrue();
 
             var sbr = br.SubBranch;
@@ -83,7 +83,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.Functions.FirstOrDefault();
-            var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
+            var br = fn.CodeBlock.LineAt<AstBranchConditional>(0);
             br.HasSubBranch.Should().BeTrue();
 
             var sbr = br.SubBranch;
@@ -109,7 +109,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.Functions.FirstOrDefault();
-            var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
+            var br = fn.CodeBlock.LineAt<AstBranchConditional>(0);
             br.HasSubBranch.Should().BeTrue();
 
             var sbr = br.SubBranch;
@@ -139,10 +139,10 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.Functions.FirstOrDefault();
-            var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
+            var br = fn.CodeBlock.LineAt<AstBranchConditional>(0);
             br.HasSubBranch.Should().BeFalse();
 
-            var nbr = br.CodeBlock.ItemAt<AstBranchConditional>(0);
+            var nbr = br.CodeBlock.LineAt<AstBranchConditional>(0);
             nbr.Should().NotBeNull();
             nbr.BranchKind.Should().Be(AstBranchKind.Conditional);
             nbr.IsConditional.Should().BeTrue();
@@ -160,7 +160,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.Functions.FirstOrDefault();
-            var br = fn.CodeBlock.ItemAt<AstBranch>(0);
+            var br = fn.CodeBlock.LineAt<AstBranch>(0);
             br.Should().NotBeNull();
             br.BranchKind.Should().Be(AstBranchKind.ExitFunction);
         }
@@ -175,7 +175,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.Functions.FirstOrDefault();
-            var br = fn.CodeBlock.ItemAt<AstBranchExpression>(0);
+            var br = fn.CodeBlock.LineAt<AstBranchExpression>(0);
             br.Should().NotBeNull();
             br.BranchKind.Should().Be(AstBranchKind.ExitFunction);
             br.Expression.Should().NotBeNull();

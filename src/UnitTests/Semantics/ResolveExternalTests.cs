@@ -16,7 +16,7 @@ namespace UnitTests.Semantics
 
             var file = Compile.File(code, Compile.CreateModuleLoader());
 
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             assign.Expression.RHS.FunctionReference.FunctionDefinition.Should().NotBeNull();
         }
 
@@ -30,7 +30,7 @@ namespace UnitTests.Semantics
 
             var file = Compile.File(code, Compile.CreateModuleLoader());
 
-            var fn = file.CodeBlock.ItemAt<AstFunctionReference>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionReference>(0);
             var typeRef = fn.FunctionType.TypeReference;
             typeRef.Symbol.Definition.Should().NotBeNull();
         }

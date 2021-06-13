@@ -18,7 +18,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var ag = file.CodeBlock.ItemAt<AstAssignment>(1);
+            var ag = file.CodeBlock.LineAt<AstAssignment>(1);
             ag.Should().NotBeNull();
             ag.Indent.Should().Be(0);
         }
@@ -33,7 +33,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var ag = file.CodeBlock.ItemAt<AstAssignment>(1);
+            var ag = file.CodeBlock.LineAt<AstAssignment>(1);
             ag.Should().NotBeNull();
             ag.Indent.Should().Be(0);
         }
@@ -48,10 +48,10 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var ag = fn.CodeBlock.ItemAt<AstAssignment>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
+            var ag = fn.CodeBlock.LineAt<AstAssignment>(0);
             ag.Should().NotBeNull();
-            var br = fn.CodeBlock.ItemAt<AstBranch>(1);
+            var br = fn.CodeBlock.LineAt<AstBranch>(1);
             br.Should().NotBeNull();
         }
 
@@ -66,11 +66,11 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
-            var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
+            var br = fn.CodeBlock.LineAt<AstBranchConditional>(0);
             br.Should().NotBeNull();
             br.Indent.Should().Be(1);
-            var ret = br.CodeBlock.ItemAt<AstBranch>(0);
+            var ret = br.CodeBlock.LineAt<AstBranch>(0);
             ret.BranchKind.Should().Be(AstBranchKind.ExitFunction);
             ret.Indent.Should().Be(2);
         }
@@ -86,9 +86,9 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn1 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn1 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             fn1.Should().NotBeNull();
-            var fn2 = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(1);
+            var fn2 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(1);
             fn2.Should().NotBeNull();
         }
     }

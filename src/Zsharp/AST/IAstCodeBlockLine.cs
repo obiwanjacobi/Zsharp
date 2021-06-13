@@ -1,6 +1,6 @@
 ﻿namespace Zsharp.AST
 {
-    public interface IAstCodeBlockItem
+    public interface IAstCodeBlockLine
     {
         uint Indent { get; set; }
     }

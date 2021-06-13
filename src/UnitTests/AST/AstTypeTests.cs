@@ -17,7 +17,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinition>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinition>(0);
             var t = fn.FunctionType.TypeReference;
             t.Identifier.Name.Should().Be("U8");
         }
@@ -31,7 +31,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var t = fn.FunctionType.Parameters.First().TypeReference;
             t.Identifier.Name.Should().Be("U8");
         }
@@ -45,7 +45,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var t = fn.FunctionType.Parameters.ElementAt(0).TypeReference;
             t.Identifier.Name.Should().Be("U8");
 
@@ -62,7 +62,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var t = fn.FunctionType.Parameters.First().TypeReference;
             t.Identifier.Name.Should().Be("SomeType");
         }
@@ -75,7 +75,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var a = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
+            var a = file.CodeBlock.LineAt<AstVariableDefinition>(0);
             var t = a.TypeReference;
             t.Identifier.Name.Should().Be("U8");
         }
@@ -89,7 +89,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var e = file.CodeBlock.ItemAt<AstTypeDefinitionEnum>(0);
+            var e = file.CodeBlock.LineAt<AstTypeDefinitionEnum>(0);
             e.Symbol.Definition.Should().Be(e);
             e.BaseType.Identifier.Name.Should().Be("I32");
 
@@ -108,7 +108,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var e = file.CodeBlock.ItemAt<AstTypeDefinitionEnum>(0);
+            var e = file.CodeBlock.LineAt<AstTypeDefinitionEnum>(0);
             e.Symbol.Definition.Should().Be(e);
             e.BaseType.Identifier.Name.Should().Be("U8");
 
@@ -130,7 +130,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var e = file.CodeBlock.ItemAt<AstTypeDefinitionEnum>(0);
+            var e = file.CodeBlock.LineAt<AstTypeDefinitionEnum>(0);
             e.Symbol.Definition.Should().Be(e);
 
             var f = e.Fields.First();
@@ -160,7 +160,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var s = file.CodeBlock.ItemAt<AstTypeDefinitionStruct>(0);
+            var s = file.CodeBlock.LineAt<AstTypeDefinitionStruct>(0);
             s.Symbol.Definition.Should().Be(s);
             s.BaseType.Should().BeNull();
 

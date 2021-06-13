@@ -10,21 +10,21 @@ namespace UnitTests.AST
         private static AstLiteralNumeric ParseNumeric(string code)
         {
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             return assign.Expression.RHS.LiteralNumeric;
         }
 
         private static AstLiteralBoolean ParseBoolean(string code)
         {
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             return assign.Expression.RHS.LiteralBoolean;
         }
 
         private static AstLiteralString ParseString(string code)
         {
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             return assign.Expression.RHS.LiteralString;
         }
 

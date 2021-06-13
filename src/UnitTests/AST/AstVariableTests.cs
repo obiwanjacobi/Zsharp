@@ -18,7 +18,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionReference>(1);
+            var fn = file.CodeBlock.LineAt<AstFunctionReference>(1);
             fn.EnforceReturnValueUse.Should().BeFalse();
         }
 
@@ -33,8 +33,8 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(1);
-            var br = fn.CodeBlock.ItemAt<AstBranchExpression>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(1);
+            var br = fn.CodeBlock.LineAt<AstBranchExpression>(0);
             var fld = br.Expression.RHS.VariableReference;
             fld.Should().NotBeNull();
         }
@@ -53,7 +53,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionReference>(3);
+            var fn = file.CodeBlock.LineAt<AstFunctionReference>(3);
             fn.Should().NotBeNull();
             fn.FunctionType.Parameters.First().Identifier
                 .Should().Be(AstIdentifierIntrinsic.Self);

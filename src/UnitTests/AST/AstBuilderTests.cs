@@ -122,7 +122,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var func = file.Functions.First().CodeBlock.ItemAt<AstFunctionReference>(0);
+            var func = file.Functions.First().CodeBlock.LineAt<AstFunctionReference>(0);
             func.Identifier.Name.Should().Be("fn");
         }
 
@@ -135,7 +135,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var func = file.Functions.First().CodeBlock.ItemAt<AstFunctionReference>(0);
+            var func = file.Functions.First().CodeBlock.LineAt<AstFunctionReference>(0);
             var p = func.FunctionType.Parameters.First();
             p.Expression.Should().NotBeNull();
         }
@@ -151,7 +151,7 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var func = file.Functions.First();
             func.Identifier.Name.Should().Be("fn");
-            func.CodeBlock.ItemAt<AstAssignment>(0)
+            func.CodeBlock.LineAt<AstAssignment>(0)
                 .Should().NotBeNull();
         }
     }

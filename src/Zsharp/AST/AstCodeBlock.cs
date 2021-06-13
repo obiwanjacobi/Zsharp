@@ -19,16 +19,16 @@ namespace Zsharp.AST
 
         public AstSymbolTable Symbols { get; }
 
-        private readonly List<IAstCodeBlockItem> _items = new();
-        public IEnumerable<IAstCodeBlockItem> Items => _items;
+        private readonly List<IAstCodeBlockLine> _lines = new();
+        public IEnumerable<IAstCodeBlockLine> Lines => _lines;
 
-        public T? ItemAt<T>(int index) where T : AstNode, IAstCodeBlockItem
-            => _items[index] as T;
+        public T? LineAt<T>(int index) where T : AstNode, IAstCodeBlockLine
+            => _lines[index] as T;
 
-        public void AddItem<T>(T item)
-            where T : AstNode, IAstCodeBlockItem
+        public void AddLine<T>(T item)
+            where T : AstNode, IAstCodeBlockLine
         {
-            _items.Add(item);
+            _lines.Add(item);
             item.Indent = Indent;
             item.SetParent(this);
         }
@@ -37,7 +37,7 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (AstNode item in Items)
+            foreach (AstNode item in Lines)
             {
                 item.Accept(visitor);
             }

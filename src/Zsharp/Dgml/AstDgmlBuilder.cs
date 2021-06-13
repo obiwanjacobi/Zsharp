@@ -56,7 +56,7 @@ namespace Zsharp.Dgml
                 _ = CreateLink(node.Id, paramNode.Id, ContainsCategory);
             }
 
-            if (function.CodeBlock.Items.Any())
+            if (function.CodeBlock.Lines.Any())
             {
                 WriteCodeBlock(function.CodeBlock, node.Id);
             }
@@ -71,7 +71,7 @@ namespace Zsharp.Dgml
             _ = CreateLink(parentId, node.Id);
 
             int i = 0;
-            foreach (AstNode item in codeBlock.Items)
+            foreach (AstNode item in codeBlock.Lines)
             {
                 var itemNode = WriteCodeBlockItem(item, node.Id);
                 var link = FindLink(node.Id, itemNode.Id);

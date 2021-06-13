@@ -16,7 +16,7 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code, Compile.CreateModuleLoader());
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             assign.Expression.RHS.FunctionReference.Should().NotBeNull();
         }
     }

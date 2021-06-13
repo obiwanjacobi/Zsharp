@@ -4,7 +4,7 @@ using static Zsharp.Parser.ZsharpParser;
 namespace Zsharp.AST
 {
     public class AstVariableDefinition : AstVariable,
-        IAstCodeBlockItem
+        IAstCodeBlockLine
     {
         public AstVariableDefinition(Variable_def_typedContext context)
         {

@@ -12,7 +12,7 @@ namespace UnitTests.Semantics
     {
         private readonly Compiler _compiler = new(new ModuleLoader());
 
-        private T Clone<T>(T node) where T : AstNode, IAstCodeBlockItem
+        private T Clone<T>(T node) where T : AstNode, IAstCodeBlockLine
         {
             var uut = new AstNodeCloner(_compiler.Context);
             return uut.Clone<T>(node);
@@ -44,8 +44,8 @@ namespace UnitTests.Semantics
 
             cloned.NodeKind.Should().Be(origin.NodeKind);
 
-            if (origin is IAstCodeBlockItem cbi)
-                AssertCodeBlockItem((IAstCodeBlockItem)cloned, cbi);
+            if (origin is IAstCodeBlockLine cbl)
+                AssertCodeBlockItem((IAstCodeBlockLine)cloned, cbl);
 
             if (origin is IAstExpressionSite es)
                 AssertEquivalent(((IAstExpressionSite)cloned).Expression, es.Expression);
@@ -68,7 +68,7 @@ namespace UnitTests.Semantics
             return false;
         }
 
-        private void AssertCodeBlockItem(IAstCodeBlockItem cloned, IAstCodeBlockItem origin)
+        private void AssertCodeBlockItem(IAstCodeBlockLine cloned, IAstCodeBlockLine origin)
         {
             cloned.Indent.Should().Be(origin.Indent);
         }
@@ -90,8 +90,8 @@ namespace UnitTests.Semantics
             cloned.Context.Should().BeEquivalentTo(origin.Context);
             cloned.Indent.Should().Be(origin.Indent);
 
-            var clonedItems = cloned.Items.ToArray();
-            var originItems = origin.Items.ToArray();
+            var clonedItems = cloned.Lines.ToArray();
+            var originItems = origin.Lines.ToArray();
             for (int i = 0; i < originItems.Length; i++)
             {
                 var clonedItem = clonedItems[i];
@@ -297,7 +297,7 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code);
-            var origin = file.CodeBlock.ItemAt<AstVariableDefinition>(0);
+            var origin = file.CodeBlock.LineAt<AstVariableDefinition>(0);
 
             var cloned = Clone(origin);
 
@@ -312,7 +312,7 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code);
-            var origin = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var origin = file.CodeBlock.LineAt<AstAssignment>(0);
 
             var cloned = Clone(origin);
 
@@ -328,7 +328,7 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code);
-            var origin = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var origin = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
 
             var cloned = Clone(origin);
 
@@ -344,7 +344,7 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code);
-            var origin = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var origin = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
 
             var cloned = Clone(origin);
 
@@ -360,7 +360,7 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code);
-            var origin = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var origin = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
 
             var cloned = Clone(origin);
 

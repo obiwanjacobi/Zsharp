@@ -150,7 +150,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
             symbols.Symbols.Should().HaveCount(2);
 
@@ -168,7 +168,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
             symbols.Symbols.Should().HaveCount(2);
 
@@ -185,7 +185,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
             symbols.Symbols.Should().HaveCount(1);
 
@@ -201,7 +201,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
             var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
@@ -217,7 +217,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
 
             var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
@@ -276,7 +276,7 @@ namespace UnitTests.AST
             symbol.SymbolKind.Should().Be(AstSymbolKind.Field);
             symbol.Definition.Should().NotBeNull();
             // reference not resolved yet
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(1);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(1);
             assign.Expression.RHS.FieldReference.Symbol.References.Should().HaveCount(1);
         }
     }

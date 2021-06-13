@@ -17,7 +17,7 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code, Compile.CreateModuleLoader());
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var intrinsic = fn.Symbols.FindDefinition<AstFunctionDefinition>("U16", AstSymbolKind.Function);
             intrinsic.FunctionType.Parameters.First().IsSelf.Should().BeTrue();
         }
@@ -35,7 +35,7 @@ namespace UnitTests.Semantics
                 ;
 
             var file = Compile.File(code);
-            var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(2);
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(2);
             var intrinsic = fn.Symbols.FindDefinition<AstFunctionDefinition>("U16", AstSymbolKind.Function);
             intrinsic.FunctionType.Parameters.First().IsSelf.Should().BeTrue();
         }

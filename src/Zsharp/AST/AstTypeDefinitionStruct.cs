@@ -5,7 +5,7 @@ using static Zsharp.Parser.ZsharpParser;
 namespace Zsharp.AST
 {
     public class AstTypeDefinitionStruct : AstTypeDefinitionWithFields,
-        IAstCodeBlockItem, IAstSymbolTableSite
+        IAstCodeBlockLine, IAstSymbolTableSite
     {
         public AstTypeDefinitionStruct(Struct_defContext context, AstSymbolTable parentTable)
             : base(AstNodeKind.Struct)

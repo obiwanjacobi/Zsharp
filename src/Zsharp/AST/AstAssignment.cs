@@ -5,7 +5,7 @@ using static Zsharp.Parser.ZsharpParser;
 namespace Zsharp.AST
 {
     public class AstAssignment : AstNode,
-        IAstCodeBlockItem, IAstExpressionSite, IAstTypeInitializeSite
+        IAstCodeBlockLine, IAstExpressionSite, IAstTypeInitializeSite
     {
         public AstAssignment(Variable_def_typedContext context)
             : base(AstNodeKind.Assignment)

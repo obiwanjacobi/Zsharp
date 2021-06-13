@@ -5,7 +5,7 @@ using static Zsharp.Parser.ZsharpParser;
 namespace Zsharp.AST
 {
     public class AstTypeDefinitionEnum : AstTypeDefinitionWithFields,
-        IAstCodeBlockItem, IAstSymbolTableSite
+        IAstCodeBlockLine, IAstSymbolTableSite
     {
         public AstTypeDefinitionEnum(Enum_defContext context, AstSymbolTable parentTable)
             : base(AstNodeKind.Enum)

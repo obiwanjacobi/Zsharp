@@ -15,7 +15,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -32,7 +32,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -51,7 +51,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -68,7 +68,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -85,7 +85,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -103,7 +103,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -120,7 +120,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -138,7 +138,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -155,7 +155,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -172,7 +172,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -189,7 +189,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -206,7 +206,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -223,7 +223,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -239,7 +239,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
@@ -255,7 +255,7 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var assign = file.CodeBlock.ItemAt<AstAssignment>(0);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             var exp = assign.Expression;
 
             exp.Should().NotBeNull();
