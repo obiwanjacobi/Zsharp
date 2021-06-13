@@ -19,6 +19,7 @@ namespace Zsharp.AST
             this.SetIdentifier(typeToCopy.Identifier!.MakeCopy());
             this.Identifier!.SymbolName.TemplatePostfix = string.Empty;
             TrySetSymbol(typeToCopy.Symbol);
+            IsInferred = typeToCopy.IsInferred;
         }
 
         public AstTypeDefinition? TypeDefinition

@@ -28,12 +28,11 @@
         public override void VisitChildren(AstVisitor visitor)
             => TypeReference?.Accept(visitor);
 
-        public void ReplaceTypeReference(AstTypeReference? typeReference)
+        public AstTypeReference? ReplaceTypeReference(AstTypeReference? typeReference)
         {
-            if (_typeReference is not null)
-                _typeReference.Symbol?.RemoveReference(_typeReference);
-
+            var oldTypeRef = _typeReference;
             _typeReference = typeReference;
+            return oldTypeRef;
         }
     }
 }

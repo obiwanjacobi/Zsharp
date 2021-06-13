@@ -37,7 +37,6 @@
 - EmitFunctionTest - multiple usings 'using Zsharp.Runtime;' emitted.
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
 - Move Function.CreateSymbols impl to FunctionType
-- How to match in incomplete FunctionReference to its FunctionDefinition?
 - Check if ResolveDefinition for variable expression operand is still 'optimal'.
     It looks a bit convoluted.
 

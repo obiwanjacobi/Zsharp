@@ -482,7 +482,9 @@ namespace Zsharp.Semantics
                 {
                     var paramDef = parameterDefs[i];
                     var typeRef = paramDef.TypeReference!.MakeCopy();
-                    parameter.ReplaceTypeReference(typeRef);
+                    var oldTypeRef = parameter.ReplaceTypeReference(typeRef);
+                    if (oldTypeRef is not null)
+                        AstSymbolReferenceRemover.RemoveReference(oldTypeRef);
                     SymbolTable!.Add(typeRef);
                     hasReplacements = true;
                 }
@@ -493,7 +495,9 @@ namespace Zsharp.Semantics
                 functionDef.FunctionType.TypeReference is not null)
             {
                 var typeRef = functionDef.FunctionType.TypeReference!.MakeCopy();
-                function.FunctionType.ReplaceTypeReference(typeRef);
+                var oldTypeRef = function.FunctionType.ReplaceTypeReference(typeRef);
+                if (oldTypeRef is not null)
+                    AstSymbolReferenceRemover.RemoveReference(oldTypeRef);
                 SymbolTable!.Add(typeRef);
                 hasReplacements = true;
             }
