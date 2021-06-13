@@ -1,6 +1,6 @@
 ﻿namespace Zsharp.AST
 {
-    public enum AstIdentifierType
+    public enum AstIdentifierKind
     {
         Unknown,
         Module,

@@ -5,8 +5,8 @@ namespace Zsharp.AST
     public abstract class AstTypeDefinitionTemplate : AstTypeDefinition,
         IAstTemplateSite<AstTemplateParameterDefinition>
     {
-        protected AstTypeDefinitionTemplate(AstNodeType nodeType = AstNodeType.Type)
-            : base(nodeType)
+        protected AstTypeDefinitionTemplate(AstNodeKind nodeKind = AstNodeKind.Type)
+            : base(nodeKind)
         { }
 
         // true when type is a template definition

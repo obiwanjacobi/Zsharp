@@ -3,12 +3,12 @@ namespace Zsharp.AST
 
     public abstract class AstNode : IAstVisitable
     {
-        protected AstNode(AstNodeType nodeType)
+        protected AstNode(AstNodeKind nodeKind)
         {
-            NodeType = nodeType;
+            NodeKind = nodeKind;
         }
 
-        public AstNodeType NodeType { get; }
+        public AstNodeKind NodeKind { get; }
 
         private AstNode? _parent;
         public AstNode? Parent => _parent;

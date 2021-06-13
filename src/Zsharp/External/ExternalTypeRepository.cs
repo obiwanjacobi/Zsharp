@@ -17,7 +17,7 @@ namespace Zsharp.External
             {
                 var typeRef = new AstTypeReferenceExternal(typeReference);
                 typeRef.SetIdentifier(new AstIdentifier(
-                    ToZsharpName(typeReference), AstIdentifierType.Type));
+                    ToZsharpName(typeReference), AstIdentifierKind.Type));
                 _typeReferences.Add(key, typeRef);
             }
 

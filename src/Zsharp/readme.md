@@ -30,7 +30,6 @@
     It should be the name of the external module but is the name of the local symbol table it is refered in.
 - Importing External modules does not find nested public classes (Zsharp.Runtime.Conversion.Checked).
 - TrySetIdentifier should check if IdentifierType matches the AstNodeType.
-- Rename all Enums from 'Type' to 'Kind'.
 - Rename AstSymbolEntry to AstSymbol.
 - Rename IAstCodeBlock item to IAstCodeLine (and rename ItemAt to LineAt on CodeBlock)
 - Assign initial TypeReference to SymbolTable (entry) and MakeProxy for all other references?

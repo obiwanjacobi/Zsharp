@@ -9,54 +9,54 @@ namespace Zsharp.AST
     public class AstIdentifier
     {
         public AstIdentifier(Identifier_typeContext context)
-            : this(context, AstIdentifierType.Type)
+            : this(context, AstIdentifierKind.Type)
         { }
 
         public AstIdentifier(Identifier_varContext context)
-            : this(context, AstIdentifierType.Variable)
+            : this(context, AstIdentifierKind.Variable)
         { }
 
         public AstIdentifier(Identifier_paramContext context)
-            : this(context, AstIdentifierType.Parameter)
+            : this(context, AstIdentifierKind.Parameter)
         { }
 
         public AstIdentifier(Identifier_funcContext context)
-            : this(context, AstIdentifierType.Function)
+            : this(context, AstIdentifierKind.Function)
         { }
 
         public AstIdentifier(Identifier_fieldContext context)
-            : this(context, AstIdentifierType.Field)
+            : this(context, AstIdentifierKind.Field)
         { }
 
         public AstIdentifier(Identifier_enumoptionContext context)
-            : this(context, AstIdentifierType.EnumOption)
+            : this(context, AstIdentifierKind.EnumOption)
         { }
 
         public AstIdentifier(Enum_option_useContext context)
-            : this(context, AstIdentifierType.EnumOption)
+            : this(context, AstIdentifierKind.EnumOption)
         { }
 
         public AstIdentifier(Identifier_template_paramContext context)
-            : this(context, AstIdentifierType.TemplateParameter)
+            : this(context, AstIdentifierKind.TemplateParameter)
         { }
 
-        public AstIdentifier(string name, AstIdentifierType identifierType)
+        public AstIdentifier(string name, AstIdentifierKind identifierKind)
         {
             SymbolName = AstSymbolName.Parse(name, AstSymbolNameParseOptions.IsSource);
-            IdentifierType = identifierType;
+            IdentifierKind = identifierKind;
         }
 
-        protected AstIdentifier(ParserRuleContext context, AstIdentifierType identifierType)
+        protected AstIdentifier(ParserRuleContext context, AstIdentifierKind identifierKind)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
             SymbolName = AstSymbolName.Parse(context.GetText(), AstSymbolNameParseOptions.IsSource);
-            IdentifierType = identifierType;
+            IdentifierKind = identifierKind;
         }
 
         protected AstIdentifier(AstIdentifier identifierToCopy)
         {
             Context = identifierToCopy.Context;
-            IdentifierType = identifierToCopy.IdentifierType;
+            IdentifierKind = identifierToCopy.IdentifierKind;
             SymbolName = new AstSymbolName(identifierToCopy.SymbolName);
         }
 
@@ -68,7 +68,7 @@ namespace Zsharp.AST
         public string Name => SymbolName.FullName;
         public string CanonicalName => SymbolName.ToCanonical().FullName;
 
-        public AstIdentifierType IdentifierType { get; }
+        public AstIdentifierKind IdentifierKind { get; }
 
         public bool IsEqual(AstIdentifier? that)
         {
@@ -76,7 +76,7 @@ namespace Zsharp.AST
                 return false;
 
             return CanonicalName == that.CanonicalName &&
-                IdentifierType == that.IdentifierType;
+                IdentifierKind == that.IdentifierKind;
         }
 
         public virtual AstIdentifier MakeCopy()

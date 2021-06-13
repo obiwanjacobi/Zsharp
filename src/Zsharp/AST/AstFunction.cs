@@ -6,7 +6,7 @@ namespace Zsharp.AST
         IAstCodeBlockItem, IAstIdentifierSite, IAstSymbolEntrySite
     {
         protected AstFunction()
-            : base(AstNodeType.Function)
+            : base(AstNodeKind.Function)
         { }
 
         public ParserRuleContext? Context { get; protected set; }

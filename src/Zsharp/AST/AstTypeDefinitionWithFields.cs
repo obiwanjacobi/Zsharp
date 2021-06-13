@@ -6,8 +6,8 @@ namespace Zsharp.AST
         IAstTypeReferenceSite,
         IAstTypeFields<AstTypeFieldDefinition>
     {
-        protected AstTypeDefinitionWithFields(AstNodeType nodeType)
-            : base(nodeType)
+        protected AstTypeDefinitionWithFields(AstNodeKind nodeKind)
+            : base(nodeKind)
         { }
 
         private AstTypeReference? _baseType;

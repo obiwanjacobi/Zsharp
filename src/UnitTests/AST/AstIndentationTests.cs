@@ -71,7 +71,7 @@ namespace UnitTests.AST
             br.Should().NotBeNull();
             br.Indent.Should().Be(1);
             var ret = br.CodeBlock.ItemAt<AstBranch>(0);
-            ret.BranchType.Should().Be(AstBranchType.ExitFunction);
+            ret.BranchKind.Should().Be(AstBranchKind.ExitFunction);
             ret.Indent.Should().Be(2);
         }
 

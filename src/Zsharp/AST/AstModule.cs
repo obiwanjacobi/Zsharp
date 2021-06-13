@@ -10,7 +10,7 @@ namespace Zsharp.AST
         IAstIdentifierSite
     {
         protected AstModule(AstModuleLocality locality)
-            : base(AstNodeType.Module)
+            : base(AstNodeKind.Module)
         {
             Locality = locality;
         }

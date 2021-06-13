@@ -8,25 +8,25 @@ namespace Zsharp.AST
         IAstCodeBlockItem, IAstExpressionSite, IAstTypeInitializeSite
     {
         public AstAssignment(Variable_def_typedContext context)
-            : base(AstNodeType.Assignment)
+            : base(AstNodeKind.Assignment)
         {
             Context = context;
         }
 
         public AstAssignment(Variable_assign_structContext context)
-            : base(AstNodeType.Assignment)
+            : base(AstNodeKind.Assignment)
         {
             Context = context;
         }
 
         public AstAssignment(Variable_assign_valueContext context)
-            : base(AstNodeType.Assignment)
+            : base(AstNodeKind.Assignment)
         {
             Context = context;
         }
 
         internal AstAssignment(ParserRuleContext context)
-            : base(AstNodeType.Assignment)
+            : base(AstNodeKind.Assignment)
         {
             Context = context;
         }

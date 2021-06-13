@@ -124,7 +124,7 @@ namespace Zsharp.External
         {
             var function = new AstFunctionDefinitionExternal(method, !method.IsStatic);
             // TODO: get_/set_ and .ctor handling
-            function.SetIdentifier(new AstIdentifier(method.Name, AstIdentifierType.Function));
+            function.SetIdentifier(new AstIdentifier(method.Name, AstIdentifierKind.Function));
 
             // TODO: special Void handling
             var typeRef = _typeRepository.GetTypeReference(method.ReturnType);
@@ -139,14 +139,14 @@ namespace Zsharp.External
 
             foreach (var p in method.Parameters)
             {
-                funcParam = CreateParameter(new AstIdentifier(p.Name, AstIdentifierType.Parameter), p.ParameterType);
+                funcParam = CreateParameter(new AstIdentifier(p.Name, AstIdentifierKind.Parameter), p.ParameterType);
                 function.FunctionType.TryAddParameter(funcParam);
             }
 
             foreach (var p in method.GenericParameters)
             {
                 // TODO: GenericParameterConstraints
-                var templParam = CreateTemplateParameter(new AstIdentifier(p.Name, AstIdentifierType.Parameter));
+                var templParam = CreateTemplateParameter(new AstIdentifier(p.Name, AstIdentifierKind.Parameter));
                 function.AddTemplateParameter(templParam);
             }
 

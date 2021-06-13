@@ -7,43 +7,43 @@ namespace Zsharp.AST
         IAstTypeReferenceSite
     {
         public AstExpression(Expression_arithmeticContext context)
-            : base(AstNodeType.Expression)
+            : base(AstNodeKind.Expression)
         {
             Context = context;
         }
 
         public AstExpression(Expression_logicContext context)
-            : base(AstNodeType.Expression)
+            : base(AstNodeKind.Expression)
         {
             Context = context;
         }
 
         public AstExpression(Expression_comparisonContext context)
-            : base(AstNodeType.Expression)
+            : base(AstNodeKind.Expression)
         {
             Context = context;
         }
 
         public AstExpression(Expression_valueContext context)
-            : base(AstNodeType.Expression)
+            : base(AstNodeKind.Expression)
         {
             Context = context;
         }
 
         public AstExpression(Comptime_expression_valueContext context)
-                : base(AstNodeType.Expression)
+                : base(AstNodeKind.Expression)
         {
             Context = context;
         }
 
         public AstExpression(AstExpressionOperand operand)
-            : base(AstNodeType.Expression)
+            : base(AstNodeKind.Expression)
         {
             _rhs = operand;
         }
 
         internal AstExpression(ParserRuleContext context)
-                : base(AstNodeType.Expression)
+                : base(AstNodeKind.Expression)
         {
             Context = context;
         }

@@ -6,7 +6,7 @@ namespace Zsharp.AST
     public class AstLiteralString : AstNode
     {
         public AstLiteralString(StringContext context)
-            : base(AstNodeType.Literal)
+            : base(AstNodeKind.Literal)
         {
             Context = context;
             Value = Parse(context.STRING().GetText());

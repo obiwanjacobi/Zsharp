@@ -4,9 +4,9 @@
         IAstExternalNameSite
     {
         public AstTypeDefinitionExternal(string @namespace, string typeName, AstTypeReference? baseType)
-            : base(AstNodeType.Type)
+            : base(AstNodeKind.Type)
         {
-            this.SetIdentifier(new AstIdentifier(typeName, AstIdentifierType.Type));
+            this.SetIdentifier(new AstIdentifier(typeName, AstIdentifierKind.Type));
             ExternalName = new AstExternalName(@namespace, typeName);
             if (baseType is not null)
                 SetBaseType(baseType);

@@ -1,6 +1,6 @@
 ﻿namespace Zsharp.AST
 {
-    public enum AstNodeType
+    public enum AstNodeKind
     {
         None,
         Module,         // root

@@ -5,8 +5,8 @@ namespace Zsharp.AST
     public abstract class AstType : AstNode,
         IAstIdentifierSite, IAstSymbolEntrySite
     {
-        protected AstType(AstNodeType nodeType)
-            : base(nodeType)
+        protected AstType(AstNodeKind nodeKind)
+            : base(nodeKind)
         { }
 
         public ParserRuleContext? Context { get; protected set; }

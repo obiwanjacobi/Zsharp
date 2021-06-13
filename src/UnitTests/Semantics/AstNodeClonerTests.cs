@@ -42,7 +42,7 @@ namespace UnitTests.Semantics
 
             Object.ReferenceEquals(cloned, origin).Should().BeFalse();
 
-            cloned.NodeType.Should().Be(origin.NodeType);
+            cloned.NodeKind.Should().Be(origin.NodeKind);
 
             if (origin is IAstCodeBlockItem cbi)
                 AssertCodeBlockItem((IAstCodeBlockItem)cloned, cbi);
@@ -121,7 +121,7 @@ namespace UnitTests.Semantics
             if (AssertNode(cloned, origin))
                 return;
 
-            cloned.BranchType.Should().Be(origin.BranchType);
+            cloned.BranchKind.Should().Be(origin.BranchKind);
             cloned.Context.Should().Be(origin.Context);
             cloned.IsConditional.Should().Be(origin.IsConditional);
             cloned.IsExpression.Should().Be(origin.IsExpression);
@@ -257,7 +257,7 @@ namespace UnitTests.Semantics
                 return;
 
             cloned.Context.Should().BeEquivalentTo(origin.Context);
-            cloned.NodeType.Should().Be(origin.NodeType);
+            cloned.NodeKind.Should().Be(origin.NodeKind);
             cloned.Operator.Should().Be(origin.Operator);
             cloned.Precedence.Should().Be(origin.Precedence);
 
@@ -270,7 +270,7 @@ namespace UnitTests.Semantics
             if (AssertNode(cloned, origin))
                 return;
 
-            cloned.NodeType.Should().Be(origin.NodeType);
+            cloned.NodeKind.Should().Be(origin.NodeKind);
 
             AssertEquivalent(cloned.FieldReference, origin.FieldReference);
             AssertEquivalent(cloned.FunctionReference, origin.FunctionReference);
@@ -282,7 +282,7 @@ namespace UnitTests.Semantics
             if (!AssertNull(cloned.LiteralNumeric, origin.LiteralNumeric))
             {
                 cloned.LiteralNumeric.Context.Should().BeEquivalentTo(origin.LiteralNumeric.Context);
-                cloned.LiteralNumeric.NodeType.Should().Be(origin.LiteralNumeric.NodeType);
+                cloned.LiteralNumeric.NodeKind.Should().Be(origin.LiteralNumeric.NodeKind);
                 cloned.LiteralNumeric.Sign.Should().Be(origin.LiteralNumeric.Sign);
                 cloned.LiteralNumeric.Value.Should().Be(origin.LiteralNumeric.Value);
             }

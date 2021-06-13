@@ -5,11 +5,11 @@ namespace Zsharp.AST
     public abstract class AstTypeFieldDefinition : AstTypeField
     {
         protected AstTypeFieldDefinition()
-            : base(AstNodeType.Field)
+            : base(AstNodeKind.Field)
         { }
 
-        protected AstTypeFieldDefinition(ParserRuleContext context, AstNodeType nodeType = AstNodeType.Field)
-            : base(context, nodeType)
+        protected AstTypeFieldDefinition(ParserRuleContext context, AstNodeKind nodeKind = AstNodeKind.Field)
+            : base(context, nodeKind)
         { }
     }
 }

@@ -6,7 +6,7 @@ namespace Zsharp.AST
         IAstTypeReferenceSite, IAstExpressionSite
     {
         public AstExpressionOperand(AstNode node)
-            : base(AstNodeType.Operand)
+            : base(AstNodeKind.Operand)
         {
             Ast.Guard(node, "Expression Operand created with null.");
 
@@ -38,7 +38,7 @@ namespace Zsharp.AST
         }
 
         public AstExpressionOperand(AstExpression expr)
-            : base(AstNodeType.Operand)
+            : base(AstNodeKind.Operand)
         {
             TrySetExpression(expr);
         }

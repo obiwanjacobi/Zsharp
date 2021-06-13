@@ -4,7 +4,7 @@
         IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolEntrySite
     {
         protected AstFunctionParameter()
-            : base(AstNodeType.FunctionParameter)
+            : base(AstNodeKind.FunctionParameter)
         { }
 
         private AstIdentifier? _identifier;

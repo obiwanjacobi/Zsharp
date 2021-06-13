@@ -8,7 +8,7 @@ namespace Zsharp.AST
         IAstSymbolTableSite, IAstCodeBlockSite
     {
         public AstFile(string scopeName, AstSymbolTable parentTable, FileContext context)
-            : base(AstNodeType.File)
+            : base(AstNodeKind.File)
         {
             Context = context;
             this.SetCodeBlock(new AstCodeBlock(scopeName, parentTable));

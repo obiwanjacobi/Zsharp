@@ -222,10 +222,10 @@ namespace UnitTests.AST
 
             var v = symbols.FindEntry("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
-            v.DefinitionAs<AstVariableDefinition>().Identifier.IdentifierType
-                .Should().Be(AstIdentifierType.Variable);
-            v.ReferencesAs<AstVariableReference>().First().Identifier.IdentifierType
-                .Should().Be(AstIdentifierType.Variable);
+            v.DefinitionAs<AstVariableDefinition>().Identifier.IdentifierKind
+                .Should().Be(AstIdentifierKind.Variable);
+            v.ReferencesAs<AstVariableReference>().First().Identifier.IdentifierKind
+                .Should().Be(AstIdentifierKind.Variable);
         }
 
 

@@ -5,12 +5,12 @@ namespace Zsharp.AST
     public abstract class AstTypeField : AstNode,
         IAstIdentifierSite, IAstSymbolEntrySite
     {
-        protected AstTypeField(AstNodeType nodeType = AstNodeType.Field)
-            : base(nodeType)
+        protected AstTypeField(AstNodeKind nodeKind = AstNodeKind.Field)
+            : base(nodeKind)
         { }
 
-        protected AstTypeField(ParserRuleContext context, AstNodeType nodeType = AstNodeType.Field)
-            : base(nodeType)
+        protected AstTypeField(ParserRuleContext context, AstNodeKind nodeKind = AstNodeKind.Field)
+            : base(nodeKind)
         {
             Context = context;
         }

@@ -16,7 +16,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             file.Should().NotBeNull();
-            file.NodeType.Should().Be(AstNodeType.File);
+            file.NodeKind.Should().Be(AstNodeKind.File);
         }
 
         [TestMethod]
@@ -28,7 +28,7 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             file.Should().NotBeNull();
-            file.NodeType.Should().Be(AstNodeType.File);
+            file.NodeKind.Should().Be(AstNodeKind.File);
         }
 
         [TestMethod]

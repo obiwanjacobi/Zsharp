@@ -6,7 +6,7 @@ namespace Zsharp.AST
         IAstExpressionSite
     {
         public AstTypeDefinitionEnumOption(Enum_option_defContext context)
-            : base(context, AstNodeType.EnumOption)
+            : base(context, AstNodeKind.EnumOption)
         { }
 
         private AstExpression? _expression;

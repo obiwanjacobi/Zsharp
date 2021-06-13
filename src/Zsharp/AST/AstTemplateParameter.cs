@@ -6,17 +6,17 @@ namespace Zsharp.AST
         IAstSymbolEntrySite
     {
         protected AstTemplateParameter()
-            : base(AstNodeType.TemplateParameter)
+            : base(AstNodeKind.TemplateParameter)
         { }
 
         protected AstTemplateParameter(ParserRuleContext context)
-            : base(AstNodeType.TemplateParameter)
+            : base(AstNodeKind.TemplateParameter)
         {
             Context = context;
         }
 
         protected AstTemplateParameter(AstTemplateParameter parameterToCopy)
-            : base(AstNodeType.TemplateParameter)
+            : base(AstNodeKind.TemplateParameter)
         {
             Context = parameterToCopy.Context;
             _symbol = parameterToCopy.Symbol;

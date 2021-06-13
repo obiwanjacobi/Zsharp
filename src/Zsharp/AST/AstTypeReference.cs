@@ -7,13 +7,13 @@ namespace Zsharp.AST
     public abstract class AstTypeReference : AstType
     {
         protected AstTypeReference(ParserRuleContext? context = null)
-            : base(AstNodeType.Type)
+            : base(AstNodeKind.Type)
         {
             Context = context;
         }
 
         protected AstTypeReference(AstTypeReference typeToCopy)
-            : base(AstNodeType.Type)
+            : base(AstNodeKind.Type)
         {
             Context = typeToCopy.Context;
             this.SetIdentifier(typeToCopy.Identifier!.MakeCopy());

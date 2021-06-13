@@ -6,7 +6,7 @@ namespace Zsharp.AST
     public class AstLiteralBoolean : AstNode
     {
         public AstLiteralBoolean(Literal_boolContext context)
-            : base(AstNodeType.Literal)
+            : base(AstNodeKind.Literal)
         {
             Context = context;
             Value = context.TRUE() is not null;

@@ -15,7 +15,7 @@ namespace Zsharp.AST
         public AstModulePublic(string moduleName)
             : base(AstModuleLocality.Public)
         {
-            this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierType.Module));
+            this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierKind.Module));
         }
 
         public IEnumerable<AstFile> Files => _files;

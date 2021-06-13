@@ -7,13 +7,13 @@ namespace Zsharp.AST
     public class AstLiteralNumeric : AstNode
     {
         public AstLiteralNumeric(UInt64 value)
-            : base(AstNodeType.Literal)
+            : base(AstNodeKind.Literal)
         {
             Value = value;
         }
 
         private AstLiteralNumeric(NumberContext context)
-            : base(AstNodeType.Literal)
+            : base(AstNodeKind.Literal)
         {
             Context = context;
         }

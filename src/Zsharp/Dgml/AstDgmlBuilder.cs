@@ -33,7 +33,7 @@ namespace Zsharp.Dgml
                 moduleName = module.Identifier.Name;
             }
 
-            var node = CreateNode(moduleName, file.NodeType);
+            var node = CreateNode(moduleName, file.NodeKind);
 
             WriteCodeBlock(file.CodeBlock, node.Id);
 
@@ -44,7 +44,7 @@ namespace Zsharp.Dgml
         {
             var identifier = function.Identifier;
             var name = identifier.Name;
-            var node = CreateNode(name, function.NodeType);
+            var node = CreateNode(name, function.NodeKind);
             _ = CreateLink(parentId, node.Id);
 
             var paramNames = String.Join(", ", function.FunctionType.Parameters
@@ -67,7 +67,7 @@ namespace Zsharp.Dgml
         public Node WriteCodeBlock(AstCodeBlock codeBlock, string parentId)
         {
             string name = "";
-            var node = CreateNode(name, codeBlock.NodeType);
+            var node = CreateNode(name, codeBlock.NodeKind);
             _ = CreateLink(parentId, node.Id);
 
             int i = 0;
@@ -87,20 +87,20 @@ namespace Zsharp.Dgml
 
         public Node WriteCodeBlockItem(AstNode codeBlockItem, string codeBlockId)
         {
-            switch (codeBlockItem.NodeType)
+            switch (codeBlockItem.NodeKind)
             {
-                case AstNodeType.Assignment:
+                case AstNodeKind.Assignment:
                     return WriteAssignment((AstAssignment)codeBlockItem, codeBlockId);
-                case AstNodeType.Branch:
+                case AstNodeKind.Branch:
                     return WriteBranch((AstBranch)codeBlockItem, codeBlockId);
-                case AstNodeType.Function:
+                case AstNodeKind.Function:
                     return WriteFunction((AstFunctionDefinitionImpl)codeBlockItem, codeBlockId);
-                case AstNodeType.Enum:
+                case AstNodeKind.Enum:
                     return WriteEnum((AstTypeDefinitionEnum)codeBlockItem, codeBlockId);
-                case AstNodeType.Struct:
+                case AstNodeKind.Struct:
                     return WriteStruct((AstTypeDefinitionStruct)codeBlockItem, codeBlockId);
                 default:
-                    var name = $"[{codeBlockItem.NodeType}] <Not Implemented>";
+                    var name = $"[{codeBlockItem.NodeKind}] <Not Implemented>";
                     var node = CreateNode(name, name);
                     _ = CreateLink(codeBlockId, node.Id);
                     return node;
@@ -110,7 +110,7 @@ namespace Zsharp.Dgml
         private Node WriteEnum(AstTypeDefinitionEnum astEnum, string parentId)
         {
             var name = astEnum.Identifier.Name;
-            var node = CreateNode(name, astEnum.NodeType);
+            var node = CreateNode(name, astEnum.NodeKind);
             _ = CreateLink(parentId, node.Id);
             node.Group = DefaultGroup;
 
@@ -127,7 +127,7 @@ namespace Zsharp.Dgml
         private Node WriteStruct(AstTypeDefinitionStruct astStruct, string parentId)
         {
             var name = astStruct.Identifier.Name;
-            var node = CreateNode(name, astStruct.NodeType);
+            var node = CreateNode(name, astStruct.NodeKind);
             _ = CreateLink(parentId, node.Id);
             node.Group = DefaultGroup;
 
@@ -147,7 +147,7 @@ namespace Zsharp.Dgml
             if (assignment.Expression is not null)
                 nodeName += " = " + assignment.Expression.AsString();
 
-            var node = CreateNode(nodeName, assignment.NodeType);
+            var node = CreateNode(nodeName, assignment.NodeKind);
             _ = CreateLink(parentId, node.Id);
             node.Group = DefaultGroup;
 
@@ -161,8 +161,8 @@ namespace Zsharp.Dgml
 
         public Node WriteBranch(AstBranch branch, string parentId)
         {
-            var name = BranchTypeToName(branch.BranchType);
-            var node = CreateNode(name, branch.NodeType);
+            var name = BranchTypeToName(branch.BranchKind);
+            var node = CreateNode(name, branch.NodeKind);
             _ = CreateLink(parentId, node.Id);
 
             var conditional = branch.ToConditional();
@@ -212,19 +212,19 @@ namespace Zsharp.Dgml
             return node;
         }
 
-        private Node CreateNode(string label, AstNodeType nodeType)
+        private Node CreateNode(string label, AstNodeKind nodeKind)
         {
-            return CreateNode(nodeType.ToString(), label, nodeType.ToString());
+            return CreateNode(nodeKind.ToString(), label, nodeKind.ToString());
         }
 
-        private static string BranchTypeToName(AstBranchType branchType)
+        private static string BranchTypeToName(AstBranchKind branchKind)
         {
-            return branchType switch
+            return branchKind switch
             {
-                AstBranchType.Conditional => "If|Else",
-                AstBranchType.ExitFunction => "Ret",
-                AstBranchType.ExitIteration => "Cont",
-                AstBranchType.ExitLoop => "Brk",
+                AstBranchKind.Conditional => "If|Else",
+                AstBranchKind.ExitFunction => "Ret",
+                AstBranchKind.ExitIteration => "Cont",
+                AstBranchKind.ExitLoop => "Brk",
                 _ => "-",
             };
         }

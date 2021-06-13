@@ -11,7 +11,7 @@
         {
             Namespace = ns;
             Symbols = new AstSymbolTable(moduleName, parentTable);
-            this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierType.Module));
+            this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierKind.Module));
         }
 
         public AstSymbolTable Symbols { get; }

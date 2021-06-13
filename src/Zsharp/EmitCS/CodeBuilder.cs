@@ -20,12 +20,12 @@ namespace Zsharp.EmitCS
 
         public void StartBranch(AstBranchExpression branch)
         {
-            var br = branch.BranchType switch
+            var br = branch.BranchKind switch
             {
-                AstBranchType.ExitFunction => BranchStatement.Return,
-                AstBranchType.ExitLoop => BranchStatement.Break,
-                AstBranchType.ExitIteration => BranchStatement.Continue,
-                AstBranchType.Conditional => BranchStatement.If,
+                AstBranchKind.ExitFunction => BranchStatement.Return,
+                AstBranchKind.ExitLoop => BranchStatement.Break,
+                AstBranchKind.ExitIteration => BranchStatement.Continue,
+                AstBranchKind.Conditional => BranchStatement.If,
                 _ => throw new InternalErrorException("No BranchType set!")
             };
             _csBuilder.StartBranch(br);

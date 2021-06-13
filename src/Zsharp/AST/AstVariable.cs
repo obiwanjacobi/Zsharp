@@ -6,7 +6,7 @@ namespace Zsharp.AST
         IAstIdentifierSite, IAstSymbolEntrySite, IAstTypeReferenceSite
     {
         protected AstVariable(AstTypeReference? typeReference = null)
-            : base(AstNodeType.Variable)
+            : base(AstNodeKind.Variable)
         {
             TrySetTypeReference(typeReference);
         }

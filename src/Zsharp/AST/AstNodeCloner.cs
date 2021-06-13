@@ -448,9 +448,9 @@ namespace Zsharp.AST
         {
             AstBranch br;
 
-            if (branch.BranchType == AstBranchType.ExitIteration)
+            if (branch.BranchKind == AstBranchKind.ExitIteration)
                 br = new AstBranch((Statement_continueContext)branch.Context!);
-            else if (branch.BranchType == AstBranchType.ExitLoop)
+            else if (branch.BranchKind == AstBranchKind.ExitLoop)
                 br = new AstBranch((Statement_breakContext)branch.Context!);
             else
                 throw new InternalErrorException("Unknown Branch Type.");

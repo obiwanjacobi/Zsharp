@@ -8,7 +8,7 @@ namespace Zsharp.AST
         IAstCodeBlockItem, IAstSymbolTableSite
     {
         public AstTypeDefinitionStruct(Struct_defContext context, AstSymbolTable parentTable)
-            : base(AstNodeType.Struct)
+            : base(AstNodeKind.Struct)
         {
             Symbols = new AstSymbolTable("", parentTable);
             Context = context;

@@ -8,7 +8,7 @@ namespace Zsharp.AST
         IAstCodeBlockItem, IAstSymbolTableSite
     {
         public AstTypeDefinitionEnum(Enum_defContext context, AstSymbolTable parentTable)
-            : base(AstNodeType.Enum)
+            : base(AstNodeKind.Enum)
         {
             Symbols = new AstSymbolTable("", parentTable);
             Context = context;

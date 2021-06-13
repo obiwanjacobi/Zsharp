@@ -21,7 +21,7 @@ namespace UnitTests.AST
             var fn = file.Functions.FirstOrDefault();
             var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
             br.Should().NotBeNull();
-            br.BranchType.Should().Be(AstBranchType.Conditional);
+            br.BranchKind.Should().Be(AstBranchKind.Conditional);
             br.IsConditional.Should().BeTrue();
             br.HasCode.Should().BeTrue();
             br.HasExpression.Should().BeTrue();
@@ -40,7 +40,7 @@ namespace UnitTests.AST
             var fn = file.Functions.FirstOrDefault();
             var br = fn.CodeBlock.ItemAt<AstBranchConditional>(0);
             br.Should().NotBeNull();
-            br.BranchType.Should().Be(AstBranchType.Conditional);
+            br.BranchKind.Should().Be(AstBranchKind.Conditional);
             br.IsConditional.Should().BeTrue();
             br.HasCode.Should().BeTrue();
             br.HasExpression.Should().BeTrue();
@@ -64,7 +64,7 @@ namespace UnitTests.AST
 
             var sbr = br.SubBranch;
             sbr.Should().NotBeNull();
-            sbr.BranchType.Should().Be(AstBranchType.Conditional);
+            sbr.BranchKind.Should().Be(AstBranchKind.Conditional);
             sbr.IsConditional.Should().BeTrue();
             sbr.HasCode.Should().BeTrue();
             sbr.HasExpression.Should().BeFalse();
@@ -88,7 +88,7 @@ namespace UnitTests.AST
 
             var sbr = br.SubBranch;
             sbr.Should().NotBeNull();
-            sbr.BranchType.Should().Be(AstBranchType.Conditional);
+            sbr.BranchKind.Should().Be(AstBranchKind.Conditional);
             sbr.IsConditional.Should().BeTrue();
             sbr.HasCode.Should().BeTrue();
             sbr.HasExpression.Should().BeTrue();
@@ -114,7 +114,7 @@ namespace UnitTests.AST
 
             var sbr = br.SubBranch;
             sbr.Should().NotBeNull();
-            sbr.BranchType.Should().Be(AstBranchType.Conditional);
+            sbr.BranchKind.Should().Be(AstBranchKind.Conditional);
             sbr.IsConditional.Should().BeTrue();
             sbr.HasCode.Should().BeTrue();
             sbr.HasExpression.Should().BeTrue();
@@ -144,7 +144,7 @@ namespace UnitTests.AST
 
             var nbr = br.CodeBlock.ItemAt<AstBranchConditional>(0);
             nbr.Should().NotBeNull();
-            nbr.BranchType.Should().Be(AstBranchType.Conditional);
+            nbr.BranchKind.Should().Be(AstBranchKind.Conditional);
             nbr.IsConditional.Should().BeTrue();
             nbr.HasCode.Should().BeTrue();
             nbr.HasExpression.Should().BeTrue();
@@ -162,7 +162,7 @@ namespace UnitTests.AST
             var fn = file.Functions.FirstOrDefault();
             var br = fn.CodeBlock.ItemAt<AstBranch>(0);
             br.Should().NotBeNull();
-            br.BranchType.Should().Be(AstBranchType.ExitFunction);
+            br.BranchKind.Should().Be(AstBranchKind.ExitFunction);
         }
 
         [TestMethod]
@@ -177,7 +177,7 @@ namespace UnitTests.AST
             var fn = file.Functions.FirstOrDefault();
             var br = fn.CodeBlock.ItemAt<AstBranchExpression>(0);
             br.Should().NotBeNull();
-            br.BranchType.Should().Be(AstBranchType.ExitFunction);
+            br.BranchKind.Should().Be(AstBranchKind.ExitFunction);
             br.Expression.Should().NotBeNull();
         }
 

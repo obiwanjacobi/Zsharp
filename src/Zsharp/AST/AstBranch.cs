@@ -7,42 +7,42 @@ namespace Zsharp.AST
         IAstCodeBlockItem
     {
         public AstBranch(Statement_breakContext context)
-            : base(AstNodeType.Branch)
+            : base(AstNodeKind.Branch)
         {
             Context = context;
-            BranchType = AstBranchType.ExitLoop;
+            BranchKind = AstBranchKind.ExitLoop;
         }
 
         public AstBranch(Statement_continueContext context)
-            : base(AstNodeType.Branch)
+            : base(AstNodeKind.Branch)
         {
             Context = context;
-            BranchType = AstBranchType.ExitIteration;
+            BranchKind = AstBranchKind.ExitIteration;
         }
 
-        protected AstBranch(AstBranchType branchType)
-            : base(AstNodeType.Branch)
+        protected AstBranch(AstBranchKind branchKind)
+            : base(AstNodeKind.Branch)
         {
-            BranchType = branchType;
+            BranchKind = branchKind;
         }
 
         public ParserRuleContext? Context { get; protected set; }
 
         public uint Indent { get; set; }
 
-        public AstBranchType BranchType { get; }
+        public AstBranchKind BranchKind { get; }
 
         public bool IsExpression
-            => BranchType == AstBranchType.ExitFunction || IsConditional;
+            => BranchKind == AstBranchKind.ExitFunction || IsConditional;
 
         public AstBranchExpression? ToExpression()
             => IsExpression ? (AstBranchExpression)this : null;
 
         public bool HasCode
-            => BranchType == AstBranchType.Conditional;
+            => BranchKind == AstBranchKind.Conditional;
 
         public bool IsConditional
-            => BranchType == AstBranchType.Conditional;
+            => BranchKind == AstBranchKind.Conditional;
 
         public AstBranchConditional? ToConditional()
             => IsConditional ? (AstBranchConditional)this : null;

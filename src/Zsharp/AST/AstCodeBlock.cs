@@ -7,7 +7,7 @@ namespace Zsharp.AST
         IAstSymbolTableSite
     {
         public AstCodeBlock(string scopeName, AstSymbolTable parentTable, CodeblockContext? context = null)
-            : base(AstNodeType.CodeBlock)
+            : base(AstNodeKind.CodeBlock)
         {
             Symbols = new AstSymbolTable(scopeName, parentTable);
             Context = context;

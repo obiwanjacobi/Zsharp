@@ -13,7 +13,7 @@ namespace Zsharp.AST
         public AstTypeReferenceFunction(ParserRuleContext context)
             : base(context)
         {
-            this.SetIdentifier(new AstIdentifier(String.Empty, AstIdentifierType.Type));
+            this.SetIdentifier(new AstIdentifier(String.Empty, AstIdentifierKind.Type));
         }
 
         private AstTypeReferenceFunction(AstTypeReferenceFunction typeOrigin)

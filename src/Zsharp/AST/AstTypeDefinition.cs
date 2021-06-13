@@ -2,8 +2,8 @@
 {
     public abstract class AstTypeDefinition : AstType
     {
-        protected AstTypeDefinition(AstNodeType nodeType = AstNodeType.Type)
-            : base(nodeType)
+        protected AstTypeDefinition(AstNodeKind nodeKind = AstNodeKind.Type)
+            : base(nodeKind)
         { }
 
         public virtual bool IsIntrinsic => false;

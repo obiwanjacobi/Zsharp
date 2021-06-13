@@ -1,6 +1,6 @@
 ﻿namespace Zsharp.AST
 {
-    public enum AstBranchType
+    public enum AstBranchKind
     {
         NotSet,
         Conditional,        // if-else

@@ -6,13 +6,13 @@ namespace Zsharp.AST
         IAstExpressionSite
     {
         public AstBranchExpression(Statement_returnContext context)
-            : base(AstBranchType.ExitFunction)
+            : base(AstBranchKind.ExitFunction)
         {
             Context = context;
         }
 
-        protected AstBranchExpression(AstBranchType branchType)
-            : base(branchType)
+        protected AstBranchExpression(AstBranchKind branchKind)
+            : base(branchKind)
         { }
 
         private AstExpression? _expression;

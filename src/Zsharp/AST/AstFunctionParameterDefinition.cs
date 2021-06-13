@@ -32,7 +32,7 @@ namespace Zsharp.AST
 
         public static AstFunctionParameterDefinition Create(string name, AstTypeDefinition astType)
         {
-            var identifier = new AstIdentifier(name, AstIdentifierType.Parameter);
+            var identifier = new AstIdentifier(name, AstIdentifierKind.Parameter);
             var param = new AstFunctionParameterDefinition(identifier);
             param.SetTypeReference(AstTypeReferenceType.From(astType));
             return param;

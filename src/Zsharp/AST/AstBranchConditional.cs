@@ -7,23 +7,23 @@ namespace Zsharp.AST
         IAstCodeBlockSite
     {
         public AstBranchConditional(Statement_ifContext context)
-            : base(AstBranchType.Conditional)
+            : base(AstBranchKind.Conditional)
         {
             Context = context;
         }
         public AstBranchConditional(Statement_elseContext context)
-            : base(AstBranchType.Conditional)
+            : base(AstBranchKind.Conditional)
         {
             Context = context;
         }
         public AstBranchConditional(Statement_elseifContext context)
-            : base(AstBranchType.Conditional)
+            : base(AstBranchKind.Conditional)
         {
             Context = context;
         }
 
         internal AstBranchConditional(ParserRuleContext context)
-            : base(AstBranchType.Conditional)
+            : base(AstBranchKind.Conditional)
         {
             Context = context;
         }

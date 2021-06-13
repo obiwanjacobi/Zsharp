@@ -6,7 +6,7 @@ namespace Zsharp.AST
     public class AstTemplateInstanceStruct : AstTypeDefinitionWithFields
     {
         public AstTemplateInstanceStruct(AstTypeDefinitionStruct templateDefinition)
-            : base(AstNodeType.Struct)
+            : base(AstNodeKind.Struct)
         {
             TemplateDefinition = templateDefinition;
         }
@@ -25,12 +25,12 @@ namespace Zsharp.AST
                 $"The number of template parameters do not match the TemplateDefinition {TemplateDefinition.Identifier!.Name}");
 
             Context = type.Context;
-            this.SetIdentifier(new AstIdentifier(type.Identifier!.Name, type.Identifier.IdentifierType));
+            this.SetIdentifier(new AstIdentifier(type.Identifier!.Name, type.Identifier.IdentifierKind));
 
             foreach (var field in TemplateDefinition.Fields)
             {
                 var fieldDef = new AstTypeDefinitionStructField();
-                fieldDef.SetIdentifier(new AstIdentifier(field.Identifier!.Name, field.Identifier.IdentifierType));
+                fieldDef.SetIdentifier(new AstIdentifier(field.Identifier!.Name, field.Identifier.IdentifierKind));
                 fieldDef.SetTypeReference(field.TypeReference!.MakeCopy());
                 this.AddField(fieldDef);
 
