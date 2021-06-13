@@ -60,10 +60,10 @@ namespace Zsharp.AST
             }
         }
 
-        private AstSymbolEntry? _symbol;
-        public AstSymbolEntry? Symbol => _symbol;
+        private AstSymbol? _symbol;
+        public AstSymbol? Symbol => _symbol;
 
-        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
+        public bool TrySetSymbol(AstSymbol? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
     }
 }

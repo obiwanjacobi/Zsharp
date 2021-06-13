@@ -6,13 +6,13 @@ using System.Linq;
 namespace Zsharp.AST
 {
     [DebuggerDisplay("{SymbolName} ({SymbolKind})")]
-    public class AstSymbolEntry
+    public class AstSymbol
     {
         private readonly List<AstNode> _definitions = new();
         private readonly List<AstNode> _references = new();
         private readonly List<string> _aliases = new();
 
-        public AstSymbolEntry(AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
+        public AstSymbol(AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
         {
             SymbolTable = symbolTable;
             SymbolName = symbolName;

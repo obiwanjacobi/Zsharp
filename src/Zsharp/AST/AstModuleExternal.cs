@@ -23,7 +23,7 @@
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var symbol in Symbols.Entries)
+            foreach (var symbol in Symbols.Symbols)
             {
                 if (symbol.HasDefinition)
                 {
@@ -47,31 +47,31 @@
 
         public void AddTypeDefinition(AstTypeDefinitionExternal typeDefinition)
         {
-            var entry = Symbols.Add(typeDefinition);
-            entry.SymbolLocality = AstSymbolLocality.Imported;
+            var symbol = Symbols.Add(typeDefinition);
+            symbol.SymbolLocality = AstSymbolLocality.Imported;
         }
 
         public void AddAlias(AstNode source, string alias)
         {
             var identifier = ((IAstIdentifierSite)source).Identifier!;
-            var entry = Symbols.Find(identifier);
-            Ast.Guard(entry, $"No symbol for '{identifier!.CanonicalName}' was found in external module {Identifier!.Name}.");
+            var symbol = Symbols.Find(identifier);
+            Ast.Guard(symbol, $"No symbol for '{identifier!.CanonicalName}' was found in external module {Identifier!.Name}.");
 
             if (source is AstFunctionDefinition functionDef)
             {
-                entry!.TryAddAlias(alias + functionDef.FunctionType!.Identifier!.CanonicalName);
+                symbol!.TryAddAlias(alias + functionDef.FunctionType!.Identifier!.CanonicalName);
             }
             else
             {
-                entry!.TryAddAlias(alias);
+                symbol!.TryAddAlias(alias);
             }
         }
 
-        public void AddAlias(string symbol, string alias)
+        public void AddAlias(string symbolName, string alias)
         {
-            var entry = Symbols.FindEntry(symbol, AstSymbolKind.Unknown);
-            Ast.Guard(entry, $"No symbol for '{symbol}' was found in external module {Identifier!.Name}.");
-            entry!.TryAddAlias(alias);
+            var symbol = Symbols.FindSymbol(symbolName, AstSymbolKind.Unknown);
+            Ast.Guard(symbol, $"No symbol for '{symbol}' was found in external module {Identifier!.Name}.");
+            symbol!.TryAddAlias(alias);
         }
 
         public void AddFunction(AstFunctionDefinitionExternal function)

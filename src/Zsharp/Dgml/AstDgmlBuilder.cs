@@ -79,7 +79,7 @@ namespace Zsharp.Dgml
                 i++;
             }
 
-            if (codeBlock.Symbols.Entries.Any())
+            if (codeBlock.Symbols.Symbols.Any())
                 WriteSymbolTable(codeBlock.Symbols, node.Id);
 
             return node;
@@ -204,7 +204,7 @@ namespace Zsharp.Dgml
             _ = CreateLink(parentId, node.Id, ContainsCategory);
 
             var symbols = String.Join("\r\n",
-                symbolTable.Entries.Select(s => $"{s.SymbolName}: {s.SymbolKind} ({s.SymbolLocality})"));
+                symbolTable.Symbols.Select(s => $"{s.SymbolName}: {s.SymbolKind} ({s.SymbolLocality})"));
 
             var entryNode = CreateNode("Symbols", symbols);
             _ = CreateLink(node.Id, entryNode.Id, ContainsCategory);

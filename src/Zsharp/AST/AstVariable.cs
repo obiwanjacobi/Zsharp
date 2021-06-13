@@ -19,14 +19,14 @@ namespace Zsharp.AST
         public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
 
-        private AstSymbolEntry? _symbol;
-        public AstSymbolEntry? Symbol
+        private AstSymbol? _symbol;
+        public AstSymbol? Symbol
         {
             get { return _symbol; }
             protected set { _symbol = value; }
         }
 
-        public bool TrySetSymbol(AstSymbolEntry? symbolEntry)
+        public bool TrySetSymbol(AstSymbol? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
         private AstTypeReference? _typeRef;

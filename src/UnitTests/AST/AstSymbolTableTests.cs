@@ -17,9 +17,9 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e is null).Should().BeFalse();
+            symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
-            var v = symbols.FindEntry("v", AstSymbolKind.Variable);
+            var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
             var def = v.DefinitionAs<AstVariableDefinition>();
             def.TypeReference.Identifier.Name.Should().Be("U8");
@@ -34,9 +34,9 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e is null).Should().BeFalse();
+            symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
-            var v = symbols.FindEntry("v", AstSymbolKind.Variable);
+            var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
             v.References.Should().HaveCount(1);
         }
@@ -50,9 +50,9 @@ namespace UnitTests.AST
 
             var file = Build.File(code, Compile.CreateModuleLoader());
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e is null).Should().BeFalse();
+            symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
-            var mod = symbols.FindEntries(AstSymbolKind.Module).Single();
+            var mod = symbols.FindSymbols(AstSymbolKind.Module).Single();
             mod.SymbolName.Should().Be("System.Console");
         }
 
@@ -67,14 +67,14 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e is null).Should().BeFalse();
+            symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
-            var fn = symbols.FindEntry("fn", AstSymbolKind.Function);
+            var fn = symbols.FindSymbol("fn", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
             fn.SymbolLocality.Should().Be(AstSymbolLocality.Exported);
 
-            // the export entry is removed
-            fn = symbols.FindEntry("fn", AstSymbolKind.Unknown);
+            // the export symbol is removed
+            fn = symbols.FindSymbol("fn", AstSymbolKind.Unknown);
             fn.SymbolKind.Should().NotBe(AstSymbolKind.Unknown);
         }
 
@@ -91,11 +91,11 @@ namespace UnitTests.AST
             var fn = file.Functions.First();
 
             var symbols = fn.Symbols;
-            var fnSymbol = symbols.FindEntry("print", AstSymbolKind.Function);
+            var fnSymbol = symbols.FindSymbol("print", AstSymbolKind.Function);
             fnSymbol.SymbolKind.Should().Be(AstSymbolKind.Function);
 
-            // the import entry should be module
-            fnSymbol = symbols.FindEntry("external", AstSymbolKind.Module);
+            // the import symbol should be module
+            fnSymbol = symbols.FindSymbol("external", AstSymbolKind.Module);
             fnSymbol.Should().NotBeNull();
         }
 
@@ -109,15 +109,15 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            symbols.Entries.Any(e => e is null).Should().BeFalse();
+            symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
-            symbols.Entries.Should().HaveCount(2);
-            var fn = symbols.FindEntry("fn", AstSymbolKind.Function);
+            symbols.Symbols.Should().HaveCount(2);
+            var fn = symbols.FindSymbol("fn", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
 
             symbols = fn.DefinitionAs<AstFunctionDefinitionImpl>()!.Symbols;
-            symbols.Entries.Should().HaveCount(1);
-            symbols.FindEntry("v", AstSymbolKind.Variable).Should().NotBeNull();
+            symbols.Symbols.Should().HaveCount(1);
+            symbols.FindSymbol("v", AstSymbolKind.Variable).Should().NotBeNull();
         }
 
         [TestMethod]
@@ -133,11 +133,11 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var symbols = file.Symbols;
 
-            symbols.Entries.Should().HaveCount(3);
-            var fn = symbols.FindEntry("fn", AstSymbolKind.Function);
+            symbols.Symbols.Should().HaveCount(3);
+            var fn = symbols.FindSymbol("fn", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
 
-            fn = symbols.FindEntry("fn2", AstSymbolKind.Function);
+            fn = symbols.FindSymbol("fn2", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
         }
 
@@ -152,9 +152,9 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
-            symbols.Entries.Should().HaveCount(2);
+            symbols.Symbols.Should().HaveCount(2);
 
-            var p = symbols.FindEntry("p", AstSymbolKind.Variable);
+            var p = symbols.FindSymbol("p", AstSymbolKind.Variable);
             p.SymbolKind.Should().Be(AstSymbolKind.Variable);
             p.Definition.Should().NotBeNull();
         }
@@ -170,9 +170,9 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
-            symbols.Entries.Should().HaveCount(2);
+            symbols.Symbols.Should().HaveCount(2);
 
-            var p = symbols.FindEntry("self", AstSymbolKind.Variable);
+            var p = symbols.FindSymbol("self", AstSymbolKind.Variable);
             p.DefinitionAs<AstFunctionParameter>().Identifier.Name.Should().Be("self");
         }
 
@@ -187,9 +187,9 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
-            symbols.Entries.Should().HaveCount(1);
+            symbols.Symbols.Should().HaveCount(1);
 
-            symbols.FindEntry("p", AstSymbolKind.Variable).Should().NotBeNull();
+            symbols.FindSymbol("p", AstSymbolKind.Variable).Should().NotBeNull();
         }
 
         [TestMethod]
@@ -203,7 +203,7 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
-            var v = symbols.FindEntry("v", AstSymbolKind.Variable);
+            var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
         }
 
@@ -220,7 +220,7 @@ namespace UnitTests.AST
             var fn = file.CodeBlock.ItemAt<AstFunctionDefinitionImpl>(0);
             var symbols = fn.CodeBlock.Symbols;
 
-            var v = symbols.FindEntry("v", AstSymbolKind.Variable);
+            var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
             v.DefinitionAs<AstVariableDefinition>().Identifier.IdentifierKind
                 .Should().Be(AstIdentifierKind.Variable);
@@ -240,8 +240,8 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
-            entry.SymbolKind.Should().Be(AstSymbolKind.Field);
+            var symbol = symbols.FindSymbol("Myenum.Zero", AstSymbolKind.Field);
+            symbol.SymbolKind.Should().Be(AstSymbolKind.Field);
         }
 
         [TestMethod]
@@ -255,8 +255,8 @@ namespace UnitTests.AST
 
             var file = Build.File(code);
             var symbols = file.Symbols;
-            var entry = symbols.FindEntry("Mystruct.Fld1", AstSymbolKind.Field);
-            entry.SymbolKind.Should().Be(AstSymbolKind.Field);
+            var symbol = symbols.FindSymbol("Mystruct.Fld1", AstSymbolKind.Field);
+            symbol.SymbolKind.Should().Be(AstSymbolKind.Field);
         }
 
         [TestMethod]
@@ -272,9 +272,9 @@ namespace UnitTests.AST
             var file = Build.File(code);
             var symbols = file.Symbols;
             // gives symbol of enum option definition (dot-name)
-            var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
-            entry.SymbolKind.Should().Be(AstSymbolKind.Field);
-            entry.Definition.Should().NotBeNull();
+            var symbol = symbols.FindSymbol("Myenum.Zero", AstSymbolKind.Field);
+            symbol.SymbolKind.Should().Be(AstSymbolKind.Field);
+            symbol.Definition.Should().NotBeNull();
             // reference not resolved yet
             var assign = file.CodeBlock.ItemAt<AstAssignment>(1);
             assign.Expression.RHS.FieldReference.Symbol.References.Should().HaveCount(1);

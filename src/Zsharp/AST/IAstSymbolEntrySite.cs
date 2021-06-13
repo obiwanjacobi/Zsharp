@@ -2,13 +2,13 @@
 {
     public interface IAstSymbolEntrySite
     {
-        AstSymbolEntry? Symbol { get; }
-        bool TrySetSymbol(AstSymbolEntry? symbolEntry);
+        AstSymbol? Symbol { get; }
+        bool TrySetSymbol(AstSymbol? symbolEntry);
     }
 
     public static class AstSymbolEntrySiteExtensions
     {
-        public static void SetSymbol(this IAstSymbolEntrySite symbolEntrySite, AstSymbolEntry symbolEntry)
+        public static void SetSymbol(this IAstSymbolEntrySite symbolEntrySite, AstSymbol symbolEntry)
         {
             if (!symbolEntrySite.TrySetSymbol(symbolEntry))
                 throw new InternalErrorException(
@@ -18,7 +18,7 @@
         public static void ThrowIfSymbolEntryNotSet(this IAstSymbolEntrySite symbolEntrySite)
         {
             if (symbolEntrySite.Symbol is null)
-                throw new InternalErrorException("Symbol Entry not set.");
+                throw new InternalErrorException("Symbol not set.");
         }
     }
 }

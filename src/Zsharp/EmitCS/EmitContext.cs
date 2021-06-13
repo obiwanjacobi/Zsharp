@@ -60,7 +60,7 @@ namespace Zsharp.EmitCS
 
         internal void Imports(AstSymbolTable symbolTable)
         {
-            var modules = symbolTable.FindEntries(AstSymbolKind.Module)
+            var modules = symbolTable.FindSymbols(AstSymbolKind.Module)
                 .Select(s => s.Definition)
                 .OfType<AstModuleExternal>();
 

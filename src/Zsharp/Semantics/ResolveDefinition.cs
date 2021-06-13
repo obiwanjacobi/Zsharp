@@ -17,7 +17,7 @@ namespace Zsharp.Semantics
         {
             var symbolTable = SetSymbolTable(_context.Modules.SymbolTable);
 
-            var externals = file.Symbols.FindEntries(AstSymbolKind.Module)
+            var externals = file.Symbols.FindSymbols(AstSymbolKind.Module)
                 .Select(s => s.DefinitionAs<AstModuleExternal>())
                 .Where(m => m is not null);
 
@@ -188,13 +188,13 @@ namespace Zsharp.Semantics
             if (assign.Variable is AstVariableReference varRef &&
                 varRef.VariableDefinition is null)
             {
-                var entry = varRef.Symbol;
+                var symbol = varRef.Symbol;
 
                 // variable.TypeReference can be null
                 var varDef = new AstVariableDefinition(varRef.TypeReference?.MakeCopy());
                 varDef.SetIdentifier(varRef.Identifier!);
-                varDef.SetSymbol(entry!);
-                entry!.PromoteToDefinition(varDef, varRef);
+                varDef.SetSymbol(symbol!);
+                symbol!.PromoteToDefinition(varDef, varRef);
                 AstSymbolReferenceRemover.RemoveReference(varRef);
                 assign.SetVariableDefinition(varDef);
 
@@ -212,10 +212,10 @@ namespace Zsharp.Semantics
                 Ast.Guard(typeRef, "AstTypeReference not set on AstExpression.");
                 Ast.Guard(typeRef!.Identifier, "AstIdentifier not set on AstTypeReference.");
 
-                var entry = assign.Variable.Symbol;
-                Ast.Guard(entry, "AstSymbolEntry was not set on Variable.");
+                var symbol = assign.Variable.Symbol!;
+                Ast.Guard(symbol, "AstSymbolEntry was not set on Variable.");
 
-                var def = entry!.DefinitionAs<AstTypeDefinition>();
+                var def = symbol.DefinitionAs<AstTypeDefinition>();
                 if (def is not null)
                 {
                     typeRef = AstTypeReferenceType.From(def);
@@ -234,9 +234,6 @@ namespace Zsharp.Semantics
         {
             if (!variable.HasDefinition)
             {
-                var entry = variable.Symbol;
-                Ast.Guard(entry, "Variable has no Symbol.");
-
                 var success = variable.TryResolveSymbol();
 
                 if (!success &&
@@ -268,8 +265,8 @@ namespace Zsharp.Semantics
                 {
                     if (function.IsTemplate)
                     {
-                        var entry = function.Symbol!;
-                        var templateFunction = entry.SymbolTable.FindDefinition<AstFunctionDefinition>(
+                        var symbol = function.Symbol!;
+                        var templateFunction = symbol.SymbolTable.FindDefinition<AstFunctionDefinition>(
                             function.Identifier!.SymbolName.TemplateDefinitionName, AstSymbolKind.Function);
 
                         if (templateFunction is not null)
@@ -279,13 +276,13 @@ namespace Zsharp.Semantics
                                 var typeDef = new AstTemplateInstanceFunction(templateFunction!);
 
                                 typeDef.Instantiate(_context, function);
-                                entry.AddNode(typeDef);
+                                symbol.AddNode(typeDef);
 
                                 Visit(typeDef);
                             }
                             else
                             {
-                                entry.AddNode(templateFunction);
+                                symbol.AddNode(templateFunction);
                             }
                         }
                     }
@@ -345,23 +342,23 @@ namespace Zsharp.Semantics
                 {
                     if (type.IsTemplate)
                     {
-                        var entry = type.Symbol;
-                        var typeTemplate = entry!.SymbolTable.FindDefinition<AstTypeDefinition>(
+                        var symbol = type.Symbol;
+                        var typeTemplate = symbol!.SymbolTable.FindDefinition<AstTypeDefinition>(
                             type.Identifier!.SymbolName.TemplateDefinitionName, AstSymbolKind.Type);
 
                         if (typeTemplate is AstTypeDefinitionStruct structTemplate)
                         {
                             var typeDef = new AstTemplateInstanceStruct(structTemplate);
                             typeDef.Instantiate(type);
-                            entry.AddNode(typeDef);
-                            Ast.Guard(entry.Definition, "Invalid Template Definition.");
+                            symbol.AddNode(typeDef);
+                            Ast.Guard(symbol.Definition, "Invalid Template Definition.");
                         }
                         else if (typeTemplate is AstTypeDefinitionIntrinsic intrinsicTemplate)
                         {
                             var typeDef = new AstTemplateInstanceType(intrinsicTemplate);
                             typeDef.Instantiate(type);
-                            entry.AddNode(typeDef);
-                            Ast.Guard(entry.Definition, "Invalid Template Definition.");
+                            symbol.AddNode(typeDef);
+                            Ast.Guard(symbol.Definition, "Invalid Template Definition.");
                         }
                         else
                             _context.UndefinedType(type);
@@ -443,12 +440,12 @@ namespace Zsharp.Semantics
 
         private bool MatchFunctionToDefinition(AstFunctionReference function)
         {
-            var entry = function.Symbol!;
+            var symbol = function.Symbol!;
 
-            if (!entry.HasDefinition)
+            if (!symbol.HasDefinition)
                 return false;
 
-            var functionDef = entry.FindFunctionDefinition(function);
+            var functionDef = symbol.FindFunctionDefinition(function);
 
             if (functionDef is null)
             {
@@ -462,7 +459,7 @@ namespace Zsharp.Semantics
                     }
 
                     // non-null if SetToMatch successful
-                    functionDef = entry.FindFunctionDefinition(function);
+                    functionDef = symbol.FindFunctionDefinition(function);
                 }
             }
 

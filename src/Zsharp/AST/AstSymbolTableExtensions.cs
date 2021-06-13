@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Zsharp.AST
 {
@@ -25,26 +24,26 @@ namespace Zsharp.AST
             return previousParent;
         }
 
-        public static AstSymbolEntry? Find<T>(this AstSymbolTable symbolTable, T node)
+        public static AstSymbol? Find<T>(this AstSymbolTable symbolTable, T node)
             where T : AstNode, IAstIdentifierSite
             => symbolTable.Find(node, node.NodeKind.ToSymbolKind());
 
-        public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
+        public static AstSymbol? Find(this AstSymbolTable symbolTable, AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
             if (kind == AstSymbolKind.NotSet)
                 kind = identifier!.IdentifierKind.ToSymbolKind();
 
-            return symbolTable.FindEntry(identifier.SymbolName.ToCanonical(), kind);
+            return symbolTable.FindSymbol(identifier.SymbolName.ToCanonical(), kind);
         }
 
-        public static AstSymbolEntry? Find(this AstSymbolTable symbolTable, IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
+        public static AstSymbol? Find(this AstSymbolTable symbolTable, IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
             identifierSite.ThrowIfIdentifierNotSet();
 
             if (kind == AstSymbolKind.NotSet)
                 kind = identifierSite.Identifier!.IdentifierKind.ToSymbolKind();
 
-            return symbolTable.FindEntry(identifierSite.Identifier!.SymbolName.ToCanonical(), kind);
+            return symbolTable.FindSymbol(identifierSite.Identifier!.SymbolName.ToCanonical(), kind);
         }
 
         public static AstSymbolKind ToSymbolKind(this AstNodeKind nodeKind)
@@ -80,7 +79,7 @@ namespace Zsharp.AST
             };
         }
 
-        public static AstSymbolEntry? TryAdd<T>(this AstSymbolTable symbolTable, T? node)
+        public static AstSymbol? TryAdd<T>(this AstSymbolTable symbolTable, T? node)
             where T : AstNode, IAstIdentifierSite
         {
             if (node is not null &&
@@ -92,11 +91,11 @@ namespace Zsharp.AST
             return null;
         }
 
-        public static AstSymbolEntry Add<T>(this AstSymbolTable symbolTable, T node)
+        public static AstSymbol Add<T>(this AstSymbolTable symbolTable, T node)
             where T : AstNode, IAstIdentifierSite
             => AddSymbol(symbolTable, node, node.NodeKind.ToSymbolKind(), node);
 
-        private static AstSymbolEntry AddSymbol(AstSymbolTable symbolTable,
+        private static AstSymbol AddSymbol(AstSymbolTable symbolTable,
             IAstIdentifierSite identifierSite, AstSymbolKind symbolKind, AstNode node)
         {
             var name = identifierSite.Identifier?.CanonicalName
@@ -108,26 +107,13 @@ namespace Zsharp.AST
                 typeRef.IsTemplateParameter)
                 symbolKind = AstSymbolKind.TemplateParameter;
 
-            var entry = symbolTable.AddSymbol(name, symbolKind, node);
+            var symbol = symbolTable.AddSymbol(name, symbolKind, node);
 
             if (node is IAstSymbolEntrySite symbolSite &&
                 symbolSite.Symbol is null)
-                symbolSite.SetSymbol(entry);
+                symbolSite.SetSymbol(symbol);
 
-            return entry;
-        }
-
-        internal static void RemoveReferences<T>(this AstSymbolTable symbolTable, IEnumerable<T> nodesToRemove)
-            where T : AstNode, IAstIdentifierSite
-        {
-            foreach (var node in nodesToRemove)
-            {
-                var entry = symbolTable.Find(node);
-                if (entry is not null)
-                {
-                    entry.RemoveReference(node);
-                }
-            }
+            return symbol;
         }
     }
 }

@@ -62,8 +62,8 @@
             foreach (var param in FunctionType.Parameters)
             {
                 // function parameters are registered as variables
-                var entry = Symbols.AddSymbol(param.Identifier!.CanonicalName, AstSymbolKind.Variable, param);
-                param.SetSymbol(entry);
+                var symbol = Symbols.AddSymbol(param.Identifier!.CanonicalName, AstSymbolKind.Variable, param);
+                param.SetSymbol(symbol);
             }
         }
     }

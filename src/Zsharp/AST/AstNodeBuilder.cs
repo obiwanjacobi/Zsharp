@@ -125,8 +125,8 @@ namespace Zsharp.AST
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
             var canonicalName = AstSymbolName.ToCanonical(context.identifier_func().GetText());
-            var entry = symbols.Symbols.AddSymbol(canonicalName, AstSymbolKind.NotSet, null);
-            entry.SymbolLocality = AstSymbolLocality.Exported;
+            var symbol = symbols.Symbols.AddSymbol(canonicalName, AstSymbolKind.NotSet, null);
+            symbol.SymbolLocality = AstSymbolLocality.Exported;
 
             return null;
         }

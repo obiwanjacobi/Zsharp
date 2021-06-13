@@ -19,10 +19,10 @@
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);
 
-        private AstSymbolEntry? _symbol;
-        public AstSymbolEntry? Symbol => _symbol;
+        private AstSymbol? _symbol;
+        public AstSymbol? Symbol => _symbol;
 
-        public virtual bool TrySetSymbol(AstSymbolEntry? symbolEntry)
+        public virtual bool TrySetSymbol(AstSymbol? symbolEntry)
             => Ast.SafeSet(ref _symbol, symbolEntry);
 
         public override void VisitChildren(AstVisitor visitor)

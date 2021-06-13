@@ -31,10 +31,10 @@ namespace Zsharp.AST
         public bool TryResolveSymbol()
         {
             this.ThrowIfSymbolEntryNotSet();
-            var entry = Symbol?.SymbolTable.ResolveDefinition(Symbol);
-            if (entry is not null)
+            var symbol = Symbol?.SymbolTable.ResolveDefinition(Symbol);
+            if (symbol is not null)
             {
-                Symbol = entry;
+                Symbol = symbol;
                 return true;
             }
             return false;

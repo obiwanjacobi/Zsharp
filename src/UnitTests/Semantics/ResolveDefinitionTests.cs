@@ -79,7 +79,7 @@ namespace UnitTests.Semantics
             v.Parent.Should().Be(a);
             v.TypeReference.Should().NotBeNull();
 
-            var sym = file.CodeBlock.Symbols.FindEntry(v.Identifier.SymbolName.ToCanonical(), AstSymbolKind.Variable);
+            var sym = file.CodeBlock.Symbols.FindSymbol(v.Identifier.SymbolName.ToCanonical(), AstSymbolKind.Variable);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -321,8 +321,8 @@ namespace UnitTests.Semantics
 
             var file = Compile.File(code);
             var symbols = file.Symbols;
-            var entry = symbols.FindEntry("Myenum.Zero", AstSymbolKind.Field);
-            entry.Definition.Should().NotBeNull();
+            var symbol = symbols.FindSymbol("Myenum.Zero", AstSymbolKind.Field);
+            symbol.Definition.Should().NotBeNull();
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(1);
             var v = a.Variable;
@@ -341,8 +341,8 @@ namespace UnitTests.Semantics
             var file = Compile.File(code);
 
             var symbols = file.Symbols;
-            var entry = symbols.FindEntry("fn;U8", AstSymbolKind.Function);
-            entry.Definition.Should().NotBeNull();
+            var symbol = symbols.FindSymbol("fn;U8", AstSymbolKind.Function);
+            symbol.Definition.Should().NotBeNull();
 
             var a = file.CodeBlock.ItemAt<AstAssignment>(1);
             a.Expression.RHS.FunctionReference.FunctionDefinition.Should().NotBeNull();

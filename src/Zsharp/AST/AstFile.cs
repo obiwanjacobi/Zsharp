@@ -17,7 +17,7 @@ namespace Zsharp.AST
         public FileContext Context { get; }
 
         public IEnumerable<AstFunctionDefinitionImpl> Functions
-            => Symbols.FindEntries(AstSymbolKind.Function)
+            => Symbols.FindSymbols(AstSymbolKind.Function)
                 .Select(s => s.DefinitionAs<AstFunctionDefinitionImpl>())
                 .Where(f => f is not null)!;
 
@@ -27,7 +27,7 @@ namespace Zsharp.AST
         public AstCodeBlock? CodeBlock => _codeBlock;
 
         public bool HasExports
-            => _codeBlock!.Symbols.Entries.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);
+            => _codeBlock!.Symbols.Symbols.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);
 
         public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
             => this.SafeSetParent(ref _codeBlock, codeBlock);

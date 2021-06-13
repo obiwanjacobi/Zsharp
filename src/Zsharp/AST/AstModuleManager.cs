@@ -19,8 +19,8 @@ namespace Zsharp.AST
             var runtimeModules = _moduleLoader.LoadAll("Zsharp.Runtime");
             foreach (var rtMod in runtimeModules)
             {
-                var entry = intrinsicSymbols.Add(rtMod);
-                entry.SymbolLocality = AstSymbolLocality.Imported;
+                var symbol = intrinsicSymbols.Add(rtMod);
+                symbol.SymbolLocality = AstSymbolLocality.Imported;
             }
         }
 

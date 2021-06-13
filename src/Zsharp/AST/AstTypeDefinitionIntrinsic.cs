@@ -82,7 +82,7 @@ namespace Zsharp.AST
         protected static void AddIntrinsicSymbol(AstSymbolTable symbols, AstTypeDefinitionIntrinsic type)
             => symbols.AddSymbol(type.Identifier!.CanonicalName, AstSymbolKind.Type, type);
 
-        public override bool TrySetSymbol(AstSymbolEntry? symbolEntry)
+        public override bool TrySetSymbol(AstSymbol? symbolEntry)
         {
             throw new InternalErrorException(
                 "Intrinsic Type Definitions are static and have no reference to the Symbol Table.");
