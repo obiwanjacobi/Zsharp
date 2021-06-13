@@ -8,53 +8,44 @@ namespace Zsharp.AST
     {
         protected AstTypeReferenceTemplate(ParserRuleContext? context = null)
             : base(context)
-        {
-            _templateParameters = new();
-        }
-
-        protected AstTypeReferenceTemplate(AstTypeReference typeOrigin)
-            : base(typeOrigin)
         { }
 
-        public new AstTypeReferenceTemplate? TypeOrigin
-            => (AstTypeReferenceTemplate?)base.TypeOrigin;
+        protected AstTypeReferenceTemplate(AstTypeReferenceTemplate typeToCopy)
+            : base(typeToCopy)
+        { }
 
-        private bool _isTemplateParameter;
         // true when type name is actually a template parameter name (T)
-        public bool IsTemplateParameter
-        {
-            get { return TypeOrigin?.IsTemplateParameter ?? _isTemplateParameter; }
-            set
-            {
-                if (IsProxy)
-                    throw new InternalErrorException("Cannot set IsTemplateParameter property on a TypeReference proxy.");
-                _isTemplateParameter = value;
-            }
-        }
+        public bool IsTemplateParameter { get; set; }
 
         // true when type is a template instantiation
         public bool IsTemplate
-            => TypeOrigin?.IsTemplate ?? _templateParameters!.Count > 0;
+            => _templateParameters is not null && _templateParameters.Count > 0;
 
-        private readonly List<AstTemplateParameterReference>? _templateParameters;
+        private readonly List<AstTemplateParameterReference> _templateParameters = new();
         public IEnumerable<AstTemplateParameterReference> TemplateParameters
-            => TypeOrigin?.TemplateParameters ?? _templateParameters!;
+            => _templateParameters!;
 
         public bool TryAddTemplateParameter(AstTemplateParameterReference templateParameter)
         {
-            if (TypeOrigin is not null || _templateParameters is null)
-                throw new InternalErrorException(
-                    "Cannot add Template Parameter onto a TypeReference Proxy.");
+            if (templateParameter is null)
+                return false;
 
-            if (templateParameter is AstTemplateParameterReference parameter)
+            _templateParameters.Add(templateParameter);
+            templateParameter.SetParent(this);
+
+            Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
+            Identifier!.SymbolName.AddTemplateParameter(templateParameter.TypeReference?.Identifier?.Name);
+
+            return true;
+        }
+
+        protected void CopyTemplateParametersTo(AstTypeReferenceTemplate typeRef)
+        {
+            foreach (var templateParameter in _templateParameters)
             {
-                _templateParameters.Add(parameter);
-
-                if (Identifier is not null)
-                    Identifier.SymbolName.AddTemplateParameter(parameter.TypeReference?.Identifier?.Name);
-                return true;
+                var newTemplateParam = new AstTemplateParameterReference(templateParameter);
+                typeRef.AddTemplateParameter(newTemplateParam);
             }
-            return false;
         }
 
         public override void VisitChildren(AstVisitor visitor)

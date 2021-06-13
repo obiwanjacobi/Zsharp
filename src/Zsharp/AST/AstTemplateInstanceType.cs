@@ -16,7 +16,7 @@ namespace Zsharp.AST
 
         private void AddTemplateParameter(AstTypeReference typeReference)
         {
-            var typeRef = typeReference.MakeProxy();
+            var typeRef = typeReference.MakeCopy();
             typeRef.SetParent(this);
             _templateParameters.Add(typeRef);
         }

@@ -46,7 +46,7 @@ namespace Zsharp.Semantics
 
         public override void VisitExpression(AstExpression expression)
         {
-            VisitChildren(expression);
+            expression.VisitChildren(this);
 
             Ast.Guard(expression.RHS, "Invalid Expression: No Right-Hand-Side.");
 

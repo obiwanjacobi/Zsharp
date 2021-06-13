@@ -41,14 +41,11 @@ namespace Zsharp.AST
         public string OverloadKey =>
             String.Join(String.Empty, _parameters.Select(p => p.TypeReference?.Identifier?.CanonicalName));
 
-        public new AstTypeReferenceFunction? TypeOrigin
-            => (AstTypeReferenceFunction?)base.TypeOrigin;
-
-        public override AstTypeReferenceFunction MakeProxy()
+        public override AstTypeReferenceFunction MakeCopy()
         {
-            return (TypeOrigin is not null)
-                ? new AstTypeReferenceFunction(TypeOrigin)
-                : new AstTypeReferenceFunction(this);
+            var typeRef = new AstTypeReferenceFunction(this);
+            Symbol?.AddNode(typeRef);
+            return typeRef;
         }
 
         private AstTypeReference? _typeReference;
@@ -112,23 +109,12 @@ namespace Zsharp.AST
             contextSymbols.Add(this);
         }
 
-        internal void OverrideTypes(AstTypeReference? returnType, IEnumerable<AstTypeReference> parameterTypes)
+        public void ReplaceTypeReference(AstTypeReference typeReference)
         {
-            var paramTypes = parameterTypes.ToList();
-            Ast.Guard(paramTypes.Count == _parameters.Count, "Number of Parameters does not moatch.");
-
-            var symbolTable = Symbol!.SymbolTable;
-            for (int i = 0; i < _parameters.Count; i++)
-            {
-                var param = _parameters[i];
-                var typeRef = paramTypes[i].MakeProxy();
-                param.OverrideTypeReference(typeRef);
-                symbolTable.Add(typeRef);
-            }
-
-            _typeReference = returnType?.MakeProxy();
             if (_typeReference is not null)
-                symbolTable.Add(_typeReference);
+                _typeReference.Symbol?.RemoveReference(_typeReference);
+
+            _typeReference = typeReference;
         }
     }
 }

@@ -53,6 +53,13 @@ namespace Zsharp.AST
             IdentifierType = identifierType;
         }
 
+        protected AstIdentifier(AstIdentifier identifierToCopy)
+        {
+            Context = identifierToCopy.Context;
+            IdentifierType = identifierToCopy.IdentifierType;
+            SymbolName = new AstSymbolName(identifierToCopy.SymbolName);
+        }
+
         public ParserRuleContext? Context { get; }
 
         public virtual bool IsIntrinsic => false;
@@ -71,5 +78,8 @@ namespace Zsharp.AST
             return CanonicalName == that.CanonicalName &&
                 IdentifierType == that.IdentifierType;
         }
+
+        public virtual AstIdentifier MakeCopy()
+            => new AstIdentifier(this);
     }
 }

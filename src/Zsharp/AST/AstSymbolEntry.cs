@@ -23,7 +23,7 @@ namespace Zsharp.AST
 
         public IEnumerable<AstNode> References => _references;
 
-        public IEnumerable<T> ReferencesOf<T>() where T : AstNode
+        public IEnumerable<T> ReferencesAs<T>() where T : class
             => _references.OfType<T>();
 
         public string Key => MakeKey(SymbolName, SymbolKind);
@@ -40,7 +40,8 @@ namespace Zsharp.AST
 
         public AstNode? Definition => _definitions.SingleOrDefault();
 
-        public T? DefinitionAs<T>() where T : class => Definition as T;
+        public T? DefinitionAs<T>() where T : class
+            => Definition as T;
 
         public bool HasDefinition => _definitions.Count > 0;
 
@@ -50,7 +51,7 @@ namespace Zsharp.AST
             Ast.Guard(_references.IndexOf(referenceNode) != -1, "Specified reference Node was not found in the References.");
 
             _references.Remove(referenceNode);
-            _definitions.Add(definitionNode);
+            AddNode(definitionNode);
         }
 
         public bool HasOverloads => _definitions.Count > 1;

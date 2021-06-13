@@ -142,7 +142,7 @@ namespace Zsharp.EmitCS
 
             _builder.Append($"{name}(");
 
-            VisitChildren(function);
+            function.VisitChildren(this);
 
             _builder.Append(")");
         }

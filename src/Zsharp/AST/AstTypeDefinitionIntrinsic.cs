@@ -5,10 +5,9 @@ namespace Zsharp.AST
     public class AstTypeDefinitionIntrinsic : AstTypeDefinitionTemplate
     {
         public AstTypeDefinitionIntrinsic(AstIdentifier identifier, Type? systemType,
-            AstTemplateParameterDefinition? templateParameter = null, bool isUnsigned = false)
+            AstTemplateParameterDefinition? templateParameter = null)
         {
             this.SetIdentifier(identifier);
-            IsUnsigned = isUnsigned;
             SystemType = systemType;
 
             if (templateParameter is not null)
@@ -17,14 +16,12 @@ namespace Zsharp.AST
 
         public override bool IsIntrinsic => true;
 
-        public override bool IsUnsigned { get; }
-
         public Type? SystemType { get; private set; }
 
-        public static readonly AstTypeDefinitionIntrinsic U8 = new(AstIdentifierIntrinsic.U8, typeof(Byte), isUnsigned: true);
-        public static readonly AstTypeDefinitionIntrinsic U16 = new(AstIdentifierIntrinsic.U16, typeof(UInt16), isUnsigned: true);
-        public static readonly AstTypeDefinitionIntrinsic U64 = new(AstIdentifierIntrinsic.U64, typeof(UInt64), isUnsigned: true);
-        public static readonly AstTypeDefinitionIntrinsic U32 = new(AstIdentifierIntrinsic.U32, typeof(UInt32), isUnsigned: true);
+        public static readonly AstTypeDefinitionIntrinsic U8 = new(AstIdentifierIntrinsic.U8, typeof(Byte));
+        public static readonly AstTypeDefinitionIntrinsic U16 = new(AstIdentifierIntrinsic.U16, typeof(UInt16));
+        public static readonly AstTypeDefinitionIntrinsic U64 = new(AstIdentifierIntrinsic.U64, typeof(UInt64));
+        public static readonly AstTypeDefinitionIntrinsic U32 = new(AstIdentifierIntrinsic.U32, typeof(UInt32));
         public static readonly AstTypeDefinitionIntrinsic I8 = new(AstIdentifierIntrinsic.I8, typeof(SByte));
         public static readonly AstTypeDefinitionIntrinsic I16 = new(AstIdentifierIntrinsic.I16, typeof(Int16));
         public static readonly AstTypeDefinitionIntrinsic I64 = new(AstIdentifierIntrinsic.I64, typeof(Int64));

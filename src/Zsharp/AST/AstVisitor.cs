@@ -9,182 +9,177 @@ namespace Zsharp.AST
 
         public virtual void VisitAssignment(AstAssignment assign)
         {
-            VisitChildren(assign);
+            assign.VisitChildren(this);
         }
 
         public virtual void VisitBranch(AstBranch branch)
         {
-            VisitChildren(branch);
+            branch.VisitChildren(this);
         }
 
         public virtual void VisitBranchExpression(AstBranchExpression branch)
         {
-            VisitChildren(branch);
+            branch.VisitChildren(this);
         }
 
         public virtual void VisitBranchConditional(AstBranchConditional branch)
         {
-            VisitChildren(branch);
+            branch.VisitChildren(this);
         }
 
         public virtual void VisitCodeBlock(AstCodeBlock codeBlock)
         {
-            VisitChildren(codeBlock);
+            codeBlock.VisitChildren(this);
         }
 
         public virtual void VisitExpression(AstExpression expression)
         {
-            VisitChildren(expression);
+            expression.VisitChildren(this);
         }
 
         public virtual void VisitExpressionOperand(AstExpressionOperand operand)
         {
-            VisitChildren(operand);
+            operand.VisitChildren(this);
         }
 
         public virtual void VisitFile(AstFile file)
         {
-            VisitChildren(file);
+            file.VisitChildren(this);
         }
 
         public virtual void VisitFunctionDefinition(AstFunctionDefinition function)
         {
-            VisitChildren(function);
+            function.VisitChildren(this);
         }
 
         public virtual void VisitFunctionReference(AstFunctionReference function)
         {
-            VisitChildren(function);
+            function.VisitChildren(this);
         }
 
         public virtual void VisitFunctionParameterDefinition(AstFunctionParameterDefinition parameter)
         {
-            VisitChildren(parameter);
+            parameter.VisitChildren(this);
         }
 
         public virtual void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
         {
-            VisitChildren(parameter);
+            parameter.VisitChildren(this);
         }
 
         public virtual void VisitModuleExternal(AstModuleExternal module)
         {
-            VisitChildren(module);
+            module.VisitChildren(this);
         }
 
         public virtual void VisitModulePublic(AstModulePublic module)
         {
-            VisitChildren(module);
+            module.VisitChildren(this);
         }
 
         public virtual void VisitLiteralNumeric(AstLiteralNumeric numeric)
         {
-            VisitChildren(numeric);
+            numeric.VisitChildren(this);
         }
 
         public virtual void VisitLiteralBoolean(AstLiteralBoolean literalBool)
         {
-            VisitChildren(literalBool);
+            literalBool.VisitChildren(this);
         }
 
         public virtual void VisitLiteralString(AstLiteralString literalString)
         {
-            VisitChildren(literalString);
+            literalString.VisitChildren(this);
         }
 
         public virtual void VisitTemplateInstanceFunction(AstTemplateInstanceFunction templateFunction)
         {
-            VisitChildren(templateFunction);
+            templateFunction.VisitChildren(this);
         }
 
         public virtual void VisitTypeFieldDefinition(AstTypeFieldDefinition field)
         {
-            VisitChildren(field);
+            field.VisitChildren(this);
         }
 
         public virtual void VisitTypeFieldInitialization(AstTypeFieldInitialization field)
         {
-            VisitChildren(field);
+            field.VisitChildren(this);
         }
 
         public virtual void VisitTypeReferenceType(AstTypeReferenceType type)
         {
-            VisitChildren(type);
+            type.VisitChildren(this);
         }
 
         public virtual void VisitTypeDefinitionFunction(AstTypeDefinitionFunction function)
         {
-            VisitChildren(function);
+            function.VisitChildren(this);
         }
 
         public virtual void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
         {
-            VisitChildren(enumType);
+            enumType.VisitChildren(this);
         }
 
         public virtual void VisitTypeDefinitionEnumOption(AstTypeDefinitionEnumOption enumOption)
         {
-            VisitChildren(enumOption);
+            enumOption.VisitChildren(this);
         }
 
         public virtual void VisitTypeReferenceFunction(AstTypeReferenceFunction function)
         {
-            VisitChildren(function);
+            function.VisitChildren(this);
         }
 
         public virtual void VisitTypeFieldReferenceEnumOption(AstTypeFieldReferenceEnumOption enumOption)
         {
-            VisitChildren(enumOption);
+            enumOption.VisitChildren(this);
         }
 
         public virtual void VisitTypeDefinitionStruct(AstTypeDefinitionStruct structType)
         {
-            VisitChildren(structType);
+            structType.VisitChildren(this);
         }
 
         public virtual void VisitTypeDefinitionStructField(AstTypeDefinitionStructField structField)
         {
-            VisitChildren(structField);
+            structField.VisitChildren(this);
         }
 
         public virtual void VisitTypeFieldReferenceStructField(AstTypeFieldReferenceStructField structField)
         {
-            VisitChildren(structField);
+            structField.VisitChildren(this);
         }
 
         public virtual void VisitTemplateInstanceStruct(AstTemplateInstanceStruct structTemplate)
         {
-            VisitChildren(structTemplate);
+            structTemplate.VisitChildren(this);
         }
 
         public virtual void VisitTemplateInstanceType(AstTemplateInstanceType typeTemplate)
         {
-            VisitChildren(typeTemplate);
+            typeTemplate.VisitChildren(this);
         }
 
         public virtual void VisitTemplateParameterDefinition(AstTemplateParameterDefinition templateParameter)
         {
-            VisitChildren(templateParameter);
+            templateParameter.VisitChildren(this);
         }
 
         public virtual void VisitTemplateParameterReference(AstTemplateParameterReference templateParameter)
         {
-            VisitChildren(templateParameter);
+            templateParameter.VisitChildren(this);
         }
 
         public virtual void VisitVariableDefinition(AstVariableDefinition variable)
         {
-            VisitChildren(variable);
+            variable.VisitChildren(this);
         }
 
         public virtual void VisitVariableReference(AstVariableReference variable)
         {
-            VisitChildren(variable);
-        }
-
-        protected void VisitChildren(AstNode node)
-        {
-            node.VisitChildren(this);
+            variable.VisitChildren(this);
         }
     }
 }

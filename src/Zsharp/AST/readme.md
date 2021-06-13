@@ -38,7 +38,11 @@ After the AST is built, the resolve-definition phase is started. This will walk 
 
 Function References have to be matched to a Function Definition. However, not all type information can always be inferred from the function reference's location.
 
-The introduction of a 'FunctionType' isolates the template and function parameters as well as the return type. In order to match a function reference to its definition, assuming the identifiers match, only their FunctionTypes have to be compared in an 'open' and flexible way.
+The introduction of a 'FunctionType' isolates the function parameters and the return type. In order to match a function reference to its definition, assuming the identifiers match, their FunctionTypes have to be compared in an 'open' and flexible way.
+
+Template parameters are on the function, not the function type, but they too have to be matched - although this is much simpler.
+
+The matching algorithm needs to know what function arguments types are concrete and which are inferred. Because of the leave-to-root nature of processing of the AST, a type reference for, say a number literal, is inferred from the literal and set to its smallest possible type. These inferred types can be changed to 'larger' compatible types in order to match a certain function parameter type definition. Types that are not inferred cannot be changed and a compile error will result if no match to a function definition can be made.
 
 When a match is found, the types on the Function Reference may have to be changed in order to match those of the function definition. Then the overload-keys will be equal and the `FunctionDefinition` will show up on the reference object.
 

@@ -23,7 +23,16 @@ namespace Zsharp.AST
 
         public virtual bool IsExternal => false;
 
-        public AstTypeDefinitionFunction FunctionType { get; protected set; }
+        private AstTypeDefinitionFunction _functionType;
+        public AstTypeDefinitionFunction FunctionType
+        {
+            get { return _functionType; }
+            protected set
+            {
+                _functionType = value;
+                _functionType?.SetParent(this);
+            }
+        }
 
         public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {

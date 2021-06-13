@@ -13,17 +13,11 @@
         public bool TrySetIdentifier(AstIdentifier? identifier)
             => Ast.SafeSet(ref _identifier, identifier);
 
-        private AstTypeReference? _typeRef;
-        public AstTypeReference? TypeReference => _typeRef;
+        private AstTypeReference? _typeReference;
+        public AstTypeReference? TypeReference => _typeReference;
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
-            => this.SafeSetParent(ref _typeRef, typeReference);
-
-        internal void OverrideTypeReference(AstTypeReference typeRef)
-        {
-            Ast.Guard(typeRef, "Parameter TypeReference is null.");
-            _typeRef = typeRef;
-        }
+            => this.SafeSetParent(ref _typeReference, typeReference);
 
         private AstSymbolEntry? _symbol;
         public AstSymbolEntry? Symbol => _symbol;
@@ -33,5 +27,13 @@
 
         public override void VisitChildren(AstVisitor visitor)
             => TypeReference?.Accept(visitor);
+
+        public void ReplaceTypeReference(AstTypeReference? typeReference)
+        {
+            if (_typeReference is not null)
+                _typeReference.Symbol?.RemoveReference(_typeReference);
+
+            _typeReference = typeReference;
+        }
     }
 }

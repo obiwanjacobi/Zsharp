@@ -31,7 +31,7 @@ namespace Zsharp.AST
             {
                 var fieldDef = new AstTypeDefinitionStructField();
                 fieldDef.SetIdentifier(new AstIdentifier(field.Identifier!.Name, field.Identifier.IdentifierType));
-                fieldDef.SetTypeReference(field.TypeReference!.MakeProxy());
+                fieldDef.SetTypeReference(field.TypeReference!.MakeCopy());
                 this.AddField(fieldDef);
 
                 type.Symbol!.SymbolTable.Add(fieldDef);

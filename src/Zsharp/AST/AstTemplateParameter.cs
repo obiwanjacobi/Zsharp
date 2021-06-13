@@ -15,6 +15,13 @@ namespace Zsharp.AST
             Context = context;
         }
 
+        protected AstTemplateParameter(AstTemplateParameter parameterToCopy)
+            : base(AstNodeType.TemplateParameter)
+        {
+            Context = parameterToCopy.Context;
+            _symbol = parameterToCopy.Symbol;
+        }
+
         public ParserRuleContext? Context { get; }
 
         private AstSymbolEntry? _symbol;

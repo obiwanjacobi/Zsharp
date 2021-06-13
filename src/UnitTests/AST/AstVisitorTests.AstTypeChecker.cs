@@ -7,46 +7,45 @@ namespace UnitTests.AST
     {
         private class AstTypeChecker : AstVisitor
         {
-
             public override void VisitExpression(AstExpression expression)
             {
                 expression.TypeReference.Should().NotBeNull();
-                VisitChildren(expression);
+                expression.VisitChildren(this);
             }
             public override void VisitExpressionOperand(AstExpressionOperand operand)
             {
                 operand.TypeReference.Should().NotBeNull();
-                VisitChildren(operand);
+                operand.VisitChildren(this);
             }
             public override void VisitFunctionDefinition(AstFunctionDefinition function)
             {
                 function.FunctionType.TypeReference.Should().NotBeNull();
-                VisitChildren(function);
+                function.VisitChildren(this);
             }
             public override void VisitFunctionReference(AstFunctionReference function)
             {
                 function.FunctionType.TypeReference.Should().NotBeNull();
-                VisitChildren(function);
+                function.VisitChildren(this);
             }
             public override void VisitFunctionParameterDefinition(AstFunctionParameterDefinition parameter)
             {
                 parameter.TypeReference.Should().NotBeNull();
-                VisitChildren(parameter);
+                parameter.VisitChildren(this);
             }
             public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
             {
                 parameter.TypeReference.Should().NotBeNull();
-                VisitChildren(parameter);
+                parameter.VisitChildren(this);
             }
             public override void VisitTypeReferenceType(AstTypeReferenceType type)
             {
                 type.TypeDefinition.Should().NotBeNull();
-                VisitChildren(type);
+                type.VisitChildren(this);
             }
             public override void VisitVariableDefinition(AstVariableDefinition variable)
             {
                 variable.TypeReference.Should().NotBeNull();
-                VisitChildren(variable);
+                variable.VisitChildren(this);
             }
         };
     }

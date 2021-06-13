@@ -50,14 +50,14 @@ Identifiers are the same when:
 Using a discard `_` in an identifier is ignored during matching.
 
 ```csharp
-My_Function(p: U8)
+My_Function: (p: U8)
     ...
 
 Myfunction(42)  // calls My_Function
 
 //----
 
-Myfunction(p: U8)
+Myfunction: (p: U8)
     ...
 
 My_Function(42)  // calls Myfunction
@@ -66,7 +66,7 @@ My_Function(42)  // calls Myfunction
 When an identifier only consists of a discard `_` it indicates it is not used.
 
 ```csharp
-myFn(_: U8): U8    // param not used
+myFn: (_: U8): U8    // param not used
     ...
 _ = myFn(42)        // return value not used
 

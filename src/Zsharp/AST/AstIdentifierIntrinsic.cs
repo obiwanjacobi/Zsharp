@@ -26,6 +26,13 @@
             : base(name, identifierType)
         { }
 
+        public AstIdentifierIntrinsic(AstIdentifierIntrinsic identifierToCopy)
+            : base(identifierToCopy)
+        { }
+
         public override bool IsIntrinsic => true;
+
+        public override AstIdentifier MakeCopy()
+            => new AstIdentifierIntrinsic(this);
     }
 }

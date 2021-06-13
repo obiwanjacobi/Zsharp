@@ -21,6 +21,7 @@ namespace Zsharp.AST
                 return false;
 
             _templateParameters.Add(templateParameter);
+            templateParameter.SetParent(this);
 
             Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
             Identifier!.SymbolName.SetTemplateParameterCount(_templateParameters.Count);

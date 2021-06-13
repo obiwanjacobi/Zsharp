@@ -12,13 +12,13 @@ namespace Zsharp.AST
             Context = context;
         }
 
-        protected AstTypeReference(AstTypeReference typeOrigin)
+        protected AstTypeReference(AstTypeReference typeToCopy)
             : base(AstNodeType.Type)
         {
-            Context = typeOrigin.Context;
-            this.SetIdentifier(typeOrigin.Identifier!);
-            TrySetSymbol(typeOrigin.Symbol!);
-            _typeOrigin = typeOrigin;
+            Context = typeToCopy.Context;
+            this.SetIdentifier(typeToCopy.Identifier!.MakeCopy());
+            this.Identifier!.SymbolName.TemplatePostfix = string.Empty;
+            TrySetSymbol(typeToCopy.Symbol);
         }
 
         public AstTypeDefinition? TypeDefinition
@@ -37,6 +37,7 @@ namespace Zsharp.AST
         }
 
         public virtual bool IsExternal => false;
+        public bool IsInferred { get; set; }
 
         public override bool IsEqual(AstType type)
         {
@@ -57,12 +58,6 @@ namespace Zsharp.AST
             return false;
         }
 
-        private readonly AstTypeReference? _typeOrigin;
-        // points to the origin of this 'proxy'.
-        public AstTypeReference? TypeOrigin => _typeOrigin;
-
-        public bool IsProxy => _typeOrigin is not null;
-
-        public abstract AstTypeReference MakeProxy();
+        public abstract AstTypeReference MakeCopy();
     }
 }

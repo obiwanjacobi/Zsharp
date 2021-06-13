@@ -34,7 +34,7 @@ namespace Zsharp.AST
 
             if (node is IAstTypeReferenceSite typeRefSite &&
                 typeRefSite.TypeReference is not null)
-                this.SetTypeReference(typeRefSite.TypeReference.MakeProxy());
+                this.SetTypeReference(typeRefSite.TypeReference.MakeCopy());
         }
 
         public AstExpressionOperand(AstExpression expr)
@@ -73,7 +73,7 @@ namespace Zsharp.AST
         public AstTypeReference? TypeReference => _typeRef;
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
-            => Ast.SafeSet(ref _typeRef, typeReference);
+            => this.SafeSetParent(ref _typeRef, typeReference);
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitExpressionOperand(this);

@@ -209,7 +209,7 @@ namespace UnitTests.Semantics
             AssertEquivalent(cloned as AstTypeReferenceTemplate, origin as AstTypeReferenceTemplate);
         }
 
-        private void AssertEquivalent(AstTypeReferenceTemplate? cloned, AstTypeReferenceTemplate? origin)
+        private void AssertEquivalent(AstTypeReferenceTemplate cloned, AstTypeReferenceTemplate origin)
         {
             if (cloned is not null &&
                 origin is not null)

@@ -21,7 +21,7 @@ namespace Zsharp.External
                 _typeReferences.Add(key, typeRef);
             }
 
-            return _typeReferences[key].MakeProxy();
+            return _typeReferences[key].MakeCopy();
         }
 
         private static string ToZsharpName(TypeReference typeReference)

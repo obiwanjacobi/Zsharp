@@ -10,8 +10,6 @@
 
         public virtual bool IsExternal => false;
 
-        public virtual bool IsUnsigned => false;
-
         public virtual bool IsStruct => false;
     }
 }

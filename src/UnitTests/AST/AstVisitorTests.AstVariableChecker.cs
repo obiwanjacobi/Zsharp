@@ -10,7 +10,7 @@ namespace UnitTests.AST
             public override void VisitAssignment(AstAssignment assign)
             {
                 assign.Variable.Should().NotBeNull();
-                VisitChildren(assign);
+                assign.VisitChildren(this);
             }
             public override void VisitExpressionOperand(AstExpressionOperand operand)
             {
@@ -20,11 +20,11 @@ namespace UnitTests.AST
                 {
                     operand.VariableReference.Should().NotBeNull();
                 }
-                VisitChildren(operand);
+                operand.VisitChildren(this);
             }
             public override void VisitVariableReference(AstVariableReference variable)
             {
-                VisitChildren(variable);
+                variable.VisitChildren(this);
             }
         }
     }

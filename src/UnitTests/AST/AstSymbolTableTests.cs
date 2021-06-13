@@ -224,7 +224,7 @@ namespace UnitTests.AST
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
             v.DefinitionAs<AstVariableDefinition>().Identifier.IdentifierType
                 .Should().Be(AstIdentifierType.Variable);
-            v.ReferencesOf<AstVariableReference>().First().Identifier.IdentifierType
+            v.ReferencesAs<AstVariableReference>().First().Identifier.IdentifierType
                 .Should().Be(AstIdentifierType.Variable);
         }
 

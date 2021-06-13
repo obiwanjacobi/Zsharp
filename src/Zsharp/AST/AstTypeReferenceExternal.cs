@@ -16,20 +16,16 @@ namespace Zsharp.AST
             _externalName = new AstExternalName(typeReference.Namespace, typeReference.Name);
         }
 
-        public new AstTypeReferenceExternal? TypeOrigin
-            => (AstTypeReferenceExternal?)base.TypeOrigin;
-
         private readonly AstExternalName? _externalName;
-        public AstExternalName ExternalName
-            => TypeOrigin?.ExternalName ?? _externalName!;
+        public AstExternalName ExternalName => _externalName!;
 
         public override bool IsExternal => true;
 
-        public override AstTypeReferenceExternal MakeProxy()
+        public override AstTypeReferenceExternal MakeCopy()
         {
-            return (TypeOrigin is not null)
-                ? new AstTypeReferenceExternal(TypeOrigin)
-                : new AstTypeReferenceExternal(this);
+            var typeRef = new AstTypeReferenceExternal(this);
+            Symbol?.AddNode(typeRef);
+            return typeRef;
         }
     }
 }

@@ -10,13 +10,19 @@ namespace Zsharp.AST
     /// </summary>
     public class AstNodeCloner : AstVisitor
     {
-        private readonly AstBuilderContext _context;
+        private readonly AstBuilderContext? _context;
+        private readonly AstCurrentContext _current;
         private readonly Dictionary<string, AstTypeReference> _typeMap = new();
         private readonly List<AstTypeReference> _typeList = new();
 
+        public AstNodeCloner()
+        {
+            _current = new AstCurrentContext();
+        }
+
         public AstNodeCloner(CompilerContext context, uint indent = 0)
         {
-            _context = new AstBuilderContext(context, indent);
+            _current = _context = new AstBuilderContext(context, indent);
         }
 
         public void Clone(AstFunctionReference functionRef,
@@ -26,11 +32,11 @@ namespace Zsharp.AST
             {
                 CreateTypeMap(functionRef, functionDef);
 
-                _context.SetCurrent(instanceFunction.FunctionType);
-                _context.SetCurrent(instanceFunction);
-                VisitChildren(functionDef);
-                _context.RevertCurrent();
-                _context.RevertCurrent();
+                _current.SetCurrent(instanceFunction.FunctionType);
+                _current.SetCurrent(instanceFunction);
+                functionDef.VisitChildren(this);
+                _current.RevertCurrent();
+                _current.RevertCurrent();
 
                 instanceFunction.SetIdentifier(functionRef.Identifier!);
 
@@ -57,10 +63,12 @@ namespace Zsharp.AST
 
         public T? Clone<T>(T node) where T : AstNode, IAstCodeBlockItem
         {
-            var cb = new AstCodeBlock("Clone", _context.CompilerContext.IntrinsicSymbols);
-            _context.SetCurrent(cb);
+            Ast.Guard(_context is not null, "Must construct with CompilerContext.");
+            AstCodeBlock cb = new AstCodeBlock("Clone", _context!.CompilerContext.IntrinsicSymbols);
+
+            _current.SetCurrent(cb);
             Visit(node);
-            _context.RevertCurrent();
+            _current.RevertCurrent();
 
             var result = cb.ItemAt<T>(0);
             result?.Orphan();
@@ -107,12 +115,12 @@ namespace Zsharp.AST
             var cb = new AstCodeBlock(
                 codeBlock.Symbols.Name, codeBlock.Symbols!.ParentTable!, codeBlock.Context);
 
-            var site = _context.GetCurrent<IAstCodeBlockSite>();
+            var site = _current.GetCurrent<IAstCodeBlockSite>();
             site.SetCodeBlock(cb);
 
-            _context.SetCurrent(cb);
-            VisitChildren(codeBlock);
-            _context.RevertCurrent();
+            _current.SetCurrent(cb);
+            codeBlock.VisitChildren(this);
+            _current.RevertCurrent();
         }
 
         public override void VisitFunctionDefinition(AstFunctionDefinition function)
@@ -122,16 +130,16 @@ namespace Zsharp.AST
                 var fnDef = new AstFunctionDefinitionImpl((Function_defContext)functionDef.Context!);
                 fnDef.SetIdentifier(functionDef.Identifier!);
 
-                var codeBlock = _context.GetCurrent<AstCodeBlock>();
+                var codeBlock = _current.GetCurrent<AstCodeBlock>();
                 codeBlock.AddItem(fnDef);
 
-                _context.SetCurrent(fnDef.FunctionType);
-                _context.SetCurrent(fnDef);
-                VisitChildren(functionDef);
-                _context.RevertCurrent();
-                _context.RevertCurrent();
+                _current.SetCurrent(fnDef.FunctionType);
+                _current.SetCurrent(fnDef);
+                functionDef.VisitChildren(this);
+                _current.RevertCurrent();
+                _current.RevertCurrent();
 
-                var symbols = _context.GetCurrent<IAstSymbolTableSite>();
+                var symbols = _current.GetCurrent<IAstSymbolTableSite>();
                 fnDef.CreateSymbols(symbols.Symbols);
             }
         }
@@ -147,12 +155,12 @@ namespace Zsharp.AST
 
             paramDef.TrySetIdentifier(parameter.Identifier);
 
-            var fnDef = _context.GetCurrent<AstFunctionDefinition>();
+            var fnDef = _current.GetCurrent<AstFunctionDefinition>();
             fnDef.FunctionType.AddParameter(paramDef);
 
-            _context.SetCurrent(paramDef);
-            VisitChildren(parameter);
-            _context.RevertCurrent();
+            _current.SetCurrent(paramDef);
+            parameter.VisitChildren(this);
+            _current.RevertCurrent();
 
             // parameter symbols are registered with FunctionDefinition.CreateSymbols()
         }
@@ -163,12 +171,12 @@ namespace Zsharp.AST
             // param ref usually has no Identifier
             paramRef.TrySetIdentifier(parameter.Identifier);
 
-            var fnRef = _context.GetCurrent<AstFunctionReference>();
+            var fnRef = _current.GetCurrent<AstFunctionReference>();
             fnRef.FunctionType.AddParameter(paramRef);
 
-            _context.SetCurrent(paramRef);
-            VisitChildren(parameter);
-            _context.RevertCurrent();
+            _current.SetCurrent(paramRef);
+            parameter.VisitChildren(this);
+            _current.RevertCurrent();
         }
 
         public override void VisitFunctionReference(AstFunctionReference function)
@@ -180,11 +188,11 @@ namespace Zsharp.AST
             var fnRef = new AstFunctionReference((Function_callContext)function.Context!);
             fnRef.SetIdentifier(function.Identifier!);
 
-            _context.SetCurrent(fnRef.FunctionType);
-            _context.SetCurrent(fnRef);
-            VisitChildren(function);
-            _context.RevertCurrent();
-            _context.RevertCurrent();
+            _current.SetCurrent(fnRef.FunctionType);
+            _current.SetCurrent(fnRef);
+            function.VisitChildren(this);
+            _current.RevertCurrent();
+            _current.RevertCurrent();
 
             return fnRef;
         }
@@ -199,12 +207,12 @@ namespace Zsharp.AST
                 Operator = expression.Operator
             };
 
-            var site = _context.GetCurrent<IAstExpressionSite>();
+            var site = _current.GetCurrent<IAstExpressionSite>();
             site.SetExpression(expr);
 
-            _context.SetCurrent(expr);
-            VisitChildren(expression);
-            _context.RevertCurrent();
+            _current.SetCurrent(expr);
+            expression.VisitChildren(this);
+            _current.RevertCurrent();
 
             return expr;
         }
@@ -236,9 +244,12 @@ namespace Zsharp.AST
 
             Ast.Guard(child, "Expression Operand yielded no AstNode.");
             var op = new AstExpressionOperand(child!);
-            op.SetTypeReference(CloneTypeReference(operand.TypeReference!));
 
-            var exp = _context.GetCurrent<AstExpression>();
+            _current.SetCurrent(op);
+            CloneTypeReference(operand.TypeReference!);
+            _current.RevertCurrent();
+
+            var exp = _current.GetCurrent<AstExpression>();
             exp.Add(op);
         }
 
@@ -263,16 +274,16 @@ namespace Zsharp.AST
                 Indent = assign.Indent
             };
 
-            var codeBlock = _context.GetCurrent<AstCodeBlock>();
+            var codeBlock = _current.GetCurrent<AstCodeBlock>();
             codeBlock.AddItem(a);
 
-            _context.SetCurrent(a);
+            _current.SetCurrent(a);
 
             var v = CloneVariable(assign.Variable!);
             a.SetVariable(v);
 
             VisitExpression(assign.Expression!);
-            _context.RevertCurrent();
+            _current.RevertCurrent();
         }
 
         private AstVariable CloneVariable(AstVariable variable)
@@ -289,7 +300,7 @@ namespace Zsharp.AST
         {
             var varDef = CloneVariableDefinition(variable);
 
-            var codeBlock = _context.GetCurrent<AstCodeBlock>();
+            var codeBlock = _current.GetCurrent<AstCodeBlock>();
             codeBlock.AddItem(varDef);
         }
 
@@ -301,11 +312,11 @@ namespace Zsharp.AST
             };
             varDef.SetIdentifier(variable.Identifier!);
 
-            _context.SetCurrent(varDef);
-            VisitChildren(variable);
-            _context.RevertCurrent();
+            _current.SetCurrent(varDef);
+            variable.VisitChildren(this);
+            _current.RevertCurrent();
 
-            var symbols = _context.GetCurrent<IAstSymbolTableSite>();
+            var symbols = _current.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(varDef);
 
             return varDef;
@@ -319,11 +330,11 @@ namespace Zsharp.AST
             var varRef = new AstVariableReference(variable.Context!);
             varRef.SetIdentifier(variable.Identifier!);
 
-            _context.SetCurrent(varRef);
-            VisitChildren(variable);
-            _context.RevertCurrent();
+            _current.SetCurrent(varRef);
+            variable.VisitChildren(this);
+            _current.RevertCurrent();
 
-            var symbols = _context.GetCurrent<IAstSymbolTableSite>();
+            var symbols = _current.GetCurrent<IAstSymbolTableSite>();
             symbols.Symbols.Add(varRef);
 
             return varRef;
@@ -331,64 +342,64 @@ namespace Zsharp.AST
 
         public override void VisitTypeDefinitionEnum(AstTypeDefinitionEnum enumType)
         {
-            VisitChildren(enumType);
+            enumType.VisitChildren(this);
             throw new NotImplementedException();
         }
 
         public override void VisitTypeDefinitionEnumOption(AstTypeDefinitionEnumOption enumOption)
         {
-            VisitChildren(enumOption);
+            enumOption.VisitChildren(this);
             throw new NotImplementedException();
         }
 
         public override void VisitTypeDefinitionStruct(AstTypeDefinitionStruct structType)
         {
-            VisitChildren(structType);
+            structType.VisitChildren(this);
             throw new NotImplementedException();
         }
 
         public override void VisitTypeDefinitionStructField(AstTypeDefinitionStructField structField)
         {
-            VisitChildren(structField);
+            structField.VisitChildren(this);
             throw new NotImplementedException();
         }
 
         public override void VisitTypeFieldDefinition(AstTypeFieldDefinition field)
         {
-            VisitChildren(field);
+            field.VisitChildren(this);
             throw new NotImplementedException();
         }
 
         public override void VisitTypeFieldInitialization(AstTypeFieldInitialization field)
         {
-            VisitChildren(field);
+            field.VisitChildren(this);
             throw new NotImplementedException();
         }
 
         public override void VisitTypeFieldReferenceEnumOption(AstTypeFieldReferenceEnumOption enumOption)
         {
-            var fldRef = new AstTypeFieldReferenceEnumOption((Enum_option_useContext)enumOption.Context);
+            var fldRef = new AstTypeFieldReferenceEnumOption((Enum_option_useContext)enumOption.Context!);
 
-            _context.SetCurrent(fldRef);
-            VisitChildren(enumOption);
-            _context.RevertCurrent();
+            _current.SetCurrent(fldRef);
+            enumOption.VisitChildren(this);
+            _current.RevertCurrent();
         }
 
         public override void VisitTypeFieldReferenceStructField(AstTypeFieldReferenceStructField structField)
         {
-            var fldRef = new AstTypeFieldReferenceStructField((Variable_field_refContext)structField.Context);
+            var fldRef = new AstTypeFieldReferenceStructField((Variable_field_refContext)structField.Context!);
 
-            _context.SetCurrent(fldRef);
-            VisitChildren(structField);
-            _context.RevertCurrent();
+            _current.SetCurrent(fldRef);
+            structField.VisitChildren(this);
+            _current.RevertCurrent();
         }
 
-        private AstTypeFieldReference CloneFieldReference(AstTypeFieldReference fieldReference)
+        private static AstTypeFieldReference CloneFieldReference(AstTypeFieldReference fieldReference)
         {
             return fieldReference switch
             {
-                AstTypeFieldReferenceStructField => new AstTypeFieldReferenceStructField((Variable_field_refContext)fieldReference.Context),
-                AstTypeFieldReferenceEnumOption => new AstTypeFieldReferenceEnumOption((Enum_option_useContext)fieldReference.Context),
+                AstTypeFieldReferenceStructField => new AstTypeFieldReferenceStructField((Variable_field_refContext)fieldReference.Context!),
+                AstTypeFieldReferenceEnumOption => new AstTypeFieldReferenceEnumOption((Enum_option_useContext)fieldReference.Context!),
                 _ => throw new InternalErrorException(
                     $"AstNodeCloner does not implement this FieldReference Type: {fieldReference.GetType().Name}")
             };
@@ -403,7 +414,7 @@ namespace Zsharp.AST
 
             if (_typeMap.TryGetValue(type.Identifier!.CanonicalName, out AstTypeReference? newType))
             {
-                typeRef = newType.MakeProxy();
+                typeRef = newType.MakeCopy();
             }
             else if (type.TypeDefinition is IAstTemplateSite<AstTemplateParameterDefinition> templateDef &&
                 templateDef.IsTemplate)
@@ -414,7 +425,7 @@ namespace Zsharp.AST
                 {
                     if (_typeMap.TryGetValue(templParamDef.Identifier!.CanonicalName, out AstTypeReference? paramType))
                     {
-                        var templParam = new AstTemplateParameterReference(paramType.MakeProxy());
+                        var templParam = new AstTemplateParameterReference(paramType.MakeCopy());
                         typeRefType.AddTemplateParameter(templParam);
                     }
                     else
@@ -425,9 +436,9 @@ namespace Zsharp.AST
                 typeRef = typeRefType;
             }
             else
-                typeRef = type.MakeProxy();
+                typeRef = type.MakeCopy();
 
-            var site = _context.GetCurrent<IAstTypeReferenceSite>();
+            var site = _current.GetCurrent<IAstTypeReferenceSite>();
             site.SetTypeReference(typeRef);
 
             return typeRef;
@@ -444,36 +455,36 @@ namespace Zsharp.AST
             else
                 throw new InternalErrorException("Unknown Branch Type.");
 
-            var cb = _context.GetCurrent<AstCodeBlock>();
+            var cb = _current.GetCurrent<AstCodeBlock>();
             cb.AddItem(br);
 
-            _context.SetCurrent(br);
-            VisitChildren(branch);
-            _context.RevertCurrent();
+            _current.SetCurrent(br);
+            branch.VisitChildren(this);
+            _current.RevertCurrent();
         }
 
         public override void VisitBranchConditional(AstBranchConditional branch)
         {
             var br = new AstBranchConditional(branch.Context!);
 
-            var cb = _context.GetCurrent<AstCodeBlock>();
+            var cb = _current.GetCurrent<AstCodeBlock>();
             cb.AddItem(br);
 
-            _context.SetCurrent(br);
-            VisitChildren(branch);
-            _context.RevertCurrent();
+            _current.SetCurrent(br);
+            branch.VisitChildren(this);
+            _current.RevertCurrent();
         }
 
         public override void VisitBranchExpression(AstBranchExpression branch)
         {
             var br = new AstBranchExpression((Statement_returnContext)branch.Context!);
 
-            var cb = _context.GetCurrent<AstCodeBlock>();
+            var cb = _current.GetCurrent<AstCodeBlock>();
             cb.AddItem(br);
 
-            _context.SetCurrent(br);
-            VisitChildren(branch);
-            _context.RevertCurrent();
+            _current.SetCurrent(br);
+            branch.VisitChildren(this);
+            _current.RevertCurrent();
         }
     }
 }

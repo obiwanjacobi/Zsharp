@@ -1,5 +1,4 @@
 using Antlr4.Runtime;
-using System;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -57,6 +56,7 @@ namespace Zsharp.AST
         {
             _rhs?.Accept(visitor);
             _lhs?.Accept(visitor);
+            _typeRef?.Accept(visitor);
         }
 
         private AstExpressionOperand? _lhs;
@@ -75,7 +75,7 @@ namespace Zsharp.AST
         public AstTypeReference? TypeReference => _typeRef;
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
-            => Ast.SafeSet(ref _typeRef, typeReference);
+            => this.SafeSetParent(ref _typeRef, typeReference);
 
         public bool Add(AstExpressionOperand op)
         {

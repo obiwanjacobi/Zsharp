@@ -13,18 +13,16 @@ namespace Zsharp.AST
             : base(context)
         { }
 
-        protected AstTypeReferenceType(AstTypeReferenceType typeOrigin)
-            : base(typeOrigin)
+        protected AstTypeReferenceType(AstTypeReferenceType typeToCopy)
+            : base(typeToCopy)
         { }
 
-        public new AstTypeReferenceType? TypeOrigin
-            => (AstTypeReferenceType?)base.TypeOrigin;
-
-        public override AstTypeReferenceType MakeProxy()
+        public override AstTypeReferenceType MakeCopy()
         {
-            return (TypeOrigin is not null)
-                ? new AstTypeReferenceType(TypeOrigin)
-                : new AstTypeReferenceType(this);
+            var typeRef = new AstTypeReferenceType(this);
+            CopyTemplateParametersTo(typeRef);
+            Symbol?.AddNode(typeRef);
+            return typeRef;
         }
 
         public static AstTypeReferenceType From(AstTypeDefinition typeDef)

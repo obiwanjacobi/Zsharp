@@ -6,10 +6,8 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstBuilderContext
+    public class AstBuilderContext : AstCurrentContext
     {
-        private readonly Stack<AstNode> _current = new();
-
         public AstBuilderContext(CompilerContext compilerContext, UInt32 indent = 0)
         {
             CompilerContext = compilerContext;
@@ -78,32 +76,6 @@ namespace Zsharp.AST
             return indent / Indent;
         }
 
-        public T? TryGetCurrent<T>()
-            where T : class
-        {
-            foreach (var c in _current)
-            {
-                if (c is T t)
-                {
-                    return t;
-                }
-            }
-            return null;
-        }
-
-        public T GetCurrent<T>()
-            where T : class
-        {
-            T? t = TryGetCurrent<T>();
-            Ast.Guard(t, $"GetCurrent() could not find {typeof(T).Name}");
-            return t!;
-        }
-
-        public void SetCurrent<T>(T current) where T : AstNode
-            => _current.Push(current);
-
-        public void RevertCurrent() => _current.Pop();
-
         public AstCodeBlock GetCodeBlock(ParserRuleContext context)
         {
             var indent = CheckIndent(context);
@@ -119,7 +91,7 @@ namespace Zsharp.AST
 
         private AstCodeBlock? TryGetCodeBlock(UInt32 indent)
         {
-            foreach (var c in _current)
+            foreach (var c in Nodes)
             {
                 if (c is AstCodeBlock cb &&
                     cb.Indent == indent)

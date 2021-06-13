@@ -36,12 +36,10 @@ namespace Zsharp.Semantics
             if (expression.TypeReference is not null)
                 return;
 
-            VisitChildren(expression);
+            expression.VisitChildren(this);
 
             if (expression.TypeReference is null)
             {
-
-
                 // comparison operators have bool result
                 if ((expression.Operator & AstExpressionOperator.MaskComparison) != 0)
                 {
@@ -72,17 +70,18 @@ namespace Zsharp.Semantics
 
                     Ast.Guard(typeRef, "Expression yielded no Type.");
                     // TODO: depending on the operator the type may need to be enlarged.
-                    expression.SetTypeReference(typeRef!);
+                    expression.SetTypeReference(typeRef!.MakeCopy());
+                    Visit(expression.TypeReference!);
                 }
             }
         }
 
         public override void VisitExpressionOperand(AstExpressionOperand operand)
         {
+            operand.VisitChildren(this);
+
             if (operand.TypeReference is not null)
                 return;
-
-            VisitChildren(operand);
 
             var expr = operand.Expression;
             if (expr is not null)
@@ -100,7 +99,7 @@ namespace Zsharp.Semantics
                 var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
                     AstIdentifierIntrinsic.Bool.CanonicalName, AstSymbolKind.Type);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found for Boolean.");
-                AssignType(operand, typeDef!);
+                AssignInferredType(operand, typeDef!);
                 return;
             }
 
@@ -111,7 +110,7 @@ namespace Zsharp.Semantics
 
                 var typeDef = FindTypeByBitCount(numeric.GetBitCount(), numeric.Sign);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found by bit count.");
-                AssignType(operand, typeDef!);
+                AssignInferredType(operand, typeDef!);
                 return;
             }
 
@@ -123,7 +122,7 @@ namespace Zsharp.Semantics
                 var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
                     AstIdentifierIntrinsic.Str.CanonicalName, AstSymbolKind.Type);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found for String.");
-                AssignType(operand, typeDef!);
+                AssignInferredType(operand, typeDef!);
                 return;
             }
 
@@ -135,19 +134,19 @@ namespace Zsharp.Semantics
 
                 if (var.TypeReference is null)
                 {
-                    var def = (IAstTypeReferenceSite?)var.VariableDefinition
-                        ?? (IAstTypeReferenceSite?)var.ParameterDefinition;
+                    var def =
+                        (IAstTypeReferenceSite?)var.VariableDefinition ?? var.ParameterDefinition;
 
                     var typeRef = def?.TypeReference ?? FindTypeReference(var);
                     if (typeRef is not null)
                     {
-                        var.SetTypeReference(typeRef.MakeProxy());
+                        var.SetTypeReference(typeRef.MakeCopy());
                     }
                 }
 
                 if (var.TypeReference is not null)
                 {
-                    operand.SetTypeReference(var.TypeReference);
+                    operand.SetTypeReference(var.TypeReference.MakeCopy());
                 }
             }
 
@@ -165,24 +164,26 @@ namespace Zsharp.Semantics
             var fn = operand.FunctionReference;
             if (fn?.FunctionType.TypeReference is not null)
             {
-                operand.SetTypeReference(fn.FunctionType.TypeReference.MakeProxy());
+                operand.SetTypeReference(fn.FunctionType.TypeReference.MakeCopy());
             }
+
+            if (operand.TypeReference is not null)
+                Visit(operand.TypeReference);
+
         }
 
-        private void AssignType(AstExpressionOperand operand, AstTypeDefinition typeDef)
+        private void AssignInferredType(AstExpressionOperand operand, AstTypeDefinition typeDef)
         {
             var typeRef = AstTypeReferenceType.From(typeDef);
-            var entry = typeRef.Symbol ?? SymbolTable!.Add(typeRef);
-            if (entry.Definition is null)
-                entry.AddNode(typeDef);
-
+            typeRef.IsInferred = true;
+            SymbolTable!.Add(typeRef);
             operand.SetTypeReference(typeRef);
         }
 
         public override void VisitAssignment(AstAssignment assign)
         {
             Ast.Guard(assign.Variable, "AstVariable not set on assign.");
-            VisitChildren(assign);
+            assign.VisitChildren(this);
 
             if (assign.Variable is AstVariableReference varRef &&
                 varRef.VariableDefinition is null)
@@ -190,15 +191,15 @@ namespace Zsharp.Semantics
                 var entry = varRef.Symbol;
 
                 // variable.TypeReference can be null
-                var varDef = new AstVariableDefinition(varRef.TypeReference?.MakeProxy());
+                var varDef = new AstVariableDefinition(varRef.TypeReference?.MakeCopy());
                 varDef.SetIdentifier(varRef.Identifier!);
                 varDef.SetSymbol(entry!);
                 entry!.PromoteToDefinition(varDef, varRef);
-
+                AstSymbolReferenceRemover.RemoveReference(varRef);
                 assign.SetVariableDefinition(varDef);
 
                 // do the children again for types
-                VisitChildren(assign);
+                assign.VisitChildren(this);
             }
 
             if (assign.Variable!.TypeReference is null)
@@ -222,8 +223,10 @@ namespace Zsharp.Semantics
                 }
                 else
                 {
-                    assign.Variable.SetTypeReference(typeRef.MakeProxy());
+                    assign.Variable.SetTypeReference(typeRef.MakeCopy());
                 }
+
+                Visit(assign.Variable.TypeReference!);
             }
         }
 
@@ -246,7 +249,7 @@ namespace Zsharp.Semantics
 
         public override void VisitTypeFieldReferenceEnumOption(AstTypeFieldReferenceEnumOption enumOption)
         {
-            VisitChildren(enumOption);
+            enumOption.VisitChildren(this);
 
             if (enumOption.Symbol!.Definition is null &&
                 !enumOption.TryResolveSymbol())
@@ -257,7 +260,7 @@ namespace Zsharp.Semantics
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            VisitChildren(function);
+            function.VisitChildren(this);
 
             if (function.FunctionDefinition is null)
             {
@@ -295,7 +298,7 @@ namespace Zsharp.Semantics
                     if (MatchFunctionToDefinition(function))
                     {
                         // make sure all new types are resolved.
-                        VisitChildren(function);
+                        function.VisitChildren(this);
                     }
                     else
                     {
@@ -307,7 +310,7 @@ namespace Zsharp.Semantics
             if (function.FunctionType.TypeReference is null &&
                 function.FunctionDefinition?.FunctionType.TypeReference is not null)
             {
-                var typeRef = function.FunctionDefinition.FunctionType.TypeReference.MakeProxy();
+                var typeRef = function.FunctionDefinition.FunctionType.TypeReference.MakeCopy();
                 function.FunctionType.SetTypeReference(typeRef);
                 // if type is intrinsic the symbol may not be set.
                 if (typeRef.Symbol is null)
@@ -318,12 +321,12 @@ namespace Zsharp.Semantics
 
         public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
         {
-            VisitChildren(parameter);
+            parameter.VisitChildren(this);
 
             // TODO: take parameter type from definition?
             if (parameter.TypeReference is null)
             {
-                parameter.SetTypeReference(parameter.Expression!.TypeReference!.MakeProxy());
+                parameter.SetTypeReference(parameter.Expression!.TypeReference!.MakeCopy());
             }
         }
 
@@ -371,7 +374,7 @@ namespace Zsharp.Semantics
                 }
             }
 
-            VisitChildren(type!);
+            type!.VisitChildren(this);
         }
 
         private AstTypeReference? FindTypeReference(AstNode? node)
@@ -445,35 +448,60 @@ namespace Zsharp.Semantics
             if (!entry.HasDefinition)
                 return false;
 
-            //if (!entry.HasOverloads)
-            //{
-            //    SetToMatch(function, entry.DefinitionAs<AstFunctionDefinition>()!);
-            //    return true;
-            //}
+            var functionDef = entry.FindFunctionDefinition(function);
 
-            // TODO: Find closest match of overloads...
-            return entry.FindFunctionDefinition(function) is not null;
+            if (functionDef is null)
+            {
+                var resolvedDef = AstTypeMatcher.ResolveOverloads(function);
+
+                if (resolvedDef is not null)
+                {
+                    if (SetToMatch(function, resolvedDef))
+                    {
+                        Visit(function.FunctionType);
+                    }
+
+                    // non-null if SetToMatch successful
+                    functionDef = entry.FindFunctionDefinition(function);
+                }
+            }
+
+            return functionDef is not null;
         }
 
-        // TODO: this needs more refinement than blindly overwriting types.
-        // - Only overwrite if no type was found
-        // - only overwrite if the current and new type are compatible / implicit convertable
-        private void SetToMatch(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
+        private bool SetToMatch(AstFunctionReference function, AstFunctionDefinition functionDef)
         {
-            var oldTypeRefs =
-                functionRef.FunctionType.Parameters.Select(p => p.TypeReference!).ToList();
+            Ast.Guard(function.FunctionType.Parameters.Count() ==
+                functionDef.FunctionType.Parameters.Count(), "Number of Parameters don't match between function reference and definition");
 
-            if (functionRef.FunctionType.TypeReference is not null)
-                oldTypeRefs.Add(functionRef.FunctionType.TypeReference!);
+            bool hasReplacements = false;
+            var parameters = function.FunctionType.Parameters.ToList();
+            var parameterDefs = functionDef.FunctionType.Parameters.ToList();
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                var parameter = parameters[i];
+                if (parameter.TypeReference is null ||
+                    parameter.TypeReference.IsInferred)
+                {
+                    var paramDef = parameterDefs[i];
+                    var typeRef = paramDef.TypeReference!.MakeCopy();
+                    parameter.ReplaceTypeReference(typeRef);
+                    SymbolTable!.Add(typeRef);
+                    hasReplacements = true;
+                }
+            }
 
-            // remove the type-references from the symbol table that are about to be overwritten
-            functionRef.Symbol!.SymbolTable.RemoveReferences(oldTypeRefs);
+            if ((function.FunctionType.TypeReference is null ||
+                    function.FunctionType.TypeReference.IsInferred) &&
+                functionDef.FunctionType.TypeReference is not null)
+            {
+                var typeRef = functionDef.FunctionType.TypeReference!.MakeCopy();
+                function.FunctionType.ReplaceTypeReference(typeRef);
+                SymbolTable!.Add(typeRef);
+                hasReplacements = true;
+            }
 
-            functionRef.OverrideTypes(
-                functionDef.FunctionType.TypeReference,
-                functionDef.FunctionType.Parameters.Select(p => p.TypeReference!));
-
-            // TODO: ParameterRef.Expression can have different TypeReference than the parameter.
+            return hasReplacements;
         }
     }
 }

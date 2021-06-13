@@ -14,6 +14,12 @@ namespace Zsharp.AST
             this.SetTypeReference(typeReference);
         }
 
+        public AstTemplateParameterReference(AstTemplateParameterReference parameterToCopy)
+            : base(parameterToCopy)
+        {
+            this.SetTypeReference(parameterToCopy.TypeReference!.MakeCopy());
+        }
+
         private AstTypeReference? _typeReference;
         public AstTypeReference? TypeReference => _typeReference;
 

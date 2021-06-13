@@ -11,6 +11,7 @@ namespace Zsharp.AST
             Context = context;
             EnforceReturnValueUse = context.Parent is not Function_call_retval_unusedContext;
             _functionType = new AstTypeReferenceFunction(context);
+            _functionType.SetParent(this);
         }
 
         public bool EnforceReturnValueUse { get; }
@@ -78,11 +79,5 @@ namespace Zsharp.AST
 
         public override string ToString()
             => $"{Identifier?.CanonicalName}: {FunctionType}";
-
-        internal void OverrideTypes(AstTypeReference? returnType, IEnumerable<AstTypeReference> parameterTypes)
-        {
-            FunctionType.OverrideTypes(returnType, parameterTypes);
-            Identifier!.SymbolName.TemplatePostfix = FunctionType.Identifier!.CanonicalName;
-        }
     }
 }

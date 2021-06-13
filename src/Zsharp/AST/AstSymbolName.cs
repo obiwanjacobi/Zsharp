@@ -28,6 +28,10 @@ namespace Zsharp.AST
             IsCanonical = isCanonical;
         }
 
+        public AstSymbolName(AstSymbolName symbolNameToCopy)
+            : this(symbolNameToCopy.Parts.ToArray(), symbolNameToCopy.TemplatePostfix, symbolNameToCopy.IsCanonical)
+        { }
+
         public static AstSymbolName Parse(string text, AstSymbolNameParseOptions options)
         {
             var parts = text.Split(Separator, StringSplitOptions.RemoveEmptyEntries).ToArray();

@@ -22,14 +22,14 @@ namespace Zsharp.EmitCS
 
             using var scope = Context.AddModule(module);
 
-            VisitChildren(module);
+            module.VisitChildren(this);
         }
 
         public override void VisitFunctionDefinition(AstFunctionDefinition function)
         {
             using var scope = Context.AddFunction(function);
 
-            VisitChildren(function);
+            function.VisitChildren(this);
         }
 
         public override void VisitFunctionReference(AstFunctionReference function)
@@ -44,7 +44,7 @@ namespace Zsharp.EmitCS
 
             Context.CodeBuilder.CsBuilder.Append($"{name}(");
 
-            VisitChildren(function);
+            function.VisitChildren(this);
 
             Context.CodeBuilder.CsBuilder.EndLine(")");
         }
@@ -128,7 +128,7 @@ namespace Zsharp.EmitCS
             {
                 Context.CodeBuilder.CsBuilder.Append(
                     $"{field.Identifier!.CanonicalName} = ");
-                VisitChildren(field);
+                field.VisitChildren(this);
                 Context.CodeBuilder.CsBuilder.AppendLine(",");
             }
         }
@@ -140,7 +140,7 @@ namespace Zsharp.EmitCS
 
             if (branch.HasExpression)
             {
-                VisitChildren(branch);
+                branch.VisitChildren(this);
             }
 
             Context.CodeBuilder.CsBuilder.EndLine();

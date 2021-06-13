@@ -1,0 +1,488 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Zsharp.AST.AstFile">
+    <Position X="7.75" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAIgBIAAAAAAAAAAIAAAAAAIAAwAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstFile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstNode" Collapsed="true">
+    <Position X="27.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAACAAAAAAAAAAAAAEQAAQAAAAAAEAgECAAAAAAAE=</HashCode>
+      <FileName>AST\AstNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstAssignment">
+    <Position X="10" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAgEUAAAAgACAAAQAAAAAAAAQwAQAgAEAkAA=</HashCode>
+      <FileName>AST\AstAssignment.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstBranch">
+    <Position X="12.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAIAAAAgBEAAgAAAAAAAAAQAAAAAAAAAAAAIQAAAA=</HashCode>
+      <FileName>AST\AstBranch.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstCodeBlock">
+    <Position X="14.5" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAgBECAAAAAACAAAAgBAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstCodeBlock.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstExpression">
+    <Position X="16.75" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIIAEAAAIgAAAAQAAAQAAQCAAAAAAABAgAAAAAACIAA=</HashCode>
+      <FileName>AST\AstExpression.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="LHS" />
+      <Property Name="RHS" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstExpressionOperand">
+    <Position X="19" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AYAAABAAIAAAAAAAAAAAAACChIAAAAAQwAAAgAECAAA=</HashCode>
+      <FileName>AST\AstExpressionOperand.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstFunction">
+    <Position X="21.25" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgCEAQAAAAAAgAAAAIAAAAQAAAAAQAAACAA=</HashCode>
+      <FileName>AST\AstFunction.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstFunctionParameter">
+    <Position X="23.5" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIACAAQAAEAAAgACAAIAAAAAAgAAAQAACCAA=</HashCode>
+      <FileName>AST\AstFunctionParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstLiteralBoolean">
+    <Position X="25.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>AST\AstLiteralBoolean.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstLiteralNumeric">
+    <Position X="28" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gIAQAAAAAgAAABIAAAAAAAAAAAAAAEAAAAAgAAAAAAA=</HashCode>
+      <FileName>AST\AstLiteralNumeric.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstLiteralString">
+    <Position X="30.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAgAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>AST\AstLiteralString.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstModule">
+    <Position X="32.5" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAgAAAgAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>AST\AstModule.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTemplateParameter">
+    <Position X="34.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgCAAAAAAAAAAAAAAIAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>AST\AstTemplateParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstType">
+    <Position X="37" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgCAAQAAAQAAgAAAAIAAAAAAAAAAQAAACAA=</HashCode>
+      <FileName>AST\AstType.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeField">
+    <Position X="39.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgCAAQAAAAAAgAAAAIAAAAAAAAAAQAAACAA=</HashCode>
+      <FileName>AST\AstTypeField.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstVariable">
+    <Position X="41.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIgCAAQAAAAAAgACAAIAAAAAAgAAAQAACCAA=</HashCode>
+      <FileName>AST\AstVariable.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstBranchExpression">
+    <Position X="12.25" Y="8.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAIAAAAAAAAAAAAQwAAAgAAAAAA=</HashCode>
+      <FileName>AST\AstBranchExpression.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstBranchConditional">
+    <Position X="12.25" Y="12.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAIEAIAAAAAAAAAAAABAAAAIAAgAAQIAAgAIA=</HashCode>
+      <FileName>AST\AstBranchConditional.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstFunctionDefinition">
+    <Position X="19.75" Y="10.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAIAAAAEAQAAAAEBAAAAAAAAAAAAAQAgAEgAAAAAAE=</HashCode>
+      <FileName>AST\AstFunctionDefinition.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstFunctionReference">
+    <Position X="22" Y="10.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAEAAEAACAAAEBCAAAAAAAABAAAQAgAEgAACAAAE=</HashCode>
+      <FileName>AST\AstFunctionReference.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstFunctionDefinitionExternal">
+    <Position X="16.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgQAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAE=</HashCode>
+      <FileName>AST\AstFunctionDefinitionExternal.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstFunctionDefinitionImpl">
+    <Position X="18.25" Y="15.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIABIAAAAAAAAAAAAAAAAAIQAgAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstFunctionDefinitionImpl.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstFunctionDefinitionIntrinsic">
+    <Position X="20.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAIAAAAAASAAAAAQAAAgAACAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>AST\AstFunctionDefinitionIntrinsic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTemplateInstanceFunction">
+    <Position X="22.5" Y="15.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAIAAAAIABIAAAAEAQAAAAAAAAAAIAAAAAAAAAAACA=</HashCode>
+      <FileName>AST\AstTemplateInstanceFunction.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstFunctionParameterDefinition">
+    <Position X="25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAgAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstFunctionParameterDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstFunctionParameterReference">
+    <Position X="27.25" Y="9" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAgAAAAAAAAAAAAAAAAAAAAAQwAAAgAAAAAA=</HashCode>
+      <FileName>AST\AstFunctionParameterReference.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinition">
+    <Position X="34.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAQAAAAAAAAAAAAAAAAAAQAAAAgAAAAAAAA=</HashCode>
+      <FileName>AST\AstTypeDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeReference">
+    <Position X="36.5" Y="11" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAABAAAIgAQAAAAAASAAAAAAAAAEAAAAAAAAABAAAAA=</HashCode>
+      <FileName>AST\AstTypeReference.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeFieldDefinition">
+    <Position X="39.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstTypeFieldDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeFieldReference">
+    <Position X="45.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstTypeFieldReference.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTemplateParameterDefinition">
+    <Position X="31" Y="7.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAIAAAAAAAAAQAAAAAAgAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>AST\AstTemplateParameterDefinition.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTemplateParameterReference">
+    <Position X="33.25" Y="7.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAIAAAAAAAAAAAAACAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>AST\AstTemplateParameterReference.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTemplateParameterDefinitionIntrinsic">
+    <Position X="31" Y="11" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>AST\AstTemplateParameterDefinitionIntrinsic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinitionEnumOption">
+    <Position X="40" Y="12" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQwAAAgAAAAAA=</HashCode>
+      <FileName>AST\AstTypeDefinitionEnumOption.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinitionStructField">
+    <Position X="42" Y="12" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAIAAAAAAAAAAAAACAAAAAAAAAgAAAAAABAAA=</HashCode>
+      <FileName>AST\AstTypeDefinitionStructField.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeFieldInitialization">
+    <Position X="44.25" Y="12" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQwAAAgAAAAAA=</HashCode>
+      <FileName>AST\AstTypeFieldInitialization.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeFieldReferenceEnumOption">
+    <Position X="46.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstTypeFieldReferenceEnumOption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeFieldReferenceStructField">
+    <Position X="48.75" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstTypeFieldReferenceStructField.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTemplateInstanceType">
+    <Position X="26.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAIEAAAAAAAAAQACAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>AST\AstTemplateInstanceType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinitionFunction">
+    <Position X="28.5" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAIAAEAIAEAAAAAACAAAAAAAQAwIAAAAABAAA=</HashCode>
+      <FileName>AST\AstTypeDefinitionFunction.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinitionTemplate">
+    <Position X="32" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAABAAAAAAAAAAAAAAAAAEgAAAAAAA=</HashCode>
+      <FileName>AST\AstTypeDefinitionTemplate.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeReferenceFunction" Collapsed="true">
+    <Position X="34.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAoAAEAIAEAAAAAACAAABEAAQAwIAAAAABAAA=</HashCode>
+      <FileName>AST\AstTypeReferenceFunction.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeReferenceTemplate">
+    <Position X="37.75" Y="15.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAkAAAAAAABAAAAAEAAAAAAAAAgAEgAAAAABA=</HashCode>
+      <FileName>AST\AstTypeReferenceTemplate.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinitionIntrinsic">
+    <Position X="31" Y="18.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAKxAgAAASACAAgAAAAIAAAIAAAEQEAAAAAAESqAAA=</HashCode>
+      <FileName>AST\AstTypeDefinitionIntrinsic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinitionWithFields">
+    <Position X="33" Y="18.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIQAAACAAAgAAAAAAACAAAAAAAAAAAAIgAAAAAAAgYA=</HashCode>
+      <FileName>AST\AstTypeDefinitionWithFields.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTemplateInstanceStruct">
+    <Position X="27.75" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAEAQAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>AST\AstTemplateInstanceStruct.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinitionEnum">
+    <Position X="30" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAABEAQAAAAAAAAAAAAAAAAAAAAAgAAAAgAA=</HashCode>
+      <FileName>AST\AstTypeDefinitionEnum.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinitionExternal">
+    <Position X="32.25" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAQAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstTypeDefinitionExternal.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeDefinitionStruct">
+    <Position X="34.5" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAABEAQAAAAAAAAAAAAAAAAAAAAggAAAAgQA=</HashCode>
+      <FileName>AST\AstTypeDefinitionStruct.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeReferenceType">
+    <Position X="37.75" Y="19.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AoAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AstTypeReferenceType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zsharp.AST.AstTypeReferenceExternal">
+    <Position X="37.75" Y="22.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAQQAAAAAAAAAAAAAAAECAAAAAAAAAABAAA=</HashCode>
+      <FileName>AST\AstTypeReferenceExternal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

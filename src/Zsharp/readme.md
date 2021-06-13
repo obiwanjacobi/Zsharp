@@ -31,6 +31,8 @@
 - Importing External modules does not find nested public classes (Zsharp.Runtime.Conversion.Checked).
 - TrySetIdentifier should check if IdentifierType matches the AstNodeType.
 - Rename all Enums from 'Type' to 'Kind'.
+- Rename AstSymbolEntry to AstSymbol.
+- Rename IAstCodeBlock item to IAstCodeLine (and rename ItemAt to LineAt on CodeBlock)
 - Assign initial TypeReference to SymbolTable (entry) and MakeProxy for all other references?
 - AstFunctionDefinitionIntrinsic.TrySetSymbol should not be called?
 - Function Overloads handling: Currently based on function name are all in the same SymbolEntry.
@@ -39,6 +41,8 @@
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
 - Move Function.CreateSymbols impl to FunctionType
 - How to match in incomplete FunctionReference to its FunctionDefinition?
+- Check if ResolveDefinition for variable expression operand is still 'optimal'.
+    It looks a bit convoluted.
 
 ---
 
