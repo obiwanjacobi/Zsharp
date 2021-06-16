@@ -25,7 +25,7 @@
 - AstTemplateInstanceFunction has duplicate code with AstFunctionDefinitionImpl 
     and does not support partial templates (missing TemplateParameters).
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
-- Importing External modules does not find nested public classes (Zsharp.Runtime.Conversion.Checked).
+- Importing External modules does not find nested public types (Zsharp.Runtime.Conversion.Checked).
 - Check if ResolveDefinition for variable expression operand is still 'optimal'.
     It looks a bit convoluted.
 
