@@ -25,12 +25,12 @@ namespace Zsharp.AST
                 $"The number of template parameters do not match the TemplateDefinition {TemplateDefinition.Identifier!.Name}");
 
             Context = type.Context;
-            this.SetIdentifier(new AstIdentifier(type.Identifier!.Name, type.Identifier.IdentifierKind));
+            this.SetIdentifier(type.Identifier!.MakeCopy());
 
             foreach (var field in TemplateDefinition.Fields)
             {
                 var fieldDef = new AstTypeDefinitionStructField();
-                fieldDef.SetIdentifier(new AstIdentifier(field.Identifier!.Name, field.Identifier.IdentifierKind));
+                fieldDef.SetIdentifier(field.Identifier!.MakeCopy());
                 fieldDef.SetTypeReference(field.TypeReference!.MakeCopy());
                 this.AddField(fieldDef);
 

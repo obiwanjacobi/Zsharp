@@ -16,9 +16,9 @@ namespace Zsharp.AST
         }
 
         public AstTypeDefinitionFunction(ParserRuleContext context)
+            : this()
         {
             Context = context;
-            this.SetIdentifier(new AstIdentifier(String.Empty, AstIdentifierKind.Type));
         }
 
         private readonly List<AstFunctionParameterDefinition> _parameters = new();

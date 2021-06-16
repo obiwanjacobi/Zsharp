@@ -19,5 +19,8 @@ namespace Zsharp.AST
             => String.IsNullOrEmpty(TypeName)
                 ? $"{Namespace}.{SymbolName}"
                 : $"{Namespace}.{TypeName}.{SymbolName}";
+
+        public override string ToString()
+            => FullName;
     }
 }
