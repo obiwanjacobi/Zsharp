@@ -26,4 +26,16 @@
       <DependentUpon>AST/AstVisitorTests.cs</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="AST\AstVisitorTests - Copy %282%29.AstTypeChecker.cs">
+      <DependentUpon>AST/AstVisitorTests.cs</DependentUpon>
+    </Compile>
+    <Compile Update="AST\AstVisitorTests - Copy %283%29.AstTypeChecker.cs">
+      <DependentUpon>AST/AstVisitorTests.cs</DependentUpon>
+    </Compile>
+    <Compile Update="AST\AstVisitorTests - Copy.AstTypeChecker.cs">
+      <DependentUpon>AST/AstVisitorTests.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

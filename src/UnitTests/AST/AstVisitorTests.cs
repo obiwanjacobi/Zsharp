@@ -55,5 +55,23 @@ namespace UnitTests.AST
             var checker = new AstTypeChecker();
             checker.Visit(file);
         }
+
+        [TestMethod]
+        public void Symbols()
+        {
+            var file = Build.File(code);
+            file.Should().NotBeNull();
+
+            var context = new CompilerContext(new ModuleLoader());
+
+            var typeResolver = new ResolveDefinition(context);
+            typeResolver.Visit(file);
+
+            context.Errors.PrintErrors();
+            context.HasErrors.Should().BeFalse();
+
+            var checker = new AstSymbolChecker();
+            checker.Visit(file);
+        }
     }
 }

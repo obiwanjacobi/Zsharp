@@ -13,8 +13,6 @@
 - Add GenericParameters besides TemplateParameters (fix grammar #)
 - AstTemplateInstanceFunction has duplicate code with AstFunctionDefinitionImpl 
     and does not support partial templates (missing TemplateParameters).
-- AstFunctionParameterReference should not have a TypeReference for literal numeric.
-    Function resolvement also takes (template) parameters (and its types) to work.
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16).
     RetVal of operator overload determines resulting type.
     Type of target (variable) determines resulting type.
@@ -35,7 +33,6 @@
     Function can have FunctionDefinition that is not correct.
 - EmitFunctionTest - multiple usings 'using Zsharp.Runtime;' emitted.
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
-- Move Function.CreateSymbols impl to FunctionType
 - Check if ResolveDefinition for variable expression operand is still 'optimal'.
     It looks a bit convoluted.
 
