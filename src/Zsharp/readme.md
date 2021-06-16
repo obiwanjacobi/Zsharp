@@ -24,14 +24,10 @@
 - `_ = fn()` results in an Assignment without a Variable...
 - TypeReferences of built-in types are added to root SymbolTable that contains definition.
     Need to see if this is a problem when multiple files are compiled using the same root symbol table.
-- Namespace on AstSymbolEntry is wrong for imported module functions. 
+- Namespace on AstSymbol is wrong for imported module functions. 
     It should be the name of the external module but is the name of the local symbol table it is refered in.
 - Importing External modules does not find nested public classes (Zsharp.Runtime.Conversion.Checked).
-- Assign initial TypeReference to SymbolTable (entry) and MakeProxy for all other references?
 - AstFunctionDefinitionIntrinsic.TrySetSymbol should not be called?
-- Function Overloads handling: Currently based on function name are all in the same SymbolEntry.
-    Function can have FunctionDefinition that is not correct.
-- EmitFunctionTest - multiple usings 'using Zsharp.Runtime;' emitted.
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
 - Check if ResolveDefinition for variable expression operand is still 'optimal'.
     It looks a bit convoluted.

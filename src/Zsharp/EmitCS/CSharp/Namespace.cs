@@ -20,7 +20,8 @@ namespace Zsharp.EmitCS.CSharp
 
         public void AddUsing(string namespaceName)
         {
-            _usings.Add(namespaceName);
+            if (!_usings.Contains(namespaceName))
+                _usings.Add(namespaceName);
         }
 
         private readonly List<Class> _classes = new();
