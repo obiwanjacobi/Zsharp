@@ -152,6 +152,8 @@ main: (args: IEnumerable<CommandLineArgument>)
 main: (args: IEnumerable<CommandLineArgument>): I32
 ```
 
+> Research if we can use the new System.CommandLine library that allows any number of typed parameters on the 'main' function that get automatically parsed from the command line.
+
 ---
 
 > TBD

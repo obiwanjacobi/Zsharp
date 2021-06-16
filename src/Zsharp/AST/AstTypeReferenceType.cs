@@ -9,6 +9,11 @@ namespace Zsharp.AST
             : base(context)
         { }
 
+        public AstTypeReferenceType(AstIdentifier identifier)
+        {
+            this.SetIdentifier(identifier);
+        }
+
         protected AstTypeReferenceType(ParserRuleContext? context = null)
             : base(context)
         { }
@@ -20,7 +25,6 @@ namespace Zsharp.AST
         public override AstTypeReferenceType MakeCopy()
         {
             var typeRef = new AstTypeReferenceType(this);
-            CopyTemplateParametersTo(typeRef);
             Symbol?.AddNode(typeRef);
             return typeRef;
         }

@@ -92,7 +92,7 @@ typedFn<OtherStruct>(o)     // derived type explicit
 Restricting the allowed types for a template parameter by using a constrained variant.
 
 ```csharp
-Choice: U8 or U16 or U24
+Choice: U8 or U16 or U32
 tfn: <#T: Choice>(p: T): U8
     ...
 

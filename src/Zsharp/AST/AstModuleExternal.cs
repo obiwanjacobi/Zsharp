@@ -79,7 +79,7 @@
         {
             if (function.FunctionType.TypeReference is null)
             {
-                var typeRef = AstTypeReferenceType.From(AstTypeDefinitionIntrinsic.Void);
+                var typeRef = new AstTypeReferenceType(AstIdentifierIntrinsic.Void);
                 function.FunctionType.SetTypeReference(typeRef);
             }
 

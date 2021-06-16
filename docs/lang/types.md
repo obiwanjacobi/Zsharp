@@ -126,6 +126,11 @@ The conversion is done using the .NET Text Encoding types from the BCL.
 
 > TBD (System.Security.SecureString)
 
+#### Str-Of-T
+
+> TBD `StrOf<T>` to allow a described string. `T` describes the structure of the content of the string. `StrOf<EmailAddress>` where `EmailAddress` contains validation (regex?).
+Related to custom data types.
+
 ---
 
 ### Character
@@ -222,7 +227,7 @@ Literal values are commonly use in programs and by default the compiler will ass
 ```csharp
 a = 42          // a: U8
 b = U16(42)     // b: U16
-c: U24 = 42     // c: U24
+c: U32 = 42     // c: U32
 ```
 
 We are simply calling a dedicated constructor function with the literal value.

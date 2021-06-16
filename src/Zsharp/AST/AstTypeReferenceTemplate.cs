@@ -12,7 +12,13 @@ namespace Zsharp.AST
 
         protected AstTypeReferenceTemplate(AstTypeReferenceTemplate typeToCopy)
             : base(typeToCopy)
-        { }
+        {
+            foreach (var templateParameter in typeToCopy.TemplateParameters)
+            {
+                var newTemplateParam = new AstTemplateParameterReference(templateParameter);
+                this.AddTemplateParameter(newTemplateParam);
+            }
+        }
 
         // true when type name is actually a template parameter name (T)
         public bool IsTemplateParameter { get; set; }
@@ -37,15 +43,6 @@ namespace Zsharp.AST
             Identifier!.SymbolName.AddTemplateParameter(templateParameter.TypeReference?.Identifier?.Name);
 
             return true;
-        }
-
-        protected void CopyTemplateParametersTo(AstTypeReferenceTemplate typeRef)
-        {
-            foreach (var templateParameter in _templateParameters)
-            {
-                var newTemplateParam = new AstTemplateParameterReference(templateParameter);
-                typeRef.AddTemplateParameter(newTemplateParam);
-            }
         }
 
         public override void VisitChildren(AstVisitor visitor)

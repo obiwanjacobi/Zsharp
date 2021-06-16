@@ -105,7 +105,7 @@ The function name cannot be split. Parameters can be spread out over multiple li
 
 ```C#
 my_very_long_function_name_with_lots_of_parameters: (
-        p1: U8, p2: U16, p3: U24, p4: U32,
+        p1: U8, p2: U16, p3: U32, p4: U64,
         p5: Str
 )
     ...
@@ -117,8 +117,8 @@ Use new-lines instead of commas.
 function_with_params_but_no_commas: (
         p1: U8
         p2: U16
-        p3: U24
-        p4: U32
+        p3: U32
+        p4: U64
         p5: Str
 )
     ...

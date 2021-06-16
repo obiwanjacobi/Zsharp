@@ -41,13 +41,13 @@ Optional function parameters:
 
 ```C#
 hasParam: (p: U8?): Bool
-    return p ? true : false
+    return p ? true : false     // bah!
     return p?       // syntax support
 ```
 
 There is no implicit conversions in Z#. So p cannot be implicitly converted to a Bool value and therefor `return p` is invalid.
 
-In this case where it needs to be converted to boolean it results in a little verbose (not so nice) code.
+---
 
 Optional fields in structs:
 
@@ -73,6 +73,8 @@ o = s.f1?.f1?.f2  // first non-value optional will stop navigation of path, resu
 ```
 
 > It is not recommended to use optional in general data structures because it does not clarify WHEN that data will or will not be available.
+
+---
 
 ## Option Matching
 

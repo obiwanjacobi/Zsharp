@@ -69,5 +69,5 @@ Have templated overloads for the operator-functions that allow the code to selec
 a = 42
 b = 101
 
-r = a.Add<U24>(b)   // r => U24
+r = a.Add<U32>(b)   // r => U32
 ```

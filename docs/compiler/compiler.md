@@ -11,31 +11,21 @@
 
 ---
 
-> Compiler as static analyzer / linter
+>TBD
 
-> Compiler as Language Server (LSP)
-
-> Compiler as (remote) debugger.
-
-> Compiler as (remote) console. Coded/hashed errors are transmitted (Serial) to the compiler that can translate it into readable diagnostic text. This way the debug binary does not explode with debugging strings.
-
-> Compiler as Assembler (byte-code?) Cross CPU Abstract Assembler Language? (WASM?)
-
-> Compiler as linker (linker map file, late optimizations)
-
-> Compiler as (language supported) build system.
-
-> Compiler as REPL (because we support Meta)
-
-> Compiler as Language VM? (used by REPL) - zs-script
-
-> Compiler as a specializer (taking source and static input and compiling an optimized version).
-
-> Compiler as profiler?
-
-> Compiler as build-system? Use REPL/VM to execute zs-script using build-task lib...?
-
-> Semantic compiler rules available as functions to code (traits?).
+- Compiler as static analyzer / linter
+- Compiler as Language Server (LSP)
+- Compiler as (remote) debugger.
+- Compiler as (remote) console. Coded/hashed errors are transmitted (Serial) to the compiler that can translate it into readable diagnostic text. This way the debug binary does not explode with debugging strings.
+- Compiler as Assembler (byte-code?) Cross CPU Abstract Assembler Language? (WASM?)
+- Compiler as linker (linker map file, late optimizations)
+- Compiler as (language supported) build system.
+- Compiler as REPL (because we support Meta)
+- Compiler as Language VM? (used by REPL) - zs-script
+- Compiler as a specializer (taking source and static input and compiling an optimized version).
+- Compiler as profiler?
+- Compiler as build-system? Use REPL/VM to execute zs-script using build-task lib...?
+- Semantic compiler rules available as functions to code (traits?).
 
 ---
 

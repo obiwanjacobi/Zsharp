@@ -70,10 +70,10 @@ a = b = c = 42
 // c: U8 = 42
 
 b: U16
-a = b = c: U24 = 42
+a = b = c: U32 = 42
 // a: U8 = 42
 // b: U16 = 42
-// c: U24 = 42
+// c: U32 = 42
 ```
 
 ### Structure Assignment

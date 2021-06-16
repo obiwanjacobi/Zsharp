@@ -2,11 +2,13 @@
 
 Most operators are syntactic sugar over a set of wellknown functions.
 
-Of these wellknown functions there are two flavors: unchecked and checked implementations. The unchecked flavor is used in the final program and its implementation is optimized to the fullest extend. The checked version implements extra validation and 'checking' to help make sure the code is correct.
+Of these wellknown functions there are two flavors: unchecked and checked implementations. The unchecked flavor performs no validation. The checked version implements extra validation and 'checking' to help make sure the code is correct.
 
 > Use identifier prefixes to identify checked/unchecked operator functions implementations. (`checked_` / `unchecked_`?)
 
 Note that `checked` and `unchecked` do not refer to the .NET variants. It only means that any conversion the operator does is checked to be correct (or not checked).
+
+---
 
 ## Operator Symbols
 
@@ -20,7 +22,7 @@ Arithmetic, bitwise and logical operators.
 | `/` | ArithmeticDivide | Division
 | `%` | ArithmeticRemainder | Remainder
 | `**` | ArithmeticPower | Power
-| `( )` | - | Math Precedence, Function Call, List Literal
+| `( )` | - | Math Precedence, Function Call, List Literal, Tuple/deconstruct
 | `=` | IsEqual | Equals
 | `<>` | IsNotEqual | Not Equals
 | `>` | IsGreaterThan | Greater than
@@ -48,6 +50,16 @@ Arithmetic, bitwise and logical operators.
 
 Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `nxor`?
 
+Operator that cascades the left value?
+So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`.
+
+| Operator | Fn Name | Description
+|--|--|--
+| `&&` | cascading l-value logical-and
+| `||` | cascading l-value logical-or
+
+---
+
 ## Other Symbols
 
 | Symbol | Description
@@ -71,8 +83,9 @@ Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `n
 | `??` | Optional variable fallback
 | `??=` | Optional variable conditional assignment
 | `#` | Pragma / Attribute access / Execute at compile-time
-| `#!` | Compile-time code definition
+| `#!` | Compile-time code definition (perhaps only `#`)
 | `->` | Line continuation (instead of indent)
+| `##` | Temporary comment (compiler warning)
 
 > Are there others like conditional assignment `??=`? Can any (applicable) operator be made conditional by prefixing `??` to it?
 
@@ -92,6 +105,7 @@ Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `n
 | Operator | Description
 |---|---
 | `\` | reserved
+| `|` | reserved
 | `$` | reserved
 | `=>` | used in mapping / some sort of (forward) assignment?
 | `<=` | map structure / assign struct properties
@@ -190,6 +204,18 @@ err =! a    // err: Err<U8>
 opt =? a    // opt: Opt<U8>
 ptr =* a    // ptr: Ptr<U8>
 imm =^ a    // imm: Imm<U8>
+
+// as parameters inline
+fnErr(!a)
+fnOpt(?a)
+fnPtr(*a)
+fnImm(^a)
+
+// or named parameters
+fnErr(err =! a)
+fnOpt(opt =? a)
+fnPtr(ptr =* a)
+fnImm(imm =^ a)
 ```
 
 > Or are these conversions implicit?

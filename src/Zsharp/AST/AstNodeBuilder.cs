@@ -188,7 +188,7 @@ namespace Zsharp.AST
 
             if (function.FunctionType.TypeReference is null)
             {
-                var typeRef = AstTypeReferenceType.From(AstTypeDefinitionIntrinsic.Void);
+                var typeRef = new AstTypeReferenceType(AstIdentifierIntrinsic.Void);
                 function.FunctionType.SetTypeReference(typeRef);
                 codeBlock.Symbols.Add(typeRef);
             }
@@ -540,7 +540,7 @@ namespace Zsharp.AST
 
             if (typeDef.BaseType is null)
             {
-                var typeRef = AstTypeReferenceType.From(AstTypeDefinitionIntrinsic.I32);
+                var typeRef = new AstTypeReferenceType(AstIdentifierIntrinsic.I32);
                 symbolsSite.Symbols.Add(typeRef);
 
                 typeDef.SetBaseType(typeRef);

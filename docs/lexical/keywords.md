@@ -41,11 +41,11 @@ Keyword | Description
 `def` | default? (looks like define!)
 `ref` | explicit reference? / read-only pointer?
 `deref` | unpack a reference (too similar to defer)
-`use` | inline module imports?
+`use` | inline module imports? IDisposable wrapper?
 `any` | a type that can be anything (object)
 `asm` | inline assembly (IL?)
 `with` | context variables
-`async` | async execution
+`async` | async execution (state machine)
 `await` | awaiting async execution
 `fun` | for pure functions?
 
