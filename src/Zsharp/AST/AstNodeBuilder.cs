@@ -113,7 +113,7 @@ namespace Zsharp.AST
             }
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var entryMod = symbols.AddSymbol(module.Identifier!.CanonicalName, AstSymbolKind.Module, module);
+            var entryMod = symbols.Symbols.Add(module);
             entryMod.SymbolLocality = AstSymbolLocality.Imported;
             return null;
         }
@@ -125,7 +125,7 @@ namespace Zsharp.AST
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
             var canonicalName = AstSymbolName.ToCanonical(context.identifier_func().GetText());
-            var symbol = symbols.Symbols.AddSymbol(canonicalName, AstSymbolKind.NotSet, null);
+            var symbol = symbols.Symbols.AddSymbol(canonicalName, AstSymbolKind.NotSet);
             symbol.SymbolLocality = AstSymbolLocality.Exported;
 
             return null;

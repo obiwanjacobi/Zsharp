@@ -34,9 +34,20 @@ namespace Zsharp.AST
 
         public AstSymbolLocality SymbolLocality { get; set; }
 
-        public string FullName => String.IsNullOrEmpty(SymbolTable.Namespace)
-            ? SymbolName
-            : $"{SymbolTable.Namespace}.{SymbolName}";
+        private string? _namespace;
+        public string Namespace
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_namespace))
+                    return SymbolTable.Namespace;
+                return _namespace;
+            }
+            set { _namespace = value; }
+        }
+
+        public string FullName => String.IsNullOrEmpty(Namespace)
+            ? SymbolName : $"{Namespace}.{SymbolName}";
 
         public AstNode? Definition => _definitions.SingleOrDefault();
 
@@ -86,7 +97,6 @@ namespace Zsharp.AST
             }
             else if (SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinition)
             {
-                // TODO: check overloadKey
                 _definitions.Add(node);
             }
             else if (!_references.Contains(node))
@@ -116,9 +126,7 @@ namespace Zsharp.AST
         }
 
         internal void Delete()
-        {
-            SymbolTable.Delete(this);
-        }
+            => SymbolTable.Delete(this);
 
         internal void RemoveReference(AstNode node)
             => _references.Remove(node);

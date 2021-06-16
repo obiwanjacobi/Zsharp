@@ -66,7 +66,7 @@ namespace Zsharp.EmitCS
 
             foreach (var module in modules)
             {
-                Namespace.AddUsing(module.Namespace);
+                Namespace.AddUsing(module.ExternalName.Namespace);
             }
         }
 

@@ -54,6 +54,8 @@ namespace UnitTests.AST
 
             var mod = symbols.FindSymbols(AstSymbolKind.Module).Single();
             mod.SymbolName.Should().Be("System.Console");
+            // System.System.Console...
+            //mod.FullName.Should().Be("System.Console");
         }
 
         [TestMethod]

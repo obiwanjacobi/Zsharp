@@ -1,6 +1,7 @@
 ﻿namespace Zsharp.AST
 {
-    public class AstModuleExternal : AstModule
+    public class AstModuleExternal : AstModule,
+        IAstExternalNameSite
     {
         public AstModuleExternal(string moduleName, AstSymbolTable? parentTable = null)
             : this(moduleName, moduleName, parentTable)
@@ -9,14 +10,14 @@
         public AstModuleExternal(string ns, string moduleName, AstSymbolTable? parentTable = null)
             : base(AstModuleLocality.External)
         {
-            Namespace = ns;
+            ExternalName = new AstExternalName(ns, moduleName);
             Symbols = new AstSymbolTable(moduleName, parentTable);
             this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierKind.Module));
         }
 
         public AstSymbolTable Symbols { get; }
 
-        public string Namespace { get; }
+        public AstExternalName ExternalName { get; }
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitModuleExternal(this);

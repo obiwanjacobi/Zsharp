@@ -38,12 +38,19 @@ namespace Zsharp.AST
             }
         }
 
-        public AstSymbol AddSymbol(string canonicalName, AstSymbolKind kind, params AstNode?[]? nodes)
-            => AddSymbol(AstSymbolName.Parse(canonicalName, AstSymbolNameParseOptions.IsCanonical), kind, nodes);
+        public AstSymbol AddSymbol(string canonicalName, AstSymbolKind kind, AstNode? node = null)
+            => AddSymbol(AstSymbolName.Parse(canonicalName, AstSymbolNameParseOptions.IsCanonical), kind, node);
 
-        public AstSymbol AddSymbol(AstSymbolName symbolName, AstSymbolKind kind, params AstNode?[]? nodes)
+        public AstSymbol AddSymbol(AstSymbolName symbolName, AstSymbolKind kind, AstNode? node = null)
         {
             Ast.Guard(symbolName.IsCanonical, "All symbol names must be a canonical name.");
+
+            // reference to a template parameter is detected as TypeReference
+            if (kind == AstSymbolKind.Type &&
+                node is AstTypeReferenceType typeRef &&
+                typeRef.IsTemplateParameter)
+                kind = AstSymbolKind.TemplateParameter;
+
             var exOrImported = FindSymbol(symbolName, AstSymbolKind.NotSet);
             var symbol = FindSymbolLocal(symbolName.FullName, kind);
 
@@ -60,15 +67,26 @@ namespace Zsharp.AST
                 _table[symbol.Key] = symbol;
             }
 
-            if (nodes is not null)
+            if (node is not null)
             {
-                foreach (var node in nodes)
-                {
-                    if (node is not null)
-                        symbol.AddNode(node);
-                }
+                symbol.AddNode(node);
+
+                if (node is IAstSymbolEntrySite symbolSite &&
+                symbolSite.Symbol is null)
+                    symbolSite.SetSymbol(symbol);
+
+                if (node is IAstExternalNameSite externalName)
+                    symbol.Namespace = externalName.ExternalName.Namespace;
             }
             return symbol;
+        }
+
+        public AstSymbol AddSymbol(IAstIdentifierSite identifierSite, AstSymbolKind kind, AstNode node)
+        {
+            var name = identifierSite.Identifier?.SymbolName.ToCanonical()
+                ?? throw new ArgumentException("No identifier name.", nameof(identifierSite));
+
+            return AddSymbol(name, kind, node);
         }
 
         private static void Merge(AstSymbol targetEntry, AstSymbol sourceEntry)
@@ -196,7 +214,7 @@ namespace Zsharp.AST
         {
             AstSymbol? symbol = null;
             var table = this;
-            foreach (var namePart in symbolName)
+            foreach (var namePart in symbolName.Parts)
             {
                 var isLast = namePart == symbolName.Symbol;
 

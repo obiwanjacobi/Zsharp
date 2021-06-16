@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +14,7 @@ namespace Zsharp.AST
         ToCanonical,
     }
 
-    public class AstSymbolName : IEnumerable<string>
+    public class AstSymbolName
     {
         public const char Separator = '.';
         public const char TemplateDelimiter = '%';
@@ -157,17 +156,6 @@ namespace Zsharp.AST
 
         public override string ToString()
             => ToString(TemplatePostfix);
-
-        public IEnumerator<string> GetEnumerator()
-        {
-            foreach (var part in _parts)
-            {
-                yield return part;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
 
         private string Join(int offset, int length)
             => String.Join(Separator, _parts.Skip(offset).Take(length));

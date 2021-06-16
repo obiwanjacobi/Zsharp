@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public static class AstSymbolTableExtensions
     {
@@ -93,27 +91,6 @@ namespace Zsharp.AST
 
         public static AstSymbol Add<T>(this AstSymbolTable symbolTable, T node)
             where T : AstNode, IAstIdentifierSite
-            => AddSymbol(symbolTable, node, node.NodeKind.ToSymbolKind(), node);
-
-        private static AstSymbol AddSymbol(AstSymbolTable symbolTable,
-            IAstIdentifierSite identifierSite, AstSymbolKind symbolKind, AstNode node)
-        {
-            var name = identifierSite.Identifier?.CanonicalName
-                ?? throw new ArgumentException("No identifier name.", nameof(identifierSite));
-
-            // reference to a template parameter is detected as TypeReference
-            if (symbolKind == AstSymbolKind.Type &&
-                node is AstTypeReferenceType typeRef &&
-                typeRef.IsTemplateParameter)
-                symbolKind = AstSymbolKind.TemplateParameter;
-
-            var symbol = symbolTable.AddSymbol(name, symbolKind, node);
-
-            if (node is IAstSymbolEntrySite symbolSite &&
-                symbolSite.Symbol is null)
-                symbolSite.SetSymbol(symbol);
-
-            return symbol;
-        }
+            => symbolTable.AddSymbol(node, node.NodeKind.ToSymbolKind(), node);
     }
 }
