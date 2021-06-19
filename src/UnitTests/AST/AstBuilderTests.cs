@@ -54,9 +54,8 @@ namespace UnitTests.AST
 
             var module = Build.Module(code);
 
-            // TODO
-            //var import = module.Imports.First();
-            //import.module_name().GetText().Should().Be("mymod");
+            var symbol = module.Symbol.SymbolTable.FindSymbol("mymod");
+            symbol.SymbolKind.Should().Be(AstSymbolKind.Module);
         }
 
         [TestMethod]
@@ -69,9 +68,11 @@ namespace UnitTests.AST
 
             var module = Build.Module(code);
 
-            // TODO
-            //var import = module.Imports.Skip(1).First();
-            //import.module_name().GetText().Should().Be("mymod2");
+            var symbol = module.Symbol.SymbolTable.FindSymbol("mymod1");
+            symbol.SymbolKind.Should().Be(AstSymbolKind.Module);
+
+            symbol = module.Symbol.SymbolTable.FindSymbol("mymod2");
+            symbol.SymbolKind.Should().Be(AstSymbolKind.Module);
         }
 
         [TestMethod]

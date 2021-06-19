@@ -320,7 +320,6 @@ namespace Zsharp.Semantics
         {
             parameter.VisitChildren(this);
 
-            // TODO: take parameter type from definition?
             if (parameter.TypeReference is null)
             {
                 parameter.SetTypeReference(parameter.Expression!.TypeReference!.MakeCopy());

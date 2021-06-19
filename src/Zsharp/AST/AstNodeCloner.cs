@@ -81,7 +81,9 @@ namespace Zsharp.AST
             var defTemplateParams = functionDef.TemplateParameters.ToArray();
             var refTemplateParams = functionRef.TemplateParameters.ToArray();
 
-            // TODO: default template parameter values
+            // TODO:
+            // default template parameter values
+            // named template parameters
             Ast.Guard(refTemplateParams.Length == defTemplateParams.Length,
                 "Inconsistent number of template parameters between definition and instantiation.");
 

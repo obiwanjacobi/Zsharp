@@ -123,10 +123,9 @@ namespace Zsharp.External
         private AstFunctionDefinitionExternal CreateFunction(MethodDefinition method)
         {
             var function = new AstFunctionDefinitionExternal(method, !method.IsStatic);
-            // TODO: get_/set_ and .ctor handling
-            function.SetIdentifier(new AstIdentifier(method.Name, AstIdentifierKind.Function));
+            var name = method.Name == ".ctor" ? method.DeclaringType.Name : method.Name;
+            function.SetIdentifier(new AstIdentifier(name, AstIdentifierKind.Function));
 
-            // TODO: special Void handling
             var typeRef = _typeRepository.GetTypeReference(method.ReturnType);
             function.FunctionType.SetTypeReference(typeRef);
 
@@ -145,9 +144,14 @@ namespace Zsharp.External
 
             foreach (var p in method.GenericParameters)
             {
-                // TODO: GenericParameterConstraints
-                var templParam = CreateTemplateParameter(new AstIdentifier(p.Name, AstIdentifierKind.TemplateParameter));
-                function.AddTemplateParameter(templParam);
+                var genericParam = CreateGenericParameter(new AstIdentifier(p.Name, AstIdentifierKind.TemplateParameter));
+                function.AddGenericParameter(genericParam);
+
+                foreach (var constraint in p.Constraints)
+                {
+                    typeRef = _typeRepository.GetTypeReference(constraint.ConstraintType);
+                    genericParam.ConstraintType = typeRef;
+                }
             }
 
             return function;
@@ -161,7 +165,7 @@ namespace Zsharp.External
             return funcParam;
         }
 
-        private static AstTemplateParameterDefinition CreateTemplateParameter(AstIdentifier identifier)
+        private static AstGenericParameterDefinition CreateGenericParameter(AstIdentifier identifier)
             => new(identifier);
     }
 }

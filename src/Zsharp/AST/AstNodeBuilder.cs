@@ -220,8 +220,7 @@ namespace Zsharp.AST
         private void VisitFunctionParameter(AstFunctionParameterDefinition parameter)
         {
             var function = _builderContext.GetCurrent<AstFunctionDefinitionImpl>();
-            // TODO: why try?
-            function.FunctionType.TryAddParameter(parameter);
+            function.FunctionType.AddParameter(parameter);
 
             _builderContext.SetCurrent(parameter);
             _ = VisitChildren(parameter.Context);

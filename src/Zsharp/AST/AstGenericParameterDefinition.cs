@@ -28,6 +28,9 @@ namespace Zsharp.AST
             return Ast.SafeSet(ref _identifier, identifier);
         }
 
+        public AstTypeReference? DefaultType { get; internal set; }
+        public AstTypeReference? ConstraintType { get; internal set; }
+
         public override void Accept(AstVisitor visitor)
             => visitor.VisitGenericParameterDefinition(this);
     }
