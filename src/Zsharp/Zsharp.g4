@@ -119,7 +119,7 @@ template_param_list_use_number: SMALL_ANGLEopen number GREAT_ANGLEclose;
 template_param_list_use_type: SMALL_ANGLEopen type_ref GREAT_ANGLEclose;
 template_param_list: SMALL_ANGLEopen template_param_any (COMMA SP template_param_any)* GREAT_ANGLEclose;
 template_param_var: identifier_param type_ref_use;
-template_param_any: template_param_var | identifier_template_param;
+template_param_any: template_param_var | (COMPTIME? identifier_template_param);
 
 // aliases
 alias_module: identifier_module;
@@ -242,8 +242,8 @@ DOT: '.';
 RANGE: '..';
 SPREAD: '...';
 COMMA: ',';
-META : '#';
-COMPTIME: '#!';
+COMPTIME : '#';
+COMPTIME_DEF: '#!';
 ERROR: '!';
 STR_QUOTE: '"';
 CHAR_QUOTE: '\'';

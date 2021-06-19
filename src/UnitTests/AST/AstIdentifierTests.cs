@@ -43,7 +43,7 @@ namespace UnitTests.AST
         public void FunctionTemplateDefinitionName()
         {
             const string code =
-                "fn: <T>()" + Tokens.NewLine +
+                "fn: <#T>()" + Tokens.NewLine +
                 Tokens.Indent1 + "return" + Tokens.NewLine
                 ;
 

@@ -650,16 +650,21 @@ namespace Zsharp.AST
 
         public override object? VisitTemplate_param_any(Template_param_anyContext context)
         {
-            var templateParam = new AstTemplateParameterDefinition(context);
+            if (context.COMPTIME() is not null)
+            {
+                var templateParam = new AstTemplateParameterDefinition(context);
 
-            _builderContext.SetCurrent(templateParam);
-            _ = VisitChildren(context);
-            _builderContext.RevertCurrent();
+                _builderContext.SetCurrent(templateParam);
+                _ = VisitChildren(context);
+                _builderContext.RevertCurrent();
 
-            var template = _builderContext.GetCurrent<IAstTemplateSite<AstTemplateParameterDefinition>>();
-            template.AddTemplateParameter(templateParam);
+                var template = _builderContext.GetCurrent<IAstTemplateSite<AstTemplateParameterDefinition>>();
+                template.AddTemplateParameter(templateParam);
 
-            return templateParam;
+                return templateParam;
+            }
+
+            return null;
         }
 
         public override object? VisitTemplate_param_use(Template_param_useContext context)

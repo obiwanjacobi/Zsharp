@@ -12,7 +12,7 @@ namespace UnitTests.AST
         public void TemplateTypeDefinition()
         {
             const string code =
-                "MyStruct<T>" + Tokens.NewLine +
+                "MyStruct<#T>" + Tokens.NewLine +
                 Tokens.Indent1 + "Id: T" + Tokens.NewLine +
                 Tokens.Indent1 + "Name: Str" + Tokens.NewLine
                 ;
@@ -36,7 +36,7 @@ namespace UnitTests.AST
         public void TemplateTypeUsage()
         {
             const string code =
-                "MyStruct<T>" + Tokens.NewLine +
+                "MyStruct<#T>" + Tokens.NewLine +
                 Tokens.Indent1 + "Id: T" + Tokens.NewLine +
                 Tokens.Indent1 + "Name: Str" + Tokens.NewLine +
                 "s = MyStruct<U8>" + Tokens.NewLine +
@@ -73,7 +73,7 @@ namespace UnitTests.AST
         public void TemplateFunctionDefinition()
         {
             const string code =
-                "fn: <T>(c: U16): T" + Tokens.NewLine +
+                "fn: <#T>(c: U16): T" + Tokens.NewLine +
                 Tokens.Indent1 + "return c.T()" + Tokens.NewLine
                 ;
 

@@ -291,7 +291,7 @@ namespace UnitTests.Semantics
         public void StructTemplateInstantiation()
         {
             const string code =
-                "Struct<T>" + Tokens.NewLine +
+                "Struct<#T>" + Tokens.NewLine +
                 Tokens.Indent1 + "Id: T" + Tokens.NewLine +
                 "s = Struct<U8>" + Tokens.NewLine +
                 Tokens.Indent1 + "Id = 42" + Tokens.NewLine
@@ -333,7 +333,7 @@ namespace UnitTests.Semantics
         public void TemplateFunction()
         {
             const string code =
-                "fn: <T>(p: T): Str" + Tokens.NewLine +
+                "fn: <#T>(p: T): Str" + Tokens.NewLine +
                 Tokens.Indent1 + "return \"\"" + Tokens.NewLine +
                 "s = fn<U8>(42)" + Tokens.NewLine
                 ;

@@ -42,9 +42,9 @@ public partial class ZsharpLexer : Lexer {
 		GREQ=36, SMEQ=37, BIT_AND=38, BIT_OR=39, BIT_XOR_IMM=40, BIT_NOT=41, BIT_SHL=42, 
 		BIT_SHR=43, BIT_ROLL=44, BIT_ROLR=45, CONCAT=46, SUBopen=47, SUBclose=48, 
 		PARENopen=49, PARENclose=50, QUESTION=51, COLON=52, DOT=53, RANGE=54, 
-		SPREAD=55, COMMA=56, META=57, COMPTIME=58, ERROR=59, STR_QUOTE=60, CHAR_QUOTE=61, 
-		COMMENTstart=62, IDENTIFIERupper=63, IDENTIFIERlower=64, SP=65, TAB=66, 
-		INDENT=67, EOL=68;
+		SPREAD=55, COMMA=56, COMPTIME=57, COMPTIME_DEF=58, ERROR=59, STR_QUOTE=60, 
+		CHAR_QUOTE=61, COMMENTstart=62, IDENTIFIERupper=63, IDENTIFIERlower=64, 
+		SP=65, TAB=66, INDENT=67, EOL=68;
 	public static string[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -63,7 +63,7 @@ public partial class ZsharpLexer : Lexer {
 		"SMALL_ANGLEopen", "GREQ", "SMEQ", "BIT_AND", "BIT_OR", "BIT_XOR_IMM", 
 		"BIT_NOT", "BIT_SHL", "BIT_SHR", "BIT_ROLL", "BIT_ROLR", "CONCAT", "SUBopen", 
 		"SUBclose", "PARENopen", "PARENclose", "QUESTION", "COLON", "DOT", "RANGE", 
-		"SPREAD", "COMMA", "META", "COMPTIME", "ERROR", "STR_QUOTE", "CHAR_QUOTE", 
+		"SPREAD", "COMMA", "COMPTIME", "COMPTIME_DEF", "ERROR", "STR_QUOTE", "CHAR_QUOTE", 
 		"COMMENTstart", "IDENTIFIERupper", "IDENTIFIERlower", "IDENTIFIERpart", 
 		"SP", "TAB", "INDENT", "EOL"
 	};
@@ -97,7 +97,7 @@ public partial class ZsharpLexer : Lexer {
 		"GREQ", "SMEQ", "BIT_AND", "BIT_OR", "BIT_XOR_IMM", "BIT_NOT", "BIT_SHL", 
 		"BIT_SHR", "BIT_ROLL", "BIT_ROLR", "CONCAT", "SUBopen", "SUBclose", "PARENopen", 
 		"PARENclose", "QUESTION", "COLON", "DOT", "RANGE", "SPREAD", "COMMA", 
-		"META", "COMPTIME", "ERROR", "STR_QUOTE", "CHAR_QUOTE", "COMMENTstart", 
+		"COMPTIME", "COMPTIME_DEF", "ERROR", "STR_QUOTE", "CHAR_QUOTE", "COMMENTstart", 
 		"IDENTIFIERupper", "IDENTIFIERlower", "SP", "TAB", "INDENT", "EOL"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
