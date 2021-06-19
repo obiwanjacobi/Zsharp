@@ -51,7 +51,7 @@ Arithmetic, bitwise and logical operators.
 Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `nxor`?
 
 Operator that cascades the left value?
-So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`.
+So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`. See also [match expression](../lang/match.md).
 
 | Operator | Fn Name | Description
 |--|--|--

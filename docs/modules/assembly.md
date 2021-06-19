@@ -159,3 +159,5 @@ main: (args: IEnumerable<CommandLineArgument>): I32
 > TBD
 
 Clearly this is nowhere near the information for a full project management and build system. Do we try to force everything we need into an assembly file, or do we introduce another (project) file?
+
+- a Z# version specifier with what version of the langauge the assembly is compatible.

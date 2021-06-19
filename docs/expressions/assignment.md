@@ -221,18 +221,10 @@ a: &U8 = 42
 
 ## Deconstruction
 
-> Use `()`
-
-- `[]` says arrays
-- `{}` says objects/structs
-- `()` used for functions and lists but otherwise ok `<=`
-
-> This is not the same as a tuple!
-
 Deconstruction is _copying_ the value into a variable.
 
 ```csharp
-(a, b) = ...
+a, b = ...
 // a and b can be used as separate vars
 sum = add(a, b)
 ```
@@ -244,16 +236,16 @@ add: (a: U8, b: U8): U16
     ...
 
 // deconstruct either by name or in order (types must match exactly)
-sum = add(x)    // (a, b) = x
+sum = add(x)    // a, b = x
 // use spread operator to make deconstruction clear?
-sum = add(...x) // (a, b) = x
+sum = add(...x) // a, b = x
 ```
 
 Deconstructing an array
 
 ```C#
 // spread operator ...
-(a, b, ...rest) = [1, 2, 3, 4, 5]
+a, b, ...rest = [1, 2, 3, 4, 5]
 
 // a: U8 = 1
 // b: U8 = 2
@@ -271,7 +263,8 @@ func(...arr)    // called 5 times?
 
 func5: (p1: U8, p2: U8, p3: U8, p4: U8, p5: U8)
     ...
-func5(...arr)    // or with 5 params?
+func5(...arr)   // or with 5 params?
+func5(arr)      // without spread operator?
 
 // what if the param count does not match array item count?
 ```
@@ -288,18 +281,18 @@ s = MyStruct
     ...
 
 // partial by name
-(field1, field3) = s
+field1, field3 = s
 // field1: U8 = <value of s.Field1>
 // field3: U8 = <value of s.Field3>
 // <value of s.Field2> is not used
 
-(a, b) = s      // error! field names must match (case insensitive)
+a, b = s      // error! field names must match (case insensitive)
 // or when in-order - all fields must be specified (or ignored)
 
-(a, _) = s
+a, _ = s
 // a: U8 = <value of s.Field1>
 // <value of s.Field2 and s.Field3> are ignored
-(_, _, a) = s
+_, _, a = s
 // a: U8 = <value of s.Field3>
 // <value of s.Field1 and s.Field2> are ignored
 
@@ -315,9 +308,9 @@ Swap scalar variables (unlike structs)
 x = 42
 y = 101
 
-// left = deconstruct '()'
+// left = deconstruct
 // right = anonymous struct '{}'
-(x, y) = {y, x}
+x, y = {y, x}
 // x = 101
 // y = 42
 

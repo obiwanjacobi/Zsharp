@@ -42,7 +42,7 @@ Keyword | Description
 `ref` | explicit reference? / read-only pointer?
 `deref` | unpack a reference (too similar to defer)
 `use` | inline module imports? IDisposable wrapper?
-`any` | a type that can be anything (object)
+`any` | a type that can be anything (object) (not a keyword but a type?)
 `asm` | inline assembly (IL?)
 `with` | context variables
 `async` | async execution (state machine)
@@ -50,3 +50,7 @@ Keyword | Description
 `fun` | for pure functions?
 
 > Use `var` to make mutable variables and normal syntax is always immutable?
+
+> Use `is` to do type checking and for use in conditional expressions?
+
+> Use `as` to cast (`Option<T>`) to a type?

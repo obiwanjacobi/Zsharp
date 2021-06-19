@@ -6,7 +6,8 @@ using System.Text;
 namespace Zsharp.AST
 {
     public abstract class AstFunctionDefinition : AstFunction,
-        IAstTemplateSite<AstTemplateParameterDefinition>
+        IAstTemplateSite<AstTemplateParameterDefinition>,
+        IAstGenericSite<AstGenericParameterDefinition>
     {
         protected AstFunctionDefinition(AstTypeDefinitionFunction functionType)
         {
@@ -57,6 +58,24 @@ namespace Zsharp.AST
             _templateParameters.Add(templateParameter);
 
             Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
+            Identifier!.SymbolName.SetTemplateParameterCount(_templateParameters.Count);
+
+            return true;
+        }
+
+        public bool IsGeneric => _genericParameters.Count > 0;
+
+        private readonly List<AstGenericParameterDefinition> _genericParameters = new();
+        public IEnumerable<AstGenericParameterDefinition> GenericParameters => _genericParameters;
+
+        public virtual bool TryAddGenericParameter(AstGenericParameterDefinition genericParameter)
+        {
+            if (genericParameter is null)
+                return false;
+
+            _genericParameters.Add(genericParameter);
+
+            Ast.Guard(Identifier, "Identifier not set - cannot register generic parameter.");
             Identifier!.SymbolName.SetTemplateParameterCount(_templateParameters.Count);
 
             return true;

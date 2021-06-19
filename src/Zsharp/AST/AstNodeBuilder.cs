@@ -664,7 +664,16 @@ namespace Zsharp.AST
                 return templateParam;
             }
 
-            return null;
+            var genericParam = new AstGenericParameterDefinition(context);
+
+            _builderContext.SetCurrent(genericParam);
+            _ = VisitChildren(context);
+            _builderContext.RevertCurrent();
+
+            var genericSite = _builderContext.GetCurrent<IAstGenericSite<AstGenericParameterDefinition>>();
+            genericSite.AddGenericParameter(genericParam);
+
+            return genericParam;
         }
 
         public override object? VisitTemplate_param_use(Template_param_useContext context)
@@ -693,8 +702,13 @@ namespace Zsharp.AST
             if (template is not null)
                 typeRef.IsTemplateParameter = template.TemplateParameters
                     .OfType<AstTemplateParameterDefinition>()
-                    .Any(p =>
-                        p.Identifier?.CanonicalName == typeRef.Identifier?.CanonicalName);
+                    .Any(p => p.Identifier?.CanonicalName == typeRef.Identifier?.CanonicalName);
+
+            var generic = _builderContext.TryGetCurrent<IAstGenericSite<AstGenericParameterDefinition>>();
+            if (generic is not null)
+                typeRef.IsGenericParameter = generic.GenericParameters
+                    .OfType<AstGenericParameterDefinition>()
+                    .Any(p => p.Identifier?.CanonicalName == typeRef.Identifier?.CanonicalName);
 
             var trSite = _builderContext.GetCurrent<IAstTypeReferenceSite>();
             trSite.SetTypeReference(typeRef);

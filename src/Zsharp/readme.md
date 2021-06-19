@@ -13,7 +13,6 @@
 - Move all Semantic errors to CheckRules.
 - Need a (source file) Location class around Antlr Context.
 - Validate Template instantiation parameters with template definition.
-- Add GenericParameters besides TemplateParameters (fix grammar #)
 - Expression Operators may need to increase the resulting type (U8 * U8 = U16).
     RetVal of operator overload determines resulting type.
     Type of target (variable) determines resulting type.
@@ -28,6 +27,9 @@
 - Importing External modules does not find nested public types (Zsharp.Runtime.Conversion.Checked).
 - Check if ResolveDefinition for variable expression operand is still 'optimal'.
     It looks a bit convoluted.
+
+- Add GenericParameters besides TemplateParameters (fix grammar #)
+    - AstSymbolName: fix hybrid generic/template postfixes.
 
 ---
 

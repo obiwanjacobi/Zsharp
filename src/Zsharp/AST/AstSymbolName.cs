@@ -18,6 +18,7 @@ namespace Zsharp.AST
     {
         public const char Separator = '.';
         public const char TemplateDelimiter = '%';
+        public const char GenericDelimiter = '`';
         public const char ParameterDelimiter = ';';
 
         private AstSymbolName(string[] parts, string templatePostfix, bool isCanonical)
@@ -118,6 +119,9 @@ namespace Zsharp.AST
 
         public void SetTemplateParameterCount(int count)
             => TemplatePostfix = $"{TemplateDelimiter}{count}";
+
+        public void SetGenericParameterCount(int count)
+            => TemplatePostfix = $"{GenericDelimiter}{count}";
 
         public void AddTemplateParameter(string? name)
         {

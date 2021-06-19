@@ -172,6 +172,16 @@ namespace Zsharp.AST
             templateParameter.VisitChildren(this);
         }
 
+        public virtual void VisitGenericParameterDefinition(AstGenericParameterDefinition genericParameter)
+        {
+            genericParameter.VisitChildren(this);
+        }
+
+        public virtual void VisitGenericParameterReference(AstGenericParameterReference genericParameter)
+        {
+            genericParameter.VisitChildren(this);
+        }
+
         public virtual void VisitVariableDefinition(AstVariableDefinition variable)
         {
             variable.VisitChildren(this);

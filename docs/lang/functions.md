@@ -1294,6 +1294,45 @@ fnAsync: (): Task<U8>
 
 ---
 
+### Parallel Function Calls
+
+An easy syntax to start multiple parallel functions calls without blocking for the result.
+
+Functions without return values:
+
+```csharp
+fn1: (p: U8)
+    ...
+fn2: (f: F64)
+    ...
+fn3: (s: Str)
+    ...
+
+// list invoke?
+// make a list of 'actions' and invoke them in parallel
+// a list does suggest a sequence, an order...
+(fn1(42), fn2(3.1415), fn3("42"))()
+```
+
+Functions with return values??
+
+```csharp
+// how??
+```
+
+Async functions (standard .NET)
+
+```csharp
+task1 = fn1Async(42)
+task2 = fn2Async(3.1415)
+task3 = fn3Async("42")
+
+// wait for all (deconstruct results into vars)
+(res1, res2, res3) = await (task1, task2, task3)
+```
+
+---
+
 > TBD
 
 Interpret the function parameters `(param: U8)` as a tuple. That means that all functions only have only one actual param, which is a single tuple and is passed by reference (as an optimization), but by value conceptually.

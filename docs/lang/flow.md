@@ -148,12 +148,18 @@ loop h in [0..10]
 ```
 
 Loop with lambda?
+
+```csharp
+loop i in [0..10]
+    (i) -> log("Now at {i}.`n")
+
+// short syntax?
+loop [0..10] (i) -> log("Now at {i}.`n")
+```
+
 Loop with Function?
 
 ```csharp
-loop n in [0..10]
-    (n) => log("Now at {n}.`n")
-
 loop [0..10]
     LogInt
 
@@ -161,12 +167,73 @@ loop [0..10]
 loop [0..10] -> LogInt
 ```
 
-> TBD Functional loops. Pass in a function or a lambda as a loop body.
+Custom Iterator function (.NET Enumerable/Enumerator)
 
 ```csharp
 // iterator function
 loop n in Iter()
     work_with_n
+```
+
+TODO
+> Parallel Loops
+
+Only loops with function bodies (.NET: TPL and PLINQ).
+
+```csharp
+// operator? (implies AsParallel)
+loop [0..10] ->> LogInt
+
+// (static) partition function
+loop [0..10].Partition(3) -> LogInt
+
+// AsParallel function (.NET)
+loop [0..10].AsParallel() -> LogInt
+```
+
+Cancelling parallel processing (CancellationToken)?
+
+```csharp
+c = CancellationSource
+loop IterObjects() ->> LogInt
+```
+
+> Async Loops
+
+```csharp
+// await keyword?
+await loop n in IterAsync()
+    ...
+```
+
+---
+
+### Cycle\<T> Type
+
+An array of values that are cycled through each time it is read.
+`Cycle<T>` is a self-restarting iterator (enumerator).
+
+```csharp
+c = Cycle(1, 2, 3, 4, 5)
+
+m = c   // 1
+n = c   // 2
+o = c   // 3
+p = c   // 4
+q = c   // 5
+r = c   // 1
+s = c   // 2
+t = c   // 3
+```
+
+For use in loops typically.
+
+```csharp
+c = Cycle(1, 2, 3, 4, 5)
+
+loop i in [0..10]
+    // i = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+    // c = 1, 2, 3, 4, 5, 1, 2, 3, 4, 5
 ```
 
 ---
