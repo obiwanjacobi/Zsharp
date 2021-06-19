@@ -185,7 +185,8 @@ namespace Zsharp.Semantics
             {
                 var symbol = varRef.Symbol;
 
-                // variable.TypeReference can be null
+                // Variable.TypeReference is usually null.
+                // It is set only when type is explicitly in source code, or has been inferred.
                 var varDef = new AstVariableDefinition(varRef.TypeReference?.MakeCopy());
                 varDef.SetIdentifier(varRef.Identifier!);
                 varDef.SetSymbol(symbol!);

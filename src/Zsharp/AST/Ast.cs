@@ -52,7 +52,7 @@ namespace Zsharp.AST
             where T : class
         {
             if (instance is null)
-                throw new InternalErrorException($"{typeof(T).Name} is null: {message}  {caller}");
+                throw new InternalErrorException($"{typeof(T).Name} is null: {message} {caller}");
         }
     }
 }

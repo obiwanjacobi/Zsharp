@@ -32,25 +32,23 @@ namespace Zsharp.AST
         {
             Ast.Guard(moduleCtx, "Context is null.");
             var moduleName = AstSymbolName.ToCanonical(moduleCtx.module_name().GetText());
-
-            var module = FindModule<AstModulePublic>(moduleName);
-            if (module is null)
-            {
-                module = new AstModulePublic(moduleName);
-                _modules.Add(moduleName, module);
-            }
-
+            var module = CreateModule(moduleName);
             module.AddModule(moduleCtx);
+            return module;
+        }
+
+        private AstModulePublic CreateModule(string moduleName)
+        {
+            var module = new AstModulePublic(moduleName);
+            _modules.Add(moduleName, module);
+            SymbolTable.Add(module);
             return module;
         }
 
         public AstModule GetOrAddModule(string moduleName)
         {
             if (!_modules.TryGetValue(moduleName, out AstModule? module))
-            {
-                module = new AstModulePublic(moduleName);
-                _modules.Add(moduleName, module);
-            }
+                module = CreateModule(moduleName);
 
             return module;
         }

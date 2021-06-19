@@ -54,7 +54,7 @@ namespace UnitTests.AST
 
             var module = Build.Module(code);
 
-            var symbol = module.Symbol.SymbolTable.FindSymbol("mymod");
+            var symbol = module.Symbol.SymbolTable.FindSymbol("mymod", AstSymbolKind.Module);
             symbol.SymbolKind.Should().Be(AstSymbolKind.Module);
         }
 
@@ -68,10 +68,10 @@ namespace UnitTests.AST
 
             var module = Build.Module(code);
 
-            var symbol = module.Symbol.SymbolTable.FindSymbol("mymod1");
+            var symbol = module.Symbol.SymbolTable.FindSymbol("mymod1", AstSymbolKind.Module);
             symbol.SymbolKind.Should().Be(AstSymbolKind.Module);
 
-            symbol = module.Symbol.SymbolTable.FindSymbol("mymod2");
+            symbol = module.Symbol.SymbolTable.FindSymbol("mymod2", AstSymbolKind.Module);
             symbol.SymbolKind.Should().Be(AstSymbolKind.Module);
         }
 

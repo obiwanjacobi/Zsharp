@@ -85,7 +85,7 @@ namespace Zsharp.AST
         {
             Ast.Guard(node, "Cannot add null.");
 
-            if (node is AstModuleExternal ||
+            if (node is AstModule ||
                 node is AstFunctionParameterDefinition ||
                 node is AstVariableDefinition ||
                 node is AstTypeDefinition ||

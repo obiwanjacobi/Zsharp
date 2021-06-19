@@ -157,10 +157,10 @@ namespace Zsharp.AST
         public IEnumerable<AstSymbol> FindSymbols(AstSymbolKind symbolKind)
             => _table.Values.Where(s => s.SymbolKind == symbolKind);
 
-        public AstSymbol? FindSymbol(string name, AstSymbolKind kind = AstSymbolKind.NotSet)
+        public AstSymbol? FindSymbol(string name, AstSymbolKind kind)
             => FindSymbol(AstSymbolName.Parse(name, AstSymbolNameParseOptions.IsCanonical), kind);
 
-        public AstSymbol? FindSymbol(AstSymbolName symbolName, AstSymbolKind kind = AstSymbolKind.NotSet)
+        public AstSymbol? FindSymbol(AstSymbolName symbolName, AstSymbolKind kind)
         {
             Ast.Guard(symbolName.IsCanonical, "All symbol names must be a canonical name.");
             AstSymbol? symbol;
