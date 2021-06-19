@@ -28,8 +28,7 @@
 - Check if ResolveDefinition for variable expression operand is still 'optimal'.
     It looks a bit convoluted.
 
-- Add GenericParameters besides TemplateParameters (fix grammar #)
-    - AstSymbolName: fix hybrid generic/template postfixes.
+- AstSymbolName: fix hybrid generic/template postfixes.
 
 ---
 

@@ -9,7 +9,7 @@ namespace Zsharp.Runtime
         private readonly T _value;
 
         public T Current => _value;
-        object IEnumerator.Current => _value;
+        object? IEnumerator.Current => _value;
 
         public bool MoveNext()
         {

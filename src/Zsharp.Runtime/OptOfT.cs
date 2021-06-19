@@ -6,7 +6,7 @@ namespace Zsharp.Runtime
 {
     public abstract class Opt
     {
-        public const string NothingText = "Nothing";
+        public const string NothingText = "<Nothing>";
 
         private readonly bool _hasValue;
         public bool HasValue => _hasValue;
@@ -25,27 +25,27 @@ namespace Zsharp.Runtime
             => _value = valueOrEmpty.SingleOrDefault();
 
         // Nullable interface
-        private readonly T _value;
+        private readonly T? _value;
         public T Value
         {
             get
             {
                 if (HasValue)
-                    return _value;
+                    return _value!;
                 throw new InvalidOperationException("The Option has no Value.");
             }
         }
 
-        public T GetValueOrDefault()
+        public T? GetValueOrDefault()
             => _value;
         public T GetValueOrDefault(T defaultValue)
-            => HasValue ? _value : defaultValue;
+            => HasValue ? _value! : defaultValue;
 
-        public bool TryGetValue(out T value)
+        public bool TryGetValue(out T? value)
         {
             if (HasValue)
             {
-                value = _value;
+                value = _value!;
                 return true;
             }
 
@@ -63,7 +63,7 @@ namespace Zsharp.Runtime
                 throw new ArgumentNullException(nameof(selector));
 
             if (HasValue)
-                return new Opt<R>(selector(_value));
+                return new Opt<R>(selector(_value!));
 
             return Opt<R>.Nothing;
         }
@@ -74,7 +74,7 @@ namespace Zsharp.Runtime
                 throw new ArgumentNullException(nameof(selector));
 
             if (HasValue)
-                return selector(_value);
+                return selector(_value!);
 
             return Opt<R>.Nothing;
         }
@@ -84,7 +84,7 @@ namespace Zsharp.Runtime
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            if (HasValue && predicate(_value))
+            if (HasValue && predicate(_value!))
                 return this;
 
             return Nothing;
@@ -100,18 +100,18 @@ namespace Zsharp.Runtime
                 throw new ArgumentNullException(nameof(selector));
 
             if (HasValue)
-                return selector(_value);
+                return selector(_value!);
 
             return Opt<R>.Nothing;
         }
 
         // (ternary) conditional operator works same as Match
         // val = optVal ? true : false
-        public R Match<R>(Func<T, R> some, R none = default)
-            => HasValue ? some(_value) : none;
+        public R? Match<R>(Func<T, R> some, R? none = default)
+            => HasValue ? some(_value!) : none;
 
-        public override string ToString()
-            => HasValue ? _value.ToString() : NothingText;
+        public override string? ToString()
+            => HasValue ? _value!.ToString() : NothingText;
 
         // operator overloads
         public static implicit operator Opt<T>(T value)
@@ -129,23 +129,23 @@ namespace Zsharp.Runtime
 
         public IEnumerator<T> GetEnumerator()
             => HasValue
-            ? new SingleValueEnumerator<T>(_value)
+            ? new SingleValueEnumerator<T>(_value!)
             : Enumerable.Empty<T>().GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             => GetEnumerator();
 
         public bool Equals(T? other)
-            => HasValue && _value.Equals(other);
+            => HasValue && _value!.Equals(other);
 
         public bool Equals(Opt<T>? other)
         {
             if (other is not null && HasValue && other.HasValue)
-                return _value.Equals(other.Value);
+                return _value!.Equals(other.Value);
             return false;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null)
                 return !HasValue;
@@ -157,7 +157,7 @@ namespace Zsharp.Runtime
         }
 
         public override int GetHashCode()
-            => HasValue ? _value.GetHashCode() : 0;
+            => HasValue ? _value!.GetHashCode() : 0;
 
         public static readonly Opt<T> Nothing = new();
     }
