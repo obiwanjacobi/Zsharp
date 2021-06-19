@@ -134,20 +134,16 @@ namespace Zsharp.Semantics
 
                 if (var.TypeReference is null)
                 {
-                    var def =
-                        (IAstTypeReferenceSite?)var.VariableDefinition ?? var.ParameterDefinition;
+                    var def = (IAstTypeReferenceSite?)
+                        var.VariableDefinition ?? var.ParameterDefinition;
 
-                    var typeRef = def?.TypeReference ?? FindTypeReference(var);
+                    var typeRef = def?.TypeReference;
                     if (typeRef is not null)
-                    {
                         var.SetTypeReference(typeRef.MakeCopy());
-                    }
                 }
 
                 if (var.TypeReference is not null)
-                {
                     operand.SetTypeReference(var.TypeReference.MakeCopy());
-                }
             }
 
             var fld = operand.FieldReference;
@@ -169,7 +165,6 @@ namespace Zsharp.Semantics
 
             if (operand.TypeReference is not null)
                 Visit(operand.TypeReference);
-
         }
 
         private void AssignInferredType(AstExpressionOperand operand, AstTypeDefinition typeDef)
@@ -371,42 +366,6 @@ namespace Zsharp.Semantics
             }
 
             type!.VisitChildren(this);
-        }
-
-        private AstTypeReference? FindTypeReference(AstNode? node)
-        {
-            if (node is null)
-                return null;
-
-            if (node is AstTypeReference typeRefNode)
-                return typeRefNode;
-
-            AstTypeReference? typeRef = null;
-
-            // down into expression
-            if (node is AstExpression expression)
-            {
-                typeRef = expression.TypeReference
-                    ?? expression.RHS?.TypeReference
-                    ?? expression.LHS?.TypeReference
-                    ?? FindTypeReference(expression.RHS?.Expression)
-                    ?? FindTypeReference(expression.LHS?.Expression)
-                    ;
-            }
-            else if (node is IAstTypeReferenceSite typeRefSite)
-            {
-                typeRef = typeRefSite.TypeReference;
-            }
-
-            // up to parent
-            var parent = node.Parent;
-
-            if (parent is not null && typeRef is null)
-            {
-                typeRef = FindTypeReference(parent);
-            }
-
-            return typeRef;
         }
 
         private AstTypeDefinition? FindTypeByBitCount(UInt32 bitCount, AstNumericSign sign)

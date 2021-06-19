@@ -25,10 +25,9 @@
     and does not support partial templates (missing TemplateParameters).
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
 - Importing External modules does not find nested public types (Zsharp.Runtime.Conversion.Checked).
-- Check if ResolveDefinition for variable expression operand is still 'optimal'.
-    It looks a bit convoluted.
 
 - AstSymbolName: fix hybrid generic/template postfixes.
+- GenericParameterReference is probably never going to be used: impossible to detect at parse time (only after resolve definition).
 
 ---
 
