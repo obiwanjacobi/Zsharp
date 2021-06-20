@@ -102,11 +102,19 @@ s = "Answer to everything is '{v:x}'"
 // Answer to everything is '2a'
 ```
 
-Using the `{}` characters as is in a string literal, requires the escape sequence `.
+Alternate syntax?
+
+```C#
+v = 42
+s = "Answer to everything is '$v'"
+s = "Answer to everything is '$v:x'"
+```
 
 > More on formatting floats, dates, etc.
 
 > What character to use to disable string features like formatting? `@`
+
+Using the `{}` characters as is in a string literal, requires the escape sequence `.
 
 ```C#
 // escape braces

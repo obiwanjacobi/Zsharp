@@ -54,11 +54,27 @@ if(42)          // function call (no space)
 
 Note that `if` is a reserved keyword and no named language element can have the same name as a reserved keyword. Maybe have an escape character?
 
+### Range Conditions
+
+```csharp
+a = 42
+if a in [0..100]        // true
+    ...
+```
+
+```csharp
+a = 42
+if a not in [0..100]    // false
+if not a in [0..100]    // ?
+    ...
+```
+
+
 ---
 
 ## Return
 
-todo
+To return a value from a function.
 
 ### Return Expressions
 
@@ -84,6 +100,8 @@ fn3: (): Bool
 
 todo
 
+Co-routines.
+
 ---
 
 ## Loops
@@ -107,10 +125,29 @@ loop true
     endless_loop
 ```
 
+A do-until loop is not supported but can be easily constructed. A do-while loop has to be converted to a do-until loop (invert the condition).
+
+```csharp
+a = 42
+loop
+    // a = 42, 41, 40, 39 ... 3, 2, 1
+    a -= 1
+    // until condition
+    if a =< 0 -> break
+```
+
 A 'for' or 'for-each' loop is constructed using a `Range`.
 
 ```C#
 loop n in [0..10]
+    foreach_n_0_to_9
+```
+
+> `loop` cannot be used with a range condition (as used in if). No way to tell the difference. Or do we need a different syntax for iteration?
+
+```C#
+// explicit to differ from range-condition
+loop n in [0..10].GetEnumerator()
     foreach_n_0_to_9
 ```
 
@@ -122,14 +159,20 @@ loop 42
 
 c = 42
 loop c
-    do_this_42_times    // is c available (value=42)
+    do_this_42_times    // c is available (value=42)
 ```
+
+> What happens when c is modified inside the loop?
 
 Reverse loop
 
 ```csharp
 loop n in -[0..5]
     n_from_4_to_0
+
+// or using step?
+loop n in [0..5:-1]
+    ...
 ```
 
 > TODO: loop with more than one range? Hard to control behavior.
@@ -160,8 +203,8 @@ loop [0..10] (i) -> log("Now at {i}.`n")
 Loop with Function?
 
 ```csharp
-loop [0..10]
-    LogInt
+loop i in [0..10]
+    LogInt(i)
 
 // short syntax?
 loop [0..10] -> LogInt
@@ -174,6 +217,8 @@ Custom Iterator function (.NET Enumerable/Enumerator)
 loop n in Iter()
     work_with_n
 ```
+
+---
 
 TODO
 > Parallel Loops

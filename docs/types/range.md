@@ -51,6 +51,8 @@ A third optional parameter for a range is the step the value takes on each itera
 
 If no step is specified it is always 1. This means that non-normalized ranges with start > end, will not iterate - a behavior that is most useful/common/expected I think.
 
+> `.NET`: how does C# behave concerning non-normalized ranges and iteration?
+
 ### Dimensions
 
 > TBD
@@ -98,7 +100,7 @@ s = Slice(a, r) // Slice<T> object
 i = GetIter(s)  // Iter<T> object
 ```
 
-> TBD Use ranges for value range checking?
+> Use ranges for value range checking (range-condition).
 
 ```csharp
 x = 42
@@ -150,12 +152,12 @@ Current: <T>(self: ArrIter<T>)
 
 ```csharp
 Slice<T>
-    ptr: Ptr<T>
+    ptr: Ptr<T>     // ptr to first element
     length: U32
 
 Slice<T>
-    ptr: Ptr<T>
-    offset: U32
+    ptr: Ptr<T>     // pointer to object
+    offset: U32     // offset to first element
     length: U32
 ```
 

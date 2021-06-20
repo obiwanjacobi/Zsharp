@@ -2,6 +2,8 @@
 
 Interfaces are the means to polymorphism without using objects (in an OOP sense).
 
+---
+
 ## Function Interface
 
 Function interfaces are a prototype for a singe function. Usually used as a callback or delegate. 
@@ -28,6 +30,8 @@ r = callFn(fnImpl)      // r = 0x24
 The function interface is simply a function declaration. It ends with a `_` to indicate it is not a function definition and contains no implementation.
 
 Function interfaces are syntactically different from Object interfaces - so an object interface with one function cannot be mixed up/interchanged with a function interface.
+
+---
 
 ## Object Interface
 
@@ -69,6 +73,8 @@ CompanionInterface<#S: TemplateInterface>
 // The interface can only be implemented on types that also implement TemplateInterface (with any T).
 ```
 
+---
+
 ### Implement an interface
 
 ```C#
@@ -97,6 +103,8 @@ interfunc(a, 42)
 The interface implementation functions are matched based on the function name, template parameters, function parameter types and its return type. The `self` parameter type may be derived from other types but must match exactly.
 
 A compile time error is generated when the compiler detects that an interface is not fully implemented for a specific type of `self`.
+
+---
 
 ### Test for Interface Implementation
 

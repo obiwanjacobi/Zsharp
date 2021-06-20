@@ -18,9 +18,7 @@ I am still playing with the syntax, concepts and constructs of the language. Thi
 
 ## Community
 
-I have created a [group on Facebook](https://www.facebook.com/groups/724275751426108/) for discussing Z#.
-
-You can also [join the Z# Discord server](https://discord.gg/5r9YMXHrYU).
+You can [join the Z# Discord server](https://discord.gg/5r9YMXHrYU).
 
 ---
 

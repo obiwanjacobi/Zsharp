@@ -390,20 +390,34 @@ aliasFn(42)
 
 Aliases are syntactic sugar that are resolved at compile time.
 
-## Partial Application
+---
 
-The alias syntax is also used for partial application. In this case the function body of the composite function (alias) is not compiled into code but used as a composition template.
+## Expression Body Functions
+
+Syntax is similar to the alias-syntax but not quite.
 
 ```csharp
-fn: (p: U8, s: Str)
+// return type is inferred
+add: (x: U8, y: U8) = x + y
+
+a = add(42, 101)
+```
+
+---
+
+## Partial Application
+
+The Expression body syntax is also used for partial application. In this case the function body of the composite function (alias) is not compiled into code but used as a composition template.
+
+```csharp
+fn: (p: U8, s: Str): Bool
     ...
 
-// alias with body => composition
-fnPartial= (p: Str)
-    fn(42, p)
+// expression body => composition
+fnPartial (p: Str) = fn(42, p)
 
 // calls fn(42, "42")
-fnPartial("42")
+b = fnPartial("42")
 ```
 
 ---
@@ -421,6 +435,14 @@ s = MyStruct
 
 s.boundFn()
 boundFn(s)
+```
+
+Alternate syntax?
+
+```csharp
+MyStruct.boundFn: (p: U8)
+    // still use the 'self' keyword
+    self.fld1 = p
 ```
 
 When calling a bound function, the 'self' parameter can be used as an 'object' using a dot-notation or simply passed as a first parameter. Matching type-bound functions to their types is done as follows:
@@ -598,6 +620,43 @@ If both the return type as well as the first parameter type are the same and imm
 If multiple overloads exist, standard overload resolution is applied to choose the correct function to call.
 
 More information on [Type Constructors](types.md#Type-Constructors) and [Conversions](conversions.md).
+
+---
+
+## Infix Functions
+
+A function that complies with specific requirements can be used in 'infix' notation, in between its arguments.
+
+An infix function:
+
+- must have a `self` parameter
+- must have exactly one addition parameter
+- must have a return type
+
+```csharp
+plus: (self: U8, p: U8): U16
+    return self + p
+
+a = 42
+x = a plus 101      // infix
+x = a.plus(101)     // bound
+x = plus(a, 101)    // flat
+
+// chain
+x = a plus 101 plus 12 plus 97 plus 4
+```
+
+Also valid
+
+```csharp
+plus: (self: U8, arr: Array<U8>): U16
+    ...
+
+a = 42
+x = a plus (101, 12, 97, 4)     // array param
+```
+
+Note that this is different from the poor-mans property syntax where a getter has only a `self` parameter and a return type and a setter has a `self` and one parameter but no return type.
 
 ---
 

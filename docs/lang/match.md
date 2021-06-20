@@ -14,6 +14,7 @@ a = match v
     x ->        // by variable value
     n: U8 ->    // by type (with var name)
     Str ->      // by type (without var name)
+    is Str ->   // use is?
     s: MyStruct ? s.fld1 = 20 ->  // by type with filter
     o: OtherStruct { fld1: 42, fld2: "42" } -> // by (property) prototype
     _ ->        // default (ignore) case
@@ -104,6 +105,23 @@ r = match list
     () -> 0     // match empty list (tuple syntax)
     (x) -> x    // match list with one item.
     (x, ...lst) -> recurse(lst) + x    // recursive sum function
+```
+
+---
+
+> TBD
+
+The match expression always yields a result. It would be nice to be able to use pattern matching without having to return a result. Basically allow a void-match (statement).
+
+```csharp
+log: (txt: Str)
+    ...
+
+a = 42
+match a
+    = 42 -> log("This is the answer!")
+    > 100 -> log("bigger than 100")
+    I32 -> log("This int is smaller than 100 and its not 42.")
 ```
 
 ---

@@ -114,6 +114,8 @@ There is one type that cannot be used:
 MyEnum: Bool        // error!
 ```
 
+---
+
 ## Usage
 
 When using an enum, the type name has to be specified too:

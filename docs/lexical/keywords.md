@@ -13,7 +13,7 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 | `return` | Exit a Function
 | `ret` | Alternative return?
 | `yield` | Exits a Coroutine Function
-| `in` | Iterating values
+| `in` | Iterating values / range condition *
 | `self` | A bound Type
 | `try` | Propagate if Error
 | `catch` | Handle Error
@@ -22,6 +22,16 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 ---
 
 > These keywords are reserved words and cannot be used as [identifiers](identifiers.md) in the code.
+
+*) as an alternative for collections that support 'Contains'?
+
+```csharp
+arr = (1, 2, 3, 4, 5)
+if 42 in arr        // false
+    ...
+
+// can also use in a match expression?
+```
 
 ## Operators
 
@@ -50,6 +60,7 @@ Keyword | Description
 `fun` | for pure functions?
 
 > Use `var` to make mutable variables and normal syntax is always immutable?
+Kotlin uses val for constants/immutable and var for mutable vars.
 
 > Use `is` to do type checking and for use in conditional expressions?
 
