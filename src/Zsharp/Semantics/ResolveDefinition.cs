@@ -262,8 +262,7 @@ namespace Zsharp.Semantics
                     if (function.IsTemplate)
                     {
                         var symbol = function.Symbol!;
-                        var templateFunction = symbol.SymbolTable.FindDefinition<AstFunctionDefinition>(
-                            function.Identifier!.SymbolName.TemplateDefinitionName, AstSymbolKind.Function);
+                        var templateFunction = FindTemplateDefinition<AstFunctionDefinition>(function, AstSymbolKind.Function);
 
                         if (templateFunction is not null)
                         {
@@ -337,9 +336,8 @@ namespace Zsharp.Semantics
                 {
                     if (type.IsTemplate)
                     {
-                        var symbol = type.Symbol;
-                        var typeTemplate = symbol!.SymbolTable.FindDefinition<AstTypeDefinition>(
-                            type.Identifier!.SymbolName.TemplateDefinitionName, AstSymbolKind.Type);
+                        var symbol = type.Symbol!;
+                        var typeTemplate = FindTemplateDefinition<AstTypeDefinition>(type, AstSymbolKind.Type);
 
                         if (typeTemplate is AstTypeDefinitionStruct structTemplate)
                         {
@@ -393,6 +391,20 @@ namespace Zsharp.Semantics
             var typeDef = FindTypeDefinition(GlobalSymbols!, typeName);
             return typeDef;
         }
+
+        private T? FindTemplateDefinition<T>(IAstIdentifierSite identifierSite, AstSymbolKind symbolKind)
+            where T : class
+        {
+            var templateDef = SymbolTable!.FindDefinition<T>(
+                identifierSite.Identifier!.SymbolName.TemplateDefinitionName, symbolKind);
+
+            if (templateDef is null)
+                templateDef = SymbolTable!.FindDefinition<T>(
+                    identifierSite.Identifier!.SymbolName.GenericDefinitionName, symbolKind);
+
+            return templateDef;
+        }
+
 
         private static AstTypeDefinition? FindTypeDefinition(AstSymbolTable symbols, string typeName)
             => symbols.FindDefinition<AstTypeDefinition>(typeName, AstSymbolKind.Type);

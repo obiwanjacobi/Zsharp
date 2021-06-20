@@ -115,6 +115,30 @@ namespace Zsharp.AST
             }
         }
 
+        public string GenericDefinitionName
+        {
+            get
+            {
+                if (TemplatePostfix.Contains(GenericDelimiter))
+                {
+                    return ToString(TemplatePostfix);
+                }
+
+                if (TemplatePostfix.Contains(TemplateDelimiter))
+                {
+                    return ToString(TemplatePostfix.Replace(TemplateDelimiter, GenericDelimiter));
+                }
+
+                if (TemplatePostfix.Contains(ParameterDelimiter))
+                {
+                    var parts = TemplatePostfix.Split(ParameterDelimiter);
+                    return ToString($"{GenericDelimiter}{parts.Length - 1}");
+                }
+
+                return String.Empty;
+            }
+        }
+
         public string TemplatePostfix { get; internal set; }
 
         public void SetTemplateParameterCount(int count)

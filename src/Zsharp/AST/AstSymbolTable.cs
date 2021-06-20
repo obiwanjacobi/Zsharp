@@ -249,6 +249,10 @@ namespace Zsharp.AST
                 if (symbol is not null)
                     return symbol;
             }
+
+            if (ParentTable is not null)
+                return ParentTable.FindSymbolInModules(symbolName, symbolKind);
+
             return null;
         }
 

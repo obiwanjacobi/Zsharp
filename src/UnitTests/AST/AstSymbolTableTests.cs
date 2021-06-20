@@ -59,6 +59,34 @@ namespace UnitTests.AST
         }
 
         [TestMethod]
+        public void ImportRuntimeGenericFunction()
+        {
+            const string code =
+                "" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code, Compile.CreateModuleLoader());
+            var symbols = file.Symbols;
+
+            var fn = symbols.FindDefinition<AstFunctionDefinitionExternal>("Array`1", AstSymbolKind.Function);
+            fn.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void ImportRuntimeGenericType()
+        {
+            const string code =
+                "" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code, Compile.CreateModuleLoader());
+            var symbols = file.Symbols;
+
+            var type = symbols.FindDefinition<AstTypeDefinitionExternal>("Opt`1", AstSymbolKind.Type);
+            type.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void ExportFunctionName()
         {
             const string code =

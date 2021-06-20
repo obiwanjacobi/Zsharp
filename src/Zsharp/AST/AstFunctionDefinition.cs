@@ -76,7 +76,7 @@ namespace Zsharp.AST
             _genericParameters.Add(genericParameter);
 
             Ast.Guard(Identifier, "Identifier not set - cannot register generic parameter.");
-            Identifier!.SymbolName.SetTemplateParameterCount(_templateParameters.Count);
+            Identifier!.SymbolName.SetGenericParameterCount(_genericParameters.Count);
 
             return true;
         }

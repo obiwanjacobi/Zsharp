@@ -18,6 +18,9 @@ namespace UnitTests.AST
                 ;
 
             var file = Build.File(code);
+            var symbol = file.Symbols.FindSymbol("Mystruct%1", AstSymbolKind.Type);
+            symbol.Should().NotBeNull();
+
             var s = file.CodeBlock.LineAt<AstTypeDefinitionStruct>(0);
             s.Symbol.Definition.Should().Be(s);
             s.BaseType.Should().BeNull();
