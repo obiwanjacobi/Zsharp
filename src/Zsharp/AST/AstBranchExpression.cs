@@ -3,7 +3,7 @@
 namespace Zsharp.AST
 {
     public class AstBranchExpression : AstBranch,
-        IAstExpressionSite
+        IAstCodeBlockSite, IAstExpressionSite
     {
         public AstBranchExpression(Statement_returnContext context)
             : base(AstBranchKind.ExitFunction)
@@ -11,9 +11,48 @@ namespace Zsharp.AST
             Context = context;
         }
 
+        public AstBranchExpression(Statement_loop_infiniteContext context)
+            : base(AstBranchKind.Loop)
+        {
+            Context = context;
+
+            // loop true
+            var trueExpression = new AstExpression(context);
+            trueExpression.Add(
+                new AstExpressionOperand(
+                    new AstLiteralBoolean(true)));
+
+            this.SetExpression(trueExpression);
+        }
+
+        public AstBranchExpression(Statement_loop_iterationContext context)
+            : base(AstBranchKind.Loop)
+        {
+            Context = context;
+        }
+
+        public AstBranchExpression(Statement_loop_whileContext context)
+            : base(AstBranchKind.Loop)
+        {
+            Context = context;
+        }
+
         protected AstBranchExpression(AstBranchKind branchKind)
             : base(branchKind)
         { }
+
+        private AstCodeBlock? _codeBlock;
+        public AstCodeBlock? CodeBlock => _codeBlock;
+
+        public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
+        {
+            if (this.SafeSetParent(ref _codeBlock, codeBlock))
+            {
+                codeBlock!.Indent = Indent + 1;
+                return true;
+            }
+            return false;
+        }
 
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;

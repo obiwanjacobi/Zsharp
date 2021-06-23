@@ -26,9 +26,10 @@ statement_else: indent ELSE newline codeblock;
 statement_elseif: indent ELSE SP IF SP expression_logic newline codeblock;
 statement_break: indent BREAK;
 statement_continue: indent CONTINUE;
-statement_loop: indent (statement_loop_infinite | statement_loop_while) newline codeblock;
-statement_loop_infinite: LOOP;
-statement_loop_while: LOOP SP expression_logic;
+statement_loop: indent (statement_loop_infinite | statement_loop_iteration | statement_loop_while);
+statement_loop_infinite: LOOP newline codeblock;
+statement_loop_iteration: LOOP SP expression_iteration newline codeblock;
+statement_loop_while: LOOP SP expression_logic newline codeblock;
 
 // definition
 definition_top: function_def | enum_def | struct_def 
@@ -51,7 +52,7 @@ expression_arithmetic:
     | operator_arithmetic_unary expression_arithmetic
     | operator_bits_unary expression_arithmetic
     | arithmetic_operand;
-arithmetic_operand: number | variable_ref | function_use ;
+arithmetic_operand: number | variable_ref | function_use;
 
 expression_logic: 
       expression_logic SP operator_logic SP expression_logic
@@ -67,6 +68,8 @@ expression_comparison:
 comparison_operand: function_use | variable_ref | literal | expression_arithmetic;
 
 expression_bool: literal_bool | variable_ref | function_use;
+
+expression_iteration: variable_ref SP IN SP MINUS_NEG? range;
 
 // functions
 function_def: identifier_func COLON SP template_param_list? PARENopen function_parameter_list? PARENclose function_return_type? newline codeblock;
@@ -120,6 +123,12 @@ template_param_list_use_type: SMALL_ANGLEopen type_ref GREAT_ANGLEclose;
 template_param_list: SMALL_ANGLEopen template_param_any (COMMA SP template_param_any)* GREAT_ANGLEclose;
 template_param_var: identifier_param type_ref_use;
 template_param_any: template_param_var | (COMPTIME? identifier_template_param);
+
+// range
+range: SUBopen range_begin? RANGE range_end? (COLON range_step)? SUBclose;
+range_begin: expression_value;
+range_end: expression_value;
+range_step: expression_value;
 
 // aliases
 alias_module: identifier_module;

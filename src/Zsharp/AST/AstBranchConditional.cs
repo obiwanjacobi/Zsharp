@@ -3,8 +3,7 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstBranchConditional : AstBranchExpression,
-        IAstCodeBlockSite
+    public class AstBranchConditional : AstBranchExpression
     {
         public AstBranchConditional(Statement_ifContext context)
             : base(AstBranchKind.Conditional)
@@ -26,19 +25,6 @@ namespace Zsharp.AST
             : base(AstBranchKind.Conditional)
         {
             Context = context;
-        }
-
-        private AstCodeBlock? _codeBlock;
-        public AstCodeBlock? CodeBlock => _codeBlock;
-
-        public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
-        {
-            if (this.SafeSetParent(ref _codeBlock, codeBlock))
-            {
-                codeBlock!.Indent = Indent + 1;
-                return true;
-            }
-            return false;
         }
 
         private AstBranchConditional? _subBranch;

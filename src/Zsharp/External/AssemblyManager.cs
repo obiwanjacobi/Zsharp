@@ -57,7 +57,19 @@ namespace Zsharp.External
         {
             return assemblyDefinition.Modules.SelectMany(module =>
                 module.AssemblyReferences.Select(r =>
-                    module.AssemblyResolver.Resolve(r)));
+                {
+                    try
+                    {
+                        return module.AssemblyResolver.Resolve(r);
+                    }
+                    catch (AssemblyResolutionException are)
+                    {
+                        Console.WriteLine($"Warning: {are.Message}");
+                    }
+                    return null;
+                })
+                .Where(m => m is not null)
+            )!;
         }
 
         private void AddAssembly(AssemblyDefinition assemblyDef)

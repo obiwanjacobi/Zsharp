@@ -181,5 +181,56 @@ namespace UnitTests.AST
             br.Expression.Should().NotBeNull();
         }
 
+        [TestMethod]
+        public void Loop()
+        {
+            const string code =
+                "fn: (): U8" + Tokens.NewLine +
+                Tokens.Indent1 + "loop" + Tokens.NewLine +
+                Tokens.Indent2 + "return 42" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.Functions.FirstOrDefault();
+            var br = fn.CodeBlock.LineAt<AstBranchExpression>(0);
+            br.Should().NotBeNull();
+            br.BranchKind.Should().Be(AstBranchKind.Loop);
+            br.Expression.Should().NotBeNull(); // loop true
+        }
+
+        [TestMethod]
+        public void Loop_iteration()
+        {
+            const string code =
+                "fn: (): U8" + Tokens.NewLine +
+                Tokens.Indent1 + "loop i in [0..42]" + Tokens.NewLine +
+                Tokens.Indent2 + "return 42" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.Functions.FirstOrDefault();
+            var br = fn.CodeBlock.LineAt<AstBranchExpression>(0);
+            br.Should().NotBeNull();
+            br.BranchKind.Should().Be(AstBranchKind.Loop);
+            br.Expression.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void Loop_condition()
+        {
+            const string code =
+                "fn: (): U8" + Tokens.NewLine +
+                Tokens.Indent1 + "x = 11" + Tokens.NewLine +
+                Tokens.Indent1 + "loop x < 42" + Tokens.NewLine +
+                Tokens.Indent2 + "return 42" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var fn = file.Functions.FirstOrDefault();
+            var br = fn.CodeBlock.LineAt<AstBranchExpression>(1);
+            br.Should().NotBeNull();
+            br.BranchKind.Should().Be(AstBranchKind.Loop);
+            br.Expression.Should().NotBeNull();
+        }
     }
 }

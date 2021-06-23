@@ -5,14 +5,20 @@ namespace Zsharp.AST
 {
     public class AstLiteralBoolean : AstNode
     {
-        public AstLiteralBoolean(Literal_boolContext context)
+        internal AstLiteralBoolean(bool value)
             : base(AstNodeKind.Literal)
+        {
+            Value = value;
+        }
+
+        public AstLiteralBoolean(Literal_boolContext context)
+        : base(AstNodeKind.Literal)
         {
             Context = context;
             Value = context.TRUE() is not null;
         }
 
-        public ParserRuleContext Context { get; }
+        public ParserRuleContext? Context { get; }
 
         public bool Value { get; }
 

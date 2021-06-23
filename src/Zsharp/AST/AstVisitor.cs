@@ -42,6 +42,11 @@ namespace Zsharp.AST
             operand.VisitChildren(this);
         }
 
+        public virtual void VisitExpressionRange(AstExpressionRange range)
+        {
+            range.VisitChildren(this);
+        }
+
         public virtual void VisitFile(AstFile file)
         {
             file.VisitChildren(this);

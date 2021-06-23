@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System.IO;
 using System.Linq;
 using Zsharp;
 using Zsharp.AST;
@@ -12,7 +13,10 @@ namespace UnitTests
         {
             return new AssemblyManagerBuilder()
                 .AddZsharpRuntime()
+                .AddMsCoreLib()
                 .AddSystemConsole()
+                .AddSystemRuntime()
+                .AddSystemCollections()
                 .ToModuleLoader();
         }
 
@@ -30,7 +34,15 @@ namespace UnitTests
 
     internal class AssemblyManagerBuilder
     {
+        private const string _dotNetBasePath = @"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\5.0.0\ref\net5.0\";
+
         private readonly AssemblyManager _assemblyManager = new();
+
+        public AssemblyManagerBuilder()
+        {
+            _assemblyManager.AddProbePath(_dotNetBasePath);
+        }
+
         public AssemblyManager AssemblyManager => _assemblyManager;
 
         public IAstModuleLoader ToModuleLoader()
@@ -42,9 +54,39 @@ namespace UnitTests
             return this;
         }
 
+        public AssemblyManagerBuilder AddSystemAll()
+        {
+            AddMsCoreLib();
+
+            var files = Directory.EnumerateFiles(_dotNetBasePath, "System.*.dll");
+
+            foreach (var file in files)
+                _assemblyManager.LoadAssembly(file);
+
+            return this;
+        }
+
+        public AssemblyManagerBuilder AddMsCoreLib()
+        {
+            _assemblyManager.LoadAssembly(Path.Combine(_dotNetBasePath, "mscorlib.dll"));
+            return this;
+        }
+
         public AssemblyManagerBuilder AddSystemConsole()
         {
-            _assemblyManager.LoadAssembly(@"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Console.dll");
+            _assemblyManager.LoadAssembly(Path.Combine(_dotNetBasePath, "System.Console.dll"));
+            return this;
+        }
+
+        public AssemblyManagerBuilder AddSystemRuntime()
+        {
+            _assemblyManager.LoadAssembly(Path.Combine(_dotNetBasePath, "System.Runtime.dll"));
+            return this;
+        }
+
+        public AssemblyManagerBuilder AddSystemCollections()
+        {
+            _assemblyManager.LoadAssembly(Path.Combine(_dotNetBasePath, "System.Collections.dll"));
             return this;
         }
     }

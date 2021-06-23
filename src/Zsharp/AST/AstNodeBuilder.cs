@@ -271,8 +271,18 @@ namespace Zsharp.AST
             function.FunctionType.AddParameter(parameter);
 
             _builderContext.SetCurrent(parameter);
-            _ = VisitChildren(context);
+            var node = (AstNode?)VisitChildren(context);
             _builderContext.RevertCurrent();
+
+            if (parameter.Expression is null)
+            {
+                parameter.SetExpression(node switch
+                {
+                    AstExpressionOperand op => new AstExpression(op),
+                    AstExpression expression => expression,
+                    _ => throw new InternalErrorException("Parameter reference not an Expression or Operand.")
+                });
+            }
 
             return parameter;
         }
@@ -369,59 +379,54 @@ namespace Zsharp.AST
         // Flow
         //
 
+        public override object? VisitStatement_loop_infinite(Statement_loop_infiniteContext context)
+        {
+            var branch = new AstBranchExpression(context);
+            BuildBranch(branch, context);
+            return branch;
+        }
+
+        public override object? VisitStatement_loop_iteration(Statement_loop_iterationContext context)
+        {
+            var branch = new AstBranchExpression(context);
+            BuildBranch(branch, context);
+            return branch;
+        }
+
+        public override object? VisitStatement_loop_while(Statement_loop_whileContext context)
+        {
+            var branch = new AstBranchExpression(context);
+            BuildBranch(branch, context);
+            return branch;
+        }
+
         public override object? VisitStatement_if(Statement_ifContext context)
         {
-            var codeBlock = _builderContext.GetCodeBlock(context);
-
             var branch = new AstBranchConditional(context);
-            codeBlock.AddLine(branch);
-
-            _builderContext.SetCurrent(branch);
-            _ = VisitChildren(context);
-            _builderContext.RevertCurrent();
+            BuildBranch(branch, context);
             return branch;
         }
 
         public override object? VisitStatement_else(Statement_elseContext context)
         {
+            var branch = new AstBranchConditional(context);
             var indent = _builderContext.CheckIndent(context, context.indent());
-            var branch = _builderContext.GetCurrent<AstBranchConditional>();
-            Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
-
-            var subBr = new AstBranchConditional(context);
-            branch.AddSubBranch(subBr);
-
-            _builderContext.SetCurrent(subBr);
-            _ = VisitChildren(context);
-            _builderContext.RevertCurrent();
-            return subBr;
+            BuildSubBranch(branch, context, indent);
+            return branch;
         }
 
         public override object? VisitStatement_elseif(Statement_elseifContext context)
         {
             var indent = _builderContext.CheckIndent(context, context.indent());
-            var branch = _builderContext.GetCurrent<AstBranchConditional>();
-            Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
-
-            var subBr = new AstBranchConditional(context);
-            branch.AddSubBranch(subBr);
-
-            _builderContext.SetCurrent(subBr);
-            _ = VisitChildren(context);
-            _builderContext.RevertCurrent();
-            return subBr;
+            var branch = new AstBranchConditional(context);
+            BuildSubBranch(branch, context, indent);
+            return branch;
         }
 
         public override object? VisitStatement_return(Statement_returnContext context)
         {
-            var codeBlock = _builderContext.GetCodeBlock(context);
-
             var branch = new AstBranchExpression(context);
-            codeBlock.AddLine(branch);
-
-            _builderContext.SetCurrent(branch);
-            _ = base.VisitChildren(context);
-            _builderContext.RevertCurrent();
+            BuildBranch(branch, context);
             return branch;
         }
 
@@ -441,6 +446,28 @@ namespace Zsharp.AST
             var branch = new AstBranch(context);
             codeBlock.AddLine(branch);
             return branch;
+        }
+
+        private void BuildBranch(AstBranch branch, ParserRuleContext context)
+        {
+            var codeBlock = _builderContext.GetCodeBlock(context);
+            codeBlock.AddLine(branch);
+
+            _builderContext.SetCurrent(branch);
+            _ = VisitChildren(context);
+            _builderContext.RevertCurrent();
+        }
+
+        private void BuildSubBranch(AstBranchConditional subBranch, ParserRuleContext context, uint indent)
+        {
+            var branch = _builderContext.GetCurrent<AstBranchConditional>();
+            Ast.Guard(indent == branch.Indent, "Indentation mismatch CodeBlock <=> Branch");
+
+            branch.AddSubBranch(subBranch);
+
+            _builderContext.SetCurrent(subBranch);
+            _ = VisitChildren(context);
+            _builderContext.RevertCurrent();
         }
 
         //
@@ -504,6 +531,11 @@ namespace Zsharp.AST
         }
 
         public override object? VisitComptime_expression_value(Comptime_expression_valueContext context)
+        {
+            return CreateExpression(builder => builder.Build(context));
+        }
+
+        public override object? VisitExpression_iteration(Expression_iterationContext context)
         {
             return CreateExpression(builder => builder.Build(context));
         }

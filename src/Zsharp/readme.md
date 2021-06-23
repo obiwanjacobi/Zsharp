@@ -29,6 +29,7 @@
 - GenericParameterReference is probably never going to be used: impossible to detect at parse time (only after resolve definition).
 - SymbolTable: different flavors of FindSymbol (FindDefintion) do not use the same algorithm to find symbols.
     Some do not check in Modules, others do not check for DotNames...
+- .NET struct interop
 
 ---
 

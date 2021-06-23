@@ -1,2 +1,3 @@
-fn1: <T, #R>(p: T)
-    return p.R()
+fn1: (p: U8)
+    loop i in [0..p]
+        log(i)

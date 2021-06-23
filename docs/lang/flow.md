@@ -149,6 +149,10 @@ loop n in [0..10]
 // explicit to differ from range-condition
 loop n in [0..10].GetEnumerator()
     foreach_n_0_to_9
+
+// or range condition in () ?
+loop (n in [0..10])
+    n -= 1
 ```
 
 Loop a number of times
@@ -163,6 +167,16 @@ loop c
 ```
 
 > What happens when c is modified inside the loop?
+
+Loop or else
+
+```csharp
+x = 0
+loop n in [0..x]
+    ...     // empty loop
+else
+    log("Nothing to see here...")
+```
 
 Reverse loop
 

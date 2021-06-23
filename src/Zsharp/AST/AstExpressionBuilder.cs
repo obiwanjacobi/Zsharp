@@ -23,6 +23,9 @@ namespace Zsharp.AST
         public AstExpression? Build(Comptime_expression_valueContext context)
             => Build(context, () => new AstExpression(context));
 
+        public AstExpression? Build(Expression_iterationContext context)
+            => Build(context, () => new AstExpression(context));
+
         private AstExpression? Build(ParserRuleContext context, Func<AstExpression> createExpression)
         {
             var operand = VisitChildren(context);
@@ -197,23 +200,19 @@ namespace Zsharp.AST
         public override object? VisitExpression_comparison(Expression_comparisonContext context)
             => ProcessExpression(new ComparisonContextWrapper(context));
 
+        public override object? VisitExpression_value(Expression_valueContext context)
+            => ToExpressionOperand(context);
+
         public override object? VisitArithmetic_operand(Arithmetic_operandContext context)
-        {
-            var node = (AstNode?)base.VisitChildren(context);
-            if (node is not null)
-                return new AstExpressionOperand(node);
-            return null;
-        }
+            => ToExpressionOperand(context);
 
         public override object? VisitLogic_operand(Logic_operandContext context)
-        {
-            var node = (AstNode?)base.VisitChildren(context);
-            if (node is not null)
-                return new AstExpressionOperand(node);
-            return null;
-        }
+            => ToExpressionOperand(context);
 
         public override object? VisitComparison_operand(Comparison_operandContext context)
+            => ToExpressionOperand(context);
+
+        private object? ToExpressionOperand(ParserRuleContext context)
         {
             var node = (AstNode?)base.VisitChildren(context);
             if (node is not null)
@@ -347,6 +346,44 @@ namespace Zsharp.AST
             if (context.BIT_NOT() is not null)
                 return AstExpressionOperator.BitNegate;
             return AstExpressionOperator.None;
+        }
+
+        //
+        // Range
+        //
+
+        public override object VisitRange(RangeContext context)
+        {
+            var range = new AstExpressionRange(context);
+
+            BuilderContext.SetCurrent(range);
+            VisitChildren(context);
+            BuilderContext.RevertCurrent();
+            return range;
+        }
+
+        public override object VisitRange_begin(Range_beginContext context)
+        {
+            var range = BuilderContext.GetCurrent<AstExpressionRange>();
+            var expression = (AstExpressionOperand)VisitChildren(context)!;
+            range.SetBegin(expression);
+            return range;
+        }
+
+        public override object VisitRange_end(Range_endContext context)
+        {
+            var range = BuilderContext.GetCurrent<AstExpressionRange>();
+            var expression = (AstExpressionOperand)VisitChildren(context)!;
+            range.SetEnd(expression);
+            return range;
+        }
+
+        public override object VisitRange_step(Range_stepContext context)
+        {
+            var range = BuilderContext.GetCurrent<AstExpressionRange>();
+            var expression = (AstExpressionOperand)VisitChildren(context)!;
+            range.SetStep(expression);
+            return range;
         }
 
         public static AstExpression CreateLiteral(int value)

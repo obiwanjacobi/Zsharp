@@ -87,6 +87,10 @@ namespace UnitTests.Semantics
 
         private void AssertEquivalent(AstCodeBlock cloned, AstCodeBlock origin)
         {
+            // branch does not always have a code block.
+            if (AssertNull(cloned, origin))
+                return;
+
             cloned.Context.Should().BeEquivalentTo(origin.Context);
             cloned.Indent.Should().Be(origin.Indent);
 

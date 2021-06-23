@@ -39,7 +39,7 @@ namespace Zsharp.AST
         public AstExpression(AstExpressionOperand operand)
             : base(AstNodeKind.Expression)
         {
-            _rhs = operand;
+            TrySetRHS(operand);
         }
 
         internal AstExpression(ParserRuleContext context)
@@ -64,6 +64,12 @@ namespace Zsharp.AST
 
         private AstExpressionOperand? _rhs;
         public AstExpressionOperand? RHS => _rhs;
+
+        protected bool TrySetLHS(AstExpressionOperand operand)
+            => this.SafeSetParent(ref _lhs, operand);
+
+        protected bool TrySetRHS(AstExpressionOperand operand)
+            => this.SafeSetParent(ref _rhs, operand);
 
         public AstExpressionOperator Operator { get; set; }
 

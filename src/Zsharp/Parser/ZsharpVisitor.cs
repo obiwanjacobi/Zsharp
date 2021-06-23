@@ -147,6 +147,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitStatement_loop_infinite([NotNull] ZsharpParser.Statement_loop_infiniteContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.statement_loop_iteration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStatement_loop_iteration([NotNull] ZsharpParser.Statement_loop_iterationContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.statement_loop_while"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -218,6 +224,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExpression_bool([NotNull] ZsharpParser.Expression_boolContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.expression_iteration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpression_iteration([NotNull] ZsharpParser.Expression_iterationContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.function_def"/>.
 	/// </summary>
@@ -458,6 +470,30 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitTemplate_param_any([NotNull] ZsharpParser.Template_param_anyContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.range"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRange([NotNull] ZsharpParser.RangeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.range_begin"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRange_begin([NotNull] ZsharpParser.Range_beginContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.range_end"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRange_end([NotNull] ZsharpParser.Range_endContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.range_step"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRange_step([NotNull] ZsharpParser.Range_stepContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.alias_module"/>.
 	/// </summary>
