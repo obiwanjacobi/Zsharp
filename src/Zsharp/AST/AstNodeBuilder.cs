@@ -521,35 +521,29 @@ namespace Zsharp.AST
         //
 
         public override object? VisitExpression_value(Expression_valueContext context)
-        {
-            return CreateExpression(builder => builder.Build(context));
-        }
+            => CreateExpression(context);
 
         public override object? VisitExpression_logic(Expression_logicContext context)
-        {
-            return CreateExpression(builder => builder.Build(context));
-        }
+            => CreateExpression(context);
 
         public override object? VisitComptime_expression_value(Comptime_expression_valueContext context)
-        {
-            return CreateExpression(builder => builder.Build(context));
-        }
+            => CreateExpression(context);
 
         public override object? VisitExpression_iteration(Expression_iterationContext context)
-        {
-            return CreateExpression(builder => builder.Build(context));
-        }
+            => CreateExpression(context);
 
-        private AstExpression? CreateExpression(Func<AstExpressionBuilder, AstExpression?> buildFn)
+        private AstExpression? CreateExpression(ParserRuleContext context)
         {
-            var builder = new AstExpressionBuilder(_builderContext, _namespace);
-            var expr = buildFn(builder);
+            var expr = new AstExpressionBuilder(_builderContext, _namespace)
+                .Build(context);
+
             if (expr is not null)
             {
                 var site = _builderContext.GetCurrent<IAstExpressionSite>();
                 site.SetExpression(expr);
                 return expr;
             }
+
             return null;
         }
 

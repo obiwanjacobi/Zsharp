@@ -14,19 +14,7 @@ namespace Zsharp.AST
             : base(context, ns)
         { }
 
-        public AstExpression? Build(Expression_valueContext context)
-            => Build(context, () => new AstExpression(context));
-
-        public AstExpression? Build(Expression_logicContext context)
-            => Build(context, () => new AstExpression(context));
-
-        public AstExpression? Build(Comptime_expression_valueContext context)
-            => Build(context, () => new AstExpression(context));
-
-        public AstExpression? Build(Expression_iterationContext context)
-            => Build(context, () => new AstExpression(context));
-
-        private AstExpression? Build(ParserRuleContext context, Func<AstExpression> createExpression)
+        public AstExpression? Build(ParserRuleContext context)
         {
             var operand = VisitChildren(context);
 
@@ -37,24 +25,11 @@ namespace Zsharp.AST
                 else
                     _values.Push(new AstExpressionOperand((AstNode)operand));
 
-                var expr = createExpression();
+                var expr = new AstExpression(context);
                 _operators.Push(expr);
             }
 
             return BuildExpression(0);
-        }
-
-        public AstExpression? Test(ParserRuleContext context)
-        {
-            var val = Visit(context);
-            return Cast(val);
-        }
-
-        private AstExpression? Cast(object? result)
-        {
-            if (result is null)
-                return BuildExpression(0);
-            return result as AstExpression;
         }
 
         private object? ProcessExpression(IExpressionContextWrapper context)

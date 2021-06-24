@@ -1,41 +1,10 @@
 using Antlr4.Runtime;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstExpression : AstNode,
         IAstTypeReferenceSite
     {
-        public AstExpression(Expression_arithmeticContext context)
-            : base(AstNodeKind.Expression)
-        {
-            Context = context;
-        }
-
-        public AstExpression(Expression_logicContext context)
-            : base(AstNodeKind.Expression)
-        {
-            Context = context;
-        }
-
-        public AstExpression(Expression_comparisonContext context)
-            : base(AstNodeKind.Expression)
-        {
-            Context = context;
-        }
-
-        public AstExpression(Expression_valueContext context)
-            : base(AstNodeKind.Expression)
-        {
-            Context = context;
-        }
-
-        public AstExpression(Comptime_expression_valueContext context)
-                : base(AstNodeKind.Expression)
-        {
-            Context = context;
-        }
-
         public AstExpression(AstExpressionOperand operand)
             : base(AstNodeKind.Expression)
         {
