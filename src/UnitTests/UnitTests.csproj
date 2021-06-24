@@ -22,19 +22,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="AST/AstVisitorTests.*.cs">
+    <Compile Update="AST\AstVisitorTests.AstTypeChecker.cs">
       <DependentUpon>AST/AstVisitorTests.cs</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="AST\AstVisitorTests - Copy %282%29.AstTypeChecker.cs">
+    <Compile Update="AST\AstVisitorTests.AstVariableChecker.cs">
       <DependentUpon>AST/AstVisitorTests.cs</DependentUpon>
     </Compile>
-    <Compile Update="AST\AstVisitorTests - Copy %283%29.AstTypeChecker.cs">
+    <Compile Update="AST\AstVisitorTests.AstSymbolChecker.cs">
       <DependentUpon>AST/AstVisitorTests.cs</DependentUpon>
     </Compile>
-    <Compile Update="AST\AstVisitorTests - Copy.AstTypeChecker.cs">
+    <Compile Update="AST\AstVisitorTests.AstParentChecker.cs">
       <DependentUpon>AST/AstVisitorTests.cs</DependentUpon>
     </Compile>
   </ItemGroup>
