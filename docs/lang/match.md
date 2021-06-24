@@ -147,3 +147,17 @@ b = c is (>= 'a' and =< 'z') or (>= 'A' and =< 'Z')
 ```
 
 ? How to distinguish (parsing: both start with `var = var is ...` - only diff is the newline) between pattern matching conditional expressions (bool) and selecting a matching case (switch)?
+
+---
+
+> TBD
+
+Match op regex?
+
+```csharp
+s = "person@domain.com"
+x = match s
+    `@` -> ...
+    `[a-z]` -> ...
+    _ -> error
+```
