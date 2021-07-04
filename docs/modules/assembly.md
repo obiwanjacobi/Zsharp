@@ -160,4 +160,35 @@ main: (args: IEnumerable<CommandLineArgument>): I32
 
 Clearly this is nowhere near the information for a full project management and build system. Do we try to force everything we need into an assembly file, or do we introduce another (project) file?
 
-- a Z# version specifier with what version of the langauge the assembly is compatible.
+- a Z# version specifier with what version of the language the assembly is compatible.
+
+---
+
+What about embedded resources? How to tell the project to embed a resource.
+
+```csharp
+# assembly Name.OfMy.Assembly
+
+// files included in the compiled assembly as resources
+# include
+    image1.jpg
+    assembly.dll
+```
+
+No control over naming (namespace and resource name)!
+Have a compile-time function for this? `#embedFile("image1.jpg", "namespace.resourceName")` or have an `#embed` pragma?
+
+How about string/int resources?
+
+```csharp
+// $ auto resource string
+resourceText = $"Text loaded from resource"
+
+// performs a load resource (with local var)
+print(resourceText)
+```
+
+How to reuse an existing resource then?
+What is the scope of the name? Module level? no - too narrow.
+
+> Can we built-in localization on resources?

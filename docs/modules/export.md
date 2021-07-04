@@ -51,3 +51,11 @@ MyFunc: ()
 
 MyNamespace.MyFunc()
 ```
+
+---
+
+> Rename `export` to `pub` for public or publish?
+
+> Rename `import` to `use`?
+
+> Drop the `#`?

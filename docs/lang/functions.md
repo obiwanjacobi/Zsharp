@@ -403,22 +403,17 @@ add: (x: U8, y: U8) = x + y
 a = add(42, 101)
 ```
 
----
-
-## Partial Application
-
-The Expression body syntax is also used for partial application. In this case the function body of the composite function (alias) is not compiled into code but used as a composition template.
+> Allow more complex expressions?
 
 ```csharp
-fn: (p: U8, s: Str): Bool
-    ...
-
-// expression body => composition
-fnPartial (p: Str) = fn(42, p)
-
-// calls fn(42, "42")
-b = fnPartial("42")
+// return type is inferred
+add: (x: U8, y: U8) =
+    if x > y
+        return -(x + y)
+    return x + y
 ```
+
+This suggests that a code block (function body) is also an expression...?
 
 ---
 
@@ -888,11 +883,11 @@ pureFnMaybe: [globalVar](x: U8, y: U8): U16
 
 // special syntax to promise purity?
 // on the return type? (haskal uses IO for impure)
-pureFnMaybe: [globalVar](x: U8, y: U8): Pure<U16>
+pureFn: [globalVar](x: U8, y: U8): Pure<U16>
 // with a 'pure' keyword?
-pure pureFnMaybe: [globalVar](x: U8, y: U8): U16
+pure pureFn: [globalVar](x: U8, y: U8): U16
 // with a 'fun' keyword?
-fun pureFnMaybe: [globalVar](x: U8, y: U8): U16
+fun pureFn: [globalVar](x: U8, y: U8): U16
 ```
 
 A higher order function is a function that takes or returns another function (or both).
@@ -913,14 +908,32 @@ See also [Piping Operator](#Piping-Operator).
 
 > Composition and value piping are different concepts. Function Composition is building functions from other functions at compile time. Value piping chains (result) values between multiple function calls (result of one function is parameter for next function).
 
-Due to our choices in syntax most of these functional principles has to be spelled out. We could make an exception for not having to specify the `()` [when there is only one (or no - for poor man's property syntax) parameter?].
+---
+
+### Partial Application
+
+The Expression body syntax is also used for partial application. In this case the function body of the composite function (alias) is not compiled into code but used as a composition template.
+
+```csharp
+fn: (p: U8, s: Str): Bool
+    ...
+
+// expression body => composition
+fnPartial (p: Str) = fn(42, p)
+
+// calls fn(42, "42")
+b = fnPartial("42")
+```
+
+---
+
+Due to our choices in syntax most of these functional principles have to be spelled out. We could make an exception for not having to specify the `()` [when there is only one (or no - for poor man's property syntax) parameter?].
 
 ```csharp
 add: (p1: U8, p2: U8): U16
     return p1 + p2
 // partial application by hand
-add42= (p: U8): U16
-    return add(42, p)
+add42 (p: U8): U16 = add(42, p)
 ```
 
 By returning a local function it becomes anonymous. Any references to external variables / parameters need to be captured.
@@ -932,20 +945,7 @@ fn: (p1: U8, p2: Str): Fn<(U8): U8>
     return internalFn
 ```
 
-> TBD: a syntax that allows function composition in a way that inlined at compile time. Basically a template function with functional template parameters. Use function alias syntax.
-
-```csharp
-fn: (p: U8, s: Str)
-    ...
-// use alias syntax on composed function
-compFn= (p: U8)
-    fn(p, "42")
-
-// call composite function
-compFn(42)
-// actual code compiled:
-// fn(42, "42")
-```
+---
 
 How about (inline) partial application?
 
@@ -1003,8 +1003,8 @@ arr = s.Add(42)     // chained calls can be spread over multiple lines
 ```C#
 is(someVar).biggerThan(42)
 does<SomeType>().implement<SomeInterface>()
-can<SomeType>().BeCastedTo<DiffType>()
 does<SomeType>().implementMethod(MethodName)
+can<SomeType>().BeCastedTo<DiffType>()
 ```
 
 Allow by default using the 'fluent' self object if no return type
@@ -1022,6 +1022,18 @@ c.add(4)
 ```
 
 > Auto-Fluent syntax? `Build(p: MyStruct)::Into(target: Stream)`
+
+```csharp
+baseFn: (p: Str)
+    // export local function makes it available
+    #export nestedFn: (p: U8): Bool
+    // or a new keyword? (publish)
+    pub nestedFn: (p: U8): Bool
+        ...
+
+s = "42"
+b = baseFn(s)::nestedFn(42)
+```
 
 ---
 

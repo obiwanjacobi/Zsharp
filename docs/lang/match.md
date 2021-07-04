@@ -152,7 +152,7 @@ b = c is (>= 'a' and =< 'z') or (>= 'A' and =< 'Z')
 
 > TBD
 
-Match op regex?
+Match on regex?
 
 ```csharp
 s = "person@domain.com"

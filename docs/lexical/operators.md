@@ -89,6 +89,8 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 
 > Are there others like conditional assignment `??=`? Can any (applicable) operator be made conditional by prefixing `??` to it?
 
+`#!` does make the distinction clear between compile-time functions and for instance inline exported functions: `#export fun: ()...` vs. `#! fun: () ...`.
+
 ## Type operators
 
 | Symbol | Type | Description

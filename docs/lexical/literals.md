@@ -74,6 +74,8 @@ Char | Note
 
 More?
 
+---
+
 For longer string you may want to spread them out over multiple lines. Using indents the compiler can see that the string is spread out.
 
 > Use one indent extra for spreading out strings.
@@ -89,6 +91,18 @@ s = "Some text
 These indents on the beginning of the new lines do not become part of the resulting string: `"Some text spread over multiple lines"`
 
 > Or surround each line of string-part with double quotes?
+
+Adjacent literal string will be concatenated. Explicit how whitespace is handled.
+
+What indentation to use? At least 1 max 2 from root?
+
+```C#
+s = "Some text"
+    "spread over"
+        "multiple lines"    // mix indentations?
+```
+
+---
 
 Basic formatting of dynamic values into a string is done in the following way:
 
@@ -175,3 +189,37 @@ s =^ "Constant"     // Imm<Str>
 - Literal syntax for custom data types and units?
 - Data Structure literals `{}` and lists `()`.
 - literals as objects: `parts = "literal string".split(' ')`
+- literals bound to custom types?
+
+```csharp
+[[Literal("Rx")]]
+RegEx: (r: Str): RegEx
+    ...
+
+// 'Rx' literal => RegEx
+regex = "$[a-z]*"Rx
+// regex: RegEx
+```
+
+or
+
+```csharp
+[[LiteralString("!")]]
+RegEx: (r: Str): RegEx
+    ...
+
+// "!...!" => RegEx
+regex = "!$[a-z]*!"
+// regex: RegEx
+```
+
+or alias
+
+```csharp
+RegEx: (r: Str): RegEx
+    ...
+Rx = RegEx
+
+regex = Rx("$[a-z]*")
+// regex: RegEx
+```
