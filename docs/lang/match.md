@@ -107,6 +107,16 @@ r = match list
     (x, ...lst) -> recurse(lst) + x    // recursive sum function
 ```
 
+> TBD: match on an anonymous type / tuple.
+
+```csharp
+t = (42, "101")
+r = match t
+    (42, _) -> 0    // ignore one tuple property
+    (I32, Str)      // match on types
+    (,)             // any tuple with two properties
+```
+
 ---
 
 > TBD
