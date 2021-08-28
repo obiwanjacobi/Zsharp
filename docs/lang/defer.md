@@ -80,3 +80,7 @@ d: Dispose<Resource> = Open("...")
 defer d.Dispose()       // implicit
 // calls Dispose(self: Resource) on exit
 ```
+
+> TBD: can the compiler figure out what disposable resources are left 'floating' when it exits the function and automatically clean those up?
+
+- The disposable resource that was not passed to any function, assigned to a (global) variable or returned from the function.

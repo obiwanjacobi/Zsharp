@@ -118,22 +118,20 @@ y: YourStruct <= s  // y: YourStruct -mapped
 
 ## Conditional Assignment
 
-Instead of an `if` statement, use the `??=` operator for use with optional values.
+Instead of an `if` statement, use the `?=` operator for use with optional values.
 
-The `??=` operator only assigns the value to the left operand if it does not already have a value.
+The `?=` operator only assigns the value to the left operand if it does not already have a value.
 
 ```csharp
 a: U8?
-a ??= 42
+a ?= 42
 // a = 42
 
 a: U8?
 a = 42
-a ??= 101
+a ?= 101
 // a = 42
 ```
-
-> Or simply use `?=`
 
 ---
 
@@ -178,6 +176,8 @@ a = 101
 // end of scope unlocks
 ```
 
+`Atom<T>` implements IDisposable and unlocks automatically on destruction when going out of scope.
+
 Using `Atom<T>` also allows to manage access to structs that are larger than a single primitive data type.
 
 > TBD: Syntax to set multiple fields under lock?
@@ -190,6 +190,11 @@ Struct
 s: Atom<Struct>
 // using object notation?
 s = {fld1: 42, fld2: "42"}  // Atom overrides = operator
+
+// or a capture?
+[s]
+    s.fld1 = 101
+    s.fld2 = "101"
 ```
 
 ### Volatile

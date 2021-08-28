@@ -237,6 +237,21 @@ We really want to keep this as simple as possible.
 
 ---
 
+## Template Alias
+
+A new name for an existing template resolved at compile time. The alias name will not appear in the binary.
+
+```csharp
+// template type alias
+AliasTemplate<T1, T2> = SomeType<T1, OtherType<T1, T2>>
+// template function alias with partial application
+templateFn<T> = fnTempl<T, U8>
+```
+
+Aliases can be exported from a module to be reused within the assembly.
+
+---
+
 ## Template Specialization
 
 When use of specific template parameter values require specific code.
@@ -341,8 +356,24 @@ MyType<#M: Struct<#T: OtherStruct>>
 
 ---
 
+> TBD
+
+Usage of the same template parameter at different places.
+
+```csharp
+// usage
+MyType<OtherType<SameType1, SameType2>, SameType1, SameType2> myType
+
+// type template alias
+MyOtherType<T1, T2> = MyType<OtherType<T1, T2>, T1, T2>
+// usage of alias
+MyOtherType<SameType1, SameType2> myOtherType
+```
+
+---
+
 The source code of any templated functions and types that are public (exported) are stored as a resources in the resulting assembly. This way the source code can be reused by the Z# compiler when an external module tries to use the templated function or type.
 
-Instead of the actual source code, we could also store the serialized AST for performance.
+Instead of the actual source code, we could also store the serialized AST for performance - but that would make it compiler version dependent.
 
 Perhaps also generate a class with loader methods for each symbol name that can have custom code attributes for the Z# compiler to discover.

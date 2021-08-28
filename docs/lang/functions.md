@@ -159,6 +159,19 @@ Having default parameter values does not explain at the calling site what is hap
 
 > See note in [Template Parameters](./templates.md#Template-Parameter-Defaults) about supporting a default value for (template) parameters.
 
+> TBD
+
+Use other parameter names as defaults
+
+```csharp
+fn: (p: U8 = 42, q: U8 = p)
+    ...
+
+// reference capture as default value
+fn: [x](p: U8 = 42, q: U8 = x)
+    ...
+```
+
 ### Named Parameter
 
 Function Parameters can be specified by name at the call site.
@@ -177,10 +190,14 @@ namedFn(0x4242, p = 42)         // ok, unnamed is only one left
 
 Not really supported but you can fake it with an Array: all of same type. For .NET interop an `Any` (object) type is available.
 
+> TBD `Params<T>` type as a way to specify an array as parameters... (C#: `params object[] p`)
+
 ```C#
 varFunc: (p: U8, varP: Array<Any>)
     ...
 varFuncTempl: <#T>(p: U8, varP: Array<T>)
+    ...
+varFuncParams: (p: U8, varP: Params<Any>)
     ...
 
 // different types allowed for 'Any'
@@ -188,9 +205,10 @@ varFunc(42, (1, 3.14, "42"))
 
 // same types (or derived) for template
 varFuncTempl(42, (1, 2, 3, 4, 5, 6))
-```
 
-Because the syntax for specifying a list is very simple we do not have a `params` keyword like C# does.
+// different types as parameters
+varFunc(42, 1, 3.14, "42")
+```
 
 ### Immutable Parameters
 
@@ -205,7 +223,7 @@ immFn: (p: *^U8)
 
 ### Out and ByRef Parameters
 
-> Use a mutable Pointer.
+Use a mutable Pointer.
 
 ```C#
 // simulated out-parameter
@@ -213,9 +231,11 @@ Make42: (p: Ptr<U8>)
     p() = 42
 ```
 
+This is on usage of `Ptr<T>` that may actually be useful.
+
 ### Illegal Parameter Types
 
-> TBD: playing with the idea of making `Bool` an illegal parameter type for an exported function.
+> TBD: playing with the idea of making `Bool` an illegal parameter type for an exported (public) function.
 
 ```csharp
 illegalFn(b: Bool)
@@ -278,7 +298,7 @@ _ = retFunc()       // ok, explicitly not interested in retval
 
 > Could the compiler have an opinion about where the return statement is located? Only allow early exits inside and `if` and as last statement in the function. What about only one inside a loop?
 
-> TBD: Want to support covariant return types (function overloads)?
+> TBD: Want to support covariant return types (function overloads)? => Yes
 
 ### Error
 
@@ -474,19 +494,40 @@ b = e.IsMagicValue()        // true
 
 ---
 
-> TBD: Allow leaving of `()` when bound function has no other parameters?
+> TBD: Allow leaving of `()` when bound function has only one or no other parameters?
 
 ```csharp
 Struct
     ...
-fn: (self: Struct): U8
+getX: (self: Struct): U8
+    ...
+setX: (self: Struct, p: U8)
     ...
 
 s: Struct
-v = s.fn    // calls fn(s)
+v = s.getX      // calls getX(s)
+s.setX v        // calls setX(s, v)
 ```
 
 We call this the poor-man's property syntax. Do we require the function name to begin with `get_`/`set_` to match .NET properties? Or can we infer them?
+
+For non-bound functions?
+
+```csharp
+fn: (): U8
+    ...
+
+// no param => no parens
+a = fn
+```
+
+```csharp
+fn: (p: U8): U8
+    ...
+
+// one param => no parens
+a = fn 42
+```
 
 ---
 
@@ -515,7 +556,7 @@ If return type is not `Void`, the actual return type is used to determine if the
 
 ---
 
-> TBD: Allow attaching existing functions to a struct??
+Attaching existing functions to a struct.
 
 ```csharp
 Struct1
@@ -523,7 +564,7 @@ Struct1
 // stand alone fn
 fn: (p: U8): U8
     ...
-// function alias syntax for inline function
+// expression body syntax for inline bound function
 fnStruct: (self: Struct1) = fn(self.fld1)
 
 s: Struct1
@@ -620,7 +661,7 @@ More information on [Type Constructors](types.md#Type-Constructors) and [Convers
 
 ## Infix Functions
 
-A function that complies with specific requirements can be used in 'infix' notation, in between its arguments.
+A function that complies with specific requirements can be used in 'infix' notation, that is: in between its arguments.
 
 An infix function:
 
@@ -761,6 +802,8 @@ coroutine: (p: U8): Iter<U16>
     return p << 12
 ```
 
+> `.NET`: C# only supports the last option.
+
 The Coroutine state is kept in hidden a parameter at the call site. It is needed for the correct function of the coroutine but does not show in its declaration.
 
 > Do we need syntax to clearly identify a coroutine?
@@ -789,14 +832,14 @@ loop [0..3]
 Coroutines should be lazily evaluated. This should work and only execute the code inside the while loop when the next call to the coroutine is made.
 
 ```csharp
-allInts: (): Int32
+allInts: (): I32
     i = 0
-    while i < Int32#max
+    while i < I32#max
         yield i
         i += 1
 ```
 
-The state of the function is captured (closure) specific for each call-site.
+The state of the function is captured (closure) specific to each call-site.
 
 ---
 
@@ -822,6 +865,22 @@ ReportProgress(self, ProgressEvent progressEvent)
 ```
 
 > `.NET`: delegates and events?
+
+In `.NET` a `delegate` is an encapsualation of a function pointer with an optional object (this) reference.
+An `event` is a list of registered `delegate`s that all will be called when the event is raised.
+
+```csharp
+// .NET 'event' represented as a type
+Event<T>
+
+// function pointer to 'handler(any: Any, args: EventArgs)'
+Delegate = Fn<(Any, EventArgs)>
+event = Event<Delegate>
+
+event.Add(ptrToHandler)
+event.Raise(any, args)
+event.Remove(ptrToHandler)
+```
 
 ---
 
@@ -854,126 +913,6 @@ weakFn()
 ```
 
 > There is no difference between a function declaration (ending in `_`) and a weak function definition. How do we distinct between weak functions and undefined function (references)?
-
----
-
-## Pure Functional
-
-A pure function is a function that returns the exact same result given the same inputs without any side effects.
-
-A pure function -without side-effects- can be recognized by the lack of (mutable?) captures and the presence of immutable (only in-) parameters. It also has to have a return value.
-
-> This is not always true (a database read function may return different results for the same inputs - even if we explicitly capture the non-mutable database connection) so we may need to introduce special syntax to indicate pure functional functions...
-
-Pure functions can only call other pure functions. Impure functions (with side-effects) can also call pure functions.
-Pure functions cannot call impure functions, ever.
-
-> The question is can the compiler detect that.
-
-```csharp
-// has imm param but potentially writes to globalVar
-sideEffect: [globalVar.Ptr()](p: Ptr<Imm<U8>>)
-// takes two params and produces result - no side effects
-pureFn: (x: U8, y: U8): U16
-
-// seems ok because capture is immutable
-// but what if it is a database connection?
-// then the function can still return different results for the same args
-pureFnMaybe: [globalVar](x: U8, y: U8): U16
-
-// special syntax to promise purity?
-// on the return type? (haskal uses IO for impure)
-pureFn: [globalVar](x: U8, y: U8): Pure<U16>
-// with a 'pure' keyword?
-pure pureFn: [globalVar](x: U8, y: U8): U16
-// with a 'fun' keyword?
-fun pureFn: [globalVar](x: U8, y: U8): U16
-```
-
-A higher order function is a function that takes or returns another function (or both).
-
-```csharp
-// a function that returns a function
-pureFn: (arr: Arr<U8>): Fn<(U8): U8>
-    ...
-// call pureFn and call the function it returns
-v = pureFn([1,2])(42)
-```
-
-> TBD: Syntax for function partial application, composition and currying?
-
-> function composition, partial application and parameter currying should be done inline and at compile time ideally. This would generate more code, but perform better at runtime - as opposed to linking existing functions together. Not sure how to handle external functions that are already compiled.
-
-See also [Piping Operator](#Piping-Operator).
-
-> Composition and value piping are different concepts. Function Composition is building functions from other functions at compile time. Value piping chains (result) values between multiple function calls (result of one function is parameter for next function).
-
----
-
-### Partial Application
-
-The Expression body syntax is also used for partial application. In this case the function body of the composite function (alias) is not compiled into code but used as a composition template.
-
-```csharp
-fn: (p: U8, s: Str): Bool
-    ...
-
-// expression body => composition
-fnPartial (p: Str) = fn(42, p)
-
-// calls fn(42, "42")
-b = fnPartial("42")
-```
-
----
-
-Due to our choices in syntax most of these functional principles have to be spelled out. We could make an exception for not having to specify the `()` [when there is only one (or no - for poor man's property syntax) parameter?].
-
-```csharp
-add: (p1: U8, p2: U8): U16
-    return p1 + p2
-// partial application by hand
-add42 (p: U8): U16 = add(42, p)
-```
-
-By returning a local function it becomes anonymous. Any references to external variables / parameters need to be captured.
-
-```csharp
-fn: (p1: U8, p2: Str): Fn<(U8): U8>
-    internalFn: [p2](p1: U8): U8
-        return p2.U8() + p1
-    return internalFn
-```
-
----
-
-How about (inline) partial application?
-
-Partial application results in an anonymous function that may be compiled to an function impl.
-
-```csharp
-fn: (p: U8, s: Str)
-    ...
-
-// what syntax to indicate partial application
-// instead of trying to call a potential overload?
-partialFn = fn(42,)
-partialFn("42") // calls fn(42, "42")
-
-// also good
-partialFn = fn(,"42")
-partialFn(42) // calls fn(42, "42")
-
-// by name? (still need syntax to differentiate overloads)
-partialFn = fn(s="42")
-partialFn("42") // calls fn(42, "42")
-```
-
-> Can you take a reference/pointer to a composite function? If you do, you create an actual function stub with the composition compiled.
-
-> `.NET`: Functions with captures (lambdas) and partial application will probably result in function classes that have members for the captured data and/or the applied (partial) function parameters.
-
-> TODO: look into monads. I don't understand them yet.
 
 ---
 
@@ -1079,163 +1018,6 @@ accept: (self: MyStruct, v: Visitor)
 
 ---
 
-## Captures
-
-Captures are snapshots (copies) or references to contextual state -like local variables- that accompany a child context.
-
-Function can use captures to be able to reference global variables in their body.
-
-```csharp
-x = 42
-fn: [x](p: U8): Bool
-    return p = x        // true if p = 42
-```
-
-Lambda's can use captures to be able to reference data in their vicinity to use during execution of the lambda.
-
-```csharp
-fn: (p: U8, predicate: Fn<(U8): Bool>)
-    if predicate(p)
-        ...
-
-x = 42
-// lambda captures x to compare with
-fn(42, [x](p) -> p = x)
-```
-
-> This is not function related - needs its own chapter.
-
-An additional syntax is considered for capturing dependencies of any code block. This may be a valuable feature when refactoring code.
-
-```csharp
-v = 42
-// following code is dependent on v
-[v]
-    // use v here
-```
-
-Captures also may be used as a synchronization mechanism for shared data. At the start of a capture a copy is made of the data and the code (function) works with that copy. The actual value may be changed (by another thread) in the meantime.
-
-In case of a mutable capture, it's value is written back to the original storage when the block of code is completed.
-
-> Should mutable captures be renamed/aliased? `[x = y.Ptr()]`
-
-That would also suggest that capture blocks themselves could be multi-threading / execute separately from other parts of the function if the dependencies would allow it. Not sure if this 'feature' would be desirable for it would make reasoning about the code harder.
-
-> How do we allow to opt-in for all these different capture behaviors?
-
-> We do need a mechanism to handle conflicts when writing back captured data? Or is this managed by using the correct Data type wrapper (`Atom<T>`)?
-
-> Add syntax/semantics for auto-disposing captured vars?
-
-> Perhaps as an optimization, immutable captures (in general) could be passed as references to a parent stack frame?
-
-Read-only capture are never a problem, the problem exists when using pointer-captures that are written to sometime during the execution of the function/lambda or code block.
-
-We might not always want to make a hidden state object to store their 'captures'.
-
-Function-captures may want to use different mechanism to synchronize access to shared/global state. We could use data type wrappers like `Atom<T>` to indicate this strategy. By default a global variable state is read at first access by the function and compared with the actual value before a new value is written at the end of the function (optimistic locking).
-
-Lambda-captures may outlive the function they're declared in. Not sure how pointer-captures would work in that scenario?
-
-Block-captures work as functions would.
-
-```csharp
-x = 42
-fn: [x](p: U8): Bool
-    return x = p
-
-// no capture has to be specified in call
-sameAsX = fn(42)   // true
-```
-
----
-
-> How does capture work inside loops?
-
-```csharp
-import
-    Fn
-    Print
-
-// Fn => (): Void
-l = List<Fn>(10)
-loop c in [0..10]
-    l.Add([c]() -> Print(c))
-for fn in l
-    fn();   // what does it print?
-```
-
-`[c]` is capturing by value, so it should print 0-9.
-
-### Capture Aliases
-
-Like all Aliases, using the assignment operator will rename the capture for (inside) the function scope.
-
-```csharp
-x = 42
-fn: [x=y](p: U8): Bool
-    return y = p    // true if p = 42
-```
-
----
-
-## Piping Operator
-
-To make nested function calls more readable. More 'functional'.
-Would make line-breaks in long statements (chains) a lot more readable?
-
-```csharp
-a = fn1(fn2(fn3(42)))
-b = fn3(42) |> fn2() |> fn1()
-// functional syntax
-b = 42 |> fn3 |> fn2 |> fn1
-```
-
-Subsequent function calls (after `|>`) will have their 1st param missing. That looks a bit strange (but no different than bound functions?). `()` can be omitted when a function has zero or one parameter?
-
-```csharp
-[0..5] |> fn()  // passed in array
-```
-
-Could also have a 'backward' piping operator? `<|` going the other way...
-
-```csharp
-fn1() <| fn2() <| fn3() <| 42
-```
-
-Does this only work for functions? (string and list concatenation?)
-
-```csharp
-// C++ style output?
-yourName = "Arthur"
-outStream <| "Hello " <| yourName
-
-// C++ style input?
-inStream |> yourName
-```
-
-... or use a different syntax?
-
-```csharp
-// C++ style output?
-yourName = "Arthur"
-outStream +| "Hello " +| yourName
-
-// C++ style input?
-inStream =| yourName
-```
-
-Concat lists?
-
-```csharp
-l1 = (1, 2, 3, 4)
-l2 = l1 |> (5, 6, 7, 8)
-// l2 = (1, 2, 3, 4, 5, 6, 7, 8)
-```
-
----
-
 ## Operator Functions
 
 All operators are implemented as functions. The operator is an alias for the actual function.
@@ -1335,78 +1117,43 @@ Some compiler functions to manipulate files would come in handy.
 
 > .NET compatibility for async/await.
 
-Closures / Futures / Promises?
+Use `Async<T>` to indicate an `async` function (state machine). Any call to a function with an `Async<T>` or `Task<T>` return value is awaited implicitly unless the receiving variable type is of type `Task<T>`.
+
+Use `Task<T>` to indicate a non-`async` function. Any call to a function with an `Async<T>` or `Task<T>` return value is NOT awaited.
+
+`Async<T>` is syntactic sugar for using the (C#) `async` keyword and the `Task<T>` return type.
 
 ```csharp
-// same async/await keywords as in C#?
-// Use .NET Task<T>
-async fnAsync: (): Task<U8>
-    x = await workAsync()
-    return x + 42
-
-// async is implicit by using await?
-// should be ok
-fnAsync: (): Task<U8>
-    x = await workAsync()
-    return x + 42
-
-// await is implicit by using async?
-// nah - not enough control
-async fnAsync: (): Task<U8>
+// C#: async Task<U8> fnAsync()
+fnAsync: (): Async<U8>
+    // don't need await (implicit)
     x = workAsync()
     return x + 42
 
-// multiple tasks parallel
+// await is implicit by using Async? Yes
+// if Task<T> return type was used => No
+fnAsync: (): Async<U8>
+    x: U8 = workAsync()
+    return x + 42
+
+// wrapping an async function without async state machine
 fnAsync: (): Task<U8>
-    t1 = work1Async()
-    t2 = work2Async()
-    return await t1 + await t2
-```
+    return workAsync(42)
 
----
-
-### Parallel Function Calls
-
-An easy syntax to start multiple parallel functions calls without blocking for the result.
-
-Functions without return values:
-
-```csharp
-fn1: (p: U8)
-    ...
-fn2: (f: F64)
-    ...
-fn3: (s: Str)
-    ...
-
-// list invoke?
-// make a list of 'actions' and invoke them in parallel
-// a list does suggest a sequence, an order...
-(fn1(42), fn2(3.1415), fn3("42"))()
-```
-
-Functions with return values??
-
-```csharp
-// how??
-```
-
-Async functions (standard .NET)
-
-```csharp
-task1 = fn1Async(42)
-task2 = fn2Async(3.1415)
-task3 = fn3Async("42")
-
-// wait for all (deconstruct results into vars)
-(res1, res2, res3) = await (task1, task2, task3)
+// multiple tasks parallel
+// Use explicit Task<T> for return values to NOT await
+fnAsync: (): Async<U8>
+    t1: Task<U8> = work1Async()
+    t2: Task<U8> = work2Async()
+    // C#: 'await t1 + await t2'
+    return t1 + t2
 ```
 
 ---
 
 > TBD
 
-Interpret the function parameters `(param: U8)` as a tuple. That means that all functions only have only one actual param, which is a single tuple and is passed by reference (as an optimization), but by value conceptually.
+Interpret the function parameters `(param: U8)` as a tuple. That means that all functions have only one actual param, which is a single tuple and is passed by reference (as an optimization), but by value conceptually.
 
 All the parameters need to be read-only (which is a bit odd because they may not use the `Imm<T>` type). This does not mean you cannot pass a pointer and change the content that it points too - that still works.
 

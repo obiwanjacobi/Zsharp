@@ -467,7 +467,8 @@ Type | Meaning
 `Ptr<T>` | Pointer to T
 `Imm<T>` | T is immutable
 `Atom<T>` | Atomic access
-`Mem<T>` | Heap allocated
+`Async<T>` | Asynchronous function (return type)
+`Mem<T>` | Heap allocated (TBD)
 
 Note that the compiler may generate different code depending on where these types are applied.
 

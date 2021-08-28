@@ -69,7 +69,6 @@ if not a in [0..100]    // ?
     ...
 ```
 
-
 ---
 
 ## Return
@@ -232,6 +231,14 @@ loop n in Iter()
     work_with_n
 ```
 
+> TBD Async loops?
+
+```csharp
+// async iterator function
+loop n in IterAsync()
+    work_with_n
+```
+
 ---
 
 TODO
@@ -253,15 +260,19 @@ loop [0..10].AsParallel() -> LogInt
 Cancelling parallel processing (CancellationToken)?
 
 ```csharp
-c = CancellationSource
-loop IterObjects() ->> LogInt
+c = CancellationTokenSource
+loop IterObjects().WithCancellation(c.Token) ->> LogInt
 ```
 
 > Async Loops
 
 ```csharp
-// await keyword?
-await loop n in IterAsync()
+// auto-detect (implicit await) based on enumerator type?
+loop n in IterAsync()
+    ...
+
+c = CancellationTokenSource
+loop n in IterAsync().WithCancellation(c.Token)
     ...
 ```
 

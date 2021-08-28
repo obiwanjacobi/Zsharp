@@ -45,6 +45,8 @@ Identifiers are the same when:
 - All other letters match (case insensitive)
 - `_` are ignored (removed) when comparing.
 
+> TBD: exclude function names from having to match case of first letter of function name? That would allow for fully adapting your own naming conventions - at least for functions. Types still have to start with a capital first char.
+
 ### Discard
 
 Using a discard `_` in an identifier is ignored during matching.
