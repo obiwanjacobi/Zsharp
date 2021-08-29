@@ -282,7 +282,7 @@ openFn: (h: Handle): Stream
     ...
 ```
 
-`Handle` is still a typeless pointer but made specific to a set of functions. This way you can direct the user of your API to not use any typeless pointer, but the specific one you designed. It makes you API clearer.
+`Handle` is still a typeless pointer but made specific to a set of functions. This way you can direct the user of your API to not use any typeless pointer, but the specific one you designed. It makes your API clearer.
 
 ### Static Ptr Helper
 

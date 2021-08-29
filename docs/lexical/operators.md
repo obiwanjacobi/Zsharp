@@ -35,13 +35,13 @@ Arithmetic, bitwise and logical operators.
 | `xor` | LogicXor | Logical Xor
 | `not` | LogicNot | Logical Negation
 | `&` | - | Bitwise And
-| `\|` | - | Bitwise Or
+| `|` | - | Bitwise Or
 | `^` | - | Bitwise Exclusive Or
 | `~` | - | Bitwise Negation (complement/invert)
 | `>>` | - | Bitwise Shift Right
 | `<<` | - | Bitwise Shift Left
-| `>\|` | - | Bitwise Rotate Right
-| `\|<` | - | Bitwise Rotate Left
+| `>|` | - | Bitwise Rotate Right
+| `|<` | - | Bitwise Rotate Left
 | `->>` | - | sign extend (arithmetic) bit shift right
 | `=` | - | Value Assignment
 | `:=` | - | Value Assignment with inferred Type
@@ -56,7 +56,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | Operator | Fn Name | Description
 |--|--|--
 | `&&` | cascading l-value logical-and
-| `\|\|` | cascading l-value logical-or
+| `||` | cascading l-value logical-or
 
 ---
 
@@ -128,15 +128,15 @@ To be determined:
 | Operator | Description
 |---|---
 | `\` | reserved
-| `\|` | reserved
+| `|` | reserved
 | `$` | reserved
 | `=>` | used in mapping / some sort of (forward) assignment?
 | `<=` | map structure / assign struct properties
 | `()` | Function Object operator
-| `\|>` | Parameter pipe?
-| `<\|` | Reverse parameter pipe?
+| `|>` | Parameter pipe?
+| `<|` | Reverse parameter pipe?
 | `<=>` | Swap operator
-| `::` | reserved
+| `::` | Static namespace delimiter
 | `:>` | reserved
 | `<:` | reserved
 | `<-` | reserved
@@ -211,17 +211,17 @@ These operators cannot be overloaded, they simply use the standard operators.
 | `**=` | read - power - write
 | `>>=` | read - shift right - write
 | `<<=` | read - shift left - write
-| `>\|=` | read - roll right - write
-| `\|<=` | read - roll left - write
+| `>|=` | read - roll right - write
+| `|<=` | read - roll left - write
 | `?=` | read - test - write (locking?)
 | `!=` | read - error?? - write
 | `&=` | read - bit and - write
-| `\|=` | read - bit or - write
+| `|=` | read - bit or - write
 | `^=` | read - bit xor - write
 | `$=` | read - ?? - write
 | `^=` | read - 'immutable' ?? - write
-| `\|>=` | ?
-| `<\|=` | ? (or `=<\|`)
+| `|>=` | ?
+| `<|=` | ? (or `=<|`)
 
 Do we allow a list of right values? (yes)
 

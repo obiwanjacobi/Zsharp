@@ -6,27 +6,9 @@ A program starts when its entry point (main) function is called.
 
 A function has a name that identifies it uniquely. See [Identifiers](../lexical/identifiers.md).
 
-It is also distinguished by the use of parenthesis `()` when declared or called. Even when the function takes no arguments, the caller still uses the '()' to mark it as function (-perhaps not).
+Here is the full syntax of a function:
 
-```C#
-MyFunction: ()        // function declaration
-    fn_impl_here
-
-MyFunction()        // function call
-```
-
-A more complex example would look like this:
-
-```C#
-repeat: (count: U8, char: U8): Str
-    fn_impl_here
-
-s = repeat(42, 'X')
-```
-
-Here is the full syntax of a function. Everything but the `()`'s are optional.
-
-```csharp
+```txt
 functionName: InterfaceName [captures]<template>(parameters): returnType
 ```
 
@@ -34,9 +16,9 @@ functionName: InterfaceName [captures]<template>(parameters): returnType
 
 `InterfaceName`: (optional) When basing the type of the function of off a function interface. In that case the declaration of the `types`, `parameters` and `returnType` may be repeated for readability. The function interface name is a type name so it starts with an upper case first letter.
 
-`[captures]`: (optional) This captures variables external to the function for its execution. For 'normal' function these would be global variables. For lambda's these could be function local variables that are used inside the lambda. Captures are only specified on function declarations (implementation), not on function (type) interfaces. The name of the capture refers to a variable (or parameter) and that name is also used in the function's implementation. Comma separated.
+`[captures]`: (optional) This captures variables external to the function for its execution. For 'normal' function these would be global variables. For lambda's these could be function-local variables that are used inside the lambda. Captures are only specified on function declarations (implementation), not on function (type) interfaces or at the call site. The name of the capture refers to a variable (or parameter) and that name is also used in the function's implementation. Comma separated.
 
-`<template>`: (optional) Template Parameters that the template function uses in its implementation. Comma separated.
+`<template>`: (optional) Template Parameters that the template function uses in its implementation. Type parameters must start with a upper case first letter. Comma separated.
 
 `(parameters)`: (optional) By-value parameters the function acts on. Comma separated.
 
@@ -59,7 +41,7 @@ fn: [c.Ptr()]<T>(p: T): Bool  // by ref
 
 fn: InterfaceName
 // interface impl with capture
-fn: [c] InterfaceName
+fn: InterfaceName [c]
 // repeated function type decl with capture
 fn: InterfaceName [c.Ptr()]<T>(p: T): Bool
 ```
@@ -1020,7 +1002,7 @@ accept: (self: MyStruct, v: Visitor)
 
 ## Operator Functions
 
-All operators are implemented as functions. The operator is an alias for the actual function.
+All operators are implemented as functions. The operator is an (implicit) alias for the actual function.
 
 > Will the compiler supply standard implementation for common operators on custom types? (C++ spaceship operator)
 
@@ -1046,9 +1028,9 @@ For more information refer to [Lexical Operators](../lexical/operators.md).
 
 ## Top-Level Functions
 
-Any function can be executed as a module is first accessed by placing the call at the top-level in a module file.
+Any function can be executed as a module is first accessed by placing the call at the top-level (scope) in a module file.
 
-Code in the top-level will be executed in order of appearance (top to bottom). This code is placed in a static C# constructor for the module type.
+Code in the top-level (scope) will be executed in order of appearance (top to bottom). This code is placed in a static C# constructor for the module type.
 
 ```csharp
 #module MyMod
@@ -1117,21 +1099,21 @@ Some compiler functions to manipulate files would come in handy.
 
 > .NET compatibility for async/await.
 
-Use `Async<T>` to indicate an `async` function (state machine). Any call to a function with an `Async<T>` or `Task<T>` return value is awaited implicitly unless the receiving variable type is of type `Task<T>`.
+Use `Async<T>` to indicate an `async` function (state machine). Any call to a function with an `Async<T>` or `Task<T>` return value is awaited implicitly unless the receiving variable type is of type `Task<T>`. If the return value is Task -without a payload type- the call is awaited if no return value is captured in a variable.
 
 Use `Task<T>` to indicate a non-`async` function. Any call to a function with an `Async<T>` or `Task<T>` return value is NOT awaited.
 
 `Async<T>` is syntactic sugar for using the (C#) `async` keyword and the `Task<T>` return type.
 
 ```csharp
-// C#: async Task<U8> fnAsync()
+// C#: async Task<Byte> fnAsync()
 fnAsync: (): Async<U8>
     // don't need await (implicit)
     x = workAsync()
     return x + 42
 
 // await is implicit by using Async? Yes
-// if Task<T> return type was used => No
+// if Task<T> return type was used => Also yes
 fnAsync: (): Async<U8>
     x: U8 = workAsync()
     return x + 42
@@ -1141,7 +1123,7 @@ fnAsync: (): Task<U8>
     return workAsync(42)
 
 // multiple tasks parallel
-// Use explicit Task<T> for return values to NOT await
+// Use explicit Task<T> for return values variables to NOT await
 fnAsync: (): Async<U8>
     t1: Task<U8> = work1Async()
     t2: Task<U8> = work2Async()
@@ -1183,7 +1165,7 @@ fn(p)
 fn(42, "42")
 ```
 
-> Also support list (ordered), map (key-value) and stack as a parameters object?
+> Also support list (ordered), map (key-value) and stack as a parameters object - or easy conversions?
 
 Will there be an automatic overload of `fn` (using an immutable ptr to the parameter structure instance) or does the compiler unpack the structure at the call site to call the original function?
 
@@ -1192,11 +1174,6 @@ Will there be an automatic overload of `fn` (using an immutable ptr to the param
 > The compiler generated option should allow being mapped from a real object.
 
 Perhaps a 'service' function type uses this principle but calls it a 'message' (like gRPC). Would also return a message in that case. Implementation could be gRPC for interop.
-
----
-
-- simulate properties? thru type-bound functions?
-Get\<T> / Set\<T> / Notify\<T> / Watch\<T[]>
 
 ---
 
@@ -1234,20 +1211,23 @@ Type Functions
 Functions that live inside the namespace of a type.
 Static methods in C#.
 
+To avoid a clash with alternate syntax for bound functions - where the typename indicates the type of the `self` parameter - we use a different 'dot' syntax: `::`.
+
 ```csharp
 MyStruct
     ...
 
 // use 'namespace' syntax?
-MyStruct.Fn: (p: U8): Bool
+MyStruct::Fn: (p: U8): Bool
     ...
 
 // call
-b = MyStruct.Fn(42)
+b = MyStruct::Fn(42)
 ```
 
 ---
 
 > TBD
 
-- Map, Apply, Bind ?? What are the names to use here? https://fsharpforfunandprofit.com/series/map-and-bind-and-apply-oh-my/
+- simulate properties? thru type-bound functions?
+Get\<T> / Set\<T> / Notify\<T> / Watch\<T[]>

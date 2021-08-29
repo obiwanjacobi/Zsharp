@@ -148,3 +148,9 @@ Could also have a 'backward' piping operator? `<|` going the other way...
 ```csharp
 fn1() <| fn2() <| fn3() <| 42
 ```
+
+---
+
+> TBD
+
+- Map, Apply, Bind ?? What are the names to use here? https://fsharpforfunandprofit.com/series/map-and-bind-and-apply-oh-my/
