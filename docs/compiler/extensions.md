@@ -2,9 +2,9 @@
 
 > `.NET` Code Attributes are objects, decorators are functions. How to make these meet? Also we may need to rethink some of the extension points.
 
-> TBD: compiler extensions. plugins that supply code. Don't allow language extension, but do allow compile-time function extensions.
+> TBD: compiler extensions. plugins that supply code. Don't allow language extension, but do allow compile-time function extensions. (see also Roslyn source generators)
 
-> A meta extension: implement a custom # tag. Register C++ code with the compiler to be called when the `#` tag is encountered. The extension either manipulates the Abstract Syntax Tree or emits Machine Code Representation.
+> A meta extension: implement a custom # tag. Register code with the compiler to be called when the `#` tag is encountered. The extension either manipulates the Abstract Syntax Tree or emits code as text.
 
 > A 'code attribute' or 'decorator' extension. Annotated code that gets in the loop for generating the code for that scope. This, for instance, allows implementation of detailed entry and exit tracing and function interception etc.
 
@@ -26,10 +26,12 @@ myFunction: (p: U8) Bool
 {CodeAttr1, CodeAttr2}      // comma separated
 myFunction: (p: U8) Bool
 
+// parameter decorator
 {p: CodeAttr}
 myFunction: (p: U8) Bool
 
-{: CodeAttr}                // : for retval
+// : for retval
+{: CodeAttr}
 myFunction: (p: U8) Bool
 
 // full set
@@ -38,7 +40,7 @@ myFunction: (p: U8) Bool
 {CodeAttr1, CodeAttr2}      // for function
 myFunction: (p: U8) Bool
 
-// concat
+// full set on 1 line
 {p: CodeAttr, : CodeAttr, CodeAttr1, CodeAttr2}
 myFunction: (p: U8) Bool
 ```
@@ -54,7 +56,7 @@ Code attributes with parameters:
 
 ## Decorator Functions
 
-> Are decorators only 'used' at compile time?
+> Are decorators only 'used' at compile time? => No
 
 Decorators are functions. For each type of Decorator a specific function with the same (decorator) name is created. If a decorator function is not found, it cannot be applied for that scenario.
 
@@ -88,11 +90,13 @@ FunctionReturn: (self: FunctionReturnInfo)
 Module: (self: ModuleInfo)
 ```
 
+> Should these functions return a decorator object?
+
 The decorator function parameters must start with the specific self type in order to be used for the specific code construct. Additionally any number of extra parameters may be added to the decorator function. Matching decorator functions to a code construct is done purely on the self parameter.
 
-The `self` structures that are defined mainly provide type information of the decorated code construct. The Info types also contain an entry point into the compiler for the decorator function to be able to modify the code compiled for the code construct.
+The `self` structures that are defined mainly provide type information of the decorated code construct. The Info types also contain an entry point into the compiler for the decorator function to be able to modify the code compiled for the code construct. They are sourced from the .NET reflection objects.
 
-Decorator functions are run at compile time and should therefor use the `#!` at the implementation definition to make sure the code is compile-time execution ready and are not compiled into the binary.
+Decorator functions are run at compile time (_are they?_) and should therefor use the `#!` at the implementation definition to make sure the code is compile-time execution ready and are not compiled into the binary.
 
 ```C#
 #! MyFnDecorator: (self: FunctionInfo, p: U8)

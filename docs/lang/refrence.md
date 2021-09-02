@@ -17,3 +17,9 @@ In .NET the the type determines the kind of reference. Regular classes are refer
 |--|--|--
 | struct | record | Reference Type with value semantics
 | custom data type | struct | A value object
+
+```csharp
+ref
+Ref<T>
+.Ref()
+```

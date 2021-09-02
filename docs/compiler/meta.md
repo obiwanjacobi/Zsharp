@@ -95,6 +95,8 @@ At the end of the scope the options are `pop`ed automatically and previous setti
 # pop() _
 ```
 
+We can also use `enable` or `disable` that automatically push the previous state and a `restore` pragma to restore it afterwards.
+
 | Pragma | Description
 |--|--
 | module | Assigning code to a module

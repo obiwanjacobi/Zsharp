@@ -26,6 +26,4 @@ There is no exe that will accept command line argument to compile a file.
 
 ## Community
 
-If you like, you can chat about the Z# language on:
-- [Facebook](https://www.facebook.com/groups/724275751426108/)
-- [Discord](https://discord.gg/5r9YMXHrYU)
+If you like, you can chat about the Z# language on [Discord](https://discord.gg/5r9YMXHrYU).

@@ -25,4 +25,11 @@ When condition of an `if` statement is known at compile time, the compiler knows
     code compiled if comptimeValue is true
 #else
     code eliminated - excluded by compiler
+
+// or
+
+if #!comptimeValue
+    code compiled if comptimeValue is true
+else
+    code eliminated - excluded by compiler
 ```

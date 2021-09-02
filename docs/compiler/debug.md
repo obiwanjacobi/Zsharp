@@ -1,3 +1,5 @@
 # Debug
 
-> Look into how to get a free ride in Visual Studio or Visual Studio Code.
+Debugging is totally based on the .NET debuggers.
+
+> look into presenting the correct Z# source code while debugging.

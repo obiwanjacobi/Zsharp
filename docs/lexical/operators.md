@@ -98,6 +98,8 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `?`-arithmetic | conditional any arithmetic operation
 | `?+=` | conditional read-add-write
 
+> We're mixing the meaning of `?` with 'if not null' and 'if null'!
+
 ```csharp
 a = 42
 o = _

@@ -34,7 +34,7 @@ use(v)
 
 The catch keyword is specified after the function that could return the error, and it introduces a scope. This scope is where the handler code goes in case there is an error. The variable name that is used to hand the code the `Error` is specified inside the parentheses.
 
-> TBD: use a more lambda-like syntax: `v = fn() catch => (err)`? That would align more with [Error Handlers](#Error-Handlers).
+> TBD: use a more lambda-like syntax: `v = fn() catch -> (err)`? That would align more with [Error Handlers](#Error-Handlers).
 
 Alternate way of handling more complex error conditions using a `match` expression.
 
@@ -43,9 +43,9 @@ FnErr: (): U8!
     ...
 
 a = match FnErr()
-    err: Error => 0
-    custom: MyError => return custom.fld    // return exits the function
-    n: U8 => n
+    err: Error -> 0
+    custom: MyError -> return custom.fld    // return exits the function
+    n: U8 -> n
 ```
 
 A (predicted) common pattern is that a function will call many functions itself and as soon as one errors out, the function itself will simply stop and propagate the error to its caller. The `try` keyword is syntactic sugar for '`catch(err) return err`' and is specified in front of the function call. It can be used as follows:
@@ -53,7 +53,7 @@ A (predicted) common pattern is that a function will call many functions itself 
 ```C#
 MyFunc: (): Bool!
     // propagate error from function
-    b = try couldWork() // try => catch(err) return err
+    b = try couldWork() // try -> catch(err) return err
     // b is the plain type - without the Err<> component.
     use(b)
 ```
@@ -100,7 +100,7 @@ You can use the `return` keyword in a function to exit its execution of course.
 
 ## Error Scopes
 
-For .NET Interop, we need a way to use the `try` and `catch` keywords for a block of code. Perhaps we could pin this to [Captures](./functions.md#Captures)? Although both the capture and the `catch` keyword introduce an indent.
+For .NET Interop, we need a way to use the `try` and `catch` keywords for a block of code. Perhaps we could pin this to [Captures](capture.md)? Although both the capture and the `catch` keyword introduce an indent.
 
 ```csharp
 fn: (): U8!     // can return Error
@@ -115,49 +115,57 @@ fn: (): U8!     // can return Error
 ```
 
 Alternate idea:
+
 The `Err<T>` type is not used at all. `try` is not used on a per function basis but as a scope (typical try-catch usage) optionally used as a capture block.
 `catch` can be still per function or as a try-handler - implicitly wrapping the function call in a try-block. The 'finally' block is implicit by using the defer keyword.
 
 ```csharp
-try     // starts scope (optionally a capture)
-    // catch with exception type for local handling
-    handle = File.Open("file.txt") catch => (err: FileNotFoundException)
-        ...
-    // schedule to close file
-    defer File.Close(handle)
-    txt = File.ReadAll(handle)
-
-catch => (err: Exception)     // allow?
+// starts scope (optionally a capture)
+try
+    // catch-lambda (with exception type) for local handling
+    handle = File.Open("file.txt") catch -> (err: FileNotFoundException)
+        // handle FileNotFound
     ...
-    // errdefer list executed here
-catch => (err: EndOfFileException)
+catch -> (err)      // err: Exception
     ...
-    // errdefer list executed here
-
-// => defer list executed here
 ```
 
-Do we allow multiple catch blocks or use `match` to sort out the exception type? Or allow both?
-
-If using match the code must propagate the exception explicitly if not handled. Using multiple catch blocks, .NET will handle exception dispatch.
+Use multiple `catch` blocks.
 
 ```csharp
 try
     ...
-catch => (err)  // err: Exception
-    v = match err
-        FileNotFoundException => "File not found"
-        EndOfFileException => "File is at its end"
-        _ => _  // throw?
-
-    if v?
-        return v
-    
-    // propagate exception
-    Error(err)      // throw (difference with Error?)
-    err.Throw()     // throw as method on Exception
-    exit err        // as exit statement?
+// order of appearance is important
+catch -> (err: FileNotFoundException)
+    ...
+catch -> (err: EndOfFileException)
+    ...
+// Exception is propagated if not caught 
 ```
+
+Throw a new Exception:
+
+```csharp
+err = ArgumentException("Not good", "param1")
+
+// throw exception
+Error(err)
+err.throw()
+exit err    // implies exit-fn at minimum
+```
+
+Rethrow an existing Exception:
+
+```csharp
+// catch (Exception e) {
+//     throw;
+// }
+catch -> (err)
+    err.throw()     // can we track usage to generate 'throw'?
+    err.rethrow()   // make it explicit?
+```
+
+`throw` and `rethrow` functions are bound to the `Exception` type that will be emitted as a C# `throw` statement.
 
 ## Error Handlers
 
@@ -202,13 +210,13 @@ v = errorFn(42) catch(err)
 v = errorFn(42) catch(err)
     // value: match
     a = match err
-        myErr: MyError => ...
-        _ => ...
+        myErr: MyError -> ...
+        _ -> ...
 
 v = match errorFn(42)
-    n: U8 => // use normal return value
-    myErr: MyError => ...
-    _ => ...
+    n: U8 -> // use normal return value
+    myErr: MyError -> ...
+    _ -> ...
 ```
 
 > We may need to capture local variables for the error handler to access. How will that work?
