@@ -9,15 +9,26 @@ m = Map<Str, U8>(capacity)
 m["key1"] = 1
 m["key2"] = 2
 m["key3"] = 42
+
+// how do these indexers work on objects?
+indexer: <K, V>(self: Map<K, V>, key: K, val: V)
+    ...
 ```
 
-Str-to-U8 map??
+---
 
-```C#
-map = ["key1" = 1, "key2" = 2, "key3" = 42]
-```
+## Map Initializers
 
 > TBD what would be the syntax to declaratively define a map?
+
+```csharp
+map = ["key1" = 1, "key2" = 2, "key3" = 42]
+map = {
+    "key1" = 1
+    "key2" = 2
+    "key3" = 42
+}
+```
 
 ---
 
@@ -60,7 +71,7 @@ fn2: (p1: U8, p2: Str, p3: U16?)
 fn2(m)
 ```
 
-> Keys MUST match field (struct) or parameter (function) names! (cannot fully check at comiletime)
+> Keys MUST match field (struct) or parameter (function) names! (cannot fully check at compile time)
 
 ---
 
@@ -69,6 +80,8 @@ Allow map syntax to be equal to object syntax - as a dynamic object.
 ```csharp
 // use list syntax to create maps?
 m = (a = 42, b = "42")
+// or object syntax?
+m = {p1 = 42, p2 = "42"}
 // or special object syntax?
 m = {p1 <= 42, p2 <= "42"}
 

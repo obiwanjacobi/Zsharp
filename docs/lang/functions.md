@@ -132,14 +132,15 @@ if v?
 
 ### Default Parameter Values
 
-> Not supported.
+Assign a default value to a function parameter.
+Function parameters with defaults cannot be in front of parameters without a default value assigned.
 
-Functions should have unique names with well-defined parameters.
-Having default parameter values does not explain at the calling site what is happening.
+```csharp
+fn: (p: U8, q: U8 = 101)
+    ...
 
-> We may have to allow this for .NET compatibility.
-
-> See note in [Template Parameters](./templates.md#Template-Parameter-Defaults) about supporting a default value for (template) parameters.
+fn(42)  // fn(42, 101)
+```
 
 > TBD
 
@@ -238,6 +239,71 @@ allowedFn(editable: Bool)
 allowedFn(editable = true)
 allowedFn(editable = false)
 ```
+
+### Parameter Containers
+
+Use anonymous types or Tuples, Structs and Maps (Dictionaries) as a parameter container.
+
+```csharp
+fn: (p: U8, s: Str)
+    ...
+
+// anonymous type
+a = { s = "42", p = 42 }
+fn(...a)
+
+// map (syntax undetermined)
+m = { p = 42, s = "42" }
+fn(...m)
+
+// auto compiler generated struct (:: syntax?)
+c = fn::Parameters
+    p = 42
+    s = "42"
+fn(...c)
+```
+
+> TBD
+
+Interpret the function parameters `(param: U8)` as a tuple. That means that all functions have only one actual param, which is a single tuple and is passed by reference (as an optimization), but by value conceptually.
+
+All the parameters need to be read-only (which is a bit odd because they may not use the `Imm<T>` type). This does not mean you cannot pass a pointer and change the content that it points too - that still works.
+
+We could auto-generate a struct for each function's parameters and allow that struct to be created, initialized and used as the function's only parameter. Although that would encourage functions with a large number of parameters - something we don't want...
+
+Associate a parameters structure with a function.
+
+```csharp
+// function with parameters
+fn: (p: u8, s: Str)
+    ...
+
+// compiler based
+p = fn#parameters
+    p = 42
+    s = "42"
+
+// as real struct
+// 'fn' is namespace?
+p = fn.Parameters
+    p = 42
+    s = "42"
+
+// call
+fn(p)
+// same as
+fn(42, "42")
+```
+
+> Also support list (ordered), map (key-value) and stack as a parameters object - or easy conversions?
+
+Will there be an automatic overload of `fn` (using an immutable ptr to the parameter structure instance) or does the compiler unpack the structure at the call site to call the original function?
+
+> Will overloaded functions share one parameter structure with all the parameters - or - each have an individual parameter structure?
+
+> The compiler generated option should allow being mapped from a real object.
+
+Perhaps a 'service' function type uses this principle but calls it a 'message' (like gRPC). Would also return a message in that case. Implementation could be gRPC for interop.
 
 ---
 
@@ -476,6 +542,20 @@ b = e.IsMagicValue()        // true
 
 ---
 
+### Immutable Self
+
+A function can publish its 'const-ness' by using an immutable self type.
+
+```csharp
+// this function will not change self
+constFn: (self: Imm<MyStruct>>, p: U8): Str
+    ...
+```
+
+A function that does not change self - or any other param for that matter - cannot call any other function on that parameter that DOES change its value. const-functions can only call other const-functions.
+
+---
+
 > TBD: Allow leaving of `()` when bound function has only one or no other parameters?
 
 ```csharp
@@ -562,7 +642,7 @@ s.fnStruct()
 
 > TBD: How would that work?
 
-Type resolution is based on the type of the instance (self). If there is no function available for the (more) specialized type, its parent (derived) type is used. If no function is available at all it is an error. This is compile-time resolution of polymorphism.
+Type resolution is based on the type of the instance (self). If there is no function available for the (more) specialized type, its parent (base) type is used. If no function is available at all it is an error. This is compile-time resolution of polymorphism.
 
 We could also have a template that would select the correct type of function to be called at compile-time. Several options exist.
 
@@ -638,6 +718,21 @@ If both the return type as well as the first parameter type are the same and imm
 If multiple overloads exist, standard overload resolution is applied to choose the correct function to call.
 
 More information on [Type Constructors](types.md#Type-Constructors) and [Conversions](conversions.md).
+
+```csharp
+// default ctor (to signal public creation?)
+MyType: (): MyType
+// ctor with params
+MyType: (p: U8): MyType
+// ctor enable deriving a type
+MyType: (self: MyType)
+// 'with' syntax support
+MyType: (self: Imm<MyType>, merge: Opt<MyType>): Imm<MyType>
+MyType: (self: Imm<MyType>, merge: Imm<Opt<MyType>>): Imm<MyType>
+// conversion
+ThatType: (self: MyType): ThatType
+ThatType: (self: MyType, p: U8): ThatType
+```
 
 ---
 
@@ -759,7 +854,7 @@ The `yield` keyword indicates that a part in the function code has finished and 
 
 The `return` keyword works as normal and also resets the state of the coroutine. The next call to the function will start from the beginning.
 
-There are three types of coroutines in respect to the function return value.
+There are three (four) types of coroutines in respect to the function return value.
 
 ```C#
 // multiple calls, no result
@@ -781,7 +876,15 @@ coroutine: (p: U8): Iter<U16>
     yield p
     yield p << 4
     yield p << 8
-    return p << 12
+    return p << 12  // optional
+
+// single call with multiple results
+coroutine: (p: U8): Iter<U16>
+    yield p
+    yield p << 4
+    yield p << 8
+    return p << 12  // optional
+
 ```
 
 > `.NET`: C# only supports the last option.
@@ -790,9 +893,9 @@ The Coroutine state is kept in hidden a parameter at the call site. It is needed
 
 > Do we need syntax to clearly identify a coroutine?
 
-> What happens when calling the same co-routine (state) with different parameters?
+> What happens when calling the same co-routine (state) with different parameter values?
 
-```C#
+```csharp
 coroutine: (state: Ptr, p: U8) // hidden state param
 
 i = 42
@@ -800,7 +903,9 @@ callings1 = 0           // (hidden) coroutine call state at root-scope
 loop [0..3]
     coroutine(i, s1.Ptr())     // ref, yield/return updates state
     i = i + 2
+```
 
+```csharp
 // multiple coroutines
 s1 = 0
 s2 = 0
@@ -809,7 +914,7 @@ loop [0..3]
     otherCoroutine(42, s2.Ptr())
 ```
 
-> Do we implement co-routines with capture that captures the parameters -so the can't change between calls- and maintains its execution state...?
+> Do we implement co-routines with capture (as an object) that captures the parameters -so the can't change between calls- and maintains its execution state...?
 
 Coroutines should be lazily evaluated. This should work and only execute the code inside the while loop when the next call to the coroutine is made.
 
@@ -1089,9 +1194,11 @@ txt = #genFn<MyStruct>(2)
 //     fld2: Str
 ```
 
-These functions only run during the build and there for need some orchestration. Perhaps extend the syntax in the [assembly](../modules/assembly.md) file, although the generator functions should be run before build composition in order to include their output.
+These functions only run during the build and therefor need some orchestration. Perhaps extend the syntax in the [assembly](../modules/assembly.md) file, although the generator functions should be run before build composition in order to include their output.
 
 Some compiler functions to manipulate files would come in handy.
+
+> A generator function (flavor) that uses Linq Expressions to generate code at runtime?
 
 ---
 
@@ -1131,51 +1238,37 @@ fnAsync: (): Async<U8>
     return t1 + t2
 ```
 
+A capture on a task is implicit await
+
+```csharp
+t1: Task<U8> = workAsync()
+[t1]
+    x = 42 + t1     // await here
+```
+
+```csharp
+t1: Task<U8> = work1Async()
+t2: Task<U8> = work2Async()
+[t1, t2]                // Task.WhenAll
+    x = t1 + t2         // await twice
+```
+
+> I don't like the use of a(n awaited) Task as if it were a value...
+
+### Promise & Future
+
+A Promise is returned from a 'producer' function that will hold the result eventually.
+A Future is used by the consuming call site to access the results inside the Promise.
+
+> Do we need this?
+
+---
+
+## TBD
+
 ---
 
 > TBD
-
-Interpret the function parameters `(param: U8)` as a tuple. That means that all functions have only one actual param, which is a single tuple and is passed by reference (as an optimization), but by value conceptually.
-
-All the parameters need to be read-only (which is a bit odd because they may not use the `Imm<T>` type). This does not mean you cannot pass a pointer and change the content that it points too - that still works.
-
-We could auto-generate a struct for each function's parameters and allow that struct to be created, initialized and used as the function's only parameter. Although that would encourage functions with a large number of parameters - something we don't want...
-
-Associate a parameters structure with a function.
-
-```csharp
-// function with parameters
-fn: (p: u8, s: Str)
-    ...
-
-// compiler based
-p = fn#parameters
-    p = 42
-    s = "42"
-
-// as real struct
-// 'fn' is namespace?
-p = fn.Parameters
-    p = 42
-    s = "42"
-
-// call
-fn(p)
-// same as
-fn(42, "42")
-```
-
-> Also support list (ordered), map (key-value) and stack as a parameters object - or easy conversions?
-
-Will there be an automatic overload of `fn` (using an immutable ptr to the parameter structure instance) or does the compiler unpack the structure at the call site to call the original function?
-
-> Will overloaded functions share one parameter structure with all the parameters - or - each have an individual parameter structure?
-
-> The compiler generated option should allow being mapped from a real object.
-
-Perhaps a 'service' function type uses this principle but calls it a 'message' (like gRPC). Would also return a message in that case. Implementation could be gRPC for interop.
-
----
 
 Declarative code: see if we can find a syntax that would make it easy to call lots of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
 https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md

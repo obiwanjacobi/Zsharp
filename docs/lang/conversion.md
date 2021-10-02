@@ -49,6 +49,45 @@ i = v.I8()      // I8: -1
 
 > Should we have specific conversion functions that explicitly state the conversion could be unsafe? `v.unsafeI8()`
 
+## Casting
+
+Strictly speaking: casting is not converting.
+
+Casting is switching to another type the instance/object supports.
+
+You cannot cast a 64-bit integer to a 32-bit integer - they are not the same type or one is not implemented by the other.
+
+You can cast an instance of a struct to its base type it derives from.
+
+```csharp
+MyType1
+    fld1: U8
+    fld2: Str
+
+MyType2 : MyType1
+    extraField: Str
+
+v = MyType2
+    ...
+t1: MyType1 = v
+
+t1 = t1.TryMyType2()    // try-cast converter
+t2 = t1 as MyType2      // keyword
+t2 = t1 <:? MyType2      // operator
+// t2: Opt<MyType2>
+
+if v is MyType1         // keyword
+    ...
+if v :? MyType1         // operator
+    ...
+
+// runtime error if fails
+c1 = v.MyType1()        // cast converter
+c2 = t1 <: MyType2      // cast operator
+```
+
+---
+
 ## Optional
 
 ```csharp

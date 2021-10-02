@@ -89,6 +89,19 @@ for fn in l
 
 `[c]` is capturing by value, so it should print 0-9.
 
+---
+
+Capture state is not 'committed' when the capture scope is exited in an error condition (exception).
+
+```csharp
+x = 42
+try [x]
+    x = 101
+    Error("Oh no!")
+
+// x = 42
+```
+
 ## Capture Aliases
 
 Like all Aliases, using the assignment operator will rename the capture for (inside) the function/capture scope.

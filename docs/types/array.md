@@ -81,6 +81,21 @@ Array<T> : T[]     // variable length at compile time
 
 ---
 
+## Array Initializers
+
+```csharp
+// immutable
+arr = (1, 2, 3, 4, 5)       // list initializer
+arr = [1..6]                // range initializer
+arr = ..?                   // other?
+
+// mutable
+arr = Array<U8>(10)
+arr += (1, 2, 3, 4, 5)
+```
+
+---
+
 ## Array Pointers
 
 To avoid copying over the complete array for a function call, it has to be passed by reference (pointer).
@@ -180,4 +195,4 @@ arr3D = Array<U8>(4, 3, 2)
 
 > TBD
 
-Reuse F# libraries to implement immutable array/list/dictionary sharing algortithms?
+Reuse F# libraries to implement immutable array/list/dictionary sharing algorithms?

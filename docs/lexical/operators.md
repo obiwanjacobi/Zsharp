@@ -139,8 +139,9 @@ To be determined:
 | `<|` | Reverse parameter pipe?
 | `<=>` | Swap operator
 | `::` | Static namespace delimiter
-| `:>` | reserved
-| `<:` | reserved
+| `:>` | is type (bool)
+| `<:?` | type as (optional cast)
+| `<:` | cast type
 | `<-` | reserved
 | `->>` | parallel execution (also sign extended shift)
 | `[[ ]]` | Alternate Decorators syntax (instead of `{}`)
@@ -162,16 +163,7 @@ Operators for strings and characters.
 | `=<~` | Case (and culture) insensitive lesser-than-or-equal - sorting.
 | `s[2..6]` | sub-string using `Range`.
 | `<+` | Concat a string.
-
-```csharp
-// string concat operator?
-s = "Hello " <| "World"
-s = "Hello " <+ "World" // <= I like this one
-s = "Hello " <& "World"
-s = "Hello " + "World"
-s = "Hello " & "World"
-s = "Hello " << "World"
-```
+| `/<+` | Concat a string with path separator.
 
 ---
 

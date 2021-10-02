@@ -96,6 +96,24 @@ The lifetime of any variable can be global, in the sense that the variable maint
 
 > TBD: in file scope or module (multiple files) scope?
 
+> TBD global variables that can only be accessed locally (function).
+
+```csharp
+// cannot see it uses global state in capture...
+fn: (): U8
+    // global state accessed locally
+    ::global: U8 = 42       // syntax?
+    return global
+
+fn2: [global]()     // error!
+    ...
+
+// use capture to declare?
+fn: [global: U8](): U8
+    global += 1
+    return global
+```
+
 ---
 
 ## Context Variables
@@ -147,6 +165,30 @@ with t
 // or
 with MyType(42)
     .MyFn("blabla")
+```
+
+---
+
+## Scoped Context
+
+A context object instance passed to all functions implicitly that is cleared at a certain boundary / valid for a certain scope.
+
+Can contain loggers, temp preallocated memory buffers and any application specific data.
+
+```csharp
+// some syntax for static bound functions (namespace or struct)
+Context.LogInfo("Context demo.")
+
+ctx = Context::Replace(Context
+    Logger = MyLogger
+)
+// schedule pop context
+defer Context::Replace(ctx)
+
+// will use new context
+fn(42)
+
+// end of scope pops context (defer)
 ```
 
 ---

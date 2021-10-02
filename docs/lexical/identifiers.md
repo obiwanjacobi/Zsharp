@@ -137,3 +137,36 @@ Prefix | .NET | Description
 `op_` | - | Z# operator implementation (neither checked/unchecked)?
 
 > Perhaps start the prefix with a `_` to indicate that part is hidden?
+
+---
+
+## Aliases
+
+Almost all identifiers can be aliased, given a new name that is resolved at compile time. These aliases themselves are identifiers and follow the same rules.
+
+An Alias is created by assigning it an existing identifier.
+
+```csharp
+Fn: (p: U8)
+    ...
+
+MyAlias = Fn
+
+MyAlias(42) // calls Fn(42)
+```
+
+> TBD
+
+When an alias resolves to nothing (or empty string) it is treated as a weak reference and removed from the code.
+
+This would allow conditional compilation to select different 'implementations' for an alias or even leave it empty when it does not apply.
+
+```csharp
+// alias resolves to nothing
+MyEmptyAlias = _
+
+// entire call removed because alias is empty
+MyEmptyAlias(42)
+```
+
+How do we know what type this alias represents (function, struct etc)?

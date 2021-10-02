@@ -363,6 +363,24 @@ If no mapping rule structure is defined the field names are matched on a 1:1 bas
 
 ---
 
+## Dependent Field Validation
+
+(Dependent Types)
+
+Add validation rules between fields. For example: `#fld1 > fld2`
+
+When/how are these rules enforced?
+
+```csharp
+MyStruct
+    fld1: U8
+    fld2: Str
+    // the length of the string must be less than value of fld1
+    #fld2.Length < fld1
+```
+
+---
+
 > TBD
 
 - Allow YAML/JSON/XAML/XML to be used inline for declaring hierarchical data? Not sure how to separate the YAML/JSON/XAML/XML syntax from the Z# syntax.

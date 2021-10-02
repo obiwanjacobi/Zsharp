@@ -143,6 +143,29 @@ catch -> (err: EndOfFileException)
 // Exception is propagated if not caught 
 ```
 
+A 'finally' handler?
+
+```csharp
+try
+    ...
+finally 
+    ...     // always executed even if error
+
+...         // executed but not if error
+```
+
+Not the same as 'defer'
+
+```csharp
+try
+    defer ...
+    errdefer ...
+
+...     // executed but not if error
+// defer list always executed even if error
+// errdefer list only executed if error
+```
+
 Throw a new Exception:
 
 ```csharp

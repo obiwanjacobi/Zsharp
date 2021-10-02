@@ -456,7 +456,7 @@ s = h.Seconds()     // s = 7200
 
 ---
 
-## Builtin Wrapper Types
+## Built-in Wrapper Types
 
 Several wrapper types are used to add meaning to other types.
 
@@ -581,8 +581,9 @@ s2 = s.Mut({ fld1 = 42 })   // explicit function call1
 s2 = s.Clone({ fld1 = 42 }) // explicit function call2
 s2 = s + { fld1 = 42 }      // special operator1
 s2 = s & { fld1 = 42 }      // special operator2
-s2 = s <= { fld1 = 42 }     // special operator3
+s2 = s <= { fld1 = 42 }     // special operator3 (mapping)
 s2 = s <- { fld1 = 42 }     // special operator4
+s2 = s <+ { fld1 = 42 }     // special operator5
 ```
 
 > TBD: type validation after construction? This is a general issue...
@@ -630,6 +631,9 @@ During compilation all references to type aliases are replaced with their origin
 Only Structure Types can be implemented as a nameless type.
 
 See also [Anonymous Structures](structures.md#Anonymous-Structures).
+
+> `.NET` C# has three different types of anonymous structures: anonymous types (class), value tuples and tuples (class).
+https://docs.microsoft.com/en-us/dotnet/standard/base-types/choosing-between-anonymous-and-tuple#key-differences
 
 ## Type Constructors
 
@@ -702,9 +706,9 @@ t: MyType   // default init-ed struct
 t.fld1 ...
 ```
 
-> Need to make sure no half initialized instances are the result of a constructor function erroring-out half way through its function. That is why we use a capture.
+Need to make sure no half initialized instances are the result of a constructor function erroring-out half way through its function. That is why we use a capture.
 
-> This (using an explicit `self` parameter) would also solve the problem of calling base-constructor functions when types are derived.
+This (using an explicit `self` parameter) would also solve the problem of calling base-constructor functions when types are derived.
 
 > Can the `self` parameter also be used to call more derived versions of 'overridden' functions (calling a virtual in ctor)?
 
@@ -725,7 +729,7 @@ MyType: (self: MyType)  // derived type constructor fn
 t = MyType()
 ```
 
-Must the base class constructor function call be first?
+The base class constructor function call must be first.
 
 ### Type Constructor Overloading
 
@@ -795,6 +799,22 @@ MyReadOnlyStruct: ^MyStruct
 ```
 
 Using `Imm<T>` and `Opt<T>` on the base type applies to all fields.
+
+=> Maybe use different types that indicate a full type transformation?
+`Immutable<T>` and `Optional<T>` (as well as `Required<T>`)?
+
+Perhaps allow manipulation like in TypeScript 'for each key'...?
+
+> TBD Inverse of `Opt<T>?` (required)
+
+```csharp
+MyStruct
+    fld1: U8?
+    fld2: U16?
+
+// ??
+NonOptStruct: Required<MyStruct>
+```
 
 Make an instance read-only:
 
@@ -926,6 +946,23 @@ Difference: Struct1 ^ Struct2
 
 ```csharp
 MyStruct: (Struct1 & Struct2) | (Struct3 ^ Struct4)
+```
+
+### Subtracting from Types
+
+Create a new type based on an existing type minus some fields.
+
+```csharp
+// syntax?
+MyStruct: BaseStruct - { fld1: Str, fld2: I32 }
+```
+
+Adding to types is a simple matter of:
+
+```csharp
+MyStruct : BaseStruct
+    addFld1: Str
+    addFld2: I32
 ```
 
 ### Multiple Inheritance

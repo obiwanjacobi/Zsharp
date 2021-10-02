@@ -28,6 +28,15 @@ MyEnum
 
 The literal values can be specified using any valid format. See [Literals](../lexical/literals.md)
 
+Enums can be exported from a module. In that case it is part of the API interface and all values must be assigned explicitly. You're less likely to break a public API when adding new enum options if its values are explicitly listed.
+
+```csharp
+#export MyEnum
+    opt0 = 0
+    opt1 = 1
+    opt2        // error!
+```
+
 The type of the enum in the previous example is defaulted to `U8`. But you can be explicit about it and / or choose a different type.
 
 Here is how that would look:
