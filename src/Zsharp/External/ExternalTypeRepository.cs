@@ -1,6 +1,6 @@
-﻿using Mono.Cecil;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Zsharp.AST;
+using Zsharp.External.Metadata;
 
 namespace Zsharp.External
 {
@@ -8,10 +8,8 @@ namespace Zsharp.External
     {
         private readonly Dictionary<string, AstTypeReferenceExternal> _typeReferences = new();
 
-        public AstTypeReference GetTypeReference(TypeReference typeReference)
+        public AstTypeReference GetTypeReference(TypeMetadata typeReference)
         {
-            Ast.Guard(typeReference, "TypeReference (cecil) is null.");
-
             var key = typeReference.FullName;
             if (!_typeReferences.ContainsKey(key))
             {
@@ -24,7 +22,7 @@ namespace Zsharp.External
             return _typeReferences[key].MakeCopy();
         }
 
-        private static string ToZsharpName(TypeReference typeReference)
+        private static string ToZsharpName(TypeMetadata typeReference)
         {
             if (typeReference.IsArray)
             {

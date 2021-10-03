@@ -1,7 +1,7 @@
-﻿using Mono.Cecil;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Zsharp.AST;
+using Zsharp.External.Metadata;
 
 namespace Zsharp.External
 {
@@ -16,7 +16,7 @@ namespace Zsharp.External
             _assemblies = assemblies;
         }
 
-        private void CreateExternalModules(IEnumerable<AssemblyDefinition> assemblies)
+        private void CreateExternalModules(IEnumerable<AssemblyMetadata> assemblies)
         {
             foreach (var assembly in assemblies)
             {
@@ -24,18 +24,15 @@ namespace Zsharp.External
             }
         }
 
-        private void CreateExternalModules(AssemblyDefinition assembly)
+        private void CreateExternalModules(AssemblyMetadata assembly)
         {
-            foreach (var mod in assembly.Modules)
+            foreach (var type in assembly.GetPublicTypes())
             {
-                foreach (var type in mod.Types.Where(t => t.IsPublic))
-                {
-                    AddType(type);
-                }
+                AddType(type);
             }
         }
 
-        private void AddType(TypeDefinition type)
+        private void AddType(TypeMetadata type)
         {
             var builder = new ImportedTypeBuilder(_typeRepository);
             builder.Build(type);

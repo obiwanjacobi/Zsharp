@@ -35,13 +35,7 @@ namespace UnitTests
     internal class AssemblyManagerBuilder
     {
         private const string _dotNetBasePath = @"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\5.0.0\ref\net5.0\";
-
-        private readonly AssemblyManager _assemblyManager = new();
-
-        public AssemblyManagerBuilder()
-        {
-            _assemblyManager.AddProbePath(_dotNetBasePath);
-        }
+        private readonly AssemblyManager _assemblyManager = new(_dotNetBasePath);
 
         public AssemblyManager AssemblyManager => _assemblyManager;
 

@@ -1,16 +1,16 @@
-﻿using Mono.Cecil;
+﻿using Zsharp.External.Metadata;
 
 namespace Zsharp.AST
 {
     public class AstTypeReferenceExternal : AstTypeReferenceType
     {
-        private readonly TypeReference? _typeReference;
+        private readonly TypeMetadata? _typeReference;
 
         protected AstTypeReferenceExternal(AstTypeReferenceType typeOrigin)
             : base(typeOrigin)
         { }
 
-        public AstTypeReferenceExternal(TypeReference typeReference)
+        public AstTypeReferenceExternal(TypeMetadata typeReference)
         {
             _typeReference = typeReference;
             _externalName = new AstExternalName(typeReference.Namespace, typeReference.Name);

@@ -1,22 +1,25 @@
-﻿using Mono.Cecil;
+﻿
+using Zsharp.External.Metadata;
 
 namespace Zsharp.AST
 {
     public class AstFunctionDefinitionExternal : AstFunctionDefinition,
         IAstExternalNameSite
     {
-        public AstFunctionDefinitionExternal(MethodDefinition method, bool hasSelfParameter)
+        public AstFunctionDefinitionExternal(MethodMetadata method, bool hasSelfParameter)
             : base(new AstTypeDefinitionFunction())
         {
+            var declType = method.GetDeclaringType();
+
             MethodDefinition = method;
             HasSelfParameter = hasSelfParameter;
             ExternalName = new AstExternalName(
-                method.DeclaringType.Namespace, method.Name, method.DeclaringType.Name);
+                declType.Namespace, method.Name, declType.Name);
 
             // TODO: built function type!
         }
 
-        internal MethodDefinition MethodDefinition { get; }
+        internal MethodMetadata MethodDefinition { get; }
 
         public override bool IsExternal => true;
 

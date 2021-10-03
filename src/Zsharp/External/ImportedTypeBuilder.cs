@@ -1,9 +1,8 @@
-﻿using Mono.Cecil;
-using Mono.Cecil.Rocks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Zsharp.AST;
+using Zsharp.External.Metadata;
 
 namespace Zsharp.External
 {
@@ -20,7 +19,7 @@ namespace Zsharp.External
             ModuleName = String.Empty;
         }
 
-        public void Build(TypeDefinition typeDefinition)
+        public void Build(TypeMetadata typeDefinition)
         {
             Namespace = ModuleName = typeDefinition.Namespace;
             ModuleName = typeDefinition.FullName;
@@ -52,33 +51,39 @@ namespace Zsharp.External
 
         public AstTypeDefinitionExternal? StructType { get; private set; }
 
-        private void BuildInterface(TypeDefinition typeDefinition)
+        private void BuildInterface(TypeMetadata typeDefinition)
         {
 
         }
 
-        private void BuildEnum(TypeDefinition typeDefinition)
+        private void BuildEnum(TypeMetadata typeDefinition)
         {
 
         }
 
-        private void BuildStruct(TypeDefinition typeDefinition)
+        private void BuildStruct(TypeMetadata typeDefinition)
         {
 
         }
 
-        private void BuildClass(TypeDefinition typeDefinition)
+        private void BuildClass(TypeMetadata typeDefinition)
         {
             if (IsInstanceType(typeDefinition))
             {
+                AstTypeReference? baseType = null;
+
+                if (typeDefinition.HasBaseType)
+                {
+                    baseType = _typeRepository.GetTypeReference(typeDefinition.GetBaseType());
+                }
+
                 StructType = new AstTypeDefinitionExternal(
                     typeDefinition.Namespace,
                     typeDefinition.Name,
-                    _typeRepository.GetTypeReference(typeDefinition.BaseType));
+                    baseType);
             }
 
-            foreach (var methodGroup in typeDefinition.Methods
-                .Where(m => m.IsPublic).GroupBy(m => m.Name))
+            foreach (var methodGroup in typeDefinition.GetPublicMethods().GroupBy(m => m.Name))
             {
                 foreach (var method in methodGroup)
                 {
@@ -112,18 +117,19 @@ namespace Zsharp.External
             }
         }
 
-        private bool IsInstanceType(TypeDefinition typeDefinition)
+        private bool IsInstanceType(TypeMetadata typeDefinition)
         {
             return
                 !(typeDefinition.IsAbstract && typeDefinition.IsSealed) &&
-                typeDefinition.GetConstructors().Any() &&
-                typeDefinition.Methods.Any(m => !m.IsStatic && m.IsPublic);
+                typeDefinition.HasConstructors &&
+                typeDefinition.GetPublicMethods().Any(m => !m.IsStatic);
         }
 
-        private AstFunctionDefinitionExternal CreateFunction(MethodDefinition method)
+        private AstFunctionDefinitionExternal CreateFunction(MethodMetadata method)
         {
+            var declType = method.GetDeclaringType();
             var function = new AstFunctionDefinitionExternal(method, !method.IsStatic);
-            var name = method.Name == ".ctor" ? method.DeclaringType.Name : method.Name;
+            var name = method.Name == ".ctor" ? declType.Name : method.Name;
             function.SetIdentifier(new AstIdentifier(name, AstIdentifierKind.Function));
 
             var typeRef = _typeRepository.GetTypeReference(method.ReturnType);
@@ -132,7 +138,7 @@ namespace Zsharp.External
             AstFunctionParameterDefinition funcParam;
             if (!method.IsStatic)
             {
-                funcParam = CreateParameter(AstIdentifierIntrinsic.Self, method.DeclaringType);
+                funcParam = CreateParameter(AstIdentifierIntrinsic.Self, declType);
                 function.FunctionType.TryAddParameter(funcParam);
             }
 
@@ -147,17 +153,17 @@ namespace Zsharp.External
                 var genericParam = CreateGenericParameter(new AstIdentifier(p.Name, AstIdentifierKind.TemplateParameter));
                 function.AddGenericParameter(genericParam);
 
-                foreach (var constraint in p.Constraints)
+                foreach (var constraintType in p.GetConstraintTypes())
                 {
-                    typeRef = _typeRepository.GetTypeReference(constraint.ConstraintType);
-                    genericParam.ConstraintType = typeRef;
+                    typeRef = _typeRepository.GetTypeReference(constraintType);
+                    genericParam.AddConstraintType(typeRef);
                 }
             }
 
             return function;
         }
 
-        private AstFunctionParameterDefinition CreateParameter(AstIdentifier identifier, TypeReference type)
+        private AstFunctionParameterDefinition CreateParameter(AstIdentifier identifier, TypeMetadata type)
         {
             var funcParam = new AstFunctionParameterDefinition(identifier);
             var typeRef = _typeRepository.GetTypeReference(type);

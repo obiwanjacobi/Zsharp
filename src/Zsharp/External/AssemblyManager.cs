@@ -1,83 +1,97 @@
-﻿using Mono.Cecil;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Reflection;
+using Zsharp.External.Metadata;
 
 namespace Zsharp.External
 {
     public class AssemblyManager
     {
-        private readonly List<string> _probePaths = new();
-        private readonly List<AssemblyDefinition> _assemblies = new();
+        private readonly ProbeAssemblyResolver _resolver;
+        private readonly MetadataLoadContext _context;
+        private readonly Dictionary<string, AssemblyMetadata> _assemblies = new();
 
-        public void AddProbePath(string path)
+        public AssemblyManager(params string[] paths)
         {
-            _probePaths.Add(path);
+            _resolver = new ProbeAssemblyResolver(paths);
+            _context = new MetadataLoadContext(_resolver);
         }
 
-        public IEnumerable<AssemblyDefinition> Assemblies => _assemblies;
+        public IEnumerable<AssemblyMetadata> Assemblies => _assemblies.Values;
 
-        public AssemblyDefinition LoadAssembly(string assemblyPath)
+        public AssemblyMetadata? LoadAssembly(AssemblyName assemblyName)
         {
-            AssemblyDefinition? assemblyDef;
+            return LoadAssembly($"{assemblyName.Name}.dll");
+        }
 
-            if (File.Exists(assemblyPath))
+        public AssemblyMetadata? LoadAssembly(string assemblyPath)
+        {
+            var assembly = _resolver.Resolve(_context, assemblyPath);
+
+            if (assembly is null)
             {
-                assemblyDef = AssemblyDefinition.ReadAssembly(assemblyPath);
-                AddDependenciesOf(assemblyDef);
-                AddAssembly(assemblyDef);
-                return assemblyDef;
+                return null;
             }
 
-            foreach (var probePath in _probePaths)
+            var assemblyMd = new AssemblyMetadata(assembly);
+            AddAssembly(assemblyMd);
+            return assemblyMd;
+        }
+
+        private void AddAssembly(AssemblyMetadata assemblyMetadata)
+        {
+            if (!_assemblies.ContainsKey(assemblyMetadata.FullName))
             {
-                var path = Path.Combine(probePath, assemblyPath);
-                if (File.Exists(path))
+                _assemblies.Add(assemblyMetadata.FullName, assemblyMetadata);
+
+                LoadDependencies(assemblyMetadata);
+            }
+        }
+
+        private void LoadDependencies(AssemblyMetadata assemblyMetadata)
+        {
+            foreach (var assemblyName in assemblyMetadata.GetDependencyNames())
+            {
+                var assembly = LoadAssembly(assemblyName);
+                if (assembly is not null)
+                    AddAssembly(assembly);
+            }
+        }
+
+        private class ProbeAssemblyResolver : MetadataAssemblyResolver
+        {
+            private readonly IEnumerable<string> _probePaths;
+            public ProbeAssemblyResolver(IEnumerable<string> probePaths)
+            {
+                _probePaths = probePaths ?? throw new ArgumentNullException(nameof(probePaths));
+            }
+
+            public override Assembly? Resolve(MetadataLoadContext context, AssemblyName assemblyName)
+            {
+                return Resolve(context, $"{assemblyName.Name}.dll");
+            }
+
+            public Assembly? Resolve(MetadataLoadContext context, string assemblyName)
+            {
+                if (File.Exists(assemblyName))
                 {
-                    assemblyDef = AssemblyDefinition.ReadAssembly(path);
-                    AddDependenciesOf(assemblyDef);
-                    AddAssembly(assemblyDef);
-                    return assemblyDef;
+                    return context.LoadFromAssemblyPath(assemblyName);
                 }
-            }
 
-            throw new ArgumentException($"Assembly '{assemblyPath}' could not be loaded.", nameof(assemblyPath));
-        }
-
-        private void AddDependenciesOf(AssemblyDefinition assembly)
-        {
-            foreach (var dependency in GetDependenciesOf(assembly))
-            {
-                AddAssembly(dependency);
-            }
-        }
-
-        private static IEnumerable<AssemblyDefinition> GetDependenciesOf(AssemblyDefinition assemblyDefinition)
-        {
-            return assemblyDefinition.Modules.SelectMany(module =>
-                module.AssemblyReferences.Select(r =>
+                foreach (var path in _probePaths)
                 {
-                    try
+                    var filePath = Path.Combine(path, assemblyName);
+
+                    if (File.Exists(filePath))
                     {
-                        return module.AssemblyResolver.Resolve(r);
+                        return context.LoadFromAssemblyPath(filePath);
                     }
-                    catch (AssemblyResolutionException are)
-                    {
-                        Console.WriteLine($"Warning: {are.Message}");
-                    }
-                    return null;
-                })
-                .Where(m => m is not null)
-            )!;
+                }
+
+                return null;
+            }
         }
 
-        private void AddAssembly(AssemblyDefinition assemblyDef)
-        {
-            if (_assemblies.SingleOrDefault(a => a.FullName == assemblyDef.FullName) is not null)
-                return;
-
-            _assemblies.Add(assemblyDef);
-        }
     }
 }
