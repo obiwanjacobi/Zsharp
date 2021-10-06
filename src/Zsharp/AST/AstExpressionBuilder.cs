@@ -309,7 +309,7 @@ namespace Zsharp.AST
                 return AstExpressionOperator.BitRollRight;
             if (context.BIT_SHL() is not null)
                 return AstExpressionOperator.BitShiftLeft;
-            if (context.BIT_SHR() is not null)
+            if (context.GREAT_ANGLEclose()?.Length == 2)
                 return AstExpressionOperator.BitShiftRight;
             if (context.BIT_XOR_IMM() is not null)
                 return AstExpressionOperator.BitXor;

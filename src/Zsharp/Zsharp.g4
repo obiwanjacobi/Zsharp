@@ -118,8 +118,6 @@ type_name: identifier_type template_param_list_use?;
 // templates
 template_param_list_use: SMALL_ANGLEopen template_param_use (COMMA SP template_param_use)* SP? GREAT_ANGLEclose;
 template_param_use: type_ref | comptime_expression_value;
-template_param_list_use_number: SMALL_ANGLEopen number GREAT_ANGLEclose;
-template_param_list_use_type: SMALL_ANGLEopen type_ref GREAT_ANGLEclose;
 template_param_list: SMALL_ANGLEopen template_param_any (COMMA SP template_param_any)* GREAT_ANGLEclose;
 template_param_var: identifier_param type_ref_use;
 template_param_any: template_param_var | (COMPTIME? identifier_template_param);
@@ -160,7 +158,7 @@ operator_arithmetic_unary: MINUS_NEG;
 operator_logic: AND | OR;
 operator_logic_unary: NOT;
 operator_comparison: EQ_ASSIGN | NEQ | GREAT_ANGLEclose | SMALL_ANGLEopen | GREQ | SMEQ;
-operator_bits: BIT_AND | BIT_OR | BIT_XOR_IMM | BIT_SHL | BIT_SHR | BIT_ROLL | BIT_ROLR;
+operator_bits: BIT_AND | BIT_OR | BIT_XOR_IMM | BIT_SHL | MINUS_NEG? GREAT_ANGLEclose GREAT_ANGLEclose | BIT_ROLL | BIT_ROLR;
 operator_bits_unary: BIT_NOT;
 operator_assignment: EQ_ASSIGN;
 
@@ -237,7 +235,7 @@ BIT_OR: '|';
 BIT_XOR_IMM: '^';
 BIT_NOT: '~';
 BIT_SHL: '<<';
-BIT_SHR: '>>';
+//BIT_SHR: '>>';
 BIT_ROLL: '|<';
 BIT_ROLR: '>|';
 CONCAT: '&&';
