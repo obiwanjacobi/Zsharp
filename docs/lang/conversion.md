@@ -134,3 +134,11 @@ Force a conversion even if the meaning of the result changes.
 ForceTargetType(self: SourceType, ...): TargetType
 DoTargetType(self: SourceType, ...): TargetType
 ```
+
+> TBD
+
+prefixes?
+
+- wrap - reinterprets the value based on the given type. wrapI8(0xFF) = -1
+- check - checks if the value fits in given type and errors-out if not.
+- test - returns an optional result that is Nothing if the value does not fit the given type.

@@ -65,7 +65,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | Symbol | Description
 |---|---
 | `_` | Unused / Discard / Hidden
-| `.` | Members Access
+| `.` | Members Access / bound access
 | `..` | Range operator
 | `...` | Spread operator
 | `,` | List Separator
@@ -132,6 +132,8 @@ To be determined:
 | `\` | reserved
 | `|` | reserved
 | `$` | reserved
+| `?.` | Safe Navigation (1) -or-
+| `&.` | Safe Navigation (2)
 | `=>` | used in mapping / some sort of (forward) assignment?
 | `<=` | map structure / assign struct properties
 | `()` | Function Object operator

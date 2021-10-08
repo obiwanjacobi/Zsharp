@@ -1,10 +1,10 @@
-# Templates
+# Templates and Generics
 
 Templates are processed at compile time. A template has one or more template parameters inside `< >`.
 
-> In light of supporting .NET generics the type names for templates are to be prefixed with a `#` on the definition to indicate compile-time processing, where as .NET generics are not prefixed - to indicate runtime processing. Note that this is not consistently applied throughout the documentation yet.
+In light of supporting .NET generics the type names for templates are to be prefixed with a `#` on the definition to indicate compile-time processing, where as .NET generics are not prefixed - to indicate runtime processing.
 
-Naming Convention for template parameters:
+Naming Convention for template and generic type parameters:
 
 | Name | Application | Description
 |--|--|--
@@ -17,7 +17,7 @@ All other template and generic parameter names start with a capital letter and e
 Example:
 `transform<#InputT, #OutputT>(input: InputT, output: OutputT)`
 
-None-Type template parameters are always processed at compile-time and are not prefixed with a `#`.
+None-Type template parameters are always processed at compile-time and are also prefixed with a `#`.
 
 ## Structure Templates
 
@@ -162,12 +162,39 @@ r: U16 = templateFn(42, 101)
 r = templateFn<R=U8>(42, 101)
 ```
 
-### Non-Type Template Parameters
-
-Template parameters that are not type parameters can be specified in a similar fashion as a regular function parameter. However, the value is applied to the code (replaced if you will) at compile time. The name does not have to be capitalized.
+A (self) bound function can use type inference to discover the template/generic parameters used in its `self` parameter.
 
 ```csharp
-fn<#T, ret: T>(): T
+MyType<G, #T>
+    GenFld: G
+    TmplFld: T
+
+// type inference fixes the issue
+boundFn: <G, #T>(self: MyType<G, #T>)
+    ...
+```
+
+### Non-Type Template Parameters
+
+Template parameters that are not type parameters can be specified in a similar fashion as a regular function parameter. However, the value is applied to the code (replaced if you will) at compile time. The name does not have to be capitalized. The compile time nature of the non-type template parameter is indicated by using a `#` before its name.
+
+```csharp
+// use '#' before name to indicate a compile-time template param
+repeatX: <#count: U16>()
+    loop count      // don't use '#' in code
+        ...
+```
+
+```csharp
+// not using '#' before name is an error
+repeatX: <count: U16>()     // Error!
+    ...
+```
+
+Example
+
+```csharp
+fn<#T, #ret: T>(): T
     return ret
 
 // Can we infer T?
@@ -179,7 +206,8 @@ Dimensioning data structures.
 
 ```csharp
 DataStruct<count: U16>:
-    Names: Str[count]   // <= TDB
+    Names: Str[count]           // <= TDB
+    Names: Array<Str>(count)    // or this?
 ```
 
 > We don't have syntax for statically dimensioning an array (list), yet!
@@ -195,11 +223,11 @@ The goal is to insert code into a template that is compiled as a new whole. The 
 
 ```csharp
 // takes a function template parameter 'as code'
-repeat: <fn: Fn<U8>>(c: U8)
+repeat: <#fn: Fn<U8>>(c: U8)
     loop n in [0..c]
         fn(n)   // need '#'?
 
-// use #! to not emit the fn in the binary
+// optionally use #! to not emit the fn in the binary
 #! doThisFn: (p: U8)
     ...             // <= body is inserted into the template
 
@@ -214,8 +242,8 @@ repeat<doThisFn>(42)
 
 Template parameters can be set to a default value that can be overridden at the 'call site'.
 
-```C#
-TemplateType<T=U8>
+```csharp
+TemplateType<#T=U8>
     field1: T
 
 // use default
@@ -231,7 +259,7 @@ t = TemplateType<Str>
 
 ### Variable Number of Template Parameters
 
-> Not supported.
+> Not supported (yet).
 
 We really want to keep this as simple as possible.
 
@@ -256,15 +284,15 @@ Aliases can be exported from a module to be reused within the assembly.
 
 When use of specific template parameter values require specific code.
 
-```C#
-typedFn: <T>(p: T)
+```csharp
+typedFn: <#T>(p: T)
     ...
 // Identified to be a specialization by name and function type (pattern).
 typedFn: <Bool>(p: Bool)    // repeat '<Bool>'?
 typedFn: (p: Bool)          // or not?
     ...
 
-typedFn(42)         // generic typedFn<T> called
+typedFn(42)         // default typedFn<T> called
 typedFn(true)       // specialization typedFn<Bool> called
 ```
 
@@ -369,6 +397,12 @@ MyOtherType<T1, T2> = MyType<OtherType<T1, T2>, T1, T2>
 // usage of alias
 MyOtherType<SameType1, SameType2> myOtherType
 ```
+
+---
+
+> TBD
+
+- Generics: Auto extract a non-generic base representation that contains all non-generic code of a templated generic definition. This extraction considers all types and their (self) bound functions without any generic parameters. The result would be a C# base class with all the non-generic members and derived from that the specific generic class with all the generic members. Perhaps have a code decorator to opt-in into this 'feature'.
 
 ---
 

@@ -344,6 +344,8 @@ retFunc()           // error! uncaught retval
 _ = retFunc()       // ok, explicitly not interested in retval
 ```
 
+For fluent interfaces where the return value is the same as the `self` type, not handling the return value is not an error.
+
 > Could the compiler have an opinion about where the return statement is located? Only allow early exits inside and `if` and as last statement in the function. What about only one inside a loop?
 
 > TBD: Want to support covariant return types (function overloads)? => Yes
@@ -508,6 +510,26 @@ MyStruct.boundFn: (p: U8)
     self.fld1 = p
 ```
 
+### Self Type Navigation
+
+Safe navigation over multiple references.
+
+Syntax to test for an Optional to have a value.
+
+```csharp
+boundFn: (self: MyStruct): Opt<MyStruct>
+    ...
+
+s = MyStruct
+    ...
+
+// syntax TBD
+_ = s?.boundFn()?.boundFn()
+_ = s&.boundFn()&.boundFn()
+```
+
+### Self Type Conversion
+
 When calling a bound function, the 'self' parameter can be used as an 'object' using a dot-notation or simply passed as a first parameter. Matching type-bound functions to their types is done as follows:
 
 > TBD
@@ -589,6 +611,22 @@ fn: (p: U8): U8
 
 // one param => no parens
 a = fn 42
+```
+
+Functions and variables can have the same name. If there are no `()` for a function call, how to distinguish between the two?
+
+```csharp
+x: (): U8
+    return 42
+
+x = 42
+
+// x is function or variable?
+q = x       // Error! x is ambiguous
+// fix for function
+q = x()
+// fix for variable
+q = x   // can't!
 ```
 
 ---

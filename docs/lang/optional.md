@@ -49,6 +49,22 @@ There is no implicit conversions in Z#. So p cannot be implicitly converted to a
 
 ---
 
+Syntax to test if an optional value is set.
+
+```csharp
+boundFn: (self: MyStruct): Opt<MyStruct>
+    ...
+
+s = MyStruct
+    ...
+
+// syntax TBD
+_ = s?.boundFn()?.boundFn()
+_ = s&.boundFn()&.boundFn()
+```
+
+---
+
 Optional fields in structs:
 
 ```C#

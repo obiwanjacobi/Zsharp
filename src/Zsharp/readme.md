@@ -4,6 +4,7 @@
 
 - TypeReferences of built-in types are added to root SymbolTable that contains definition.
     Need to see if this is a problem when multiple files are compiled using the same root symbol table.
+- `_ = fn()` results in an Assignment without a Variable...
 
 ## TODO
 
@@ -19,7 +20,6 @@
 - Add (custom) Type Conversion (Type names as function names)
     Conversions are simply functions with same name as (target) type and a self parameter of source type.
     Type Constructor functions are very similar - but without the self parameter.
-- `_ = fn()` results in an Assignment without a Variable...
 - AstTemplateInstanceFunction has duplicate code with AstFunctionDefinitionImpl 
     and does not support partial templates (missing TemplateParameters).
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
@@ -28,6 +28,11 @@
 - GenericParameterReference is probably never going to be used: impossible to detect at parse time (only after resolve definition).
 - SymbolTable: different flavors of FindSymbol (FindDefintion) do not use the same algorithm to find symbols.
     Some do not check in Modules, others do not check for DotNames...
+- SymbolTable: store symbols in the scopes the occur in. Reference defintions from higher tables with their AstSymbol ref.
+    Currently references are stored in the AstSymbol of the definition. By doing this we lose scope information on references.
+    Work out if this is a good idea and how to manage it. How to retrieve all references to a symbol and its definition(s).
+    Do AstSymbol instances have parent and children refs to other AstSymbol instances in othe SymbolTables?
+
 - .NET struct interop
 
 ---

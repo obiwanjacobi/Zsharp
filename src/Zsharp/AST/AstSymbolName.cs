@@ -34,6 +34,8 @@ namespace Zsharp.AST
 
         public static AstSymbolName Parse(string text, AstSymbolNameParseOptions options)
         {
+            Ast.Guard(options != AstSymbolNameParseOptions.IsCanonical || !text.Contains('_'), "A canonical symbol name does not contain '_' chars.");
+
             var parts = text.Split(Separator, StringSplitOptions.RemoveEmptyEntries).ToArray();
             var templatePostfix = String.Empty;
 

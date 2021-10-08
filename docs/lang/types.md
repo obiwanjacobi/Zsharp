@@ -355,6 +355,7 @@ ScaleKilo:
     #1000 => kilo
     #100 => hecto
     #10 => deca
+    #0 => _
     #0.1 => deci
     #0.001 => milli
     #0.000001 => micro
@@ -1090,6 +1091,19 @@ v = match a
 ```
 
 > TODO: check C++ std::any
+
+---
+
+> TBD
+
+Use meta programming to create types.
+
+```csharp
+// special type assignment
+MyType =: #Type("MyType", ...)
+```
+
+Meta programming needs more work.
 
 ---
 

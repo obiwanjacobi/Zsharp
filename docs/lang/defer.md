@@ -70,11 +70,16 @@ Can we tag functions that require `defer` to cleanup resource acquired by anothe
 // how??
 Open: (identity: Str): Resource
     ...
-Close: (resource: Resource)
+Close: (self: Resource)     // ??
     ...
 
 // mark as a defer candidate
-Close: (resource: Resource) defer
+Close: (self: Resource) defer
+defer Close: (self: Resource)
+
+// mark as defer with return type
+Close: (self: Resource): Defer
+Close: (self: Resource): Defer<Bool>    // if Close would return non-void
 
 d: Dispose<Resource> = Open("...")
 defer d.Dispose()       // implicit

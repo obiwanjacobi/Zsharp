@@ -223,3 +223,31 @@ Rx = RegEx
 regex = Rx("$[a-z]*")
 // regex: RegEx
 ```
+
+---
+
+> TBD
+
+- Literal embedded Xml, Json, Yaml etc.
+
+```csharp
+"""Xml
+<?xml version="1.0"?>
+<document xmlns="example">
+    <line attr="42" />
+</document>
+"""
+
+"""Json
+{
+    "property": "value",
+    "array": [
+        "item1", "item2"
+    ]
+}
+"""
+```
+
+Assign to vars and work with implicit object model (XDocument/JsonObject)?
+
+Most useful when allowing to inject programmatic constructs like loops and value (interpolated strings)...
