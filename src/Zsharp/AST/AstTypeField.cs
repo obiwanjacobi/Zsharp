@@ -3,7 +3,7 @@
 namespace Zsharp.AST
 {
     public abstract class AstTypeField : AstNode,
-        IAstIdentifierSite, IAstSymbolEntrySite
+        IAstIdentifierSite, IAstSymbolSite
     {
         protected AstTypeField(AstNodeKind nodeKind = AstNodeKind.Field)
             : base(nodeKind)

@@ -75,8 +75,6 @@ namespace Zsharp.AST
             var symbolName = AstSymbolName.Parse(ToString(), AstSymbolNameParseOptions.IsSource);
             symbolName.TemplatePostfix = Identifier!.SymbolName.TemplatePostfix;
             Identifier.SymbolName = symbolName;
-
-            //contextSymbols.Add(this);
         }
 
         public override string ToString()

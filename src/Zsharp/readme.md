@@ -20,10 +20,13 @@
 - Add (custom) Type Conversion (Type names as function names)
     Conversions are simply functions with same name as (target) type and a self parameter of source type.
     Type Constructor functions are very similar - but without the self parameter.
+- External Function definition is not a codeblockline (indent).
 - AstTemplateInstanceFunction has duplicate code with AstFunctionDefinitionImpl 
     and does not support partial templates (missing TemplateParameters).
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
 - Importing External modules does not find nested public types (Zsharp.Runtime.Conversion.Checked).
+- Import External Modules also loads in all external-to-the-module referenced types (like System.Object).
+    we need Module level dependency detection (and loading).
 - AstSymbolName: fix hybrid generic/template postfixes.
 - GenericParameterReference is probably never going to be used: impossible to detect at parse time (only after resolve definition).
 - SymbolTable: different flavors of FindSymbol (FindDefintion) do not use the same algorithm to find symbols.

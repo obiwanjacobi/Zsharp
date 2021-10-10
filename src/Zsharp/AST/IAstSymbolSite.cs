@@ -1,21 +1,21 @@
 ﻿namespace Zsharp.AST
 {
-    public interface IAstSymbolEntrySite
+    public interface IAstSymbolSite
     {
         AstSymbol? Symbol { get; }
         bool TrySetSymbol(AstSymbol? symbolEntry);
     }
 
-    public static class AstSymbolEntrySiteExtensions
+    public static class AstSymbolSiteExtensions
     {
-        public static void SetSymbol(this IAstSymbolEntrySite symbolEntrySite, AstSymbol symbolEntry)
+        public static void SetSymbol(this IAstSymbolSite symbolEntrySite, AstSymbol symbolEntry)
         {
             if (!symbolEntrySite.TrySetSymbol(symbolEntry))
                 throw new InternalErrorException(
-                    "SymbolEntry is already set or null.");
+                    "Symbol is already set or null.");
         }
 
-        public static void ThrowIfSymbolEntryNotSet(this IAstSymbolEntrySite symbolEntrySite)
+        public static void ThrowIfSymbolEntryNotSet(this IAstSymbolSite symbolEntrySite)
         {
             if (symbolEntrySite.Symbol is null)
                 throw new InternalErrorException("Symbol not set.");

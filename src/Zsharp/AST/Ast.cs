@@ -35,16 +35,16 @@ namespace Zsharp.AST
         {
             if (instance is null)
                 throw new InternalErrorException(
-                    $"Object not of the expected type ({typeof(T).Name}) because it was null. {caller}");
+                    $"{caller}: Object not of the expected type ({typeof(T).Name}) because it was null.");
             if (!(instance is T))
-                throw new InternalErrorException($"Object of type '{instance.GetType().Name}' is not of the expected type: {typeof(T).Name}");
+                throw new InternalErrorException($"{caller}: Object of type '{instance.GetType().Name}' is not of the expected type: {typeof(T).Name}");
         }
 
         [Conditional("DEBUG")]
         public static void Guard(bool trueIsValid, string message, [CallerMemberName] string caller = "")
         {
             if (!trueIsValid)
-                throw new InternalErrorException($"{message} {caller}");
+                throw new InternalErrorException($"{caller}: {message}");
         }
 
         [Conditional("DEBUG")]
@@ -52,7 +52,7 @@ namespace Zsharp.AST
             where T : class
         {
             if (instance is null)
-                throw new InternalErrorException($"{typeof(T).Name} is null: {message} {caller}");
+                throw new InternalErrorException($"{caller}: {typeof(T).Name} is null: {message}");
         }
     }
 }

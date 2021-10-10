@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
 namespace Zsharp.External.Metadata
 {
+    [DebuggerDisplay("{Name}")]
     public sealed class AssemblyMetadata
     {
         private readonly Assembly _assembly;
@@ -14,6 +16,7 @@ namespace Zsharp.External.Metadata
             _assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
         }
 
+        public string? Name => _assembly.GetName().Name;
         public string FullName => _assembly.FullName!;
 
         private readonly List<TypeMetadata> _types = new();

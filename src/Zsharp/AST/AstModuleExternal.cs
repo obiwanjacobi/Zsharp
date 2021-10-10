@@ -55,7 +55,7 @@
         public void AddAlias(AstNode source, string alias)
         {
             var identifier = ((IAstIdentifierSite)source).Identifier!;
-            var symbol = Symbols.Find(identifier);
+            var symbol = Symbols.FindSymbol(identifier);
             Ast.Guard(symbol, $"No symbol for '{identifier!.CanonicalName}' was found in external module {Identifier!.Name}.");
 
             if (source is AstFunctionDefinition functionDef)

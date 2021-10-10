@@ -1,7 +1,7 @@
 ﻿namespace Zsharp.AST
 {
     public abstract class AstFunctionParameter : AstNode,
-        IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolEntrySite
+        IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolSite
     {
         protected AstFunctionParameter()
             : base(AstNodeKind.FunctionParameter)

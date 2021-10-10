@@ -413,10 +413,10 @@ namespace Zsharp.Semantics
         {
             var symbol = function.Symbol!;
 
-            if (!symbol.HasDefinition)
+            if (symbol.Definition is null)
                 return false;
 
-            var functionDef = symbol.FindFunctionDefinition(function);
+            var functionDef = function.FunctionDefinition;
 
             if (functionDef is null)
             {

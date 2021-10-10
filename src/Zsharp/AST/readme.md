@@ -7,7 +7,7 @@ The `AstBuilder`, `AstNodeBuilder` and `AstExpressionBuilder` classes perform th
 
 ## Symbols
 
-`AstSymbolsEntry` instances are maintained in a `AstSymbolTable` and symbol tables are organized in a hierarchy.
+`AstSymbol` instances are maintained in a `AstSymbolTable` and symbol tables are organized in a hierarchy.
 
 ```
 Intrinsic Symbols
@@ -22,17 +22,17 @@ Intrinsic Symbols
 - Intrinsic Symbols contain the built-in compiler types and functions.
 - File Symbols contain all the globals of a code file, including imported external symbols.
 - Function Symbols contain all the symbols defined inside a function.
-- Code Block Symbols contain the symbols defined in a scope of code (inside a function).
+- Code Block Symbols contain the symbols defined in a scope of code (at global level or inside a function).
 - External Module Symbols contain all symbols for imported modules in a file.
 
-`AstSymbolEntry` instances are put in the symbol table where the symbol is defined.
-For example a function definition will be placed in the file's symbol table. That symbol entry will record any references to the function and/or defined aliases.
+`AstSymbol` instances are stored in the symbol table that represent the scope they were encountered at.
+For example a function definition will be placed in the file's symbol table. That symbol entry will be linked to any references to the function and/or defined aliases found elsewhere. If an `AstSymbol` instance does not contain a definition, its parent (recursively) will.
 
-The `TryResolve` method on AstXxxxReference types is used to resolve the symbol entry with the definition for that reference. The symbol entries are rearranged (merged) to add the reference to the definition's symbol entry.
+The `TryResolve` method on AstXxxxReference types is used to resolve the symbol entry with the definition for that reference. This is done by searching parent symbol tables for the same symbol name and linking the resulting `AstSymbol` instances.
 
 ### TryResolve
 
-After the AST is built, the resolve-definition phase is started. This will walk (visitor) the AST tree and check if each AST node has a symbol definition. The `TryResolve` on an AST node (for a reference) searches the Symbol Table hierarchy for a symbol entry of the same name with a symbol definition set. When found the reference is merged into the symbol entry of the definition and deleted.
+After the AST is built, the resolve-definition phase is started. This will walk (visitor) the AST tree and check if each AST node has a symbol definition. The `TryResolve` on an AST node (for a reference) searches the Symbol Table hierarchy for a symbol entry of the same name with a symbol definition set. When found the symbol of the reference is linked to the symbol entry of the definition.
 
 ### Resolve Function References
 

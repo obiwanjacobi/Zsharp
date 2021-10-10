@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
 namespace Zsharp.External.Metadata
 {
+    [DebuggerDisplay("{Name}")]
     public class MethodMetadata
     {
         private readonly MethodInfo _method;

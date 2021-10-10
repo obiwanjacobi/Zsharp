@@ -6,7 +6,7 @@ using static Zsharp.Parser.ZsharpParser;
 namespace Zsharp.AST
 {
     public class AstModulePublic : AstModule,
-        IAstSymbolEntrySite
+        IAstSymbolSite
     {
         private readonly List<Statement_moduleContext> _contexts = new();
         private readonly List<Statement_exportContext> _exports = new();

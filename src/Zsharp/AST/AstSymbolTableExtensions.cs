@@ -22,11 +22,7 @@
             return previousParent;
         }
 
-        public static AstSymbol? Find<T>(this AstSymbolTable symbolTable, T node)
-            where T : AstNode, IAstIdentifierSite
-            => symbolTable.Find(node, node.NodeKind.ToSymbolKind());
-
-        public static AstSymbol? Find(this AstSymbolTable symbolTable, AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
+        public static AstSymbol? FindSymbol(this AstSymbolTable symbolTable, AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
             if (kind == AstSymbolKind.NotSet)
                 kind = identifier!.IdentifierKind.ToSymbolKind();
@@ -34,7 +30,7 @@
             return symbolTable.FindSymbol(identifier.SymbolName.ToCanonical(), kind);
         }
 
-        public static AstSymbol? Find(this AstSymbolTable symbolTable, IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
+        public static AstSymbol? FindSymbol(this AstSymbolTable symbolTable, IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
             identifierSite.ThrowIfIdentifierNotSet();
 
@@ -81,7 +77,7 @@
             where T : AstNode, IAstIdentifierSite
         {
             if (node is not null &&
-                (node as IAstSymbolEntrySite)?.Symbol is null)
+                (node as IAstSymbolSite)?.Symbol is null)
             {
                 return Add(symbolTable, node);
             }

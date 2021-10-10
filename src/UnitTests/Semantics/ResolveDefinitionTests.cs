@@ -22,7 +22,7 @@ namespace UnitTests.Semantics
             v.Should().NotBeNull();
             v.Parent.Should().Be(a);
 
-            var sym = file.CodeBlock.Symbols.Find(v);
+            var sym = file.CodeBlock.Symbols.FindSymbol(v);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -40,7 +40,7 @@ namespace UnitTests.Semantics
             v.TypeReference.TypeDefinition.Should().NotBeNull();
             v.TypeReference.TypeDefinition.IsIntrinsic.Should().BeTrue();
 
-            var sym = file.CodeBlock.Symbols.Find(v);
+            var sym = file.CodeBlock.Symbols.FindSymbol(v);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -60,7 +60,7 @@ namespace UnitTests.Semantics
             v.TypeReference.TypeDefinition.Should().NotBeNull();
             v.TypeReference.TypeDefinition.IsIntrinsic.Should().BeTrue();
 
-            var sym = file.CodeBlock.Symbols.Find(v);
+            var sym = file.CodeBlock.Symbols.FindSymbol(v);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -99,7 +99,7 @@ namespace UnitTests.Semantics
             v.Parent.Should().Be(a);
             v.TypeReference.Should().NotBeNull();
 
-            var sym = file.CodeBlock.Symbols.Find(v);
+            var sym = file.CodeBlock.Symbols.FindSymbol(v);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -305,7 +305,7 @@ namespace UnitTests.Semantics
             var id = a.Fields.First();
             id.Expression.TypeReference.TypeDefinition.Should().NotBeNull();
 
-            var typeSymbol = v.Symbol.SymbolTable.Find(v.TypeReference.Identifier, AstSymbolKind.Type);
+            var typeSymbol = v.Symbol.SymbolTable.FindSymbol(v.TypeReference.Identifier, AstSymbolKind.Type);
             var typeDef = typeSymbol.DefinitionAs<AstTemplateInstanceStruct>();
             typeDef.TemplateDefinition.Should().Be(template);
         }

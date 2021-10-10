@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Zsharp.AST
 {
+    [DebuggerDisplay("{Namespace} ({SymbolCount})")]
     public class AstSymbolTable
     {
         private readonly Dictionary<string, AstSymbol> _table = new();
@@ -20,12 +22,13 @@ namespace Zsharp.AST
         {
             if (!String.IsNullOrEmpty(Name))
                 throw new InternalErrorException(
-                    "Name is already set");
+                    "Name is already set.");
             Name = name;
         }
 
         public AstSymbolTable? ParentTable { get; }
 
+        public int SymbolCount => _table.Count;
         public IEnumerable<AstSymbol> Symbols => _table.Values;
 
         public string Namespace
@@ -51,16 +54,14 @@ namespace Zsharp.AST
                 typeRef.IsTemplateParameter)
                 kind = AstSymbolKind.TemplateParameter;
 
-            var exOrImported = FindSymbol(symbolName, AstSymbolKind.NotSet);
+            var exOrImported = FindSymbol(symbolName.FullName, AstSymbolKind.NotSet);
             var symbol = FindSymbolLocal(symbolName.FullName, kind);
 
             if (symbol is null)
             {
                 symbol = new AstSymbol(this, symbolName.FullName, kind);
-                if (exOrImported?.SymbolTable == this)
+                if (exOrImported is not null)
                 {
-                    Ast.Guard(_table.ContainsValue(exOrImported), "Exported/Imported Symbol is not defined in this SymbolTable.");
-
                     _table.Remove(exOrImported.Key);
                     Merge(symbol, exOrImported);
                 }
@@ -71,13 +72,14 @@ namespace Zsharp.AST
             {
                 symbol.AddNode(node);
 
-                if (node is IAstSymbolEntrySite symbolSite &&
+                if (node is IAstSymbolSite symbolSite &&
                 symbolSite.Symbol is null)
                     symbolSite.SetSymbol(symbol);
 
                 if (node is IAstExternalNameSite externalName)
                     symbol.Namespace = externalName.ExternalName.Namespace;
             }
+
             return symbol;
         }
 
@@ -106,36 +108,43 @@ namespace Zsharp.AST
             }
         }
 
-        public AstSymbol? ResolveDefinition(AstSymbol symbolEntry)
+        public bool TryResolveDefinition(AstSymbol symbol)
         {
-            if (symbolEntry is null)
-                return null;
-            if (symbolEntry.HasOverloads || symbolEntry.Definition is not null)
-                return symbolEntry;
+            Ast.Guard(symbol, "Symbol is null.");
+            if (symbol.HasOverloads || symbol.Definition is not null)
+                return true;
 
-            var symbolName = AstSymbolName.Parse(symbolEntry.SymbolName, AstSymbolNameParseOptions.IsCanonical);
+            var symbolName = AstSymbolName.Parse(symbol.SymbolName, AstSymbolNameParseOptions.IsCanonical);
+            var childSymbol = symbol;
             var table = this;
             while (table is not null)
             {
-                var symbol = table.FindSymbolLocal(symbolEntry.SymbolName, symbolEntry.SymbolKind);
-                if (!HasDefinition(symbol) && symbolName.IsDotName)
-                    symbol = table.FindSymbol(symbolName, symbolEntry.SymbolKind);
-                if (!HasDefinition(symbol))
-                    symbol = table.FindSymbolInModules(symbolEntry.SymbolName, symbolEntry.SymbolKind);
+                AstSymbol? parentSymbol;
+                if (symbolName.IsDotName)
+                    parentSymbol = FindSymbolByPath(symbolName, symbol.SymbolKind);
+                else
+                    parentSymbol = table.FindSymbolLocal(symbol.SymbolName, symbol.SymbolKind);
+                // FindSymbolLocal may find itself (symbol)
+                if (parentSymbol is null || parentSymbol == symbol)
+                    parentSymbol = table.FindSymbolInModulesLocal(symbol.SymbolName, symbol.SymbolKind);
 
-                if (HasDefinition(symbol))
+                if (parentSymbol is not null)
                 {
-                    Merge(symbol!, symbolEntry);
-                    symbolEntry.Delete();
-                    return symbol;
+                    if (childSymbol.Parent is null)
+                        childSymbol.SetParent(parentSymbol!);
+                    else
+                        return true;
+
+                    if (parentSymbol.HasDefinition)
+                        return true;
+
+                    childSymbol = parentSymbol;
                 }
+
                 table = table.ParentTable;
             }
-            return null;
+            return false;
         }
-
-        private static bool HasDefinition(AstSymbol? symbol)
-            => symbol?.HasDefinition ?? false;
 
         public T? FindDefinition<T>(string symbolName, AstSymbolKind symbolKind)
             where T : class
@@ -154,6 +163,7 @@ namespace Zsharp.AST
 
             return symbolDef;
         }
+
         public IEnumerable<AstSymbol> FindSymbols(AstSymbolKind symbolKind)
             => _table.Values.Where(s => s.SymbolKind == symbolKind);
 
@@ -162,7 +172,7 @@ namespace Zsharp.AST
 
         public AstSymbol? FindSymbol(AstSymbolName symbolName, AstSymbolKind kind)
         {
-            Ast.Guard(symbolName.IsCanonical, "All symbol names must be a canonical name.");
+            Ast.Guard(symbolName.IsCanonical, "Symbol names must be canonical names.");
             AstSymbol? symbol;
 
             if (symbolName.IsDotName)
@@ -174,17 +184,7 @@ namespace Zsharp.AST
         }
 
         private AstSymbol? FindSymbolRecursive(string name, AstSymbolKind kind)
-        {
-            var symbol = FindSymbolLocal(name, kind);
-
-            if (ParentTable is not null &&
-                symbol is null)
-            {
-                symbol = ParentTable.FindSymbol(name, kind);
-            }
-
-            return symbol;
-        }
+            => FindSymbolLocal(name, kind) ?? ParentTable?.FindSymbolRecursive(name, kind);
 
         private AstSymbol? FindSymbolLocal(string name, AstSymbolKind kind)
         {
@@ -236,24 +236,32 @@ namespace Zsharp.AST
             return symbol;
         }
 
-        private AstSymbol? FindSymbolInModules(string symbolName, AstSymbolKind symbolKind)
+        private AstSymbol? FindSymbolInModulesLocal(string symbolName, AstSymbolKind symbolKind)
         {
-            var moduleSymbols = _table.Values
+            var moduleSymbolTables = _table.Values
                 .Where(e => e.SymbolKind == AstSymbolKind.Module &&
                        e.SymbolLocality == AstSymbolLocality.Imported)
                 .Select(e => e.DefinitionAs<AstModuleExternal>()!.Symbols);
 
-            foreach (var symbols in moduleSymbols)
+            foreach (var symbolTable in moduleSymbolTables)
             {
-                var symbol = symbols.FindSymbolLocal(symbolName, symbolKind);
+                var symbol = symbolTable.FindSymbolLocal(symbolName, symbolKind);
                 if (symbol is not null)
                     return symbol;
             }
 
-            if (ParentTable is not null)
+            return null;
+        }
+
+        private AstSymbol? FindSymbolInModules(string symbolName, AstSymbolKind symbolKind)
+        {
+            var symbol = FindSymbolInModulesLocal(symbolName, symbolKind);
+
+            if (symbol is null &&
+                ParentTable is not null)
                 return ParentTable.FindSymbolInModules(symbolName, symbolKind);
 
-            return null;
+            return symbol;
         }
 
         internal void Delete(AstSymbol symbolEntry)

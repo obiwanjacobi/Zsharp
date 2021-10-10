@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Zsharp.External.Metadata
 {
+    [DebuggerDisplay("{Name}")]
     public class ParameterMetadata
     {
         private readonly ParameterInfo _parameter;

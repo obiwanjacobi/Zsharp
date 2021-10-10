@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Zsharp.External.Metadata
 {
+    [DebuggerDisplay("{Name}")]
     public class TypeMetadata
     {
         private readonly Type _type;

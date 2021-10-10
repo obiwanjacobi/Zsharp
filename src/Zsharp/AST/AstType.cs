@@ -3,7 +3,7 @@ using Antlr4.Runtime;
 namespace Zsharp.AST
 {
     public abstract class AstType : AstNode,
-        IAstIdentifierSite, IAstSymbolEntrySite
+        IAstIdentifierSite, IAstSymbolSite
     {
         protected AstType(AstNodeKind nodeKind)
             : base(nodeKind)

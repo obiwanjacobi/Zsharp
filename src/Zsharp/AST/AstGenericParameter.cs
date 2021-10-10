@@ -3,7 +3,7 @@
 namespace Zsharp.AST
 {
     public abstract class AstGenericParameter : AstNode,
-        IAstSymbolEntrySite
+        IAstSymbolSite
     {
         protected AstGenericParameter()
             : base(AstNodeKind.GenericParameter)
