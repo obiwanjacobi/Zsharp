@@ -2,6 +2,10 @@
 
 Allow to write Z# code that executes at compile time in order to shift the workload as much as possible to the compiler.
 
+> `.NET` we can let the Z# compiler extract all the compile time code and generate an assembly behind the scenes during compilation. Then we can integrate calls to this assembly during further compilation.
+
+---
+
 ## Intrinsic Attributes
 
 The compiler will allow accessing intrinsic attributes of the compiled code. These attributes are constants whose value was determined by the compiler at compile time.
@@ -59,6 +63,8 @@ a = 42
 ```
 
 This may be conflicting with pragmas. Symbol must be in scope, resolvement will be up to parent scopes as usual.
+
+---
 
 ## Pragmas
 
@@ -192,6 +198,8 @@ msg = "Error in '{@file()}' at line {@line()}: {@name()} is invalid."
 No type information is available at runtime other than the `#typeId` which can only be used as type identifier to compare equality or for use as a key in a map/table store.
 
 Full type information is only available at compile time. Are there any scenarios that would really become a problem not having type info at runtime?
+
+---
 
 ### Type Traits
 

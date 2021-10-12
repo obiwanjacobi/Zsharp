@@ -26,9 +26,8 @@
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
 - Importing External modules does not find nested public types (Zsharp.Runtime.Conversion.Checked).
 - Import External Modules also loads in all external-to-the-module referenced types (like System.Object).
-    we need Module level dependency detection (and loading).
+    we need Module level dependency detection (and loading) and reference resolvement (SymbolTable).
 - AstSymbolName: fix hybrid generic/template postfixes.
-- GenericParameterReference is probably never going to be used: impossible to detect at parse time (only after resolve definition).
 - SymbolTable: different flavors of FindSymbol (FindDefintion) do not use the same algorithm to find symbols.
     Some do not check in Modules, others do not check for DotNames...
 - SymbolTable: store symbols in the scopes the occur in. Reference defintions from higher tables with their AstSymbol ref.

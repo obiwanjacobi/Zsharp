@@ -2,11 +2,15 @@
 
 Unlike most languages, whitespace matters in Z#. Similar to Python and F#.
 
+---
+
 ## Spaces and Tabs
 
 Spaces are used to separate code elements in order to make them distinct.
 
 `iftrue` does not mean anything, while `if true` represents an `if` statement with a condition (`true`). The space separates the parts and makes them meaningful.
+
+---
 
 ## Indentation
 
@@ -40,6 +44,8 @@ MyFuncion: ()
 
 The 'conditional code' is only executed if the `if` branch is taken. The 'implementation' is always executed.
 
+---
+
 ## Scope Names
 
 Names for the indentation levels that create scopes:
@@ -56,6 +62,8 @@ global-scope        // exports
         type-scope
 ```
 
+---
+
 ## Breaking up lines
 
 As a general rule: broken up lines continue on the next line one indent further than a new (child) scope would be: a double indent.
@@ -65,6 +73,8 @@ Use the line break `;`.
 ```csharp
 
 ```
+
+---
 
 ## Merging lines
 
@@ -88,6 +98,8 @@ fn: ()
     spaces = x.Where((c) -> c = ' ')
 ```
 
+---
+
 ### Literal Strings
 
 No extra quotes are required. The new-line (EOL) character(s) and the indent white-space(s) will **NOT** become part of the string.
@@ -98,6 +110,8 @@ s = "this is a very long string to demonstrate
 ```
 
 So in this example there is a trailing space after 'demonstrate' in order to separate that word from the next word 'how'.
+
+---
 
 ### Functions
 

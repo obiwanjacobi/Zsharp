@@ -2,6 +2,8 @@
 
 Captures are snapshots (copies) or references to contextual state -like local variables- that accompany a child context.
 
+---
+
 ## Function Capture
 
 Function can use captures to be able to reference global variables in their body.
@@ -23,6 +25,8 @@ x = 42
 // lambda captures x to compare with
 fn(42, [x](p) -> p = x)
 ```
+
+---
 
 ## Capture Context
 
@@ -101,6 +105,8 @@ try [x]
 
 // x = 42
 ```
+
+---
 
 ## Capture Aliases
 

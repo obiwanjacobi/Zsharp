@@ -36,6 +36,8 @@ s = MyStruct
 // s.field2 = 101
 ```
 
+---
+
 ## Composition
 
 New structure types can be made from other structure types by the following methods:
@@ -82,6 +84,8 @@ s = MyContainer
 
 > Unions in structures are not supported at this moment.
 
+---
+
 ## Bit Fields
 
 > This needs to be revised for .NET interop.
@@ -114,6 +118,8 @@ The resulting structure has 3 bytes worth of bit fields and one byte for the oth
 > What will be the #offset for a bit field? (byte-offset/bit-offset)
 
 > Should this be a union type?
+
+---
 
 ## Nested Declaration
 
@@ -154,11 +160,15 @@ someFn: (p: U8)
     ...
 ```
 
+---
+
 ## Structure Layout
 
 The fields of a structure are layed out in the order of their definition starting at the base structure type. No alignment or filler bytes are added.
 
 > `.NET` does the actual layout in memory.
+
+---
 
 ## Tables
 
@@ -210,6 +220,8 @@ v: MyStruct1 =
 
 // or any combination of these??
 ```
+
+---
 
 ## Anonymous Structures
 

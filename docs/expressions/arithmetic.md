@@ -31,9 +31,13 @@ Can you add an `U8` and an `U16`?
 
 I think we could make 'overloads' operator functions that take all possible operand data types and have an optimized implementation for each one.
 
+---
+
 ## Overflow / Underflow
 
 Checked functions can be used to implement the operators that check for overflow and underflow at runtime. Overflow is a condition where the results exceeds the storage capacity of the data types used. Underflow is a condition where a subtraction resulted in a numerical value smaller than 0 (on an unsigned type).
+
+---
 
 ## Result Data Type Promotion
 

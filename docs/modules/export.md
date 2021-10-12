@@ -34,6 +34,8 @@ The `export` pragma can also be applied directly to the code identifier to be ma
 
 > How we make clear(er) this is not a compile-time function?
 
+---
+
 ## Aliasing
 
 By using an alias the name of the exported item can be renamed to something new. It can also be a way to simulate namespaces.

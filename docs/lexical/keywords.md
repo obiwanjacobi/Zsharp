@@ -33,12 +33,16 @@ if 42 in arr        // false
 // can also use in a match expression?
 ```
 
+---
+
 ## Operators
 
 - and
 - or
 - not
 - xor?
+
+---
 
 ## Reserved for future use
 

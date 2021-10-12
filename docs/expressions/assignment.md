@@ -34,6 +34,8 @@ if a = myFunc()      // error!
     ...
 ```
 
+---
+
 ## Boolean Assignment
 
 > Assignment clashes with comparison is-equal operator!
@@ -58,6 +60,8 @@ a = (x > 101)
 // a: Bool = false
 ```
 
+---
+
 ## Assignment Chaining
 
 The assignment can be chained across multiple variables (left operand) that all get assigned the same value (right operand). Type inference works as expected and the inferred type is applied to all untyped vars.
@@ -75,6 +79,8 @@ a = b = c: U32 = 42
 // b: U16 = 42
 // c: U32 = 42
 ```
+
+---
 
 ### Structure Assignment
 
@@ -144,6 +150,8 @@ A way to ensure an assignment operation is uninterrupted.
 - unconditional
 - conditional (exchange-if)
 
+---
+
 ### Atomic Type
 
 A wrapper type that indicates the instance is accessed atomically.
@@ -196,6 +204,8 @@ s = {fld1: 42, fld2: "42"}  // Atom overrides = operator
     s.fld1 = 101
     s.fld2 = "101"
 ```
+
+---
 
 ### Volatile
 

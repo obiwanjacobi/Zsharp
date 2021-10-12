@@ -124,11 +124,15 @@ The conversion is done using the .NET Text Encoding types from the BCL.
 
 #### Secure String
 
-> TBD (System.Security.SecureString)
+> TBD
+
+`System.Security.SecureString`
 
 #### Str-Of-T
 
-> TBD `StrOf<T>` to allow a described string. `T` describes the structure of the content of the string. `StrOf<EmailAddress>` where `EmailAddress` contains validation (regex?).
+> TBD
+
+`StrOf<T>` to allow a described string. `T` describes the structure of the content of the string. `StrOf<EmailAddress>` where `EmailAddress` contains validation (regex?).
 Related to custom data types.
 
 ---
@@ -157,6 +161,8 @@ It can only have one of two values: `true` or `false`.
 
 This type maps to the .NET `bool`.
 
+---
+
 ### Bits
 
 The `Bit` type is parameterized to specify the number of bits the value contains.
@@ -170,6 +176,14 @@ Bit<4>
 When `Bit`s are stored, the closest fitting data type is used. So a `Bit<6>` would take up a single byte `U8`, while a `Bit<12>` would take up two bytes `U16`. `Bit`s are always interpreted as unsigned and stored in the lower bits of the storage type. The upper unused bits are reset to zero.
 
 This type maps the .NET `System.Collections.BitArray` or `System.Collections.Specialized.BitVector32`. Possibly some of `System.Numerics.BitOperations` will be used for some of the operations.
+
+---
+
+### Date and Time
+
+DateTime, Date(only) and Time(only).
+
+---
 
 ### Function Type
 
@@ -201,6 +215,8 @@ makeFn(p: U8): Fn<(U8)>
 
 This type will map to the .NET `Func<T>` and `Action<T>` types depending on the return type.
 
+---
+
 ### Void
 
 > In light of .NET interop we need to rethink this.
@@ -220,6 +236,8 @@ NoParamsFn: (Void): U8    // Error: Void not allowed here
 
 Introducing the `Void` type removes the necessity to distinguish between functions with or without a return value. See the 'Void' topic in [Functions](functions.md) for more info.
 
+---
+
 ## Literal Numerical Values
 
 Literal values are commonly use in programs and by default the compiler will assign the smallest data type to fit the literal numerical value. There are times when you want to override that, however.
@@ -231,6 +249,8 @@ c: U32 = 42     // c: U32
 ```
 
 We are simply calling a dedicated constructor function with the literal value.
+
+---
 
 ## Custom Data Types
 
@@ -369,6 +389,8 @@ scale: (val: MeterValue, scale: ScaleKilo): MeterValue
 // ??
 ```
 
+---
+
 ### Literal Values
 
 Make a literal value have a custom data type.
@@ -394,6 +416,8 @@ a = MidType(275)        // Error: does not pass rules
 ```
 
 Again, we're simply calling dedicated construct functions.
+
+---
 
 ### Custom Data Constraints
 
@@ -434,6 +458,8 @@ CustomDataType: Str
     #length <= 100, "Too long"
 ```
 
+---
+
 ### Custom Data Type Conversion
 
 Any conversion to or from a custom data type must be hand written. The compiler cannot know how/what to convert when/where.
@@ -472,6 +498,8 @@ Type | Meaning
 `Mem<T>` | Heap allocated (TBD)
 
 Note that the compiler may generate different code depending on where these types are applied.
+
+---
 
 ### Types Operators
 
@@ -525,6 +553,8 @@ i: U8^*?    // pointer to an optional immutable U8
 
 `Err<T>` is typically (only) used on function return values.
 
+---
+
 ### Immutable Types
 
 Any type can be made immutable wrapping it in a `Imm<T>` type.
@@ -543,6 +573,8 @@ ImmStruct: Imm<MyStruct>
 ```
 
 The compiler will generate a new Type (struct) based on `MyStruct` making all fields immutable. All references to immutable types are tracked as immutable.
+
+---
 
 ### Immutable References
 
@@ -613,6 +645,8 @@ MyStruct: (Imm<MyStruct> self, Imm<MyStructOpt> change): Imm<MyStruct>
 
 If no custom constructor is defined for these immutable object manipulations, the compiler will generate one that performs the merging of `self` and the `change`s into a new instance.
 
+---
+
 ## Type Alias
 
 Provides a new name for an existing type. Similar to declaring a new type but without any additions.
@@ -627,6 +661,8 @@ MyType = OtherType<Complex<U8>, Str>
 
 During compilation all references to type aliases are replaced with their original types. Compiler-issues _are_ reported using the original type alias name.
 
+---
+
 ## Anonymous Types
 
 Only Structure Types can be implemented as a nameless type.
@@ -635,6 +671,8 @@ See also [Anonymous Structures](structures.md#Anonymous-Structures).
 
 > `.NET` C# has three different types of anonymous structures: anonymous types (class), value tuples and tuples (class).
 https://docs.microsoft.com/en-us/dotnet/standard/base-types/choosing-between-anonymous-and-tuple#key-differences
+
+---
 
 ## Type Constructors
 
@@ -732,6 +770,8 @@ t = MyType()
 
 The base class constructor function call must be first.
 
+---
+
 ### Type Constructor Overloading
 
 A Type Constructor function can be overloaded - normal functions can only be overloaded based on the self parameter.
@@ -752,6 +792,8 @@ MyType: (p1: U8, p2: Str, p3: U16): MyType
 // uses overload with 3 parameters
 t = MyType(42, "42", 0x4242)
 ```
+
+---
 
 ## Constrained Variant
 
@@ -776,6 +818,8 @@ v = match s
 > A Ptr should still point to the payload of the variant so perhaps store the var-type in front of the main payload.
 
 A constrained variant instance cannot change type during its lifetime.
+
+---
 
 ## Type Manipulation
 
@@ -806,7 +850,7 @@ Using `Imm<T>` and `Opt<T>` on the base type applies to all fields.
 
 Perhaps allow manipulation like in TypeScript 'for each key'...?
 
-> TBD Inverse of `Opt<T>?` (required)
+> TBD Inverse of `Opt<T>` (required)? Inverse of `Imm<T>`?
 
 ```csharp
 MyStruct
@@ -885,6 +929,8 @@ The `|`, `&` and `^` operators act on the memory of a type (sort of).
 
 What about marker interfaces?
 
+---
+
 ### Unions
 
 > How are shared fields (locations) initialized when two structs have different default values? Or simply init to zero-always.
@@ -925,6 +971,8 @@ Struct1
     un2: Union2
 ```
 
+---
+
 ### Type Commonality
 
 Common fields in all types.
@@ -934,6 +982,8 @@ MyStruct: Struct1 & Struct2
 ```
 
 A compiler error is generated if no fields are common - the type defined is empty.
+
+---
 
 ### Type difference
 
@@ -948,6 +998,8 @@ Difference: Struct1 ^ Struct2
 ```csharp
 MyStruct: (Struct1 & Struct2) | (Struct3 ^ Struct4)
 ```
+
+---
 
 ### Subtracting from Types
 
@@ -965,6 +1017,8 @@ MyStruct : BaseStruct
     addFld1: Str
     addFld2: I32
 ```
+
+---
 
 ### Multiple Inheritance
 
@@ -1059,6 +1113,8 @@ d: Dyn <= "{ 'data':'hello world'}"
 if d?#data
     // use d.data
 ```
+
+---
 
 ## Object Type
 

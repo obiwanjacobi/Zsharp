@@ -10,6 +10,8 @@ TargetType: (self: SourceType, bits: Range): TargetType
 TargetType: (self: SourceType, other: X): TargetType
 ```
 
+---
+
 ## Built-in Types
 
 The allowed conversions are all explicitly represented by a function. The name of the function is the target type.
@@ -48,6 +50,8 @@ i = v.I8()      // I8: -1
 > Use checked functions to do bounds checking and make sure that the actual value has not changed meaning.
 
 > Should we have specific conversion functions that explicitly state the conversion could be unsafe? `v.unsafeI8()`
+
+---
 
 ## Casting
 
@@ -103,6 +107,8 @@ v = o       // error: o could be nothing
 if o? => v = o
 ```
 
+---
+
 ## Expressions
 
 ```csharp
@@ -116,7 +122,7 @@ v: U8 = U8(1000 / 200)
 v: U8 = (1000 / 200).U8()
 ```
 
-----
+---
 
 ## Try Convert
 
@@ -125,6 +131,8 @@ Return type is an `Opt<T>` of the target type.
 ```csharp
 TryTargetType(self: SourceType, ...): TargetType?
 ```
+
+---
 
 ## Force Convert
 

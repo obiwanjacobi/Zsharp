@@ -190,6 +190,8 @@ catch -> (err)
 
 `throw` and `rethrow` functions are bound to the `Exception` type that will be emitted as a C# `throw` statement.
 
+---
+
 ## Error Handlers
 
 > We'll probably drop this for it does not add any value in a .NET context.

@@ -126,6 +126,24 @@ This helps with passing necessary but non-informative parameters.
 
 `with` keyword starts a scope that contain the specified type instances. A list of instances can be specified separated by a comma (default list separator).
 
+```csharp
+// syntax / keywords?
+with x
+    ...
+
+use x
+    ...
+
+push x
+    ...
+(pop x?)
+```
+
+- How does this differ from capture blocks?
+- How to combine context vars and capture blocks?
+
+Could be useful for passing async cancellation tokens etc.
+
 > What happens when multiple of the same type are specified? Compile Error? Match Array\<T>?
 
 ```csharp

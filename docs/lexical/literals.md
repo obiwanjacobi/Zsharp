@@ -231,14 +231,14 @@ regex = Rx("$[a-z]*")
 - Literal embedded Xml, Json, Yaml etc.
 
 ```csharp
-"""Xml
+"""@Xml
 <?xml version="1.0"?>
 <document xmlns="example">
     <line attr="42" />
 </document>
 """
 
-"""Json
+"""@Json
 {
     "property": "value",
     "array": [
@@ -248,6 +248,31 @@ regex = Rx("$[a-z]*")
 """
 ```
 
+The `@Xml` and `@Json` refer to the object (type) name that handles the content inside the `"""` block.
+
 Assign to vars and work with implicit object model (XDocument/JsonObject)?
 
-Most useful when allowing to inject programmatic constructs like loops and value (interpolated strings)...
+Most useful when allowing to inject programmatic constructs like loops and value (interpolated strings). See Generator Functions.
+
+This idea can be extended to created embedded (declarative) DSLs.
+
+```csharp
+"""@Html
+html
+    header
+        style
+    body
+        h1: 'Page Title'
+        p:
+            Loris ipsum
+"""
+```
+
+```csharp
+"""@Wpf
+// xaml like wpf dsl?        
+"""
+```
+
+The more this can look like normal code the better.
+Is there a way to do this with normal function syntax?

@@ -29,6 +29,7 @@ Arithmetic, bitwise and logical operators.
 | `<` | IsLesserThan | Smaller than
 | `>=` | IsGreaterEqual | Greater or Equal
 | `=<` | IsLesserEqual | Smaller or Equal
+| `?` | AsBoolean | Boolean postfix
 | `? :` | - | Ternary Conditional (if-else)
 | `and` | LogicAnd | Logical And
 | `or` | LogicOr | Logical Or
@@ -109,6 +110,8 @@ x = a ?+ o
 // does it matter?
 x = o ?+ a
 ```
+
+---
 
 ## Type operators
 

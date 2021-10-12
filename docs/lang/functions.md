@@ -101,6 +101,8 @@ filter: (predicate: Fn<U8, Bool>)
     ...
 ```
 
+---
+
 ### Optional Parameters
 
 Optional function parameters can be specified using the optional symbol `?` or `Opt<T>`.
@@ -130,6 +132,8 @@ if v?
     fn(v)
 ```
 
+---
+
 ### Default Parameter Values
 
 Assign a default value to a function parameter.
@@ -155,6 +159,8 @@ fn: [x](p: U8 = 42, q: U8 = x)
     ...
 ```
 
+---
+
 ### Named Parameter
 
 Function Parameters can be specified by name at the call site.
@@ -168,6 +174,8 @@ namedFn(p2 = 0x4242, p = 42)    // ok, out of order, but named
 namedFn(42, p2 = 0x4242)        // ok, p in order, rest named
 namedFn(0x4242, p = 42)         // ok, unnamed is only one left
 ```
+
+---
 
 ### Variable number of parameters
 
@@ -193,6 +201,8 @@ varFuncTempl(42, (1, 2, 3, 4, 5, 6))
 varFunc(42, 1, 3.14, "42")
 ```
 
+---
+
 ### Immutable Parameters
 
 Gives the caller the guarantee that the parameter will not be changed.
@@ -203,6 +213,8 @@ immFn: (p: Ptr<Imm<U8>>)
 // shorter using type operators
 immFn: (p: *^U8)
 ```
+
+---
 
 ### Out and ByRef Parameters
 
@@ -215,6 +227,8 @@ Make42: (p: Ptr<U8>)
 ```
 
 This is on usage of `Ptr<T>` that may actually be useful.
+
+---
 
 ### Illegal Parameter Types
 
@@ -239,6 +253,8 @@ allowedFn(editable: Bool)
 allowedFn(editable = true)
 allowedFn(editable = false)
 ```
+
+---
 
 ### Parameter Containers
 
@@ -350,13 +366,19 @@ For fluent interfaces where the return value is the same as the `self` type, not
 
 > TBD: Want to support covariant return types (function overloads)? => Yes
 
+---
+
 ### Error
 
 The return type of a function can contain an error `Err<T>`, Refer to [Errors](errors.md) for more details.
 
+---
+
 ### Optional
 
 The return type of a function can be optional `Opt<T>`. Refer to [Optional](optional.md) for more details.
+
+---
 
 ### Void
 
@@ -510,6 +532,8 @@ MyStruct.boundFn: (p: U8)
     self.fld1 = p
 ```
 
+---
+
 ### Self Type Navigation
 
 Safe navigation over multiple references.
@@ -527,6 +551,8 @@ s = MyStruct
 _ = s?.boundFn()?.boundFn()
 _ = s&.boundFn()&.boundFn()
 ```
+
+---
 
 ### Self Type Conversion
 
@@ -675,6 +701,8 @@ s.fnStruct()
 ```
 
 > `.NET`: When the type of the `self` parameter is being compiled, the function is generated as a class method. If the `self` type is external the function is generated as an extension method.
+
+---
 
 ### Overriding Self Bound Functions
 
@@ -1155,6 +1183,8 @@ All operator functions will be tested by the compiler if they confirm to the cor
 
 For more information refer to [Lexical Operators](../lexical/operators.md).
 
+---
+
 ### Custom operators
 
 > Can custom operators be implemented? (like in F#)
@@ -1216,6 +1246,7 @@ A function that can be called to generate simple string based code at compile ti
     // use '#' to indicate use of a template param
     // use a special '#<<' syntax?
     #<< Stub#T : #T
+    #<$ Stub#T : #T
     loop c
         #<<     fld#c: Str
     // or a compiler pragma?
@@ -1292,6 +1323,31 @@ t2: Task<U8> = work2Async()
 ```
 
 > I don't like the use of a(n awaited) Task as if it were a value...
+
+---
+
+### Async Task Cancellation
+
+Use normal .NET `CancellationToken`.
+
+But can we find a way to pass the cancellation token down the call hierarchy without having to specify it explicitly?
+
+Use Context Variables?
+
+```csharp
+task: (p: U8, s: Str, c: CancellationToken): Async
+    with c
+        // c passed as CancellationToken
+        task(p, s)
+
+cts = CancellationSource
+
+with cts.Token
+    // c passed as CancellationToken
+    task(42, "42");
+```
+
+---
 
 ### Promise & Future
 

@@ -2,6 +2,8 @@
 
 Constructs to direct the flow of program execution.
 
+---
+
 ## Conditional branching
 
 The basic if statement works as expected, but the condition is not enclosed in `()`. There can only be a conditional expression following the `if`, so parsing of the condition stops when a newline is encountered or a comment.
@@ -41,6 +43,8 @@ if x in arr // can x be found in arr?
     ...     // true
 ```
 
+---
+
 ### Parenthesis
 
 When parenthesis are used they are always part of the expression, not of the `if` statement. There is always a space after the `if` statement - this is what sets it apart from a function call.
@@ -53,6 +57,8 @@ if(42)          // function call (no space)
 ```
 
 Note that `if` is a reserved keyword and no named language element can have the same name as a reserved keyword. Maybe have an escape character?
+
+---
 
 ### Range Conditions
 
@@ -74,6 +80,8 @@ if not a in [0..100]    // ?
 ## Return
 
 To return a value from a function.
+
+---
 
 ### Return Expressions
 
@@ -188,11 +196,24 @@ loop n in [0..5:-1]
     ...
 ```
 
-> TODO: loop with more than one range? Hard to control behavior.
+> TBD
+
+Loop with more than one range/iter? How to control if 'ranges' are repeated or first one done ends the loop?
 
 ```csharp
 loop w in -[0..5], h in [0..10]
     w_makes_two_rounds_and_h_one
+    w_makes_one_round_and_h_half
+```
+
+```csharp
+loop w in -[0..5] and h in [0..10]
+    w_makes_two_rounds_and_h_one
+```
+
+```csharp
+loop w in -[0..5] or h in [0..10]
+    w_makes_one_round_and_h_half
 ```
 
 Nested loops
@@ -231,12 +252,59 @@ loop n in Iter()
     work_with_n
 ```
 
+> TBD implicit casting?
+
+```csharp
+// iterator function
+loop n: OtherType in Iter()
+    work_with_n_of_OtherType
+```
+
 > TBD Async loops?
 
 ```csharp
 // async iterator function
 loop n in IterAsync()
+    work_with_n_awaited
+```
+
+> TBD loops with CancellationTokens?
+
+```csharp
+ct: CancellationToken = ...
+
+// iterator function
+loop n in Iter() and ct?
     work_with_n
+```
+
+When a type has the `?` operator overloaded it can be used as a boolean expression by adding the `?` to the end.
+
+---
+
+### Loop Expressions
+
+```csharp
+loop                        // endless loop
+loop <integer>              // loop count
+loop <var> in [-]<range>    // (reverse) for-loop
+loop <var> in <iter>        // for-each loop
+(loop <expression>)         // access loop object
+(loop <expression>).AsParallel()  // call loop object function
+```
+
+Expressions can be combined using the `and` and `or` keywords.
+
+The `and` keyword requires both sides to finish. How to control if the shorter/faster side is to be restarted?
+
+```csharp
+loop n in [0..3] and s in [2..9]
+```
+
+The 'or' keyword allows the fastest side to end the loop.
+
+```csharp
+loop n in [0..x] or 42
 ```
 
 ---
@@ -252,6 +320,7 @@ loop [0..10] ->> LogInt
 
 // (static) partition function
 loop [0..10].Partition(3) -> LogInt
+loop [0..10].Partition(3) ->> LogInt
 
 // AsParallel function (.NET)
 loop [0..10].AsParallel() -> LogInt
@@ -262,6 +331,7 @@ Cancelling parallel processing (CancellationToken)?
 ```csharp
 c = CancellationTokenSource
 loop IterObjects().WithCancellation(c.Token) ->> LogInt
+loop IterObjects() and c.Token? ->> LogInt
 ```
 
 > Async Loops
@@ -273,6 +343,7 @@ loop n in IterAsync()
 
 c = CancellationTokenSource
 loop n in IterAsync().WithCancellation(c.Token)
+loop n in IterAsync() and c.Token?
     ...
 ```
 
@@ -305,6 +376,8 @@ loop i in [0..10]
     // i = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
     // c = 1, 2, 3, 4, 5, 1, 2, 3, 4, 5
 ```
+
+Of course a `Cycle` can be constructed with a range.
 
 ---
 
@@ -367,7 +440,7 @@ As with `break`, `continue` only works on the immediate parent loop.
 
 ## Exit
 
-> TBD: use `exit` as a keyword to replace `break`, `continue`, `yield` and `return`?
+> TBD: use `exit` as a keyword to replace `break`, `continue`, `yield` and `return` (and abort program)?
 
 ```csharp
 exit()              // exits program

@@ -36,6 +36,8 @@ pure pureFn: [globalVar](x: U8, y: U8): U16
 fun pureFn: [globalVar](x: U8, y: U8): U16
 ```
 
+---
+
 ## Higher Order Function
 
 A higher order function is a function that takes or returns another function (or both).

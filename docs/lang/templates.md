@@ -19,6 +19,8 @@ Example:
 
 None-Type template parameters are always processed at compile-time and are also prefixed with a `#`.
 
+---
+
 ## Structure Templates
 
 ```C#
@@ -67,6 +69,8 @@ z = typedRet()      // Error! cannot determine type
 ## Template Parameters
 
 Template parameters are applied at compile time. A parameter name (first char) _MUST_ be capitalized when it is used as a Type.
+
+---
 
 ### Restricting Template Parameters
 
@@ -138,6 +142,8 @@ f = factory<U8>()       // f: U8 (0 = default)
 c = create<MyStruct>()  // c: MyStruct (all fields default)
 ```
 
+---
+
 ### Type Template Parameter Inference
 
 Type parameters can be inferred from the context they're used in.
@@ -173,6 +179,8 @@ MyType<G, #T>
 boundFn: <G, #T>(self: MyType<G, #T>)
     ...
 ```
+
+---
 
 ### Non-Type Template Parameters
 
@@ -211,6 +219,20 @@ DataStruct<count: U16>:
 ```
 
 > We don't have syntax for statically dimensioning an array (list), yet!
+
+Special cases?
+
+In both cases the `T` can be inferred from usage.
+
+```csharp
+fn: <#T>(ptr: Ptr<T>)
+    ...
+
+fn: <#T, #ptr: Ptr<T>>()
+    ...
+```
+
+---
 
 ### Code Template Parameters (inlining)
 
@@ -257,6 +279,8 @@ t = TemplateType<Str>
 
 > Note: Inconsistency with function parameter defaults => which are not supported. Should we support both or neither?
 
+---
+
 ### Variable Number of Template Parameters
 
 > Not supported (yet).
@@ -298,6 +322,7 @@ typedFn(true)       // specialization typedFn<Bool> called
 
 When all template parameters are specialized a concrete type or function is created that is used as a template instantiation.
 
+---
 ### Partial Specialization
 
 Partial specialization means partly specifying the template parameters (not all of them). The result is another template.

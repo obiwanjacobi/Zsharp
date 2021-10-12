@@ -33,6 +33,8 @@ my-type
 
 > TBD: Specifically allowing `.` in an identifier could provide some flexibility for applying namespaces within a module. It could also be used to separate name parts with a non-optional character (`_` is an optional character).
 
+---
+
 ## Case Sensitivity
 
 - Type identifiers start with an upper case letter.
@@ -46,6 +48,8 @@ Identifiers are the same when:
 - `_` are ignored (removed) when comparing.
 
 > TBD: exclude function names from having to match case of first letter of function name? That would allow for fully adapting your own naming conventions - at least for functions. Types still have to start with a capital first char.
+
+---
 
 ### Discard
 
@@ -86,6 +90,8 @@ s.[intellisense does not show _id]
 ```
 
 > Do we want to give meaning to identifiers ending with a `_`? Could we use this for weak-functions (or weak-anything)?
+
+---
 
 ## Fully Qualified Names
 
