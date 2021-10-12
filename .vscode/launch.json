@@ -11,17 +11,6 @@
             "printParseTree": false,
             "visualParseTree": true,
             "internalConsoleOptions": "neverOpen"
-        },
-        {
-            "name": "Test",
-            "type": "antlr-debug",
-            "request": "launch",
-            "input": "./src/Zsharp/antlr.debug.zs",
-            "grammar": "./src/Zsharp/test.g4",
-            "startRule": "run",
-            "printParseTree": false,
-            "visualParseTree": true,
-            "internalConsoleOptions": "neverOpen"
         }
     ]
 }
