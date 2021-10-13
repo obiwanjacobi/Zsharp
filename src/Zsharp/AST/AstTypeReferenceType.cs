@@ -1,20 +1,15 @@
 ﻿using Antlr4.Runtime;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstTypeReferenceType : AstTypeReferenceTemplate
     {
-        public AstTypeReferenceType(Type_refContext context)
-            : base(context)
-        { }
-
         public AstTypeReferenceType(AstIdentifier identifier)
         {
             this.SetIdentifier(identifier);
         }
 
-        protected AstTypeReferenceType(ParserRuleContext? context = null)
+        internal AstTypeReferenceType(ParserRuleContext? context = null)
             : base(context)
         { }
 

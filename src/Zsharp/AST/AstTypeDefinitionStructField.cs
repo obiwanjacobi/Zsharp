@@ -1,4 +1,4 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
@@ -8,7 +8,7 @@ namespace Zsharp.AST
         public AstTypeDefinitionStructField()
         { }
 
-        public AstTypeDefinitionStructField(Struct_field_defContext context)
+        internal AstTypeDefinitionStructField(ParserRuleContext context)
             : base(context)
         { }
 

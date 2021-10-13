@@ -1,10 +1,10 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
     public class AstTypeFieldReferenceEnumOption : AstTypeFieldReference
     {
-        public AstTypeFieldReferenceEnumOption(Enum_option_useContext context)
+        internal AstTypeFieldReferenceEnumOption(ParserRuleContext context)
             : base(context)
         { }
 

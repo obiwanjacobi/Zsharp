@@ -70,7 +70,7 @@ namespace Zsharp.AST
 
         public override object? VisitFile(FileContext context)
         {
-            var file = new AstFile(_namespace, _builderContext.CompilerContext.IntrinsicSymbols, context);
+            var file = New.AstFile(_namespace, _builderContext.CompilerContext.IntrinsicSymbols, context);
 
             _builderContext.SetCurrent(file);
             _builderContext.SetCurrent(file.CodeBlock!);
@@ -160,7 +160,7 @@ namespace Zsharp.AST
         public override object? VisitFunction_def(Function_defContext context)
         {
             var codeBlock = _builderContext.GetCodeBlock(context);
-            var function = new AstFunctionDefinitionImpl(context);
+            var function = New.AstFunctionDefinitionImpl(context);
 
             codeBlock.AddLine(function);
             _builderContext.SetCurrent(function.FunctionType);
@@ -200,7 +200,7 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_parameter(Function_parameterContext context)
         {
-            var parameter = new AstFunctionParameterDefinition(context);
+            var parameter = New.AstFunctionParameterDefinition(context);
 
             VisitFunctionParameter(parameter);
 
@@ -209,7 +209,7 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_parameter_self(Function_parameter_selfContext context)
         {
-            var parameter = new AstFunctionParameterDefinition(context);
+            var parameter = New.AstFunctionParameterDefinition(context);
             parameter.SetIdentifier(AstIdentifierIntrinsic.Self);
 
             VisitFunctionParameter(parameter);
@@ -251,7 +251,7 @@ namespace Zsharp.AST
 
         protected AstFunctionReference CreateFunctionReference(Function_callContext context)
         {
-            var function = new AstFunctionReference(context);
+            var function = New.AstFunctionReference(context);
             _builderContext.SetCurrent(function.FunctionType);
             _builderContext.SetCurrent(function);
             _ = VisitChildren(context);
@@ -266,7 +266,7 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_param_use(Function_param_useContext context)
         {
-            var parameter = new AstFunctionParameterReference(context);
+            var parameter = New.AstFunctionParameterReference(context);
             var function = _builderContext.GetCurrent<AstFunctionReference>();
             function.FunctionType.AddParameter(parameter);
 
@@ -293,7 +293,7 @@ namespace Zsharp.AST
 
         public override object? VisitVariable_def_typed(Variable_def_typedContext context)
         {
-            var variable = new AstVariableDefinition(context);
+            var variable = New.AstVariableDefinition(context);
             var codeBlock = _builderContext.GetCodeBlock(context);
 
             codeBlock!.AddLine(variable);
@@ -320,7 +320,7 @@ namespace Zsharp.AST
 
         public override object? VisitVariable_ref(Variable_refContext context)
         {
-            var varRef = new AstVariableReference(context);
+            var varRef = New.AstVariableReference(context);
 
             BuilderContext.SetCurrent(varRef);
             VisitChildren(context);
@@ -337,10 +337,10 @@ namespace Zsharp.AST
 
         public override object? VisitVariable_assign_value(Variable_assign_valueContext context)
         {
-            var assign = new AstAssignment(context);
+            var assign = New.AstAssignment(context);
             AstVariable variable = context.type_ref_use() is null
-                ? new AstVariableReference(context)
-                : new AstVariableDefinition(context);
+                ? New.AstVariableReference(context)
+                : New.AstVariableDefinition(context);
 
             VisitVariableAssign(context, assign, variable);
 
@@ -349,8 +349,8 @@ namespace Zsharp.AST
 
         public override object? VisitVariable_assign_struct(Variable_assign_structContext context)
         {
-            var assign = new AstAssignment(context);
-            AstVariable variable = new AstVariableReference(context);
+            var assign = New.AstAssignment(context);
+            AstVariable variable = New.AstVariableReference(context);
 
             VisitVariableAssign(context, assign, variable);
 
@@ -381,35 +381,35 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_loop_infinite(Statement_loop_infiniteContext context)
         {
-            var branch = new AstBranchExpression(context);
+            var branch = New.AstBranchExpression(context);
             BuildBranch(branch, context);
             return branch;
         }
 
         public override object? VisitStatement_loop_iteration(Statement_loop_iterationContext context)
         {
-            var branch = new AstBranchExpression(context);
+            var branch = New.AstBranchExpression(context);
             BuildBranch(branch, context);
             return branch;
         }
 
         public override object? VisitStatement_loop_while(Statement_loop_whileContext context)
         {
-            var branch = new AstBranchExpression(context);
+            var branch = New.AstBranchExpression(context);
             BuildBranch(branch, context);
             return branch;
         }
 
         public override object? VisitStatement_if(Statement_ifContext context)
         {
-            var branch = new AstBranchConditional(context);
+            var branch = New.AstBranchConditional(context);
             BuildBranch(branch, context);
             return branch;
         }
 
         public override object? VisitStatement_else(Statement_elseContext context)
         {
-            var branch = new AstBranchConditional(context);
+            var branch = New.AstBranchConditional(context);
             var indent = _builderContext.CheckIndent(context, context.indent());
             BuildSubBranch(branch, context, indent);
             return branch;
@@ -418,14 +418,14 @@ namespace Zsharp.AST
         public override object? VisitStatement_elseif(Statement_elseifContext context)
         {
             var indent = _builderContext.CheckIndent(context, context.indent());
-            var branch = new AstBranchConditional(context);
+            var branch = New.AstBranchConditional(context);
             BuildSubBranch(branch, context, indent);
             return branch;
         }
 
         public override object? VisitStatement_return(Statement_returnContext context)
         {
-            var branch = new AstBranchExpression(context);
+            var branch = New.AstBranchExpression(context);
             BuildBranch(branch, context);
             return branch;
         }
@@ -434,7 +434,7 @@ namespace Zsharp.AST
         {
             var codeBlock = _builderContext.GetCodeBlock(context);
 
-            var branch = new AstBranch(context);
+            var branch = New.AstBranch(context);
             codeBlock.AddLine(branch);
             return branch;
         }
@@ -443,7 +443,7 @@ namespace Zsharp.AST
         {
             var codeBlock = _builderContext.GetCodeBlock(context);
 
-            var branch = new AstBranch(context);
+            var branch = New.AstBranch(context);
             codeBlock.AddLine(branch);
             return branch;
         }
@@ -476,43 +476,43 @@ namespace Zsharp.AST
 
         public override object? VisitIdentifier_type(Identifier_typeContext context)
         {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
+            _builderContext.AddIdentifier(New.AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_var(Identifier_varContext context)
         {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
+            _builderContext.AddIdentifier(New.AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_param(Identifier_paramContext context)
         {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
+            _builderContext.AddIdentifier(New.AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_func(Identifier_funcContext context)
         {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
+            _builderContext.AddIdentifier(New.AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_field(Identifier_fieldContext context)
         {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
+            _builderContext.AddIdentifier(New.AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_enumoption(Identifier_enumoptionContext context)
         {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
+            _builderContext.AddIdentifier(New.AstIdentifier(context));
             return null;
         }
 
         public override object? VisitIdentifier_template_param(Identifier_template_paramContext context)
         {
-            _builderContext.AddIdentifier(new AstIdentifier(context));
+            _builderContext.AddIdentifier(New.AstIdentifier(context));
             return null;
         }
 
@@ -554,7 +554,7 @@ namespace Zsharp.AST
         public override object? VisitEnum_def(Enum_defContext context)
         {
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var typeDef = new AstTypeDefinitionEnum(context, symbolsSite.Symbols);
+            var typeDef = New.AstTypeDefinitionEnum(context, symbolsSite.Symbols);
 
             var codeBlock = _builderContext.GetCodeBlock(context);
             codeBlock.AddLine(typeDef);
@@ -597,7 +597,7 @@ namespace Zsharp.AST
 
         public override object? VisitEnum_option_def(Enum_option_defContext context)
         {
-            var fieldDef = new AstTypeDefinitionEnumOption(context);
+            var fieldDef = New.AstTypeDefinitionEnumOption(context);
 
             _builderContext.SetCurrent(fieldDef);
             _ = VisitChildren(context);
@@ -620,7 +620,7 @@ namespace Zsharp.AST
         public override object? VisitStruct_def(Struct_defContext context)
         {
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var typeDef = new AstTypeDefinitionStruct(context, symbolsSite.Symbols);
+            var typeDef = New.AstTypeDefinitionStruct(context, symbolsSite.Symbols);
 
             var codeBlock = _builderContext.GetCodeBlock(context);
             codeBlock.AddLine(typeDef);
@@ -641,7 +641,7 @@ namespace Zsharp.AST
 
         public override object? VisitStruct_field_def(Struct_field_defContext context)
         {
-            var fieldDef = new AstTypeDefinitionStructField(context);
+            var fieldDef = New.AstTypeDefinitionStructField(context);
 
             _builderContext.SetCurrent(fieldDef);
             _ = VisitChildren(context);
@@ -658,7 +658,7 @@ namespace Zsharp.AST
 
         public override object? VisitStruct_field_init(Struct_field_initContext context)
         {
-            var field = new AstTypeFieldInitialization(context);
+            var field = New.AstTypeFieldInitialization(context);
 
             _builderContext.SetCurrent(field);
             _ = VisitChildren(context);
@@ -677,7 +677,7 @@ namespace Zsharp.AST
         {
             if (context.COMPTIME() is not null)
             {
-                var templateParam = new AstTemplateParameterDefinition(context);
+                var templateParam = New.AstTemplateParameterDefinition(context);
 
                 _builderContext.SetCurrent(templateParam);
                 _ = VisitChildren(context);
@@ -689,7 +689,7 @@ namespace Zsharp.AST
                 return templateParam;
             }
 
-            var genericParam = new AstGenericParameterDefinition(context);
+            var genericParam = New.AstGenericParameterDefinition(context);
 
             _builderContext.SetCurrent(genericParam);
             _ = VisitChildren(context);
@@ -703,7 +703,7 @@ namespace Zsharp.AST
 
         public override object? VisitTemplate_param_use(Template_param_useContext context)
         {
-            var templateParam = new AstTemplateParameterReference(context);
+            var templateParam = New.AstTemplateParameterReference(context);
 
             _builderContext.SetCurrent(templateParam);
             _ = VisitChildren(context);
@@ -717,7 +717,7 @@ namespace Zsharp.AST
 
         public override object? VisitType_ref(Type_refContext context)
         {
-            var typeRef = new AstTypeReferenceType(context);
+            var typeRef = New.AstTypeReferenceType(context);
 
             _builderContext.SetCurrent(typeRef);
             _ = VisitChildren(context);

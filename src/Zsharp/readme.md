@@ -27,6 +27,7 @@
 - Importing External modules does not find nested public types (Zsharp.Runtime.Conversion.Checked).
 - Import External Modules also loads in all external-to-the-module referenced types (like System.Object).
     we need Module level dependency detection (and loading) and reference resolvement (SymbolTable).
+- AstFunctionDefinitionExternal has no FunctionType (and constructs on an empty AstTypeDefinitionFunction?).
 - AstSymbolName: fix hybrid generic/template postfixes.
 - SymbolTable: different flavors of FindSymbol (FindDefintion) do not use the same algorithm to find symbols.
     Some do not check in Modules, others do not check for DotNames...

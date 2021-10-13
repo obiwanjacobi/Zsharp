@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
+using System.Collections.Generic;
 
 namespace Zsharp.AST
 {
     public class AstFunctionReference : AstFunction,
         IAstTemplateSite<AstTemplateParameterReference>
     {
-        public AstFunctionReference(Function_callContext context)
+        internal AstFunctionReference(ParserRuleContext context, bool enforceReturnValueUse)
         {
             Context = context;
-            EnforceReturnValueUse = context.Parent is not Function_call_retval_unusedContext;
+            EnforceReturnValueUse = enforceReturnValueUse;
             _functionType = new AstTypeReferenceFunction(context);
             _functionType.SetParent(this);
         }

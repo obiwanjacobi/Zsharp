@@ -1,11 +1,17 @@
-﻿namespace Zsharp.AST
+﻿using Antlr4.Runtime;
+
+namespace Zsharp.AST
 {
     public abstract class AstFunctionParameter : AstNode,
         IAstIdentifierSite, IAstTypeReferenceSite, IAstSymbolSite
     {
-        protected AstFunctionParameter()
+        protected AstFunctionParameter(ParserRuleContext? context)
             : base(AstNodeKind.FunctionParameter)
-        { }
+        {
+            Context = context;
+        }
+
+        public ParserRuleContext? Context { get; }
 
         private AstIdentifier? _identifier;
         public AstIdentifier? Identifier => _identifier;

@@ -1,10 +1,10 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
     public class AstTypeFieldReferenceStructField : AstTypeFieldReference
     {
-        public AstTypeFieldReferenceStructField(Variable_field_refContext context)
+        internal AstTypeFieldReferenceStructField(ParserRuleContext context)
             : base(context)
         { }
 

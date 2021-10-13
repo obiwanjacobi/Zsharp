@@ -108,7 +108,7 @@ namespace Zsharp.AST
             var namedObj = GetCurrent<IAstIdentifierSite>();
             if (namedObj is not null)
             {
-                return namedObj.TrySetIdentifier(identifier);
+                return namedObj.TrySetIdentifier(identifier!);
             }
             return false;
         }

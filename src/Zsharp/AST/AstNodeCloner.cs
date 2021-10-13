@@ -150,12 +150,12 @@ namespace Zsharp.AST
         {
             var paramDef = parameter.Context switch
             {
-                Function_parameterContext ctx => new AstFunctionParameterDefinition(ctx),
-                Function_parameter_selfContext ctx => new AstFunctionParameterDefinition(ctx),
+                Function_parameterContext ctx => new AstFunctionParameterDefinition(ctx, parameter.IsSelf),
+                Function_parameter_selfContext ctx => new AstFunctionParameterDefinition(ctx, parameter.IsSelf),
                 _ => new AstFunctionParameterDefinition(parameter.Identifier!)
             };
 
-            paramDef.TrySetIdentifier(parameter.Identifier);
+            paramDef.TrySetIdentifier(parameter.Identifier!);
 
             var fnDef = _current.GetCurrent<AstFunctionDefinition>();
             fnDef.FunctionType.AddParameter(paramDef);
@@ -171,7 +171,7 @@ namespace Zsharp.AST
         {
             var paramRef = new AstFunctionParameterReference((Function_param_useContext)parameter.Context!);
             // param ref usually has no Identifier
-            paramRef.TrySetIdentifier(parameter.Identifier);
+            paramRef.TrySetIdentifier(parameter.Identifier!);
 
             var fnRef = _current.GetCurrent<AstFunctionReference>();
             fnRef.FunctionType.AddParameter(paramRef);
@@ -187,7 +187,7 @@ namespace Zsharp.AST
         private AstFunctionReference CloneFunctionReference(AstFunctionReference function)
         {
             Ast.Guard(function.Context, "No FunctionReference Context set.");
-            var fnRef = new AstFunctionReference((Function_callContext)function.Context!);
+            var fnRef = new AstFunctionReference(function.Context!, function.EnforceReturnValueUse);
             fnRef.SetIdentifier(function.Identifier!);
 
             _current.SetCurrent(fnRef.FunctionType);
@@ -256,7 +256,7 @@ namespace Zsharp.AST
         }
 
         private static AstLiteralBoolean CloneLiteralBoolean(AstLiteralBoolean literal)
-            => new((Literal_boolContext)literal.Context);
+            => new(literal.Context!, literal.Value);
 
         private static AstLiteralNumeric CloneLiteralNumeric(AstLiteralNumeric literal)
         {
@@ -380,7 +380,7 @@ namespace Zsharp.AST
 
         public override void VisitTypeFieldReferenceEnumOption(AstTypeFieldReferenceEnumOption enumOption)
         {
-            var fldRef = new AstTypeFieldReferenceEnumOption((Enum_option_useContext)enumOption.Context!);
+            var fldRef = new AstTypeFieldReferenceEnumOption(enumOption.Context!);
 
             _current.SetCurrent(fldRef);
             enumOption.VisitChildren(this);
@@ -389,7 +389,7 @@ namespace Zsharp.AST
 
         public override void VisitTypeFieldReferenceStructField(AstTypeFieldReferenceStructField structField)
         {
-            var fldRef = new AstTypeFieldReferenceStructField((Variable_field_refContext)structField.Context!);
+            var fldRef = new AstTypeFieldReferenceStructField(structField.Context!);
 
             _current.SetCurrent(fldRef);
             structField.VisitChildren(this);
@@ -400,8 +400,8 @@ namespace Zsharp.AST
         {
             return fieldReference switch
             {
-                AstTypeFieldReferenceStructField => new AstTypeFieldReferenceStructField((Variable_field_refContext)fieldReference.Context!),
-                AstTypeFieldReferenceEnumOption => new AstTypeFieldReferenceEnumOption((Enum_option_useContext)fieldReference.Context!),
+                AstTypeFieldReferenceStructField => new AstTypeFieldReferenceStructField(fieldReference.Context!),
+                AstTypeFieldReferenceEnumOption => new AstTypeFieldReferenceEnumOption(fieldReference.Context!),
                 _ => throw new InternalErrorException(
                     $"AstNodeCloner does not implement this FieldReference Type: {fieldReference.GetType().Name}")
             };
@@ -448,15 +448,11 @@ namespace Zsharp.AST
 
         public override void VisitBranch(AstBranch branch)
         {
-            AstBranch br;
-
-            if (branch.BranchKind == AstBranchKind.ExitIteration)
-                br = new AstBranch((Statement_continueContext)branch.Context!);
-            else if (branch.BranchKind == AstBranchKind.ExitLoop)
-                br = new AstBranch((Statement_breakContext)branch.Context!);
-            else
+            if (branch.BranchKind != AstBranchKind.ExitIteration &&
+                branch.BranchKind != AstBranchKind.ExitLoop)
                 throw new InternalErrorException("Unknown Branch Type.");
 
+            var br = new AstBranch(branch.Context!, branch.BranchKind);
             var cb = _current.GetCurrent<AstCodeBlock>();
             cb.AddLine(br);
 
@@ -479,7 +475,7 @@ namespace Zsharp.AST
 
         public override void VisitBranchExpression(AstBranchExpression branch)
         {
-            var br = new AstBranchExpression((Statement_returnContext)branch.Context!);
+            var br = new AstBranchExpression(branch.Context!, branch.BranchKind);
 
             var cb = _current.GetCurrent<AstCodeBlock>();
             cb.AddLine(br);

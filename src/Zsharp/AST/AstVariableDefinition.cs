@@ -1,21 +1,10 @@
 ﻿using Antlr4.Runtime;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstVariableDefinition : AstVariable,
         IAstCodeBlockLine
     {
-        public AstVariableDefinition(Variable_def_typedContext context)
-        {
-            Context = context;
-        }
-
-        public AstVariableDefinition(Variable_assign_valueContext context)
-        {
-            Context = context;
-        }
-
         public AstVariableDefinition(AstTypeReference? typeReference)
             : base(typeReference)
         { }

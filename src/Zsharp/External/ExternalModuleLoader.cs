@@ -52,11 +52,12 @@ namespace Zsharp.External
             return module;
         }
 
-        public AstSymbolTable SymbolTable { get; private set; }
+        private AstSymbolTable? _symbolTable;
+        public AstSymbolTable SymbolTable => _symbolTable ?? throw new InternalErrorException("SymbolTable was not set.");
 
         public void Initialize(AstSymbolTable symbolTable)
         {
-            SymbolTable = symbolTable;
+            _symbolTable = symbolTable;
             CreateExternalModules(_assemblies.Assemblies);
         }
 

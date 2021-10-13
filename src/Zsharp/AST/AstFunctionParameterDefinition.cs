@@ -1,29 +1,21 @@
 ﻿using Antlr4.Runtime;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstFunctionParameterDefinition : AstFunctionParameter
     {
-        public AstFunctionParameterDefinition(Function_parameterContext context)
+        internal AstFunctionParameterDefinition(ParserRuleContext context, bool isSelf)
+            : base(context)
         {
-            Context = context;
-            IsSelf = false;
-        }
-
-        public AstFunctionParameterDefinition(Function_parameter_selfContext context)
-        {
-            Context = context;
-            IsSelf = true;
+            IsSelf = isSelf;
         }
 
         public AstFunctionParameterDefinition(AstIdentifier identifier)
+            : base(null)
         {
             this.SetIdentifier(identifier);
             IsSelf = identifier.IsEqual(AstIdentifierIntrinsic.Self);
         }
-
-        public ParserRuleContext? Context { get; }
 
         public bool IsSelf { get; }
 

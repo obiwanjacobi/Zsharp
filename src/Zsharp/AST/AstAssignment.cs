@@ -1,30 +1,11 @@
 using Antlr4.Runtime;
 using System.Collections.Generic;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstAssignment : AstNode,
         IAstCodeBlockLine, IAstExpressionSite, IAstTypeInitializeSite
     {
-        public AstAssignment(Variable_def_typedContext context)
-            : base(AstNodeKind.Assignment)
-        {
-            Context = context;
-        }
-
-        public AstAssignment(Variable_assign_structContext context)
-            : base(AstNodeKind.Assignment)
-        {
-            Context = context;
-        }
-
-        public AstAssignment(Variable_assign_valueContext context)
-            : base(AstNodeKind.Assignment)
-        {
-            Context = context;
-        }
-
         internal AstAssignment(ParserRuleContext context)
             : base(AstNodeKind.Assignment)
         {

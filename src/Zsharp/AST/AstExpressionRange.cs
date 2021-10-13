@@ -1,10 +1,10 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
     public class AstExpressionRange : AstExpression
     {
-        public AstExpressionRange(RangeContext context)
+        internal AstExpressionRange(ParserRuleContext context)
             : base(context)
         { }
 

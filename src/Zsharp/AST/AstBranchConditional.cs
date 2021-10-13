@@ -1,26 +1,9 @@
 ﻿using Antlr4.Runtime;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstBranchConditional : AstBranchExpression
     {
-        public AstBranchConditional(Statement_ifContext context)
-            : base(AstBranchKind.Conditional)
-        {
-            Context = context;
-        }
-        public AstBranchConditional(Statement_elseContext context)
-            : base(AstBranchKind.Conditional)
-        {
-            Context = context;
-        }
-        public AstBranchConditional(Statement_elseifContext context)
-            : base(AstBranchKind.Conditional)
-        {
-            Context = context;
-        }
-
         internal AstBranchConditional(ParserRuleContext context)
             : base(AstBranchKind.Conditional)
         {

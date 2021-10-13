@@ -1,11 +1,11 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
     public class AstTemplateParameterReference : AstTemplateParameter,
         IAstTypeReferenceSite
     {
-        public AstTemplateParameterReference(Template_param_useContext context)
+        internal AstTemplateParameterReference(ParserRuleContext context)
             : base(context)
         { }
 

@@ -1,14 +1,10 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
     public class AstGenericParameterReference : AstGenericParameter,
         IAstTypeReferenceSite
     {
-        public AstGenericParameterReference(Template_param_useContext context)
-            : base(context)
-        { }
-
         public AstGenericParameterReference(AstTypeReference typeReference)
         {
             this.SetTypeReference(typeReference);
@@ -19,6 +15,10 @@ namespace Zsharp.AST
         {
             this.SetTypeReference(parameterToCopy.TypeReference!.MakeCopy());
         }
+
+        internal AstGenericParameterReference(ParserRuleContext context)
+            : base(context)
+        { }
 
         private AstTypeReference? _typeReference;
         public AstTypeReference? TypeReference => _typeReference;

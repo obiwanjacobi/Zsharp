@@ -1,20 +1,20 @@
+using Antlr4.Runtime;
 using System.Collections.Generic;
 using System.Linq;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstFile : AstNode,
         IAstSymbolTableSite, IAstCodeBlockSite
     {
-        public AstFile(string scopeName, AstSymbolTable parentTable, FileContext context)
+        internal AstFile(string scopeName, AstSymbolTable parentTable, ParserRuleContext context)
             : base(AstNodeKind.File)
         {
             Context = context;
             this.SetCodeBlock(new AstCodeBlock(scopeName, parentTable));
         }
 
-        public FileContext Context { get; }
+        public ParserRuleContext Context { get; }
 
         public IEnumerable<AstFunctionDefinitionImpl> Functions
             => Symbols.FindSymbols(AstSymbolKind.Function)

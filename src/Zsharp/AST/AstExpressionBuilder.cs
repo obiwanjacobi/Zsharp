@@ -202,7 +202,7 @@ namespace Zsharp.AST
         {
             var varRefCtx = context.variable_ref();
             var varRef = (AstVariableReference)VisitVariable_ref(varRefCtx)!;
-            var fieldRef = new AstTypeFieldReferenceStructField(context);
+            var fieldRef = New.AstTypeFieldReferenceStructField(context);
 
             BuilderContext.SetCurrent(fieldRef);
             VisitChildrenExcept(context, varRefCtx);
@@ -218,11 +218,11 @@ namespace Zsharp.AST
 
         public override object? VisitEnum_option_use(Enum_option_useContext context)
         {
-            var enumOpt = new AstTypeFieldReferenceEnumOption(context);
+            var enumOpt = New.AstTypeFieldReferenceEnumOption(context);
 
             // not using standard VisitChildren because 
             // Identifier needs special processing with dot-name.
-            var identifier = new AstIdentifier(context);
+            var identifier = New.AstIdentifier(context);
             enumOpt.SetIdentifier(identifier);
 
             var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
@@ -232,7 +232,7 @@ namespace Zsharp.AST
         }
 
         public override object? VisitLiteral_bool(Literal_boolContext context)
-            => new AstLiteralBoolean(context);
+            => New.AstLiteralBoolean(context);
 
         public override object? VisitNumber(NumberContext context)
             => AstLiteralNumeric.Create(context);
@@ -329,7 +329,7 @@ namespace Zsharp.AST
 
         public override object VisitRange(RangeContext context)
         {
-            var range = new AstExpressionRange(context);
+            var range = New.AstExpressionRange(context);
 
             BuilderContext.SetCurrent(range);
             VisitChildren(context);

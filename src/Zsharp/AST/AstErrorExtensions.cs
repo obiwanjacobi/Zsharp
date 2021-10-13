@@ -36,7 +36,7 @@ namespace Zsharp.AST
 
         public static AstMessage UndefinedEnumeration(this AstErrorSite errorSite, AstTypeFieldReferenceEnumOption enumOption)
         {
-            return errorSite.AddError(enumOption, enumOption.Context,
+            return errorSite.AddError(enumOption, enumOption.Context!,
                 $"Reference to an undefined Enumeration Option '{enumOption.Identifier!.Name}'");
         }
 

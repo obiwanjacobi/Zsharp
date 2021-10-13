@@ -1,11 +1,11 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
     public class AstTypeFieldInitialization : AstTypeFieldReference,
         IAstExpressionSite
     {
-        public AstTypeFieldInitialization(Struct_field_initContext context)
+        internal AstTypeFieldInitialization(ParserRuleContext context)
             : base(context)
         { }
 

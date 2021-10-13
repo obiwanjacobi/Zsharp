@@ -20,8 +20,6 @@ namespace Zsharp.AST
             => visitor.VisitLiteralString(this);
 
         private static string Parse(string withQuotes)
-        {
-            return withQuotes[1..^1];
-        }
+            => withQuotes[1..^1];
     }
 }

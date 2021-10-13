@@ -1,13 +1,13 @@
-﻿using System;
-using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
+using System;
 
 namespace Zsharp.AST
 {
     public class AstFunctionDefinitionImpl : AstFunctionDefinition,
         IAstCodeBlockSite, IAstSymbolTableSite
     {
-        public AstFunctionDefinitionImpl(Function_defContext functionCtx)
-            : base(functionCtx)
+        internal AstFunctionDefinitionImpl(ParserRuleContext context)
+            : base(context)
         { }
 
         private AstCodeBlock? _codeBlock;

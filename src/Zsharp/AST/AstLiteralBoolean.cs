@@ -1,5 +1,4 @@
 ﻿using Antlr4.Runtime;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
@@ -11,11 +10,11 @@ namespace Zsharp.AST
             Value = value;
         }
 
-        public AstLiteralBoolean(Literal_boolContext context)
-        : base(AstNodeKind.Literal)
+        internal AstLiteralBoolean(ParserRuleContext context, bool value)
+            : base(AstNodeKind.Literal)
         {
             Context = context;
-            Value = context.TRUE() is not null;
+            Value = value;
         }
 
         public ParserRuleContext? Context { get; }

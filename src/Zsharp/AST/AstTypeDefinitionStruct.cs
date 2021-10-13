@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Antlr4.Runtime;
+using System.Collections.Generic;
 using System.Linq;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstTypeDefinitionStruct : AstTypeDefinitionWithFields,
         IAstCodeBlockLine, IAstSymbolTableSite
     {
-        public AstTypeDefinitionStruct(Struct_defContext context, AstSymbolTable parentTable)
+        internal AstTypeDefinitionStruct(ParserRuleContext context, AstSymbolTable parentTable)
             : base(AstNodeKind.Struct)
         {
             Symbols = new AstSymbolTable("", parentTable);

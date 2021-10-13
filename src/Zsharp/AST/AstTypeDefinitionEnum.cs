@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Antlr4.Runtime;
+using System.Collections.Generic;
 using System.Linq;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstTypeDefinitionEnum : AstTypeDefinitionWithFields,
         IAstCodeBlockLine, IAstSymbolTableSite
     {
-        public AstTypeDefinitionEnum(Enum_defContext context, AstSymbolTable parentTable)
+        internal AstTypeDefinitionEnum(ParserRuleContext context, AstSymbolTable parentTable)
             : base(AstNodeKind.Enum)
         {
-            Symbols = new AstSymbolTable("", parentTable);
             Context = context;
+            Symbols = new AstSymbolTable("", parentTable);
         }
 
         public uint Indent { get; set; }

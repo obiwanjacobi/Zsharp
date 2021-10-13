@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
-using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
+using System.Collections.Generic;
 
 namespace Zsharp.AST
 {
     public class AstGenericParameterDefinition : AstGenericParameter,
         IAstIdentifierSite
     {
-        public AstGenericParameterDefinition(Template_param_anyContext context)
-            : base(context)
-        { }
-
         public AstGenericParameterDefinition(AstIdentifier identifier)
         {
             this.SetIdentifier(identifier);
         }
+
+        internal AstGenericParameterDefinition(ParserRuleContext context)
+            : base(context)
+        { }
 
         protected AstGenericParameterDefinition()
         { }

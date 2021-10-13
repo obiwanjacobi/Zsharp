@@ -24,13 +24,13 @@ namespace Zsharp.AST
 
         public virtual bool IsExternal => false;
 
-        private AstTypeDefinitionFunction _functionType;
+        private AstTypeDefinitionFunction? _functionType;
         public AstTypeDefinitionFunction FunctionType
         {
-            get { return _functionType; }
+            get { return _functionType ?? throw new InternalErrorException("FunctionType was not set."); }
             protected set
             {
-                _functionType = value;
+                _functionType = value ?? throw new InternalErrorException("FunctionType value is null.");
                 _functionType?.SetParent(this);
             }
         }

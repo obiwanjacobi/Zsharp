@@ -1,11 +1,11 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
     public class AstTypeDefinitionEnumOption : AstTypeFieldDefinition,
         IAstExpressionSite
     {
-        public AstTypeDefinitionEnumOption(Enum_option_defContext context)
+        internal AstTypeDefinitionEnumOption(ParserRuleContext context)
             : base(context, AstNodeKind.EnumOption)
         { }
 

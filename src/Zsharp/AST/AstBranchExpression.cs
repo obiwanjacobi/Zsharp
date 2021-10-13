@@ -1,41 +1,13 @@
-﻿using static Zsharp.Parser.ZsharpParser;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
     public class AstBranchExpression : AstBranch,
         IAstCodeBlockSite, IAstExpressionSite
     {
-        public AstBranchExpression(Statement_returnContext context)
-            : base(AstBranchKind.ExitFunction)
-        {
-            Context = context;
-        }
-
-        public AstBranchExpression(Statement_loop_infiniteContext context)
-            : base(AstBranchKind.Loop)
-        {
-            Context = context;
-
-            // loop true
-            var trueExpression = new AstExpression(context);
-            trueExpression.Add(
-                new AstExpressionOperand(
-                    new AstLiteralBoolean(true)));
-
-            this.SetExpression(trueExpression);
-        }
-
-        public AstBranchExpression(Statement_loop_iterationContext context)
-            : base(AstBranchKind.Loop)
-        {
-            Context = context;
-        }
-
-        public AstBranchExpression(Statement_loop_whileContext context)
-            : base(AstBranchKind.Loop)
-        {
-            Context = context;
-        }
+        internal AstBranchExpression(ParserRuleContext context, AstBranchKind branchKind)
+            : base(context, branchKind)
+        { }
 
         protected AstBranchExpression(AstBranchKind branchKind)
             : base(branchKind)

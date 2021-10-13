@@ -1,22 +1,19 @@
 ﻿using Antlr4.Runtime;
-using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
     public class AstFunctionParameterReference : AstFunctionParameter,
         IAstExpressionSite
     {
-        public AstFunctionParameterReference(Function_param_useContext paramCtx)
-        {
-            Context = paramCtx;
-        }
+        internal AstFunctionParameterReference(ParserRuleContext context)
+            : base(context)
+        { }
 
         public AstFunctionParameterReference(AstExpression expression)
+            : base(null)
         {
             TrySetExpression(expression);
         }
-
-        public ParserRuleContext? Context { get; }
 
         private AstExpression? _expression;
         public AstExpression? Expression => _expression;

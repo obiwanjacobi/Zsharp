@@ -12,7 +12,7 @@ namespace Zsharp.AST
             Value = value;
         }
 
-        private AstLiteralNumeric(NumberContext context)
+        private AstLiteralNumeric(ParserRuleContext context)
             : base(AstNodeKind.Literal)
         {
             Context = context;
@@ -49,39 +49,46 @@ namespace Zsharp.AST
         private static ulong GetNumberValue(NumberContext context)
         {
             string txt;
-            if (context.NUMBERbin() is not null)
+
+            var bin = context.NUMBERbin();
+            if (bin is not null)
             {
-                txt = context.NUMBERbin().GetText();
+                txt = bin.GetText();
                 return ParseNumber(2, 2, txt);
             }
 
-            if (context.NUMBERoct() is not null)
+            var oct = context.NUMBERoct();
+            if (oct is not null)
             {
-                txt = context.NUMBERoct().GetText();
+                txt = oct.GetText();
                 return ParseNumber(2, 8, txt);
             }
 
-            if (context.NUMBERdec() is not null)
+            var dec = context.NUMBERdec();
+            if (dec is not null)
             {
-                txt = context.NUMBERdec().GetText();
+                txt = dec.GetText();
                 return ParseNumber(0, 10, txt);
             }
 
-            if (context.NUMBERdec_prefix() is not null)
+            var decPre = context.NUMBERdec_prefix();
+            if (decPre is not null)
             {
-                txt = context.NUMBERdec_prefix().GetText();
+                txt = decPre.GetText();
                 return ParseNumber(2, 10, txt);
             }
 
-            if (context.NUMBERhex() is not null)
+            var hex = context.NUMBERhex();
+            if (hex is not null)
             {
-                txt = context.NUMBERhex().GetText();
+                txt = hex.GetText();
                 return ParseNumber(2, 16, txt);
             }
 
-            if (context.CHARACTER() is not null)
+            var ch = context.CHARACTER();
+            if (ch is not null)
             {
-                txt = context.CHARACTER().GetText();
+                txt = ch.GetText();
                 return (UInt64)txt[0];
             }
 
