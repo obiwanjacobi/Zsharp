@@ -32,7 +32,7 @@ namespace Zsharp.AST
             return BuildExpression(0);
         }
 
-        private object? ProcessExpression(IExpressionContextWrapper context)
+        private object? ProcessExpression(ExpressionContextWrapper context)
         {
             if (context.HasOpenParen)
             {

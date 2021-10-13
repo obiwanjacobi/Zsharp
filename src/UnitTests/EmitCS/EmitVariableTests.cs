@@ -30,7 +30,8 @@ namespace UnitTests.EmitCS
 
             var emitCode = Emit.Run(code, "TopVariableAssignment_VariableRef");
             var csCode = emitCode.ToString();
-            csCode.Should().Contain("private static System.Int32 x = 42;");
+            csCode.Should().Contain("private static System.Int32 x = 42;")
+                .And.Contain("private static System.Int32 a = x + 42;");
         }
 
         [TestMethod]

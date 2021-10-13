@@ -11,7 +11,7 @@ namespace Zsharp.Runtime
         private readonly bool _hasValue;
         public bool HasValue => _hasValue;
 
-        internal protected Opt(bool hasValue)
+        protected Opt(bool hasValue)
             => _hasValue = hasValue;
     }
 
