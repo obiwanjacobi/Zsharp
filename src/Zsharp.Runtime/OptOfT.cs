@@ -8,23 +8,30 @@ namespace Zsharp.Runtime
     {
         public const string NothingText = "<Nothing>";
 
-        private readonly bool _hasValue;
-        public bool HasValue => _hasValue;
+        public bool HasValue { get; protected set; }
 
-        protected Opt(bool hasValue)
-            => _hasValue = hasValue;
+        public static bool operator true(Opt opt)
+            => opt.HasValue;
+        public static bool operator false(Opt opt)
+            => !opt.HasValue;
     }
 
     public sealed class Opt<T> : Opt,
         IEnumerable<T>, IEquatable<Opt<T>>, IEquatable<T>
     {
-        public Opt() : base(false) { }
-        public Opt(T value) : base(true)
-            => _value = value ?? throw new ArgumentNullException(nameof(value));
-        public Opt(IEnumerable<T> valueOrEmpty) : base(valueOrEmpty.Any())
-            => _value = valueOrEmpty.SingleOrDefault();
+        public Opt() { }
+        public Opt(T value)
+        { 
+            _value = value ?? throw new ArgumentNullException(nameof(value));
+            HasValue = true;
+        }
+        public Opt(IEnumerable<T> valueOrEmpty)
+        { 
+            _value = valueOrEmpty.SingleOrDefault();
+            HasValue = valueOrEmpty.Any();
+        }
 
-        // Nullable interface
+        // Nullable<T> interface
         private readonly T? _value;
         public T Value
         {
@@ -32,7 +39,7 @@ namespace Zsharp.Runtime
             {
                 if (HasValue)
                     return _value!;
-                throw new InvalidOperationException("The Option has no Value.");
+                throw new InvalidOperationException($"The Opt<{typeof(T).Name}> has no Value.");
             }
         }
 
@@ -76,6 +83,7 @@ namespace Zsharp.Runtime
             if (HasValue)
                 return selector(_value!);
 
+            // Opt<T> implements IEnumerable<T>
             return Opt<R>.Nothing;
         }
 
@@ -92,7 +100,7 @@ namespace Zsharp.Runtime
 
         // Map == Select
         public Opt<R> Map<R>(Func<T, R> selector)
-            => Select<R>(selector);
+            => Select(selector);
 
         public Opt<R> Bind<R>(Func<T, Opt<R>> selector)
         {
@@ -118,10 +126,6 @@ namespace Zsharp.Runtime
             => value is not null ? new(value) : new();
         public static explicit operator T(Opt<T> option)
             => option.Value;
-        public static bool operator true(Opt<T> opt)
-            => opt.HasValue;
-        public static bool operator false(Opt<T> opt)
-            => !opt.HasValue;
         public static bool operator ==(Opt<T> option, Opt<T> value)
             => option.Equals(value);
         public static bool operator !=(Opt<T> option, Opt<T> value)
@@ -140,8 +144,14 @@ namespace Zsharp.Runtime
 
         public bool Equals(Opt<T>? other)
         {
-            if (other is not null && HasValue && other.HasValue)
-                return _value!.Equals(other.Value);
+            if (other is not null)
+            { 
+                if(HasValue && other.HasValue)
+                    return _value!.Equals(other.Value);
+                
+                // both nothing is equal
+                return HasValue == other.HasValue;
+            }
             return false;
         }
 

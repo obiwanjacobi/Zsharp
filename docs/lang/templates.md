@@ -23,7 +23,7 @@ None-Type template parameters are always processed at compile-time and are also 
 
 ## Structure Templates
 
-```C#
+```csharp
 MyStruct<#T>
     f: T
 
@@ -33,18 +33,30 @@ s = MyStruct<U8>
 
 This will also work:
 
-```C#
+```csharp
 MyStruct<#T>: T
     ...
 
 s = MyStruct<OtherStruct>
 ```
 
+As well as
+
+```csharp
+CRTP<T>
+    Super: T
+
+Usage : CRTP<Usage>
+    //Super: Usage
+```
+
+CRTP: https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
+
 ---
 
 ## Function Templates
 
-```C#
+```csharp
 typedFn: <#T>(p: T)
     ...
 
@@ -76,7 +88,7 @@ Template parameters are applied at compile time. A parameter name (first char) _
 
 You might want to use a template with type restriction instead of a normal functions or struct with just the type, in order to keep the specific type without having to cast. For instance in case of a function return type or a structure field.
 
-```C#
+```csharp
 MyStruct
     ...
 OtherStruct: MyStruct       // derive from MyStruct

@@ -18,11 +18,13 @@ functionName: InterfaceName [captures]<template>(parameters): returnType
 
 `[captures]`: (optional) This captures variables external to the function for its execution. For 'normal' function these would be global variables. For lambda's these could be function-local variables that are used inside the lambda. Captures are only specified on function declarations (implementation), not on function (type) interfaces or at the call site. The name of the capture refers to a variable (or parameter) and that name is also used in the function's implementation. Comma separated.
 
-`<template>`: (optional) Template Parameters that the template function uses in its implementation. Type parameters must start with a upper case first letter. Comma separated.
+`<template>`: (optional) Template or Generic Parameters that the function uses in its implementation. Type parameters must start with a upper case first letter. Comma separated.
 
 `(parameters)`: (optional) By-value parameters the function acts on. Comma separated.
 
 `returnType`: (optional) The Type of the function result. `Void` if not specified.
+
+> TBD: we may be able to drop the '`:`' before the return type.
 
 ```csharp
 // not showing implementation
@@ -31,9 +33,12 @@ fn: (): U8
 fn: (p: U8)
 fn: (p: U8): U8
 
-fn: <T>(): T
-fn: <T>(p: T)
-fn: <T, R>(p: T): R
+fn: <#T>(): T
+fn: <#T>(p: T)
+fn: <#T, #R>(p: T): R
+fn: <G>(): G
+fn: <G>(p: G)
+fn: <G, R>(p: G): R
 
 // capture on fn impl
 fn: [c]<T>(p: T): Bool        // by val
@@ -46,25 +51,7 @@ fn: InterfaceName [c]
 fn: InterfaceName [c.Ptr()]<T>(p: T): Bool
 ```
 
-> How to differentiate `fn: InterfaceName` from struct construction? => Has no field names.
-
----
-
-> TBD
-
-Make the function syntax more like variable syntax? => Use an `=` to 'assign' the implementation to the function name.
-
-```csharp
-// single line, without return, use ->
-isFortyTwo: (p: U8): Bool -> p = 42
-
-// multi line, with indent and return, use =
-isFortyTwo: (p: U8): Bool =
-    return p = 42
-
-// function declarations have no '=' sign.
-fnDecl: (p: U8)     // no _ needed
-```
+> How to differentiate `fn: InterfaceName` from struct definition? => Has no field names.
 
 ---
 
@@ -1355,6 +1342,72 @@ A Promise is returned from a 'producer' function that will hold the result event
 A Future is used by the consuming call site to access the results inside the Promise.
 
 > Do we need this?
+
+---
+
+## Function Traits
+
+> TBD
+
+Function 'traits' that are part of the Function Type.
+
+- Thread safe / Single threaded
+- Pure function (no side effects)
+- Recursive function
+- Async (expressed in the return type)
+- Blocking / non-blocking (Async/co-routine)
+- Constant / Immutable self (expressed in the self parameter)
+- Generic
+- Dynamic (for Types mainly?)
+
+Are Template and/or Generic parameters part of the Function Type? Template params => no, Generic params => yes.
+
+Adding custom traits to a function (and Type) and requiring specific traits in functions could setup a nice guidance framework for writing code / libraries.
+
+```csharp
+// trait definition syntax: TBD
+
+// Step trait definition
+Step: Trait
+    #Async  // a step must be async
+
+// Workflow trait definition
+Workflow: Trait
+    #Async
+    #Step       // requiring Step trait
+
+// random function, without traits
+fn: (s: Str): Async
+
+// step function
+[[Step]]
+sp: (s: Str): Async
+    ...
+
+// workflow function
+[[Workflow]]
+wf: (p: U8): Async<Bool>
+    sp(p.Str())
+    fn(p.Str())     // Error! Required 'Step' trait not present.
+```
+
+```csharp
+[[Workflow]]
+wfError: (p: U8): Bool   // Error! Workflow trait requires 'Async'
+    ...
+```
+
+Defining traits also declare on what type of syntax element they can be applied to (multiple).
+
+- Type
+- Struct
+    - Field
+- Enum
+    - Option (Field)
+- Function
+    - Template/Generic Parameter
+    - Parameter
+    - Return Type
 
 ---
 

@@ -21,7 +21,8 @@ Arithmetic, bitwise and logical operators.
 | `*` | ArithmeticMultiply | Multiplication
 | `/` | ArithmeticDivide | Division
 | `%` | ArithmeticRemainder | Remainder
-| `**` | ArithmeticPower | Power
+| `**` | ArithmeticPower | Power (3 ** 2 = 9)
+| `//` | ArithmeticRoot | Root (9 // 2 = 3) (comments!)
 | `( )` | - | Math Precedence, Function Call, List Literal, Tuple/deconstruct
 | `=` | IsEqual | Equals (`is`?)
 | `<>` | IsNotEqual | Not Equals (`is not`?)
@@ -50,6 +51,11 @@ Arithmetic, bitwise and logical operators.
 > Ternary operators cannot contain other ternary operators. No nesting of `? :` for readability.
 
 Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `nxor`?
+
+More mathematic concepts as operators?
+PI (and other constants), rad, deg, vectors, matrix, infinity, sin, cos, tan (inv), rounding (floor, ceiling), medium, mean, average, factorial/permutation/combination, sum...
+
+Set Theory? Set, intersect, union, subset, superset, powerset, (relative) complement, symmetric difference, membership, cardinality, ordered pair, cartesian product, wellknown sets (natural, integer, rational, real, complex).
 
 Operator that cascades the left value?
 So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`. See also [match expression](../lang/match.md).
@@ -135,9 +141,10 @@ To be determined:
 | `\` | reserved
 | `|` | reserved
 | `$` | reserved
+| `!` | reserved (factorial?)
 | `?.` | Safe Navigation (1) -or-
 | `&.` | Safe Navigation (2)
-| `=>` | used in mapping / some sort of (forward) assignment?
+| `=>` | used in mapping / some sort of (forward) assignment? (implies?)
 | `<=` | map structure / assign struct properties
 | `()` | Function Object operator
 | `|>` | Parameter pipe?

@@ -27,6 +27,10 @@ Dereferencing a pointer is done by using de function `()`'s.
 ```C#
 ptr: Ptr<U8>
 v = ptr()           // v: U8
+
+// alternate syntax
+c = ptr.*           // zig
+c = ptr.deref()
 ```
 
 Assigning a new value to the pointed-to-storage:

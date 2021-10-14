@@ -68,36 +68,6 @@ global-scope        // exports
 
 As a general rule: broken up lines continue on the next line one indent further than a new (child) scope would be: a double indent.
 
-Use the line break `;`.
-
-```csharp
-
-```
-
----
-
-## Merging lines
-
-Use the `->` operator to continue a line of code.
-
-```csharp
-fn: ()
-    // you cannot write this
-    if true doStuff() -> else doNothing()
-    // use this instead
-    true ? doStuff() : doNothing()
-
-    a = 42
-    // useful for match case continuation
-    x = match a
-        Error -> "This is an error"
-        U8 -> "This is an unsigned 8-bit.
-        _ -> "I don't know what this is"
-
-    // also used for lambda's
-    spaces = x.Where((c) -> c = ' ')
-```
-
 ---
 
 ### Literal Strings
@@ -153,3 +123,65 @@ lst = (
 // would be the same as
 lst = (1, 2, 3, 4, 5, 6)
 ```
+
+---
+
+## Merging lines
+
+Use the `->` operator to continue a line of code.
+
+```csharp
+fn: ()
+    // you cannot write this
+    if true doStuff() -> else doNothing()
+    // use this instead
+    true ? doStuff() : doNothing()
+
+    a = 42
+    // useful for match case continuation
+    x = match a
+        Error -> "This is an error"
+        U8 -> "This is an unsigned 8-bit.
+        _ -> "I don't know what this is"
+
+    // also used for lambda's
+    spaces = x.Where((c) -> c = ' ')
+```
+
+---
+
+## Comments
+
+Comments can really throw of the flow of a block. Therefor comments must start at the same indentation as the block.
+
+Example of hard to read code:
+
+```csharp
+// indentation block
+fn: ()
+    a = 42
+    x = 101
+// comment
+    y = 2112    // unclear if this belongs to the block above the comment
+```
+
+Corrected example:
+
+```csharp
+// indentation block
+fn: ()
+    a = 42
+    x = 101
+    // comment
+    y = 2112
+```
+
+---
+
+> TBD
+
+Allow `{}` as an escape of indent based parsing.
+When after certain keywords an opening `{` is detected, the indentation rules are dropped and the closing `}` ends the code block.
+This could be a nice balance between both types of block detection mechanisms.
+
+`{}` could also be used as an inline block.

@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Emit = UnitTests.EmitCS.Emit;
 
-namespace UnitTests.EmitCs
+namespace UnitTests.EmitCS
 {
     [TestClass]
     public class EmitFunctionTests

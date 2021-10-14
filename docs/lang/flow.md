@@ -77,6 +77,24 @@ if not a in [0..100]    // ?
 
 ---
 
+### If Expressions
+
+>TBD
+
+Use the `if` keyword inside an expression.
+
+```csharp
+a = 42
+// newline/indent syntax does not work for expressions
+v = if a > 42 -> 101 else a
+v = a > 42 ? 101 : a            // same
+
+// more complex expressions?
+v = if a > 42 -> 101 else if a < 10 -> 0 else a * a
+```
+
+---
+
 ## Return
 
 To return a value from a function.
@@ -214,6 +232,17 @@ loop w in -[0..5] and h in [0..10]
 ```csharp
 loop w in -[0..5] or h in [0..10]
     w_makes_one_round_and_h_half
+```
+
+> TBD
+
+Access index during in-loop.
+
+```csharp
+// n = value
+// i = index
+loop (n, i) in [0..5]
+    // n = i
 ```
 
 Nested loops

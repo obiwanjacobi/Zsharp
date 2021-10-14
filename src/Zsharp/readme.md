@@ -31,9 +31,6 @@
 - AstSymbolName: fix hybrid generic/template postfixes.
 - SymbolTable: different flavors of FindSymbol (FindDefintion) do not use the same algorithm to find symbols.
     Some do not check in Modules, others do not check for DotNames...
-- Compile leaves MSBuild process alive?
-- Remove (Antlr) Parser dependencies from AST as much as possible. Basically we only need a ParserRuleContext dependency.
-    The AstBuilder, AstNodeBuilder and AstExpressionBuilder are the only objects to need that dependency to the parser objects.
 - .NET struct interop
 
 ---

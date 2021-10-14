@@ -127,7 +127,5 @@ namespace Zsharp.AST
             => new(context);
         public static AstVariableReference AstVariableReference(Variable_assign_valueContext context)
             => new(context);
-
-
     }
 }
