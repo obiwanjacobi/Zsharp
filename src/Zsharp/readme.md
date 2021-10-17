@@ -32,6 +32,7 @@
 - SymbolTable: different flavors of FindSymbol (FindDefintion) do not use the same algorithm to find symbols.
     Some do not check in Modules, others do not check for DotNames...
 - .NET struct interop
+- A faster file stream (ICharStream) based on `Span<T>` or Memory<T>`?
 
 ---
 

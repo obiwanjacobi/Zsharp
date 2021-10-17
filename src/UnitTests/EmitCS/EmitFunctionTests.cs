@@ -16,7 +16,7 @@ namespace UnitTests.EmitCS
                 Tokens.Indent1 + "return" + Tokens.NewLine
                 ;
 
-            var emitCode = Emit.Run(code, "TypeEnumExport");
+            var emitCode = Emit.Run(code, "Function");
             var csCode = emitCode.ToString();
             csCode.Should().Contain("private static void fn()")
                 .And.Contain("return ;");

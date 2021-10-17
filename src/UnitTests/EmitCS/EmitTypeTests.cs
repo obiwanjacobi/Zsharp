@@ -51,7 +51,7 @@ namespace UnitTests.EmitCS
                 Tokens.Indent1 + "None = 0" + Tokens.NewLine
                 ;
 
-            var emitCode = Emit.Run(code, "TypeEnumExport");
+            var emitCode = Emit.Run(code, "TypeEnumBaseType");
             var csCode = emitCode.ToString();
             csCode.Should().Contain("private enum Myenum : System.Byte");
         }
@@ -66,7 +66,7 @@ namespace UnitTests.EmitCS
                 Tokens.Indent1 + "Name: Str" + Tokens.NewLine
                 ;
 
-            var emitCode = Emit.Run(code, "TypeEnumExport");
+            var emitCode = Emit.Run(code, "TypeStructExport");
             var csCode = emitCode.ToString();
             csCode.Should().Contain("public partial record Mystruct")
                 .And.Contain("System.UInt32 Id")

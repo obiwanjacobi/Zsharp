@@ -20,10 +20,10 @@ namespace UnitTests.AST
             sysMods.All(m => m.Symbols.Namespace.StartsWith("System"))
                 .Should().BeTrue();
             sysMods.All(m => m.Symbols.FindSymbols(AstSymbolKind.Function)
-                                .All(e => e.SymbolLocality == AstSymbolLocality.Imported))
+                .All(e => e.SymbolLocality == AstSymbolLocality.Imported))
                 .Should().BeTrue();
             sysMods.All(m => m.Symbols.FindSymbols(AstSymbolKind.Type).Where(s => s.HasDefinition)
-                                .All(e => e.SymbolLocality == AstSymbolLocality.Imported))
+                .All(e => e.SymbolLocality == AstSymbolLocality.Imported))
                 .Should().BeTrue();
         }
     }
