@@ -15,7 +15,7 @@ namespace UnitTests.AST
         {
             var moduleLoader = new ModuleLoader();
             var compiler = new Compiler(moduleLoader);
-            compiler.Compile("UnitTests", "AstErrorTests", code);
+            compiler.ParseAst("UnitTests", "AstErrorTests", code);
             PrintErrors(compiler.Context.Errors);
             return compiler;
         }

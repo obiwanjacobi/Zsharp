@@ -1354,6 +1354,7 @@ Function 'traits' that are part of the Function Type.
 - Thread safe / Single threaded
 - Pure function (no side effects)
 - Recursive function
+- Fluent function (ignore unused retvals)
 - Async (expressed in the return type)
 - Blocking / non-blocking (Async/co-routine)
 - Constant / Immutable self (expressed in the self parameter)

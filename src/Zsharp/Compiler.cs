@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using Zsharp.AST;
+using Zsharp.EmitCS;
 using Zsharp.Parser;
 using Zsharp.Semantics;
 
@@ -24,7 +27,57 @@ namespace Zsharp
 
         public CompilerContext Context { get; }
 
-        public IEnumerable<AstMessage> Compile(string filePath, string defaultModuleName, string code)
+        public string Compile(string filePath, string configuration, string output, string[] references)
+        {
+            var console = new StringBuilder();
+
+            // parse code and build AST
+            var code = File.ReadAllText(filePath);
+            var moduleName = Path.GetFileNameWithoutExtension(filePath);
+            var messages = ParseAst(filePath, moduleName, code);
+
+            foreach (var message in messages)
+            {
+                console.AppendLine(message.ToString());
+            }
+            
+            if (messages.HasErrors())
+            {
+                return console.ToString();
+            }
+
+            var assemblyName = Path.GetFileNameWithoutExtension(output);
+            var outputDir = Path.GetDirectoryName(output) ?? ".\\";
+            var module = Context.Modules.Modules.First();
+            var emit = new EmitCode(assemblyName);
+            emit.Visit(module);
+            emit.SaveAs(Path.Combine(outputDir, $"{assemblyName}.cs"));
+
+            var csCompiler = new CsCompiler()
+            {
+                Debug = configuration == "Debug",
+                ProjectPath = outputDir,
+            };
+
+            foreach (var reference in references)
+            {
+                csCompiler.Project.AddReference(reference);
+            }
+
+            var buildOutput = csCompiler.Compile(assemblyName);
+
+            if (buildOutput.Contains("Build FAILED"))
+            {
+                console.AppendLine();
+                console.AppendLine($"Generating Assembly {assemblyName} failed.");
+                console.AppendLine();
+                console.AppendLine(buildOutput);
+            }
+
+            return console.ToString();
+        }
+
+        public IEnumerable<AstMessage> ParseAst(string filePath, string defaultModuleName, string code)
         {
             var parser = CreateParser(filePath, code);
             var file = parser.file();

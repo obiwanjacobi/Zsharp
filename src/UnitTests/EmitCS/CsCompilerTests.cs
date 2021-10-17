@@ -23,7 +23,7 @@ namespace UnitTests.EmitCS
             };
 
             var stdOutput = csc.Compile("CsTestAssembly");
-            Console.WriteLine(String.Join(Environment.NewLine, stdOutput));
+            Console.WriteLine(stdOutput);
 
             File.Exists(csc.Project.TargetPath).Should().BeTrue();
         }
@@ -41,7 +41,7 @@ namespace UnitTests.EmitCS
             };
 
             var stdOutput = csc.Compile("CsTestAssembly");
-            Console.WriteLine(String.Join(Environment.NewLine, stdOutput));
+            Console.WriteLine(stdOutput);
 
             File.Exists(csc.Project.TargetPath).Should().BeTrue();
         }

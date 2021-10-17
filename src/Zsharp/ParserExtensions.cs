@@ -26,5 +26,8 @@ namespace Zsharp
             }
             return errors;
         }
+
+        public static bool HasErrors(this IEnumerable<AstMessage> messages)
+            => messages.Any(m => m.MessageType == AstMessageType.Error);
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30523.141
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31808.319
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94B57A57-4951-4588-89D8-4D6F3FF404D1}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zsharp", "Zsharp\Zsharp.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zsharp.Runtime", "Zsharp.Runtime\Zsharp.Runtime.csproj", "{CB4B0449-2DE3-4965-881C-D9EA9380E9CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zsharp.Runtime.UnitTests", "Zsharp.Runtime.UnitTests\Zsharp.Runtime.UnitTests.csproj", "{4E4205E4-6C68-4141-9F42-1B4055148657}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zsharp.Runtime.UnitTests", "Zsharp.Runtime.UnitTests\Zsharp.Runtime.UnitTests.csproj", "{4E4205E4-6C68-4141-9F42-1B4055148657}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zsharp.Compiler", "Zsharp.Compiler\Zsharp.Compiler.csproj", "{84C14D7E-6026-4C5A-9C4E-8F8E449DA244}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{4E4205E4-6C68-4141-9F42-1B4055148657}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E4205E4-6C68-4141-9F42-1B4055148657}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E4205E4-6C68-4141-9F42-1B4055148657}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C14D7E-6026-4C5A-9C4E-8F8E449DA244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C14D7E-6026-4C5A-9C4E-8F8E449DA244}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C14D7E-6026-4C5A-9C4E-8F8E449DA244}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C14D7E-6026-4C5A-9C4E-8F8E449DA244}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

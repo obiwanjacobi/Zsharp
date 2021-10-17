@@ -20,7 +20,7 @@ namespace UnitTests.EmitCS
         public static EmitCode Create(string code, IAstModuleLoader moduleLoader = null)
         {
             var compiler = new Compiler(moduleLoader ?? new ModuleLoader());
-            var errors = compiler.Compile("UnitTests", AssemblyName, code);
+            var errors = compiler.ParseAst("UnitTests", AssemblyName, code);
             foreach (var err in errors)
             {
                 Console.WriteLine(err);
@@ -35,7 +35,7 @@ namespace UnitTests.EmitCS
 
         public static string Build(string projectPath)
         {
-            var compiler = new CsCompiler()
+            var csCompiler = new CsCompiler()
             {
                 Debug = true,
                 ProjectPath = projectPath,
@@ -46,19 +46,19 @@ namespace UnitTests.EmitCS
                 "..", "..", "..", "..", "..",
                 "Zsharp.Runtime",
                 "bin",
-                compiler.Debug ? "Debug" : "Release",
-                compiler.Project.TargetFrameworkMoniker,
+                csCompiler.Debug ? "Debug" : "Release",
+                csCompiler.Project.TargetFrameworkMoniker,
                 ZsharpRuntime);
 
-            compiler.Project.AddReference(runtimePath);
+            csCompiler.Project.AddReference(runtimePath);
 
-            var output = compiler.Compile(AssemblyName);
+            var output = csCompiler.Compile(AssemblyName);
             Console.WriteLine(output);
 
             if (OutputHasErrors(output))
                 throw new ZsharpException($"Build Failed: {projectPath}");
 
-            return compiler.Project.TargetPath;
+            return csCompiler.Project.TargetPath;
         }
 
         public static EmitCode Run(string code, string testName, IAstModuleLoader moduleLoader = null)
