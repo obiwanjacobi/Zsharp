@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zsharp.Runtime.UnitTests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zsharp.Compiler", "Zsharp.Compiler\Zsharp.Compiler.csproj", "{84C14D7E-6026-4C5A-9C4E-8F8E449DA244}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zsharp.Compiler.Tests", "Zsharp.Compiler.Tests\Zsharp.Compiler.Tests.csproj", "{42E4DE41-4576-4D94-9D66-33203CAFE361}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{84C14D7E-6026-4C5A-9C4E-8F8E449DA244}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84C14D7E-6026-4C5A-9C4E-8F8E449DA244}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84C14D7E-6026-4C5A-9C4E-8F8E449DA244}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42E4DE41-4576-4D94-9D66-33203CAFE361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42E4DE41-4576-4D94-9D66-33203CAFE361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42E4DE41-4576-4D94-9D66-33203CAFE361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42E4DE41-4576-4D94-9D66-33203CAFE361}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

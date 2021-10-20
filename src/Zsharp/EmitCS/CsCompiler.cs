@@ -37,7 +37,6 @@ namespace Zsharp.EmitCS
 
         private string Build(string path)
         {
-
             var startInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
@@ -45,14 +44,20 @@ namespace Zsharp.EmitCS
                 WorkingDirectory = path,
                 RedirectStandardOutput = true,
             };
+
             using var proc = Process.Start(startInfo);
             if (proc is not null)
             {
-                proc.WaitForExit();
-                return proc.StandardOutput.ReadToEnd();
+                var result = proc.StandardOutput.ReadToEnd();
+
+                if (!proc.HasExited &&
+                    !proc.WaitForExit(90000))
+                    throw new ZsharpException($"The dotnet build process timed out.\n{result}");
+
+                return result;
             }
 
-            return "Build FAILED - process could not be started.";
+            return "Build FAILED - dotnet process could not be started.";
         }
 
         private string BuildCommandLine()

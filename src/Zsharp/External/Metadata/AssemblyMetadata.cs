@@ -18,6 +18,7 @@ namespace Zsharp.External.Metadata
 
         public string? Name => _assembly.GetName().Name;
         public string FullName => _assembly.FullName!;
+        public string Loaction => _assembly.Location;
 
         private readonly List<TypeMetadata> _types = new();
         public IEnumerable<TypeMetadata> GetPublicTypes()

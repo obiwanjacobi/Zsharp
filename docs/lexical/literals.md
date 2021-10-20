@@ -248,6 +248,17 @@ regex = Rx("$[a-z]*")
 """
 ```
 
+or a syntax that high lights the entire block (zig does this)?
+
+```csharp
+\\{
+\\    "property": "value",
+\\    "array": [
+\\        "item1", "item2"
+\\    ]
+\\}
+```
+
 The `@Xml` and `@Json` refer to the object (type) name that handles the content inside the `"""` block.
 
 Assign to vars and work with implicit object model (XDocument/JsonObject)?

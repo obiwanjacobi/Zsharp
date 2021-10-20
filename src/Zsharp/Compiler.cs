@@ -1,4 +1,5 @@
 ﻿using Antlr4.Runtime;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace Zsharp
 
         public CompilerContext Context { get; }
 
-        public string Compile(string filePath, string configuration, string output, string[] references)
+        public string Compile(string filePath, string configuration, string outputAssemblyPath, string[] references)
         {
             var console = new StringBuilder();
 
@@ -46,8 +47,8 @@ namespace Zsharp
                 return console.ToString();
             }
 
-            var assemblyName = Path.GetFileNameWithoutExtension(output);
-            var outputDir = Path.GetDirectoryName(output) ?? ".\\";
+            var assemblyName = Path.GetFileNameWithoutExtension(outputAssemblyPath);
+            var outputDir = Path.GetDirectoryName(outputAssemblyPath) ?? ".\\";
             var module = Context.Modules.Modules.First();
             var emit = new EmitCode(assemblyName);
             emit.Visit(module);
@@ -69,7 +70,7 @@ namespace Zsharp
             if (buildOutput.Contains("Build FAILED"))
             {
                 console.AppendLine();
-                console.AppendLine($"Generating Assembly {assemblyName} failed.");
+                console.AppendLine($"Error: Generating Assembly {assemblyName} failed.");
                 console.AppendLine();
                 console.AppendLine(buildOutput);
             }

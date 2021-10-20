@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Zsharp;
 using Zsharp.AST;
 using Zsharp.External;
@@ -34,7 +35,8 @@ namespace UnitTests
 
     internal class AssemblyManagerBuilder
     {
-        private const string _dotNetBasePath = @"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\5.0.0\ref\net5.0\";
+        //private const string _dotNetBasePath = @"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\5.0.0\ref\net5.0\";
+        private static readonly string _dotNetBasePath = RuntimeEnvironment.GetRuntimeDirectory();
         private readonly AssemblyManager _assemblyManager = new(_dotNetBasePath);
 
         public AssemblyManager AssemblyManager => _assemblyManager;

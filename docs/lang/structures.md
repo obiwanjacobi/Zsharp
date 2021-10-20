@@ -168,6 +168,8 @@ The fields of a structure are layed out in the order of their definition startin
 
 > `.NET` does the actual layout in memory.
 
+> TBD: have an align attribute?
+
 ---
 
 ## Tables
