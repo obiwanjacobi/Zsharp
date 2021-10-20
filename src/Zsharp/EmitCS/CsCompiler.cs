@@ -26,21 +26,25 @@ namespace Zsharp.EmitCS
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            Project.SaveAs(Path.Combine(path, $"{assemblyName}.csproj"));
+            var projectFilePath = Path.Combine(path, $"{assemblyName}.csproj");
+            Project.SaveAs(projectFilePath);
             Project.TargetPath = Path.Combine(path, "bin",
                 Debug ? "Debug" : "Release",
                 Project.TargetFrameworkMoniker,
                 $"{assemblyName}.dll");
 
-            return Build(path);
+            return Build(projectFilePath);
         }
 
-        private string Build(string path)
+        private string Build(string projectFilePath)
         {
+            var path = Path.GetDirectoryName(projectFilePath) ?? ".\\";
+            var projectFile = Path.GetFileName(projectFilePath);
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = BuildCommandLine(),
+                Arguments = BuildCommandLine(projectFile),
                 WorkingDirectory = path,
                 RedirectStandardOutput = true,
             };
@@ -60,12 +64,13 @@ namespace Zsharp.EmitCS
             return "Build FAILED - dotnet process could not be started.";
         }
 
-        private string BuildCommandLine()
+        private string BuildCommandLine(string projectFile)
         {
             var config = Debug ? "Debug" : "Release";
             var cmdLine = new StringBuilder();
 
-            cmdLine.Append($"build -c {config}");
+            cmdLine.Append($"build -c {config} ");
+            cmdLine.Append(projectFile);
 
             return cmdLine.ToString();
         }

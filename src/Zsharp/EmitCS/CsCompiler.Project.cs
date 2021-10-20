@@ -15,6 +15,8 @@ namespace Zsharp.EmitCS
 
         public SdkType Sdk { get; set; }
 
+        public bool Executable { get; set; }
+
         public string TargetFrameworkMoniker { get; set; }
 
         public string TargetPath { get; internal set; }
@@ -48,6 +50,8 @@ namespace Zsharp.EmitCS
 
             // <PropertyGroup>
             writer.WriteStartElement("PropertyGroup");
+            if (Executable)
+                writer.WriteElementString("OutputType", "Exe");
             writer.WriteElementString("TargetFramework", TargetFrameworkMoniker);
             writer.WriteElementString("Nullable", "annotations");
             writer.WriteEndElement();

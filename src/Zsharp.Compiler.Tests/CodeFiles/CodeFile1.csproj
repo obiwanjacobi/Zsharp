@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>annotations</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System.Console">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Console.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Runtime">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Runtime.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Private.CoreLib">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Private.CoreLib.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Private.Uri">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Private.Uri.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Threading">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Threading.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Runtime.InteropServices">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Runtime.InteropServices.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Text.Encoding.Extensions">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Text.Encoding.Extensions.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Memory">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Memory.dll</HintPath>
+        </Reference>
+        <Reference Include="Zsharp.Runtime">
+            <HintPath>C:\Users\marc\Documents\MyProjects\Zsharp\src\Zsharp.Compiler\bin\Debug\net5.0\Zsharp.Runtime.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Linq">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Linq.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Collections">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.11\System.Collections.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>

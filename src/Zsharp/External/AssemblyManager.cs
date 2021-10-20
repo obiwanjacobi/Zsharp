@@ -27,6 +27,9 @@ namespace Zsharp.External
 
         public AssemblyMetadata? LoadAssembly(string assemblyPath)
         {
+            if (!assemblyPath.EndsWith(".dll"))
+                assemblyPath += ".dll";
+
             var assembly = _resolver.Resolve(_context, assemblyPath);
 
             if (assembly is null)

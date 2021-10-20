@@ -52,7 +52,10 @@ namespace Zsharp
             var module = Context.Modules.Modules.First();
             var emit = new EmitCode(assemblyName);
             emit.Visit(module);
-            emit.SaveAs(Path.Combine(outputDir, $"{assemblyName}.cs"));
+
+            var csFile= $"{assemblyName}.cs";
+            var csFilePath = String.IsNullOrEmpty(outputDir) ? csFile : Path.Combine(outputDir, csFile);
+            emit.SaveAs(csFilePath);
 
             var csCompiler = new CsCompiler()
             {
@@ -65,14 +68,21 @@ namespace Zsharp
                 csCompiler.Project.AddReference(reference);
             }
 
+            csCompiler.Project.Executable = true;
             var buildOutput = csCompiler.Compile(assemblyName);
 
-            if (buildOutput.Contains("Build FAILED"))
+            if (buildOutput.Contains("Build FAILED") || 
+                buildOutput.Contains("error"))
             {
                 console.AppendLine();
                 console.AppendLine($"Error: Generating Assembly {assemblyName} failed.");
                 console.AppendLine();
                 console.AppendLine(buildOutput);
+            }
+            else
+            {
+                console.AppendLine();
+                console.AppendLine($"Compiled Z# assembly: {csCompiler.Project.TargetPath}");
             }
 
             return console.ToString();

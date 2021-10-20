@@ -2,16 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="CodeFile1.zs" />
+    <Compile Remove="CodeFiles\bin\**" />
+    <Compile Remove="CodeFiles\obj\**" />
+    <EmbeddedResource Remove="CodeFiles\bin\**" />
+    <EmbeddedResource Remove="CodeFiles\obj\**" />
+    <None Remove="CodeFiles\bin\**" />
+    <None Remove="CodeFiles\obj\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="CodeFile1.zs">
+    <Compile Remove="CodeFiles\*.cs" />
+    <None Remove="*.zs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="CodeFiles\CodeFile1.zs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

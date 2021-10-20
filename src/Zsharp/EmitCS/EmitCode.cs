@@ -191,9 +191,11 @@ namespace Zsharp.EmitCS
         public void SaveAs(string filePath)
         {
             var dir = Path.GetDirectoryName(filePath);
-            if (!Directory.Exists(dir))
+            if (!String.IsNullOrEmpty(dir) &&
+                !Directory.Exists(dir))
+            {
                 Directory.CreateDirectory(dir!);
-
+            }
             File.WriteAllText(filePath, ToString());
         }
 

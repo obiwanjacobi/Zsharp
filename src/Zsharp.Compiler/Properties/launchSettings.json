@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "ZSharp.Compiler (empty)": {
+      "commandName": "Project"
+    },
+    "Zsharp.Compiler (CodeFile1)": {
+      "commandName": "Project",
+      "commandLineArgs": " --file ..\\..\\..\\..\\Zsharp.Compiler.Tests\\CodeFiles\\CodeFile1.zs --config Release --ref System.Console --ref Zsharp.Runtime"
+    }
+  }
+}

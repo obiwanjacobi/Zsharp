@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Zsharp;
@@ -9,39 +10,65 @@ namespace ZsharpCompiler
 {
     public static class Program
     {
-        public static void Main(string filePath, string? configuration, string? output, string[] reference)
+        public static void Main(string file, string? config, string? output, string[] @ref)
         {
             var console = new ConsoleWriter(OutputLevel.Verbose);
 
-            console.BannerLine("Z# Compiler v0.1");
-            console.BannerLine("Copyright (c) Jacobi Software 2021");
-            console.InfoLine($"Using .NET from: {RuntimeEnvironment.GetRuntimeDirectory()}");
-            console.InfoLine("Loaded Assemblies:");
-            var assemblyManager = new AssemblyManager(RuntimeEnvironment.GetRuntimeDirectory());
-            foreach (var name in reference)
+            if (console.DisplayBanner)
             {
-                _ = assemblyManager.LoadAssembly(name);
-                console.InfoLine(name);
+                console.BannerLine("Z# Compiler v0.1");
+                console.BannerLine("Copyright (c) Jacobi Software 2021");
             }
+
+            if (String.IsNullOrEmpty(file))
+            {
+                console.ErrorLine("There is no file specified to compile. Use the -h option to get help.");
+                return;
+            }
+
+            if (!Path.IsPathRooted(file))
+                file = Path.GetFullPath(file);
+
+            var dotnetDir = RuntimeEnvironment.GetRuntimeDirectory();
+            console.InfoLine($"Using .NET from: {dotnetDir}");
             
+            var assemblyManager = new AssemblyManager(dotnetDir);
+            foreach (var name in @ref)
+            {
+                if(assemblyManager.LoadAssembly(name) is null)
+                    console.ErrorLine($"Assembly {name} could not be loaded.");
+            }
+
+            if (console.Level == OutputLevel.Verbose)
+            { 
+                console.InfoLine("Loaded Assemblies:");
+                foreach (var assembly in assemblyManager.Assemblies)
+                {
+                    console.InfoLine($"  - {assembly.Name}");
+                }
+            }
+
             var moduleLoader = new ExternalModuleLoader(assemblyManager);
             var compiler = new Compiler(moduleLoader);
 
-            console.DebugLine("Loaded Modules:");
-            foreach (var module in moduleLoader.SymbolTable.FindSymbols(AstSymbolKind.Module))
+            if (console.Level == OutputLevel.Debug)
             {
-                console.DebugLine(module.FullName);
+                console.DebugLine("Loaded Modules:");
+                foreach (var module in moduleLoader.SymbolTable.FindSymbols(AstSymbolKind.Module))
+                {
+                    console.DebugLine(module.FullName);
+                }
             }
 
             console.ProgressLine();
-            console.ProgressLine($"Compiling: {filePath}.");
+            console.ProgressLine($"Compiling: {file}.");
 
-            if (String.IsNullOrEmpty(configuration))
-                configuration = "Release";
+            if (String.IsNullOrEmpty(config))
+                config = "Release";
             if (String.IsNullOrEmpty(output))
-                output = ".\\";
+                output = Path.Combine(Path.GetDirectoryName(file) ?? ".\\", Path.GetFileNameWithoutExtension(file));
             
-            var result = compiler.Compile(filePath, configuration, output, 
+            var result = compiler.Compile(file, config, output, 
                 assemblyManager.Assemblies.Select(a => a.Loaction).ToArray());
 
             console.ProgressLine(result);
@@ -51,29 +78,31 @@ namespace ZsharpCompiler
 
     internal class ConsoleWriter
     {
-        private readonly OutputLevel _level;
+        public bool DisplayBanner {get;set;}
+        public OutputLevel Level { get; }
 
         public ConsoleWriter(OutputLevel level)
         {
-            _level = level;
+            Level = level;
+            DisplayBanner = true;
         }
 
         public void BannerLine(string text)
         {
-            if (_level != OutputLevel.NoBanner)
+            if (DisplayBanner)
                 Console.WriteLine(text);
         }
 
         public void InfoLine(string text)
         {
-            if (_level == OutputLevel.Verbose ||
-                _level == OutputLevel.Debug)
+            if (Level == OutputLevel.Verbose ||
+                Level == OutputLevel.Debug)
                 Console.WriteLine(text);
         }
 
         public void DebugLine(string text)
         {
-            if (_level == OutputLevel.Debug)
+            if (Level == OutputLevel.Debug)
                 Console.WriteLine(text);
         }
 
@@ -86,13 +115,20 @@ namespace ZsharpCompiler
         {
             Console.WriteLine();
         }
+
+        public void ErrorLine(string text)
+        {
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Error: {text}");
+            Console.ForegroundColor = color;
+        }
     }
 
     internal enum OutputLevel
     {
         Debug,
         Verbose,
-        NoBanner,
         Normal,
     }
 }
