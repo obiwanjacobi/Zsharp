@@ -67,7 +67,7 @@ namespace Zsharp.UnitTests.AST
                 parameter.Parent.Should().NotBeNull();
                 parameter.VisitChildren(this);
             }
-            public override void VisitModulePublic(AstModulePublic module)
+            public override void VisitModulePublic(AstModuleImpl module)
             {
                 module.Parent.Should().NotBeNull();
                 module.VisitChildren(this);

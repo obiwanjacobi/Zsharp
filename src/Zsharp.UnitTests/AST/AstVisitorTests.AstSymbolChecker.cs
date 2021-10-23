@@ -7,7 +7,7 @@ namespace Zsharp.UnitTests.AST
     {
         private class AstSymbolChecker : AstVisitor
         {
-            public override void VisitModulePublic(AstModulePublic module)
+            public override void VisitModulePublic(AstModuleImpl module)
             {
                 module.Symbol.Should().NotBeNull();
                 base.VisitModulePublic(module);

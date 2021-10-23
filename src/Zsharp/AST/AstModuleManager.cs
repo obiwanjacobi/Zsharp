@@ -28,7 +28,7 @@ namespace Zsharp.AST
 
         public IEnumerable<AstModule> Modules => _modules.Values;
 
-        public AstModulePublic AddModule(Statement_moduleContext moduleCtx)
+        public AstModuleImpl AddModule(Statement_moduleContext moduleCtx)
         {
             Ast.Guard(moduleCtx, "Context is null.");
             var moduleName = AstSymbolName.ToCanonical(moduleCtx.module_name().GetText());
@@ -37,9 +37,9 @@ namespace Zsharp.AST
             return module;
         }
 
-        private AstModulePublic CreateModule(string moduleName)
+        private AstModuleImpl CreateModule(string moduleName)
         {
-            var module = new AstModulePublic(moduleName);
+            var module = new AstModuleImpl(moduleName);
             _modules.Add(moduleName, module);
             SymbolTable.Add(module);
             return module;

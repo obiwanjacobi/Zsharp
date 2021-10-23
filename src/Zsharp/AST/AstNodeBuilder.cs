@@ -120,7 +120,7 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_export(Statement_exportContext context)
         {
-            var module = _builderContext.GetCurrent<AstModulePublic>();
+            var module = _builderContext.GetCurrent<AstModuleImpl>();
             module.AddExport(context);
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();

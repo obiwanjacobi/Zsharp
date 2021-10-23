@@ -102,7 +102,7 @@ namespace Zsharp.AST
 
         //---------------------------------------------------------------------
 
-        public override void VisitModulePublic(AstModulePublic module)
+        public override void VisitModulePublic(AstModuleImpl module)
         {
             throw new InvalidOperationException("AstNodeCloner cannot clone a Module.");
         }

@@ -10,12 +10,12 @@ namespace Zsharp.UnitTests
 {
     internal static class Build
     {
-        public static AstModulePublic Module(string code, IAstModuleLoader moduleLoader = null)
+        public static AstModuleImpl Module(string code, IAstModuleLoader moduleLoader = null)
         {
             var file = ParseFile(code);
             var context = new CompilerContext(moduleLoader ?? new ModuleLoader());
             _ = BuildFile(file, context);
-            return (AstModulePublic)context.Modules.Modules.First();
+            return (AstModuleImpl)context.Modules.Modules.First();
         }
 
         public static AstFile File(string code, IAstModuleLoader moduleLoader = null)

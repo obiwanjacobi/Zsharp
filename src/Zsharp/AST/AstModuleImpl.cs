@@ -5,14 +5,14 @@ using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
 {
-    public class AstModulePublic : AstModule,
+    public class AstModuleImpl : AstModule,
         IAstSymbolSite
     {
         private readonly List<Statement_moduleContext> _contexts = new();
         private readonly List<Statement_exportContext> _exports = new();
         private readonly List<AstFile> _files = new();
 
-        public AstModulePublic(string moduleName)
+        public AstModuleImpl(string moduleName)
             : base(AstModuleLocality.Public)
         {
             this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierKind.Module));

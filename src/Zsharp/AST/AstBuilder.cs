@@ -32,7 +32,7 @@ namespace Zsharp.AST
                 _context.SetCurrent(mod);
             }
 
-            var file = BuildFile(moduleName, fileCtx);
+            var file = BuildFile(fileCtx, moduleName);
 
             if (modCtx is null)
             {
@@ -40,16 +40,16 @@ namespace Zsharp.AST
                 _context.RevertCurrent();
             }
 
-            var module = _context.CompilerContext.Modules.FindModule<AstModulePublic>(file.Symbols.Name);
+            var module = _context.CompilerContext.Modules.FindModule<AstModuleImpl>(file.Symbols.Name);
             module!.AddFile(file!);
             return file;
         }
 
-        private AstFile BuildFile(string moduleName, FileContext fileCtx)
+        private AstFile BuildFile(FileContext fileCtx, string moduleName)
         {
             var builder = new AstNodeBuilder(_context, moduleName);
-            var file = builder.VisitFile(fileCtx);
-            return (AstFile)file!;
+            var file = (AstFile?)builder.VisitFile(fileCtx);
+            return file ?? throw new InternalErrorException("AstNodeBuilder for File did not return a result.");
         }
 
         private static Statement_moduleContext? ToStatementModule(FileContext fileCtx)

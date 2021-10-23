@@ -77,7 +77,7 @@ namespace Zsharp.AST
             module.VisitChildren(this);
         }
 
-        public virtual void VisitModulePublic(AstModulePublic module)
+        public virtual void VisitModulePublic(AstModuleImpl module)
         {
             module.VisitChildren(this);
         }

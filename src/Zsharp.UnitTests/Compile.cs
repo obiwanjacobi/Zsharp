@@ -29,7 +29,7 @@ namespace Zsharp.UnitTests
             errors.PrintErrors();
             errors.Should().BeEmpty();
 
-            return ((AstModulePublic)compiler.Context.Modules.Modules.First()).Files.First();
+            return ((AstModuleImpl)compiler.Context.Modules.Modules.First()).Files.First();
         }
     }
 

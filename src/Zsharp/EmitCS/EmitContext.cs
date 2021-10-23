@@ -70,7 +70,7 @@ namespace Zsharp.EmitCS
             }
         }
 
-        public IDisposable AddModule(AstModulePublic module)
+        public IDisposable AddModule(AstModuleImpl module)
         {
             if (Scopes.Count > 0)
                 throw new InvalidOperationException(

@@ -13,7 +13,7 @@ namespace Zsharp.EmitCS
             _moduleClass = moduleClass;
         }
 
-        public static ClassBuilder Create(EmitContext context, AstModulePublic module)
+        public static ClassBuilder Create(EmitContext context, AstModuleImpl module)
         {
             var moduleClass = new CSharp.Class(module.Identifier!.CanonicalName, ClassKeyword.Class)
             {
