@@ -64,6 +64,7 @@ namespace Zsharp.AST
                 {
                     _table.Remove(exOrImported.Key);
                     Merge(symbol, exOrImported);
+                    _table.Remove(exOrImported.Key);
                 }
                 _table[symbol.Key] = symbol;
             }
