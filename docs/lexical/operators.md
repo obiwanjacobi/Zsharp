@@ -187,6 +187,9 @@ Operators for working with `Array<T>` and `List<T>` types.
 |---|---
 | `+=` | add item to array/list
 | `-=` | remove item from array/list
+| `^=` | insert item into array/list
+| `&=` | add item to array/list/tree as a child
+| `|=` | insert item to array/list/tree as a child
 | `in` | test if item is in array/list
 
 ```csharp

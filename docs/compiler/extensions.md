@@ -107,3 +107,26 @@ Decorator functions are run at compile time (_are they?_) and should therefor us
 SomeDecoratedFn: ()
     ...
 ```
+
+---
+
+## AST Manipulation
+
+Allow programmatic inline manipulation of Abstract Syntax Tree nodes.
+
+```csharp
+// some syntax to denote ast code: <[...]>
+// generates and Ast node for the code
+ast = <[loop n in [0..42]]>
+// add another ast node (as child?)
+ast += <[    WriteLine(n)]>
+
+// some way to add ast nodes to the program...
+AstAdd(ast)
+AstAddAt(ast, <ast-node-ref>)
+
+// how to determine the location of the insertion point?
+// get ast node for function 'fn1'
+astFn1 = Ast.Get(fn1)
+astFn1 += ast   // add ast node to function
+```

@@ -95,16 +95,21 @@ Does `use` return a type that represents the loaded module? Something like `Err<
 Be explicit about what assembly to use to import the name/namespace? (for .NET compatibility)
 
 ```csharp
-# import System.Core        // <= assembly
+# import
+    System.Core             // <= assembly
     System.IO.*             // <= namespace
     System.DBNull           // < Type
 ```
+
+> TBD: this would require a fallback when resolving a type and if not found, trying to locate the identifier as an assembly.
 
 Or more C# like - always specify .NET namespaces (`.*`) or specific type / Z# modules?
 
 ```csharp
 # import System.IO          // <= namespace
 ```
+
+> TBD: this does not fit well with Z#'s `module` paradigm.
 
 ---
 
@@ -120,6 +125,19 @@ Allow import from a remote location?
 ```
 
 What format should the file be that is being imported? Is it an assembly file or something else. Should these 'modules' or 'packages' be hosted on a specific package manager's site?
+
+Use some sort of (plugable) loader -or unpacker- during compile-time?
+
+```csharp
+[[zip-loader]]
+#import https://user.github.com/master/package1
+```
+
+> TBD: import/include based on source code?
+
+```csharp
+#include https://user.github.com/master/src
+```
 
 ---
 

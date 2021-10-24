@@ -1260,11 +1260,11 @@ Some compiler functions to manipulate files would come in handy.
 
 ## Asynchronous Functions
 
-> .NET compatibility for async/await.
+> `.NET` compatibility for async/await.
 
-Use `Async<T>` to indicate an `async` function (state machine). Any call to a function with an `Async<T>` or `Task<T>` return value is awaited implicitly unless the receiving variable type is of type `Task<T>`. If the return value is Task -without a payload type- the call is awaited if no return value is captured in a variable.
+Use `Async<T>` as return type to indicate an `async` function (state machine). Any call to a function with an `Async<T>` or `Task<T>` return value is awaited implicitly inside the async-context unless the receiving variable type is of type `Task<T>`. If the return value is Task -without a payload type- the call is awaited if no return value is captured in a variable.
 
-Use `Task<T>` to indicate a non-`async` function. Any call to a function with an `Async<T>` or `Task<T>` return value is NOT awaited.
+Use a `Task<T>` or normal `T` return type to indicate a non-`async` (sync) context. Any call in this sync-context to a function with an `Async<T>` or `Task<T>` return value is NOT awaited.
 
 `Async<T>` is syntactic sugar for using the (C#) `async` keyword and the `Task<T>` return type.
 
@@ -1275,14 +1275,15 @@ fnAsync: (): Async<U8>
     x = workAsync()
     return x + 42
 
-// await is implicit by using Async? Yes
-// if Task<T> return type was used => Also yes
+// await is implicit by using Async
+// not if Task<T> return type was used in fnAsync
 fnAsync: (): Async<U8>
     x: U8 = workAsync()
     return x + 42
 
 // wrapping an async function without async state machine
 fnAsync: (): Task<U8>
+    // no async, not awaited
     return workAsync(42)
 
 // multiple tasks parallel
@@ -1294,7 +1295,8 @@ fnAsync: (): Async<U8>
     return t1 + t2
 ```
 
-A capture on a task is implicit await
+`await` is implicit when 'casting' from `Task<T>` to `T`.
+A capture on a task is implicit await on first use:
 
 ```csharp
 t1: Task<U8> = workAsync()
@@ -1310,6 +1312,65 @@ t2: Task<U8> = work2Async()
 ```
 
 > I don't like the use of a(n awaited) Task as if it were a value...
+
+```csharp
+fn1: (p: U8): Str
+    ...
+fn2: ()
+    ...
+fn3: (s: Str): Bool
+    ...
+
+// void return values are not awaited (fire & forget)
+result = InvokeAsync(() => fn1(42), fn2, () => fn3("42"))
+r1, _, r3 = ...result // deconstruct result
+```
+
+> Can we make a `Future<T>` type wrapper that is a bit like `Lazy<T>` where the result is awaited when retrieved?
+
+```csharp
+asyncFn: (p: U8): Async<U8>
+    ...
+// called async and attached to Future<T>
+f: Future<U8> = asyncFn(42)
+// do other stuff
+completed = f.HasCompleted  // Bool
+v = f.Value                 // awaited here by future
+```
+
+> Is there a way to wrap sync code into an async-await compatible pattern and to wrap the async-await sequence into a sync-call?
+
+That way the call-site would determine how to execute the function.
+
+```csharp
+// sync function
+syncFn: (p: U8): U8
+    ...
+// should work the same in an async-context
+syncContext: (): U8
+    // call sync function as async task
+    t: Task<U8> = syncFn(42).Async()
+    // syncFn is running on a different thread
+    // do other stuff
+    // await result (U8)
+    return t
+```
+
+```csharp
+// async function
+asyncFn: (p: U8): Async<U8>
+    ...
+// in an async-context normal async-await mechanism is used
+syncContext: (): U8
+    // implicit wrapping/conversion?
+    return asyncFn(42)
+    // or explicit '.Sync()' conversion needed
+    return asyncFn(42).Sync()
+```
+
+Using `Sync()` and `Async()` conversion functions mitigates the problem of function coloring (functions have to be called/handled different depending on their traits).
+
+> Compiler should warn for sync/async call-chains that switch multiple times (very inefficient).
 
 ---
 
@@ -1343,6 +1404,8 @@ A Future is used by the consuming call site to access the results inside the Pro
 
 > Do we need this?
 
+See `Future<T>` example above.
+
 ---
 
 ## Function Traits
@@ -1354,7 +1417,7 @@ Function 'traits' that are part of the Function Type.
 - Thread safe / Single threaded
 - Pure function (no side effects)
 - Recursive function
-- Fluent function (ignore unused retvals)
+- Ignore unused retvals (for fluent functions)
 - Async (expressed in the return type)
 - Blocking / non-blocking (Async/co-routine)
 - Constant / Immutable self (expressed in the self parameter)
@@ -1375,6 +1438,8 @@ Step: Trait
 // Workflow trait definition
 Workflow: Trait
     #Async
+    // how to indicate own traits (Async)
+    // and code-content traits (Step)??
     #Step       // requiring Step trait
 
 // random function, without traits
@@ -1409,6 +1474,8 @@ Defining traits also declare on what type of syntax element they can be applied 
     - Template/Generic Parameter
     - Parameter
     - Return Type
+
+> Is there a Z# assembly-level trait?
 
 ---
 

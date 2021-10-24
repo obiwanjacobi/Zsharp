@@ -19,6 +19,19 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 | `catch` | Handle Error
 | `match` | Pattern matching
 
+Project and File keywords
+
+| Keyword | Description
+|--|--
+| `assembly` | Identify the name of the resulting assembly.
+| `ref` | Reference an external library/assembly/project
+| `module` | Declare a file belongs to a named module.
+| `import` | Reference exported symbols from another module.
+| `export` | Declare symbols to be publicly available from a module.
+| `include` | Copy in the content of a file at the location of this statement.
+
+> TBD: `import` and `export` will possibly be replaced by `use` and `pub`.
+
 ---
 
 > These keywords are reserved words and cannot be used as [identifiers](identifiers.md) in the code.

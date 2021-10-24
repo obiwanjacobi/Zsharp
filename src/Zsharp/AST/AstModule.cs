@@ -2,7 +2,7 @@ namespace Zsharp.AST
 {
     public enum AstModuleLocality
     {
-        Public,
+        Local,
         External
     }
 

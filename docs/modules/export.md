@@ -54,6 +54,8 @@ MyFunc: ()
 MyNamespace.MyFunc()
 ```
 
+> TBD: This can conflict with module names with namespaces. Drop this?
+
 ---
 
 > Rename `export` to `pub` for public or publish?

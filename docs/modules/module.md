@@ -27,13 +27,14 @@ In a sense, the module name is also the namespace of the code in the file.
 
 > Should the module statements `module` and `import` only be used at the top of the file, or can they appear anywhere?
 
-> TBD: Circular references are not supported.
+> `.NET`: Circular Assembly references are not supported. Multiple modules can go into one Assembly.
 
 ---
 
 > Should there be a way to mark a module as open/closed for extension?
 
 Because a module can be made up of multiple files, can any new file declare itself part of any module and therefor gain access to it's 'internals'?
+Or just within the same compilation run?
 
 ```csharp
 // explicitly declare the module as open
@@ -62,7 +63,7 @@ globalVar: U8 = 42  // accessible by all files in module?
 
 ---
 
-> TBD
+> TBD: Services
 
 Module as a boundary for implementing 'services'?
 

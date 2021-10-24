@@ -13,7 +13,7 @@ Identifiers name program entities such as variable, functions and types. These n
 
 Here are examples of valid identifiers:
 
-```C#
+```csharp
 My_Function1
 someVariable
 _hidden
@@ -21,7 +21,7 @@ _hidden
 
 Here are examples of _invalid_ identifiers:
 
-```C#
+```csharp
 1Function
 some variable
 my-type
@@ -95,13 +95,13 @@ s.[intellisense does not show _id]
 
 ## Fully Qualified Names
 
-```C#
+```csharp
 MyModule.v2.MyFunction
 ```
 
-> Do we want to distinguish between namespace separators and obj.fn() calls?
+> Do we want to distinguish between namespace separators and `obj.fn()` calls?
 
-```C#
+```csharp
 // namespace / module name (also for import, export aliases)
 MyModule::v2::MyFunction
 
@@ -110,6 +110,62 @@ obj.MyFunction(42)
 ```
 
 Only needed when function call may include namespace/module parts...
+
+---
+
+### Navigation
+
+Any identifier that has a `.` (dot) in it will be split up in parts. Those parts will be used to navigate to the correct 'location' where that symbol is defined.
+
+- Absolute navigation: starting at the root scope (global)
+- Relative navigation: starting at the current module
+
+> For now, relative navigation is only supported for symbols that do not have dot-name. In the `import` statement, long navigation paths (namespaces) can be aliased to shorter names to be used in the module's source code.
+
+`import` statements for external modules are always specified in absolute (fully qualified) names.
+`import` statements for local modules are specified with relative (in the same namespace) or absolute names.
+
+```csharp
+// external module
+import System.Console   // type
+import System.*         // namespace
+
+// local module
+import myModule         // module (type)
+import namespace.module // same as external module
+```
+
+Fully qualified names in code are resolved during compilation.
+
+```csharp
+// this should not require an import statement
+fn: ()
+    System.Console.WriteLine("Hello World")
+```
+
+Navigation into fields does work relatively.
+
+```csharp
+MyStruct
+    fld1: U8
+    fld2: Str
+
+s = MyStruct
+    fld1 = 42
+    fld2 = "42"
+
+// struct field navigation
+x = s.fld1
+```
+
+```csharp
+MyEnum
+    Opt1
+    Opt2
+
+// enum field navigation
+e = MyEnum.Opt1
+```
 
 ---
 

@@ -45,6 +45,18 @@ The `include` keyword includes the compiled source code module into the specifie
 
 > TBD: Include all by default and Exclude files specifically?
 
+> TBD: if local modules are included by file name, they could be specified using the `import` keyword and we would not need the `include` keyword. Then again, the `include` keyword could be a general way to include a file's content into another file. However that is not how it is used here. `include` in the assembly file could (be made to) mean to include a library as source code (point to -remote- root folder).
+
+```csharp
+# assembly Name.OfMy.Assembly
+
+// included in the compiled assembly
+# include
+    file1.zs
+    folder/src  // include a folder (recursive)
+    'http://project.github.com/master/src'    // remote source
+```
+
 ---
 
 ## Global Import
@@ -57,11 +69,22 @@ Modules globally imported in an assembly file are available throughout the proje
 // global imports
 # import
     externalModule1
-    externalModule2
+    internalModuleToo
 
 # include
     ...
 ```
+
+> Also allow `export` modules to have assembly-public modules that can be used by other project? That would mean that to determine at what accessability to generate the code, we need the full hierarchy of assembly-file and module file.
+
+|Assembly|Module|Module Access
+|--|--|--|
+| - | - | Private to the module.
+| - | export | Internal to the assembly.
+| export | - | Module (type) is assembly-public, but empty. (*)
+| export | export | Public to the assembly.
+
+*) Should probably give a warning.
 
 ---
 
