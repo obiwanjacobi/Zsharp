@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -53,11 +54,37 @@ namespace Zsharp.AST
             return module;
         }
 
+        public IEnumerable<T> FindModules<T>(string moduleNamespace)
+            where T : AstModule
+        {
+            return _modules.Keys
+                .Where(k => k.StartsWith($"{moduleNamespace}."))
+                .Select(k => _modules[k] as T)
+                .Where(m => m is not null)
+                .ToList()!;
+        }
+
         public T? FindModule<T>(string moduleName)
             where T : AstModule
         {
             _modules.TryGetValue(moduleName, out AstModule? module);
             return module as T;
+        }
+
+        public IEnumerable<AstModuleExternal> ImportNamespace(string moduleNamespace)
+        {
+            var modules = _moduleLoader.LoadNamespace(moduleNamespace);
+            foreach (var module in modules)
+            {
+                var moduleName = module.Identifier!.CanonicalName;
+                var astModule = FindModule<AstModuleExternal>(moduleName);
+                if (astModule is null)
+                {
+                    _modules.Add(moduleName, module);
+                    _ = _externalSymbolTable.Add(module);
+                }
+            }
+            return modules;
         }
 
         public AstModuleExternal? Import(string moduleName)
@@ -69,7 +96,7 @@ namespace Zsharp.AST
                 if (module is not null)
                 {
                     _modules.Add(moduleName, module);
-                    _externalSymbolTable.Add(module);
+                    _ = _externalSymbolTable.Add(module);
                 }
             }
             return module;

@@ -9,7 +9,7 @@ namespace Zsharp.AST
         AstSymbolTable SymbolTable { get; }
 
         AstModuleExternal? LoadExact(string fullModuleName);
-
+        IEnumerable<AstModuleExternal> LoadNamespace(string moduleNamespace);
         IEnumerable<AstModuleExternal> LoadAll(string partialModuleName);
     }
 }

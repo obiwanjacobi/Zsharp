@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime.Tree;
 using System.Collections.Generic;
+using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -9,6 +10,11 @@ namespace Zsharp.AST
         // stuff to make grammar rule context object polymorphic
         private abstract class ExpressionContextWrapper
         {
+            protected ExpressionContextWrapper()
+            {
+                Children = Enumerable.Empty<IParseTree>();
+            }
+
             public bool HasOpenParen { get; protected set; }
             public bool HasCloseParen { get; protected set; }
             public bool IsOperand { get; protected set; }

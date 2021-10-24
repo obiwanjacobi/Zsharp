@@ -25,6 +25,9 @@ namespace Zsharp.UnitTests
             return mod;
         }
 
+        public IEnumerable<AstModuleExternal> LoadNamespace(string moduleNamespace)
+            => Modules.Where(m => m.Identifier.Name.StartsWith(moduleNamespace));
+
         public IEnumerable<AstModuleExternal> LoadAll(string partialModuleName)
             => Modules.Where(m => m.Identifier.Name.StartsWith(partialModuleName));
     }

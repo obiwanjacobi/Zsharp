@@ -42,23 +42,6 @@ namespace Zsharp.UnitTests.AST
         }
 
         [TestMethod]
-        public void ImportModuleName()
-        {
-            const string code =
-                "import System.Console" + Tokens.NewLine
-                ;
-
-            var file = Build.File(code, Compile.CreateModuleLoader());
-            var symbols = file.Symbols;
-            symbols.Symbols.Any(e => e is null).Should().BeFalse();
-
-            var mod = symbols.FindSymbols(AstSymbolKind.Module).Single();
-            mod.SymbolName.Should().Be("System.Console");
-            // System.System.Console...
-            //mod.FullName.Should().Be("System.Console");
-        }
-
-        [TestMethod]
         public void ImportRuntimeGenericFunction()
         {
             const string code =

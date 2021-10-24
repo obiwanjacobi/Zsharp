@@ -69,6 +69,12 @@ public interface IZsharpVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitModule_name([NotNull] ZsharpParser.Module_nameContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZsharpParser.module_namespace"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitModule_namespace([NotNull] ZsharpParser.Module_namespaceContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZsharpParser.statement_module"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

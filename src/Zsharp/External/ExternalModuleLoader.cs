@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Zsharp.AST;
 using Zsharp.External.Metadata;
@@ -53,11 +54,11 @@ namespace Zsharp.External
         }
 
         private AstSymbolTable? _symbolTable;
-        public AstSymbolTable SymbolTable => _symbolTable ?? throw new InternalErrorException("SymbolTable was not set.");
+        public AstSymbolTable SymbolTable => _symbolTable ?? throw new InternalErrorException("Initialize() was not called.");
 
         public void Initialize(AstSymbolTable symbolTable)
         {
-            _symbolTable = symbolTable;
+            _symbolTable = symbolTable ?? throw new ArgumentNullException(nameof(symbolTable));
             CreateExternalModules(_assemblies.Assemblies);
         }
 
@@ -67,9 +68,15 @@ namespace Zsharp.External
             return module;
         }
 
+        public IEnumerable<AstModuleExternal> LoadNamespace(string moduleNamespace)
+            => _modules.Values
+                .Where(m => m.Identifier!.SymbolName.ModuleName == moduleNamespace)
+                .ToList();
+
         public IEnumerable<AstModuleExternal> LoadAll(string partialModuleName)
             => _modules.Keys
                 .Where(k => k.StartsWith(partialModuleName))
-                .Select(k => _modules[k]);
+                .Select(k => _modules[k])
+                .ToList();
     }
 }

@@ -93,6 +93,29 @@ namespace Zsharp.AST
 
         public override object? VisitStatement_import(Statement_importContext context)
         {
+            var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
+
+            var importNamespace = context.module_namespace()?.GetText();
+            if (!String.IsNullOrEmpty(importNamespace))
+            {
+                Ast.Guard(importNamespace.EndsWith(".*"), "import module namespace does not end in '.*'");
+                var moduleNamespace = AstSymbolName.ToCanonical(importNamespace[..^2]);
+                var modules = _builderContext.CompilerContext.Modules.ImportNamespace(moduleNamespace);
+                if (!modules.Any())
+                {
+                    _builderContext.CompilerContext.AddError(context,
+                        $"Module namespace '{importNamespace}' was not found in any external Assembly.");
+                    return null;
+                }
+
+                foreach (var mod in modules)
+                {
+                    var modSymbol = symbols.Symbols.Add(mod);
+                    modSymbol.SymbolLocality = AstSymbolLocality.Imported;
+                }
+                return null;
+            }
+
             var symbolName = AstSymbolName.Parse(context.module_name().GetText(), AstSymbolNameParseOptions.ToCanonical);
             var alias = context.alias_module()?.GetText();
             var hasAlias = !String.IsNullOrEmpty(alias);
@@ -112,9 +135,8 @@ namespace Zsharp.AST
                 module.AddAlias(symbolName.Symbol, AstSymbolName.ToCanonical(alias!));
             }
 
-            var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var entryMod = symbols.Symbols.Add(module);
-            entryMod.SymbolLocality = AstSymbolLocality.Imported;
+            var symbol = symbols.Symbols.Add(module);
+            symbol.SymbolLocality = AstSymbolLocality.Imported;
             return null;
         }
 

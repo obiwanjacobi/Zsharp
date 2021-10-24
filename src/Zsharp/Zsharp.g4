@@ -12,8 +12,9 @@ codeblock: (flow_statement
 // modules
 module_statement : statement_module | statement_import | statement_export;
 module_name: identifier_module | module_name DOT identifier_module;
+module_namespace: module_name DOT MULT_PTR;
 statement_module: MODULE SP module_name newline;
-statement_import: IMPORT SP (alias_module SP EQ_ASSIGN SP)? module_name newline;
+statement_import: IMPORT SP (((alias_module SP EQ_ASSIGN SP)? module_name) | module_namespace) newline;
 statement_export: EXPORT SP (identifier_func | identifier_type) newline;
 statement_export_inline: EXPORT SP (function_def | type_def | struct_def | enum_def);
 
