@@ -826,7 +826,7 @@ Note that this is different from the poor-mans property syntax where a getter ha
 
 ---
 
-## Local Functions
+## Local Functions and Types
 
 A local function is a function that is defined inside another function and is local to that scope - it cannot be used (seen) outside the function its defined in.
 
@@ -852,6 +852,25 @@ OuterFn: (p: U8)
 ```
 
 Local Functions can be declared at the end of the containing function. It is not allowed to declare local functions inside local functions.
+
+Local Types are types (Enums, Structs etc.) declared in the local scope of the function and are invisible outside of that function scope.
+
+```csharp
+fn: ()
+    MyLocalType
+        fld1: U8
+        fld2: Str
+
+    lt = MyLocalType
+        fld1 = 42
+        fld2 = "42"
+    
+    ...
+```
+
+> TBD: Allow local functions? and types to be made public. See also the discussion about calling public nested functions in [Fluent Functions](#Fulent-Functions) and the `.>` operator.
+
+For public nested types, no special operator would be necessary. There is a question of how public nested (in a function) types would be represented in .NET...
 
 ---
 
@@ -1006,7 +1025,7 @@ ReportProgress(self, ProgressEvent progressEvent)
 
 > `.NET`: delegates and events?
 
-In `.NET` a `delegate` is an encapsualation of a function pointer with an optional object (this) reference.
+In `.NET` a `delegate` is an encapsulation of a function pointer with an optional object (this) reference.
 An `event` is a list of registered `delegate`s that all will be called when the event is raised.
 
 ```csharp
@@ -1025,8 +1044,6 @@ event.Remove(ptrToHandler)
 ---
 
 ## Weak Functions
-
-> TBD not sure if this will fly
 
 Weak functions are function declarations that allows external code to implement the function. It is a forward declaration that does not needs to be resolved.
 
@@ -1100,7 +1117,7 @@ c.add(4)
     .sub(2)
 ```
 
-> Auto-Fluent syntax? `Build(p: MyStruct)::Into(target: Stream)`
+> TBD: Auto-Fluent syntax? `Build(p: MyStruct).>Into(target: Stream)`
 
 ```csharp
 baseFn: (p: Str)
@@ -1111,8 +1128,13 @@ baseFn: (p: Str)
         ...
 
 s = "42"
-b = baseFn(s)::nestedFn(42)
+// have to 'instantiate' the parent function...
+b = baseFn(s).>nestedFn(42)
 ```
+
+We do need a new operator `.>` because the standard `.` would indicate the (nested) function is called on the return value of the parent function.
+
+> Its a total mystery how this would work technically. :-)
 
 ---
 
@@ -1321,9 +1343,14 @@ fn2: ()
 fn3: (s: Str): Bool
     ...
 
-// void return values are not awaited (fire & forget)
 result = InvokeAsync(() => fn1(42), fn2, () => fn3("42"))
 r1, _, r3 = ...result // deconstruct result
+
+// parallel operator?
+r1, _, r3 =>> (fn1(42), fn2(), fn3("42"))
+
+// the results are of type Error<T> where T is the return type of the called function.
+// Error<T>: Exception or T
 ```
 
 > Can we make a `Future<T>` type wrapper that is a bit like `Lazy<T>` where the result is awaited when retrieved?

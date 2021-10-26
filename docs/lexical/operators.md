@@ -150,12 +150,14 @@ To be determined:
 | `|>` | Parameter pipe?
 | `<|` | Reverse parameter pipe?
 | `<=>` | Swap operator
-| `::` | Static namespace delimiter
-| `:>` | is type (bool)
+| `::` | traits? (type of type)
+| `:=` | is type (bool/condition) (also assignment with type inference)
 | `<:?` | type as (optional cast)
-| `<:` | cast type
+| `<:` | down cast type
+| `:>` | up cast type? (is implicit)
 | `<-` | reserved
 | `->>` | parallel execution (also sign extended shift)
+| `=>>` | parallel execution and collect results (in tuple or deconstruct)
 | `[[ ]]` | Alternate Decorators syntax (instead of `{}`)
 
 ---

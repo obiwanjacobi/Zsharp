@@ -116,8 +116,10 @@ fn: (): U8!     // can return Error
 
 Alternate idea:
 
-The `Err<T>` type is not used at all. `try` is not used on a per function basis but as a scope (typical try-catch usage) optionally used as a capture block.
+The `Err<T>` type is not used at all*. `try` is not used on a per function basis but as a scope (typical try-catch usage) optionally used as a capture block.
 `catch` can be still per function or as a try-handler - implicitly wrapping the function call in a try-block. The 'finally' block is implicit by using the defer keyword.
+
+*) `Error<T>` can instead be (re)defined as `Error<T>: Exception or T` and used as a way to return exceptions or return values from a function invocation.
 
 ```csharp
 // starts scope (optionally a capture)
