@@ -13,11 +13,11 @@ namespace Zsharp.AST
         public AstTypeReferenceExternal(TypeMetadata typeReference)
         {
             _typeReference = typeReference;
-            _externalName = new AstExternalName(typeReference.Namespace, typeReference.Name);
+            _externalName = new AstName(typeReference.Namespace, typeReference.Name, AstNameKind.External);
         }
 
-        private readonly AstExternalName? _externalName;
-        public AstExternalName ExternalName => _externalName!;
+        private readonly AstName? _externalName;
+        public AstName ExternalName => _externalName!;
 
         public override bool IsExternal => true;
 

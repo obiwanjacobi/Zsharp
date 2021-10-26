@@ -10,14 +10,14 @@
         public AstModuleExternal(string ns, string moduleName, AstSymbolTable? parentTable = null)
             : base(AstModuleLocality.External)
         {
-            ExternalName = new AstExternalName(ns, moduleName);
+            ExternalName = new AstName(ns, moduleName, AstNameKind.External);
             Symbols = new AstSymbolTable(moduleName, parentTable);
             this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierKind.Module));
         }
 
         public AstSymbolTable Symbols { get; }
 
-        public AstExternalName ExternalName { get; }
+        public AstName ExternalName { get; }
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitModuleExternal(this);

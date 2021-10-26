@@ -54,12 +54,13 @@ namespace Zsharp.AST
                 typeRef.IsTemplateParameter)
                 kind = AstSymbolKind.TemplateParameter;
 
-            var exOrImported = FindSymbol(symbolName.FullName, AstSymbolKind.NotSet);
             var symbol = FindSymbolLocal(symbolName.FullName, kind);
 
             if (symbol is null)
             {
                 symbol = new AstSymbol(this, symbolName.FullName, kind);
+
+                var exOrImported = FindSymbol(symbolName.FullName, AstSymbolKind.NotSet);
                 if (exOrImported is not null)
                 {
                     _table.Remove(exOrImported.Key);
@@ -73,7 +74,7 @@ namespace Zsharp.AST
                 symbol.AddNode(node);
 
                 if (node is IAstSymbolSite symbolSite &&
-                symbolSite.Symbol is null)
+                    symbolSite.Symbol is null)
                     symbolSite.SetSymbol(symbol);
 
                 if (node is IAstExternalNameSite externalName)

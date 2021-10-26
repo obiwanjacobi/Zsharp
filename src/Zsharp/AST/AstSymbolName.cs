@@ -10,7 +10,7 @@ namespace Zsharp.AST
         IsSource,
         /// <summary>text is canonical format</summary>
         IsCanonical,
-        /// <summary>convert source to to canonical format</summary>
+        /// <summary>convert source to canonical format</summary>
         ToCanonical,
     }
 
@@ -34,9 +34,7 @@ namespace Zsharp.AST
 
         public static AstSymbolName Parse(string text, AstSymbolNameParseOptions options)
         {
-            Ast.Guard(options != AstSymbolNameParseOptions.IsCanonical || !text.Contains('_'), "A canonical symbol name does not contain '_' chars.");
-
-            var parts = text.Split(Separator, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var parts = text.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
             var templatePostfix = String.Empty;
 
             var lastIndex = parts.Length - 1;
@@ -171,15 +169,16 @@ namespace Zsharp.AST
             if (String.IsNullOrEmpty(part))
                 return part;
 
-            var simplified = part.Replace("_", String.Empty);
             var prefix = String.Empty;
+            string simplified;
 
             // .NET property getters and setters
             if (part.StartsWith("get_") || part.StartsWith("set_"))
             {
-                prefix = simplified.Substring(0, 3);
-                simplified = simplified.Substring(3);
+                prefix = part[..3];
+                simplified = part[3..];
             }
+            simplified = part.Replace("_", String.Empty);
 
             return prefix + simplified[0] + simplified[1..].ToLowerInvariant();
         }

@@ -79,3 +79,50 @@ Module Manager
 ```
 
 By putting all external modules into one Symbol Table the normal process of `TryResolve` can be (re)used.
+
+---
+
+## Symbol Names
+
+- Local Names are parsed out of the source file and converted to canonical format.
+- External Names are read from an assembly file and converted to canonical format.
+
+A Symbol (in a Symbol Table) is always stored under its canonical format.
+
+All references to a Symbol are stored with both native (local or external) name and canonical name.
+All definitions of a Symbol are stored with both native (local or external) name and canonical name.
+
+An AstIdentifier is basically a combination of a Symbol Name and it's location in the source code (if local). The identifier also tags what type of Symbol the name represents (Enum, Struct, Function, Parameter etc).
+
+Symbol Names all have the namespace of the Symbol Table they are in (hierarchically). Except for module Symbols definitions, they are located in the Symbol Table where they were referenced but maintain their own namespace hierarchy. Module Symbol references are stored in the same Symbol Table as the referenced module is in, but their namespace has to be overridden to the namespace of the module -not the namespace of the symbol table. We want to keep references in the Symbol Table of the scope they were encountered in (not moving them).
+
+External names can be referenced locally without a namespace. By linking up the Symbols between reference and definition (during the resolve names phase) the actual namespace of the reference should become clear.
+
+Native names (local or external) and canonical names both have a namespace and a name.
+Nested external symbols use their declaring type name as a namespace. Both native and canonical names can also have name extensions for template and generic parameters. These extensions are built up during AST traversal and need to be mutable.
+
+AstName: Namespace (string), Name (string), prefix (string), extension (counts)
+AstSymbolName: Native: (AstName), Canonical: (AstName)
+
+Function (method) names can have prefixes (get_, set_) that are preserved in the canonical name (specifically the '_').
+
+> How are external Methods (Namespace.Type.Function) named?
+
+When emitting code the Symbol Name is in external format, that is the name formatted to the standard .NET naming convention. An external name already has this format (duh). A Code Attribute will hold the local name if available. The canonical format can always be regenerated from either the .NET name or the local name and is not stored.
+
+---
+
+`Namespace` can have zero, one or more '`.`' separators.
+
+Local (from source)
+
+- `Symbol` - simple local names
+- `Symbol.Member` - Struct/Enum name navigation
+- `Namespace.Symbol` - fully qualified names
+- `Namespace.Symbol.Member` - fully qualified name navigation
+
+External (from assembly)
+
+- `Namespace.Type` - default naming
+- `Namespace.Type.Member` - member full name
+- `Namespace.Type.Nested...` - nested type naming (recursive)

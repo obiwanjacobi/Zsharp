@@ -21,7 +21,7 @@ namespace Zsharp.External
 
         public void Build(TypeMetadata typeDefinition)
         {
-            Namespace = ModuleName = typeDefinition.Namespace;
+            Namespace = typeDefinition.Namespace;
             ModuleName = typeDefinition.FullName;
 
             if (typeDefinition.IsEnum)
@@ -144,6 +144,7 @@ namespace Zsharp.External
 
             foreach (var p in method.Parameters)
             {
+                // TODO: test for 'self: declType' parameter and rename.
                 funcParam = CreateParameter(new AstIdentifier(p.Name, AstIdentifierKind.Parameter), p.ParameterType);
                 function.FunctionType.TryAddParameter(funcParam);
             }

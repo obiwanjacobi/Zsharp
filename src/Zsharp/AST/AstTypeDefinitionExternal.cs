@@ -7,14 +7,14 @@
             : base(AstNodeKind.Type)
         {
             this.SetIdentifier(new AstIdentifier(typeName, AstIdentifierKind.Type));
-            ExternalName = new AstExternalName(@namespace, typeName);
+            ExternalName = new AstName(@namespace, typeName, AstNameKind.External);
             if (baseType is not null)
                 SetBaseType(baseType);
         }
 
         public override bool IsExternal => true;
 
-        public AstExternalName ExternalName { get; }
+        public AstName ExternalName { get; }
 
         public override void Accept(AstVisitor visitor)
         {

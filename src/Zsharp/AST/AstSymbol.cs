@@ -81,17 +81,14 @@ namespace Zsharp.AST
         private string? _namespace;
         public string Namespace
         {
-            get
-            {
-                if (String.IsNullOrEmpty(_namespace))
-                    return SymbolTable.Namespace;
-                return _namespace;
-            }
+            get { return _namespace ?? SymbolTable.Namespace; }
             set { _namespace = value; }
         }
 
-        public string FullName => String.IsNullOrEmpty(Namespace)
-            ? SymbolName : $"{Namespace}.{SymbolName}";
+        public string FullName 
+            => String.IsNullOrEmpty(Namespace)
+                ? SymbolName 
+                : $"{Namespace}.{SymbolName}";
 
         public AstNode? Definition
             => _definitions.SingleOrDefault() ?? Parent?.Definition;

@@ -2,6 +2,6 @@
 {
     public interface IAstExternalNameSite
     {
-        AstExternalName ExternalName { get; }
+        AstName ExternalName { get; }
     }
 }
