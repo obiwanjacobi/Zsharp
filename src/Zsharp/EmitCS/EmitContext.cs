@@ -81,7 +81,7 @@ namespace Zsharp.EmitCS
             Scopes.Push(modScope);
 
             // static constructor
-            var method = new CSharp.Method(module.Identifier!.CanonicalName, String.Empty)
+            var method = new CSharp.Method(module.Identifier!.SymbolName.CanonicalName.FullName, String.Empty)
             {
                 AccessModifiers = AccessModifiers.None,
                 MethodModifiers = MethodModifiers.Static,

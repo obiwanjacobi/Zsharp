@@ -22,7 +22,7 @@ namespace Zsharp.EmitCS
             public override void Build(CsBuilder builder, AstFunctionDefinition functionDef)
             {
                 var conversion = "Conversion";
-                builder.Append($"Zsharp.Runtime.{conversion}.{functionDef.Identifier!.CanonicalName}");
+                builder.Append($"Zsharp.Runtime.{conversion}.{functionDef.Identifier!.SymbolName.CanonicalName.FullName}");
             }
         }
     }

@@ -42,7 +42,7 @@ namespace Zsharp.UnitTests.AST
             var builder = new AstBuilder(context);
             builder.Build(Parser.ParseFile(code), "UnitTests");
             var mod = context.Modules.Modules.First();
-            mod.Identifier.Name.Should().Be("mymod");
+            mod.Identifier.NativeFullName.Should().Be("mymod");
         }
 
         [TestMethod]
@@ -110,7 +110,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var func = file.Functions.First();
-            func.Identifier.Name.Should().Be("fn");
+            func.Identifier.NativeFullName.Should().Be("fn");
             func.CodeBlock.Should().NotBeNull();
         }
 
@@ -124,7 +124,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var func = file.Functions.First().CodeBlock.LineAt<AstFunctionReference>(0);
-            func.Identifier.Name.Should().Be("fn");
+            func.Identifier.NativeFullName.Should().Be("fn");
         }
 
         [TestMethod]
@@ -151,7 +151,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var func = file.Functions.First();
-            func.Identifier.Name.Should().Be("fn");
+            func.Identifier.NativeFullName.Should().Be("fn");
             func.CodeBlock.LineAt<AstAssignment>(0)
                 .Should().NotBeNull();
         }

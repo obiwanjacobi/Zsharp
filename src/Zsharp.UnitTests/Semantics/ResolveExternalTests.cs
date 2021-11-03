@@ -14,7 +14,11 @@ namespace Zsharp.UnitTests.Semantics
                 "v = U16(42)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
 
             var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             assign.Expression.RHS.FunctionReference.FunctionDefinition.Should().NotBeNull();
@@ -28,7 +32,11 @@ namespace Zsharp.UnitTests.Semantics
                 "WriteLine(\"Test\")" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddSystemConsole()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
 
             var fn = file.CodeBlock.LineAt<AstFunctionReference>(0);
             var typeRef = fn.FunctionType.TypeReference;

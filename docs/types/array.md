@@ -129,6 +129,37 @@ arr2 = arr.SetAt(i, 42) // returns a new array with changed value at index 'i'
 
 ---
 
+> TBD Array specific index (types)
+
+Based on value?
+
+```csharp
+arr = (1, 2, 3, 4, 5)
+// var of array index type
+i: arr#Index = 0    // also default
+n = arr[i]          // 1
+
+i = 5               // Error! out of range
+
+arr += 6    // add an item
+i = 5       // now its okay?
+```
+
+Based on type?
+
+```csharp
+arr8 = (1, 2, 3, 4, 5)
+arr16 = (501, 502, 503, 504, 505)
+
+i8: arr8#Index
+i16: arr16#Index
+
+// even if index value itself is valid
+arr8[i16]   // Error! wrong index type
+```
+
+---
+
 > TBD
 
 Should creating data use the same operator/syntax as indexing?
@@ -141,16 +172,15 @@ Would `[]` be an operator - with a backing function? Would it be overloadable. W
 What would the syntax look like if there were no special operators to work with an array?
 
 ```csharp
-arr = { 1, 2, 3 }   // using object syntax is conflicting
-arr = ( 1, 2, 3 )   // list construction syntax?
+arr = ( 1, 2, 3 )   // list construction syntax
 
-i = 1           // index
-x = arr.At(i)   // lookup value (U8)
-p = arr.PtrTo(i)  // lookup pointer (Ptr<U8>)
+i = 1               // index
+x = arr.At(i)       // lookup value (U8)
+p = arr.PtrTo(i)    // lookup pointer (Ptr<U8>)
 s = arr.PtrTo(i, 2) // sub-array (Slice<U8, 2>)
 
 arr: Array<U8> = ( 1, 2, 3 )     // mutable
-arr.At(i) = 42  // At() used as getter and setter?
+arr.At(i) = 42      // At() used as getter and setter?
 
 // or separate?
 x = arr.GetAt(i)

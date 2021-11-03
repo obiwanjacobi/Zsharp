@@ -92,6 +92,25 @@ o = s.f1?.f1?.f2  // first non-value optional will stop navigation of path, resu
 
 ---
 
+## Optional Inference
+
+> TBD: changes if an error is reported.
+
+```csharp
+errIfNot42: (p: U8): Bool
+    return p = 42 ? true : Error('Not 42')
+
+b = errIfNot42(42)      // true
+b = errIfNot42(101)     // Error!
+
+b: Opt<Bool> = errIfNot42(42)   // true
+b: Opt<Bool> = errIfNot42(101)  // Nothing
+```
+
+This will wrap the call in a try-catch (and look for a logger in the context?) and return Nothing on an Error.
+
+---
+
 ## Option Matching
 
 Have a helper for matching optional values.

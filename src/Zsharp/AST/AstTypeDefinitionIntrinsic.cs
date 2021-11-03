@@ -29,6 +29,7 @@ namespace Zsharp.AST
             AddIntrinsicSymbol(symbols, new(AstIdentifierIntrinsic.I64, typeof(Int64)));
             AddIntrinsicSymbol(symbols, new(AstIdentifierIntrinsic.I32, typeof(Int32)));
             AddIntrinsicSymbol(symbols, new(AstIdentifierIntrinsic.C16, typeof(Char)));
+            AddIntrinsicSymbol(symbols, new(AstIdentifierIntrinsic.F16, typeof(Half)));
             AddIntrinsicSymbol(symbols, new(AstIdentifierIntrinsic.F32, typeof(Single)));
             AddIntrinsicSymbol(symbols, new(AstIdentifierIntrinsic.F64, typeof(Double)));
             AddIntrinsicSymbol(symbols, new(AstIdentifierIntrinsic.F96, typeof(Decimal)));
@@ -44,6 +45,6 @@ namespace Zsharp.AST
         }
 
         protected static void AddIntrinsicSymbol(AstSymbolTable symbols, AstTypeDefinitionIntrinsic type)
-            => symbols.AddSymbol(type.Identifier!.CanonicalName, AstSymbolKind.Type, type);
+            => symbols.AddSymbol(type.Identifier!.SymbolName.CanonicalName.FullName, AstSymbolKind.Type, type);
     }
 }

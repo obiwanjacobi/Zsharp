@@ -16,7 +16,11 @@ namespace Zsharp.UnitTests.Semantics
                 Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var intrinsic = fn.Symbols.FindDefinition<AstFunctionDefinition>("U16", AstSymbolKind.Function);
             intrinsic.FunctionType.Parameters.First().IsSelf.Should().BeTrue();

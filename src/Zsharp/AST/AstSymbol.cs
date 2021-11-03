@@ -12,7 +12,7 @@ namespace Zsharp.AST
         private readonly List<AstNode> _references = new();
         private readonly List<string> _aliases = new();
 
-        public AstSymbol(AstSymbolTable symbolTable, string symbolName, AstSymbolKind symbolKind)
+        public AstSymbol(AstSymbolTable symbolTable, AstName symbolName, AstSymbolKind symbolKind)
         {
             SymbolTable = symbolTable;
             SymbolName = symbolName;
@@ -70,9 +70,9 @@ namespace Zsharp.AST
         public IEnumerable<T> ReferencesAs<T>() where T : class
             => _references.OfType<T>();
 
-        public string Key => MakeKey(SymbolName, SymbolKind);
+        public string Key => MakeKey(SymbolName.Symbol, SymbolKind, SymbolName.GetArgumentCount());
 
-        public string SymbolName { get; }
+        public AstName SymbolName { get; }
 
         public AstSymbolKind SymbolKind { get; }
 
@@ -87,43 +87,52 @@ namespace Zsharp.AST
 
         public string FullName 
             => String.IsNullOrEmpty(Namespace)
-                ? SymbolName 
-                : $"{Namespace}.{SymbolName}";
+                ? SymbolName.Name
+                : $"{Namespace}.{SymbolName.Name}";
 
         public AstNode? Definition
             => _definitions.SingleOrDefault() ?? Parent?.Definition;
 
         public T? DefinitionAs<T>() where T : class
-            => Definition as T;
+            => _definitions.OfType<T>().SingleOrDefault() ?? Parent?.DefinitionAs<T>();
 
         public bool HasDefinition => _definitions.Count > 0;
 
-        public void PromoteToDefinition(AstNode definitionNodeToAdd, AstNode referenceNodeToRemove)
-        {
-            Ast.Guard(Definition is null, "Symbol already has a definition.");
-            Ast.Guard(_references.Contains(referenceNodeToRemove), "Specified reference Node was not found in the Symbol references.");
-
-            _references.Remove(referenceNodeToRemove);
-            AddNode(definitionNodeToAdd);
-        }
-
         public bool HasOverloads => _definitions.Count > 1;
 
-        public IEnumerable<AstFunctionDefinition> Overloads
+        public IEnumerable<AstFunctionDefinition> FunctionOverloads
         {
             get
             {
-                if (SymbolKind != AstSymbolKind.Function)
-                    return Enumerable.Empty<AstFunctionDefinition>();
-
+                Ast.Guard(SymbolKind == AstSymbolKind.Function, $"Cannot call FunctionOverloads on a {SymbolKind} symbol.");
                 return _definitions.Cast<AstFunctionDefinition>();
             }
         }
 
+        public T? TemplateInstanceAs<T>(IEnumerable<AstTypeReference> templateArgumentTypes)
+            where T : class
+        {
+            return _definitions
+                .OfType<IAstTemplateInstance>()
+                .SingleOrDefault(i => i.TemplateArguments.Arguments
+                    .Select(a => a.TypeReference!.Identifier!.CanonicalFullName)
+                    .SequenceEqual(
+                        templateArgumentTypes.Select(a => a.Identifier!.CanonicalFullName))) as T;
+        }
+
         public AstFunctionDefinition? FindFunctionDefinition(AstFunctionReference overload)
-            => HasDefinition
-            ? Overloads.SingleOrDefault(def => def.FunctionType.OverloadKey == overload.FunctionType.OverloadKey)
-            : Parent?.FindFunctionDefinition(overload);
+        { 
+            if(HasDefinition)
+            {
+                if (overload.IsTemplate)
+                {
+                    return FunctionOverloads.SingleOrDefault(def => def.Identifier!.SymbolName.CanonicalName.GetArgumentCount() == overload.Identifier!.SymbolName.CanonicalName.GetArgumentCount());
+                }
+                
+                return FunctionOverloads.SingleOrDefault(def => def.FunctionType.OverloadKey == overload.FunctionType.OverloadKey);
+            }
+            return Parent?.FindFunctionDefinition(overload);
+        }
 
         public void AddNode(AstNode node)
         {
@@ -136,7 +145,11 @@ namespace Zsharp.AST
                 node is AstTypeFieldDefinition ||
                 node is AstTemplateParameterDefinition)
             {
-                Ast.Guard(Definition is null, "Definition is already set.");
+                if (node is not AstTypeDefinitionTemplate &&
+                    node is not AstTemplateInstanceType)
+                { 
+                    Ast.Guard(Definition is null, "Definition is already set.");
+                }
                 _definitions.Add(node);
             }
             else if (SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinition)
@@ -170,9 +183,11 @@ namespace Zsharp.AST
         }
 
         internal void RemoveReference(AstNode node)
+            // TODO: call node as IAstSymbolSite to remove symbol
             => _references.Remove(node);
+            // if no references are left and no parent or child and no definition - this symbol can be deleted.
 
-        internal static string MakeKey(string name, AstSymbolKind kind)
-            => name + kind;
+        internal static string MakeKey(string name, AstSymbolKind kind, int argCount)
+            => $"{name}{kind}{argCount}";
     }
 }

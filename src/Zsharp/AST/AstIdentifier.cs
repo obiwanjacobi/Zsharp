@@ -4,19 +4,27 @@ using System.Diagnostics;
 
 namespace Zsharp.AST
 {
-    [DebuggerDisplay("{Name}")]
+    [DebuggerDisplay("{NativeFullName}")]
     public class AstIdentifier
     {
-        public AstIdentifier(string name, AstIdentifierKind identifierKind)
+        public AstIdentifier(string symbolName, AstIdentifierKind identifierKind)
+            : this(AstName.ParseFullName(symbolName), identifierKind)
+        { }
+
+        public AstIdentifier(AstName symbolName, AstIdentifierKind identifierKind)
+            : this(new AstSymbolName(symbolName), identifierKind)
+        { }
+
+        public AstIdentifier(AstSymbolName symbolName, AstIdentifierKind identifierKind)
         {
-            SymbolName = AstSymbolName.Parse(name, AstSymbolNameParseOptions.IsSource);
+            SymbolName = symbolName;
             IdentifierKind = identifierKind;
         }
 
         internal AstIdentifier(ParserRuleContext context, AstIdentifierKind identifierKind)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
-            SymbolName = AstSymbolName.Parse(context.GetText(), AstSymbolNameParseOptions.IsSource);
+            SymbolName = AstSymbolName.Parse(context.GetText());
             IdentifierKind = identifierKind;
         }
 
@@ -32,21 +40,18 @@ namespace Zsharp.AST
         public virtual bool IsIntrinsic => false;
 
         public AstSymbolName SymbolName { get; internal set; }
-        public string Name => SymbolName.FullName;
-        public string CanonicalName => SymbolName.ToCanonical().FullName;
+        public string NativeFullName => SymbolName.NativeName.FullName;
+        public string CanonicalFullName => SymbolName.CanonicalName.FullName;
 
         public AstIdentifierKind IdentifierKind { get; }
 
         public bool IsEqual(AstIdentifier? that)
         {
-            if (that is null)
-                return false;
-
-            return CanonicalName == that.CanonicalName &&
-                IdentifierKind == that.IdentifierKind;
+            return SymbolName.CanonicalName.FullName == that?.SymbolName.CanonicalName.FullName &&
+                IdentifierKind == that?.IdentifierKind;
         }
 
         public virtual AstIdentifier MakeCopy()
-            => new AstIdentifier(this);
+            => new(this);
     }
 }

@@ -12,8 +12,7 @@ namespace Zsharp.AST
     {
         private readonly AstBuilderContext? _context;
         private readonly AstCurrentContext _current;
-        private readonly Dictionary<string, AstTypeReference> _typeMap = new();
-        private readonly List<AstTypeReference> _typeList = new();
+        private AstTemplateArgumentMap? _argumentMap;
 
         public AstNodeCloner()
         {
@@ -26,12 +25,12 @@ namespace Zsharp.AST
         }
 
         public void Clone(AstFunctionReference functionRef,
-            AstFunctionDefinition templateFunctionDef, AstTemplateInstanceFunction instanceFunction)
+            AstFunctionDefinition templateFunctionDef, AstTemplateInstanceFunction instanceFunction,
+            AstTemplateArgumentMap argumentMap)
         {
             if (templateFunctionDef is AstFunctionDefinition functionDef)
             {
-                CreateTypeMap(functionRef, functionDef);
-
+                _argumentMap = argumentMap;
                 _current.SetCurrent(instanceFunction.FunctionType);
                 _current.SetCurrent(instanceFunction);
                 functionDef.VisitChildren(this);
@@ -74,30 +73,6 @@ namespace Zsharp.AST
             result?.Orphan();
 
             return result;
-        }
-
-        private void CreateTypeMap(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
-        {
-            var defTemplateParams = functionDef.TemplateParameters.ToArray();
-            var refTemplateParams = functionRef.TemplateParameters.ToArray();
-
-            // TODO:
-            // default template parameter values
-            // named template parameters
-            Ast.Guard(refTemplateParams.Length == defTemplateParams.Length,
-                "Inconsistent number of template parameters between definition and instantiation.");
-
-            for (int i = 0; i < functionDef.TemplateParameters.Count(); i++)
-            {
-                var defParam = defTemplateParams[i];
-                var refParam = refTemplateParams[i];
-
-                _typeMap.Add(
-                    defParam.Identifier!.CanonicalName,
-                    refParam.TypeReference!
-                );
-                _typeList.Add(refParam.TypeReference!);
-            }
         }
 
         //---------------------------------------------------------------------
@@ -414,9 +389,10 @@ namespace Zsharp.AST
         {
             AstTypeReference typeRef;
 
-            if (_typeMap.TryGetValue(type.Identifier!.CanonicalName, out AstTypeReference? newType))
+            var templateArgument = _argumentMap?.LookupArgument(type.Identifier!);
+            if (templateArgument is not null)
             {
-                typeRef = newType.MakeCopy();
+                typeRef = templateArgument.TypeReference!.MakeCopy();
             }
             else if (type.TypeDefinition is IAstTemplateSite<AstTemplateParameterDefinition> templateDef &&
                 templateDef.IsTemplate)
@@ -425,14 +401,15 @@ namespace Zsharp.AST
 
                 foreach (AstTemplateParameterDefinition templParamDef in templateDef.TemplateParameters)
                 {
-                    if (_typeMap.TryGetValue(templParamDef.Identifier!.CanonicalName, out AstTypeReference? paramType))
+                    templateArgument = _argumentMap?.LookupArgument(templParamDef.Identifier!);
+                    if (templateArgument is not null)
                     {
-                        var templParam = new AstTemplateParameterReference(paramType.MakeCopy());
+                        var templParam = new AstTemplateParameterReference(templateArgument.TypeReference!.MakeCopy());
                         typeRefType.AddTemplateParameter(templParam);
                     }
                     else
                         throw new InternalErrorException(
-                            $"Template Parameter '{templParamDef.Identifier.Name}' could not be resolved.");
+                            $"Template Parameter '{templParamDef.Identifier!.NativeFullName}' could not be resolved.");
                 }
 
                 typeRef = typeRefType;

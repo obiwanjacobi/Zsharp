@@ -27,7 +27,7 @@
             if (kind == AstSymbolKind.NotSet)
                 kind = identifier!.IdentifierKind.ToSymbolKind();
 
-            return symbolTable.FindSymbol(identifier.SymbolName.ToCanonical(), kind);
+            return symbolTable.FindSymbol(identifier.SymbolName.CanonicalName, kind);
         }
 
         public static AstSymbol? FindSymbol(this AstSymbolTable symbolTable, IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
@@ -37,7 +37,7 @@
             if (kind == AstSymbolKind.NotSet)
                 kind = identifierSite.Identifier!.IdentifierKind.ToSymbolKind();
 
-            return symbolTable.FindSymbol(identifierSite.Identifier!.SymbolName.ToCanonical(), kind);
+            return symbolTable.FindSymbol(identifierSite.Identifier!.SymbolName.CanonicalName, kind);
         }
 
         public static AstSymbolKind ToSymbolKind(this AstNodeKind nodeKind)

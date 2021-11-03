@@ -23,10 +23,10 @@ namespace Zsharp.UnitTests.AST
             s.BaseType.Should().BeNull();
             s.IsGeneric.Should().BeTrue();
             var tp = s.GenericParameters.First();
-            tp.Identifier.Name.Should().Be("T");
+            tp.Identifier.NativeFullName.Should().Be("T");
 
             var f = s.Fields.First();
-            f.Identifier.Name.Should().Be("Id");
+            f.Identifier.NativeFullName.Should().Be("Id");
             f.TypeReference.Should().NotBeNull();
             f.TypeReference.IsGenericParameter.Should().BeTrue();
             f.Symbol.Definition.Should().Be(f);
@@ -44,7 +44,7 @@ namespace Zsharp.UnitTests.AST
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             fn.IsGeneric.Should().BeTrue();
             var tp = fn.GenericParameters.First();
-            tp.Identifier.Name.Should().Be("T");
+            tp.Identifier.NativeFullName.Should().Be("T");
         }
     }
 }

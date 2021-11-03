@@ -76,12 +76,12 @@ namespace Zsharp.AST
             var modules = _moduleLoader.LoadNamespace(moduleNamespace);
             foreach (var module in modules)
             {
-                var moduleName = module.Identifier!.CanonicalName;
+                var moduleName = module.Identifier!.CanonicalFullName;
                 var astModule = FindModule<AstModuleExternal>(moduleName);
                 if (astModule is null)
                 {
                     _modules.Add(moduleName, module);
-                    _ = _externalSymbolTable.Add(module);
+                    _ = _externalSymbolTable.TryAdd(module);
                 }
             }
             return modules;

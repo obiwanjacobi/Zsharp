@@ -1,4 +1,4 @@
-# Assignment Expressions
+# Assignment
 
 | Operator | Function
 |--|--

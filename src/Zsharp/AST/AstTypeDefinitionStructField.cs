@@ -12,6 +12,9 @@ namespace Zsharp.AST
             : base(context)
         { }
 
+        public bool IsTemplate 
+            => _typeReference?.IsTemplateParameter ?? false;
+
         private AstTypeReferenceType? _typeReference;
         public AstTypeReferenceType? TypeReference => _typeReference;
         AstTypeReference? IAstTypeReferenceSite.TypeReference => _typeReference;

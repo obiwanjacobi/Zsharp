@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Zsharp.AST
 {
@@ -32,14 +33,13 @@ namespace Zsharp.AST
 
         public bool TryAddTemplateParameter(AstTemplateParameterReference templateParameter)
         {
+            Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
             if (templateParameter is null)
                 return false;
 
             _templateParameters.Add(templateParameter);
             templateParameter.SetParent(this);
-
-            Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
-            Identifier!.SymbolName.AddTemplateParameter(templateParameter.TypeReference?.Identifier?.Name);
+            Identifier!.SymbolName.AddTemplateParameter(templateParameter.TypeReference?.Identifier?.NativeFullName);
 
             return true;
         }
@@ -55,17 +55,21 @@ namespace Zsharp.AST
 
         public bool TryAddGenericParameter(AstGenericParameterReference genericParameter)
         {
+            Ast.Guard(Identifier, "Identifier not set - cannot register generic parameter.");
             if (genericParameter is null)
                 return false;
 
             _genericParameters.Add(genericParameter);
             genericParameter.SetParent(this);
-
-            Ast.Guard(Identifier, "Identifier not set - cannot register generic parameter.");
-            Identifier!.SymbolName.AddTemplateParameter(genericParameter.TypeReference?.Identifier?.Name);
+            Identifier!.SymbolName.AddTemplateParameter(genericParameter.TypeReference?.Identifier?.NativeFullName);
 
             return true;
         }
+
+        public override AstTypeDefinition? TypeDefinition 
+            => IsTemplate 
+            ? Symbol?.TemplateInstanceAs<AstTypeDefinition>(TemplateParameters.Select(p => p.TypeReference)) 
+            : base.TypeDefinition;
 
         public override void VisitChildren(AstVisitor visitor)
         {

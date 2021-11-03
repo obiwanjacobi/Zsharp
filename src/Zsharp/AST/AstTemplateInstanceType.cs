@@ -2,7 +2,8 @@
 
 namespace Zsharp.AST
 {
-    public class AstTemplateInstanceType : AstTypeDefinition
+    public class AstTemplateInstanceType : AstTypeDefinition,
+        IAstTemplateInstance
     {
         public AstTemplateInstanceType(AstTypeDefinitionIntrinsic intrinsicTypeDef)
         {
@@ -11,25 +12,17 @@ namespace Zsharp.AST
 
         public AstTypeDefinitionIntrinsic TypeDefinition { get; }
 
-        private readonly List<AstTypeReference> _templateParameters = new();
-        public IEnumerable<AstTypeReference> TemplateParameters => _templateParameters;
-
-        private void AddTemplateParameter(AstTypeReference typeReference)
-        {
-            var typeRef = typeReference.MakeCopy();
-            typeRef.SetParent(this);
-            _templateParameters.Add(typeRef);
-        }
+        private AstTemplateArgumentMap? _templateArguments;
+        public AstTemplateArgumentMap TemplateArguments
+            => _templateArguments ?? AstTemplateArgumentMap.Empty;
 
         public void Instantiate(AstTypeReferenceType type)
         {
             Context = type.Context;
             this.SetIdentifier(type.Identifier!.MakeCopy());
 
-            foreach (AstTemplateParameterReference templateParam in type.TemplateParameters)
-            {
-                AddTemplateParameter(templateParam.TypeReference!);
-            }
+            _templateArguments = new AstTemplateArgumentMap(
+                TypeDefinition.TemplateParameters, type.TemplateParameters);
         }
 
         public override void Accept(AstVisitor visitor)

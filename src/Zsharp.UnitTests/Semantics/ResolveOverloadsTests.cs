@@ -27,7 +27,7 @@ namespace Zsharp.UnitTests.Semantics
 
             var fn2 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(1);
             fn2.Should().NotBeNull();
-            fn2.Symbol.SymbolName.Should().Be("fn2");
+            fn2.Symbol.SymbolName.Symbol.Should().Be("fn2");
             fn2.Symbol.HasOverloads.Should().BeTrue();
             fn2.Symbol.Children.ElementAt(0).References.Should().HaveCount(1);
             fn2.Symbol.FindFunctionDefinition(fn2Ref).Should().Be(fn2);
@@ -52,7 +52,7 @@ namespace Zsharp.UnitTests.Semantics
 
             var fn2 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(2);
             fn2.Should().NotBeNull();
-            fn2.Symbol.SymbolName.Should().Be("fn2");
+            fn2.Symbol.SymbolName.Symbol.Should().Be("fn2");
             fn2.Symbol.HasOverloads.Should().BeTrue();
             fn2.Symbol.Children.ElementAt(0).References.Should().HaveCount(1);
             fn2.Symbol.FindFunctionDefinition(fn2Ref).Should().Be(fn2);
@@ -77,7 +77,7 @@ namespace Zsharp.UnitTests.Semantics
 
             var fn2 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(2);
             fn2.Should().NotBeNull();
-            fn2.Symbol.SymbolName.Should().Be("fn2");
+            fn2.Symbol.SymbolName.Symbol.Should().Be("fn2");
             fn2.Symbol.HasOverloads.Should().BeTrue();
             fn2.Symbol.Children.ElementAt(0).References.Should().HaveCount(1);
             fn2.Symbol.FindFunctionDefinition(fn2Ref).Should().Be(fn2);
@@ -92,7 +92,11 @@ namespace Zsharp.UnitTests.Semantics
                 "x = fn(42)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
             var a = file.CodeBlock.LineAt<AstAssignment>(1);
             a.Expression.TypeReference.Should().NotBeNull();
             a.Variable.TypeReference.Should().NotBeNull();
@@ -106,7 +110,11 @@ namespace Zsharp.UnitTests.Semantics
                 Tokens.Indent1 + "return U16(p)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
 
             var fn1 = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var br = fn1.CodeBlock.LineAt<AstBranchExpression>(0);
@@ -122,7 +130,11 @@ namespace Zsharp.UnitTests.Semantics
                 "x = U16(42)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
 
             var assign = file.CodeBlock.LineAt<AstAssignment>(0);
 

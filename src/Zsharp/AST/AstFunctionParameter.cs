@@ -31,8 +31,8 @@ namespace Zsharp.AST
         private AstSymbol? _symbol;
         public AstSymbol? Symbol => _symbol;
 
-        public virtual bool TrySetSymbol(AstSymbol? symbolEntry)
-            => Ast.SafeSet(ref _symbol, symbolEntry);
+        public virtual bool TrySetSymbol(AstSymbol? symbol)
+            => Ast.SafeSet(ref _symbol, symbol);
 
         public override void VisitChildren(AstVisitor visitor)
             => TypeReference?.Accept(visitor);

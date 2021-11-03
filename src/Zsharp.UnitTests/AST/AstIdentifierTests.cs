@@ -20,7 +20,7 @@ namespace Zsharp.UnitTests.AST
             var id = assign.Variable.Identifier;
 
             id.Should().NotBeNull();
-            id.Name.Should().Be("a");
+            id.NativeFullName.Should().Be("a");
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace Zsharp.UnitTests.AST
             var id = fn.Identifier;
 
             id.Should().NotBeNull();
-            id.Name.Should().Be("fn");
+            id.NativeFullName.Should().Be("fn");
         }
 
         [TestMethod]
@@ -52,8 +52,8 @@ namespace Zsharp.UnitTests.AST
             var id = fn.Identifier;
 
             id.Should().NotBeNull();
-            id.Name.Should().Be("fn%1");
-            id.CanonicalName.Should().Be("fn%1");
+            id.NativeFullName.Should().Be("fn%1");
+            id.SymbolName.CanonicalName.FullName.Should().Be("fn%1");
         }
 
         [TestMethod]
@@ -68,8 +68,8 @@ namespace Zsharp.UnitTests.AST
             var id = fn.Identifier;
 
             id.Should().NotBeNull();
-            id.Name.Should().Be("fn;U8");
-            id.CanonicalName.Should().Be("fn;U8");
+            id.NativeFullName.Should().Be("fn;U8");
+            id.SymbolName.CanonicalName.FullName.Should().Be("fn;U8");
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace Zsharp.UnitTests.AST
             var id = p.Identifier;
 
             id.Should().NotBeNull();
-            id.Name.Should().Be("p");
+            id.NativeFullName.Should().Be("p");
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace Zsharp.UnitTests.AST
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var p = fn.FunctionType.Parameters.FirstOrDefault();
             p.TypeReference.Should().NotBeNull();
-            p.Identifier.Name.Should().Be("self");
+            p.Identifier.NativeFullName.Should().Be("self");
         }
 
         [TestMethod]
@@ -115,7 +115,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var assign = fn.CodeBlock.LineAt<AstAssignment>(0);
-            assign.Variable.Identifier.Name.Should().Be("v");
+            assign.Variable.Identifier.NativeFullName.Should().Be("v");
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var assign = fn.CodeBlock.LineAt<AstAssignment>(0);
-            assign.Variable.Identifier.Name.Should().Be("p");
+            assign.Variable.Identifier.NativeFullName.Should().Be("p");
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var assign = fn.CodeBlock.LineAt<AstAssignment>(0);
-            assign.Variable.Identifier.CanonicalName.Should().Be("psomename");
+            assign.Variable.Identifier.SymbolName.CanonicalName.FullName.Should().Be("psomename");
         }
     }
 }

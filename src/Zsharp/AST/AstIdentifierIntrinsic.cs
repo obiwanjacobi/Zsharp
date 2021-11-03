@@ -12,6 +12,7 @@
         public static readonly AstIdentifierIntrinsic I32 = new("I32", AstIdentifierKind.Type);
         public static readonly AstIdentifierIntrinsic I64 = new("I64", AstIdentifierKind.Type);
         public static readonly AstIdentifierIntrinsic C16 = new("C16", AstIdentifierKind.Type);
+        public static readonly AstIdentifierIntrinsic F16 = new("F16", AstIdentifierKind.Type);
         public static readonly AstIdentifierIntrinsic F32 = new("F32", AstIdentifierKind.Type);
         public static readonly AstIdentifierIntrinsic F64 = new("F64", AstIdentifierKind.Type);
         public static readonly AstIdentifierIntrinsic F96 = new("F96", AstIdentifierKind.Type);

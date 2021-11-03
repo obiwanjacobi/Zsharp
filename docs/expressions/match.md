@@ -150,7 +150,7 @@ a = 42
 s = a is
     < 10 -> "Smaller than 10"                   // `<` operator
     >= 10 and =< 100 -> "between 10 and 100"    // logical and
-    > 100 -> "bigger than 100"                     // `>` operator
+    > 100 -> "bigger than 100"                  // `>` operator
 
 // boolean result
 b = c is (>= 'a' and =< 'z') or (>= 'A' and =< 'Z')

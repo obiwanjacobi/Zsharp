@@ -77,7 +77,7 @@ couldErr(p: U8): U8!
     return MyError("Failed.", p)    // custom fn
 ```
 
-Using custom Error types, it is possible to make hierarchies and test on the actual Error type in the handler code - using [pattern matching](../lang/match.md).
+Using custom Error types, it is possible to make hierarchies and test on the actual Error type in the handler code - using [pattern matching](../expressions/match.md).
 
 ## Nesting Errors
 

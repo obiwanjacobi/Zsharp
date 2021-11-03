@@ -35,7 +35,7 @@ namespace Zsharp.EmitCS
         public override void VisitFunctionReference(AstFunctionReference function)
         {
             var functionDef = function.FunctionDefinition!;
-            var name = functionDef.Identifier!.CanonicalName;
+            var name = functionDef.Identifier!.SymbolName.CanonicalName.FullName;
 
             if (functionDef.IsExternal)
             {
@@ -83,7 +83,7 @@ namespace Zsharp.EmitCS
                 if (assign.IsTopLevel())
                 {
                     var field = Context.ModuleClass.ModuleClass.Fields
-                        .Single(f => f.Name == varDef.Identifier!.CanonicalName);
+                        .Single(f => f.Name == varDef.Identifier!.SymbolName.CanonicalName.FullName);
 
                     builderScope = Context.SetBuilder(field.ValueBuilder);
                 }
@@ -127,7 +127,7 @@ namespace Zsharp.EmitCS
             if (assign is not null)
             {
                 Context.CodeBuilder.CsBuilder.Append(
-                    $"{field.Identifier!.CanonicalName} = ");
+                    $"{field.Identifier!.SymbolName.CanonicalName.FullName} = ");
                 field.VisitChildren(this);
                 Context.CodeBuilder.CsBuilder.AppendLine(",");
             }

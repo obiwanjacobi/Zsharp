@@ -1,9 +1,10 @@
 using Antlr4.Runtime;
+using System;
 
 namespace Zsharp.AST
 {
     public abstract class AstType : AstNode,
-        IAstIdentifierSite, IAstSymbolSite
+        IAstIdentifierSite, IAstSymbolSite, IEquatable<AstType>
     {
         protected AstType(AstNodeKind nodeKind)
             : base(nodeKind)
@@ -27,10 +28,10 @@ namespace Zsharp.AST
             protected set { _symbol = value; }
         }
 
-        public virtual bool TrySetSymbol(AstSymbol? symbolEntry)
-            => Ast.SafeSet(ref _symbol, symbolEntry);
+        public virtual bool TrySetSymbol(AstSymbol? symbol)
+            => Ast.SafeSet(ref _symbol, symbol);
 
-        public virtual bool IsEqual(AstType type)
+        public virtual bool IsEqual(AstType? type)
         {
             if (type is null)
                 return false;
@@ -41,5 +42,8 @@ namespace Zsharp.AST
 
             return Identifier.IsEqual(type.Identifier);
         }
+
+        public bool Equals(AstType? other)
+            => IsEqual(other);
     }
 }

@@ -95,7 +95,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIACAAQAAAAAAgACAAIAAAAAAgAAAQAABCAA=</HashCode>
+      <HashCode>AAAAAAAAIgCAAQAAAAAAgACAAIAAAAAAgAAAQAABCAA=</HashCode>
       <FileName>AST\AstFunctionParameter.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -146,7 +146,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAgCAAQAAAQAAgAAAAIAAAAAAAAAAQAAACAA=</HashCode>
+      <HashCode>AAAAAAAAAgCAAQAAgQAAgAAAAIAAAAAAAAAAQAAACAA=</HashCode>
       <FileName>AST\AstType.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -235,7 +235,7 @@
   <Class Name="Zsharp.AST.AstFunctionDefinitionIntrinsic">
     <Position X="20.25" Y="16.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AIAIAAAAAASAAAAAQAAAgAACAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>AIAIAAAAAASAAAAAQAAAgAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
       <FileName>AST\AstFunctionDefinitionIntrinsic.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -245,7 +245,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAIAAAAIABIAAAAEAQAAAAAAAAAAIAAAAAAAAAAACA=</HashCode>
+      <HashCode>AIQIQAAAIABIAAAAEAQAAAAAAAAAAIAAAAAAAAAAACA=</HashCode>
       <FileName>AST\AstTemplateInstanceFunction.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -253,7 +253,7 @@
   <Class Name="Zsharp.AST.AstFunctionParameterDefinition">
     <Position X="24.5" Y="9.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AIAAAAAAAgAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
       <FileName>AST\AstFunctionParameterDefinition.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -263,7 +263,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAAAgAAAAAAAAAAAAAAAAAAAAAQwAAAgAAAAAA=</HashCode>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQwAAAgAAAAAA=</HashCode>
       <FileName>AST\AstFunctionParameterReference.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -281,7 +281,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAIAAQAAAAABSAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAIAAQAAAAAhSAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
       <FileName>AST\AstTypeReference.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -348,7 +348,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAAIAAAAAAAAAAAAACAAAAAAAAAgAAAAAABAAA=</HashCode>
+      <HashCode>AIAAAAAAIAAAAAAABAAAAACAAAAAAAAAgAAAAAABAAA=</HashCode>
       <FileName>AST\AstTypeDefinitionStructField.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -384,9 +384,10 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAIEAAAAAAAAAQACAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <HashCode>AIQAQAAIAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>AST\AstTemplateInstanceType.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Zsharp.AST.AstTypeDefinitionFunction">
     <Position X="28.5" Y="15.75" Width="2.25" />
@@ -427,7 +428,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAEAAAAAAABAgAAAEAAQIAAAAAgAUgAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAIEAAAAAAABAgAAAEAAQIAAAAAgAUgAAAAAAA=</HashCode>
       <FileName>AST\AstTypeReferenceTemplate.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -485,7 +486,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Zsharp.AST.AstTypeReferenceType">
-    <Position X="38.75" Y="20.25" Width="2" />
+    <Position X="38.75" Y="20.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AoAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
       <FileName>AST\AstTypeReferenceType.cs</FileName>

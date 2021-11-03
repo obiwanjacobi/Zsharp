@@ -21,13 +21,5 @@ namespace Zsharp.AST
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitFunctionParameterDefinition(this);
-
-        public static AstFunctionParameterDefinition Create(string name, AstTypeDefinition astType)
-        {
-            var identifier = new AstIdentifier(name, AstIdentifierKind.Parameter);
-            var param = new AstFunctionParameterDefinition(identifier);
-            param.SetTypeReference(AstTypeReferenceType.From(astType));
-            return param;
-        }
     }
 }

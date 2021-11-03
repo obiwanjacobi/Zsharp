@@ -22,7 +22,7 @@ namespace Zsharp.UnitTests.AST
             var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
             var def = v.DefinitionAs<AstVariableDefinition>();
-            def.TypeReference.Identifier.Name.Should().Be("U8");
+            def.TypeReference.Identifier.NativeFullName.Should().Be("U8");
         }
 
         [TestMethod]
@@ -48,10 +48,14 @@ namespace Zsharp.UnitTests.AST
                 "" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .ToModuleLoader();
+
+            var file = Build.File(code, moduleLoader);
             var symbols = file.Symbols;
 
-            var fn = symbols.FindDefinition<AstFunctionDefinitionExternal>("Array`1", AstSymbolKind.Function);
+            var fn = symbols.FindDefinition<AstFunctionDefinitionExternal>("Array%1", AstSymbolKind.Function);
             fn.Should().NotBeNull();
         }
 
@@ -62,10 +66,14 @@ namespace Zsharp.UnitTests.AST
                 "" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .ToModuleLoader();
+
+            var file = Build.File(code, moduleLoader);
             var symbols = file.Symbols;
 
-            var type = symbols.FindDefinition<AstTypeDefinitionExternal>("Opt`1", AstSymbolKind.Type);
+            var type = symbols.FindDefinition<AstTypeDefinitionExternal>("Opt%1", AstSymbolKind.Type);
             type.Should().NotBeNull();
         }
 
@@ -186,7 +194,7 @@ namespace Zsharp.UnitTests.AST
             symbols.Symbols.Should().HaveCount(2);
 
             var p = symbols.FindSymbol("self", AstSymbolKind.Variable);
-            p.DefinitionAs<AstFunctionParameter>().Identifier.Name.Should().Be("self");
+            p.DefinitionAs<AstFunctionParameter>().Identifier.NativeFullName.Should().Be("self");
         }
 
         [TestMethod]

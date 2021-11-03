@@ -26,10 +26,10 @@ namespace Zsharp.UnitTests.AST
             s.BaseType.Should().BeNull();
             s.IsTemplate.Should().BeTrue();
             var tp = s.TemplateParameters.First();
-            tp.Identifier.Name.Should().Be("T");
+            tp.Identifier.NativeFullName.Should().Be("T");
 
             var f = s.Fields.First();
-            f.Identifier.Name.Should().Be("Id");
+            f.Identifier.NativeFullName.Should().Be("Id");
             f.TypeReference.Should().NotBeNull();
             f.TypeReference.IsTemplateParameter.Should().BeTrue();
             f.Symbol.Definition.Should().Be(f);
@@ -84,7 +84,7 @@ namespace Zsharp.UnitTests.AST
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             fn.IsTemplate.Should().BeTrue();
             var tp = fn.TemplateParameters.First();
-            tp.Identifier.Name.Should().Be("T");
+            tp.Identifier.NativeFullName.Should().Be("T");
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace Zsharp.UnitTests.AST
             var fn = file.CodeBlock.LineAt<AstFunctionReference>(0);
             fn.IsTemplate.Should().BeTrue();
             var tp = fn.TemplateParameters.First();
-            tp.TypeReference.Identifier.Name.Should().Be("U8");
+            tp.TypeReference.Identifier.NativeFullName.Should().Be("U8");
         }
     }
 }
