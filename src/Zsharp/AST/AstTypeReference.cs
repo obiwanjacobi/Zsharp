@@ -17,24 +17,24 @@ namespace Zsharp.AST
         {
             Context = typeToCopy.Context;
             this.SetIdentifier(typeToCopy.Identifier!.MakeCopy());
-            this.Identifier!.SymbolName.TemplatePostfix = string.Empty;
+            Identifier!.SymbolName.Postfix = string.Empty;
             TrySetSymbol(typeToCopy.Symbol);
             IsInferred = typeToCopy.IsInferred;
         }
 
-        public AstTypeDefinition? TypeDefinition
+        public virtual AstTypeDefinition? TypeDefinition
             => Symbol?.DefinitionAs<AstTypeDefinition>();
 
         public virtual bool TryResolveSymbol()
         {
-            this.ThrowIfSymbolEntryNotSet();
+            this.ThrowIfSymbolNotSet();
             return Symbol!.SymbolTable.TryResolveDefinition(Symbol);
         }
 
         public virtual bool IsExternal => false;
         public bool IsInferred { get; set; }
 
-        public override bool IsEqual(AstType type)
+        public override bool IsEqual(AstType? type)
         {
             if (!base.IsEqual(type))
                 return false;

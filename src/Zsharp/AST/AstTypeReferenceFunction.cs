@@ -39,7 +39,7 @@ namespace Zsharp.AST
         }
 
         public string OverloadKey =>
-            String.Join(String.Empty, _parameters.Select(p => p.TypeReference?.Identifier?.CanonicalName));
+            String.Join(String.Empty, _parameters.Select(p => p.TypeReference?.Identifier?.SymbolName.CanonicalName.FullName));
 
         public override AstTypeReferenceFunction MakeCopy()
         {
@@ -78,14 +78,14 @@ namespace Zsharp.AST
                     txt.Append(", ");
 
                 var p = Parameters.ElementAt(i);
-                txt.Append(p.TypeReference?.Identifier?.Name);
+                txt.Append(p.TypeReference?.Identifier?.NativeFullName);
             }
             txt.Append(')');
 
             if (TypeReference?.Identifier is not null)
             {
                 txt.Append(": ");
-                txt.Append(TypeReference.Identifier.Name);
+                txt.Append(TypeReference.Identifier.NativeFullName);
             }
 
             return txt.ToString();
@@ -102,8 +102,7 @@ namespace Zsharp.AST
                 functionSymbols.TryAdd(parameter.TypeReference);
             }
 
-            var symbolName = AstSymbolName.Parse(ToString(), AstSymbolNameParseOptions.IsSource);
-            symbolName.TemplatePostfix = Identifier!.SymbolName.TemplatePostfix;
+            var symbolName = AstSymbolName.Parse(ToString());
             Identifier.SymbolName = symbolName;
 
             contextSymbols.Add(this);

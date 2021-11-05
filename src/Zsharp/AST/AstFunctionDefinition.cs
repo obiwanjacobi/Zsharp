@@ -52,13 +52,13 @@ namespace Zsharp.AST
 
         public virtual bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
         {
+            Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
             if (templateParameter is null)
                 return false;
 
             _templateParameters.Add(templateParameter);
-
-            Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
-            Identifier!.SymbolName.SetTemplateParameterCount(_templateParameters.Count);
+            templateParameter.SetParent(this);
+            Identifier!.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
 
             return true;
         }
@@ -70,13 +70,13 @@ namespace Zsharp.AST
 
         public virtual bool TryAddGenericParameter(AstGenericParameterDefinition genericParameter)
         {
+            Ast.Guard(Identifier, "Identifier not set - cannot register generic parameter.");
             if (genericParameter is null)
                 return false;
 
             _genericParameters.Add(genericParameter);
-
-            Ast.Guard(Identifier, "Identifier not set - cannot register generic parameter.");
-            Identifier!.SymbolName.SetGenericParameterCount(_genericParameters.Count);
+            genericParameter.SetParent(this);
+            Identifier!.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
 
             return true;
         }
@@ -89,7 +89,7 @@ namespace Zsharp.AST
 
         public override string ToString()
         {
-            var txt = new StringBuilder(Identifier?.CanonicalName);
+            var txt = new StringBuilder(Identifier?.SymbolName.CanonicalName.FullName);
             if (IsTemplate)
             {
                 txt.Append('<');
@@ -99,7 +99,7 @@ namespace Zsharp.AST
                         txt.Append(", ");
 
                     var p = TemplateParameters.ElementAt(i);
-                    txt.Append(p.Identifier!.Name);
+                    txt.Append(p.Identifier!.SymbolName.CanonicalName.FullName);
                 }
                 txt.Append('>');
             }

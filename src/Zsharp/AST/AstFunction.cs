@@ -29,8 +29,8 @@ namespace Zsharp.AST
             protected set { _symbol = value; }
         }
 
-        public virtual bool TrySetSymbol(AstSymbol? symbolEntry)
-            => Ast.SafeSet(ref _symbol, symbolEntry);
+        public virtual bool TrySetSymbol(AstSymbol? symbol)
+            => Ast.SafeSet(ref _symbol, symbol);
 
         public abstract void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null);
     }

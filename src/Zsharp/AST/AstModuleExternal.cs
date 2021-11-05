@@ -4,20 +4,16 @@
         IAstExternalNameSite
     {
         public AstModuleExternal(string moduleName, AstSymbolTable? parentTable = null)
-            : this(moduleName, moduleName, parentTable)
-        { }
-
-        public AstModuleExternal(string ns, string moduleName, AstSymbolTable? parentTable = null)
             : base(AstModuleLocality.External)
         {
-            ExternalName = new AstName(ns, moduleName, AstNameKind.External);
-            Symbols = new AstSymbolTable(moduleName, parentTable);
-            this.SetIdentifier(new AstIdentifier(moduleName, AstIdentifierKind.Module));
+            var symbolName = AstSymbolName.Parse(moduleName, AstNameKind.External);
+            Symbols = new AstSymbolTable(symbolName.CanonicalName.FullName, parentTable);
+            this.SetIdentifier(new AstIdentifier(symbolName, AstIdentifierKind.Module));
         }
 
         public AstSymbolTable Symbols { get; }
 
-        public AstName ExternalName { get; }
+        public AstName ExternalName => Identifier!.SymbolName.NativeName;
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitModuleExternal(this);
@@ -30,7 +26,7 @@
                 {
                     if (symbol.HasOverloads)
                     {
-                        foreach (var overload in symbol.Overloads)
+                        foreach (var overload in symbol.FunctionOverloads)
                         {
                             visitor.Visit(overload);
                         }
@@ -56,11 +52,11 @@
         {
             var identifier = ((IAstIdentifierSite)source).Identifier!;
             var symbol = Symbols.FindSymbol(identifier);
-            Ast.Guard(symbol, $"No symbol for '{identifier!.CanonicalName}' was found in external module {Identifier!.Name}.");
+            Ast.Guard(symbol, $"No symbol for '{identifier!.SymbolName.CanonicalName.FullName}' was found in external module {Identifier!.NativeFullName}.");
 
             if (source is AstFunctionDefinition functionDef)
             {
-                symbol!.TryAddAlias(alias + functionDef.FunctionType!.Identifier!.CanonicalName);
+                symbol!.TryAddAlias(alias + functionDef.FunctionType!.Identifier!.SymbolName.CanonicalName.FullName);
             }
             else
             {
@@ -68,10 +64,10 @@
             }
         }
 
-        public void AddAlias(string symbolName, string alias)
+        public void AddAlias(AstName symbolName, string alias)
         {
             var symbol = Symbols.FindSymbol(symbolName, AstSymbolKind.Unknown);
-            Ast.Guard(symbol, $"No symbol for '{symbol}' was found in external module {Identifier!.Name}.");
+            Ast.Guard(symbol, $"No symbol for '{symbol}' was found in external module {Identifier!.NativeFullName}.");
             symbol!.TryAddAlias(alias);
         }
 

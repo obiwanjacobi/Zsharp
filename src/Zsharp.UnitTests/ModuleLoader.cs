@@ -15,7 +15,7 @@ namespace Zsharp.UnitTests
 
         public AstModuleExternal LoadExact(string fullModuleName)
         {
-            var mod = Modules.FirstOrDefault(m => m.Identifier.Name == fullModuleName);
+            var mod = Modules.FirstOrDefault(m => m.Identifier.NativeFullName == fullModuleName);
 
             if (mod is null)
             {
@@ -26,9 +26,9 @@ namespace Zsharp.UnitTests
         }
 
         public IEnumerable<AstModuleExternal> LoadNamespace(string moduleNamespace)
-            => Modules.Where(m => m.Identifier.Name.StartsWith(moduleNamespace));
+            => Modules.Where(m => m.Identifier.NativeFullName.StartsWith(moduleNamespace));
 
         public IEnumerable<AstModuleExternal> LoadAll(string partialModuleName)
-            => Modules.Where(m => m.Identifier.Name.StartsWith(partialModuleName));
+            => Modules.Where(m => m.Identifier.NativeFullName.StartsWith(partialModuleName));
     }
 }

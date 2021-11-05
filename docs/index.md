@@ -24,6 +24,6 @@ You can [join the Z# Discord server](https://discord.gg/5r9YMXHrYU).
 
 ## TODO
 
-- FSM syntax? (will match do?)
+- [FSM syntax? (will match do?)](fsm.md)
 - RingBuffer type?
 - Set type (set-theory)?

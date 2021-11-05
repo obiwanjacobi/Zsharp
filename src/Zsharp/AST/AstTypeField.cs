@@ -36,7 +36,7 @@ namespace Zsharp.AST
             protected set { _symbol = value; }
         }
 
-        public bool TrySetSymbol(AstSymbol? symbolEntry)
-            => Ast.SafeSet(ref _symbol, symbolEntry);
+        public bool TrySetSymbol(AstSymbol? symbol)
+            => Ast.SafeSet(ref _symbol, symbol);
     }
 }

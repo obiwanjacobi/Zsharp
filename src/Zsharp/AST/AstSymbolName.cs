@@ -1,195 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Zsharp.AST
 {
-    public enum AstSymbolNameParseOptions
-    {
-        /// <summary>text is from source code</summary>
-        IsSource,
-        /// <summary>text is canonical format</summary>
-        IsCanonical,
-        /// <summary>convert source to canonical format</summary>
-        ToCanonical,
-    }
-
+    [DebuggerDisplay("{CanonicalFullName}")]
     public class AstSymbolName
     {
-        public const char Separator = '.';
-        public const char TemplateDelimiter = '%';
-        public const char GenericDelimiter = '`';
-        public const char ParameterDelimiter = ';';
-
-        private AstSymbolName(string[] parts, string templatePostfix, bool isCanonical)
+        private AstSymbolName() { }
+        public AstSymbolName(AstSymbolName nameToCopy)
         {
-            _parts = parts;
-            TemplatePostfix = templatePostfix;
-            IsCanonical = isCanonical;
+            _native = new AstName(nameToCopy.NativeName);
+            _canonical = new AstName(nameToCopy.CanonicalName);
+        }
+        public AstSymbolName(AstName nativeName)
+        {
+            _native = nativeName ?? throw new ArgumentNullException(nameof(nativeName));
+            if (_native.Kind == AstNameKind.Canonical)
+                throw new ArgumentException("Parameter must represent a non-canonical symbol name.", nameof(nativeName));
+
+            _canonical = nativeName.ToCanonical();
         }
 
-        public AstSymbolName(AstSymbolName symbolNameToCopy)
-            : this(symbolNameToCopy.Parts.ToArray(), symbolNameToCopy.TemplatePostfix, symbolNameToCopy.IsCanonical)
-        { }
+        private AstName? _native;
+        public AstName NativeName
+            => _native ?? throw new InvalidOperationException("NativeName was not set.");
 
-        public static AstSymbolName Parse(string text, AstSymbolNameParseOptions options)
+        private AstName? _canonical;
+        public AstName CanonicalName
+            => _canonical ?? throw new InvalidOperationException("CanonicalName was not set.");
+
+        public string Postfix
         {
-            var parts = text.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
-            var templatePostfix = String.Empty;
-
-            var lastIndex = parts.Length - 1;
-            if (lastIndex >= 0)
-            {
-                var lastPart = parts[lastIndex];
-                var postFix = lastPart?.Split(new[] { TemplateDelimiter, ParameterDelimiter });
-                if (postFix?.Length == 2)
-                {
-                    parts[lastIndex] = postFix[0];
-                    // includes delimiter(s)
-                    templatePostfix = lastPart![postFix[0].Length..];
-                }
-            }
-
-            if (options == AstSymbolNameParseOptions.ToCanonical)
-                parts = parts.Select(PartToCanonical).ToArray();
-
-            return new AstSymbolName(parts, templatePostfix, options != AstSymbolNameParseOptions.IsSource);
-        }
-
-        public static string ToCanonical(string text)
-            => Parse(text, AstSymbolNameParseOptions.ToCanonical).ToString();
-
-        public bool IsCanonical { get; }
-
-        public int Count => _parts.Length;
-
-        private readonly string[] _parts;
-        public IEnumerable<string> Parts => _parts;
-
-        public bool IsDotName => _parts.Length > 1;
-
-        public string FullName => ToString(TemplatePostfix);
-
-        // not including last part
-        public string ModuleName
-        {
-            get
-            {
-                if (_parts.Length > 1)
-                {
-                    return Join(0, _parts.Length - 1);
-                }
-                return _parts[0];
+            get {  return _native!.Postfix; }
+            set
+            { 
+                _native!.Postfix = value;
+                _canonical!.Postfix = value;
             }
         }
 
-        // last part
-        public string Symbol
-        {
-            get
-            {
-                if (_parts.Length > 1)
-                {
-                    return _parts[^1];
-                }
-                return String.Empty;
-            }
+        /// <summary>For template/generic definitions: MyType%1</summary>
+        public void SetParameterCounts(int templateParameterCount, int genericParameterCount)
+        { 
+            var postfix = $"{AstName.TemplateDelimiter}{templateParameterCount + genericParameterCount}";
+            NativeName.Postfix = postfix;
+            CanonicalName.Postfix = postfix;
         }
 
-        public string TemplateDefinitionName
-        {
-            get
-            {
-                if (TemplatePostfix.Contains(TemplateDelimiter))
-                {
-                    return ToString(TemplatePostfix);
-                }
-
-                if (TemplatePostfix.Contains(ParameterDelimiter))
-                {
-                    var parts = TemplatePostfix.Split(ParameterDelimiter);
-                    return ToString($"{TemplateDelimiter}{parts.Length - 1}");
-                }
-
-                return String.Empty;
-            }
-        }
-
-        public string GenericDefinitionName
-        {
-            get
-            {
-                if (TemplatePostfix.Contains(GenericDelimiter))
-                {
-                    return ToString(TemplatePostfix);
-                }
-
-                if (TemplatePostfix.Contains(TemplateDelimiter))
-                {
-                    return ToString(TemplatePostfix.Replace(TemplateDelimiter, GenericDelimiter));
-                }
-
-                if (TemplatePostfix.Contains(ParameterDelimiter))
-                {
-                    var parts = TemplatePostfix.Split(ParameterDelimiter);
-                    return ToString($"{GenericDelimiter}{parts.Length - 1}");
-                }
-
-                return String.Empty;
-            }
-        }
-
-        public string TemplatePostfix { get; internal set; }
-
-        public void SetTemplateParameterCount(int count)
-            => TemplatePostfix = $"{TemplateDelimiter}{count}";
-
-        public void SetGenericParameterCount(int count)
-            => TemplatePostfix = $"{GenericDelimiter}{count}";
-
+        /// <summary>For template/generic references: MyType<T></summary>
         public void AddTemplateParameter(string? name)
         {
             if (!String.IsNullOrEmpty(name))
             {
-                TemplatePostfix += ParameterDelimiter + name;
+                var postfix = $"{AstName.ParameterDelimiter}{name}";
+                NativeName.Postfix += postfix;
+                CanonicalName.Postfix += postfix;
             }
         }
 
-        public AstSymbolName ToCanonical()
-        {
-            if (IsCanonical)
-                return this;
+        /// <summary>Convert symbolName to a canonical format.</summary>
+        public static string ToCanonical(string symbolName)
+            => Parse(symbolName, AstNameKind.Local).CanonicalName.FullName;
 
-            var parts = _parts.Select(PartToCanonical).ToArray();
-            return new AstSymbolName(parts, TemplatePostfix, isCanonical: true);
+        /// <summary>Parse a local source code or external symbol name.</summary>
+        public static AstSymbolName Parse(string symbolName, AstNameKind nameKind = AstNameKind.Local)
+        {
+            var parts = ParseParts(symbolName);
+            var native = AstName.FromParts(parts, nameKind);
+            return new AstSymbolName(native);
         }
 
-        private static string PartToCanonical(string part)
+        private static string[] ParseParts(string symbolName)
         {
-            if (String.IsNullOrEmpty(part))
-                return part;
+            if (String.IsNullOrEmpty(symbolName))
+                return Array.Empty<string>();
 
-            var prefix = String.Empty;
-            string simplified;
+            var parts = symbolName.Split(AstName.Separator);
+            if (parts.Any(p => String.IsNullOrEmpty(p)))
+                throw new ArgumentException("Invalid Symbol Name: multiple '.' characters in sequence.", nameof(symbolName));
 
+            return parts;
+        }
+
+        private static IEnumerable<string> PartsToCanonical(string[] parts)
+        {
+            if (!parts.Any())
+                return Enumerable.Empty<string>();
+
+            var part = parts[0];
             // .NET property getters and setters
             if (part.StartsWith("get_") || part.StartsWith("set_"))
             {
-                prefix = part[..3];
-                simplified = part[3..];
+                var prefix = part[..4] + AstName.PartToCanonical(part[4..]);
+                return parts[1..].Select(AstName.PartToCanonical).Append(prefix);
             }
-            simplified = part.Replace("_", String.Empty);
 
-            return prefix + simplified[0] + simplified[1..].ToLowerInvariant();
+            return parts.Select(AstName.PartToCanonical);
         }
-
-        public override string ToString()
-            => ToString(TemplatePostfix);
-
-        private string Join(int offset, int length)
-            => String.Join(Separator, _parts.Skip(offset).Take(length));
-
-        private string ToString(string postfix)
-            => Join(0, _parts.Length) + postfix;
     }
 }

@@ -38,15 +38,15 @@ namespace Zsharp.External
             var builder = new ImportedTypeBuilder(_typeRepository);
             builder.Build(type);
 
-            var module = GetModule(builder.Namespace, builder.ModuleName);
+            var module = GetModule(builder.ModuleName);
             builder.AddTo(module);
         }
 
-        private AstModuleExternal GetModule(string ns, string moduleName)
+        private AstModuleExternal GetModule(string moduleName)
         {
             if (!_modules.TryGetValue(moduleName, out AstModuleExternal? module))
             {
-                module = new AstModuleExternal(ns, moduleName, SymbolTable);
+                module = new AstModuleExternal(moduleName, SymbolTable);
                 _modules.Add(moduleName, module);
             }
 
@@ -70,7 +70,7 @@ namespace Zsharp.External
 
         public IEnumerable<AstModuleExternal> LoadNamespace(string moduleNamespace)
             => _modules.Values
-                .Where(m => m.Identifier!.SymbolName.ModuleName == moduleNamespace)
+                .Where(m => m.Identifier!.SymbolName.NativeName.Namespace == moduleNamespace)
                 .ToList();
 
         public IEnumerable<AstModuleExternal> LoadAll(string partialModuleName)

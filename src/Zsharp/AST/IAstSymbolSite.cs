@@ -15,7 +15,7 @@
                     "Symbol is already set or null.");
         }
 
-        public static void ThrowIfSymbolEntryNotSet(this IAstSymbolSite symbolEntrySite)
+        public static void ThrowIfSymbolNotSet(this IAstSymbolSite symbolEntrySite)
         {
             if (symbolEntrySite.Symbol is null)
                 throw new InternalErrorException("Symbol not set.");

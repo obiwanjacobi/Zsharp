@@ -17,12 +17,6 @@ namespace Zsharp.AST
             SetSelfParameter(selfParameter);
         }
 
-        public void AddParameter(string name, AstTypeDefinition astType)
-        {
-            var parameter = AstFunctionParameterDefinition.Create(name, astType);
-            FunctionType.AddParameter(parameter);
-        }
-
         public void SetSelfParameter(AstTypeDefinitionIntrinsic type)
         {
             Ast.Guard(!FunctionType.Parameters.Any(), "A Self parameter has to be first.");
@@ -47,7 +41,7 @@ namespace Zsharp.AST
         public override void Accept(AstVisitor visitor)
             => throw new InternalErrorException("Must not Visit Intrinsic Function Definition.");
 
-        public override bool TrySetSymbol(AstSymbol? symbolEntry)
+        public override bool TrySetSymbol(AstSymbol? symbol)
         {
             // Intrinsic Function Definitions are static and have no reference to the Symbol Table.
             return true;    // fake success

@@ -15,7 +15,7 @@ namespace Zsharp.EmitCS
 
         public void AddVariable(AstVariableDefinition variable)
         {
-            _csBuilder.StartVariable(variable.TypeReference.ToCode(), variable.Identifier!.CanonicalName);
+            _csBuilder.StartVariable(variable.TypeReference.ToCode(), variable.Identifier!.SymbolName.CanonicalName.FullName);
         }
 
         public void StartBranch(AstBranchExpression branch)

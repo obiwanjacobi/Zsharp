@@ -13,11 +13,11 @@ namespace Zsharp.AST
 
             MethodDefinition = method;
             HasSelfParameter = hasSelfParameter;
-            ExternalName = new AstName(
+            ExternalName = AstName.FromExternal(
                 hasSelfParameter 
                     ? declType.Namespace
                     : $"{declType.Namespace}.{declType.Name}",
-                method.Name, AstNameKind.External);
+                method.Name);
 
             // TODO: built function type!
         }

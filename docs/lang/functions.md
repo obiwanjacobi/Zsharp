@@ -1490,6 +1490,8 @@ wfError: (p: U8): Bool   // Error! Workflow trait requires 'Async'
     ...
 ```
 
+Can traits be taken further? Research C++ concepts.
+
 Defining traits also declare on what type of syntax element they can be applied to (multiple).
 
 - Type

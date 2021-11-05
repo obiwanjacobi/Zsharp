@@ -10,7 +10,9 @@ namespace Zsharp.AST
             if (function?.Symbol is null)
                 throw new InternalErrorException("No Symbol is set on the Function Reference.");
 
-            return function.Symbol!.Overloads
+            var symbol = function.Symbol?.DefinitionSymbol!;
+
+            return symbol!.FunctionOverloads
                 .Select(functionDef => new RankInfo<AstFunctionDefinition>
                 { Object = functionDef, Rank = Rank(function, functionDef) })
                 .Where(rank => rank.Rank >= 0)
@@ -23,6 +25,9 @@ namespace Zsharp.AST
         {
             var sources = functionRef.FunctionType.Parameters.Select(p => p.TypeReference!).ToList();
             var targets = functionDef.FunctionType.Parameters.Select(p => p.TypeReference!).ToList();
+
+            // TODO: check for default values on targets
+            if (sources.Count != targets.Count) return 0;
 
             if (functionRef.FunctionType.TypeReference is not null &&
                 functionDef.FunctionType.TypeReference is not null)
@@ -50,8 +55,8 @@ namespace Zsharp.AST
 
         public static int Rank(AstTypeReference source, AstTypeReference target)
         {
-            var sourceName = source.Identifier!.CanonicalName;
-            var targetName = target.Identifier!.CanonicalName;
+            var sourceName = source.Identifier!.SymbolName.CanonicalName.FullName;
+            var targetName = target.Identifier!.SymbolName.CanonicalName.FullName;
 
             if (sourceName == targetName)
                 return 100;

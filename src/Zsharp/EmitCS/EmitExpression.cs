@@ -126,14 +126,14 @@ namespace Zsharp.EmitCS
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
-            var name = variable.Identifier!.CanonicalName;
+            var name = variable.Identifier!.SymbolName.CanonicalName.FullName;
             _builder.Append(name);
         }
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
             var functionDef = function.FunctionDefinition!;
-            var name = functionDef.Identifier!.CanonicalName;
+            var name = functionDef.Identifier!.SymbolName.CanonicalName.FullName;
 
             if (functionDef.IsExternal)
             {

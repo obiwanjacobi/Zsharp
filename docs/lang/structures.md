@@ -162,6 +162,34 @@ someFn: (p: U8)
 
 ---
 
+## Field Indexing
+
+Ways in which to access fields for reading or writing.
+
+```csharp
+MyStruct
+    fld1: U8
+    fld2: Str
+
+s: MyStruct
+    fld1 = 42
+    fld2 = "42"
+
+f1 = s.fld1             // dot notation
+f2 = s[MyStruct#fld2]   // indexed by name at compile time (metadata)
+
+f1 = s["fld1"]          // indexed by name at run time
+// Error or Opt, if field with 'name' does not exist? What if the field type is incompatible with the variable type? Any?
+name = ...
+f2 = s[name]          // indexed by name at runtime time/reflection (variable)
+s[name] = 42
+// Error if field with 'name' does not exist? What if the field type is incompatible with the value type? Auto-Convert?
+```
+
+Syntax should be the same as with the `Dyn`amic Type.
+
+---
+
 ## Structure Layout
 
 The fields of a structure are layed out in the order of their definition starting at the base structure type. No alignment or filler bytes are added.

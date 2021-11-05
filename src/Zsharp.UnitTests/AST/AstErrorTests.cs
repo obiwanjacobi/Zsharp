@@ -64,7 +64,7 @@ namespace Zsharp.UnitTests.AST
             var compiler = Compile(code);
             var error = compiler.Context.Errors.Single();
             var variable = (AstVariableReference)error.Node;
-            variable.Identifier.Name.Should().Be("x");
+            variable.Identifier.NativeFullName.Should().Be("x");
             error.Text.Should().Contain("undefined Variable");
         }
 

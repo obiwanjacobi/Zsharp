@@ -79,7 +79,7 @@ namespace Zsharp.UnitTests.Semantics
             v.Parent.Should().Be(a);
             v.TypeReference.Should().NotBeNull();
 
-            var sym = file.CodeBlock.Symbols.FindSymbol(v.Identifier.SymbolName.ToCanonical(), AstSymbolKind.Variable);
+            var sym = file.CodeBlock.Symbols.FindSymbol(v.Identifier.SymbolName.CanonicalName.FullName, AstSymbolKind.Variable);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -206,7 +206,7 @@ namespace Zsharp.UnitTests.Semantics
 
             var fnRef = fn.CodeBlock.LineAt<AstFunctionReference>(0);
             fnRef.Should().NotBeNull();
-            fnRef.Identifier.Name.Should().Be("fn2");
+            fnRef.Identifier.NativeFullName.Should().Be("fn2");
             fnRef.Symbol.Definition.Should().NotBeNull();
         }
 
@@ -225,7 +225,7 @@ namespace Zsharp.UnitTests.Semantics
             var v = a.Variable as AstVariableDefinition;
             var p = a.Expression.RHS.VariableReference.ParameterDefinition;
             p.Should().NotBeNull();
-            v.TypeReference.Identifier.Name.Should().Be(p.TypeReference.Identifier.Name);
+            v.TypeReference.Identifier.NativeFullName.Should().Be(p.TypeReference.Identifier.NativeFullName);
         }
 
         [TestMethod]
@@ -244,13 +244,13 @@ namespace Zsharp.UnitTests.Semantics
             var v = a.Variable as AstVariableDefinition;
             var p = a.Expression.RHS.VariableReference.ParameterDefinition;
             p.Should().NotBeNull();
-            v.TypeReference.Identifier.Name.Should().Be(p.TypeReference.Identifier.Name);
+            v.TypeReference.Identifier.NativeFullName.Should().Be(p.TypeReference.Identifier.NativeFullName);
 
             a = fn.CodeBlock.LineAt<AstAssignment>(1);
             v = a.Variable as AstVariableDefinition;
             p = a.Expression.RHS.VariableReference.ParameterDefinition;
             p.Should().NotBeNull();
-            v.TypeReference.Identifier.Name.Should().Be(p.TypeReference.Identifier.Name);
+            v.TypeReference.Identifier.NativeFullName.Should().Be(p.TypeReference.Identifier.NativeFullName);
         }
 
         [TestMethod]
@@ -262,7 +262,10 @@ namespace Zsharp.UnitTests.Semantics
                 Tokens.Indent1 + "Print(\"Hello World\")" + Tokens.NewLine
                 ;
 
-            var moduleLoader = Compile.CreateModuleLoader();
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddSystemConsole()
+                .ToModuleLoader();
+
             var file = Compile.File(code, moduleLoader);
 
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);

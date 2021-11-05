@@ -28,7 +28,7 @@ namespace Zsharp.AST
         {
             if (moduleCtx is not null)
             {
-                Ast.Guard(Identifier!.CanonicalName == AstSymbolName.ToCanonical(moduleCtx.module_name().GetText()), "Not the same module.");
+                Ast.Guard(Identifier!.SymbolName.CanonicalName.FullName == AstSymbolName.ToCanonical(moduleCtx.module_name().GetText()), "Not the same module.");
                 _contexts.Add(moduleCtx);
             }
         }
@@ -63,7 +63,7 @@ namespace Zsharp.AST
         private AstSymbol? _symbol;
         public AstSymbol? Symbol => _symbol;
 
-        public bool TrySetSymbol(AstSymbol? symbolEntry)
-            => Ast.SafeSet(ref _symbol, symbolEntry);
+        public bool TrySetSymbol(AstSymbol? symbol)
+            => Ast.SafeSet(ref _symbol, symbol);
     }
 }

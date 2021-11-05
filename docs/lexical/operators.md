@@ -58,7 +58,7 @@ PI (and other constants), rad, deg, vectors, matrix, infinity, sin, cos, tan (in
 Set Theory? Set, intersect, union, subset, superset, powerset, (relative) complement, symmetric difference, membership, cardinality, ordered pair, cartesian product, wellknown sets (natural, integer, rational, real, complex).
 
 Operator that cascades the left value?
-So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`. See also [match expression](../lang/match.md).
+So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`. See also [match expression](../expressions/match.md).
 
 | Operator | Fn Name | Description
 |--|--|--

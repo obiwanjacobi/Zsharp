@@ -14,7 +14,11 @@ namespace Zsharp.UnitTests.Semantics
                 "arr = Array<U8>(10)" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
             var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             assign.Expression.RHS.FunctionReference.Should().NotBeNull();
         }

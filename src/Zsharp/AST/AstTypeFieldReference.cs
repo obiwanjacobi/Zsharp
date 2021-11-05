@@ -13,7 +13,7 @@ namespace Zsharp.AST
 
         public bool TryResolveSymbol()
         {
-            this.ThrowIfSymbolEntryNotSet();
+            this.ThrowIfSymbolNotSet();
             return Symbol!.SymbolTable.TryResolveDefinition(Symbol);
         }
     }

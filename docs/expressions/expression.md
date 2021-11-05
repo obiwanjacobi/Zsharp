@@ -12,9 +12,7 @@ The supported expressions are divided in these categories:
 - [Logical](logical.md)
 - [Comparison](comparison.md)
 - [Bitwise](bitwise.md)
-- [Assignment](assignment.md)
-
-See also the [Match Expression](../lang/match.md)
+- [Match](match.md)
 
 ---
 

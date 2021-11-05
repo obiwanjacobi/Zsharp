@@ -36,7 +36,7 @@ namespace Zsharp.AST
             if (field?.Identifier is null)
                 return false;
 
-            if (_fields.TryAdd(field.Identifier.CanonicalName, field))
+            if (_fields.TryAdd(field.Identifier.SymbolName.CanonicalName.FullName, field))
             {
                 return field.TrySetParent(this);
             }

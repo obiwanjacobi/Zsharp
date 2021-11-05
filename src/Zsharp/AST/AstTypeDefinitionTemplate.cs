@@ -18,14 +18,13 @@ namespace Zsharp.AST
 
         public virtual bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
         {
+            Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
             if (templateParameter is null)
                 return false;
 
             _templateParameters.Add(templateParameter);
             templateParameter.SetParent(this);
-
-            Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
-            Identifier!.SymbolName.SetTemplateParameterCount(_templateParameters.Count);
+            Identifier!.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
 
             return true;
         }
@@ -37,14 +36,13 @@ namespace Zsharp.AST
 
         public bool TryAddGenericParameter(AstGenericParameterDefinition genericParameter)
         {
+            Ast.Guard(Identifier, "Identifier not set - cannot register generic parameter.");
             if (genericParameter is null)
                 return false;
 
             _genericParameters.Add(genericParameter);
             genericParameter.SetParent(this);
-
-            Ast.Guard(Identifier, "Identifier not set - cannot register generic parameter.");
-            Identifier!.SymbolName.SetGenericParameterCount(_genericParameters.Count);
+            Identifier!.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
 
             return true;
         }

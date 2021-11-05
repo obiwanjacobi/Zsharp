@@ -30,15 +30,14 @@ Then each type has its own way of specifying its implementation:
 
 `Field` sets the defined type up as a data structure containing one or more fields. See also [Structures](structures.md).
 
+> **_All type names start with a Capital letter_**
+
 ## Built-in Types
 
 The built-in data type form the basic building blocks for creating structures.
-
-> **_All type names start with a Capital letter_**
-
 There are built-in types for integers, floating point, string and boolean.
 
-Other .NET types like `DateTime` are not a native part of Z# and can be used as an external library type.
+Other .NET types are not a native part of Z# and can be used as an external library type.
 
 > .NET has other types in `System.Numerics` that may be of interest to include in the future as native Z# types.
 
@@ -75,10 +74,10 @@ These map to respective .NET types:
 The floating point data types are:
 
 ```C#
-F16 F32, F96
+F16, F32, F64, F96
 ```
 
-These map to respective .NET types: `float`, `double` and `decimal`.
+These map to respective .NET types: `Half`, `Single`, `Double` and `Decimal`.
 
 ### Strings
 
@@ -249,6 +248,13 @@ c: U32 = 42     // c: U32
 ```
 
 We are simply calling a dedicated constructor function with the literal value.
+
+> Coercing literals to bigger (compatible) types.
+
+```csharp
+// some sort of postfix?
+a = 42L // U64?
+```
 
 ---
 
@@ -1052,10 +1058,6 @@ structFn(s#offset(Struct2), 42)
 ## Dynamic Type
 
 > Should dynamic types be taken into account? How would the syntax look and what semantics are attached?
-
-A dynamic type would require a whole runtime system that turns away from the compile-time focus currently aimed for.
-Dynamic types may be required when doing a REPL interface..?
-But that would be more of an implementation detail of the REPL itself.
 
 ```csharp
 d: Dyn              // dynamic type

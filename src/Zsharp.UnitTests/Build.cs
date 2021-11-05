@@ -10,6 +10,8 @@ namespace Zsharp.UnitTests
 {
     internal static class Build
     {
+        public const string ModuleName = "UnitTests";
+
         public static AstModuleImpl Module(string code, IAstModuleLoader moduleLoader = null)
         {
             var file = ParseFile(code);
@@ -28,7 +30,7 @@ namespace Zsharp.UnitTests
         private static AstFile BuildFile(FileContext file, CompilerContext context)
         {
             var builder = new AstBuilder(context);
-            var astFile = builder.Build(file, "UnitTests");
+            var astFile = builder.Build(file, ModuleName);
             PrintErrors(builder.Errors);
             builder.HasErrors.Should().BeFalse();
             return astFile;

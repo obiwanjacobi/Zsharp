@@ -15,13 +15,11 @@ namespace Zsharp.External
         public ImportedTypeBuilder(ExternalTypeRepository typeRepository)
         {
             _typeRepository = typeRepository;
-            Namespace = String.Empty;
             ModuleName = String.Empty;
         }
 
         public void Build(TypeMetadata typeDefinition)
         {
-            Namespace = typeDefinition.Namespace;
             ModuleName = typeDefinition.FullName;
 
             if (typeDefinition.IsEnum)
@@ -44,8 +42,6 @@ namespace Zsharp.External
                 throw new NotImplementedException(
                     $"No implementation for Type {typeDefinition.FullName}");
         }
-
-        public string Namespace { get; private set; }
 
         public string ModuleName { get; private set; }
 
@@ -78,8 +74,7 @@ namespace Zsharp.External
                 }
 
                 StructType = new AstTypeDefinitionExternal(
-                    typeDefinition.Namespace,
-                    typeDefinition.Name,
+                    typeDefinition.FullName,
                     baseType);
             }
 
@@ -92,15 +87,14 @@ namespace Zsharp.External
 
                     if (method.IsStatic)
                     {
-                        // TODO: get_/set_ property methods name handling
-                        _aliases.TryAdd(function,
-                            $"{typeDefinition.Name}{function.Identifier!.CanonicalName}");
+                        var aliasName = AstName.ParseFullName($"{typeDefinition.Name}{function.Identifier!.SymbolName.CanonicalName.Name}");
+                        _aliases.TryAdd(function, aliasName.FullName);
                     }
                 }
             }
         }
 
-        // copy over the types to the module
+        // copy the types over to the module
         public void AddTo(AstModuleExternal module)
         {
             if (StructType is not null)
@@ -129,7 +123,8 @@ namespace Zsharp.External
         {
             var declType = method.GetDeclaringType();
             var function = new AstFunctionDefinitionExternal(method, !method.IsStatic);
-            var name = method.Name == ".ctor" ? declType.Name : method.Name;
+            var methodName = method.Name == ".ctor" ? declType.Name : method.Name;
+            var name = AstName.FromExternal(declType.FullName, methodName);
             function.SetIdentifier(new AstIdentifier(name, AstIdentifierKind.Function));
 
             var typeRef = _typeRepository.GetTypeReference(method.ReturnType);
@@ -144,7 +139,6 @@ namespace Zsharp.External
 
             foreach (var p in method.Parameters)
             {
-                // TODO: test for 'self: declType' parameter and rename.
                 funcParam = CreateParameter(new AstIdentifier(p.Name, AstIdentifierKind.Parameter), p.ParameterType);
                 function.FunctionType.TryAddParameter(funcParam);
             }

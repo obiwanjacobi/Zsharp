@@ -4,6 +4,8 @@
 
 There may still be a place for Ptr's as a synonym for C#'s `ref` - a way to replace a parameter value. Z#'s `ref` would then be used to pass by immutable reference.
 
+Perhaps use `Ptr` to simulate a raw buffer pointer but with a size attached to it..? This type can be returned from memory management functions. The type can be derived to add extra pointer metadata.
+
 ## Pointer Types
 
 The template type `Ptr<T>` is used to represent a pointer.
@@ -41,6 +43,18 @@ changeByRef: (Ptr<U8> ptr)
 
     v = ptr()           // read into a local copy
     v = 42              // does NOT change ptr value!
+```
+
+Alternative: Ptr with a `Value` field that represents the dereferenced value - for reading and writing.
+
+```csharp
+a = 42
+p: Ptr<U8> = a.Ptr()
+if p = 42           // false. 'p' is the address of 'a'
+    ...
+if p.Value = 42     // true
+    ...
+p.Value = 101       // changes 'a'
 ```
 
 ### Optional

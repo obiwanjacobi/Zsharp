@@ -179,6 +179,20 @@ err.throw()
 exit err    // implies exit-fn at minimum
 ```
 
+```csharp
+// params in the same order as ctor of Exception (brittle)
+Error<ArgumentException>("Not good", "param1")
+
+// use named parameters
+Error<ArgumentException>(message="Not good", paramName="param1")
+
+// as tuple
+p = { message="Not good", paramName="param1" }
+Error<ArgumentException>(p)
+```
+
+> Are param names available on imported external assemblies?
+
 Rethrow an existing Exception:
 
 ```csharp
@@ -187,6 +201,7 @@ Rethrow an existing Exception:
 // }
 catch -> (err)
     err.throw()     // can we track usage to generate 'throw'?
+    Error(err)
     err.rethrow()   // make it explicit?
 ```
 

@@ -19,7 +19,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinition>(0);
             var t = fn.FunctionType.TypeReference;
-            t.Identifier.Name.Should().Be("U8");
+            t.Identifier.NativeFullName.Should().Be("U8");
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var t = fn.FunctionType.Parameters.First().TypeReference;
-            t.Identifier.Name.Should().Be("U8");
+            t.Identifier.NativeFullName.Should().Be("U8");
         }
 
         [TestMethod]
@@ -47,10 +47,10 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var t = fn.FunctionType.Parameters.ElementAt(0).TypeReference;
-            t.Identifier.Name.Should().Be("U8");
+            t.Identifier.NativeFullName.Should().Be("U8");
 
             t = fn.FunctionType.Parameters.ElementAt(1).TypeReference;
-            t.Identifier.Name.Should().Be("Str");
+            t.Identifier.NativeFullName.Should().Be("Str");
         }
 
         [TestMethod]
@@ -64,7 +64,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var t = fn.FunctionType.Parameters.First().TypeReference;
-            t.Identifier.Name.Should().Be("SomeType");
+            t.Identifier.NativeFullName.Should().Be("SomeType");
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var a = file.CodeBlock.LineAt<AstVariableDefinition>(0);
             var t = a.TypeReference;
-            t.Identifier.Name.Should().Be("U8");
+            t.Identifier.NativeFullName.Should().Be("U8");
         }
 
         [TestMethod]
@@ -91,10 +91,10 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var e = file.CodeBlock.LineAt<AstTypeDefinitionEnum>(0);
             e.Symbol.Definition.Should().Be(e);
-            e.BaseType.Identifier.Name.Should().Be("I32");
+            e.BaseType.Identifier.NativeFullName.Should().Be("I32");
 
             var f = e.Fields.First();
-            f.Identifier.Name.Should().Be("None");
+            f.Identifier.NativeFullName.Should().Be("None");
             f.Expression.Should().NotBeNull();
             f.Symbol.Definition.Should().Be(f);
         }
@@ -110,10 +110,10 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var e = file.CodeBlock.LineAt<AstTypeDefinitionEnum>(0);
             e.Symbol.Definition.Should().Be(e);
-            e.BaseType.Identifier.Name.Should().Be("U8");
+            e.BaseType.Identifier.NativeFullName.Should().Be("U8");
 
             var f = e.Fields.First();
-            f.Identifier.Name.Should().Be("None");
+            f.Identifier.NativeFullName.Should().Be("None");
             f.Expression.Should().NotBeNull();
             f.Symbol.Definition.Should().Be(f);
         }
@@ -134,19 +134,19 @@ namespace Zsharp.UnitTests.AST
             e.Symbol.Definition.Should().Be(e);
 
             var f = e.Fields.First();
-            f.Identifier.Name.Should().Be("Zero");
+            f.Identifier.NativeFullName.Should().Be("Zero");
             f.Expression.RHS.LiteralNumeric.Value.Should().Be(0);
 
             f = e.Fields.Skip(1).First();
-            f.Identifier.Name.Should().Be("One");
+            f.Identifier.NativeFullName.Should().Be("One");
             f.Expression.RHS.LiteralNumeric.Value.Should().Be(1);
 
             f = e.Fields.Skip(2).First();
-            f.Identifier.Name.Should().Be("Two");
+            f.Identifier.NativeFullName.Should().Be("Two");
             f.Expression.RHS.LiteralNumeric.Value.Should().Be(2);
 
             f = e.Fields.Skip(3).First();
-            f.Identifier.Name.Should().Be("Three");
+            f.Identifier.NativeFullName.Should().Be("Three");
             f.Expression.RHS.LiteralNumeric.Value.Should().Be(3);
         }
 
@@ -165,7 +165,7 @@ namespace Zsharp.UnitTests.AST
             s.BaseType.Should().BeNull();
 
             var f = s.Fields.First();
-            f.Identifier.Name.Should().Be("Id");
+            f.Identifier.NativeFullName.Should().Be("Id");
             f.TypeReference.Should().NotBeNull();
             f.Symbol.Definition.Should().Be(f);
         }

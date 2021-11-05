@@ -1,7 +1,10 @@
-﻿namespace Zsharp.AST
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Zsharp.AST
 {
     public class AstTemplateInstanceFunction : AstFunctionDefinition,
-        IAstCodeBlockSite, IAstSymbolTableSite
+        IAstCodeBlockSite, IAstSymbolTableSite, IAstTemplateInstance
     {
         public AstTemplateInstanceFunction(AstFunctionDefinition templateDefinition)
             : base(new AstTypeDefinitionFunction())
@@ -20,8 +23,11 @@
         public void Instantiate(CompilerContext context, AstFunctionReference function)
         {
             Context = function.Context;
+            _templateArguments = new AstTemplateArgumentMap(
+                TemplateDefinition.TemplateParameters, function.TemplateParameters);
+
             var cloner = new AstNodeCloner(context, TemplateDefinition.Indent);
-            cloner.Clone(function, TemplateDefinition, this);
+            cloner.Clone(function, TemplateDefinition, this, _templateArguments);
         }
 
         private AstCodeBlock? _codeBlock;
@@ -54,6 +60,10 @@
             }
         }
 
+        private AstTemplateArgumentMap? _templateArguments;
+        public AstTemplateArgumentMap TemplateArguments
+            => _templateArguments ?? AstTemplateArgumentMap.Empty;
+
         /// <summary>
         /// Deferred registration of function parameter symbols in the codeblock's symbol table.
         /// </summary>
@@ -62,7 +72,7 @@
             foreach (var param in FunctionType.Parameters)
             {
                 // function parameters are registered as variables
-                Symbols.AddSymbol(param.Identifier!.CanonicalName, AstSymbolKind.Variable, param);
+                Symbols.AddSymbol(param.Identifier!.SymbolName.CanonicalName.FullName, AstSymbolKind.Variable, param);
             }
         }
     }

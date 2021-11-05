@@ -116,12 +116,12 @@ namespace Zsharp.AST
                 return null;
             }
 
-            var symbolName = AstSymbolName.Parse(context.module_name().GetText(), AstSymbolNameParseOptions.ToCanonical);
+            var symbolName = AstSymbolName.Parse(context.module_name().GetText());
             var alias = context.alias_module()?.GetText();
             var hasAlias = !String.IsNullOrEmpty(alias);
 
             // if alias then last part of dot name is symbol.
-            var moduleName = hasAlias ? symbolName.ModuleName : symbolName.FullName;
+            var moduleName = hasAlias ? symbolName.CanonicalName.Namespace : symbolName.CanonicalName.FullName;
             var module = _builderContext.CompilerContext.Modules.Import(moduleName);
             if (module is null)
             {
@@ -132,7 +132,7 @@ namespace Zsharp.AST
 
             if (hasAlias)
             {
-                module.AddAlias(symbolName.Symbol, AstSymbolName.ToCanonical(alias!));
+                module.AddAlias(symbolName.CanonicalName, alias!);
             }
 
             var symbol = symbols.Symbols.Add(module);
@@ -163,7 +163,7 @@ namespace Zsharp.AST
             var parent = cbSite as AstFunctionDefinition;
             if (parent?.Identifier is not null)
             {
-                scopeName = parent.Identifier.CanonicalName;
+                scopeName = parent.Identifier.SymbolName.CanonicalName.FullName;
             }
 
             var codeBlock = new AstCodeBlock(scopeName, symbols, context);
@@ -749,13 +749,13 @@ namespace Zsharp.AST
             if (template is not null)
                 typeRef.IsTemplateParameter = template.TemplateParameters
                     .OfType<AstTemplateParameterDefinition>()
-                    .Any(p => p.Identifier?.CanonicalName == typeRef.Identifier?.CanonicalName);
+                    .Any(p => p.Identifier?.SymbolName.CanonicalName.FullName == typeRef.Identifier?.SymbolName.CanonicalName.FullName);
 
             var generic = _builderContext.TryGetCurrent<IAstGenericSite<AstGenericParameterDefinition>>();
             if (generic is not null)
                 typeRef.IsGenericParameter = generic.GenericParameters
                     .OfType<AstGenericParameterDefinition>()
-                    .Any(p => p.Identifier?.CanonicalName == typeRef.Identifier?.CanonicalName);
+                    .Any(p => p.Identifier?.SymbolName.CanonicalName.FullName == typeRef.Identifier?.SymbolName.CanonicalName.FullName);
 
             var trSite = _builderContext.GetCurrent<IAstTypeReferenceSite>();
             trSite.SetTypeReference(typeRef);

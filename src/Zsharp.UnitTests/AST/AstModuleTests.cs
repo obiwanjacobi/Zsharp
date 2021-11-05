@@ -59,7 +59,7 @@ namespace Zsharp.UnitTests.AST
 
             foreach(var mod in symbols.FindSymbols(AstSymbolKind.Module))
             { 
-                mod.SymbolName.Should().StartWith("System.");
+                mod.SymbolName.FullName.Should().StartWith("System.");
             }
         }
 
@@ -70,14 +70,16 @@ namespace Zsharp.UnitTests.AST
                 "import System.Console" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddSystemConsole()
+                .ToModuleLoader();
+
+            var file = Build.File(code, moduleLoader);
             var symbols = file.Symbols;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
             var mod = symbols.FindSymbols(AstSymbolKind.Module).Single();
-            mod.SymbolName.Should().Be("System.Console");
-            // System.System.Console...
-            //mod.FullName.Should().Be("System.Console");
+            mod.SymbolName.FullName.Should().Be("System.Console");
         }
 
         [TestMethod]
@@ -87,14 +89,16 @@ namespace Zsharp.UnitTests.AST
                 "import Print = System.Console.WriteLine" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddSystemConsole()
+                .ToModuleLoader();
+
+            var file = Build.File(code, moduleLoader);
             var symbols = file.Symbols;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
             var mod = symbols.FindSymbols(AstSymbolKind.Module).Single();
-            mod.SymbolName.Should().Be("System.Console");
-            // System.System.Console...
-            //mod.FullName.Should().Be("System.Console");
+            mod.SymbolName.FullName.Should().Be("System.Console");
         }
     }
 }

@@ -92,7 +92,7 @@ namespace Zsharp.AST
 
         private static string AsString(this IAstIdentifierSite? identifierSite)
         {
-            return identifierSite?.Identifier?.Name ?? String.Empty;
+            return identifierSite?.Identifier?.NativeFullName ?? String.Empty;
         }
     }
 }

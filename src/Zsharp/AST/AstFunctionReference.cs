@@ -23,14 +23,14 @@ namespace Zsharp.AST
         {
             get
             {
-                this.ThrowIfSymbolEntryNotSet();
+                this.ThrowIfSymbolNotSet();
                 return Symbol!.FindFunctionDefinition(this);
             }
         }
 
         public bool TryResolveSymbol()
         {
-            this.ThrowIfSymbolEntryNotSet();
+            this.ThrowIfSymbolNotSet();
             return Symbol!.SymbolTable.TryResolveDefinition(Symbol);
         }
 
@@ -49,7 +49,7 @@ namespace Zsharp.AST
                 _templateParameters.Add(parameter);
 
                 if (Identifier is not null)
-                    Identifier.SymbolName.AddTemplateParameter(parameter.TypeReference?.Identifier?.Name);
+                    Identifier.SymbolName.AddTemplateParameter(parameter.TypeReference?.Identifier?.NativeFullName);
                 return true;
             }
             return false;
@@ -72,6 +72,6 @@ namespace Zsharp.AST
         }
 
         public override string ToString()
-            => $"{Identifier?.CanonicalName}: {FunctionType}";
+            => $"{Identifier?.SymbolName.CanonicalName.FullName}: {FunctionType}";
     }
 }

@@ -30,7 +30,7 @@ namespace Zsharp.Dgml
             var module = (AstModule)(file.Parent);
             if (module is not null)
             {
-                moduleName = module.Identifier.Name;
+                moduleName = module.Identifier.NativeFullName;
             }
 
             var node = CreateNode(moduleName, file.NodeKind);
@@ -43,12 +43,12 @@ namespace Zsharp.Dgml
         public Node WriteFunction(AstFunctionDefinitionImpl function, string parentId)
         {
             var identifier = function.Identifier;
-            var name = identifier.Name;
+            var name = identifier.NativeFullName;
             var node = CreateNode(name, function.NodeKind);
             _ = CreateLink(parentId, node.Id);
 
             var paramNames = String.Join(", ", function.FunctionType.Parameters
-                .Select(p => $"{p.Identifier.Name}: {p.TypeReference.Identifier.Name}"));
+                .Select(p => $"{p.Identifier.NativeFullName}: {p.TypeReference.Identifier.NativeFullName}"));
             if (paramNames.Length > 0)
             {
                 node.Group = DefaultGroup;
@@ -109,13 +109,13 @@ namespace Zsharp.Dgml
 
         private Node WriteEnum(AstTypeDefinitionEnum astEnum, string parentId)
         {
-            var name = astEnum.Identifier.Name;
+            var name = astEnum.Identifier.NativeFullName;
             var node = CreateNode(name, astEnum.NodeKind);
             _ = CreateLink(parentId, node.Id);
             node.Group = DefaultGroup;
 
             var fields = String.Join("\r\n",
-                astEnum.Fields.Select(f => $"{f.Identifier.Name} = {f.Expression.AsString()}"));
+                astEnum.Fields.Select(f => $"{f.Identifier.NativeFullName} = {f.Expression.AsString()}"));
 
             var fieldsNode = CreateNode("Fields", fields);
             fieldsNode.Category = FieldsCategory;
@@ -126,13 +126,13 @@ namespace Zsharp.Dgml
 
         private Node WriteStruct(AstTypeDefinitionStruct astStruct, string parentId)
         {
-            var name = astStruct.Identifier.Name;
+            var name = astStruct.Identifier.NativeFullName;
             var node = CreateNode(name, astStruct.NodeKind);
             _ = CreateLink(parentId, node.Id);
             node.Group = DefaultGroup;
 
             var fields = String.Join("\r\n",
-                astStruct.Fields.Select(f => $"{f.Identifier.Name}: {f.TypeReference?.Identifier.Name}"));
+                astStruct.Fields.Select(f => $"{f.Identifier.NativeFullName}: {f.TypeReference?.Identifier.NativeFullName}"));
 
             var fieldNode = CreateNode("Fields", fields);
             _ = CreateLink(node.Id, fieldNode.Id, ContainsCategory);
@@ -141,8 +141,8 @@ namespace Zsharp.Dgml
 
         public Node WriteAssignment(AstAssignment assignment, string parentId)
         {
-            var name = assignment.Variable.Identifier.Name;
-            var typeName = assignment.Variable.TypeReference?.Identifier.Name;
+            var name = assignment.Variable.Identifier.NativeFullName;
+            var typeName = assignment.Variable.TypeReference?.Identifier.NativeFullName;
             var nodeName = $"{name}: {typeName}";
             if (assignment.Expression is not null)
                 nodeName += " = " + assignment.Expression.AsString();
@@ -152,7 +152,7 @@ namespace Zsharp.Dgml
             node.Group = DefaultGroup;
 
             var fields = String.Join("\r\n",
-                assignment.Fields.Select(f => $"{f.Identifier.Name} = {f.Expression.AsString()}"));
+                assignment.Fields.Select(f => $"{f.Identifier.NativeFullName} = {f.Expression.AsString()}"));
 
             var fieldNode = CreateNode("Fields", fields);
             _ = CreateLink(node.Id, fieldNode.Id, ContainsCategory);

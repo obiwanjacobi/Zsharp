@@ -13,24 +13,6 @@ namespace Zsharp.Semantics
             _context = context;
         }
 
-        public override void VisitFile(AstFile file)
-        {
-            var symbolTable = SetSymbolTable(_context.Modules.SymbolTable);
-
-            var externals = file.Symbols.FindSymbols(AstSymbolKind.Module)
-                .Select(s => s.DefinitionAs<AstModuleExternal>())
-                .Where(m => m is not null);
-
-            foreach (var mod in externals)
-            {
-                VisitModuleExternal(mod!);
-            }
-
-            SetSymbolTable(symbolTable);
-
-            base.VisitFile(file);
-        }
-
         public override void VisitExpression(AstExpression expression)
         {
             if (expression.TypeReference is not null)
@@ -44,7 +26,7 @@ namespace Zsharp.Semantics
                 if ((expression.Operator & AstExpressionOperator.MaskComparison) != 0)
                 {
                     var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
-                        AstIdentifierIntrinsic.Bool.CanonicalName, AstSymbolKind.Type);
+                        AstIdentifierIntrinsic.Bool.SymbolName.CanonicalName, AstSymbolKind.Type);
                     var typeRefType = AstTypeReferenceType.From(typeDef!);
                     SymbolTable!.Add(typeRefType);
 
@@ -97,7 +79,7 @@ namespace Zsharp.Semantics
                 Ast.Guard(SymbolTable, "No SymbolTable set.");
 
                 var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
-                    AstIdentifierIntrinsic.Bool.CanonicalName, AstSymbolKind.Type);
+                    AstIdentifierIntrinsic.Bool.SymbolName.CanonicalName, AstSymbolKind.Type);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found for Boolean.");
                 AssignInferredType(operand, typeDef!);
                 return;
@@ -120,7 +102,7 @@ namespace Zsharp.Semantics
                 Ast.Guard(SymbolTable, "No SymbolTable set.");
 
                 var typeDef = SymbolTable!.FindDefinition<AstTypeDefinition>(
-                    AstIdentifierIntrinsic.Str.CanonicalName, AstSymbolKind.Type);
+                    AstIdentifierIntrinsic.Str.SymbolName.CanonicalName, AstSymbolKind.Type);
                 Ast.Guard(typeDef, "No AstTypeDefintion was found for String.");
                 AssignInferredType(operand, typeDef!);
                 return;
@@ -190,8 +172,9 @@ namespace Zsharp.Semantics
                 var varDef = new AstVariableDefinition(varRef.TypeReference?.MakeCopy());
                 varDef.SetIdentifier(varRef.Identifier!);
                 varDef.SetSymbol(symbol!);
-                symbol!.PromoteToDefinition(varDef, varRef);
+                symbol!.RemoveReference(varRef);
                 AstSymbolReferenceRemover.RemoveReference(varRef);
+                symbol!.AddNode(varDef);
                 assign.SetVariableDefinition(varDef);
 
                 // do the children again for types
@@ -323,44 +306,44 @@ namespace Zsharp.Semantics
 
         public override void VisitTypeReferenceType(AstTypeReferenceType type)
         {
-            if (type.TypeDefinition is not null)
-                return;
-
             Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
-            Ast.Guard(type?.Identifier, "AstTypeReference or AstIdentifier is null.");
+            Ast.Guard(type.Identifier, "AstTypeReference or AstIdentifier is null.");
 
-            if (!type!.IsTemplateParameter)
+            if (type.IsTemplate)
             {
-                var success = type!.TryResolveSymbol();
-                if (!success)
-                {
-                    if (type.IsTemplate)
-                    {
-                        var symbol = type.Symbol!;
-                        var typeTemplate = FindTemplateDefinition<AstTypeDefinition>(type, AstSymbolKind.Type);
+                var typeTemplate = type.TypeDefinition;
+                if (typeTemplate is null)
+                    typeTemplate = FindTemplateDefinition<AstTypeDefinition>(type, AstSymbolKind.Type);
 
-                        if (typeTemplate is AstTypeDefinitionStruct structTemplate)
-                        {
-                            var typeDef = new AstTemplateInstanceStruct(structTemplate);
-                            typeDef.Instantiate(type);
-                            symbol.AddNode(typeDef);
-                            Ast.Guard(symbol.Definition, "Invalid Template Definition.");
-                        }
-                        else if (typeTemplate is AstTypeDefinitionIntrinsic intrinsicTemplate)
-                        {
-                            var typeDef = new AstTemplateInstanceType(intrinsicTemplate);
-                            typeDef.Instantiate(type);
-                            symbol.AddNode(typeDef);
-                            Ast.Guard(symbol.Definition, "Invalid Template Definition.");
-                        }
-                        else
-                            _context.UndefinedType(type);
-                    }
-                    else if (!type.IsExternal)
-                    {
-                        // TODO: for now unresolved external references are ignored.
-                        _context.UndefinedType(type);
-                    }
+                var symbol = type.Symbol!;
+                if (typeTemplate is AstTypeDefinitionStruct structTemplate)
+                {
+                    var typeDef = new AstTemplateInstanceStruct(structTemplate);
+                    typeDef.Instantiate(type);
+                    symbol.AddNode(typeDef);
+
+                    Visit(typeDef);
+                }
+                else if (typeTemplate is AstTypeDefinitionIntrinsic intrinsicTemplate)
+                {
+                    var typeDef = new AstTemplateInstanceType(intrinsicTemplate);
+                    typeDef.Instantiate(type);
+                    symbol.AddNode(typeDef);
+
+                    Visit(typeDef);
+                }
+                else
+                    _context.UndefinedType(type);
+            }
+            
+            if (!type.IsTemplateParameter && type.TypeDefinition is null)
+            {
+                var success = type.TryResolveSymbol();
+
+                if (!success && !type.IsExternal)
+                {
+                    // TODO: for now unresolved external references are ignored.
+                    _context.UndefinedType(type);
                 }
             }
 
@@ -385,7 +368,7 @@ namespace Zsharp.Semantics
                 < 5 => typeName + "32",
                 < 9 => typeName + "64",
                 _ => throw new NotSupportedException(
-            $"The '{typeName}{index}' Type is not supported."),
+            $"The '{typeName}{bitCount}' Type is not supported."),
             };
 
             var typeDef = FindTypeDefinition(GlobalSymbols!, typeName);
@@ -396,28 +379,20 @@ namespace Zsharp.Semantics
             where T : class
         {
             var templateDef = SymbolTable!.FindDefinition<T>(
-                identifierSite.Identifier!.SymbolName.TemplateDefinitionName, symbolKind);
-
-            if (templateDef is null)
-                templateDef = SymbolTable!.FindDefinition<T>(
-                    identifierSite.Identifier!.SymbolName.GenericDefinitionName, symbolKind);
+                identifierSite.Identifier!.SymbolName.CanonicalName, symbolKind);
 
             return templateDef;
         }
 
-
         private static AstTypeDefinition? FindTypeDefinition(AstSymbolTable symbols, string typeName)
-            => symbols.FindDefinition<AstTypeDefinition>(typeName, AstSymbolKind.Type);
+            => symbols.FindDefinition<AstTypeDefinition>(AstName.ParseFullName(typeName), AstSymbolKind.Type);
 
         private bool MatchFunctionToDefinition(AstFunctionReference function)
         {
-            var symbol = function.Symbol!;
-
-            if (symbol.Definition is null)
-                return false;
+            var symbol = function.Symbol?.DefinitionSymbol;
+            if (symbol is null) return false;
 
             var functionDef = function.FunctionDefinition;
-
             if (functionDef is null)
             {
                 var resolvedDef = AstTypeMatcher.ResolveOverloads(function);
@@ -439,8 +414,8 @@ namespace Zsharp.Semantics
 
         private bool SetToMatch(AstFunctionReference function, AstFunctionDefinition functionDef)
         {
-            Ast.Guard(function.FunctionType.Parameters.Count() ==
-                functionDef.FunctionType.Parameters.Count(), "Number of Parameters don't match between function reference and definition");
+            Ast.Guard(function.FunctionType.Parameters.Count() == functionDef.FunctionType.Parameters.Count(), 
+                "Number of Parameters don't match between function reference and definition");
 
             bool hasReplacements = false;
             var parameters = function.FunctionType.Parameters.ToList();

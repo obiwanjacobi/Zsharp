@@ -96,17 +96,31 @@ An AstIdentifier is basically a combination of a Symbol Name and it's location i
 
 Symbol Names all have the namespace of the Symbol Table they are in (hierarchically). Except for module Symbols definitions, they are located in the Symbol Table where they were referenced but maintain their own namespace hierarchy. Module Symbol references are stored in the same Symbol Table as the referenced module is in, but their namespace has to be overridden to the namespace of the module -not the namespace of the symbol table. We want to keep references in the Symbol Table of the scope they were encountered in (not moving them).
 
-External names can be referenced locally without a namespace. By linking up the Symbols between reference and definition (during the resolve names phase) the actual namespace of the reference should become clear.
+External names are imported preserving their full name and marked as external. When imported into a module the external symbol(s) become(s) available and resolving to definition should find the external symbol(s). External names can be referenced locally without a namespace. By linking up the Symbols between reference and definition (during the resolve names phase) the actual namespace of the reference should become clear. When a full external name is specified in the reference, the module will (probably) not have been imported and that will need to be tried after the normal search has yielded no results.
 
 Native names (local or external) and canonical names both have a namespace and a name.
 Nested external symbols use their declaring type name as a namespace. Both native and canonical names can also have name extensions for template and generic parameters. These extensions are built up during AST traversal and need to be mutable.
 
-AstName: Namespace (string), Name (string), prefix (string), extension (counts)
+AstName: Namespace (string), Name (string), prefix (string), extension (counts or typenames)
 AstSymbolName: Native: (AstName), Canonical: (AstName)
 
 Function (method) names can have prefixes (get_, set_) that are preserved in the canonical name (specifically the '_').
 
 > How are external Methods (Namespace.Type.Function) named?
+
+Template and Generic parameters are not separate in the symbol name of the definition of the type or function that defines them. External generic argument counts 'backtick-number' are converted to the Z# representation `%number`.
+
+Symbol Name resolution for references to its definitions:
+
+- The Symbol Table the reference is located is the starting point for the search up the hierarchy (parents). If the definition is in the same scope the AstSymbol will have its definition set.
+- If the reference is a dotname the path is followed starting from the current SymbolTable (the reference is defined in). If no definition is found, the SymbolTables are scanned for the name the dotname starts with (for instance 'MyModule'). As a last resort the external (imported) modules are searched for the dotname.
+- A template or generic instantiation (`Array<U8>`) needs to be resolved using three parts. First the symbol name (Array) and second the type of symbol (Array is a Type) and third the number of template and/or generic arguments found in the reference.
+
+This puts a `Array<U8>` reference with the `Array%1` symbol definition. The instantiation for `Array<U8>` is added to the same Symbol. This is similar to function overloads. With a `TemplateInstanceAs<T>` function it is possible to select the correct template instantiation for a specific combination of template arguments.
+
+At a later time a search for symbols with template/generic arguments could result in multiple 'overloads' when the argument count is not matched exactly (definition should have equal or more template parameters). This would indicate a partial application of a templated type or function - which should result in a new (generated) templated type or function.
+
+---
 
 When emitting code the Symbol Name is in external format, that is the name formatted to the standard .NET naming convention. An external name already has this format (duh). A Code Attribute will hold the local name if available. The canonical format can always be regenerated from either the .NET name or the local name and is not stored.
 
@@ -126,3 +140,20 @@ External (from assembly)
 - `Namespace.Type` - default naming
 - `Namespace.Type.Member` - member full name
 - `Namespace.Type.Nested...` - nested type naming (recursive)
+
+---
+
+Search Algorithm
+Should it return more than one result?
+
+Not a DotName
+
+- FindSymbolLocal: by Key with fallback without-kind or alias.
+- FindInModules
+- Recurse to parent symbol table.
+
+Is a DotName
+
+- Find the table that is either the namespace of the first part or has the symbol.
+- follow the parts either using the symbols and/or the table hierarchy.
+- check with imported modules
