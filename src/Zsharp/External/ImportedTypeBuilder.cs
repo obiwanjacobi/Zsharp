@@ -94,7 +94,7 @@ namespace Zsharp.External
             }
         }
 
-        // copy over the types to the module
+        // copy the types over to the module
         public void AddTo(AstModuleExternal module)
         {
             if (StructType is not null)

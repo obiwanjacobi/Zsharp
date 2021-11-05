@@ -96,6 +96,9 @@ namespace Zsharp.AST
         public T? DefinitionAs<T>() where T : class
             => _definitions.OfType<T>().SingleOrDefault() ?? Parent?.DefinitionAs<T>();
 
+        public AstSymbol? DefinitionSymbol
+            => HasDefinition ? this : Parent?.DefinitionSymbol;
+
         public bool HasDefinition => _definitions.Count > 0;
 
         public bool HasOverloads => _definitions.Count > 1;

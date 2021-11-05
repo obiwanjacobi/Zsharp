@@ -1,1 +1,1 @@
-b: Bit<4>
+arr = Array<Str>(2)

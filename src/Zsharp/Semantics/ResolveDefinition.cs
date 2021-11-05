@@ -13,24 +13,6 @@ namespace Zsharp.Semantics
             _context = context;
         }
 
-        public override void VisitFile(AstFile file)
-        {
-            var symbolTable = SetSymbolTable(_context.Modules.SymbolTable);
-
-            var externals = file.Symbols.FindSymbols(AstSymbolKind.Module)
-                .Select(s => s.DefinitionAs<AstModuleExternal>())
-                .Where(m => m is not null);
-
-            foreach (var mod in externals)
-            {
-                VisitModuleExternal(mod!);
-            }
-
-            SetSymbolTable(symbolTable);
-
-            base.VisitFile(file);
-        }
-
         public override void VisitExpression(AstExpression expression)
         {
             if (expression.TypeReference is not null)
@@ -407,13 +389,10 @@ namespace Zsharp.Semantics
 
         private bool MatchFunctionToDefinition(AstFunctionReference function)
         {
-            var symbol = function.Symbol!;
-
-            if (symbol.Definition is null)
-                return false;
+            var symbol = function.Symbol?.DefinitionSymbol;
+            if (symbol is null) return false;
 
             var functionDef = function.FunctionDefinition;
-
             if (functionDef is null)
             {
                 var resolvedDef = AstTypeMatcher.ResolveOverloads(function);
@@ -435,8 +414,8 @@ namespace Zsharp.Semantics
 
         private bool SetToMatch(AstFunctionReference function, AstFunctionDefinition functionDef)
         {
-            Ast.Guard(function.FunctionType.Parameters.Count() ==
-                functionDef.FunctionType.Parameters.Count(), "Number of Parameters don't match between function reference and definition");
+            Ast.Guard(function.FunctionType.Parameters.Count() == functionDef.FunctionType.Parameters.Count(), 
+                "Number of Parameters don't match between function reference and definition");
 
             bool hasReplacements = false;
             var parameters = function.FunctionType.Parameters.ToList();

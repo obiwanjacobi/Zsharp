@@ -42,5 +42,27 @@ namespace Zsharp.UnitTests.Semantics
             var typeRef = fn.FunctionType.TypeReference;
             typeRef.Symbol.Definition.Should().NotBeNull();
         }
+
+        [TestMethod]
+        public void ExternalFunctionArray()
+        {
+            const string code =
+                "import Zsharp.Runtime.Types" + Tokens.NewLine +
+                "import System.Console" + Tokens.NewLine +
+                "arr = Array<Str>(2)" + Tokens.NewLine +
+                "WriteLine(arr)" + Tokens.NewLine
+                ;
+
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .AddSystemConsole()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
+
+            var fn = file.CodeBlock.LineAt<AstFunctionReference>(0);
+            var typeRef = fn.FunctionType.TypeReference;
+            typeRef.Symbol.Definition.Should().NotBeNull();
+        }
     }
 }

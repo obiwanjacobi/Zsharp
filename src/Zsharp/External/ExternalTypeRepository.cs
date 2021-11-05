@@ -77,12 +77,15 @@ namespace Zsharp.External
             { "Int16", AstIdentifierIntrinsic.I16 },
             { "Int32", AstIdentifierIntrinsic.I32 },
             { "Int64", AstIdentifierIntrinsic.I64 },
+            { "Char", AstIdentifierIntrinsic.C16 },
             { "Half", AstIdentifierIntrinsic.F16 },
             { "Single", AstIdentifierIntrinsic.F32 },
             { "Double", AstIdentifierIntrinsic.F64 },
-            { "String", AstIdentifierIntrinsic.F96 },
+            { "Decimal", AstIdentifierIntrinsic.F96 },
+            { "String", AstIdentifierIntrinsic.Str },
             { "Boolean", AstIdentifierIntrinsic.Bool },
-            { "Void", AstIdentifierIntrinsic.Void }
+            { "Void", AstIdentifierIntrinsic.Void },
+            { "Array", AstIdentifierIntrinsic.Array }
         };
     }
 }
