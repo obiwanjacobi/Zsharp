@@ -24,7 +24,7 @@ namespace Zsharp.AST
 
             _templateParameters.Add(templateParameter);
             templateParameter.SetParent(this);
-            Identifier!.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
+            Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
 
             return true;
         }
@@ -42,7 +42,7 @@ namespace Zsharp.AST
 
             _genericParameters.Add(genericParameter);
             genericParameter.SetParent(this);
-            Identifier!.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
+            Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
 
             return true;
         }

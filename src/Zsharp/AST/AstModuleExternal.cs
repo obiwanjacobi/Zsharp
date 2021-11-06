@@ -13,7 +13,7 @@
 
         public AstSymbolTable Symbols { get; }
 
-        public AstName ExternalName => Identifier!.SymbolName.NativeName;
+        public AstName ExternalName => Identifier.SymbolName.NativeName;
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitModuleExternal(this);
@@ -43,7 +43,7 @@
         public void AddAlias(AstName symbolName, string alias)
         {
             var symbol = Symbols.FindSymbol(symbolName, AstSymbolKind.Unknown);
-            Ast.Guard(symbol, $"No symbol for '{symbol}' was found in external module {Identifier!.NativeFullName}.");
+            Ast.Guard(symbol, $"No symbol for '{symbol}' was found in external module {Identifier.NativeFullName}.");
             symbol!.TryAddAlias(alias);
         }
 

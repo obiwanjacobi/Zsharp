@@ -22,6 +22,9 @@ namespace Zsharp.AST
             => visitor.VisitTypeFieldInitialization(this);
 
         public override void VisitChildren(AstVisitor visitor)
-            => Expression?.Accept(visitor);
+        {
+            if (HasExpression)
+                Expression.Accept(visitor);
+        }
     }
 }

@@ -39,7 +39,9 @@ namespace Zsharp.AST
         }
 
         public string OverloadKey =>
-            String.Join(String.Empty, _parameters.Select(p => p.TypeReference?.Identifier?.SymbolName.CanonicalName.FullName));
+            String.Join(String.Empty, _parameters
+                .Where(p => p.HasTypeReference)
+                .Select(p => p.TypeReference.Identifier.SymbolName.CanonicalName.FullName));
 
         public override AstTypeReferenceFunction MakeCopy()
         {

@@ -23,10 +23,10 @@ namespace Zsharp.AST
         public void Instantiate(AstTypeReferenceType type)
         {
             Ast.Guard(type.TemplateParameters.Count() == TemplateDefinition.TemplateParameters.Count(),
-                $"The number of template parameters do not match the TemplateDefinition {TemplateDefinition.Identifier!.NativeFullName}");
+                $"The number of template parameters do not match the TemplateDefinition {TemplateDefinition.Identifier.NativeFullName}");
 
             Context = type.Context;
-            this.SetIdentifier(type.Identifier!.MakeCopy());
+            this.SetIdentifier(type.Identifier.MakeCopy());
 
             _templateArguments = new AstTemplateArgumentMap(
                 TemplateDefinition.TemplateParameters, type.TemplateParameters);
@@ -34,15 +34,15 @@ namespace Zsharp.AST
             foreach (var field in TemplateDefinition.Fields)
             {
                 var fieldDef = new AstTypeDefinitionStructField();
-                fieldDef.SetIdentifier(field.Identifier!.MakeCopy());
+                fieldDef.SetIdentifier(field.Identifier.MakeCopy());
                 if (field.IsTemplate)
                 { 
-                    var templateArgument = _templateArguments.LookupArgument(field.TypeReference!.Identifier!);
-                    Ast.Guard(templateArgument, $"No Template Argument was found for {field.TypeReference!.Identifier!.CanonicalFullName}");
-                    fieldDef.SetTypeReference(templateArgument!.TypeReference!.MakeCopy());
+                    var templateArgument = _templateArguments.LookupArgument(field.TypeReference.Identifier);
+                    Ast.Guard(templateArgument, $"No Template Argument was found for {field.TypeReference.Identifier.CanonicalFullName}");
+                    fieldDef.SetTypeReference(templateArgument!.TypeReference.MakeCopy());
                 }
                 else
-                    fieldDef.SetTypeReference(field.TypeReference!.MakeCopy());
+                    fieldDef.SetTypeReference(field.TypeReference.MakeCopy());
 
                 this.AddField(fieldDef);
                 type.Symbol!.SymbolTable.Add(fieldDef);

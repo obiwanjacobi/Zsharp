@@ -45,6 +45,6 @@ namespace Zsharp.AST
         }
 
         protected static void AddIntrinsicSymbol(AstSymbolTable symbols, AstTypeDefinitionIntrinsic type)
-            => symbols.AddSymbol(type.Identifier!.SymbolName.CanonicalName.FullName, AstSymbolKind.Type, type);
+            => symbols.AddSymbol(type.Identifier.SymbolName.CanonicalName.FullName, AstSymbolKind.Type, type);
     }
 }

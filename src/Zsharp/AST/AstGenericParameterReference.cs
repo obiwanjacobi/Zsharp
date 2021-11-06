@@ -13,7 +13,7 @@ namespace Zsharp.AST
         public AstGenericParameterReference(AstGenericParameterReference parameterToCopy)
             : base(parameterToCopy)
         {
-            this.SetTypeReference(parameterToCopy.TypeReference!.MakeCopy());
+            this.SetTypeReference(parameterToCopy.TypeReference.MakeCopy());
         }
 
         internal AstGenericParameterReference(ParserRuleContext context)

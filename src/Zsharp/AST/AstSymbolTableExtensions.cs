@@ -25,7 +25,7 @@
         public static AstSymbol? FindSymbol(this AstSymbolTable symbolTable, AstIdentifier identifier, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
             if (kind == AstSymbolKind.NotSet)
-                kind = identifier!.IdentifierKind.ToSymbolKind();
+                kind = identifier.IdentifierKind.ToSymbolKind();
 
             return symbolTable.FindSymbol(identifier.SymbolName.CanonicalName, kind);
         }

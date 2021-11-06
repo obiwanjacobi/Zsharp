@@ -609,7 +609,7 @@ namespace Zsharp.AST
                 }
                 else
                 {
-                    value = (int)field.Expression!.RHS!.LiteralNumeric!.Value;
+                    value = (int)field.Expression.RHS.LiteralNumeric!.Value;
                 }
                 value++;
             }

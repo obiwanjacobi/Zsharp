@@ -23,7 +23,7 @@ namespace Zsharp.EmitCS
                     return "void";
                 }
 
-                return astType.Identifier!.SymbolName.CanonicalName.FullName;
+                return astType.Identifier.SymbolName.CanonicalName.FullName;
             }
             return String.Empty;
         }

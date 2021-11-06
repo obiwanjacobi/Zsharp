@@ -50,7 +50,7 @@ namespace Zsharp.Semantics
                     Ast.Guard(typeRef, "Expression yielded no Type.");
                     // TODO: depending on the operator the type may need to be enlarged.
                     expression.SetTypeReference(typeRef!.MakeCopy());
-                    Visit(expression.TypeReference!);
+                    Visit(expression.TypeReference);
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace Zsharp.Semantics
             {
                 var expr = operand.Expression;
                 Ast.Guard(expr.TypeReference, "AstExpression.TypeReference not set.");
-                operand.SetTypeReference(expr.TypeReference!);
+                operand.SetTypeReference(expr.TypeReference);
                 return;
             }
 
@@ -171,7 +171,7 @@ namespace Zsharp.Semantics
 
                 // It is set only when type is explicitly in source code, or has been inferred.
                 var varDef = new AstVariableDefinition(typeRef);
-                varDef.SetIdentifier(varRef.Identifier!);
+                varDef.SetIdentifier(varRef.Identifier);
                 varDef.SetSymbol(symbol!);
                 symbol!.RemoveReference(varRef);
                 AstSymbolReferenceRemover.RemoveReference(varRef);
@@ -206,7 +206,7 @@ namespace Zsharp.Semantics
                     assign.Variable.SetTypeReference(typeRef.MakeCopy());
                 }
 
-                Visit(assign.Variable.TypeReference!);
+                Visit(assign.Variable.TypeReference);
             }
         }
 
@@ -301,7 +301,7 @@ namespace Zsharp.Semantics
 
             if (!parameter.HasTypeReference)
             {
-                parameter.SetTypeReference(parameter.Expression!.TypeReference!.MakeCopy());
+                parameter.SetTypeReference(parameter.Expression.TypeReference.MakeCopy());
             }
         }
 
@@ -428,7 +428,7 @@ namespace Zsharp.Semantics
                     parameter.TypeReference.IsInferred)
                 {
                     var paramDef = parameterDefs[i];
-                    var typeRef = paramDef.TypeReference!.MakeCopy();
+                    var typeRef = paramDef.TypeReference.MakeCopy();
                     var oldTypeRef = parameter.ReplaceTypeReference(typeRef);
                     if (oldTypeRef is not null)
                         AstSymbolReferenceRemover.RemoveReference(oldTypeRef);
@@ -441,7 +441,7 @@ namespace Zsharp.Semantics
                     function.FunctionType.TypeReference.IsInferred) &&
                 functionDef.FunctionType.HasTypeReference)
             {
-                var typeRef = functionDef.FunctionType.TypeReference!.MakeCopy();
+                var typeRef = functionDef.FunctionType.TypeReference.MakeCopy();
                 var oldTypeRef = function.FunctionType.ReplaceTypeReference(typeRef);
                 if (oldTypeRef is not null)
                     AstSymbolReferenceRemover.RemoveReference(oldTypeRef);

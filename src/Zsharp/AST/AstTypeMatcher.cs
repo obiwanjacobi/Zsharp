@@ -23,8 +23,8 @@ namespace Zsharp.AST
 
         public static int Rank(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
         {
-            var sources = functionRef.FunctionType.Parameters.Select(p => p.TypeReference!).ToList();
-            var targets = functionDef.FunctionType.Parameters.Select(p => p.TypeReference!).ToList();
+            var sources = functionRef.FunctionType.Parameters.Select(p => p.TypeReference).ToList();
+            var targets = functionDef.FunctionType.Parameters.Select(p => p.TypeReference).ToList();
 
             // TODO: check for default values on targets
             if (sources.Count != targets.Count) return 0;
@@ -55,8 +55,8 @@ namespace Zsharp.AST
 
         public static int Rank(AstTypeReference source, AstTypeReference target)
         {
-            var sourceName = source.Identifier!.SymbolName.CanonicalName.FullName;
-            var targetName = target.Identifier!.SymbolName.CanonicalName.FullName;
+            var sourceName = source.Identifier.SymbolName.CanonicalName.FullName;
+            var targetName = target.Identifier.SymbolName.CanonicalName.FullName;
 
             if (sourceName == targetName)
                 return 100;

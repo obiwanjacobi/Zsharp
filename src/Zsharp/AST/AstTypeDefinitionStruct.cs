@@ -25,7 +25,7 @@ namespace Zsharp.AST
             var success = base.TrySetIdentifier(identifier);
 
             if (success)
-                Symbols.SetName(identifier!.SymbolName.CanonicalName.FullName);
+                Symbols.SetName(identifier.SymbolName.CanonicalName.FullName);
 
             return success;
         }

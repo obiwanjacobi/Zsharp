@@ -83,7 +83,7 @@ namespace Zsharp.EmitCS
                 if (assign.IsTopLevel())
                 {
                     var field = Context.ModuleClass.ModuleClass.Fields
-                        .Single(f => f.Name == varDef.Identifier!.SymbolName.CanonicalName.FullName);
+                        .Single(f => f.Name == varDef.Identifier.SymbolName.CanonicalName.FullName);
 
                     builderScope = Context.SetBuilder(field.ValueBuilder);
                 }
@@ -95,7 +95,7 @@ namespace Zsharp.EmitCS
 
             if (assign.HasFields)
             {
-                Ast.Guard(assign.Variable!.TypeReference!.TypeDefinition!.IsStruct, "Expect Struct.");
+                Ast.Guard(assign.Variable.TypeReference.TypeDefinition!.IsStruct, "Expect Struct.");
 
                 Context.CodeBuilder.CsBuilder.AppendLine(
                     $" = new {assign.Variable.TypeReference.ToCode()}");
@@ -127,7 +127,7 @@ namespace Zsharp.EmitCS
             if (assign is not null)
             {
                 Context.CodeBuilder.CsBuilder.Append(
-                    $"{field.Identifier!.SymbolName.CanonicalName.FullName} = ");
+                    $"{field.Identifier.SymbolName.CanonicalName.FullName} = ");
                 field.VisitChildren(this);
                 Context.CodeBuilder.CsBuilder.AppendLine(",");
             }
@@ -153,7 +153,7 @@ namespace Zsharp.EmitCS
                 Context.CodeBuilder.StartBranch(branch);
                 Context.CodeBuilder.CsBuilder.Append("(");
 
-                Visit(branch.Expression!);
+                Visit(branch.Expression);
 
                 Context.CodeBuilder.CsBuilder.StartScope(")");
 

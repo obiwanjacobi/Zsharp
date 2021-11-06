@@ -25,6 +25,9 @@ namespace Zsharp.AST
             => visitor.VisitTypeDefinitionEnumOption(this);
 
         public override void VisitChildren(AstVisitor visitor)
-            => Expression?.Accept(visitor);
+        {
+            if (HasExpression)
+                Expression.Accept(visitor);
+        }
     }
 }

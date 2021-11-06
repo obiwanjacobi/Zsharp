@@ -14,7 +14,7 @@
 
         public override bool IsExternal => true;
 
-        public AstName ExternalName => Identifier!.SymbolName.NativeName;
+        public AstName ExternalName => Identifier.SymbolName.NativeName;
 
         public override void Accept(AstVisitor visitor)
         {

@@ -63,7 +63,7 @@ namespace Zsharp.AST
             _genericParameters.Add(genericParameter);
             genericParameter.SetParent(this);
             if (genericParameter.HasTypeReference)
-                Identifier!.SymbolName.AddTemplateParameter(genericParameter.TypeReference.Identifier.NativeFullName);
+                Identifier.SymbolName.AddTemplateParameter(genericParameter.TypeReference.Identifier.NativeFullName);
 
             return true;
         }

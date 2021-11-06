@@ -19,7 +19,7 @@ namespace Zsharp.AST
         public void Instantiate(AstTypeReferenceType type)
         {
             Context = type.Context;
-            this.SetIdentifier(type.Identifier!.MakeCopy());
+            this.SetIdentifier(type.Identifier.MakeCopy());
 
             _templateArguments = new AstTemplateArgumentMap(
                 TypeDefinition.TemplateParameters, type.TemplateParameters);

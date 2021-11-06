@@ -127,7 +127,7 @@ namespace Zsharp.EmitCS
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
-            var name = variable.Identifier!.SymbolName.CanonicalName.FullName;
+            var name = variable.Identifier.SymbolName.CanonicalName.FullName;
             _builder.Append(name);
         }
 

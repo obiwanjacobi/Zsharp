@@ -15,7 +15,7 @@ namespace Zsharp.EmitCS
 
         public static ClassBuilder Create(EmitContext context, AstModuleImpl module)
         {
-            var moduleClass = new CSharp.Class(module.Identifier!.SymbolName.CanonicalName.FullName, ClassKeyword.Class)
+            var moduleClass = new CSharp.Class(module.Identifier.SymbolName.CanonicalName.FullName, ClassKeyword.Class)
             {
                 AccessModifiers = module.HasExports
                     ? AccessModifiers.Public
@@ -31,7 +31,7 @@ namespace Zsharp.EmitCS
 
         public void AddField(AstVariableDefinition variable)
         {
-            var field = new CSharp.Field(variable.Identifier!.SymbolName.CanonicalName.FullName, variable.TypeReference.ToCode())
+            var field = new CSharp.Field(variable.Identifier.SymbolName.CanonicalName.FullName, variable.TypeReference.ToCode())
             {
                 AccessModifiers = AccessModifiers.Private,
                 FieldModifiers = FieldModifiers.Static,
@@ -42,7 +42,7 @@ namespace Zsharp.EmitCS
 
         public CSharp.Enum AddEnum(AstTypeDefinitionEnum enumDef)
         {
-            var enumType = new CSharp.Enum(enumDef.Identifier!.SymbolName.CanonicalName.FullName)
+            var enumType = new CSharp.Enum(enumDef.Identifier.SymbolName.CanonicalName.FullName)
             {
                 AccessModifiers = enumDef.Symbol!.SymbolLocality == AstSymbolLocality.Exported
                     ? AccessModifiers.Public : AccessModifiers.Private,
@@ -51,7 +51,7 @@ namespace Zsharp.EmitCS
 
             foreach (var field in enumDef.Fields)
             {
-                var option = new CSharp.EnumOption(field.Identifier!.SymbolName.CanonicalName.FullName)
+                var option = new CSharp.EnumOption(field.Identifier.SymbolName.CanonicalName.FullName)
                 {
                     Value = field.Expression.ToCode()
                 };
@@ -94,7 +94,7 @@ namespace Zsharp.EmitCS
         {
             var method = new CSharp.Method(function.Identifier.SymbolName.CanonicalName.FullName, function.FunctionType.TypeReference.ToCode())
             {
-                AccessModifiers = function.Symbol!.SymbolLocality == AstSymbolLocality.Exported
+                AccessModifiers = function.Symbol.SymbolLocality == AstSymbolLocality.Exported
                     ? AccessModifiers.Public : AccessModifiers.Private,
                 MethodModifiers = MethodModifiers.Static,
             };
@@ -103,7 +103,7 @@ namespace Zsharp.EmitCS
             {
                 method.AddParameter(
                     new CSharp.Parameter(
-                        parameter.Identifier!.SymbolName.CanonicalName.FullName,
+                        parameter.Identifier.SymbolName.CanonicalName.FullName,
                         parameter.TypeReference.ToCode()
                     )
                 );

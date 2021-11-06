@@ -37,7 +37,7 @@ namespace Zsharp.AST
                 _current.RevertCurrent();
                 _current.RevertCurrent();
 
-                instanceFunction.SetIdentifier(functionRef.Identifier!);
+                instanceFunction.SetIdentifier(functionRef.Identifier);
 
                 AstSymbolTable symbols;
                 if (templateFunctionDef is IAstSymbolTableSite symbolSite)
@@ -223,7 +223,7 @@ namespace Zsharp.AST
             var op = new AstExpressionOperand(child!);
 
             _current.SetCurrent(op);
-            CloneTypeReference(operand.TypeReference!);
+            CloneTypeReference(operand.TypeReference);
             _current.RevertCurrent();
 
             var exp = _current.GetCurrent<AstExpression>();
@@ -259,7 +259,7 @@ namespace Zsharp.AST
             var v = CloneVariable(assign.Variable!);
             a.SetVariable(v);
 
-            VisitExpression(assign.Expression!);
+            VisitExpression(assign.Expression);
             _current.RevertCurrent();
         }
 
@@ -392,7 +392,7 @@ namespace Zsharp.AST
             var templateArgument = _argumentMap?.LookupArgument(type.Identifier);
             if (templateArgument is not null)
             {
-                typeRef = templateArgument.TypeReference!.MakeCopy();
+                typeRef = templateArgument.TypeReference.MakeCopy();
             }
             else if (type.TypeDefinition is IAstTemplateSite<AstTemplateParameterDefinition> templateDef &&
                 templateDef.IsTemplate)
@@ -404,7 +404,7 @@ namespace Zsharp.AST
                     templateArgument = _argumentMap?.LookupArgument(templParamDef.Identifier);
                     if (templateArgument is not null)
                     {
-                        var templParam = new AstTemplateParameterReference(templateArgument.TypeReference!.MakeCopy());
+                        var templParam = new AstTemplateParameterReference(templateArgument.TypeReference.MakeCopy());
                         typeRefType.AddTemplateParameter(templParam);
                     }
                     else

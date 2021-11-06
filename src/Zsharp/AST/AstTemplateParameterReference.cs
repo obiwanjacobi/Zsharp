@@ -17,7 +17,7 @@ namespace Zsharp.AST
         public AstTemplateParameterReference(AstTemplateParameterReference parameterToCopy)
             : base(parameterToCopy)
         {
-            this.SetTypeReference(parameterToCopy.TypeReference!.MakeCopy());
+            this.SetTypeReference(parameterToCopy.TypeReference.MakeCopy());
         }
 
         public bool HasTypeReference => _typeReference is not null;

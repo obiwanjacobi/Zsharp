@@ -40,7 +40,9 @@ namespace Zsharp.AST
         }
 
         public string OverloadKey =>
-            String.Join(String.Empty, _parameters.Select(p => p.TypeReference?.Identifier?.SymbolName.CanonicalName.FullName));
+            String.Join(String.Empty, _parameters
+                .Where(p => p.HasTypeReference)
+                .Select(p => p.TypeReference.Identifier.SymbolName.CanonicalName.FullName));
 
         public bool HasTypeReference => _typeReference is not null;
 
@@ -80,7 +82,7 @@ namespace Zsharp.AST
             }
 
             var symbolName = AstSymbolName.Parse(ToString());
-            Identifier!.SymbolName = symbolName;
+            Identifier.SymbolName = symbolName;
         }
 
         public override string ToString()

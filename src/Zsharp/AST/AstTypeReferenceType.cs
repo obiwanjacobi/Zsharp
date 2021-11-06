@@ -29,10 +29,10 @@ namespace Zsharp.AST
         public static AstTypeReferenceType From(AstTypeDefinition typeDef)
         {
             Ast.Guard(typeDef is not null, "TypeDefinition is null.");
-            Ast.Guard(typeDef!.Identifier is not null, "TypeDefinition has no Identifier.");
+            Ast.Guard(typeDef!.HasIdentifier, "TypeDefinition has no Identifier.");
 
             var typeRef = new AstTypeReferenceType();
-            typeRef.SetIdentifier(typeDef.Identifier!);
+            typeRef.SetIdentifier(typeDef.Identifier);
             if (typeDef.Symbol is not null)
             {
                 typeRef.TrySetSymbol(typeDef.Symbol);

@@ -30,7 +30,8 @@ namespace Zsharp.AST
         public override void VisitChildren(AstVisitor visitor)
         {
             base.VisitChildren(visitor);
-            Expression?.Accept(visitor);
+            if (HasExpression)
+                Expression.Accept(visitor);
         }
     }
 }
