@@ -29,10 +29,12 @@ namespace Zsharp.AST
             return Ast.SafeSet(ref _identifier, identifier);
         }
 
+        public bool HasSymbol => _symbol is not null;
+
         private AstSymbol? _symbol;
-        public AstSymbol? Symbol
+        public AstSymbol Symbol
         {
-            get { return _symbol; }
+            get { return _symbol ?? throw new InternalErrorException("Symbol was not set."); }
             protected set { _symbol = value; }
         }
 

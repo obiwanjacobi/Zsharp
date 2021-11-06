@@ -10,49 +10,57 @@
 
         public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
         {
-            parameter.Symbol?.RemoveReference(parameter);
+            if (parameter.HasSymbol)
+                parameter.Symbol.RemoveReference(parameter);
             base.VisitFunctionParameterReference(parameter);
         }
 
         public override void VisitFunctionReference(AstFunctionReference function)
         {
-            function.Symbol?.RemoveReference(function);
+            if (function.HasSymbol)
+                function.Symbol.RemoveReference(function);
             base.VisitFunctionReference(function);
         }
 
         public override void VisitTemplateParameterReference(AstTemplateParameterReference templateParameter)
         {
-            templateParameter.Symbol?.RemoveReference(templateParameter);
+            if (templateParameter.HasSymbol)
+                templateParameter.Symbol.RemoveReference(templateParameter);
             base.VisitTemplateParameterReference(templateParameter);
         }
 
         public override void VisitTypeFieldReferenceEnumOption(AstTypeFieldReferenceEnumOption enumOption)
         {
-            enumOption.Symbol?.RemoveReference(enumOption);
+            if (enumOption.HasSymbol)
+                enumOption.Symbol?.RemoveReference(enumOption);
             base.VisitTypeFieldReferenceEnumOption(enumOption);
         }
 
         public override void VisitTypeFieldReferenceStructField(AstTypeFieldReferenceStructField structField)
         {
-            structField.Symbol?.RemoveReference(structField);
+            if (structField.HasSymbol)
+                structField.Symbol?.RemoveReference(structField);
             base.VisitTypeFieldReferenceStructField(structField);
         }
 
         public override void VisitTypeReferenceFunction(AstTypeReferenceFunction function)
         {
-            function.Symbol?.RemoveReference(function);
+            if (function.HasSymbol)
+                function.Symbol?.RemoveReference(function);
             base.VisitTypeReferenceFunction(function);
         }
 
         public override void VisitTypeReferenceType(AstTypeReferenceType type)
         {
-            type.Symbol?.RemoveReference(type);
+            if (type.HasSymbol)
+                type.Symbol?.RemoveReference(type);
             base.VisitTypeReferenceType(type);
         }
 
         public override void VisitVariableReference(AstVariableReference variable)
         {
-            variable.Symbol?.RemoveReference(variable);
+            if (variable.HasSymbol)
+                variable.Symbol?.RemoveReference(variable);
             base.VisitVariableReference(variable);
         }
     }

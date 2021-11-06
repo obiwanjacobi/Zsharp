@@ -63,7 +63,7 @@ namespace Zsharp.AST
 
         public void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
-            Ast.Guard(Symbol is null, "Symbol already set. Call CreateSymbols only once.");
+            Ast.Guard(!HasSymbol, "Symbol already set. Call CreateSymbols only once.");
             var contextSymbols = parentSymbols ?? functionSymbols;
 
             contextSymbols.TryAdd(TypeReference);

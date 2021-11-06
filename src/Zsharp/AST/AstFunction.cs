@@ -13,7 +13,7 @@ namespace Zsharp.AST
 
         public uint Indent { get; set; }
 
-        public bool HasIdentifier => _identifier != null;
+        public bool HasIdentifier => _identifier is not null;
 
         private AstIdentifier? _identifier;
         public AstIdentifier Identifier 
@@ -25,10 +25,12 @@ namespace Zsharp.AST
             return Ast.SafeSet(ref _identifier, identifier);
         }
 
+        public bool HasSymbol => _symbol is not null;
+
         private AstSymbol? _symbol;
-        public AstSymbol? Symbol
+        public AstSymbol Symbol
         {
-            get { return _symbol; }
+            get { return _symbol ?? throw new InternalErrorException("Symbol was not set."); }
             protected set { _symbol = value; }
         }
 

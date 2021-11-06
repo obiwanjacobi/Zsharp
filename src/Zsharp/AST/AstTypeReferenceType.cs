@@ -21,7 +21,8 @@ namespace Zsharp.AST
         public override AstTypeReferenceType MakeCopy()
         {
             var typeRef = new AstTypeReferenceType(this);
-            Symbol?.AddNode(typeRef);
+            if (HasSymbol)
+                Symbol.AddNode(typeRef);
             return typeRef;
         }
 

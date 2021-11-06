@@ -2,7 +2,8 @@
 {
     public interface IAstSymbolSite
     {
-        AstSymbol? Symbol { get; }
+        bool HasSymbol { get; }
+        AstSymbol Symbol { get; }
         bool TrySetSymbol(AstSymbol? symbolEntry);
     }
 
@@ -17,7 +18,7 @@
 
         public static void ThrowIfSymbolNotSet(this IAstSymbolSite symbolEntrySite)
         {
-            if (symbolEntrySite.Symbol is null)
+            if (!symbolEntrySite.HasSymbol)
                 throw new InternalErrorException("Symbol not set.");
         }
     }

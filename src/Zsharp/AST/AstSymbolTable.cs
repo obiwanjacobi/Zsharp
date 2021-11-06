@@ -71,7 +71,7 @@ namespace Zsharp.AST
                 symbol.AddNode(node);
 
                 if (node is IAstSymbolSite symbolSite &&
-                    symbolSite.Symbol is null)
+                    !symbolSite.HasSymbol)
                     symbolSite.SetSymbol(symbol);
 
                 if (node is IAstExternalNameSite externalName)

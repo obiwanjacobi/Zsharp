@@ -16,9 +16,13 @@ namespace Zsharp.AST
             : base(AstNodeKind.Type)
         {
             Context = typeToCopy.Context;
-            this.SetIdentifier(typeToCopy.Identifier.MakeCopy());
-            Identifier.SymbolName.Postfix = string.Empty;
-            TrySetSymbol(typeToCopy.Symbol);
+            if (typeToCopy.HasIdentifier)
+            { 
+                this.SetIdentifier(typeToCopy.Identifier.MakeCopy());
+                Identifier.SymbolName.Postfix = string.Empty;
+            }
+            if (typeToCopy.HasSymbol)
+                TrySetSymbol(typeToCopy.Symbol);
             IsInferred = typeToCopy.IsInferred;
         }
 

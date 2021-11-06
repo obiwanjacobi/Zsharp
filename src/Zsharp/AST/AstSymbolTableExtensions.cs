@@ -76,8 +76,8 @@
         public static AstSymbol? TryAdd<T>(this AstSymbolTable symbolTable, T? node)
             where T : AstNode, IAstIdentifierSite
         {
-            if (node is not null &&
-                (node as IAstSymbolSite)?.Symbol is null)
+            if (node is IAstSymbolSite symbolSite &&
+                !symbolSite.HasSymbol)
             {
                 return Add(symbolTable, node);
             }

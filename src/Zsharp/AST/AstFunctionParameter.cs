@@ -13,7 +13,7 @@ namespace Zsharp.AST
 
         public ParserRuleContext? Context { get; }
 
-        public bool HasIdentifier => _identifier != null;
+        public bool HasIdentifier => _identifier is not null;
 
         private AstIdentifier? _identifier;
         public AstIdentifier Identifier
@@ -31,8 +31,10 @@ namespace Zsharp.AST
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);
 
+        public bool HasSymbol => _symbol is not null;
+
         private AstSymbol? _symbol;
-        public AstSymbol? Symbol => _symbol;
+        public AstSymbol Symbol => _symbol ?? throw new InternalErrorException("Symbol was not set.");
 
         public virtual bool TrySetSymbol(AstSymbol? symbol)
             => Ast.SafeSet(ref _symbol, symbol);

@@ -37,7 +37,7 @@ namespace Zsharp.AST
 
         public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
-            Ast.Guard(Symbol is null, "Symbol already set. Call CreateSymbols only once.");
+            Ast.Guard(!HasSymbol, "Symbol already set. Call CreateSymbols only once.");
 
             FunctionType.CreateSymbols(functionSymbols, parentSymbols);
 
