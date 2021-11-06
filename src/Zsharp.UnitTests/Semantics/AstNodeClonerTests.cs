@@ -62,7 +62,7 @@ namespace Zsharp.UnitTests.Semantics
             if (origin is IAstTypeReferenceSite trs)
                 AssertEquivalent(((IAstTypeReferenceSite)cloned).TypeReference, trs.TypeReference);
 
-            if (origin is IAstCodeBlockSite cbs)
+            if (origin is IAstCodeBlockSite cbs && cbs.HasCodeBlock)
                 AssertEquivalent(((IAstCodeBlockSite)cloned).CodeBlock, cbs.CodeBlock);
 
             return false;

@@ -21,10 +21,14 @@ namespace Zsharp.AST
                 .Select(s => s.DefinitionAs<AstFunctionDefinitionImpl>())
                 .Where(f => f is not null)!;
 
-        public AstSymbolTable Symbols => CodeBlock!.Symbols;
+        public AstSymbolTable Symbols
+            => CodeBlock?.Symbols ?? throw new InternalErrorException("CodeBlock was not set. No SymbolTable available.");
+
+        public bool HasCodeBlock => _codeBlock is not null;
 
         private AstCodeBlock? _codeBlock;
-        public AstCodeBlock? CodeBlock => _codeBlock;
+        public AstCodeBlock CodeBlock
+            => _codeBlock ?? throw new InternalErrorException("CodeBlock was not set.");
 
         public bool HasExports
             => _codeBlock!.Symbols.Symbols.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);

@@ -10,8 +10,11 @@ namespace Zsharp.AST
             : base(context)
         { }
 
+        public bool HasCodeBlock => _codeBlock is not null;
+
         private AstCodeBlock? _codeBlock;
-        public AstCodeBlock? CodeBlock => _codeBlock;
+        public AstCodeBlock CodeBlock
+            => _codeBlock ?? throw new InternalErrorException("CodeBlock was not set.");
 
         public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
         {
@@ -27,10 +30,9 @@ namespace Zsharp.AST
         {
             get
             {
-                var codeBlock = CodeBlock;
-                if (codeBlock is not null)
+                if (HasCodeBlock)
                 {
-                    return codeBlock.Symbols;
+                    return CodeBlock.Symbols;
                 }
 
                 // When the Node Builder is building up the function definition,

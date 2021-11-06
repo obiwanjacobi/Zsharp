@@ -13,8 +13,11 @@ namespace Zsharp.AST
             : base(branchKind)
         { }
 
+        public bool HasCodeBlock => _codeBlock is not null;
+
         private AstCodeBlock? _codeBlock;
-        public AstCodeBlock? CodeBlock => _codeBlock;
+        public AstCodeBlock CodeBlock
+            => _codeBlock ?? throw new InternalErrorException("CodeBlock was not set.");
 
         public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
         {

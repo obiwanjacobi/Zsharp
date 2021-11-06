@@ -2,7 +2,8 @@
 {
     public interface IAstCodeBlockSite
     {
-        AstCodeBlock? CodeBlock { get; }
+        bool HasCodeBlock { get; }
+        AstCodeBlock CodeBlock { get; }
         bool TrySetCodeBlock(AstCodeBlock? codeBlock);
     }
 
