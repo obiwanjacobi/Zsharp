@@ -83,7 +83,7 @@ namespace Zsharp.AST
 
         public AstSymbol AddSymbol(IAstIdentifierSite identifierSite, AstSymbolKind kind, AstNode node)
         {
-            var name = identifierSite.Identifier?.SymbolName.CanonicalName.FullName
+            var name = identifierSite.Identifier.SymbolName.CanonicalName.FullName
                 ?? throw new ArgumentException("No identifier name.", nameof(identifierSite));
 
             return AddSymbol(name, kind, node);

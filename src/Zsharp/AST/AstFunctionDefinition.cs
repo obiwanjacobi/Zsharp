@@ -52,13 +52,13 @@ namespace Zsharp.AST
 
         public virtual bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
         {
-            Ast.Guard(Identifier, "Identifier not set - cannot register template parameter.");
+            Ast.Guard(HasIdentifier, "Identifier not set - cannot register template parameter.");
             if (templateParameter is null)
                 return false;
 
             _templateParameters.Add(templateParameter);
             templateParameter.SetParent(this);
-            Identifier!.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
+            Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
 
             return true;
         }
@@ -70,13 +70,13 @@ namespace Zsharp.AST
 
         public virtual bool TryAddGenericParameter(AstGenericParameterDefinition genericParameter)
         {
-            Ast.Guard(Identifier, "Identifier not set - cannot register generic parameter.");
+            Ast.Guard(HasIdentifier, "Identifier not set - cannot register generic parameter.");
             if (genericParameter is null)
                 return false;
 
             _genericParameters.Add(genericParameter);
             genericParameter.SetParent(this);
-            Identifier!.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
+            Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
 
             return true;
         }
@@ -89,7 +89,7 @@ namespace Zsharp.AST
 
         public override string ToString()
         {
-            var txt = new StringBuilder(Identifier?.SymbolName.CanonicalName.FullName);
+            var txt = new StringBuilder(Identifier.SymbolName.CanonicalName.FullName);
             if (IsTemplate)
             {
                 txt.Append('<');

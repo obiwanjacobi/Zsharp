@@ -90,7 +90,7 @@ namespace Zsharp.EmitCS
 
         public CSharp.Method AddFunction(AstFunctionDefinition function)
         {
-            var method = new CSharp.Method(function.Identifier!.SymbolName.CanonicalName.FullName, function.FunctionType.TypeReference.ToCode())
+            var method = new CSharp.Method(function.Identifier.SymbolName.CanonicalName.FullName, function.FunctionType.TypeReference.ToCode())
             {
                 AccessModifiers = function.Symbol!.SymbolLocality == AstSymbolLocality.Exported
                     ? AccessModifiers.Public : AccessModifiers.Private,

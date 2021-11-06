@@ -2,7 +2,8 @@
 {
     public interface IAstIdentifierSite
     {
-        AstIdentifier? Identifier { get; }
+        bool HasIdentifier { get; }
+        AstIdentifier Identifier { get; }
         bool TrySetIdentifier(AstIdentifier identifier);
     }
 
@@ -16,7 +17,9 @@
         }
 
         public static void ThrowIfIdentifierNotSet(this IAstIdentifierSite identifierSite)
-            => _ = identifierSite.Identifier ??
+        { 
+            if (!identifierSite.HasIdentifier)
                 throw new InternalErrorException("Identifier is not set.");
+        }
     }
 }

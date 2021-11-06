@@ -25,6 +25,8 @@ A special operator is used to access them: `#`
 | `#default` | Default value for the type.
 | `#mask` | Mask for retrieving a bit field value.
 | `#offset` | Byte offset from the start of a structure to a field.
+| `#expr` | Expression that was passed as a parameter (tracing)
+| `#caller` | name of the caller of the function (tracing)
 
 - `#typeid` is a U16 hash value over (part of) the module name and type name (Not really needed for .NET).
 

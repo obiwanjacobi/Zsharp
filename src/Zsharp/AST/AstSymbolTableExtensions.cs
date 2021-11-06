@@ -35,9 +35,9 @@
             identifierSite.ThrowIfIdentifierNotSet();
 
             if (kind == AstSymbolKind.NotSet)
-                kind = identifierSite.Identifier!.IdentifierKind.ToSymbolKind();
+                kind = identifierSite.Identifier.IdentifierKind.ToSymbolKind();
 
-            return symbolTable.FindSymbol(identifierSite.Identifier!.SymbolName.CanonicalName, kind);
+            return symbolTable.FindSymbol(identifierSite.Identifier.SymbolName.CanonicalName, kind);
         }
 
         public static AstSymbolKind ToSymbolKind(this AstNodeKind nodeKind)

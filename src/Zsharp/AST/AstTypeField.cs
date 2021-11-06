@@ -17,8 +17,12 @@ namespace Zsharp.AST
 
         public ParserRuleContext? Context { get; }
 
+        public bool HasIdentifier => _identifier != null;
+
         private AstIdentifier? _identifier;
-        public AstIdentifier? Identifier => _identifier;
+        public AstIdentifier Identifier
+            => _identifier ?? throw new InternalErrorException("No Identifier was set.");
+
 
         public virtual bool TrySetIdentifier(AstIdentifier identifier)
             => TrySetIdentifier(identifier, AstIdentifierKind.Field);

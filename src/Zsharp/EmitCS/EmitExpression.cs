@@ -133,7 +133,7 @@ namespace Zsharp.EmitCS
         public override void VisitFunctionReference(AstFunctionReference function)
         {
             var functionDef = function.FunctionDefinition!;
-            var name = functionDef.Identifier!.SymbolName.CanonicalName.FullName;
+            var name = functionDef.Identifier.SymbolName.CanonicalName.FullName;
 
             if (functionDef.IsExternal)
             {

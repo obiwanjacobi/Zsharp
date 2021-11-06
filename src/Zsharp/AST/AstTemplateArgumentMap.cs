@@ -86,7 +86,7 @@ namespace Zsharp.AST
         {
             foreach (IAstIdentifierSite item in source)
             {
-                if (item.Identifier?.CanonicalFullName == canonicalFullName)
+                if (item.Identifier.CanonicalFullName == canonicalFullName)
                 {
                     return (T)item;
                 }

@@ -91,8 +91,6 @@ namespace Zsharp.AST
         }
 
         private static string AsString(this IAstIdentifierSite? identifierSite)
-        {
-            return identifierSite?.Identifier?.NativeFullName ?? String.Empty;
-        }
+            => identifierSite?.Identifier.NativeFullName ?? String.Empty;
     }
 }

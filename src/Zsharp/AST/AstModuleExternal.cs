@@ -18,30 +18,6 @@
         public override void Accept(AstVisitor visitor)
             => visitor.VisitModuleExternal(this);
 
-        public override void VisitChildren(AstVisitor visitor)
-        {
-            foreach (var symbol in Symbols.Symbols)
-            {
-                if (symbol.HasDefinition)
-                {
-                    if (symbol.HasOverloads)
-                    {
-                        foreach (var overload in symbol.FunctionOverloads)
-                        {
-                            visitor.Visit(overload);
-                        }
-                    }
-                    else
-                        visitor.Visit(symbol.Definition!);
-                }
-
-                foreach (var reference in symbol.References)
-                {
-                    visitor.Visit(reference);
-                }
-            }
-        }
-
         public void AddTypeDefinition(AstTypeDefinitionExternal typeDefinition)
         {
             var symbol = Symbols.Add(typeDefinition);

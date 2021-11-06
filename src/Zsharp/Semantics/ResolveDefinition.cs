@@ -379,7 +379,7 @@ namespace Zsharp.Semantics
             where T : class
         {
             var templateDef = SymbolTable!.FindDefinition<T>(
-                identifierSite.Identifier!.SymbolName.CanonicalName, symbolKind);
+                identifierSite.Identifier.SymbolName.CanonicalName, symbolKind);
 
             return templateDef;
         }

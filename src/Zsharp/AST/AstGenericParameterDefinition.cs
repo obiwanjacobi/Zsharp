@@ -20,8 +20,11 @@ namespace Zsharp.AST
 
         public virtual bool IsIntrinsic => false;
 
+        public bool HasIdentifier => _identifier != null;
+
         private AstIdentifier? _identifier;
-        public AstIdentifier? Identifier => _identifier;
+        public AstIdentifier Identifier
+            => _identifier ?? throw new InternalErrorException("No Identifier was set.");
 
         public bool TrySetIdentifier(AstIdentifier identifier)
         {

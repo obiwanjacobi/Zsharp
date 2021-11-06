@@ -161,7 +161,7 @@ namespace Zsharp.AST
 
             var cbSite = _builderContext.GetCurrent<IAstCodeBlockSite>();
             var parent = cbSite as AstFunctionDefinition;
-            if (parent?.Identifier is not null)
+            if (parent?.HasIdentifier ?? false)
             {
                 scopeName = parent.Identifier.SymbolName.CanonicalName.FullName;
             }

@@ -129,7 +129,7 @@ namespace Zsharp.AST
             {
                 if (overload.IsTemplate)
                 {
-                    return FunctionOverloads.SingleOrDefault(def => def.Identifier!.SymbolName.CanonicalName.GetArgumentCount() == overload.Identifier!.SymbolName.CanonicalName.GetArgumentCount());
+                    return FunctionOverloads.SingleOrDefault(def => def.Identifier.SymbolName.CanonicalName.GetArgumentCount() == overload.Identifier.SymbolName.CanonicalName.GetArgumentCount());
                 }
                 
                 return FunctionOverloads.SingleOrDefault(def => def.FunctionType.OverloadKey == overload.FunctionType.OverloadKey);

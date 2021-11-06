@@ -30,7 +30,7 @@ namespace Zsharp.AST
                 param.TrySetParent(this))
             {
                 // always make sure 'self' is first param
-                if (param.Identifier == AstIdentifierIntrinsic.Self)
+                if (param.HasIdentifier && param.Identifier == AstIdentifierIntrinsic.Self)
                     _parameters.Insert(0, param);
                 else
                     _parameters.Add(param);

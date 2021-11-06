@@ -48,8 +48,8 @@ namespace Zsharp.AST
             {
                 _templateParameters.Add(parameter);
 
-                if (Identifier is not null)
-                    Identifier.SymbolName.AddTemplateParameter(parameter.TypeReference?.Identifier?.NativeFullName);
+                if (HasIdentifier)
+                    Identifier.SymbolName.AddTemplateParameter(parameter.TypeReference?.Identifier.NativeFullName);
                 return true;
             }
             return false;
@@ -72,6 +72,6 @@ namespace Zsharp.AST
         }
 
         public override string ToString()
-            => $"{Identifier?.SymbolName.CanonicalName.FullName}: {FunctionType}";
+            => $"{Identifier.SymbolName.CanonicalName.FullName}: {FunctionType}";
     }
 }

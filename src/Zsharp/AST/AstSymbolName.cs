@@ -67,37 +67,8 @@ namespace Zsharp.AST
         /// <summary>Parse a local source code or external symbol name.</summary>
         public static AstSymbolName Parse(string symbolName, AstNameKind nameKind = AstNameKind.Local)
         {
-            var parts = ParseParts(symbolName);
-            var native = AstName.FromParts(parts, nameKind);
+            var native = AstName.ParseFullName(symbolName, nameKind);
             return new AstSymbolName(native);
-        }
-
-        private static string[] ParseParts(string symbolName)
-        {
-            if (String.IsNullOrEmpty(symbolName))
-                return Array.Empty<string>();
-
-            var parts = symbolName.Split(AstName.Separator);
-            if (parts.Any(p => String.IsNullOrEmpty(p)))
-                throw new ArgumentException("Invalid Symbol Name: multiple '.' characters in sequence.", nameof(symbolName));
-
-            return parts;
-        }
-
-        private static IEnumerable<string> PartsToCanonical(string[] parts)
-        {
-            if (!parts.Any())
-                return Enumerable.Empty<string>();
-
-            var part = parts[0];
-            // .NET property getters and setters
-            if (part.StartsWith("get_") || part.StartsWith("set_"))
-            {
-                var prefix = part[..4] + AstName.PartToCanonical(part[4..]);
-                return parts[1..].Select(AstName.PartToCanonical).Append(prefix);
-            }
-
-            return parts.Select(AstName.PartToCanonical);
         }
     }
 }

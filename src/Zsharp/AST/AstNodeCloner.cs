@@ -105,7 +105,7 @@ namespace Zsharp.AST
             if (function is AstFunctionDefinitionImpl functionDef)
             {
                 var fnDef = new AstFunctionDefinitionImpl((Function_defContext)functionDef.Context!);
-                fnDef.SetIdentifier(functionDef.Identifier!);
+                fnDef.SetIdentifier(functionDef.Identifier);
 
                 var codeBlock = _current.GetCurrent<AstCodeBlock>();
                 codeBlock.AddLine(fnDef);
@@ -163,7 +163,7 @@ namespace Zsharp.AST
         {
             Ast.Guard(function.Context, "No FunctionReference Context set.");
             var fnRef = new AstFunctionReference(function.Context!, function.EnforceReturnValueUse);
-            fnRef.SetIdentifier(function.Identifier!);
+            fnRef.SetIdentifier(function.Identifier);
 
             _current.SetCurrent(fnRef.FunctionType);
             _current.SetCurrent(fnRef);
