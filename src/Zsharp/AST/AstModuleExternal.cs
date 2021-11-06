@@ -26,13 +26,13 @@
 
         public void AddAlias(AstNode source, string alias)
         {
-            var identifier = ((IAstIdentifierSite)source).Identifier!;
+            var identifier = ((IAstIdentifierSite)source).Identifier;
             var symbol = Symbols.FindSymbol(identifier);
-            Ast.Guard(symbol, $"No symbol for '{identifier!.SymbolName.CanonicalName.FullName}' was found in external module {Identifier!.NativeFullName}.");
+            Ast.Guard(symbol, $"No symbol for '{identifier.SymbolName.CanonicalName.FullName}' was found in external module {Identifier.NativeFullName}.");
 
             if (source is AstFunctionDefinition functionDef)
             {
-                symbol!.TryAddAlias(alias + functionDef.FunctionType!.Identifier!.SymbolName.CanonicalName.FullName);
+                symbol!.TryAddAlias(alias + functionDef.FunctionType.Identifier.SymbolName.CanonicalName.FullName);
             }
             else
             {

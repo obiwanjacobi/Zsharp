@@ -7,7 +7,7 @@ namespace Zsharp.AST
         public static AstMessage UndefinedVariable(this AstErrorSite errorSite, AstVariableReference variable)
         {
             return errorSite.AddError(variable, variable.Context!,
-                $"Reference to an undefined Variable '{variable.Identifier!.NativeFullName}'");
+                $"Reference to an undefined Variable '{variable.Identifier.NativeFullName}'");
         }
 
         public static AstMessage UndefinedFunction(this AstErrorSite errorSite, AstFunctionReference function)
@@ -19,7 +19,7 @@ namespace Zsharp.AST
         public static AstMessage UndefinedType(this AstErrorSite errorSite, AstTypeReference type)
         {
             return errorSite.AddError(type, type.Context!,
-                $"Reference to an undefined Type '{type.Identifier!.NativeFullName}'");
+                $"Reference to an undefined Type '{type.Identifier.NativeFullName}'");
         }
 
         public static AstMessage ExpressionNoType(this AstErrorSite errorSite, AstExpression expression)
@@ -31,13 +31,13 @@ namespace Zsharp.AST
         public static AstMessage InvalidEnumBaseType(this AstErrorSite errorSite, AstTypeReference type)
         {
             return errorSite.AddError(type, type.Context!,
-                $"Specified Type is not valid as an Enum Base Type: '{type.Identifier!.NativeFullName}'");
+                $"Specified Type is not valid as an Enum Base Type: '{type.Identifier.NativeFullName}'");
         }
 
         public static AstMessage UndefinedEnumeration(this AstErrorSite errorSite, AstTypeFieldReferenceEnumOption enumOption)
         {
             return errorSite.AddError(enumOption, enumOption.Context!,
-                $"Reference to an undefined Enumeration Option '{enumOption.Identifier!.NativeFullName}'");
+                $"Reference to an undefined Enumeration Option '{enumOption.Identifier.NativeFullName}'");
         }
 
         public static AstMessage FunctionReturnValueNotUsed(this AstErrorSite errorSite, AstFunctionReference function)

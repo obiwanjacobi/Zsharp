@@ -10,10 +10,10 @@ namespace Zsharp.AST
             Context = context;
         }
 
-        private AstBranchConditional? _subBranch;
-        public AstBranchConditional? SubBranch => _subBranch;
-
         public bool HasSubBranch => _subBranch is not null;
+
+        private AstBranchConditional? _subBranch;
+        public AstBranchConditional SubBranch => _subBranch ?? throw new InternalErrorException("SubBranch was not set.");
 
         public bool TryAddSubBranch(AstBranchConditional? subBranch)
         {

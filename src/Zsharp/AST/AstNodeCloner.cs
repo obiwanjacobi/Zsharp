@@ -127,10 +127,10 @@ namespace Zsharp.AST
             {
                 Function_parameterContext ctx => new AstFunctionParameterDefinition(ctx, parameter.IsSelf),
                 Function_parameter_selfContext ctx => new AstFunctionParameterDefinition(ctx, parameter.IsSelf),
-                _ => new AstFunctionParameterDefinition(parameter.Identifier!)
+                _ => new AstFunctionParameterDefinition(parameter.Identifier)
             };
 
-            paramDef.TrySetIdentifier(parameter.Identifier!);
+            paramDef.TrySetIdentifier(parameter.Identifier);
 
             var fnDef = _current.GetCurrent<AstFunctionDefinition>();
             fnDef.FunctionType.AddParameter(paramDef);
@@ -146,7 +146,7 @@ namespace Zsharp.AST
         {
             var paramRef = new AstFunctionParameterReference((Function_param_useContext)parameter.Context!);
             // param ref usually has no Identifier
-            paramRef.TrySetIdentifier(parameter.Identifier!);
+            paramRef.TrySetIdentifier(parameter.Identifier);
 
             var fnRef = _current.GetCurrent<AstFunctionReference>();
             fnRef.FunctionType.AddParameter(paramRef);
@@ -287,7 +287,7 @@ namespace Zsharp.AST
             {
                 Indent = variable.Indent
             };
-            varDef.SetIdentifier(variable.Identifier!);
+            varDef.SetIdentifier(variable.Identifier);
 
             _current.SetCurrent(varDef);
             variable.VisitChildren(this);
@@ -305,7 +305,7 @@ namespace Zsharp.AST
         private AstVariableReference CloneVariableReference(AstVariableReference variable)
         {
             var varRef = new AstVariableReference(variable.Context!);
-            varRef.SetIdentifier(variable.Identifier!);
+            varRef.SetIdentifier(variable.Identifier);
 
             _current.SetCurrent(varRef);
             variable.VisitChildren(this);
@@ -389,7 +389,7 @@ namespace Zsharp.AST
         {
             AstTypeReference typeRef;
 
-            var templateArgument = _argumentMap?.LookupArgument(type.Identifier!);
+            var templateArgument = _argumentMap?.LookupArgument(type.Identifier);
             if (templateArgument is not null)
             {
                 typeRef = templateArgument.TypeReference!.MakeCopy();
@@ -401,7 +401,7 @@ namespace Zsharp.AST
 
                 foreach (AstTemplateParameterDefinition templParamDef in templateDef.TemplateParameters)
                 {
-                    templateArgument = _argumentMap?.LookupArgument(templParamDef.Identifier!);
+                    templateArgument = _argumentMap?.LookupArgument(templParamDef.Identifier);
                     if (templateArgument is not null)
                     {
                         var templParam = new AstTemplateParameterReference(templateArgument.TypeReference!.MakeCopy());
@@ -409,7 +409,7 @@ namespace Zsharp.AST
                     }
                     else
                         throw new InternalErrorException(
-                            $"Template Parameter '{templParamDef.Identifier!.NativeFullName}' could not be resolved.");
+                            $"Template Parameter '{templParamDef.Identifier.NativeFullName}' could not be resolved.");
                 }
 
                 typeRef = typeRefType;

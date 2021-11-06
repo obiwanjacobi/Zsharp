@@ -118,9 +118,9 @@ namespace Zsharp.AST
             return _definitions
                 .OfType<IAstTemplateInstance>()
                 .SingleOrDefault(i => i.TemplateArguments.Arguments
-                    .Select(a => a.TypeReference!.Identifier!.CanonicalFullName)
+                    .Select(a => a.TypeReference.Identifier.CanonicalFullName)
                     .SequenceEqual(
-                        templateArgumentTypes.Select(a => a.Identifier!.CanonicalFullName))) as T;
+                        templateArgumentTypes.Select(a => a.Identifier.CanonicalFullName))) as T;
         }
 
         public AstFunctionDefinition? FindFunctionDefinition(AstFunctionReference overload)

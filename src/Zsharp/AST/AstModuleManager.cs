@@ -76,7 +76,7 @@ namespace Zsharp.AST
             var modules = _moduleLoader.LoadNamespace(moduleNamespace);
             foreach (var module in modules)
             {
-                var moduleName = module.Identifier!.CanonicalFullName;
+                var moduleName = module.Identifier.CanonicalFullName;
                 var astModule = FindModule<AstModuleExternal>(moduleName);
                 if (astModule is null)
                 {

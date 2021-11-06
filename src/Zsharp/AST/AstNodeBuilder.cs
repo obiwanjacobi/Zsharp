@@ -749,13 +749,13 @@ namespace Zsharp.AST
             if (template is not null)
                 typeRef.IsTemplateParameter = template.TemplateParameters
                     .OfType<AstTemplateParameterDefinition>()
-                    .Any(p => p.Identifier?.SymbolName.CanonicalName.FullName == typeRef.Identifier?.SymbolName.CanonicalName.FullName);
+                    .Any(p => p.Identifier.SymbolName.CanonicalName.FullName == typeRef.Identifier.SymbolName.CanonicalName.FullName);
 
             var generic = _builderContext.TryGetCurrent<IAstGenericSite<AstGenericParameterDefinition>>();
             if (generic is not null)
                 typeRef.IsGenericParameter = generic.GenericParameters
                     .OfType<AstGenericParameterDefinition>()
-                    .Any(p => p.Identifier?.SymbolName.CanonicalName.FullName == typeRef.Identifier?.SymbolName.CanonicalName.FullName);
+                    .Any(p => p.Identifier.SymbolName.CanonicalName.FullName == typeRef.Identifier.SymbolName.CanonicalName.FullName);
 
             var trSite = _builderContext.GetCurrent<IAstTypeReferenceSite>();
             trSite.SetTypeReference(typeRef);

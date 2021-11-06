@@ -163,20 +163,20 @@ namespace Zsharp.EmitCS
 
                 if (branch.HasSubBranch)
                 {
-                    var subHasExpression = branch.SubBranch!.HasExpression;
+                    var subHasExpression = branch.SubBranch.HasExpression;
                     Context.CodeBuilder.CsBuilder.StartBranch(BranchStatement.Else);
 
                     if (!subHasExpression)
                         Context.CodeBuilder.CsBuilder.StartScope();
 
-                    Visit(branch.SubBranch!);
+                    Visit(branch.SubBranch);
 
                     if (!subHasExpression)
                         Context.CodeBuilder.CsBuilder.EndScope();
                 }
             }
-            else
-                Visit(branch.CodeBlock!);
+            else if (branch.HasCodeBlock)
+                Visit(branch.CodeBlock);
         }
 
         public override void VisitExpression(AstExpression expression)

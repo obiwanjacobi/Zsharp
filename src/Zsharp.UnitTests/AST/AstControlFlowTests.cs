@@ -119,6 +119,7 @@ namespace Zsharp.UnitTests.AST
             sbr.HasCode.Should().BeTrue();
             sbr.HasExpression.Should().BeTrue();
 
+            sbr.HasSubBranch.Should().BeTrue();
             sbr = sbr.SubBranch;
             sbr.Should().NotBeNull();
             sbr.CodeBlock.Should().NotBeNull();

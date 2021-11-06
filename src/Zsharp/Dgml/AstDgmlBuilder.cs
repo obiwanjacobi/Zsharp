@@ -186,10 +186,9 @@ namespace Zsharp.Dgml
                     }
                 }
 
-                var subBranch = conditional.SubBranch;
-                if (subBranch is not null)
+                if (conditional.HasSubBranch)
                 {
-                    var subNode = WriteBranch(subBranch, node.Id);
+                    var subNode = WriteBranch(conditional.SubBranch, node.Id);
                     var link = FindLink(node.Id, subNode.Id);
                     link.Label = "else";
                 }

@@ -146,7 +146,8 @@ namespace Zsharp.UnitTests.Semantics
 
                 if (originCond.HasCodeBlock)
                     AssertEquivalent(clonedCond.CodeBlock, originCond.CodeBlock);
-                AssertEquivalent(clonedCond.SubBranch, originCond.SubBranch);
+                if (originCond.HasSubBranch)
+                    AssertEquivalent(clonedCond.SubBranch, originCond.SubBranch);
             }
         }
 

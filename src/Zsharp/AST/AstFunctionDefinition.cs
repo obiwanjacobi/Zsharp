@@ -99,7 +99,7 @@ namespace Zsharp.AST
                         txt.Append(", ");
 
                     var p = TemplateParameters.ElementAt(i);
-                    txt.Append(p.Identifier!.SymbolName.CanonicalName.FullName);
+                    txt.Append(p.Identifier.SymbolName.CanonicalName.FullName);
                 }
                 txt.Append('>');
             }

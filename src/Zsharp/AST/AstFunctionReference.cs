@@ -48,8 +48,7 @@ namespace Zsharp.AST
             {
                 _templateParameters.Add(parameter);
 
-                if (HasIdentifier)
-                    Identifier.SymbolName.AddTemplateParameter(parameter.TypeReference?.Identifier.NativeFullName);
+                Identifier.SymbolName.AddTemplateParameter(parameter.TypeReference.Identifier.NativeFullName);
                 return true;
             }
             return false;
