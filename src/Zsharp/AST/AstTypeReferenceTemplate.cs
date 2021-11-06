@@ -39,7 +39,8 @@ namespace Zsharp.AST
 
             _templateParameters.Add(templateParameter);
             templateParameter.SetParent(this);
-            Identifier!.SymbolName.AddTemplateParameter(templateParameter.TypeReference?.Identifier?.NativeFullName);
+            if (templateParameter.HasTypeReference)
+                Identifier.SymbolName.AddTemplateParameter(templateParameter.TypeReference.Identifier.NativeFullName);
 
             return true;
         }
@@ -61,7 +62,8 @@ namespace Zsharp.AST
 
             _genericParameters.Add(genericParameter);
             genericParameter.SetParent(this);
-            Identifier!.SymbolName.AddTemplateParameter(genericParameter.TypeReference?.Identifier?.NativeFullName);
+            if (genericParameter.HasTypeReference)
+                Identifier!.SymbolName.AddTemplateParameter(genericParameter.TypeReference.Identifier.NativeFullName);
 
             return true;
         }

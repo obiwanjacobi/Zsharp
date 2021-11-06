@@ -28,11 +28,15 @@ namespace Zsharp.AST
             _typeRef?.Accept(visitor);
         }
 
+        public bool HasLHS => _lhs is not null;
+
         private AstExpressionOperand? _lhs;
-        public AstExpressionOperand? LHS => _lhs;
+        public AstExpressionOperand LHS => _lhs ?? throw new InternalErrorException("LHS was not set.");
+
+        public bool HasRHS => _rhs is not null;
 
         private AstExpressionOperand? _rhs;
-        public AstExpressionOperand? RHS => _rhs;
+        public AstExpressionOperand RHS => _rhs ?? throw new InternalErrorException("RHS was not set.");
 
         protected bool TrySetLHS(AstExpressionOperand operand)
             => this.SafeSetParent(ref _lhs, operand);
@@ -46,8 +50,11 @@ namespace Zsharp.AST
 
         public bool IsOperator(AstExpressionOperator op) => (Operator & op) > 0;
 
+        public bool HasTypeReference => _typeRef is not null;
+
         private AstTypeReference? _typeRef;
-        public AstTypeReference? TypeReference => _typeRef;
+        public AstTypeReference TypeReference
+            => _typeRef ?? throw new InternalErrorException("TypeReference is not set.");
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeRef, typeReference);

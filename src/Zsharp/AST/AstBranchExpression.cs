@@ -29,10 +29,11 @@ namespace Zsharp.AST
             return false;
         }
 
-        private AstExpression? _expression;
-        public AstExpression? Expression => _expression;
-
         public bool HasExpression => _expression is not null;
+
+        private AstExpression? _expression;
+        public AstExpression Expression
+            => _expression ?? throw new InternalErrorException("Expression was not set.");
 
         public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
@@ -41,6 +42,9 @@ namespace Zsharp.AST
             => visitor.VisitBranchExpression(this);
 
         public override void VisitChildren(AstVisitor visitor)
-            => Expression?.Accept(visitor);
+        {
+            if (HasExpression)
+                Expression.Accept(visitor);
+        }
     }
 }

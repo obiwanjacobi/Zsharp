@@ -2,7 +2,8 @@
 {
     public interface IAstTypeReferenceSite
     {
-        AstTypeReference? TypeReference { get; }
+        bool HasTypeReference { get; }
+        AstTypeReference TypeReference { get; }
         bool TrySetTypeReference(AstTypeReference? typeReference);
     }
 

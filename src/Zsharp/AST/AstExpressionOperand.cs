@@ -33,7 +33,7 @@ namespace Zsharp.AST
             node.SetParent(this);
 
             if (node is IAstTypeReferenceSite typeRefSite &&
-                typeRefSite.TypeReference is not null)
+                typeRefSite.HasTypeReference)
                 this.SetTypeReference(typeRefSite.TypeReference.MakeCopy());
         }
 
@@ -71,12 +71,14 @@ namespace Zsharp.AST
 
         public AstTypeFieldReference? FieldReference { get; }
 
-        private AstTypeReference? _typeRef;
+        public bool HasTypeReference => _typeReference is not null;
 
-        public AstTypeReference? TypeReference => _typeRef;
+        private AstTypeReference? _typeReference;
+        public AstTypeReference TypeReference
+            => _typeReference ?? throw new InternalErrorException("TypeReference is not set.");
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
-            => this.SafeSetParent(ref _typeRef, typeReference);
+            => this.SafeSetParent(ref _typeReference, typeReference);
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitExpressionOperand(this);

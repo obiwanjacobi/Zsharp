@@ -15,12 +15,12 @@ namespace Zsharp.Semantics
 
         public override void VisitExpression(AstExpression expression)
         {
-            if (expression.TypeReference is not null)
+            if (expression.HasTypeReference)
                 return;
 
             expression.VisitChildren(this);
 
-            if (expression.TypeReference is null)
+            if (!expression.HasTypeReference)
             {
                 // comparison operators have bool result
                 if ((expression.Operator & AstExpressionOperator.MaskComparison) != 0)
@@ -38,16 +38,13 @@ namespace Zsharp.Semantics
                 else
                 {
                     AstTypeReference? typeRef = null;
-                    AstTypeReference? leftTypeRef = expression.LHS?.TypeReference;
-                    AstTypeReference? rightTypeRef = expression.RHS?.TypeReference;
-
-                    if (leftTypeRef is not null)
+                    if (expression.HasLHS && expression.LHS.HasTypeReference)
                     {
-                        typeRef = leftTypeRef;
+                        typeRef = expression.LHS.TypeReference;
                     }
-                    else if (rightTypeRef is not null)
+                    else if (expression.HasRHS && expression.RHS.HasTypeReference)
                     {
-                        typeRef = rightTypeRef;
+                        typeRef = expression.RHS.TypeReference;
                     }
 
                     Ast.Guard(typeRef, "Expression yielded no Type.");
@@ -62,7 +59,7 @@ namespace Zsharp.Semantics
         {
             operand.VisitChildren(this);
 
-            if (operand.TypeReference is not null)
+            if (operand.HasTypeReference)
                 return;
 
             if (operand.HasExpression)
@@ -114,7 +111,7 @@ namespace Zsharp.Semantics
                 Ast.Guard(SymbolTable, "No SymbolTable was set.");
                 Ast.Guard(var.Identifier, "Variable has no Identifier");
 
-                if (var.TypeReference is null)
+                if (!var.HasTypeReference)
                 {
                     var def = (IAstTypeReferenceSite?)
                         var.VariableDefinition ?? var.ParameterDefinition;
@@ -124,7 +121,7 @@ namespace Zsharp.Semantics
                         var.SetTypeReference(typeRef.MakeCopy());
                 }
 
-                if (var.TypeReference is not null)
+                if (var.HasTypeReference)
                     operand.SetTypeReference(var.TypeReference.MakeCopy());
             }
 
@@ -140,12 +137,12 @@ namespace Zsharp.Semantics
             }
 
             var fn = operand.FunctionReference;
-            if (fn?.FunctionType.TypeReference is not null)
+            if (fn?.FunctionType.HasTypeReference ?? false)
             {
                 operand.SetTypeReference(fn.FunctionType.TypeReference.MakeCopy());
             }
 
-            if (operand.TypeReference is not null)
+            if (operand.HasTypeReference)
                 Visit(operand.TypeReference);
         }
 
@@ -167,9 +164,13 @@ namespace Zsharp.Semantics
             {
                 var symbol = varRef.Symbol;
 
+                AstTypeReference? typeRef = null;
                 // Variable.TypeReference is usually null.
+                if (varRef.HasTypeReference)
+                    typeRef = varRef.TypeReference.MakeCopy();
+
                 // It is set only when type is explicitly in source code, or has been inferred.
-                var varDef = new AstVariableDefinition(varRef.TypeReference?.MakeCopy());
+                var varDef = new AstVariableDefinition(typeRef);
                 varDef.SetIdentifier(varRef.Identifier!);
                 varDef.SetSymbol(symbol!);
                 symbol!.RemoveReference(varRef);
@@ -181,7 +182,7 @@ namespace Zsharp.Semantics
                 assign.VisitChildren(this);
             }
 
-            if (assign.Variable!.TypeReference is null)
+            if (!assign.Variable!.HasTypeReference)
             {
                 // typeless assign of var (x = 42)
                 var expr = assign.Expression;
@@ -282,8 +283,8 @@ namespace Zsharp.Semantics
                 }
             }
 
-            if (function.FunctionType.TypeReference is null &&
-                function.FunctionDefinition?.FunctionType.TypeReference is not null)
+            if (!function.FunctionType.HasTypeReference &&
+                (function.FunctionDefinition?.FunctionType.HasTypeReference ?? false))
             {
                 var typeRef = function.FunctionDefinition.FunctionType.TypeReference.MakeCopy();
                 function.FunctionType.SetTypeReference(typeRef);
@@ -298,7 +299,7 @@ namespace Zsharp.Semantics
         {
             parameter.VisitChildren(this);
 
-            if (parameter.TypeReference is null)
+            if (!parameter.HasTypeReference)
             {
                 parameter.SetTypeReference(parameter.Expression!.TypeReference!.MakeCopy());
             }
@@ -423,7 +424,7 @@ namespace Zsharp.Semantics
             for (int i = 0; i < parameters.Count; i++)
             {
                 var parameter = parameters[i];
-                if (parameter.TypeReference is null ||
+                if (!parameter.HasTypeReference ||
                     parameter.TypeReference.IsInferred)
                 {
                     var paramDef = parameterDefs[i];
@@ -436,9 +437,9 @@ namespace Zsharp.Semantics
                 }
             }
 
-            if ((function.FunctionType.TypeReference is null ||
+            if ((!function.FunctionType.HasTypeReference ||
                     function.FunctionType.TypeReference.IsInferred) &&
-                functionDef.FunctionType.TypeReference is not null)
+                functionDef.FunctionType.HasTypeReference)
             {
                 var typeRef = functionDef.FunctionType.TypeReference!.MakeCopy();
                 var oldTypeRef = function.FunctionType.ReplaceTypeReference(typeRef);

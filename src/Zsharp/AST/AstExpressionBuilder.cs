@@ -122,9 +122,9 @@ namespace Zsharp.AST
                 _values.Pop();
             }
 
-            if (expr.LHS is null &&
+            if (!expr.HasLHS &&
                 expr.Operator == AstExpressionOperator.None &&
-                expr.RHS?.LiteralNumeric is not null)
+                expr.HasRHS && expr.RHS.LiteralNumeric is not null)
             {
                 // expression used as a number wrapper
                 expr.Operator = AstExpressionOperator.Number;

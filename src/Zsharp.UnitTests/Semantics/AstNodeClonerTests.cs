@@ -135,7 +135,8 @@ namespace Zsharp.UnitTests.Semantics
                 var clonedExp = (AstBranchExpression)cloned;
                 var originExp = (AstBranchExpression)origin;
 
-                AssertEquivalent(clonedExp.Expression, originExp.Expression);
+                if (originExp.HasExpression)
+                    AssertEquivalent(clonedExp.Expression, originExp.Expression);
             }
 
             if (origin.IsConditional)
@@ -143,7 +144,8 @@ namespace Zsharp.UnitTests.Semantics
                 var clonedCond = (AstBranchConditional)cloned;
                 var originCond = (AstBranchConditional)origin;
 
-                AssertEquivalent(clonedCond.CodeBlock, originCond.CodeBlock);
+                if (originCond.HasCodeBlock)
+                    AssertEquivalent(clonedCond.CodeBlock, originCond.CodeBlock);
                 AssertEquivalent(clonedCond.SubBranch, originCond.SubBranch);
             }
         }
@@ -265,8 +267,10 @@ namespace Zsharp.UnitTests.Semantics
             cloned.Operator.Should().Be(origin.Operator);
             cloned.Precedence.Should().Be(origin.Precedence);
 
-            AssertEquivalent(cloned.LHS, origin.LHS);
-            AssertEquivalent(cloned.RHS, origin.RHS);
+            if (origin.HasLHS)
+                AssertEquivalent(cloned.LHS, origin.LHS);
+            if (origin.HasRHS)
+                AssertEquivalent(cloned.RHS, origin.RHS);
         }
 
         private void AssertEquivalent(AstExpressionOperand cloned, AstExpressionOperand origin)

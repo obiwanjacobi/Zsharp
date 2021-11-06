@@ -68,7 +68,7 @@ namespace Zsharp.Semantics
             else // arithmetic and bitwise
             {
                 Int64 rhs = PopInt();
-                Int64 lhs = expression.LHS is not null ? PopInt() : 0;
+                Int64 lhs = expression.HasLHS ? PopInt() : 0;
 
                 value = PerformNumericalOperation(lhs, expression.Operator, rhs);
             }

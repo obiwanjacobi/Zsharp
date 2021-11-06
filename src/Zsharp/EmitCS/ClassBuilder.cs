@@ -66,17 +66,19 @@ namespace Zsharp.EmitCS
 
         public CSharp.Class AddStruct(AstTypeDefinitionStruct structDef)
         {
-            var recordType = new CSharp.Class(structDef.Identifier!.SymbolName.CanonicalName.FullName, ClassKeyword.Record)
+            var recordType = new CSharp.Class(structDef.Identifier.SymbolName.CanonicalName.FullName, ClassKeyword.Record)
             {
                 AccessModifiers = structDef.Symbol!.SymbolLocality == AstSymbolLocality.Exported
                     ? AccessModifiers.Public : AccessModifiers.Private,
                 ClassModifiers = ClassModifiers.None,
-                BaseTypeName = structDef.BaseType.ToCode(),
             };
+
+            if (structDef.HasBaseType)
+                recordType.BaseTypeName = structDef.BaseType.ToCode();
 
             foreach (var field in structDef.Fields)
             {
-                var property = new CSharp.Property(field.Identifier!.SymbolName.CanonicalName.FullName, field.TypeReference.ToCode())
+                var property = new CSharp.Property(field.Identifier.SymbolName.CanonicalName.FullName, field.TypeReference.ToCode())
                 {
                     AccessModifiers = AccessModifiers.Public,
                 };

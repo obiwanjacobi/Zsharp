@@ -15,7 +15,8 @@ namespace Zsharp.EmitCS
 
         public override void VisitExpression(AstExpression expression)
         {
-            expression.LHS?.Accept(this);
+            if (expression.HasLHS)
+                expression.LHS.Accept(this);
 
             if (expression.IsOperator(AstExpressionOperator.MaskArithmetic))
             {

@@ -10,8 +10,11 @@ namespace Zsharp.AST
             : base(nodeKind)
         { }
 
+        public bool HasBaseType => _baseType is not null;
+
         private AstTypeReference? _baseType;
-        public AstTypeReference? BaseType => _baseType;
+        public AstTypeReference BaseType
+            => _baseType ?? throw new InternalErrorException("BaseType was not set.");
 
         public bool TrySetBaseType(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _baseType, typeReference);
@@ -23,7 +26,8 @@ namespace Zsharp.AST
                     "Base Type Reference already set or null.");
         }
 
-        AstTypeReference? IAstTypeReferenceSite.TypeReference => _baseType;
+        bool IAstTypeReferenceSite.HasTypeReference => HasBaseType;
+        AstTypeReference IAstTypeReferenceSite.TypeReference => BaseType;
 
         bool IAstTypeReferenceSite.TrySetTypeReference(AstTypeReference? typeReference)
             => TrySetBaseType(typeReference);
@@ -45,7 +49,9 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            BaseType?.Accept(visitor);
+            if (HasBaseType)
+                BaseType.Accept(visitor);
+
             foreach (var option in Fields)
             {
                 option.Accept(visitor);

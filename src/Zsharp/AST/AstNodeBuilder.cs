@@ -208,7 +208,7 @@ namespace Zsharp.AST
             if (context.Parent is Statement_export_inlineContext)
                 function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
 
-            if (function.FunctionType.TypeReference is null)
+            if (!function.FunctionType.HasTypeReference)
             {
                 var typeRef = new AstTypeReferenceType(AstIdentifierIntrinsic.Void);
                 function.FunctionType.SetTypeReference(typeRef);
@@ -585,7 +585,7 @@ namespace Zsharp.AST
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
 
-            if (typeDef.BaseType is null)
+            if (!typeDef.HasBaseType)
             {
                 var typeRef = new AstTypeReferenceType(AstIdentifierIntrinsic.I32);
                 symbolsSite.Symbols.Add(typeRef);

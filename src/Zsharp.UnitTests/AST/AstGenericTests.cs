@@ -20,7 +20,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var s = file.CodeBlock.LineAt<AstTypeDefinitionStruct>(0);
             s.Symbol.Definition.Should().Be(s);
-            s.BaseType.Should().BeNull();
+            s.HasBaseType.Should().BeFalse();
             s.IsGeneric.Should().BeTrue();
             var tp = s.GenericParameters.First();
             tp.Identifier.NativeFullName.Should().Be("T");

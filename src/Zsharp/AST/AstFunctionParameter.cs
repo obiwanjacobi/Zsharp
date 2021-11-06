@@ -25,8 +25,11 @@ namespace Zsharp.AST
             return Ast.SafeSet(ref _identifier, identifier);
         }
 
+        public bool HasTypeReference => _typeReference is not null;
+
         private AstTypeReference? _typeReference;
-        public AstTypeReference? TypeReference => _typeReference;
+        public AstTypeReference TypeReference
+            => _typeReference ?? throw new InternalErrorException("TypeReference is not set.");
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);
@@ -40,7 +43,10 @@ namespace Zsharp.AST
             => Ast.SafeSet(ref _symbol, symbol);
 
         public override void VisitChildren(AstVisitor visitor)
-            => TypeReference?.Accept(visitor);
+        {
+            if (HasTypeReference)
+                TypeReference.Accept(visitor);
+        }
 
         public AstTypeReference? ReplaceTypeReference(AstTypeReference? typeReference)
         {

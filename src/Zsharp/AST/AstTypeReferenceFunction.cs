@@ -48,8 +48,11 @@ namespace Zsharp.AST
             return typeRef;
         }
 
+        public bool HasTypeReference => _typeReference is not null;
+
         private AstTypeReference? _typeReference;
-        public AstTypeReference? TypeReference => _typeReference;
+        public AstTypeReference TypeReference
+            => _typeReference ?? throw new InternalErrorException("TypeReference was not set.");
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);
@@ -64,7 +67,8 @@ namespace Zsharp.AST
                 param.Accept(visitor);
             }
 
-            TypeReference?.Accept(visitor);
+            if (HasTypeReference)
+                TypeReference.Accept(visitor);
         }
 
         public override string ToString()
@@ -78,11 +82,12 @@ namespace Zsharp.AST
                     txt.Append(", ");
 
                 var p = Parameters.ElementAt(i);
-                txt.Append(p.TypeReference?.Identifier?.NativeFullName);
+                if (p.HasTypeReference)
+                    txt.Append(p.TypeReference.Identifier.NativeFullName);
             }
             txt.Append(')');
 
-            if (TypeReference?.Identifier is not null)
+            if (HasTypeReference)
             {
                 txt.Append(": ");
                 txt.Append(TypeReference.Identifier.NativeFullName);
@@ -96,10 +101,13 @@ namespace Zsharp.AST
             Ast.Guard(!HasSymbol, "Symbol already set. Call CreateSymbols only once.");
             var contextSymbols = parentSymbols ?? functionSymbols;
 
-            contextSymbols.TryAdd(TypeReference);
+            if (HasTypeReference)
+                contextSymbols.TryAdd(TypeReference);
+
             foreach (var parameter in Parameters)
             {
-                functionSymbols.TryAdd(parameter.TypeReference);
+                if (parameter.HasTypeReference)
+                    functionSymbols.TryAdd(parameter.TypeReference);
             }
 
             var symbolName = AstSymbolName.Parse(ToString());

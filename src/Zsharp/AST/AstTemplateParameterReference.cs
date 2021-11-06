@@ -20,8 +20,11 @@ namespace Zsharp.AST
             this.SetTypeReference(parameterToCopy.TypeReference!.MakeCopy());
         }
 
+        public bool HasTypeReference => _typeReference is not null;
+
         private AstTypeReference? _typeReference;
-        public AstTypeReference? TypeReference => _typeReference;
+        public AstTypeReference TypeReference
+            => _typeReference ?? throw new InternalErrorException("TypeReference is not set.");
 
         public bool TrySetTypeReference(AstTypeReference? typeReference)
             => this.SafeSetParent(ref _typeReference, typeReference);

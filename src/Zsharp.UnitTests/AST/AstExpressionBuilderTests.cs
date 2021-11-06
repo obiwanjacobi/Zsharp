@@ -20,7 +20,7 @@ namespace Zsharp.UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Number);
-            exp.LHS.Should().BeNull();
+            exp.HasLHS.Should().BeFalse();
             exp.RHS.LiteralNumeric.Value.Should().Be(42);
         }
 
@@ -73,7 +73,7 @@ namespace Zsharp.UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Negate);
-            exp.LHS.Should().BeNull();
+            exp.HasLHS.Should().BeFalse();
             exp.RHS.LiteralNumeric.Value.Should().Be(4);
         }
 
@@ -194,7 +194,7 @@ namespace Zsharp.UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Not);
-            exp.LHS.Should().BeNull();
+            exp.HasLHS.Should().BeFalse();
             exp.RHS.LiteralBoolean.Should().NotBeNull();
         }
 
@@ -211,7 +211,7 @@ namespace Zsharp.UnitTests.AST
 
             exp.Should().NotBeNull();
             exp.Operator.Should().Be(AstExpressionOperator.Not);
-            exp.LHS.Should().BeNull();
+            exp.HasLHS.Should().BeFalse();
             exp.RHS.Expression.Operator.Should().Be(AstExpressionOperator.Greater);
         }
 

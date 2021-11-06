@@ -23,7 +23,7 @@ namespace Zsharp.UnitTests.AST
 
             var s = file.CodeBlock.LineAt<AstTypeDefinitionStruct>(0);
             s.Symbol.Definition.Should().Be(s);
-            s.BaseType.Should().BeNull();
+            s.HasBaseType.Should().BeFalse();
             s.IsTemplate.Should().BeTrue();
             var tp = s.TemplateParameters.First();
             tp.Identifier.NativeFullName.Should().Be("T");

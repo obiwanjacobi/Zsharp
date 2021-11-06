@@ -132,7 +132,7 @@ namespace Zsharp.Dgml
             node.Group = DefaultGroup;
 
             var fields = String.Join("\r\n",
-                astStruct.Fields.Select(f => $"{f.Identifier.NativeFullName}: {f.TypeReference?.Identifier.NativeFullName}"));
+                astStruct.Fields.Select(f => $"{f.Identifier.NativeFullName}: {f.TypeReference.Identifier.NativeFullName}"));
 
             var fieldNode = CreateNode("Fields", fields);
             _ = CreateLink(node.Id, fieldNode.Id, ContainsCategory);
@@ -142,7 +142,9 @@ namespace Zsharp.Dgml
         public Node WriteAssignment(AstAssignment assignment, string parentId)
         {
             var name = assignment.Variable.Identifier.NativeFullName;
-            var typeName = assignment.Variable.TypeReference?.Identifier.NativeFullName;
+            string typeName = String.Empty;
+            if (assignment.Variable.HasTypeReference)
+                typeName = assignment.Variable.TypeReference.Identifier.NativeFullName;
             var nodeName = $"{name}: {typeName}";
             if (assignment.Expression is not null)
                 nodeName += " = " + assignment.Expression.AsString();
@@ -168,8 +170,7 @@ namespace Zsharp.Dgml
             var conditional = branch.ToConditional();
             if (conditional is not null)
             {
-                var expression = conditional.Expression;
-                if (expression is not null)
+                if (conditional.HasExpression)
                 {
                     node.Label = conditional.Expression.AsString();
                 }
@@ -178,7 +179,7 @@ namespace Zsharp.Dgml
                 if (code is not null)
                 {
                     var blockNode = WriteCodeBlock(code, node.Id);
-                    if (expression is not null)
+                    if (conditional.HasExpression)
                     {
                         var link = FindLink(node.Id, blockNode.Id);
                         link.Label = "if";

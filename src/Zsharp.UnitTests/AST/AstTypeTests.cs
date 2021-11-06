@@ -162,7 +162,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var s = file.CodeBlock.LineAt<AstTypeDefinitionStruct>(0);
             s.Symbol.Definition.Should().Be(s);
-            s.BaseType.Should().BeNull();
+            s.HasBaseType.Should().BeFalse();
 
             var f = s.Fields.First();
             f.Identifier.NativeFullName.Should().Be("Id");

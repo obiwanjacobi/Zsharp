@@ -29,8 +29,8 @@ namespace Zsharp.AST
             // TODO: check for default values on targets
             if (sources.Count != targets.Count) return 0;
 
-            if (functionRef.FunctionType.TypeReference is not null &&
-                functionDef.FunctionType.TypeReference is not null)
+            if (functionRef.FunctionType.HasTypeReference &&
+                functionDef.FunctionType.HasTypeReference)
             {
                 sources.Add(functionRef.FunctionType.TypeReference);
                 targets.Add(functionDef.FunctionType.TypeReference);
