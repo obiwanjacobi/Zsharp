@@ -16,8 +16,11 @@ namespace Zsharp.AST
 
         public uint Indent { get; set; }
 
+        public bool HasExpression => _expression is not null;
+
         private AstExpression? _expression;
-        public AstExpression? Expression => _expression;
+        public AstExpression Expression
+            => _expression ?? throw new InternalErrorException("Expression was not set.");
 
         public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
@@ -70,7 +73,8 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            Expression?.Accept(visitor);
+            if (HasExpression)
+                Expression.Accept(visitor);
             Variable?.Accept(visitor);
             foreach (var field in _fields)
             {

@@ -65,9 +65,9 @@ namespace Zsharp.Semantics
             if (operand.TypeReference is not null)
                 return;
 
-            var expr = operand.Expression;
-            if (expr is not null)
+            if (operand.HasExpression)
             {
+                var expr = operand.Expression;
                 Ast.Guard(expr.TypeReference, "AstExpression.TypeReference not set.");
                 operand.SetTypeReference(expr.TypeReference!);
                 return;

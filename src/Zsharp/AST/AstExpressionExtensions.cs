@@ -63,9 +63,12 @@ namespace Zsharp.AST
             if (operand is null)
             { return String.Empty; }
 
-            var expr = operand.Expression;
-            if (expr is not null)
-            { return AsString(expr); }
+            
+            if (operand.HasExpression)
+            {
+                var expr = operand.Expression;
+                return AsString(expr);
+            }
 
             var num = operand.LiteralNumeric;
             if (num is not null)

@@ -198,7 +198,7 @@ namespace Zsharp.AST
         {
             AstNode? child = null;
 
-            if (operand.Expression is not null)
+            if (operand.HasExpression)
                 child = CloneExpression(operand.Expression);
 
             if (operand.FieldReference is not null)

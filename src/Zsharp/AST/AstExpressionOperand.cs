@@ -18,7 +18,7 @@ namespace Zsharp.AST
             FunctionReference = node as AstFunctionReference;
             FieldReference = node as AstTypeFieldReference;
 
-            if (Expression is null &&
+            if (!HasExpression &&
                 LiteralBoolean is null &&
                 LiteralNumeric is null &&
                 LiteralString is null &&
@@ -43,8 +43,11 @@ namespace Zsharp.AST
             TrySetExpression(expr);
         }
 
+        public bool HasExpression => _expression is not null;
+
         private AstExpression? _expression;
-        public AstExpression? Expression => _expression;
+        public AstExpression Expression
+            => _expression ?? throw new InternalErrorException("Expression was not set.");
 
         public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
@@ -80,7 +83,8 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            Expression?.Accept(visitor);
+            if (HasExpression)
+                Expression.Accept(visitor);
             LiteralBoolean?.Accept(visitor);
             LiteralNumeric?.Accept(visitor);
             LiteralString?.Accept(visitor);

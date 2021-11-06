@@ -110,7 +110,7 @@ namespace Zsharp.EmitCS
                 Context.CodeBuilder.CsBuilder.EndScope();
             }
 
-            if (assign.Expression is not null)
+            if (assign.HasExpression)
             {
                 Context.CodeBuilder.CsBuilder.Append(" = ");
                 VisitExpression(assign.Expression);

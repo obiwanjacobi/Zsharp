@@ -47,7 +47,7 @@ namespace Zsharp.UnitTests.Semantics
             if (origin is IAstCodeBlockLine cbl)
                 AssertCodeBlockItem((IAstCodeBlockLine)cloned, cbl);
 
-            if (origin is IAstExpressionSite es)
+            if (origin is IAstExpressionSite es && es.HasExpression)
                 AssertEquivalent(((IAstExpressionSite)cloned).Expression, es.Expression);
 
             if (origin is IAstIdentifierSite ids)

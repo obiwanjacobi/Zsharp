@@ -296,7 +296,7 @@ namespace Zsharp.AST
             var node = (AstNode?)VisitChildren(context);
             _builderContext.RevertCurrent();
 
-            if (parameter.Expression is null)
+            if (!parameter.HasExpression)
             {
                 parameter.SetExpression(node switch
                 {
@@ -603,7 +603,7 @@ namespace Zsharp.AST
             int value = 0;
             foreach (var field in typeDef.Fields)
             {
-                if (field.Expression is null)
+                if (!field.HasExpression)
                 {
                     field.SetExpression(AstExpressionBuilder.CreateLiteral(value));
                 }

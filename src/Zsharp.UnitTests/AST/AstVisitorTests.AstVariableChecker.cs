@@ -14,7 +14,7 @@ namespace Zsharp.UnitTests.AST
             }
             public override void VisitExpressionOperand(AstExpressionOperand operand)
             {
-                if (operand.Expression is null &&
+                if (!operand.HasExpression &&
                     operand.LiteralNumeric is null &&
                     operand.FunctionReference is null)
                 {

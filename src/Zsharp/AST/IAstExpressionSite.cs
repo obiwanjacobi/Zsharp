@@ -2,7 +2,8 @@
 {
     public interface IAstExpressionSite
     {
-        AstExpression? Expression { get; }
+        bool HasExpression { get; }
+        AstExpression Expression { get; }
         bool TrySetExpression(AstExpression? expression);
     }
 
