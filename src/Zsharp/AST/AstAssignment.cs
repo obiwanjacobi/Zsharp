@@ -25,9 +25,10 @@ namespace Zsharp.AST
         public bool TrySetExpression(AstExpression? expression)
             => this.SafeSetParent(ref _expression, expression);
 
-        private AstVariable? _variable;
+        public bool HasVariable => _variable is not null;
 
-        public AstVariable? Variable => _variable;
+        private AstVariable? _variable;
+        public AstVariable Variable => _variable ?? throw new InternalErrorException("Variable was not set.");
 
         public bool TrySetVariable(AstVariable? variable)
             => this.SafeSetParent(ref _variable, variable);
@@ -75,7 +76,9 @@ namespace Zsharp.AST
         {
             if (HasExpression)
                 Expression.Accept(visitor);
-            Variable?.Accept(visitor);
+            if (HasVariable)
+                Variable.Accept(visitor);
+
             foreach (var field in _fields)
             {
                 field.Accept(visitor);

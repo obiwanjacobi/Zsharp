@@ -9,7 +9,7 @@ namespace Zsharp.UnitTests.AST
         {
             public override void VisitAssignment(AstAssignment assign)
             {
-                assign.Variable.Should().NotBeNull();
+                assign.HasVariable.Should().BeTrue();
                 assign.VisitChildren(this);
             }
             public override void VisitExpressionOperand(AstExpressionOperand operand)

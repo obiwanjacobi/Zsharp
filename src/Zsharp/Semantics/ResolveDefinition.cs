@@ -156,7 +156,7 @@ namespace Zsharp.Semantics
 
         public override void VisitAssignment(AstAssignment assign)
         {
-            Ast.Guard(assign.Variable, "AstVariable not set on assign.");
+            Ast.Guard(assign.HasVariable, "AstVariable not set on assign.");
             assign.VisitChildren(this);
 
             if (assign.Variable is AstVariableReference varRef &&

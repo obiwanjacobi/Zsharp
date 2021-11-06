@@ -98,8 +98,8 @@ namespace Zsharp.UnitTests.Semantics
 
             var file = Compile.File(code, moduleLoader);
             var a = file.CodeBlock.LineAt<AstAssignment>(1);
-            a.Expression.TypeReference.Should().NotBeNull();
-            a.Variable.TypeReference.Should().NotBeNull();
+            a.Expression.HasTypeReference.Should().BeTrue();
+            a.Variable.HasTypeReference.Should().BeTrue();
         }
 
         [TestMethod]
