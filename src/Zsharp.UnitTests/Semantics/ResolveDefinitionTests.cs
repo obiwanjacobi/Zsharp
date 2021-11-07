@@ -157,6 +157,28 @@ namespace Zsharp.UnitTests.Semantics
         }
 
         [TestMethod]
+        public void FunctionReference_FunctionType()
+        {
+            const string code =
+                "fn: (p: U8): Bool" + Tokens.NewLine +
+                Tokens.Indent1 + "return fn(42)" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code);
+
+            var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
+            fn.Should().NotBeNull();
+
+            var brExpr = fn.CodeBlock.LineAt<AstBranchExpression>(0);
+            brExpr.Should().NotBeNull();
+            var fnRef = brExpr.Expression.RHS.FunctionReference;
+            fnRef.FunctionType.TypeDefinition.Should().NotBeNull();
+            fnRef.FunctionType.TypeReference.Identifier.CanonicalFullName.Should().Be("Bool");
+            fnRef.FunctionType.Parameters.First().TypeReference.Identifier.CanonicalFullName.Should().Be("U8");
+            fnRef.FunctionType.Identifier.CanonicalFullName.Should().Be("(U8): Bool");
+        }
+
+        [TestMethod]
         public void FunctionReferenceByParameterType_Forward()
         {
             const string code =

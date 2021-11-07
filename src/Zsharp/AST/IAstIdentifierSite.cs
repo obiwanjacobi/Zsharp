@@ -15,11 +15,5 @@
                 throw new InternalErrorException(
                     "Identifier is already set or null.");
         }
-
-        public static void ThrowIfIdentifierNotSet(this IAstIdentifierSite identifierSite)
-        { 
-            if (!identifierSite.HasIdentifier)
-                throw new InternalErrorException("Identifier is not set.");
-        }
     }
 }

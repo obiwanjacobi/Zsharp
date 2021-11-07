@@ -32,8 +32,6 @@
 
         public static AstSymbol? FindSymbol(this AstSymbolTable symbolTable, IAstIdentifierSite identifierSite, AstSymbolKind kind = AstSymbolKind.NotSet)
         {
-            identifierSite.ThrowIfIdentifierNotSet();
-
             if (kind == AstSymbolKind.NotSet)
                 kind = identifierSite.Identifier.IdentifierKind.ToSymbolKind();
 

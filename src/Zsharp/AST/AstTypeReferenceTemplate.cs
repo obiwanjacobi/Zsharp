@@ -70,7 +70,7 @@ namespace Zsharp.AST
 
         public override AstTypeDefinition? TypeDefinition 
             => IsTemplate 
-            ? Symbol?.TemplateInstanceAs<AstTypeDefinition>(TemplateParameters.Select(p => p.TypeReference)) 
+            ? Symbol.TemplateInstanceAs<AstTypeDefinition>(TemplateParameters.Select(p => p.TypeReference)) 
             : base.TypeDefinition;
 
         public override void VisitChildren(AstVisitor visitor)

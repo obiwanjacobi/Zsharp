@@ -48,7 +48,7 @@ namespace Zsharp.AST
                 else
                 {
                     // intrinsics are registered in root symbol table
-                    symbols = functionRef.Symbol!.SymbolTable.GetRootTable();
+                    symbols = functionRef.Symbol.SymbolTable.GetRootTable();
                 }
 
                 instanceFunction.CreateSymbols(symbols);

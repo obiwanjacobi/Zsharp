@@ -1450,6 +1450,7 @@ Function 'traits' that are part of the Function Type.
 - Constant / Immutable self (expressed in the self parameter)
 - Generic
 - Dynamic (for Types mainly?)
+- Static blueprint: a collection of types and functions that defines an architectural interface.
 
 Are Template and/or Generic parameters part of the Function Type? Template params => no, Generic params => yes.
 

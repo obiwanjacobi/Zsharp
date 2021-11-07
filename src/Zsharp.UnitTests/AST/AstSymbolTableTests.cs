@@ -132,13 +132,32 @@ namespace Zsharp.UnitTests.AST
             var symbols = file.Symbols;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
-            symbols.Symbols.Should().HaveCount(2);
+            symbols.Symbols.Should().HaveCount(3);
             var fn = symbols.FindSymbol("fn", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
 
             symbols = fn.DefinitionAs<AstFunctionDefinitionImpl>()!.Symbols;
             symbols.Symbols.Should().HaveCount(1);
             symbols.FindSymbol("v", AstSymbolKind.Variable).Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void FunctionDefinitionType()
+        {
+            const string code =
+                "fn: (p: U8): Bool" + Tokens.NewLine +
+                Tokens.Indent1 + "return p = 42" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var symbols = file.Symbols;
+            symbols.Symbols.Should().HaveCount(4);
+            var fnTypeSymbol = symbols.FindSymbol("(U8): Bool", AstSymbolKind.Type);
+            fnTypeSymbol.Should().NotBeNull();
+            fnTypeSymbol.SymbolKind.Should().Be(AstSymbolKind.Type);
+
+            var fnType = fnTypeSymbol.DefinitionAs<AstTypeDefinitionFunction>();
+            fnType.Should().NotBeNull();
         }
 
         [TestMethod]
@@ -154,7 +173,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var symbols = file.Symbols;
 
-            symbols.Symbols.Should().HaveCount(3);
+            symbols.Symbols.Should().HaveCount(4);
             var fn = symbols.FindSymbol("fn", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
 

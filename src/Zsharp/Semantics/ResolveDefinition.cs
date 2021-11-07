@@ -126,7 +126,7 @@ namespace Zsharp.Semantics
             }
 
             var fld = operand.FieldReference;
-            if (fld?.Symbol?.Definition is not null)
+            if (fld?.Symbol.Definition is not null)
             {
                 var enumOptDef = fld.Symbol.DefinitionAs<AstTypeDefinitionEnumOption>();
                 if (enumOptDef is not null)
@@ -172,10 +172,10 @@ namespace Zsharp.Semantics
                 // It is set only when type is explicitly in source code, or has been inferred.
                 var varDef = new AstVariableDefinition(typeRef);
                 varDef.SetIdentifier(varRef.Identifier);
-                varDef.SetSymbol(symbol!);
-                symbol!.RemoveReference(varRef);
+                varDef.SetSymbol(symbol);
+                symbol.RemoveReference(varRef);
                 AstSymbolReferenceRemover.RemoveReference(varRef);
-                symbol!.AddNode(varDef);
+                symbol.AddNode(varDef);
                 assign.SetVariableDefinition(varDef);
 
                 // do the children again for types
@@ -186,14 +186,10 @@ namespace Zsharp.Semantics
             {
                 // typeless assign of var (x = 42)
                 var expr = assign.Expression;
-                Ast.Guard(expr, "AstExpression not set on AstAssignement.");
+                var typeRef = expr.TypeReference;
+                Ast.Guard(typeRef.HasIdentifier, "AstIdentifier not set on AstTypeReference.");
 
-                var typeRef = expr!.TypeReference;
-                Ast.Guard(typeRef, "AstTypeReference not set on AstExpression.");
-                Ast.Guard(typeRef!.Identifier, "AstIdentifier not set on AstTypeReference.");
-
-                var symbol = assign.Variable.Symbol!;
-                Ast.Guard(symbol, "AstSymbolEntry was not set on Variable.");
+                var symbol = assign.Variable.Symbol;
 
                 var def = symbol.DefinitionAs<AstTypeDefinition>();
                 if (def is not null)
@@ -228,7 +224,7 @@ namespace Zsharp.Semantics
         {
             enumOption.VisitChildren(this);
 
-            if (enumOption.Symbol!.Definition is null &&
+            if (enumOption.Symbol.Definition is null &&
                 !enumOption.TryResolveSymbol())
             {
                 _context.UndefinedEnumeration(enumOption);
@@ -245,7 +241,7 @@ namespace Zsharp.Semantics
                 {
                     if (function.IsTemplate)
                     {
-                        var symbol = function.Symbol!;
+                        var symbol = function.Symbol;
                         var templateFunction = FindTemplateDefinition<AstFunctionDefinition>(function, AstSymbolKind.Function);
 
                         if (templateFunction is not null)
@@ -253,7 +249,6 @@ namespace Zsharp.Semantics
                             if (!templateFunction.IsExternal)
                             {
                                 var typeDef = new AstTemplateInstanceFunction(templateFunction!);
-
                                 typeDef.Instantiate(_context, function);
                                 symbol.AddNode(typeDef);
 
@@ -267,20 +262,18 @@ namespace Zsharp.Semantics
                     }
                 }
 
-                // in case of overloads, TryResolve may succeed (finding the correct SymbolEntry)
+                // in case of overloads, TryResolve may succeed (finding the correct Symbol)
                 // but FunctionDefinition may still be null (FunctionReference.OverloadKey does not match functionDef)
                 if (function.FunctionDefinition is null)
                 {
-                    if (MatchFunctionToDefinition(function))
-                    {
-                        // make sure all new types are resolved.
-                        function.VisitChildren(this);
-                    }
-                    else
+                    if (!MatchFunctionToDefinition(function))
                     {
                         _context.UndefinedFunction(function);
                     }
                 }
+
+                // make sure all new types are resolved.
+                function.VisitChildren(this);
             }
 
             if (!function.FunctionType.HasTypeReference &&
@@ -289,8 +282,9 @@ namespace Zsharp.Semantics
                 var typeRef = function.FunctionDefinition.FunctionType.TypeReference.MakeCopy();
                 function.FunctionType.SetTypeReference(typeRef);
                 // if type is intrinsic the symbol may not be set.
-                if (typeRef.Symbol is null)
-                    function.Symbol!.SymbolTable.Add(typeRef);
+                if (!typeRef.HasSymbol)
+                    function.Symbol.SymbolTable.Add(typeRef);
+
                 Visit(typeRef);
             }
         }
@@ -316,7 +310,7 @@ namespace Zsharp.Semantics
                 if (typeTemplate is null)
                     typeTemplate = FindTemplateDefinition<AstTypeDefinition>(type, AstSymbolKind.Type);
 
-                var symbol = type.Symbol!;
+                var symbol = type.Symbol;
                 if (typeTemplate is AstTypeDefinitionStruct structTemplate)
                 {
                     var typeDef = new AstTemplateInstanceStruct(structTemplate);
@@ -390,7 +384,7 @@ namespace Zsharp.Semantics
 
         private bool MatchFunctionToDefinition(AstFunctionReference function)
         {
-            var symbol = function.Symbol?.DefinitionSymbol;
+            var symbol = function.Symbol.DefinitionSymbol;
             if (symbol is null) return false;
 
             var functionDef = function.FunctionDefinition;

@@ -45,7 +45,7 @@ namespace Zsharp.AST
                     fieldDef.SetTypeReference(field.TypeReference.MakeCopy());
 
                 this.AddField(fieldDef);
-                type.Symbol!.SymbolTable.Add(fieldDef);
+                type.Symbol.SymbolTable.Add(fieldDef);
             }
         }
 

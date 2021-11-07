@@ -22,16 +22,13 @@ namespace Zsharp.AST
             => VariableDefinition is not null || ParameterDefinition is not null;
 
         public AstVariableDefinition? VariableDefinition
-            => Symbol?.DefinitionAs<AstVariableDefinition>();
+            => Symbol.DefinitionAs<AstVariableDefinition>();
 
         public AstFunctionParameterDefinition? ParameterDefinition
-            => Symbol?.DefinitionAs<AstFunctionParameterDefinition>();
+            => Symbol.DefinitionAs<AstFunctionParameterDefinition>();
 
         public bool TryResolveSymbol()
-        {
-            this.ThrowIfSymbolNotSet();
-            return Symbol!.SymbolTable.TryResolveDefinition(Symbol);
-        }
+            => Symbol.SymbolTable.TryResolveDefinition(Symbol);
 
         private AstTypeFieldReference? _fieldRef;
         public AstTypeFieldReference? Field => _fieldRef;

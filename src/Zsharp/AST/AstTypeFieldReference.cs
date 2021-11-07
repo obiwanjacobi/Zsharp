@@ -9,12 +9,9 @@ namespace Zsharp.AST
         { }
 
         public AstTypeFieldDefinition? FieldDefinition
-            => Symbol?.DefinitionAs<AstTypeFieldDefinition>();
+            => Symbol.DefinitionAs<AstTypeFieldDefinition>();
 
         public bool TryResolveSymbol()
-        {
-            this.ThrowIfSymbolNotSet();
-            return Symbol!.SymbolTable.TryResolveDefinition(Symbol);
-        }
+            => Symbol.SymbolTable.TryResolveDefinition(Symbol);
     }
 }

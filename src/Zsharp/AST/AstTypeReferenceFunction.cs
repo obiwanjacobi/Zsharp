@@ -46,7 +46,7 @@ namespace Zsharp.AST
         public override AstTypeReferenceFunction MakeCopy()
         {
             var typeRef = new AstTypeReferenceFunction(this);
-            Symbol?.AddNode(typeRef);
+            Symbol.AddNode(typeRef);
             return typeRef;
         }
 
@@ -86,6 +86,8 @@ namespace Zsharp.AST
                 var p = Parameters.ElementAt(i);
                 if (p.HasTypeReference)
                     txt.Append(p.TypeReference.Identifier.NativeFullName);
+                else
+                    txt.Append('?');
             }
             txt.Append(')');
 
@@ -111,11 +113,45 @@ namespace Zsharp.AST
                 if (parameter.HasTypeReference)
                     functionSymbols.TryAdd(parameter.TypeReference);
             }
+        }
 
-            var symbolName = AstSymbolName.Parse(ToString());
-            Identifier.SymbolName = symbolName;
+        public bool SetDefinition(AstSymbolTable symbolTable, AstTypeDefinitionFunction functionTypeDef)
+        {
+            var map = new AstFunctionArgumentMap(functionTypeDef.Parameters, Parameters);
+            var name = new StringBuilder();
 
-            contextSymbols.Add(this);
+            for (int i = 0; i < map.Count; i++)
+            {
+                var p = map.ParameterAt(i);
+                var a = map.ArgumentAt(i);
+
+                if (a is null)
+                    break;
+
+                var paramTypeRef = p.TypeReference.MakeCopy();
+                a.TrySetTypeReference(paramTypeRef);
+
+                if (name.Length > 0)
+                    name.Append(',');
+                name.Append(paramTypeRef.Identifier.CanonicalFullName);
+            }
+
+            name.Insert(0, '(');
+
+            var typeRef = functionTypeDef.TypeReference.MakeCopy();
+            this.SetTypeReference(typeRef);
+
+            if (typeRef.Identifier != AstIdentifierIntrinsic.Void)
+            {
+                name.Append("): ")
+                    .Append(typeRef.Identifier.CanonicalFullName);
+            }
+            else
+                name.Append(')');
+
+            Identifier.SymbolName = AstSymbolName.ParseCanonical(name.ToString());
+            symbolTable.Add(this);
+            return symbolTable.TryResolveDefinition(Symbol);
         }
 
         public AstTypeReference? ReplaceTypeReference(AstTypeReference typeReference)

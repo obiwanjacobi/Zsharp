@@ -56,7 +56,7 @@
             }
 
             function.CreateSymbols(Symbols);
-            function.Symbol!.SymbolLocality = AstSymbolLocality.Imported;
+            function.Symbol.SymbolLocality = AstSymbolLocality.Imported;
         }
     }
 }

@@ -128,7 +128,7 @@ namespace Zsharp.AST
                 if (parentSymbol is not null)
                 {
                     if (childSymbol.Parent is null)
-                        childSymbol.SetParent(parentSymbol!);
+                        childSymbol.SetParent(parentSymbol);
                     else
                         return true;
 

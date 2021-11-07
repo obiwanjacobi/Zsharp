@@ -66,7 +66,8 @@ namespace Zsharp.AST
         public override void VisitChildren(AstVisitor visitor)
         {
             base.VisitChildren(visitor);
-            CodeBlock?.Accept(visitor);
+            if (HasCodeBlock)
+                CodeBlock.Accept(visitor);
         }
     }
 }

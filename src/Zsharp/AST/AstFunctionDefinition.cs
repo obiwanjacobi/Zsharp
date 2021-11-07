@@ -35,6 +35,16 @@ namespace Zsharp.AST
             }
         }
 
+        public override bool TrySetSymbol(AstSymbol? symbol)
+        {
+            var success = base.TrySetSymbol(symbol);
+            if (success)
+            {
+                symbol!.SymbolTable.Add(FunctionType);
+            }
+            return success;
+        }
+
         public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
             Ast.Guard(!HasSymbol, "Symbol already set. Call CreateSymbols only once.");
@@ -107,6 +117,5 @@ namespace Zsharp.AST
             txt.Append(FunctionType.ToString());
             return txt.ToString();
         }
-
     }
 }

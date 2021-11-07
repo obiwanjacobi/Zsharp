@@ -72,17 +72,34 @@ namespace Zsharp.AST
             Ast.Guard(!HasSymbol, "Symbol already set. Call CreateSymbols only once.");
             var contextSymbols = parentSymbols ?? functionSymbols;
 
-            if (HasTypeReference)
-                contextSymbols.TryAdd(TypeReference);
-
+            var name = new StringBuilder();
             foreach (var parameter in Parameters)
             {
+                if (name.Length > 0)
+                    name.Append(',');
+
                 if (parameter.HasTypeReference)
+                { 
                     functionSymbols.TryAdd(parameter.TypeReference);
+                    name.Append(parameter.TypeReference.Identifier.CanonicalFullName);
+                }
+                else
+                    name.Append('?');
             }
 
-            var symbolName = AstSymbolName.Parse(ToString());
-            Identifier.SymbolName = symbolName;
+            name.Insert(0, '(');
+
+            if (HasTypeReference)
+            {
+                contextSymbols.TryAdd(TypeReference);
+                
+                name.Append("): ")
+                    .Append(TypeReference.Identifier.CanonicalFullName);
+            }
+            else
+                name.Append(')');
+
+            Identifier.SymbolName = AstSymbolName.ParseCanonical(name.ToString());
         }
 
         public override string ToString()

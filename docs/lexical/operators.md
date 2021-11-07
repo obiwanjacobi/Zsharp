@@ -140,7 +140,7 @@ To be determined:
 |---|---
 | `\` | reserved
 | `|` | reserved
-| `$` | reserved
+| `$` | auto-constant string checked by compiler.
 | `!` | reserved (factorial?)
 | `?.` | Safe Navigation (1) -or-
 | `&.` | Safe Navigation (2)
@@ -151,7 +151,7 @@ To be determined:
 | `<|` | Reverse parameter pipe?
 | `<=>` | Swap operator
 | `::` | traits? (type of type)
-| `:=` | is type (bool/condition) (also assignment with type inference)
+| `:=` | is/equals type (bool/condition) (also assignment with type inference)
 | `<:?` | type as (optional cast)
 | `<:` | down cast type
 | `:>` | up cast type? (is implicit)
@@ -192,15 +192,15 @@ Operators for working with `Array<T>` and `List<T>` types.
 | `^=` | insert item into array/list
 | `&=` | add item to array/list/tree as a child
 | `|=` | insert item to array/list/tree as a child
-| `in` | test if item is in array/list
+| `in` | test if item is in array/list (contains)
 
 ```csharp
 arr = (1, 2, 3, 4, 5)
 // add single item
 arr += 6
 // remove multiple items
-arr -= (1, 3, 5)
-// arr = (2, 4, 6)
+arr -= (1, 3, 5)    // arr = (2, 4, 6)
+b = 4 in arr        // true
 ```
 
 ---
@@ -298,10 +298,11 @@ x: U16 = U16unchecked(a ** a)
 
 // unchecked operator?
 x: U16 = $(a ** a)
+x: U16 = !(a ** a)
 ```
 
 ---
 
 > TBD
 
-- allow custom defined operators? `.>>.`, `|<<` etc. Requires identifiers to be less strict. Also requires escape characters in function definition symbol: `''.>>.'': (...): Bool`
+- allow custom defined operators? `.>>.`, `|<<` etc. Requires identifiers to be less strict. Also requires escape characters in function definition symbol: `''.>>.'': (...): Bool`. The names would be considered normal functions and therefor -to be used as operators- would need to adhere to the infix function rules.

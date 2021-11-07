@@ -149,7 +149,8 @@ namespace Zsharp.AST
                 node is AstTemplateParameterDefinition)
             {
                 if (node is not AstTypeDefinitionTemplate &&
-                    node is not AstTemplateInstanceType)
+                    node is not AstTemplateInstanceType &&
+                    node is not AstTypeDefinitionFunction)
                 { 
                     Ast.Guard(Definition is null, "Definition is already set.");
                 }

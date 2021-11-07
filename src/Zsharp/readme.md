@@ -3,7 +3,6 @@
 ---
 
 - `_ = fn()` results in an Assignment without a Variable...
-- External Function definition is not a codeblockline (indent - from AstFunction).
 
 ## TODO
 
@@ -28,24 +27,21 @@
 - Import External Modules also loads in all external-to-the-module referenced types (like System.Object).
     we need Module level dependency detection (and loading) and reference resolvement (SymbolTable).
 - AstModuleManager should not return AstModuleExternal instances, but AstModule instances (move Aliases to AstModule).
-- AstFunctionDefinitionExternal has no FunctionType (and constructs on an empty AstTypeDefinitionFunction?).
 - AstTypeReference.MakeCopy should not add to same symboltable.
-- AstSymbolName: fix hybrid generic/template postfixes.
 - SymbolTable: different flavors of FindSymbol (FindDefintion) do not use the same algorithm to find symbols.
     Some do not check in Modules, others do not check for DotNames...
 - .NET struct interop
 - A faster file stream (ICharStream) based on `Span<T>` or Memory<T>`?
 - Try to get template and generic parameter counts up-front so we don't have to mutate the type-name as the nodes are visited (currently).
 - Rename parameters on references to arguments. Parameters are for defintions, arguments are the provided values to the parameters.
+- Refactor function overload resolvement (ResolveDefinition) to use AstFunctionArgumentMap.
 
 ---
 
 ## Bugs
 
-- ResolveDefinition.FindTemplateDefinition needs resolving based on number of template/generic params.
 - Namespace on AstSymbol is wrong for imported modules. 
     TBD: how module and import naming is going to work.
-- FunctionType identifier shows '()' even when it has params.
 
 ---
 

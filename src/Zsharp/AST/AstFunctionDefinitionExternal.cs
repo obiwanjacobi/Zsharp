@@ -18,8 +18,6 @@ namespace Zsharp.AST
                     ? declType.Namespace
                     : $"{declType.Namespace}.{declType.Name}",
                 method.Name);
-
-            // TODO: built function type!
         }
 
         internal MethodMetadata MethodDefinition { get; }

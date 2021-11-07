@@ -27,13 +27,10 @@ namespace Zsharp.AST
         }
 
         public virtual AstTypeDefinition? TypeDefinition
-            => Symbol?.DefinitionAs<AstTypeDefinition>();
+            => Symbol.DefinitionAs<AstTypeDefinition>();
 
         public virtual bool TryResolveSymbol()
-        {
-            this.ThrowIfSymbolNotSet();
-            return Symbol!.SymbolTable.TryResolveDefinition(Symbol);
-        }
+            => Symbol.SymbolTable.TryResolveDefinition(Symbol);
 
         public virtual bool IsExternal => false;
         public bool IsInferred { get; set; }

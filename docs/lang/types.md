@@ -32,6 +32,10 @@ Then each type has its own way of specifying its implementation:
 
 > **_All type names start with a Capital letter_**
 
+> TBD: instead of making a distinction between structs and enums and custom types, have one type that can be a combination of any of these aspects - except custom data types are always a singular value, but can be combined with enum-values.
+
+---
+
 ## Built-in Types
 
 The built-in data type form the basic building blocks for creating structures.
@@ -1118,23 +1122,9 @@ if d?#data
 
 ---
 
-## Object Type
+## The Any Type
 
 Represents the .NET `System.Object` type.
-
-```C#
-funcObj(): Object
-    ...
-
-a = funcObj()   // a => Object
-v = match a
-    n: U8 => n
-    _ => Error("Unsupported")
-
-// v => U8!
-```
-
-Is there a difference between `Object` and `Any`?
 
 ```C#
 funcAny(): Any

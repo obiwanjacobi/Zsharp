@@ -149,7 +149,25 @@ MyFunc(opt2)    // MyEnum.opt2
 MyFunc(.opt2)   // MyEnum.opt2
 ```
 
-If `opt2` is ambiguous the type needs to be specified to resolve it. (how can it be ambiguous?)
+If `opt2` is ambiguous the type needs to be specified to resolve it.
+
+---
+
+> TBD: Allow `Str` enums to be used as indexers into a `Map`.
+
+```csharp
+Names: Str
+    Field1
+    Field2
+
+
+map = (Field1 = "Field1", Field2 = "Field2")
+
+v = map[Names.Field1]   // 'Field1'
+// alternate map syntax?
+v = map.Field1          // 'Field1'
+v = map.$Field1         // 'Field1'
+```
 
 ---
 

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Zsharp.AST
 {
-    [DebuggerDisplay("{CanonicalFullName}")]
+    [DebuggerDisplay("{CanonicalName}")]
     public class AstSymbolName
     {
         private AstSymbolName() { }
@@ -14,13 +12,17 @@ namespace Zsharp.AST
             _native = new AstName(nameToCopy.NativeName);
             _canonical = new AstName(nameToCopy.CanonicalName);
         }
-        public AstSymbolName(AstName nativeName)
+        public AstSymbolName(AstName symbolName)
         {
-            _native = nativeName ?? throw new ArgumentNullException(nameof(nativeName));
-            if (_native.Kind == AstNameKind.Canonical)
-                throw new ArgumentException("Parameter must represent a non-canonical symbol name.", nameof(nativeName));
-
-            _canonical = nativeName.ToCanonical();
+            if (symbolName.Kind == AstNameKind.Canonical)
+            {
+                _native = _canonical = symbolName ?? throw new ArgumentNullException(nameof(symbolName));
+            }    
+            else
+            {
+                _native = symbolName ?? throw new ArgumentNullException(nameof(symbolName));
+                _canonical = symbolName.ToCanonical();
+            }
         }
 
         private AstName? _native;
@@ -68,6 +70,12 @@ namespace Zsharp.AST
         public static AstSymbolName Parse(string symbolName, AstNameKind nameKind = AstNameKind.Local)
         {
             var native = AstName.ParseFullName(symbolName, nameKind);
+            return new AstSymbolName(native);
+        }
+
+        public static AstSymbolName ParseCanonical(string canonicalName)
+        {
+            var native = AstName.ParseFullName(canonicalName, AstNameKind.Canonical);
             return new AstSymbolName(native);
         }
     }

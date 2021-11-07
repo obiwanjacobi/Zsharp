@@ -44,7 +44,7 @@ namespace Zsharp.EmitCS
         {
             var enumType = new CSharp.Enum(enumDef.Identifier.SymbolName.CanonicalName.FullName)
             {
-                AccessModifiers = enumDef.Symbol!.SymbolLocality == AstSymbolLocality.Exported
+                AccessModifiers = enumDef.Symbol.SymbolLocality == AstSymbolLocality.Exported
                     ? AccessModifiers.Public : AccessModifiers.Private,
                 BaseTypeName = enumDef.BaseType.ToCode(),
             };
@@ -68,7 +68,7 @@ namespace Zsharp.EmitCS
         {
             var recordType = new CSharp.Class(structDef.Identifier.SymbolName.CanonicalName.FullName, ClassKeyword.Record)
             {
-                AccessModifiers = structDef.Symbol!.SymbolLocality == AstSymbolLocality.Exported
+                AccessModifiers = structDef.Symbol.SymbolLocality == AstSymbolLocality.Exported
                     ? AccessModifiers.Public : AccessModifiers.Private,
                 ClassModifiers = ClassModifiers.None,
             };

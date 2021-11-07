@@ -20,18 +20,18 @@ namespace Zsharp.AST
         public AstTypeReferenceFunction FunctionType => _functionType;
 
         public AstFunctionDefinition? FunctionDefinition
-        {
-            get
-            {
-                this.ThrowIfSymbolNotSet();
-                return Symbol!.FindFunctionDefinition(this);
-            }
-        }
+            => Symbol.FindFunctionDefinition(this);
 
         public bool TryResolveSymbol()
         {
-            this.ThrowIfSymbolNotSet();
-            return Symbol!.SymbolTable.TryResolveDefinition(Symbol);
+            if (Symbol.SymbolTable.TryResolveDefinition(Symbol))
+            {
+                var funcDef = FunctionDefinition;
+                if (funcDef is not null)
+                    FunctionType.SetDefinition(Symbol.SymbolTable, funcDef.FunctionType);
+                return  true;
+            }
+            return false;
         }
 
         // true when type is a template instantiation
@@ -63,7 +63,6 @@ namespace Zsharp.AST
         public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {
             Ast.Guard(!HasSymbol, "Symbol already set. Call CreateSymbols only once.");
-
             FunctionType.CreateSymbols(functionSymbols, parentSymbols);
 
             var contextSymbols = parentSymbols ?? functionSymbols;

@@ -23,7 +23,7 @@ namespace Zsharp.AST
         {
             if (this.SafeSetParent(ref _codeBlock, codeBlock))
             {
-                codeBlock!.Indent = Indent + 1;
+                _codeBlock!.Indent = Indent + 1;
                 return true;
             }
             return false;

@@ -73,7 +73,7 @@ namespace Zsharp.AST
             var file = New.AstFile(_namespace, _builderContext.CompilerContext.IntrinsicSymbols, context);
 
             _builderContext.SetCurrent(file);
-            _builderContext.SetCurrent(file.CodeBlock!);
+            _builderContext.SetCurrent(file.CodeBlock);
             _ = base.VisitChildren(context);
             _builderContext.RevertCurrent();
             _builderContext.RevertCurrent();
@@ -206,7 +206,7 @@ namespace Zsharp.AST
             function.CreateSymbols(functionTable.Symbols, codeBlock.Symbols);
 
             if (context.Parent is Statement_export_inlineContext)
-                function.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
+                function.Symbol.SymbolLocality = AstSymbolLocality.Exported;
 
             if (!function.FunctionType.HasTypeReference)
             {
@@ -253,7 +253,7 @@ namespace Zsharp.AST
         {
             var function = CreateFunctionReference(context);
             var codeBlock = _builderContext.GetCodeBlock(context);
-            codeBlock!.AddLine(function);
+            codeBlock.AddLine(function);
             return function;
         }
 
@@ -317,8 +317,7 @@ namespace Zsharp.AST
         {
             var variable = New.AstVariableDefinition(context);
             var codeBlock = _builderContext.GetCodeBlock(context);
-
-            codeBlock!.AddLine(variable);
+            codeBlock.AddLine(variable);
 
             _builderContext.SetCurrent(variable);
             _ = VisitChildren(context);
@@ -597,7 +596,7 @@ namespace Zsharp.AST
 
             if (context.Parent is Statement_export_inlineContext)
             {
-                typeDef.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
+                typeDef.Symbol.SymbolLocality = AstSymbolLocality.Exported;
             }
 
             int value = 0;
@@ -655,7 +654,7 @@ namespace Zsharp.AST
 
             if (context.Parent is Statement_export_inlineContext)
             {
-                typeDef.Symbol!.SymbolLocality = AstSymbolLocality.Exported;
+                typeDef.Symbol.SymbolLocality = AstSymbolLocality.Exported;
             }
 
             return typeDef;

@@ -22,7 +22,7 @@ namespace Zsharp.AST
                 .Where(f => f is not null)!;
 
         public AstSymbolTable Symbols
-            => CodeBlock?.Symbols ?? throw new InternalErrorException("CodeBlock was not set. No SymbolTable available.");
+            => _codeBlock?.Symbols ?? throw new InternalErrorException("CodeBlock was not set. No SymbolTable available.");
 
         public bool HasCodeBlock => _codeBlock is not null;
 
@@ -31,7 +31,7 @@ namespace Zsharp.AST
             => _codeBlock ?? throw new InternalErrorException("CodeBlock was not set.");
 
         public bool HasExports
-            => _codeBlock!.Symbols.Symbols.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);
+            => CodeBlock.Symbols.Symbols.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);
 
         public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
             => this.SafeSetParent(ref _codeBlock, codeBlock);
@@ -40,6 +40,6 @@ namespace Zsharp.AST
             => visitor.VisitFile(this);
 
         public override void VisitChildren(AstVisitor visitor)
-            => CodeBlock?.Accept(visitor);
+            => _codeBlock?.Accept(visitor);
     }
 }
