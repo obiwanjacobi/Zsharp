@@ -82,3 +82,9 @@ Maybe have a service be the conventional remote API and a component be the in-me
 > Actor Model / Active Object Pattern? An isolated component with an Event/Message Queue and a private (pooled?) processing thread... Preferably stateless? No (non-constant) data sharing across threads, ever.
 
 We may want to add a proxy to immutable objects to share the proxy (identity) and not the object itself (Clojure does this) - so that changes to the immutable object -becoming a new instance- can be pointed to by the proxy?
+
+> TBD
+
+The principle of declaring a file to be part of a module can be extended to OO classes/records as well.
+A future extension could introduce the `class` or `record` keyword to interpret the file as a class implementation.
+Although currently the idea is selectively generate C# records based on the presents of self-bound functions.

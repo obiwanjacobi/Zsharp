@@ -21,7 +21,16 @@ namespace Zsharp.Runtime
         public static UInt64 U64(UInt16 self) => self;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt64 U64(UInt32 self) => self;
+        public static String Str(Byte self) => self.ToString();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Str(UInt16 self) => self.ToString();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Str(UInt32 self) => self.ToString();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Str(UInt64 self) => self.ToString();
 
         public static class Checked
         {

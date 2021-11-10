@@ -10,7 +10,15 @@ namespace Zsharp.Dgml
     {
         private const string FieldsCategory = "Fields";
 
-        public static void Save(AstFile file, string filePath = "file.dgml")
+        public static void Save(AstNode node, string filePath = "node.dgml")
+        {
+            var builder = new AstDgmlBuilder();
+            builder.CreateCommon();
+            _ = builder.WriteNode(node);
+            builder.SaveAs(filePath);
+        }
+
+        public static void SaveFile(AstFile file, string filePath = "file.dgml")
         {
             var builder = new AstDgmlBuilder();
             builder.CreateCommon();
@@ -22,6 +30,55 @@ namespace Zsharp.Dgml
         {
             base.CreateCommon();
             _ = CreateCategory(FieldsCategory, FieldsCategory);
+        }
+
+        public Node WriteNode(AstNode node, string parentId = "")
+        {
+            switch (node.NodeKind)
+            {
+                case AstNodeKind.None:
+                    return null;
+                case AstNodeKind.Module:
+                    //return WriteModule(node);
+                    return null;
+                case AstNodeKind.File:
+                    return WriteFile((AstFile)node);
+                case AstNodeKind.Function:
+                    return WriteFunction((AstFunctionDefinitionImpl)node, parentId);
+                case AstNodeKind.Struct:
+                    return WriteStruct((AstTypeDefinitionStruct)node, parentId);
+                case AstNodeKind.Enum:
+                    return WriteEnum((AstTypeDefinitionEnum)node, parentId);
+                case AstNodeKind.Type:
+                    return null;
+                case AstNodeKind.CodeBlock:
+                    return WriteCodeBlock((AstCodeBlock)node, parentId);
+                case AstNodeKind.Assignment:
+                    return WriteAssignment((AstAssignment)node, parentId);
+                case AstNodeKind.Branch:
+                    return WriteBranch((AstBranch)node, parentId);
+                case AstNodeKind.Expression:
+                    return WriteExpression((AstExpression)node, parentId);
+                case AstNodeKind.Operand:
+                    return null;
+                case AstNodeKind.Literal:
+                    return null;
+                case AstNodeKind.Variable:
+                    return null;
+                case AstNodeKind.FunctionParameter:
+                    return null;
+                case AstNodeKind.TemplateParameter:
+                    return null;
+                case AstNodeKind.GenericParameter:
+                    return null;
+                case AstNodeKind.Field:
+                    return null;
+                case AstNodeKind.EnumOption:
+                    return null;
+                default:
+                    break;
+            }
+            return null;
         }
 
         public Node WriteFile(AstFile file)
@@ -192,6 +249,83 @@ namespace Zsharp.Dgml
                     var link = FindLink(node.Id, subNode.Id);
                     link.Label = "else";
                 }
+            }
+
+            return node;
+        }
+
+        public Node WriteExpression(AstExpression expression, string parentId)
+        {
+            var nodeName = expression.Operator.AsString();
+            var node = CreateNode(nodeName, expression.NodeKind);
+            if (!String.IsNullOrEmpty(parentId))
+            {
+                _ = CreateLink(parentId, node.Id);
+            }
+
+            if (expression.HasLHS)
+            {
+                WriteOperand(expression.LHS, node.Id, "lhs");
+            }
+
+            if (expression.HasRHS)
+            {
+                WriteOperand(expression.RHS, node.Id, "rhs");
+            }
+            return node;
+        }
+
+        public Node WriteOperand(AstExpressionOperand operand, string parentId, string linkLabel = "")
+        {
+            if (operand.HasExpression)
+            {
+                return WriteExpression(operand.Expression, parentId);
+            }
+
+            var type = AstNodeKind.None;
+            var value = String.Empty;
+
+            var num = operand.LiteralNumeric;
+            if (num is not null)
+            {
+                type = num.NodeKind;
+                value = num.Value.ToString();
+            }
+
+            var bl = operand.LiteralBoolean;
+            if (bl is not null)
+            {
+                type = bl.NodeKind;
+                value = bl.Value.ToString();
+            }
+
+            var str = operand.LiteralString;
+            if (str is not null)
+            { 
+                type = str.NodeKind;
+                value = str.Value;
+            }
+
+            var varRef = operand.VariableReference;
+            if (varRef is not null)
+            { 
+                type = varRef.NodeKind;
+                value = varRef.AsString();
+            }
+
+            var funRef = operand.FunctionReference;
+            if (funRef is not null)
+            { 
+                type = funRef.NodeKind;
+                value = funRef.AsString();
+            }
+
+            var node = CreateNode(value, type);
+
+            if (!String.IsNullOrEmpty(parentId))
+            {
+                var link = CreateLink(parentId, node.Id);
+                link.Label = linkLabel;
             }
 
             return node;

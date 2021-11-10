@@ -52,8 +52,8 @@ namespace Zsharp.AST
             if (expression is null)
             { return String.Empty; }
 
-            var lhs = expression.LHS;
-            var rhs = expression.RHS;
+            var lhs = expression.HasLHS ? expression.LHS : null;
+            var rhs = expression.HasRHS ? expression.RHS : null;
 
             return AsString(lhs) + AsString(expression.Operator) + AsString(rhs);
         }
@@ -62,7 +62,6 @@ namespace Zsharp.AST
         {
             if (operand is null)
             { return String.Empty; }
-
             
             if (operand.HasExpression)
             {
@@ -93,7 +92,7 @@ namespace Zsharp.AST
             return String.Empty;
         }
 
-        private static string AsString(this IAstIdentifierSite? identifierSite)
+        public static string AsString(this IAstIdentifierSite? identifierSite)
             => identifierSite?.Identifier.NativeFullName ?? String.Empty;
     }
 }

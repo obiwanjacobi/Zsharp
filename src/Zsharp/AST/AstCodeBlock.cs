@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -33,7 +33,8 @@ namespace Zsharp.AST
             item.SetParent(this);
         }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitCodeBlock(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitCodeBlock(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

@@ -20,6 +20,7 @@
     Type Constructor functions are very similar - but without the self parameter.
 - AstTemplateInstanceFunction has duplicate code with AstFunctionDefinitionImpl 
     and does not support partial templates (missing TemplateParameters).
+- Honor the '#' in template parameters (#template or generic)
 - AstTemplateInstanceStruct.Instantiate does not check field TypeReferences (or base type) to be replaced with template parameter values.
 - Extract common from AstTypeDefinitionFunction and AstTypeReferenceFunction into static helper
 - Can AstTemplateInstanceType derive from AstTypeDefinitionTemplate?
@@ -35,6 +36,9 @@
 - Try to get template and generic parameter counts up-front so we don't have to mutate the type-name as the nodes are visited (currently).
 - Rename parameters on references to arguments. Parameters are for defintions, arguments are the provided values to the parameters.
 - Refactor function overload resolvement (ResolveDefinition) to use AstFunctionArgumentMap.
+- Function with return type should give error if no expression of said type is returned from impl.
+- Conversion Functions as Type in a template function do not work: `fn: <T>(p: U8): T; return T(p)`.
+- External/imported generic parameters are not correctly marked (IsTemplate/IsTemplateParameter)
 
 ---
 

@@ -10,11 +10,15 @@ namespace Zsharp.AST
         {
             Context = context;
             EnforceReturnValueUse = enforceReturnValueUse;
+            //DeferResolveDefinition = _    do not copy this!
             _functionType = new AstTypeReferenceFunction(context);
             _functionType.SetParent(this);
         }
 
         public bool EnforceReturnValueUse { get; }
+
+        // Do not try to resolve definition until after this is cloned for template instantiation.
+        public bool DeferResolveDefinition { get; private set; }
 
         private readonly AstTypeReferenceFunction _functionType;
         public AstTypeReferenceFunction FunctionType => _functionType;
@@ -24,12 +28,22 @@ namespace Zsharp.AST
 
         public bool TryResolveSymbol()
         {
-            if (Symbol.SymbolTable.TryResolveDefinition(Symbol))
+            var symbolTable = Symbol.SymbolTable;
+            if (symbolTable.TryResolveDefinition(Symbol))
             {
                 var funcDef = FunctionDefinition;
                 if (funcDef is not null)
-                    FunctionType.SetDefinition(Symbol.SymbolTable, funcDef.FunctionType);
+                    FunctionType.SetDefinition(symbolTable, funcDef.FunctionType);
                 return  true;
+            }
+
+            var templateParamSymbol = symbolTable.FindSymbol(Identifier.CanonicalFullName, AstSymbolKind.TemplateParameter);
+            if (templateParamSymbol is not null)
+            {
+                // We found a template parameter with the exact same name as the function reference.
+                // This means that this function reference represents a conversion function for a template type (T).
+                // Defer resolve-definition untill after the template has been instantiated.
+                DeferResolveDefinition = true;
             }
             return false;
         }

@@ -20,6 +20,8 @@ namespace Zsharp.AST
                 var newTemplateParam = new AstTemplateParameterReference(templateParameter);
                 this.AddTemplateParameter(newTemplateParam);
             }
+
+            IsTemplateParameter = typeToCopy.IsTemplateParameter;
         }
 
         // true when type name is actually a template parameter name (T)

@@ -92,8 +92,8 @@ namespace Zsharp
         {
             var parser = CreateParser(filePath, code);
             var file = parser.file();
-            var parseErrors = file.Errors();
 
+            var parseErrors = Context.Errors;
             if (parseErrors.Any())
             {
                 return parseErrors;
@@ -135,12 +135,13 @@ namespace Zsharp
 
         private class AstErrorHandlerParser : IAntlrErrorListener<IToken>
         {
-            private readonly CompilerContext _context;
-
             public AstErrorHandlerParser(CompilerContext context)
             {
                 _context = context;
             }
+
+            private readonly CompilerContext _context;
+            public CompilerContext Context => _context;
 
             public void SyntaxError(TextWriter output, IRecognizer recognizer,
                 IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)

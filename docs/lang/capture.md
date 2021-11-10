@@ -117,3 +117,15 @@ x = 42
 fn: [y=x](p: U8): Bool
     return y = p    // true if p = 42
 ```
+
+---
+
+> TBD: How to 'add scopes' without indenting too much. Capture, error handling (with and use) etc. als require scopes.
+
+```csharp
+a = 42
+use, with, [a]  // commas?
+    ...
+use; with; [a]  // line breaks?
+    ...
+```

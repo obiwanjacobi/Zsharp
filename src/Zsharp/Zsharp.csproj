@@ -10,4 +10,12 @@
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="5.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\marc\Documents\MyProjects\Zsharp\src\Zsharp\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\marc\Documents\MyProjects\Zsharp\src\Zsharp\.editorconfig" />
+  </ItemGroup>
+
 </Project>

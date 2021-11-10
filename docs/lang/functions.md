@@ -146,6 +146,17 @@ fn: [x](p: U8 = 42, q: U8 = x)
     ...
 ```
 
+> TBD
+
+Just like with variables omit the type?
+
+```csharp
+fn: (p = 42, s = "42")
+    ...
+fn: (p := 42, s := "42")
+    ...
+```
+
 ---
 
 ### Named Parameter
@@ -353,6 +364,13 @@ For fluent interfaces where the return value is the same as the `self` type, not
 
 > TBD: Want to support covariant return types (function overloads)? => Yes
 
+> TBD: A named return value (as in a tuple) where this name can be referenced from within the function implementation. Maybe even as a way to assign a value. It could exist as an implicit local variable in the function scope. How would this interact with the `return` keyword. Would this work better with a return expression - where the last expression/value determine the return value.
+
+```csharp
+fn: (p: U8): (retval: U8)
+    retval = p          // this would set the return value
+```
+
 ---
 
 ### Error
@@ -423,6 +441,23 @@ fn: (self: Struct2, p: U8)
 ```
 
 [Type Constructor functions](./types.md#Type-Constructors) can also be overloaded.
+
+> TBD
+
+Compose overloads by combining existing functions.
+
+```csharp
+intToString: (i: I32): Str
+    ...
+boolToString: (b: Bool): Str
+    ...
+
+// a list of overloads (syntax?)
+toString := (intToString, boolToString)
+
+s = toString(42)        // intToString
+s = toString(true)      // boolToString
+```
 
 ---
 
@@ -1452,7 +1487,10 @@ Function 'traits' that are part of the Function Type.
 - Dynamic (for Types mainly?)
 - Static blueprint: a collection of types and functions that defines an architectural interface.
 
-Are Template and/or Generic parameters part of the Function Type? Template params => no, Generic params => yes.
+Are Template and/or Generic parameters part of the Function Type?
+Template params => no, Generic params => yes.
+
+Type (and in some cases Function) traits can also be used to constraint template (and generic) parameters.
 
 Adding custom traits to a function (and Type) and requiring specific traits in functions could setup a nice guidance framework for writing code / libraries.
 

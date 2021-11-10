@@ -26,7 +26,7 @@ useResourceFn: (): Bool
     r = match a
         Error => return false // exit function
         // schedule closing the resource
-        _ => defer r.Close()
+        _ -> defer r.Close()
 
     // code here uses 'r'
 
@@ -34,7 +34,17 @@ useResourceFn: (): Bool
     return true
 ```
 
-Multiple defer statements can be executed, which are stored on a stack. When the -usually file- scope ends, the deferred entries on the stack are popped off and run - resulting in a reversed order.
+Multiple defer statements can be executed, which are stored on a stack. When the -usually function- scope ends, the deferred entries on the stack are popped off and run - resulting in a reversed order.
+
+```csharp
+// defer an entire block of code
+defer
+    ...
+
+// conditionally defer a block
+defer if x = 42
+    ...
+```
 
 ---
 

@@ -1,1 +1,2 @@
-arr = Array<Str>(2)
+fn: <#T>(p: U8): T
+    return T

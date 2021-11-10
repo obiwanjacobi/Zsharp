@@ -69,7 +69,12 @@ s = arr[0..3]               // s = [1, 2, 3]
 arr2 = arr[..]              // arr2 = all elements (slice, not a copy!)
 ```
 
-> Do we repeat (or truncate) range assignments of unequal length? `arr1[0..4] = arr2[0..2]`
+> Do we repeat (or truncate) range assignments of unequal length?
+
+```csharp
+arr1[0..4] = arr2[0..2]
+arr1[0..2] = arr2[0..4]
+```
 
 ---
 
@@ -218,6 +223,43 @@ arr2D.At(0, 0) = 42
 arr2D.At(3, 2) = 42     // last position
 
 arr3D = Array<U8>(4, 3, 2)
+
+```
+
+---
+
+> TBD
+
+Math with numerical arrays?
+
+```csharp
+arr1 = (1, 2, 3, 4, 5)
+arr2 = (6, 7, 8, 9, 0)
+
+// what if not the same length?
+arr3 = arr1 + arr2  // (7, 9, 11, 13, 5)
+
+// require type of fixed size?
+Vector: I32[3]  // syntax?
+v1 = (1, 2, 3)
+v2 = (4, 5, 6)
+
+v3 = v1 + v2    // (5, 7, 9)
+v3 = v1 * v2    // (4, 10, 18)
+```
+
+---
+
+> TBD
+
+Explicit dynamic array size?
+
+```csharp
+arr = I32[42]   // fixed: 42 I32's
+
+// syntax
+arr = I32[]
+arr = I32[?]
 
 ```
 

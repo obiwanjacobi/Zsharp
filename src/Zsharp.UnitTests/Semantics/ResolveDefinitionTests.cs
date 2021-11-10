@@ -313,29 +313,6 @@ namespace Zsharp.UnitTests.Semantics
         }
 
         [TestMethod]
-        public void StructTemplateInstantiation()
-        {
-            const string code =
-                "Struct<#T>" + Tokens.NewLine +
-                Tokens.Indent1 + "Id: T" + Tokens.NewLine +
-                "s = Struct<U8>" + Tokens.NewLine +
-                Tokens.Indent1 + "Id = 42" + Tokens.NewLine
-                ;
-
-            var file = Compile.File(code);
-            var template = file.CodeBlock.LineAt<AstTypeDefinitionStruct>(0);
-            var a = file.CodeBlock.LineAt<AstAssignment>(1);
-            var v = a.Variable;
-            v.Symbol.Definition.Should().NotBeNull();
-            var id = a.Fields.First();
-            id.Expression.TypeReference.TypeDefinition.Should().NotBeNull();
-
-            var typeSymbol = v.Symbol.SymbolTable.FindSymbol(v.TypeReference.Identifier, AstSymbolKind.Type);
-            var typeDef = typeSymbol.DefinitionAs<AstTemplateInstanceStruct>();
-            typeDef.TemplateDefinition.Should().Be(template);
-        }
-
-        [TestMethod]
         public void EnumUseOption()
         {
             const string code =
@@ -352,25 +329,6 @@ namespace Zsharp.UnitTests.Semantics
             var a = file.CodeBlock.LineAt<AstAssignment>(1);
             var v = a.Variable;
             v.Symbol.Definition.Should().NotBeNull();
-        }
-
-        [TestMethod]
-        public void TemplateFunction()
-        {
-            const string code =
-                "fn: <#T>(p: T): Str" + Tokens.NewLine +
-                Tokens.Indent1 + "return \"\"" + Tokens.NewLine +
-                "s = fn<U8>(42)" + Tokens.NewLine
-                ;
-
-            var file = Compile.File(code);
-
-            var symbols = file.Symbols;
-            var symbol = symbols.FindSymbol("fn;U8", AstSymbolKind.Function);
-            symbol.Definition.Should().NotBeNull();
-
-            var a = file.CodeBlock.LineAt<AstAssignment>(1);
-            a.Expression.RHS.FunctionReference.FunctionDefinition.Should().NotBeNull();
         }
     }
 }

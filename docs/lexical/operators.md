@@ -55,8 +55,6 @@ Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `n
 More mathematic concepts as operators?
 PI (and other constants), rad, deg, vectors, matrix, infinity, sin, cos, tan (inv), rounding (floor, ceiling), medium, mean, average, factorial/permutation/combination, sum...
 
-Set Theory? Set, intersect, union, subset, superset, powerset, (relative) complement, symmetric difference, membership, cardinality, ordered pair, cartesian product, wellknown sets (natural, integer, rational, real, complex).
-
 Operator that cascades the left value?
 So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`. See also [match expression](../expressions/match.md).
 
@@ -105,11 +103,9 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `?`-arithmetic | conditional any arithmetic operation
 | `?+=` | conditional read-add-write
 
-> We're mixing the meaning of `?` with 'if not null' and 'if null'!
-
 ```csharp
-a = 42
-o = _
+a: U8 = 42
+o: U8? = _
 
 // on which side is the optional?
 x = a ?+ o
@@ -193,6 +189,7 @@ Operators for working with `Array<T>` and `List<T>` types.
 | `&=` | add item to array/list/tree as a child
 | `|=` | insert item to array/list/tree as a child
 | `in` | test if item is in array/list (contains)
+| `not in` | test if item is not in array/list (not contains)
 
 ```csharp
 arr = (1, 2, 3, 4, 5)

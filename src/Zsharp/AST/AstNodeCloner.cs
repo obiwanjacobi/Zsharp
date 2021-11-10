@@ -163,7 +163,13 @@ namespace Zsharp.AST
         {
             Ast.Guard(function.Context, "No FunctionReference Context set.");
             var fnRef = new AstFunctionReference(function.Context!, function.EnforceReturnValueUse);
-            fnRef.SetIdentifier(function.Identifier);
+
+            var typeArg = _argumentMap!.LookupArgument(function.Identifier);
+            // a conversion function may be templated by a type (T)
+            if (typeArg is null || !typeArg.HasTypeReference)
+                fnRef.SetIdentifier(function.Identifier);
+            else
+                fnRef.SetIdentifier(typeArg.TypeReference.Identifier);
 
             _current.SetCurrent(fnRef.FunctionType);
             _current.SetCurrent(fnRef);

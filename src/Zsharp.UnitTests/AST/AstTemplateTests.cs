@@ -60,19 +60,6 @@ namespace Zsharp.UnitTests.AST
         }
 
         [TestMethod]
-        public void TemplateIntrinsicTypeUsage()
-        {
-            const string code =
-                "s: Array<U8>" + Tokens.NewLine
-                ;
-
-            var file = Compile.File(code);
-
-            var v = file.CodeBlock.LineAt<AstVariableDefinition>(0);
-            v.TypeReference.TypeDefinition.Should().NotBeNull();
-        }
-
-        [TestMethod]
         public void TemplateFunctionDefinition()
         {
             const string code =

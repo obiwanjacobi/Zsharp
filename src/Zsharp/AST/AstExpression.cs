@@ -1,4 +1,4 @@
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
@@ -19,7 +19,8 @@ namespace Zsharp.AST
 
         public ParserRuleContext? Context { get; }
 
-        public override void Accept(AstVisitor visitor) => visitor.VisitExpression(this);
+        public override void Accept(AstVisitor visitor)
+            => visitor.VisitExpression(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {
@@ -31,12 +32,14 @@ namespace Zsharp.AST
         public bool HasLHS => _lhs is not null;
 
         private AstExpressionOperand? _lhs;
-        public AstExpressionOperand LHS => _lhs ?? throw new InternalErrorException("LHS was not set.");
+        public AstExpressionOperand LHS
+            => _lhs ?? throw new InternalErrorException("LHS was not set.");
 
         public bool HasRHS => _rhs is not null;
 
         private AstExpressionOperand? _rhs;
-        public AstExpressionOperand RHS => _rhs ?? throw new InternalErrorException("RHS was not set.");
+        public AstExpressionOperand RHS
+            => _rhs ?? throw new InternalErrorException("RHS was not set.");
 
         protected bool TrySetLHS(AstExpressionOperand operand)
             => this.SafeSetParent(ref _lhs, operand);

@@ -114,6 +114,8 @@ We can also use `enable` or `disable` that automatically push the previous state
 | pop | Popping compiler configuration from the (compile-time) stack
 | enable | Enable a compiler feature (checks)
 | ignore | Disable a compiler warning
+| align | align structure
+| pack | pack structure
 
 ---
 

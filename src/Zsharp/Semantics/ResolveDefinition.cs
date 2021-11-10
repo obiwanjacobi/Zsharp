@@ -30,7 +30,7 @@ namespace Zsharp.Semantics
                     var typeRefType = AstTypeReferenceType.From(typeDef!);
                     SymbolTable!.Add(typeRefType);
 
-                    expression.SetTypeReference(typeRefType!);
+                    expression.SetTypeReference(typeRefType);
 
                     // resolve new created type
                     VisitTypeReferenceType(typeRefType);
@@ -47,10 +47,13 @@ namespace Zsharp.Semantics
                         typeRef = expression.RHS.TypeReference;
                     }
 
-                    Ast.Guard(typeRef, "Expression yielded no Type.");
-                    // TODO: depending on the operator the type may need to be enlarged.
-                    expression.SetTypeReference(typeRef!.MakeCopy());
-                    Visit(expression.TypeReference);
+                    //Ast.Guard(typeRef, "Expression yielded no Type.");
+                    if (typeRef is not null)
+                    {
+                        // TODO: depending on the operator the type may need to be enlarged.
+                        expression.SetTypeReference(typeRef!.MakeCopy());
+                        Visit(expression.TypeReference);
+                    }
                 }
             }
         }
@@ -264,7 +267,8 @@ namespace Zsharp.Semantics
 
                 // in case of overloads, TryResolve may succeed (finding the correct Symbol)
                 // but FunctionDefinition may still be null (FunctionReference.OverloadKey does not match functionDef)
-                if (function.FunctionDefinition is null)
+                if (!function.DeferResolveDefinition &&
+                    function.FunctionDefinition is null)
                 {
                     if (!MatchFunctionToDefinition(function))
                     {

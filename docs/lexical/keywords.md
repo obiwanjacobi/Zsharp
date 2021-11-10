@@ -32,6 +32,24 @@ Project and File keywords
 
 > TBD: `import` and `export` will possibly be replaced by `use` and `pub`.
 
+> TBD: `use` keyword to bring other things in scope besides modules.
+
+```csharp
+MyStruct
+    fld1: U8
+    fld2: Str
+s = MyStruct
+    ...
+
+// with scope/indent?
+use s
+    fld1 = 42   // MyStruct.fld1 of s
+
+// without scope/indent?
+use s
+fld1 = 42   // MyStruct.fld1 of s
+```
+
 ---
 
 > These keywords are reserved words and cannot be used as [identifiers](identifiers.md) in the code.

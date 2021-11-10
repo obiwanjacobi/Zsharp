@@ -49,7 +49,7 @@ namespace Zsharp.UnitTests.Semantics
             const string code =
                 "import Zsharp.Runtime.Types" + Tokens.NewLine +
                 "import System.Console" + Tokens.NewLine +
-                "arr = Array<Str>(2)" + Tokens.NewLine +
+                "arr = Array<C16>(2)" + Tokens.NewLine +
                 "WriteLine(arr)" + Tokens.NewLine
                 ;
 
