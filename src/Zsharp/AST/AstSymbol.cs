@@ -78,18 +78,6 @@ namespace Zsharp.AST
 
         public AstSymbolLocality SymbolLocality { get; set; }
 
-        private string? _namespace;
-        public string Namespace
-        {
-            get { return _namespace ?? SymbolTable.Namespace; }
-            set { _namespace = value; }
-        }
-
-        public string FullName 
-            => String.IsNullOrEmpty(Namespace)
-                ? SymbolName.Name
-                : $"{Namespace}.{SymbolName.Name}";
-
         public AstNode? Definition
             => _definitions.SingleOrDefault() ?? ParentSymbol?.Definition;
 

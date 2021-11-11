@@ -56,7 +56,7 @@ namespace ZsharpCompiler
                 console.DebugLine("Loaded Modules:");
                 foreach (var module in moduleLoader.SymbolTable.FindSymbols(AstSymbolKind.Module))
                 {
-                    console.DebugLine(module.FullName);
+                    console.DebugLine(module.SymbolName.FullName);
                 }
             }
 

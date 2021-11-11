@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -73,9 +73,6 @@ namespace Zsharp.AST
                 if (node is IAstSymbolSite symbolSite &&
                     !symbolSite.HasSymbol)
                     symbolSite.SetSymbol(symbol);
-
-                if (node is IAstExternalNameSite externalName)
-                    symbol.Namespace = externalName.ExternalName.Namespace;
             }
 
             return symbol;
