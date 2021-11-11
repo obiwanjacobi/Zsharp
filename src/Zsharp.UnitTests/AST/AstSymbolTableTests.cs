@@ -16,7 +16,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
             var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
@@ -33,7 +33,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
             var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
@@ -53,7 +53,7 @@ namespace Zsharp.UnitTests.AST
                 .ToModuleLoader();
 
             var file = Build.File(code, moduleLoader);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
 
             var fn = symbols.FindDefinition<AstFunctionDefinitionExternal>("Array%1", AstSymbolKind.Function);
             fn.Should().NotBeNull();
@@ -71,7 +71,7 @@ namespace Zsharp.UnitTests.AST
                 .ToModuleLoader();
 
             var file = Build.File(code, moduleLoader);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
 
             var type = symbols.FindDefinition<AstTypeDefinitionExternal>("Opt%1", AstSymbolKind.Type);
             type.Should().NotBeNull();
@@ -87,7 +87,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
             var fn = symbols.FindSymbol("fn", AstSymbolKind.Function);
@@ -111,7 +111,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var fn = file.Functions.First();
 
-            var symbols = fn.Symbols;
+            var symbols = fn.SymbolTable;
             var fnSymbol = symbols.FindSymbol("print", AstSymbolKind.Function);
             fnSymbol.SymbolKind.Should().Be(AstSymbolKind.Function);
 
@@ -129,14 +129,14 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
             symbols.Symbols.Should().HaveCount(3);
             var fn = symbols.FindSymbol("fn", AstSymbolKind.Function);
             fn.SymbolKind.Should().Be(AstSymbolKind.Function);
 
-            symbols = fn.DefinitionAs<AstFunctionDefinitionImpl>()!.Symbols;
+            symbols = fn.DefinitionAs<AstFunctionDefinitionImpl>()!.SymbolTable;
             symbols.Symbols.Should().HaveCount(1);
             symbols.FindSymbol("v", AstSymbolKind.Variable).Should().NotBeNull();
         }
@@ -150,7 +150,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             symbols.Symbols.Should().HaveCount(4);
             var fnTypeSymbol = symbols.FindSymbol("(U8): Bool", AstSymbolKind.Type);
             fnTypeSymbol.Should().NotBeNull();
@@ -171,7 +171,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
 
             symbols.Symbols.Should().HaveCount(4);
             var fn = symbols.FindSymbol("fn", AstSymbolKind.Function);
@@ -191,7 +191,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var symbols = fn.CodeBlock.Symbols;
+            var symbols = fn.CodeBlock.SymbolTable;
             symbols.Symbols.Should().HaveCount(2);
 
             var p = symbols.FindSymbol("p", AstSymbolKind.Variable);
@@ -209,7 +209,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var symbols = fn.CodeBlock.Symbols;
+            var symbols = fn.CodeBlock.SymbolTable;
             symbols.Symbols.Should().HaveCount(2);
 
             var p = symbols.FindSymbol("self", AstSymbolKind.Variable);
@@ -226,7 +226,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var symbols = fn.CodeBlock.Symbols;
+            var symbols = fn.CodeBlock.SymbolTable;
             symbols.Symbols.Should().HaveCount(1);
 
             symbols.FindSymbol("p", AstSymbolKind.Variable).Should().NotBeNull();
@@ -242,7 +242,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var symbols = fn.CodeBlock.Symbols;
+            var symbols = fn.CodeBlock.SymbolTable;
             var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
         }
@@ -258,7 +258,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var symbols = fn.CodeBlock.Symbols;
+            var symbols = fn.CodeBlock.SymbolTable;
 
             var v = symbols.FindSymbol("v", AstSymbolKind.Variable);
             v.SymbolKind.Should().Be(AstSymbolKind.Variable);
@@ -279,7 +279,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             var symbol = symbols.FindSymbol("Myenum.Zero", AstSymbolKind.Field);
             symbol.SymbolKind.Should().Be(AstSymbolKind.Field);
         }
@@ -294,7 +294,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             var symbol = symbols.FindSymbol("Mystruct.Fld1", AstSymbolKind.Field);
             symbol.SymbolKind.Should().Be(AstSymbolKind.Field);
         }
@@ -310,7 +310,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             // gives symbol of enum option definition (dot-name)
             var symbol = symbols.FindSymbol("Myenum.Zero", AstSymbolKind.Field);
             symbol.SymbolKind.Should().Be(AstSymbolKind.Field);

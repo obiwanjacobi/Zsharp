@@ -136,8 +136,8 @@ namespace Zsharp.Dgml
                 i++;
             }
 
-            if (codeBlock.Symbols.Symbols.Any())
-                WriteSymbolTable(codeBlock.Symbols, node.Id);
+            if (codeBlock.SymbolTable.Symbols.Any())
+                WriteSymbolTable(codeBlock.SymbolTable, node.Id);
 
             return node;
         }

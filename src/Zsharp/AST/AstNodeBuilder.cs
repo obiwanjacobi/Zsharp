@@ -86,7 +86,7 @@ namespace Zsharp.AST
             var module = _builderContext.CompilerContext.Modules.AddModule(context);
 
             var symbolTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            symbolTable.Symbols.Add(module);
+            symbolTable.SymbolTable.Add(module);
 
             return base.VisitChildren(context);
         }
@@ -110,7 +110,7 @@ namespace Zsharp.AST
 
                 foreach (var mod in modules)
                 {
-                    var modSymbol = symbols.Symbols.Add(mod);
+                    var modSymbol = symbols.SymbolTable.Add(mod);
                     modSymbol.SymbolLocality = AstSymbolLocality.Imported;
                 }
                 return null;
@@ -135,7 +135,7 @@ namespace Zsharp.AST
                 module.AddAlias(symbolName.CanonicalName, alias!);
             }
 
-            var symbol = symbols.Symbols.Add(module);
+            var symbol = symbols.SymbolTable.Add(module);
             symbol.SymbolLocality = AstSymbolLocality.Imported;
             return null;
         }
@@ -147,7 +147,7 @@ namespace Zsharp.AST
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
             var canonicalName = AstSymbolName.ToCanonical(context.identifier_func().GetText());
-            var symbol = symbols.Symbols.AddSymbol(canonicalName, AstSymbolKind.NotSet);
+            var symbol = symbols.SymbolTable.AddSymbol(canonicalName, AstSymbolKind.NotSet);
             symbol.SymbolLocality = AstSymbolLocality.Exported;
 
             return null;
@@ -156,7 +156,7 @@ namespace Zsharp.AST
         public override object? VisitCodeblock(CodeblockContext context)
         {
             var stSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var symbols = stSite.Symbols;
+            var symbols = stSite.SymbolTable;
             string scopeName = symbols.Namespace;
 
             var cbSite = _builderContext.GetCurrent<IAstCodeBlockSite>();
@@ -203,7 +203,7 @@ namespace Zsharp.AST
             _ = VisitChildrenExcept(context, identifier, templateParams);
 
             var functionTable = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            function.CreateSymbols(functionTable.Symbols, codeBlock.Symbols);
+            function.CreateSymbols(functionTable.SymbolTable, codeBlock.SymbolTable);
 
             if (context.Parent is Statement_export_inlineContext)
                 function.Symbol.SymbolLocality = AstSymbolLocality.Exported;
@@ -212,7 +212,7 @@ namespace Zsharp.AST
             {
                 var typeRef = new AstTypeReferenceType(AstIdentifierIntrinsic.Void);
                 function.FunctionType.SetTypeReference(typeRef);
-                codeBlock.Symbols.Add(typeRef);
+                codeBlock.SymbolTable.Add(typeRef);
             }
 
             _builderContext.RevertCurrent();
@@ -281,7 +281,7 @@ namespace Zsharp.AST
             _builderContext.RevertCurrent();
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            function.CreateSymbols(symbols.Symbols);
+            function.CreateSymbols(symbols.SymbolTable);
 
             return function;
         }
@@ -324,7 +324,7 @@ namespace Zsharp.AST
             _builderContext.RevertCurrent();
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(variable);
+            symbols.SymbolTable.Add(variable);
 
             return variable;
         }
@@ -351,7 +351,7 @@ namespace Zsharp.AST
                 varRef.SetIdentifier(AstIdentifierIntrinsic.Self);
 
             var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(varRef);
+            symbols.SymbolTable.Add(varRef);
 
             return varRef;
         }
@@ -393,7 +393,7 @@ namespace Zsharp.AST
             _builderContext.RevertCurrent();
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(variable);
+            symbols.SymbolTable.Add(variable);
         }
 
         //
@@ -575,7 +575,7 @@ namespace Zsharp.AST
         public override object? VisitEnum_def(Enum_defContext context)
         {
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var typeDef = New.AstTypeDefinitionEnum(context, symbolsSite.Symbols);
+            var typeDef = New.AstTypeDefinitionEnum(context, symbolsSite.SymbolTable);
 
             var codeBlock = _builderContext.GetCodeBlock(context);
             codeBlock.AddLine(typeDef);
@@ -587,12 +587,12 @@ namespace Zsharp.AST
             if (!typeDef.HasBaseType)
             {
                 var typeRef = new AstTypeReferenceType(AstIdentifierIntrinsic.I32);
-                symbolsSite.Symbols.Add(typeRef);
+                symbolsSite.SymbolTable.Add(typeRef);
 
                 typeDef.SetBaseType(typeRef);
             }
 
-            symbolsSite.Symbols.Add(typeDef);
+            symbolsSite.SymbolTable.Add(typeDef);
 
             if (context.Parent is Statement_export_inlineContext)
             {
@@ -628,7 +628,7 @@ namespace Zsharp.AST
             typeDef.AddField(fieldDef);
 
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            symbolsSite.Symbols.Add(fieldDef);
+            symbolsSite.SymbolTable.Add(fieldDef);
 
             return fieldDef;
         }
@@ -641,7 +641,7 @@ namespace Zsharp.AST
         public override object? VisitStruct_def(Struct_defContext context)
         {
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            var typeDef = New.AstTypeDefinitionStruct(context, symbolsSite.Symbols);
+            var typeDef = New.AstTypeDefinitionStruct(context, symbolsSite.SymbolTable);
 
             var codeBlock = _builderContext.GetCodeBlock(context);
             codeBlock.AddLine(typeDef);
@@ -650,7 +650,7 @@ namespace Zsharp.AST
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
 
-            symbolsSite.Symbols.Add(typeDef);
+            symbolsSite.SymbolTable.Add(typeDef);
 
             if (context.Parent is Statement_export_inlineContext)
             {
@@ -672,7 +672,7 @@ namespace Zsharp.AST
             typeDef.AddField(fieldDef);
 
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            symbolsSite.Symbols.Add(fieldDef);
+            symbolsSite.SymbolTable.Add(fieldDef);
 
             return fieldDef;
         }
@@ -686,7 +686,7 @@ namespace Zsharp.AST
             _builderContext.RevertCurrent();
 
             var symbols = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(field);
+            symbols.SymbolTable.Add(field);
 
             var typeInit = _builderContext.GetCurrent<IAstTypeInitializeSite>();
             typeInit.AddFieldInit(field);
@@ -760,7 +760,7 @@ namespace Zsharp.AST
             trSite.SetTypeReference(typeRef);
 
             var symbolsSite = _builderContext.GetCurrent<IAstSymbolTableSite>();
-            symbolsSite.Symbols.Add(typeRef);
+            symbolsSite.SymbolTable.Add(typeRef);
 
             return typeRef;
         }

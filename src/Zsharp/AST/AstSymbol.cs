@@ -21,46 +21,46 @@ namespace Zsharp.AST
 
         public AstSymbolTable SymbolTable { get; }
 
-        private AstSymbol? _parent;
-        public AstSymbol? Parent => _parent;
+        private AstSymbol? _parentSymbol;
+        public AstSymbol? ParentSymbol => _parentSymbol;
 
-        public bool TrySetParent(AstSymbol parent)
+        public bool TrySetParentSymbol(AstSymbol parent)
         {
             Ast.Guard(parent != this, "Cannot add this as parent Symbol.");
 
-            if (_parent is null && parent is not null &&
-                parent.TryAddChild(this))
+            if (_parentSymbol is null && parent is not null &&
+                parent.TryAddChildSymbol(this))
             {
-                _parent = parent;
+                _parentSymbol = parent;
                 return true;
             }
             return false;
         }
 
-        public void SetParent(AstSymbol parent)
+        public void SetParentSymbol(AstSymbol parent)
         {
-            if (!TrySetParent(parent))
+            if (!TrySetParentSymbol(parent))
                 throw new InternalErrorException(
                     "Symbol parent is already set or null.");
         }
 
-        private readonly List<AstSymbol> _children = new();
-        public IEnumerable<AstSymbol> Children => _children;
+        private readonly List<AstSymbol> _childSymbols = new();
+        public IEnumerable<AstSymbol> ChildSymbols => _childSymbols;
 
-        public bool TryAddChild(AstSymbol symbol)
+        public bool TryAddChildSymbol(AstSymbol symbol)
         {
             if (symbol is not null &&
-                !_children.Contains(symbol))
+                !_childSymbols.Contains(symbol))
             {
-                _children.Add(symbol);
+                _childSymbols.Add(symbol);
                 return true;
             }
             return false;
         }
 
-        public void AddChild(AstSymbol symbol)
+        public void AddChildSymbol(AstSymbol symbol)
         {
-            if (!TryAddChild(symbol))
+            if (!TryAddChildSymbol(symbol))
                 throw new InternalErrorException(
                     "Symbol child is already added or null.");
         }
@@ -91,13 +91,13 @@ namespace Zsharp.AST
                 : $"{Namespace}.{SymbolName.Name}";
 
         public AstNode? Definition
-            => _definitions.SingleOrDefault() ?? Parent?.Definition;
+            => _definitions.SingleOrDefault() ?? ParentSymbol?.Definition;
 
         public T? DefinitionAs<T>() where T : class
-            => _definitions.OfType<T>().SingleOrDefault() ?? Parent?.DefinitionAs<T>();
+            => _definitions.OfType<T>().SingleOrDefault() ?? ParentSymbol?.DefinitionAs<T>();
 
         public AstSymbol? DefinitionSymbol
-            => HasDefinition ? this : Parent?.DefinitionSymbol;
+            => HasDefinition ? this : ParentSymbol?.DefinitionSymbol;
 
         public bool HasDefinition => _definitions.Count > 0;
 
@@ -134,7 +134,7 @@ namespace Zsharp.AST
                 
                 return FunctionOverloads.SingleOrDefault(def => def.FunctionType.OverloadKey == overload.FunctionType.OverloadKey);
             }
-            return Parent?.FindFunctionDefinition(overload);
+            return ParentSymbol?.FindFunctionDefinition(overload);
         }
 
         public void AddNode(AstNode node)

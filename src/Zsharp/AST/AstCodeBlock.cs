@@ -9,7 +9,7 @@ namespace Zsharp.AST
         public AstCodeBlock(string scopeName, AstSymbolTable parentTable, CodeblockContext? context = null)
             : base(AstNodeKind.CodeBlock)
         {
-            Symbols = new AstSymbolTable(scopeName, parentTable);
+            SymbolTable = new AstSymbolTable(scopeName, parentTable);
             Context = context;
         }
 
@@ -17,7 +17,7 @@ namespace Zsharp.AST
 
         public CodeblockContext? Context { get; }
 
-        public AstSymbolTable Symbols { get; }
+        public AstSymbolTable SymbolTable { get; }
 
         private readonly List<IAstCodeBlockLine> _lines = new();
         public IEnumerable<IAstCodeBlockLine> Lines => _lines;

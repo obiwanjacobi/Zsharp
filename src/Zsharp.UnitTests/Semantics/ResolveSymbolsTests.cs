@@ -16,7 +16,7 @@ namespace Zsharp.UnitTests.Semantics
 
             var file = Compile.File(code);
 
-            var strSymbol = file.CodeBlock.Symbols.FindSymbol("Str", Zsharp.AST.AstSymbolKind.Type);
+            var strSymbol = file.CodeBlock.SymbolTable.FindSymbol("Str", Zsharp.AST.AstSymbolKind.Type);
 
             strSymbol.Definition.Should().NotBeNull();
         }

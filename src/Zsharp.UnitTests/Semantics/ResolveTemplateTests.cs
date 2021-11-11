@@ -59,7 +59,7 @@ namespace Zsharp.UnitTests.Semantics
 
             var file = Compile.File(code);
 
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             var symbol = symbols.FindSymbol("fn;U8", AstSymbolKind.Function);
             symbol.Definition.Should().NotBeNull();
 
@@ -82,7 +82,7 @@ namespace Zsharp.UnitTests.Semantics
             fn.IsTemplate.Should().BeTrue();
             fn.TemplateParameters.Should().HaveCount(1);
 
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             var symbol = symbols.FindSymbol("fn%1", AstSymbolKind.Function);
             symbol.Definition.Should().NotBeNull();
         }
@@ -106,7 +106,7 @@ namespace Zsharp.UnitTests.Semantics
             var fn = assign.Expression.RHS.FunctionReference;
             fn.Should().NotBeNull();
 
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             var symbol = symbols.FindSymbol("fn;Str", AstSymbolKind.Function);
             symbol.Definition.Should().NotBeNull();
         }

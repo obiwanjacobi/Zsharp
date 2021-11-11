@@ -10,7 +10,7 @@ namespace Zsharp.AST
         internal AstTypeDefinitionStruct(ParserRuleContext context, AstSymbolTable parentTable)
             : base(AstNodeKind.Struct)
         {
-            Symbols = new AstSymbolTable("", parentTable);
+            SymbolTable = new AstSymbolTable("", parentTable);
             Context = context;
         }
 
@@ -18,14 +18,14 @@ namespace Zsharp.AST
 
         public override bool IsStruct => true;
 
-        public AstSymbolTable Symbols { get; }
+        public AstSymbolTable SymbolTable { get; }
 
         public override bool TrySetIdentifier(AstIdentifier identifier)
         {
             var success = base.TrySetIdentifier(identifier);
 
             if (success)
-                Symbols.SetName(identifier.SymbolName.CanonicalName.FullName);
+                SymbolTable.SetName(identifier.SymbolName.CanonicalName.FullName);
 
             return success;
         }
@@ -38,7 +38,7 @@ namespace Zsharp.AST
             var success = base.TryAddField(field);
 
             if (success)
-                Symbols.Add(field);
+                SymbolTable.Add(field);
 
             return success;
         }
@@ -47,7 +47,7 @@ namespace Zsharp.AST
         {
             if (base.TryAddTemplateParameter(templateParameter))
             {
-                Symbols.Add(templateParameter);
+                SymbolTable.Add(templateParameter);
                 return true;
             }
             return false;

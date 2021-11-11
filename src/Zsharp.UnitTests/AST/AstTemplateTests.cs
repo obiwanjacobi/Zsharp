@@ -18,7 +18,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code);
-            var symbol = file.Symbols.FindSymbol("Mystruct%1", AstSymbolKind.Type);
+            var symbol = file.SymbolTable.FindSymbol("Mystruct%1", AstSymbolKind.Type);
             symbol.Should().NotBeNull();
 
             var s = file.CodeBlock.LineAt<AstTypeDefinitionStruct>(0);

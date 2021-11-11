@@ -2,17 +2,17 @@
 {
     public interface IAstSymbolTableSite
     {
-        AstSymbolTable Symbols { get; }
+        AstSymbolTable SymbolTable { get; }
     }
 
     public static class AstSymbolTableSiteExtensions
     {
         public static AstSymbol AddSymbol(this IAstSymbolTableSite symbolTableSite, string symbolName, AstSymbolKind kind, AstNode? node = null)
-            => symbolTableSite.Symbols.AddSymbol(symbolName, kind, node);
+            => symbolTableSite.SymbolTable.AddSymbol(symbolName, kind, node);
 
         public static void ThrowIfSymbolTableNotSet(this IAstSymbolTableSite symbolTableSite)
         {
-            if (symbolTableSite.Symbols is null)
+            if (symbolTableSite.SymbolTable is null)
                 throw new InternalErrorException("Symbol Table was not set.");
         }
     }

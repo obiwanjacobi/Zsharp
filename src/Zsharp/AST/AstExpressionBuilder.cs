@@ -209,7 +209,7 @@ namespace Zsharp.AST
             BuilderContext.RevertCurrent();
 
             var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(fieldRef);
+            symbols.SymbolTable.Add(fieldRef);
 
             varRef.TrySetTypeFieldReference(fieldRef);
 
@@ -226,7 +226,7 @@ namespace Zsharp.AST
             enumOpt.SetIdentifier(identifier);
 
             var symbols = BuilderContext.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(enumOpt);
+            symbols.SymbolTable.Add(enumOpt);
 
             return enumOpt;
         }

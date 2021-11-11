@@ -26,13 +26,13 @@ namespace Zsharp.AST
             return false;
         }
 
-        public AstSymbolTable Symbols
+        public AstSymbolTable SymbolTable
         {
             get
             {
                 if (HasCodeBlock)
                 {
-                    return CodeBlock.Symbols;
+                    return CodeBlock.SymbolTable;
                 }
 
                 // When the Node Builder is building up the function definition,
@@ -44,7 +44,7 @@ namespace Zsharp.AST
 
                 var site = ParentAs<IAstSymbolTableSite>() ??
                     throw new InvalidOperationException("Function Parent not a SymbolTable Site.");
-                return site.Symbols;
+                return site.SymbolTable;
             }
         }
 
@@ -59,7 +59,7 @@ namespace Zsharp.AST
 
             foreach (var templParam in TemplateParameters)
             {
-                Symbols.TryAdd(templParam);
+                SymbolTable.TryAdd(templParam);
             }
         }
 

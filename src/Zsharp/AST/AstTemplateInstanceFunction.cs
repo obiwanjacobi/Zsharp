@@ -47,19 +47,19 @@ namespace Zsharp.AST
             return false;
         }
 
-        public AstSymbolTable Symbols
+        public AstSymbolTable SymbolTable
         {
             get
             {
                 var codeBlock = CodeBlock;
                 if (codeBlock is not null)
                 {
-                    return codeBlock.Symbols;
+                    return codeBlock.SymbolTable;
                 }
 
                 var site = ParentAs<IAstSymbolTableSite>() ??
                     throw new InternalErrorException("Function Parent not a SymbolTable Site.");
-                return site.Symbols;
+                return site.SymbolTable;
             }
         }
 
@@ -75,7 +75,7 @@ namespace Zsharp.AST
             foreach (var param in FunctionType.Parameters)
             {
                 // function parameters are registered as variables
-                Symbols.AddSymbol(param.Identifier.SymbolName.CanonicalName.FullName, AstSymbolKind.Variable, param);
+                SymbolTable.AddSymbol(param.Identifier.SymbolName.CanonicalName.FullName, AstSymbolKind.Variable, param);
             }
         }
     }

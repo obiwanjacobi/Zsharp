@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -40,7 +40,7 @@ namespace Zsharp.AST
                 _context.RevertCurrent();
             }
 
-            var module = _context.CompilerContext.Modules.FindModule<AstModuleImpl>(file.Symbols.Name);
+            var module = _context.CompilerContext.Modules.FindModule<AstModuleImpl>(file.SymbolTable.Name);
             module!.AddFile(file!);
             return file;
         }

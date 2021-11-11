@@ -1,4 +1,4 @@
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,12 +17,12 @@ namespace Zsharp.AST
         public ParserRuleContext Context { get; }
 
         public IEnumerable<AstFunctionDefinitionImpl> Functions
-            => Symbols.FindSymbols(AstSymbolKind.Function)
+            => SymbolTable.FindSymbols(AstSymbolKind.Function)
                 .Select(s => s.DefinitionAs<AstFunctionDefinitionImpl>())
                 .Where(f => f is not null)!;
 
-        public AstSymbolTable Symbols
-            => _codeBlock?.Symbols ?? throw new InternalErrorException("CodeBlock was not set. No SymbolTable available.");
+        public AstSymbolTable SymbolTable
+            => _codeBlock?.SymbolTable ?? throw new InternalErrorException("CodeBlock was not set. No SymbolTable available.");
 
         public bool HasCodeBlock => _codeBlock is not null;
 
@@ -31,7 +31,7 @@ namespace Zsharp.AST
             => _codeBlock ?? throw new InternalErrorException("CodeBlock was not set.");
 
         public bool HasExports
-            => CodeBlock.Symbols.Symbols.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);
+            => CodeBlock.SymbolTable.Symbols.Any(e => e.SymbolLocality == AstSymbolLocality.Exported);
 
         public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
             => this.SafeSetParent(ref _codeBlock, codeBlock);

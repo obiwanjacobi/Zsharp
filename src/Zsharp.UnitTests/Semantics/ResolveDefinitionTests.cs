@@ -22,7 +22,7 @@ namespace Zsharp.UnitTests.Semantics
             v.Should().NotBeNull();
             v.Parent.Should().Be(a);
 
-            var sym = file.CodeBlock.Symbols.FindSymbol(v);
+            var sym = file.CodeBlock.SymbolTable.FindSymbol(v);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -40,7 +40,7 @@ namespace Zsharp.UnitTests.Semantics
             v.TypeReference.TypeDefinition.Should().NotBeNull();
             v.TypeReference.TypeDefinition.IsIntrinsic.Should().BeTrue();
 
-            var sym = file.CodeBlock.Symbols.FindSymbol(v);
+            var sym = file.CodeBlock.SymbolTable.FindSymbol(v);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -60,7 +60,7 @@ namespace Zsharp.UnitTests.Semantics
             v.TypeReference.TypeDefinition.Should().NotBeNull();
             v.TypeReference.TypeDefinition.IsIntrinsic.Should().BeTrue();
 
-            var sym = file.CodeBlock.Symbols.FindSymbol(v);
+            var sym = file.CodeBlock.SymbolTable.FindSymbol(v);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -79,7 +79,7 @@ namespace Zsharp.UnitTests.Semantics
             v.Parent.Should().Be(a);
             v.TypeReference.Should().NotBeNull();
 
-            var sym = file.CodeBlock.Symbols.FindSymbol(v.Identifier.SymbolName.CanonicalName.FullName, AstSymbolKind.Variable);
+            var sym = file.CodeBlock.SymbolTable.FindSymbol(v.Identifier.SymbolName.CanonicalName.FullName, AstSymbolKind.Variable);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -99,7 +99,7 @@ namespace Zsharp.UnitTests.Semantics
             v.Parent.Should().Be(a);
             v.TypeReference.Should().NotBeNull();
 
-            var sym = file.CodeBlock.Symbols.FindSymbol(v);
+            var sym = file.CodeBlock.SymbolTable.FindSymbol(v);
             sym.Definition.Should().NotBeNull();
         }
 
@@ -322,7 +322,7 @@ namespace Zsharp.UnitTests.Semantics
                 ;
 
             var file = Compile.File(code);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             var symbol = symbols.FindSymbol("Myenum.Zero", AstSymbolKind.Field);
             symbol.Definition.Should().NotBeNull();
 

@@ -43,7 +43,7 @@ namespace Zsharp.AST
                 if (templateFunctionDef is IAstSymbolTableSite symbolSite)
                 {
                     // registered in impl function defs symbol table
-                    symbols = symbolSite.Symbols;
+                    symbols = symbolSite.SymbolTable;
                 }
                 else
                 {
@@ -90,7 +90,7 @@ namespace Zsharp.AST
         public override void VisitCodeBlock(AstCodeBlock codeBlock)
         {
             var cb = new AstCodeBlock(
-                codeBlock.Symbols.Name, codeBlock.Symbols!.ParentTable!, codeBlock.Context);
+                codeBlock.SymbolTable.Name, codeBlock.SymbolTable!.ParentTable!, codeBlock.Context);
 
             var site = _current.GetCurrent<IAstCodeBlockSite>();
             site.SetCodeBlock(cb);
@@ -117,7 +117,7 @@ namespace Zsharp.AST
                 _current.RevertCurrent();
 
                 var symbols = _current.GetCurrent<IAstSymbolTableSite>();
-                fnDef.CreateSymbols(symbols.Symbols);
+                fnDef.CreateSymbols(symbols.SymbolTable);
             }
         }
 
@@ -300,7 +300,7 @@ namespace Zsharp.AST
             _current.RevertCurrent();
 
             var symbols = _current.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(varDef);
+            symbols.SymbolTable.Add(varDef);
 
             return varDef;
         }
@@ -318,7 +318,7 @@ namespace Zsharp.AST
             _current.RevertCurrent();
 
             var symbols = _current.GetCurrent<IAstSymbolTableSite>();
-            symbols.Symbols.Add(varRef);
+            symbols.SymbolTable.Add(varRef);
 
             return varRef;
         }

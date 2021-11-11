@@ -127,8 +127,8 @@ namespace Zsharp.AST
 
                 if (parentSymbol is not null)
                 {
-                    if (childSymbol.Parent is null)
-                        childSymbol.SetParent(parentSymbol);
+                    if (childSymbol.ParentSymbol is null)
+                        childSymbol.SetParentSymbol(parentSymbol);
                     else
                         return true;
 
@@ -238,7 +238,7 @@ namespace Zsharp.AST
                 {
                     var tableSite = symbol.DefinitionAs<IAstSymbolTableSite>();
                     if (tableSite is not null)
-                        symbolTable = tableSite.Symbols;
+                        symbolTable = tableSite.SymbolTable;
                 }
                 
                 var table = FindChildSymbolTableByNamespace(part);
@@ -258,7 +258,7 @@ namespace Zsharp.AST
             var moduleSymbolTables = _table.Values
                 .Where(e => e.SymbolKind == AstSymbolKind.Module &&
                        e.SymbolLocality == AstSymbolLocality.Imported)
-                .Select(e => e.DefinitionAs<AstModuleExternal>()!.Symbols)
+                .Select(e => e.DefinitionAs<AstModuleExternal>()!.SymbolTable)
                 .Where(t => t.Namespace == symbolName.Namespace || String.IsNullOrEmpty(symbolName.Namespace));
 
             foreach (var symbolTable in moduleSymbolTables)
@@ -297,7 +297,7 @@ namespace Zsharp.AST
         private AstSymbolTable? FindChildSymbolTableByNamespace(string @namespace)
         {
             var tables = _table.Values
-                .Select(s => s.DefinitionAs<IAstSymbolTableSite>()?.Symbols)
+                .Select(s => s.DefinitionAs<IAstSymbolTableSite>()?.SymbolTable)
                 .Where(t => t is not null && t.Namespace == @namespace);
 
             return tables.SingleOrDefault();

@@ -7,11 +7,11 @@
             : base(AstModuleLocality.External)
         {
             var symbolName = AstSymbolName.Parse(moduleName, AstNameKind.External);
-            Symbols = new AstSymbolTable(symbolName.CanonicalName.FullName, parentTable);
+            SymbolTable = new AstSymbolTable(symbolName.CanonicalName.FullName, parentTable);
             this.SetIdentifier(new AstIdentifier(symbolName, AstIdentifierKind.Module));
         }
 
-        public AstSymbolTable Symbols { get; }
+        public AstSymbolTable SymbolTable { get; }
 
         public AstName ExternalName => Identifier.SymbolName.NativeName;
 
@@ -20,14 +20,14 @@
 
         public void AddTypeDefinition(AstTypeDefinitionExternal typeDefinition)
         {
-            var symbol = Symbols.Add(typeDefinition);
+            var symbol = SymbolTable.Add(typeDefinition);
             symbol.SymbolLocality = AstSymbolLocality.Imported;
         }
 
         public void AddAlias(AstNode source, string alias)
         {
             var identifier = ((IAstIdentifierSite)source).Identifier;
-            var symbol = Symbols.FindSymbol(identifier);
+            var symbol = SymbolTable.FindSymbol(identifier);
             Ast.Guard(symbol, $"No symbol for '{identifier.SymbolName.CanonicalName.FullName}' was found in external module {Identifier.NativeFullName}.");
 
             if (source is AstFunctionDefinition functionDef)
@@ -42,7 +42,7 @@
 
         public void AddAlias(AstName symbolName, string alias)
         {
-            var symbol = Symbols.FindSymbol(symbolName, AstSymbolKind.Unknown);
+            var symbol = SymbolTable.FindSymbol(symbolName, AstSymbolKind.Unknown);
             Ast.Guard(symbol, $"No symbol for '{symbol}' was found in external module {Identifier.NativeFullName}.");
             symbol!.TryAddAlias(alias);
         }
@@ -55,7 +55,7 @@
                 function.FunctionType.SetTypeReference(typeRef);
             }
 
-            function.CreateSymbols(Symbols);
+            function.CreateSymbols(SymbolTable);
             function.Symbol.SymbolLocality = AstSymbolLocality.Imported;
         }
     }

@@ -17,9 +17,9 @@ namespace Zsharp.UnitTests.AST
 
             var sysMods = loader.LoadAll("System");
             sysMods.Should().NotBeEmpty();
-            sysMods.All(m => m.Symbols.Namespace.StartsWith("System"))
+            sysMods.All(m => m.SymbolTable.Namespace.StartsWith("System"))
                 .Should().BeTrue();
-            sysMods.All(m => m.Symbols.FindSymbols(AstSymbolKind.Function)
+            sysMods.All(m => m.SymbolTable.FindSymbols(AstSymbolKind.Function)
                 .All(e => e.SymbolLocality == AstSymbolLocality.Imported))
                 .Should().BeTrue();
             //sysMods.All(m => m.Symbols.FindSymbols(AstSymbolKind.Type)
@@ -37,9 +37,9 @@ namespace Zsharp.UnitTests.AST
 
             var sysMods = loader.LoadNamespace("System");
             sysMods.Should().NotBeEmpty();
-            sysMods.All(m => m.Symbols.Namespace.StartsWith("System."))
+            sysMods.All(m => m.SymbolTable.Namespace.StartsWith("System."))
                 .Should().BeTrue();
-            sysMods.All(m => m.Symbols.FindSymbols(AstSymbolKind.Function)
+            sysMods.All(m => m.SymbolTable.FindSymbols(AstSymbolKind.Function)
                 .All(e => e.SymbolLocality == AstSymbolLocality.Imported))
                 .Should().BeTrue();
             //sysMods.All(m => m.Symbols.FindSymbols(AstSymbolKind.Type)
@@ -56,7 +56,7 @@ namespace Zsharp.UnitTests.AST
                 ;
 
             var file = Build.File(code, Compile.CreateModuleLoader());
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
             foreach(var mod in symbols.FindSymbols(AstSymbolKind.Module))
@@ -77,7 +77,7 @@ namespace Zsharp.UnitTests.AST
                 .ToModuleLoader();
 
             var file = Build.File(code, moduleLoader);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
             var mod = symbols.FindSymbols(AstSymbolKind.Module).Single();
@@ -96,7 +96,7 @@ namespace Zsharp.UnitTests.AST
                 .ToModuleLoader();
 
             var file = Build.File(code, moduleLoader);
-            var symbols = file.Symbols;
+            var symbols = file.SymbolTable;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
             var mod = symbols.FindSymbols(AstSymbolKind.Module).Single();

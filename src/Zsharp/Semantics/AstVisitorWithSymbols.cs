@@ -13,14 +13,14 @@ namespace Zsharp.Semantics
 
         public override void VisitCodeBlock(AstCodeBlock codeBlock)
         {
-            var symbols = SetSymbolTable(codeBlock.Symbols);
+            var symbols = SetSymbolTable(codeBlock.SymbolTable);
             codeBlock.VisitChildren(this);
             SetSymbolTable(symbols);
         }
 
         public override void VisitFile(AstFile file)
         {
-            var symbols = SetSymbolTable(file.Symbols);
+            var symbols = SetSymbolTable(file.SymbolTable);
             file.VisitChildren(this);
             SetSymbolTable(symbols);
         }

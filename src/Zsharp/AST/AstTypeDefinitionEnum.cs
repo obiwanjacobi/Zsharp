@@ -11,19 +11,19 @@ namespace Zsharp.AST
             : base(AstNodeKind.Enum)
         {
             Context = context;
-            Symbols = new AstSymbolTable("", parentTable);
+            SymbolTable = new AstSymbolTable("", parentTable);
         }
 
         public uint Indent { get; set; }
 
-        public AstSymbolTable Symbols { get; }
+        public AstSymbolTable SymbolTable { get; }
 
         public override bool TrySetIdentifier(AstIdentifier identifier)
         {
             var success = base.TrySetIdentifier(identifier);
 
             if (success)
-                Symbols.SetName(identifier.SymbolName.CanonicalName.FullName);
+                SymbolTable.SetName(identifier.SymbolName.CanonicalName.FullName);
 
             return success;
         }
