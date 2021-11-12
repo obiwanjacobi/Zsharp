@@ -20,7 +20,7 @@ namespace Zsharp.External
 
         public void Build(TypeMetadata typeDefinition)
         {
-            ModuleName = typeDefinition.FullName;
+            ModuleName = AstSymbolName.ToCanonical(typeDefinition.FullName);
 
             if (typeDefinition.IsEnum)
             {

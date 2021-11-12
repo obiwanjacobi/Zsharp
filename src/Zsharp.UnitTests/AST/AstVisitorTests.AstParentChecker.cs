@@ -62,10 +62,10 @@ namespace Zsharp.UnitTests.AST
                 parameter.Parent.Should().NotBeNull();
                 parameter.VisitChildren(this);
             }
-            public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
+            public override void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
             {
-                parameter.Parent.Should().NotBeNull();
-                parameter.VisitChildren(this);
+                argument.Parent.Should().NotBeNull();
+                argument.VisitChildren(this);
             }
             public override void VisitModulePublic(AstModuleImpl module)
             {
@@ -132,10 +132,10 @@ namespace Zsharp.UnitTests.AST
                 templateParameter.Parent.Should().NotBeNull();
                 templateParameter.VisitChildren(this);
             }
-            public override void VisitTemplateParameterReference(AstTemplateParameterReference templateParameter)
+            public override void VisitTemplateParameterReference(AstTemplateParameterArgument templateArgument)
             {
-                templateParameter.Parent.Should().NotBeNull();
-                templateParameter.VisitChildren(this);
+                templateArgument.Parent.Should().NotBeNull();
+                templateArgument.VisitChildren(this);
             }
             public override void VisitTypeDefinitionEnumOption(AstTypeDefinitionEnumOption enumOption)
             {

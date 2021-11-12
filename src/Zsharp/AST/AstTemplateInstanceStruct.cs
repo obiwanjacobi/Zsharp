@@ -22,14 +22,14 @@ namespace Zsharp.AST
 
         public void Instantiate(AstTypeReferenceType type)
         {
-            Ast.Guard(type.TemplateParameters.Count() == TemplateDefinition.TemplateParameters.Count(),
+            Ast.Guard(type.TemplateArguments.Count() == TemplateDefinition.TemplateParameters.Count(),
                 $"The number of template parameters do not match the TemplateDefinition {TemplateDefinition.Identifier.NativeFullName}");
 
             Context = type.Context;
             this.SetIdentifier(type.Identifier.MakeCopy());
 
             _templateArguments = new AstTemplateArgumentMap(
-                TemplateDefinition.TemplateParameters, type.TemplateParameters);
+                TemplateDefinition.TemplateParameters, type.TemplateArguments);
 
             foreach (var field in TemplateDefinition.Fields)
             {
@@ -50,7 +50,7 @@ namespace Zsharp.AST
         }
 
         private AstTemplateArgumentMap? _templateArguments;
-        public AstTemplateArgumentMap TemplateArguments
+        public AstTemplateArgumentMap TemplateParameterArguments
             => _templateArguments ?? AstTemplateArgumentMap.Empty;
     }
 }

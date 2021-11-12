@@ -44,6 +44,24 @@ namespace Zsharp.UnitTests.Semantics
         }
 
         [TestMethod]
+        public void ExternalGenericType()
+        {
+            const string code =
+                "import System.Collections.Generic.*" + Tokens.NewLine +
+                "l = List<Str>()" + Tokens.NewLine
+                ;
+
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddSystemCollections()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
+
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
+            assign.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void ExternalFunctionArray()
         {
             const string code =

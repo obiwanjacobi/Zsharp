@@ -137,7 +137,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var func = file.Functions.First().CodeBlock.LineAt<AstFunctionReference>(0);
-            var p = func.FunctionType.Parameters.First();
+            var p = func.FunctionType.Arguments.First();
             p.Expression.Should().NotBeNull();
         }
 

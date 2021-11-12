@@ -39,7 +39,7 @@ namespace Zsharp.EmitCS
 
             if (functionDef.IsExternal)
             {
-                name = ((AstFunctionDefinitionExternal)functionDef).ExternalName.FullName;
+                name = functionDef.Identifier.NativeFullName;
             }
 
             Context.CodeBuilder.CsBuilder.Append($"{name}(");

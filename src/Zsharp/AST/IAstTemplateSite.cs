@@ -3,7 +3,7 @@
 namespace Zsharp.AST
 {
     public interface IAstTemplateSite<T>
-        where T : AstTemplateParameter
+        where T : AstTemplateParameterDefinition
     {
         bool IsTemplate { get; }
         IEnumerable<T> TemplateParameters { get; }
@@ -13,7 +13,7 @@ namespace Zsharp.AST
     public static class AstTemplateSiteExtensions
     {
         public static void AddTemplateParameter<T>(this IAstTemplateSite<T> templateSite, T templateParameter)
-            where T : AstTemplateParameter
+            where T : AstTemplateParameterDefinition
         {
             if (!templateSite.TryAddTemplateParameter(templateParameter))
                 throw new InternalErrorException(

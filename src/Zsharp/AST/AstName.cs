@@ -19,7 +19,7 @@ namespace Zsharp.AST
         public const char Separator = '.';
         public const char TemplateDelimiter = '%';
         public const char GenericDelimiter = '`';
-        public const char ParameterDelimiter = ';';
+        public const char ArgumentDelimiter = ';';
 
         private AstName(NamePart[] parts, AstNameKind nameKind)
         {
@@ -72,9 +72,9 @@ namespace Zsharp.AST
                 return  0;
 
             string[] parts;
-            if (Postfix.Contains(ParameterDelimiter))
+            if (Postfix.Contains(ArgumentDelimiter))
             {
-                parts = Postfix.Split(new[] { ParameterDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+                parts = Postfix.Split(new[] { ArgumentDelimiter }, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Any()) return parts.Length;
             }
 
@@ -94,7 +94,7 @@ namespace Zsharp.AST
 
         public AstName ToCanonical()
         {
-            var canonical = AstName.FromParts(Parts.Select(PartToCanonical).ToArray(), AstNameKind.Canonical);
+            var canonical = new AstName(_parts.Select(PartToCanonical).ToArray(), AstNameKind.Canonical);
             canonical.Prefix = Prefix;
             canonical.Postfix = Postfix;
             return canonical;
@@ -122,15 +122,19 @@ namespace Zsharp.AST
             return new AstName(parts, nameKind);
         }
 
-        internal static string PartToCanonical(string part)
+        private static NamePart PartToCanonical(NamePart part)
         {
-            if (String.IsNullOrEmpty(part))
-                return part;
+            if (String.IsNullOrEmpty(part.Name))
+                return new NamePart(part);
 
             // remove discards '_'
-            var canonical = part.Replace("_", String.Empty);
+            var canonical = part.Name.Replace("_", String.Empty);
             // preserve casing of first letter
-            return canonical[0] + canonical[1..].ToLowerInvariant();
+            return new NamePart(canonical[0] + canonical[1..].ToLowerInvariant())
+            { 
+                Prefix = part.Prefix,
+                Postfix = part.Postfix
+            };
         }
 
         private void ParseParts()
@@ -149,13 +153,18 @@ namespace Zsharp.AST
 
             var namePart = _parts[_nameIndex];
 
-            Prefix = ParsePrefix(namePart.Name);
-            namePart.Prefix = Prefix;
-            namePart.Name = namePart.Name[Prefix.Length..];
-
-            Postfix = ParsePostfix(namePart.Name);
-            namePart.Postfix =Postfix;
-            namePart.Name = namePart.Name[..^Postfix.Length];
+            if (namePart.Prefix.Length == 0)
+            { 
+                Prefix = ParsePrefix(namePart.Name);
+                namePart.Prefix = Prefix;
+                namePart.Name = namePart.Name[Prefix.Length..];
+            }
+            if (namePart.Postfix.Length == 0)
+            { 
+                Postfix = ParsePostfix(namePart.Name);
+                namePart.Postfix =Postfix;
+                namePart.Name = namePart.Name[..^Postfix.Length];
+            }
         }
 
         private string ParsePrefix(string name)
@@ -175,7 +184,7 @@ namespace Zsharp.AST
         {
             var postfix = String.Empty;
 
-            var parts = symbolName.Split(new[] { TemplateDelimiter, GenericDelimiter, ParameterDelimiter });
+            var parts = symbolName.Split(new[] { TemplateDelimiter, GenericDelimiter, ArgumentDelimiter });
             if (parts.Length > 1)
             {
                 // includes and replace delimiter
@@ -200,6 +209,13 @@ namespace Zsharp.AST
                 Prefix = String.Empty;
                 Name = name;
                 Postfix = String.Empty;
+            }
+
+            public NamePart(NamePart part)
+            {
+                Prefix = part.Prefix;
+                Name = part.Name;
+                Postfix = part.Postfix;
             }
 
             public string Prefix;

@@ -45,7 +45,7 @@ namespace Zsharp.UnitTests.Semantics
             typeRef.IsTemplate.Should().BeTrue();
             var typeDef = typeRef.TypeDefinition as AstTemplateInstanceType;
             typeDef.Should().NotBeNull();
-            typeDef.TemplateArguments.Count.Should().Be(1);
+            typeDef.TemplateParameterArguments.Count.Should().Be(1);
         }
 
         [TestMethod]

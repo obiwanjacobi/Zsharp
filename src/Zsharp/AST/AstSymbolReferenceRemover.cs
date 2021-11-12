@@ -8,11 +8,11 @@
         public void Remove(AstNode node)
             => Visit(node);
 
-        public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
+        public override void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
         {
-            if (parameter.HasSymbol)
-                parameter.Symbol.RemoveReference(parameter);
-            base.VisitFunctionParameterReference(parameter);
+            if (argument.HasSymbol)
+                argument.Symbol.RemoveReference(argument);
+            base.VisitFunctionParameterReference(argument);
         }
 
         public override void VisitFunctionReference(AstFunctionReference function)
@@ -22,11 +22,11 @@
             base.VisitFunctionReference(function);
         }
 
-        public override void VisitTemplateParameterReference(AstTemplateParameterReference templateParameter)
+        public override void VisitTemplateParameterReference(AstTemplateParameterArgument templateArgument)
         {
-            if (templateParameter.HasSymbol)
-                templateParameter.Symbol.RemoveReference(templateParameter);
-            base.VisitTemplateParameterReference(templateParameter);
+            if (templateArgument.HasSymbol)
+                templateArgument.Symbol.RemoveReference(templateArgument);
+            base.VisitTemplateParameterReference(templateArgument);
         }
 
         public override void VisitTypeFieldReferenceEnumOption(AstTypeFieldReferenceEnumOption enumOption)

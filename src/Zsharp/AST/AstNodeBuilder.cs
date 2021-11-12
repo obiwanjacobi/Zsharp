@@ -1,4 +1,4 @@
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
@@ -264,9 +264,9 @@ namespace Zsharp.AST
 
             // make variable into a parameter ref
             var expression = new AstExpression(new AstExpressionOperand(varRef));
-            var param = new AstFunctionParameterReference(expression);
-            param.SetIdentifier(AstIdentifierIntrinsic.Self);
-            fnRef.FunctionType.AddParameter(param);
+            var argument = new AstFunctionParameterArgument(expression);
+            argument.SetIdentifier(AstIdentifierIntrinsic.Self);
+            fnRef.FunctionType.AddArgument(argument);
 
             return fnRef;
         }
@@ -288,9 +288,9 @@ namespace Zsharp.AST
 
         public override object? VisitFunction_param_use(Function_param_useContext context)
         {
-            var parameter = New.AstFunctionParameterReference(context);
+            var parameter = New.AstFunctionParameterArgument(context);
             var function = _builderContext.GetCurrent<AstFunctionReference>();
-            function.FunctionType.AddParameter(parameter);
+            function.FunctionType.AddArgument(parameter);
 
             _builderContext.SetCurrent(parameter);
             var node = (AstNode?)VisitChildren(context);
@@ -724,16 +724,16 @@ namespace Zsharp.AST
 
         public override object? VisitTemplate_param_use(Template_param_useContext context)
         {
-            var templateParam = New.AstTemplateParameterReference(context);
+            var templateArg = New.AstTemplateParameterArgument(context);
 
-            _builderContext.SetCurrent(templateParam);
+            _builderContext.SetCurrent(templateArg);
             _ = VisitChildren(context);
             _builderContext.RevertCurrent();
 
-            var template = _builderContext.GetCurrent<IAstTemplateSite<AstTemplateParameterReference>>();
-            template.AddTemplateParameter(templateParam);
+            var template = _builderContext.GetCurrent<IAstTemplateUseSite<AstTemplateParameterArgument>>();
+            template.AddTemplateArgument(templateArg);
 
-            return templateParam;
+            return templateArg;
         }
 
         public override object? VisitType_ref(Type_refContext context)

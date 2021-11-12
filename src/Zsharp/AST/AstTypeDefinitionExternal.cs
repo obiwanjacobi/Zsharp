@@ -1,7 +1,6 @@
 ﻿namespace Zsharp.AST
 {
-    public class AstTypeDefinitionExternal : AstTypeDefinitionWithFields,
-        IAstExternalNameSite
+    public class AstTypeDefinitionExternal : AstTypeDefinitionWithFields
     {
         public AstTypeDefinitionExternal(string typeName, AstTypeReference? baseType)
             : base(AstNodeKind.Type)
@@ -13,8 +12,6 @@
         }
 
         public override bool IsExternal => true;
-
-        public AstName ExternalName => Identifier.SymbolName.NativeName;
 
         public override void Accept(AstVisitor visitor)
         {

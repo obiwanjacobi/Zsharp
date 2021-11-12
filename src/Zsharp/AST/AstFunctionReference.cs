@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Zsharp.AST
 {
     public class AstFunctionReference : AstFunction,
-        IAstTemplateSite<AstTemplateParameterReference>
+        IAstTemplateUseSite<AstTemplateParameterArgument>
     {
         internal AstFunctionReference(ParserRuleContext context, bool enforceReturnValueUse)
         {
@@ -50,19 +50,19 @@ namespace Zsharp.AST
 
         // true when type is a template instantiation
         public bool IsTemplate
-            => _templateParameters!.Count > 0;
+            => _templateArguments!.Count > 0;
 
-        private readonly List<AstTemplateParameterReference> _templateParameters = new();
-        public IEnumerable<AstTemplateParameterReference> TemplateParameters
-            => _templateParameters!;
+        private readonly List<AstTemplateParameterArgument> _templateArguments = new();
+        public IEnumerable<AstTemplateParameterArgument> TemplateArguments
+            => _templateArguments!;
 
-        public bool TryAddTemplateParameter(AstTemplateParameterReference templateParameter)
+        public bool TryAddTemplateArgument(AstTemplateParameterArgument templateArgument)
         {
-            if (templateParameter is AstTemplateParameterReference parameter)
+            if (templateArgument is not null)
             {
-                _templateParameters.Add(parameter);
+                _templateArguments.Add(templateArgument);
 
-                Identifier.SymbolName.AddTemplateParameter(parameter.TypeReference.Identifier.NativeFullName);
+                Identifier.SymbolName.AddTemplateArgument(templateArgument.TypeReference.Identifier.NativeFullName);
                 return true;
             }
             return false;

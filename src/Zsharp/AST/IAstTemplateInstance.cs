@@ -2,6 +2,6 @@
 {
     public interface IAstTemplateInstance
     {
-        AstTemplateArgumentMap TemplateArguments { get; }
+        AstTemplateArgumentMap TemplateParameterArguments { get; }
     }
 }

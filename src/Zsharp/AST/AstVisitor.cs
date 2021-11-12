@@ -1,4 +1,4 @@
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public class AstVisitor
     {
@@ -67,9 +67,9 @@ namespace Zsharp.AST
             parameter.VisitChildren(this);
         }
 
-        public virtual void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
+        public virtual void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
         {
-            parameter.VisitChildren(this);
+            argument.VisitChildren(this);
         }
 
         public virtual void VisitModuleExternal(AstModuleExternal module)
@@ -172,9 +172,9 @@ namespace Zsharp.AST
             templateParameter.VisitChildren(this);
         }
 
-        public virtual void VisitTemplateParameterReference(AstTemplateParameterReference templateParameter)
+        public virtual void VisitTemplateParameterReference(AstTemplateParameterArgument templateArgument)
         {
-            templateParameter.VisitChildren(this);
+            templateArgument.VisitChildren(this);
         }
 
         public virtual void VisitGenericParameterDefinition(AstGenericParameterDefinition genericParameter)
@@ -182,9 +182,9 @@ namespace Zsharp.AST
             genericParameter.VisitChildren(this);
         }
 
-        public virtual void VisitGenericParameterReference(AstGenericParameterReference genericParameter)
+        public virtual void VisitGenericParameterReference(AstGenericParameterArgument genericArgument)
         {
-            genericParameter.VisitChildren(this);
+            genericArgument.VisitChildren(this);
         }
 
         public virtual void VisitVariableDefinition(AstVariableDefinition variable)

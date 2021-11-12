@@ -105,7 +105,7 @@ namespace Zsharp.AST
         {
             return _definitions
                 .OfType<IAstTemplateInstance>()
-                .SingleOrDefault(i => i.TemplateArguments.Arguments
+                .SingleOrDefault(i => i.TemplateParameterArguments.Arguments
                     .Select(a => a.TypeReference.Identifier.CanonicalFullName)
                     .SequenceEqual(
                         templateArgumentTypes.Select(a => a.Identifier.CanonicalFullName))) as T;

@@ -24,7 +24,7 @@ namespace Zsharp.AST
         {
             Context = function.Context;
             _templateArguments = new AstTemplateArgumentMap(
-                TemplateDefinition.TemplateParameters, function.TemplateParameters);
+                TemplateDefinition.TemplateParameters, function.TemplateArguments);
 
             var cloner = new AstNodeCloner(context, TemplateDefinition.Indent);
             cloner.Clone(function, TemplateDefinition, this, _templateArguments);
@@ -64,7 +64,7 @@ namespace Zsharp.AST
         }
 
         private AstTemplateArgumentMap? _templateArguments;
-        public AstTemplateArgumentMap TemplateArguments
+        public AstTemplateArgumentMap TemplateParameterArguments
             => _templateArguments ?? AstTemplateArgumentMap.Empty;
 
         /// <summary>

@@ -293,13 +293,13 @@ namespace Zsharp.Semantics
             }
         }
 
-        public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
+        public override void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
         {
-            parameter.VisitChildren(this);
+            argument.VisitChildren(this);
 
-            if (!parameter.HasTypeReference)
+            if (!argument.HasTypeReference)
             {
-                parameter.SetTypeReference(parameter.Expression.TypeReference.MakeCopy());
+                argument.SetTypeReference(argument.Expression.TypeReference.MakeCopy());
             }
         }
 
@@ -413,15 +413,15 @@ namespace Zsharp.Semantics
 
         private bool SetToMatch(AstFunctionReference function, AstFunctionDefinition functionDef)
         {
-            Ast.Guard(function.FunctionType.Parameters.Count() == functionDef.FunctionType.Parameters.Count(), 
+            Ast.Guard(function.FunctionType.Arguments.Count() == functionDef.FunctionType.Parameters.Count(), 
                 "Number of Parameters don't match between function reference and definition");
 
             bool hasReplacements = false;
-            var parameters = function.FunctionType.Parameters.ToList();
+            var arguments = function.FunctionType.Arguments.ToList();
             var parameterDefs = functionDef.FunctionType.Parameters.ToList();
-            for (int i = 0; i < parameters.Count; i++)
+            for (int i = 0; i < arguments.Count; i++)
             {
-                var parameter = parameters[i];
+                var parameter = arguments[i];
                 if (!parameter.HasTypeReference ||
                     parameter.TypeReference.IsInferred)
                 {

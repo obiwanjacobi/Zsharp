@@ -52,11 +52,11 @@ namespace Zsharp.AST
         }
 
         /// <summary>For template/generic references: MyType<T></summary>
-        public void AddTemplateParameter(string? name)
+        public void AddTemplateArgument(string? name)
         {
             if (!String.IsNullOrEmpty(name))
             {
-                var postfix = $"{AstName.ParameterDelimiter}{name}";
+                var postfix = $"{AstName.ArgumentDelimiter}{name}";
                 NativeName.Postfix += postfix;
                 CanonicalName.Postfix += postfix;
             }

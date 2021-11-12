@@ -829,6 +829,20 @@ v = match s
 
 A constrained variant instance cannot change type during its lifetime.
 
+> TBD: have other means of determining the type of the contents?
+
+```csharp
+OneOfThese: Struct1 or Struct2 or Struct3 or Struct4
+
+s: OneOfThese
+
+// a property that matches T
+if s.type = Struct1
+    ...
+```
+
+This would be basically how the type would be stored...
+
 ---
 
 ## Type Manipulation

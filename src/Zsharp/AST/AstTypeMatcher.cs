@@ -23,7 +23,7 @@ namespace Zsharp.AST
 
         public static int Rank(AstFunctionReference functionRef, AstFunctionDefinition functionDef)
         {
-            var sources = functionRef.FunctionType.Parameters.Select(p => p.TypeReference).ToList();
+            var sources = functionRef.FunctionType.Arguments.Select(p => p.TypeReference).ToList();
             var targets = functionDef.FunctionType.Parameters.Select(p => p.TypeReference).ToList();
 
             // TODO: check for default values on targets

@@ -55,7 +55,7 @@ namespace Zsharp.UnitTests.AST
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionReference>(3);
             fn.Should().NotBeNull();
-            fn.FunctionType.Parameters.First().Identifier
+            fn.FunctionType.Arguments.First().Identifier
                 .Should().Be(AstIdentifierIntrinsic.Self);
         }
     }

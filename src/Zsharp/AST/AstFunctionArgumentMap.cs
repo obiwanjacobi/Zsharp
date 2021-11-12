@@ -3,11 +3,11 @@
 namespace Zsharp.AST
 {
     public class AstFunctionArgumentMap
-        : AstParameterArgumentMap<AstFunctionParameterDefinition, AstFunctionParameterReference>
+        : AstParameterArgumentMap<AstFunctionParameterDefinition, AstFunctionParameterArgument>
     {
         public AstFunctionArgumentMap(
             IEnumerable<AstFunctionParameterDefinition> parameters,
-            IEnumerable<AstFunctionParameterReference> arguments)
+            IEnumerable<AstFunctionParameterArgument> arguments)
             : base(parameters, arguments)
         { }
     }

@@ -8,7 +8,7 @@ namespace Zsharp.AST
 {
     public class AstTypeReferenceFunction : AstTypeReference,
         IAstTypeReferenceSite,
-        IAstFunctionParameters<AstFunctionParameterReference>
+        IAstFunctionArguments<AstFunctionParameterArgument>
     {
         public AstTypeReferenceFunction(ParserRuleContext context)
             : base(context)
@@ -20,26 +20,26 @@ namespace Zsharp.AST
             : base(typeOrigin)
         { }
 
-        private readonly List<AstFunctionParameterReference> _parameters = new();
-        public IEnumerable<AstFunctionParameterReference> Parameters => _parameters;
+        private readonly List<AstFunctionParameterArgument> _arguments = new();
+        public IEnumerable<AstFunctionParameterArgument> Arguments => _arguments;
 
-        public bool TryAddParameter(AstFunctionParameterReference param)
+        public bool TryAddArgument(AstFunctionParameterArgument argument)
         {
-            if (param is not null &&
-                param.TrySetParent(this))
+            if (argument is not null &&
+                argument.TrySetParent(this))
             {
                 // always make sure 'self' is first param
-                if (param.HasIdentifier && param.Identifier == AstIdentifierIntrinsic.Self)
-                    _parameters.Insert(0, param);
+                if (argument.HasIdentifier && argument.Identifier == AstIdentifierIntrinsic.Self)
+                    _arguments.Insert(0, argument);
                 else
-                    _parameters.Add(param);
+                    _arguments.Add(argument);
                 return true;
             }
             return false;
         }
 
         public string OverloadKey =>
-            String.Join(String.Empty, _parameters
+            String.Join(String.Empty, _arguments
                 .Where(p => p.HasTypeReference)
                 .Select(p => p.TypeReference.Identifier.SymbolName.CanonicalName.FullName));
 
@@ -64,7 +64,7 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var param in Parameters)
+            foreach (var param in Arguments)
             {
                 param.Accept(visitor);
             }
@@ -78,12 +78,12 @@ namespace Zsharp.AST
             var txt = new StringBuilder();
 
             txt.Append('(');
-            for (int i = 0; i < Parameters.Count(); i++)
+            for (int i = 0; i < Arguments.Count(); i++)
             {
                 if (i > 0)
                     txt.Append(", ");
 
-                var p = Parameters.ElementAt(i);
+                var p = Arguments.ElementAt(i);
                 if (p.HasTypeReference)
                     txt.Append(p.TypeReference.Identifier.NativeFullName);
                 else
@@ -108,7 +108,7 @@ namespace Zsharp.AST
             if (HasTypeReference)
                 contextSymbols.TryAdd(TypeReference);
 
-            foreach (var parameter in Parameters)
+            foreach (var parameter in Arguments)
             {
                 if (parameter.HasTypeReference)
                     functionSymbols.TryAdd(parameter.TypeReference);
@@ -117,7 +117,7 @@ namespace Zsharp.AST
 
         public bool SetDefinition(AstSymbolTable symbolTable, AstTypeDefinitionFunction functionTypeDef)
         {
-            var map = new AstFunctionArgumentMap(functionTypeDef.Parameters, Parameters);
+            var map = new AstFunctionArgumentMap(functionTypeDef.Parameters, Arguments);
             var name = new StringBuilder();
 
             for (int i = 0; i < map.Count; i++)

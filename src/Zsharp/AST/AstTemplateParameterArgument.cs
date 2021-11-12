@@ -2,22 +2,22 @@
 
 namespace Zsharp.AST
 {
-    public class AstTemplateParameterReference : AstTemplateParameter,
+    public class AstTemplateParameterArgument : AstTemplateParameter,
         IAstTypeReferenceSite
     {
-        internal AstTemplateParameterReference(ParserRuleContext context)
+        internal AstTemplateParameterArgument(ParserRuleContext context)
             : base(context)
         { }
 
-        public AstTemplateParameterReference(AstTypeReference typeReference)
+        public AstTemplateParameterArgument(AstTypeReference typeReference)
         {
             this.SetTypeReference(typeReference);
         }
 
-        public AstTemplateParameterReference(AstTemplateParameterReference parameterToCopy)
-            : base(parameterToCopy)
+        public AstTemplateParameterArgument(AstTemplateParameterArgument argumentToCopy)
+            : base(argumentToCopy)
         {
-            this.SetTypeReference(parameterToCopy.TypeReference.MakeCopy());
+            this.SetTypeReference(argumentToCopy.TypeReference.MakeCopy());
         }
 
         public bool HasTypeReference => _typeReference is not null;

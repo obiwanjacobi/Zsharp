@@ -3,8 +3,7 @@ using Zsharp.External.Metadata;
 
 namespace Zsharp.AST
 {
-    public class AstFunctionDefinitionExternal : AstFunctionDefinition,
-        IAstExternalNameSite
+    public class AstFunctionDefinitionExternal : AstFunctionDefinition
     {
         public AstFunctionDefinitionExternal(MethodMetadata method, bool hasSelfParameter)
             : base(new AstTypeDefinitionFunction())
@@ -13,11 +12,6 @@ namespace Zsharp.AST
 
             MethodDefinition = method;
             HasSelfParameter = hasSelfParameter;
-            ExternalName = AstName.FromExternal(
-                hasSelfParameter 
-                    ? declType.Namespace
-                    : $"{declType.Namespace}.{declType.Name}",
-                method.Name);
         }
 
         internal MethodMetadata MethodDefinition { get; }
@@ -25,7 +19,5 @@ namespace Zsharp.AST
         public override bool IsExternal => true;
 
         public bool HasSelfParameter { get; }
-
-        public AstName ExternalName { get; }
     }
 }

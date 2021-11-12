@@ -56,8 +56,8 @@ namespace Zsharp.UnitTests.Semantics
             if (origin is IAstTemplateSite<AstTemplateParameterDefinition> tpd)
                 AssertTemplate((IAstTemplateSite<AstTemplateParameterDefinition>)cloned, tpd);
 
-            if (origin is IAstTemplateSite<AstTemplateParameterReference> tpr)
-                AssertTemplate((IAstTemplateSite<AstTemplateParameterReference>)cloned, tpr);
+            if (origin is IAstTemplateUseSite<AstTemplateParameterArgument> tpr)
+                AssertTemplateUse((IAstTemplateUseSite<AstTemplateParameterArgument>)cloned, tpr);
 
             if (origin is IAstTypeReferenceSite trs)
                 AssertEquivalent(((IAstTypeReferenceSite)cloned).TypeReference, trs.TypeReference);
@@ -79,9 +79,16 @@ namespace Zsharp.UnitTests.Semantics
         }
 
         private void AssertTemplate<T>(IAstTemplateSite<T> cloned, IAstTemplateSite<T> origin)
-            where T : AstTemplateParameter
+            where T : AstTemplateParameterDefinition
         {
             cloned.TemplateParameters.Should().BeEquivalentTo(origin.TemplateParameters);
+            cloned.IsTemplate.Should().Be(origin.IsTemplate);
+        }
+
+        private void AssertTemplateUse<T>(IAstTemplateUseSite<T> cloned, IAstTemplateUseSite<T> origin)
+            where T : AstTemplateParameterArgument
+        {
+            cloned.TemplateArguments.Should().BeEquivalentTo(origin.TemplateArguments);
             cloned.IsTemplate.Should().Be(origin.IsTemplate);
         }
 
@@ -253,7 +260,7 @@ namespace Zsharp.UnitTests.Semantics
 
             cloned.EnforceReturnValueUse.Should().Be(origin.EnforceReturnValueUse);
             cloned.FunctionType.OverloadKey.Should().Be(origin.FunctionType.OverloadKey);
-            cloned.FunctionType.Parameters.Should().BeEquivalentTo(origin.FunctionType.Parameters);
+            cloned.FunctionType.Arguments.Should().BeEquivalentTo(origin.FunctionType.Arguments);
 
             AssertEquivalent(cloned.FunctionDefinition, origin.FunctionDefinition);
         }

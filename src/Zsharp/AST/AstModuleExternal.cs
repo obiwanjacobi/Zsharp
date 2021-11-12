@@ -1,7 +1,6 @@
 ﻿namespace Zsharp.AST
 {
-    public class AstModuleExternal : AstModule,
-        IAstExternalNameSite
+    public class AstModuleExternal : AstModule
     {
         public AstModuleExternal(string moduleName, AstSymbolTable? parentTable = null)
             : base(AstModuleLocality.External)
@@ -12,8 +11,6 @@
         }
 
         public AstSymbolTable SymbolTable { get; }
-
-        public AstName ExternalName => Identifier.SymbolName.NativeName;
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitModuleExternal(this);

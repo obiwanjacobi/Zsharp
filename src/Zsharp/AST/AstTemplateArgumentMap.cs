@@ -6,11 +6,11 @@ using System.Text;
 namespace Zsharp.AST
 {
     public sealed class AstTemplateArgumentMap 
-        : AstParameterArgumentMap<AstTemplateParameterDefinition, AstTemplateParameterReference>
+        : AstParameterArgumentMap<AstTemplateParameterDefinition, AstTemplateParameterArgument>
     {
         public AstTemplateArgumentMap(
             IEnumerable<AstTemplateParameterDefinition> templateParameters,
-            IEnumerable<AstTemplateParameterReference> templateArguments)
+            IEnumerable<AstTemplateParameterArgument> templateArguments)
             : base(templateParameters, templateArguments)
         { }
 
@@ -33,7 +33,7 @@ namespace Zsharp.AST
         }
 
         private static readonly AstTemplateArgumentMap _empty
-            = new (Enumerable.Empty<AstTemplateParameterDefinition>(), Enumerable.Empty<AstTemplateParameterReference>());
+            = new (Enumerable.Empty<AstTemplateParameterDefinition>(), Enumerable.Empty<AstTemplateParameterArgument>());
 
         public static AstTemplateArgumentMap Empty => _empty;
     }

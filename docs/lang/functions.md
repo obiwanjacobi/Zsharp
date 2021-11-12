@@ -1605,5 +1605,25 @@ b = MyStruct::Fn(42)
 
 > TBD
 
+Scope overridden functions.
+
+The ability to relink the definition of a function within a specific scope.
+
+```csharp
+// fn: (p: U8): Bool
+
+myFn: (p: U8): Bool
+    ...
+
+b = fn(42)      // calls fn
+
+fn <= myFn      // syntax?
+b = fn(42)      // calls myFn
+```
+
+---
+
+> TBD
+
 - simulate properties? thru type-bound functions?
 Get\<T> / Set\<T> / Notify\<T> / Watch\<T[]>

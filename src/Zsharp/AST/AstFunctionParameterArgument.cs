@@ -2,14 +2,14 @@
 
 namespace Zsharp.AST
 {
-    public class AstFunctionParameterReference : AstFunctionParameter,
+    public class AstFunctionParameterArgument : AstFunctionParameter,
         IAstExpressionSite
     {
-        internal AstFunctionParameterReference(ParserRuleContext context)
+        internal AstFunctionParameterArgument(ParserRuleContext context)
             : base(context)
         { }
 
-        public AstFunctionParameterReference(AstExpression expression)
+        public AstFunctionParameterArgument(AstExpression expression)
             : base(null)
         {
             TrySetExpression(expression);

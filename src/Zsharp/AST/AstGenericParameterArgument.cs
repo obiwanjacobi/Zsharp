@@ -2,21 +2,21 @@
 
 namespace Zsharp.AST
 {
-    public class AstGenericParameterReference : AstGenericParameter,
+    public class AstGenericParameterArgument : AstGenericParameter,
         IAstTypeReferenceSite
     {
-        public AstGenericParameterReference(AstTypeReference typeReference)
+        public AstGenericParameterArgument(AstTypeReference typeReference)
         {
             this.SetTypeReference(typeReference);
         }
 
-        public AstGenericParameterReference(AstGenericParameterReference parameterToCopy)
-            : base(parameterToCopy)
+        public AstGenericParameterArgument(AstGenericParameterArgument argumentToCopy)
+            : base(argumentToCopy)
         {
-            this.SetTypeReference(parameterToCopy.TypeReference.MakeCopy());
+            this.SetTypeReference(argumentToCopy.TypeReference.MakeCopy());
         }
 
-        internal AstGenericParameterReference(ParserRuleContext context)
+        internal AstGenericParameterArgument(ParserRuleContext context)
             : base(context)
         { }
 

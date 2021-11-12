@@ -70,7 +70,7 @@ namespace Zsharp.External
 
         public IEnumerable<AstModuleExternal> LoadNamespace(string moduleNamespace)
             => _modules.Values
-                .Where(m => m.Identifier.SymbolName.NativeName.Namespace == moduleNamespace)
+                .Where(m => m.Identifier.SymbolName.CanonicalName.Namespace == moduleNamespace)
                 .ToList();
 
         public IEnumerable<AstModuleExternal> LoadAll(string partialModuleName)

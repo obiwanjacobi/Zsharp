@@ -15,7 +15,7 @@ namespace Zsharp.UnitTests.AST
                 Tokens.Indent1 + "return false" + Tokens.NewLine
                 ;
 
-            var file = Compile.File(code);
+            var file = Build.File(code);
 
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             fn.Should().NotBeNull();

@@ -303,3 +303,36 @@ x: U16 = !(a ** a)
 > TBD
 
 - allow custom defined operators? `.>>.`, `|<<` etc. Requires identifiers to be less strict. Also requires escape characters in function definition symbol: `''.>>.'': (...): Bool`. The names would be considered normal functions and therefor -to be used as operators- would need to adhere to the infix function rules.
+
+---
+
+> TBD: Is operator overloading useful for operators other than arithmetic, comparable and possibly logical?
+
+Which operators will definitely not be overloadable?
+
+---
+
+> TBD: Allow 'array programming' operator (overloads) that target simd instructions?
+
+---
+
+> TBD
+
+Implement operators by tagging regular functions with the operator signs.
+
+```csharp
+// must follow the infix function rules.
+[[Operator(">>|")]]
+MyWeirdOperator: <T>(self: T, other: T): T
+    ...
+
+a = 42
+x = a >>| 101   // calls MyWeirdOperator
+
+// How to do unary or ternary operators?
+[[Operator("-")]]
+MyUnaryOperator: <T>(other: T): T
+
+[[Operator(">>|", "|<<")]]
+MyTernaryOperator: <T>(self: T, other: T, third: T): T
+```

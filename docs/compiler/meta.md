@@ -284,3 +284,5 @@ Pragma's and compiler functions are the same and custom compile-time functions a
 Invocation always uses `#` to indicate the compile-time nature of the result (you can `#`-call runtime functions if they can be evaluated at compile time). Compile-time functions are declared with `#!` to indicate they should not end up in the binary. But that could also just be a `#`...
 
 Problem here is that some pragma's start a new scope and others don't. How to fix that?
+
+> TBD: Transparently pass custom meta programs to roslyn source generators?

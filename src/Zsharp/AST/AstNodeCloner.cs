@@ -142,17 +142,17 @@ namespace Zsharp.AST
             // parameter symbols are registered with FunctionDefinition.CreateSymbols()
         }
 
-        public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
+        public override void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
         {
-            var paramRef = new AstFunctionParameterReference((Function_param_useContext)parameter.Context!);
+            var arg = new AstFunctionParameterArgument(argument.Context!);
             // param ref usually has no Identifier
-            paramRef.TrySetIdentifier(parameter.Identifier);
+            arg.TrySetIdentifier(argument.Identifier);
 
             var fnRef = _current.GetCurrent<AstFunctionReference>();
-            fnRef.FunctionType.AddParameter(paramRef);
+            fnRef.FunctionType.AddArgument(arg);
 
-            _current.SetCurrent(paramRef);
-            parameter.VisitChildren(this);
+            _current.SetCurrent(arg);
+            argument.VisitChildren(this);
             _current.RevertCurrent();
         }
 
@@ -410,8 +410,8 @@ namespace Zsharp.AST
                     templateArgument = _argumentMap?.LookupArgument(templParamDef.Identifier);
                     if (templateArgument is not null)
                     {
-                        var templParam = new AstTemplateParameterReference(templateArgument.TypeReference.MakeCopy());
-                        typeRefType.AddTemplateParameter(templParam);
+                        var templArg = new AstTemplateParameterArgument(templateArgument.TypeReference.MakeCopy());
+                        typeRefType.AddTemplateArgument(templArg);
                     }
                     else
                         throw new InternalErrorException(

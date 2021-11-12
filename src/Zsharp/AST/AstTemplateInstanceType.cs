@@ -13,7 +13,7 @@ namespace Zsharp.AST
         public AstTypeDefinitionIntrinsic TypeDefinition { get; }
 
         private AstTemplateArgumentMap? _templateArguments;
-        public AstTemplateArgumentMap TemplateArguments
+        public AstTemplateArgumentMap TemplateParameterArguments
             => _templateArguments ?? AstTemplateArgumentMap.Empty;
 
         public void Instantiate(AstTypeReferenceType type)
@@ -22,7 +22,7 @@ namespace Zsharp.AST
             this.SetIdentifier(type.Identifier.MakeCopy());
 
             _templateArguments = new AstTemplateArgumentMap(
-                TypeDefinition.TemplateParameters, type.TemplateParameters);
+                TypeDefinition.TemplateParameters, type.TemplateArguments);
         }
 
         public override void Accept(AstVisitor visitor)

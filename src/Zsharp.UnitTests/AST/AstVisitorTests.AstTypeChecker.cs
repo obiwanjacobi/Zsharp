@@ -32,10 +32,10 @@ namespace Zsharp.UnitTests.AST
                 parameter.TypeReference.Should().NotBeNull();
                 parameter.VisitChildren(this);
             }
-            public override void VisitFunctionParameterReference(AstFunctionParameterReference parameter)
+            public override void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
             {
-                parameter.TypeReference.Should().NotBeNull();
-                parameter.VisitChildren(this);
+                argument.TypeReference.Should().NotBeNull();
+                argument.VisitChildren(this);
             }
             public override void VisitTypeReferenceType(AstTypeReferenceType type)
             {

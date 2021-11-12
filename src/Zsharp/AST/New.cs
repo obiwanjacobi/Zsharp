@@ -55,7 +55,7 @@ namespace Zsharp.AST
         public static AstFunctionParameterDefinition AstFunctionParameterDefinition(Function_parameter_selfContext context)
             => new(context, isSelf: true);
 
-        public static AstFunctionParameterReference AstFunctionParameterReference(Function_param_useContext context)
+        public static AstFunctionParameterArgument AstFunctionParameterArgument(Function_param_useContext context)
             => new(context);
 
         public static AstFunctionReference AstFunctionReference(Function_callContext context)
@@ -63,7 +63,7 @@ namespace Zsharp.AST
 
         public static AstGenericParameterDefinition AstGenericParameterDefinition(Template_param_anyContext context)
             => new(context);
-        public static AstGenericParameterReference AstGenericParameterReference(Template_param_useContext context)
+        public static AstGenericParameterArgument AstGenericParameterArgument(Template_param_useContext context)
             => new(context);
 
         public static AstIdentifier AstIdentifier(Identifier_typeContext context)
@@ -89,7 +89,7 @@ namespace Zsharp.AST
         public static AstTemplateParameterDefinition AstTemplateParameterDefinition(Template_param_anyContext context)
             => new(context);
 
-        public static AstTemplateParameterReference AstTemplateParameterReference(Template_param_useContext context)
+        public static AstTemplateParameterArgument AstTemplateParameterArgument(Template_param_useContext context)
             => new(context);
 
         public static AstTypeDefinitionEnum AstTypeDefinitionEnum(Enum_defContext context, AstSymbolTable parentTable)

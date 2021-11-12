@@ -174,7 +174,7 @@ namespace Zsharp.UnitTests.Semantics
             var fnRef = brExpr.Expression.RHS.FunctionReference;
             fnRef.FunctionType.TypeDefinition.Should().NotBeNull();
             fnRef.FunctionType.TypeReference.Identifier.CanonicalFullName.Should().Be("Bool");
-            fnRef.FunctionType.Parameters.First().TypeReference.Identifier.CanonicalFullName.Should().Be("U8");
+            fnRef.FunctionType.Arguments.First().TypeReference.Identifier.CanonicalFullName.Should().Be("U8");
             fnRef.FunctionType.Identifier.CanonicalFullName.Should().Be("(U8): Bool");
         }
 
@@ -308,8 +308,8 @@ namespace Zsharp.UnitTests.Semantics
 
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var call = fn.CodeBlock.LineAt<AstFunctionReference>(0);
-            var p = call.FunctionType.Parameters.First();
-            p.TypeReference.Should().NotBeNull();
+            var arg = call.FunctionType.Arguments.First();
+            arg.TypeReference.Should().NotBeNull();
         }
 
         [TestMethod]
