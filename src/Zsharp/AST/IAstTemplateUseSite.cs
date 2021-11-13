@@ -5,7 +5,7 @@ namespace Zsharp.AST
     public interface IAstTemplateUseSite<T>
         where T : AstTemplateParameterArgument
     {
-        bool IsTemplate { get; }
+        bool IsTemplateOrGeneric { get; }
         IEnumerable<T> TemplateArguments { get; }
         bool TryAddTemplateArgument(T templateArgument);
     }

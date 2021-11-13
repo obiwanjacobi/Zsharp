@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using static Zsharp.Parser.ZsharpParser;
 
 namespace Zsharp.AST
@@ -142,7 +140,7 @@ namespace Zsharp.AST
             // parameter symbols are registered with FunctionDefinition.CreateSymbols()
         }
 
-        public override void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
+        public override void VisitFunctionParameterArgument(AstFunctionParameterArgument argument)
         {
             var arg = new AstFunctionParameterArgument(argument.Context!);
             // param ref usually has no Identifier

@@ -84,6 +84,8 @@ namespace Zsharp.AST
         public T? DefinitionAs<T>() where T : class
             => _definitions.OfType<T>().SingleOrDefault() ?? ParentSymbol?.DefinitionAs<T>();
 
+        public bool IsDefined => DefinitionSymbol is not null;
+
         public AstSymbol? DefinitionSymbol
             => HasDefinition ? this : ParentSymbol?.DefinitionSymbol;
 
@@ -100,28 +102,47 @@ namespace Zsharp.AST
             }
         }
 
-        public T? TemplateInstanceAs<T>(IEnumerable<AstTypeReference> templateArgumentTypes)
-            where T : class
+        public T? TemplateDefinitionAs<T>()
+            where T : AstTypeDefinitionTemplate
         {
-            return _definitions
-                .OfType<IAstTemplateInstance>()
-                .SingleOrDefault(i => i.TemplateParameterArguments.Arguments
-                    .Select(a => a.TypeReference.Identifier.CanonicalFullName)
-                    .SequenceEqual(
-                        templateArgumentTypes.Select(a => a.Identifier.CanonicalFullName))) as T;
+            if (HasDefinition)
+            {
+                return _definitions
+                    .OfType<T>()
+                    .SingleOrDefault(d => d.IsTemplate);
+            }
+
+            return ParentSymbol?.TemplateDefinitionAs<T>();
+        }
+
+        public T? TemplateInstanceAs<T>(IEnumerable<AstTypeReference> templateArgumentTypes)
+            where T : AstNode
+        {
+            if (HasDefinition)
+            {
+                return _definitions
+                    .OfType<IAstTemplateInstance>()
+                    .SingleOrDefault(i => i.TemplateParameterArguments.Arguments
+                        .Select(a => a.TypeReference.Identifier.CanonicalFullName)
+                        .SequenceEqual(
+                            templateArgumentTypes.Select(a => a.Identifier.CanonicalFullName))) as T;
+            }
+
+            return ParentSymbol?.TemplateInstanceAs<T>(templateArgumentTypes);
         }
 
         public AstFunctionDefinition? FindFunctionDefinition(AstFunctionReference overload)
-        { 
-            if(HasDefinition)
+        {
+            if (HasDefinition)
             {
-                if (overload.IsTemplate)
+                if (overload.IsTemplateOrGeneric)
                 {
                     return FunctionOverloads.SingleOrDefault(def => def.Identifier.SymbolName.CanonicalName.GetArgumentCount() == overload.Identifier.SymbolName.CanonicalName.GetArgumentCount());
                 }
-                
+
                 return FunctionOverloads.SingleOrDefault(def => def.FunctionType.OverloadKey == overload.FunctionType.OverloadKey);
             }
+
             return ParentSymbol?.FindFunctionDefinition(overload);
         }
 
@@ -139,7 +160,7 @@ namespace Zsharp.AST
                 if (node is not AstTypeDefinitionTemplate &&
                     node is not AstTemplateInstanceType &&
                     node is not AstTypeDefinitionFunction)
-                { 
+                {
                     Ast.Guard(Definition is null, "Definition is already set.");
                 }
                 _definitions.Add(node);
@@ -177,7 +198,7 @@ namespace Zsharp.AST
         internal void RemoveReference(AstNode node)
             // TODO: call node as IAstSymbolSite to remove symbol
             => _references.Remove(node);
-            // if no references are left and no parent or child and no definition - this symbol can be deleted.
+        // if no references are left and no parent or child and no definition - this symbol can be deleted.
 
         internal static string MakeKey(string name, AstSymbolKind kind, int argCount)
             => $"{name}{kind}{argCount}";

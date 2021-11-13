@@ -232,3 +232,7 @@ MyEmptyAlias(42)
 ```
 
 How do we know what type this alias represents (function, struct etc)?
+
+---
+
+> TBD: Aliases and variable initialization with type inference have a potential syntax clash. Using `:=` for type inferred assignment would fix that.

@@ -76,6 +76,11 @@ namespace Zsharp.External
                 StructType = new AstTypeDefinitionExternal(
                     typeDefinition.FullName,
                     baseType);
+
+                if (typeDefinition.ContainsGenericParameter)
+                {
+                    AddGenericParametersTo(StructType, typeDefinition.GenericParameters);
+                }
             }
 
             foreach (var methodGroup in typeDefinition.GetPublicMethods().GroupBy(m => m.Name))
@@ -143,17 +148,7 @@ namespace Zsharp.External
                 function.FunctionType.TryAddParameter(funcParam);
             }
 
-            foreach (var p in method.GenericParameters)
-            {
-                var genericParam = CreateGenericParameter(new AstIdentifier(p.Name, AstIdentifierKind.TemplateParameter));
-                function.AddGenericParameter(genericParam);
-
-                foreach (var constraintType in p.GetConstraintTypes())
-                {
-                    typeRef = _typeRepository.GetTypeReference(constraintType);
-                    genericParam.AddConstraintType(typeRef);
-                }
-            }
+            AddGenericParametersTo(function, method.GenericParameters);
 
             return function;
         }
@@ -166,7 +161,21 @@ namespace Zsharp.External
             return funcParam;
         }
 
-        private static AstGenericParameterDefinition CreateGenericParameter(AstIdentifier identifier)
-            => new(identifier);
+        private void AddGenericParametersTo(IAstGenericSite<AstGenericParameterDefinition> site, IEnumerable<GenericParameterMetadata> genericParameters)
+        {
+            foreach (var p in genericParameters)
+            {
+                var paramName = AstName.ParseFullName(p.Name, AstNameKind.External);
+                var identifier = new AstIdentifier(paramName, AstIdentifierKind.TemplateParameter);
+                var genericParam = new AstGenericParameterDefinition(identifier);
+                site.AddGenericParameter(genericParam);
+
+                foreach (var constraintType in p.GetConstraintTypes())
+                {
+                    var typeRef = _typeRepository.GetTypeReference(constraintType);
+                    genericParam.AddConstraintType(typeRef);
+                }
+            }
+        }
     }
 }

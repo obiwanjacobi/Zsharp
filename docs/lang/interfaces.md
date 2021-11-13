@@ -190,6 +190,8 @@ I think Swift uses protocol for this?
 
 ---
 
+> TBD
+
 Static interfaces?
 
 An interface on a type definition (not an instance).
@@ -206,3 +208,36 @@ TypeInterface<DerivedFromMyStruct>
         // call 'base' as normal 'static' function
         return MyStruct.staticFn(p)
 ```
+
+---
+
+> TBD
+
+A set of template types and functions that can be instantiated as a whole.
+Could be used to implement patterns or mechanisms.
+
+```csharp
+// define a group
+WithParent<T> {     // syntax?
+    Parent: T
+    hasParent: <T>(self: T): Bool
+        ...
+    trySetParent(self: T, parent: T): Bool
+        ...
+}
+
+// use with custom type
+MyStruct : WithParent<MyStruct>
+    fld1: U8
+
+p := MyStruct
+s := MyStruct
+
+if not s.hasParent()
+    s.trySetParent(p)
+
+// access extra field
+s.Parent        // set to p
+```
+
+---

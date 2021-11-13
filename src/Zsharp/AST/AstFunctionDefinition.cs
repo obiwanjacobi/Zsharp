@@ -1,7 +1,7 @@
-﻿using Antlr4.Runtime;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
@@ -55,6 +55,10 @@ namespace Zsharp.AST
             contextSymbols.Add(this);
         }
 
+        private readonly List<AstTemplateParameter> _parameterList = new();
+        public T TemplateParameterAt<T>(int index) where T : AstTemplateParameter
+            => (T)_parameterList[index];
+
         public bool IsTemplate => _templateParameters.Count > 0;
 
         private readonly List<AstTemplateParameterDefinition> _templateParameters = new();
@@ -66,6 +70,7 @@ namespace Zsharp.AST
             if (templateParameter is null)
                 return false;
 
+            _parameterList.Add(templateParameter);
             _templateParameters.Add(templateParameter);
             templateParameter.SetParent(this);
             Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
@@ -84,6 +89,7 @@ namespace Zsharp.AST
             if (genericParameter is null)
                 return false;
 
+            _parameterList.Add(genericParameter);
             _genericParameters.Add(genericParameter);
             genericParameter.SetParent(this);
             Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);

@@ -27,6 +27,20 @@ namespace Zsharp.External.Metadata
 
         public bool ContainsGenericParameter => _type.ContainsGenericParameters;
 
+        private readonly List<GenericParameterMetadata> _genTypes = new();
+        public IEnumerable<GenericParameterMetadata> GenericParameters
+        {
+            get
+            {
+                if (_genTypes.Count == 0)
+                {
+                    _genTypes.AddRange(_type.GetGenericArguments()
+                        .Select(g => new GenericParameterMetadata(g)));
+                }
+                return _genTypes;
+            }
+        }
+
         public bool IsSealed => _type.IsSealed;
         public bool IsAbstract => _type.IsAbstract;
 

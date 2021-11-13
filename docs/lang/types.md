@@ -1138,7 +1138,9 @@ if d?#data
 
 ## The Any Type
 
-Represents the .NET `System.Object` type.
+Represents the .NET `System.Object` type for reference cases.
+(External) Type definitions still use `System.Object` as base type.
+
 
 ```C#
 funcAny(): Any

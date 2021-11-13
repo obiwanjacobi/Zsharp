@@ -17,10 +17,10 @@ namespace Zsharp.UnitTests.AST
                 templateParameter.Symbol.Should().NotBeNull();
                 base.VisitTemplateParameterDefinition(templateParameter);
             }
-            public override void VisitTemplateParameterReference(AstTemplateParameterArgument templateArgument)
+            public override void VisitTemplateParameterArgument(AstTemplateParameterArgument templateArgument)
             {
                 templateArgument.Symbol.Should().NotBeNull();
-                base.VisitTemplateParameterReference(templateArgument);
+                base.VisitTemplateParameterArgument(templateArgument);
             }
             public override void VisitFunctionDefinition(AstFunctionDefinition function)
             {
@@ -37,7 +37,7 @@ namespace Zsharp.UnitTests.AST
                 parameter.Symbol.Should().NotBeNull();
                 parameter.VisitChildren(this);
             }
-            public override void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
+            public override void VisitFunctionParameterArgument(AstFunctionParameterArgument argument)
             {
                 // only named parameters have an identifer and therefor a symbol
                 //parameter.Symbol.Should().NotBeNull();

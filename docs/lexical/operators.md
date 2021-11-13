@@ -190,6 +190,11 @@ Operators for working with `Array<T>` and `List<T>` types.
 | `|=` | insert item to array/list/tree as a child
 | `in` | test if item is in array/list (contains)
 | `not in` | test if item is not in array/list (not contains)
+| `/` | split in array with chunks/tuples of n
+| `|` | zip two arrays
+| `~` | unzip (split in 2)
+
+Using arithmetic operators hinders supporting array programming...
 
 ```csharp
 arr = (1, 2, 3, 4, 5)

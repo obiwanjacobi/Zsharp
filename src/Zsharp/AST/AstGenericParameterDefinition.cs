@@ -1,9 +1,9 @@
-﻿using Antlr4.Runtime;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
-    public class AstGenericParameterDefinition : AstGenericParameter,
+    public class AstGenericParameterDefinition : AstTemplateParameter,
         IAstIdentifierSite
     {
         public AstGenericParameterDefinition(AstIdentifier identifier)

@@ -42,7 +42,7 @@ namespace Zsharp.UnitTests.Semantics
 
             var v = file.CodeBlock.LineAt<AstVariableDefinition>(0);
             var typeRef = v.TypeReference as AstTypeReferenceType;
-            typeRef.IsTemplate.Should().BeTrue();
+            typeRef.IsTemplateOrGeneric.Should().BeTrue();
             var typeDef = typeRef.TypeDefinition as AstTemplateInstanceType;
             typeDef.Should().NotBeNull();
             typeDef.TemplateParameterArguments.Count.Should().Be(1);

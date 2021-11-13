@@ -1,5 +1,5 @@
-﻿using Antlr4.Runtime;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
@@ -34,7 +34,7 @@ namespace Zsharp.AST
                 var funcDef = FunctionDefinition;
                 if (funcDef is not null)
                     FunctionType.SetDefinition(symbolTable, funcDef.FunctionType);
-                return  true;
+                return true;
             }
 
             var templateParamSymbol = symbolTable.FindSymbol(Identifier.CanonicalFullName, AstSymbolKind.TemplateParameter);
@@ -49,7 +49,7 @@ namespace Zsharp.AST
         }
 
         // true when type is a template instantiation
-        public bool IsTemplate
+        public bool IsTemplateOrGeneric
             => _templateArguments!.Count > 0;
 
         private readonly List<AstTemplateParameterArgument> _templateArguments = new();
@@ -60,6 +60,7 @@ namespace Zsharp.AST
         {
             if (templateArgument is not null)
             {
+                templateArgument.OrderIndex = _templateArguments.Count;
                 _templateArguments.Add(templateArgument);
 
                 Identifier.SymbolName.AddTemplateArgument(templateArgument.TypeReference.Identifier.NativeFullName);

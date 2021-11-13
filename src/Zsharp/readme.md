@@ -39,6 +39,10 @@
 - Function with return type should give error if no expression of said type is returned from impl.
 - Conversion Functions as Type in a template function do not work: `fn: <T>(p: U8): T; return T(p)`.
 - External/imported generic parameters are not correctly marked (IsTemplate/IsTemplateParameter)
+- Make external module loading lazy. Only load in the types of local referenced symbols. 
+    Secondary dependencies could wait until really needed. Knowing the correct `usings` to emit would probably be enough?
+    The ResolveDefinition phase would need to be aware of lazy loaded externals in order not to fail them when a secondairy dependecy's definition cannot be resolved.'
+- try to map C# compiler messages to Z# source code locations.
 
 ---
 

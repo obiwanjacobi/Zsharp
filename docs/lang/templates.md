@@ -448,3 +448,5 @@ The source code of any templated functions and types that are public (exported) 
 Instead of the actual source code, we could also store the serialized AST for performance - but that would make it compiler version dependent.
 
 Perhaps also generate a class with loader methods for each symbol name that can have custom code attributes for the Z# compiler to discover.
+
+---

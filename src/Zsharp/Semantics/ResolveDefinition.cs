@@ -129,7 +129,7 @@ namespace Zsharp.Semantics
             }
 
             var fld = operand.FieldReference;
-            if (fld?.Symbol.Definition is not null)
+            if (fld?.Symbol.IsDefined ?? false)
             {
                 var enumOptDef = fld.Symbol.DefinitionAs<AstTypeDefinitionEnumOption>();
                 if (enumOptDef is not null)
@@ -227,7 +227,7 @@ namespace Zsharp.Semantics
         {
             enumOption.VisitChildren(this);
 
-            if (enumOption.Symbol.Definition is null &&
+            if (!enumOption.Symbol.IsDefined &&
                 !enumOption.TryResolveSymbol())
             {
                 _context.UndefinedEnumeration(enumOption);
@@ -242,7 +242,7 @@ namespace Zsharp.Semantics
             {
                 if (!function.TryResolveSymbol())
                 {
-                    if (function.IsTemplate)
+                    if (function.IsTemplateOrGeneric)
                     {
                         var symbol = function.Symbol;
                         var templateFunction = FindTemplateDefinition<AstFunctionDefinition>(function, AstSymbolKind.Function);
@@ -293,7 +293,7 @@ namespace Zsharp.Semantics
             }
         }
 
-        public override void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
+        public override void VisitFunctionParameterArgument(AstFunctionParameterArgument argument)
         {
             argument.VisitChildren(this);
 
@@ -303,42 +303,78 @@ namespace Zsharp.Semantics
             }
         }
 
+        public override void VisitTemplateParameterArgument(AstTemplateParameterArgument templateArgument)
+        {
+            templateArgument.VisitChildren(this);
+
+            var parent = templateArgument.ParentAs<AstTypeReferenceType>();
+
+            var templDef = parent?.TemplateDefinition;
+            if (templDef is not null)
+            {
+                var param = templDef.TemplateParameterAt<AstTemplateParameter>(templateArgument.OrderIndex);
+                templateArgument.TrySetParameterDefinition(param);
+            }
+
+            var funcDef = templateArgument.ParentAs<AstFunctionReference>()?.FunctionDefinition;
+            if (funcDef is not null)
+            {
+                var param = funcDef.TemplateParameterAt<AstTemplateParameter>(templateArgument.OrderIndex);
+                templateArgument.TrySetParameterDefinition(param);
+            }
+        }
+
         public override void VisitTypeReferenceType(AstTypeReferenceType type)
         {
             Ast.Guard(SymbolTable, "ResolveTypes has no SymbolTable.");
             Ast.Guard(type.Identifier, "AstTypeReference or AstIdentifier is null.");
 
-            if (type.IsTemplate)
+            var success = type.TryResolveSymbol();
+
+            if (type.IsTemplateOrGeneric)
             {
-                var typeTemplate = type.TypeDefinition;
+                var typeTemplate = type.TypeDefinition as AstTypeDefinitionTemplate;
                 if (typeTemplate is null)
-                    typeTemplate = FindTemplateDefinition<AstTypeDefinition>(type, AstSymbolKind.Type);
+                    typeTemplate = FindTemplateDefinition<AstTypeDefinitionTemplate>(type, AstSymbolKind.Type);
 
-                var symbol = type.Symbol;
-                if (typeTemplate is AstTypeDefinitionStruct structTemplate)
+                if (typeTemplate is not null)
                 {
-                    var typeDef = new AstTemplateInstanceStruct(structTemplate);
-                    typeDef.Instantiate(type);
-                    symbol.AddNode(typeDef);
+                    var symbol = type.Symbol;
 
-                    Visit(typeDef);
-                }
-                else if (typeTemplate is AstTypeDefinitionIntrinsic intrinsicTemplate)
-                {
-                    var typeDef = new AstTemplateInstanceType(intrinsicTemplate);
-                    typeDef.Instantiate(type);
-                    symbol.AddNode(typeDef);
+                    if (typeTemplate.IsTemplate)
+                    {
+                        if (typeTemplate is AstTypeDefinitionStruct structTemplate)
+                        {
+                            var typeDef = new AstTemplateInstanceStruct(structTemplate);
+                            typeDef.Instantiate(type);
+                            symbol.AddNode(typeDef);
 
-                    Visit(typeDef);
+                            Visit(typeDef);
+                        }
+                        else if (typeTemplate is AstTypeDefinitionIntrinsic intrinsicTemplate)
+                        {
+                            var typeDef = new AstTemplateInstanceType(intrinsicTemplate);
+                            typeDef.Instantiate(type);
+                            symbol.AddNode(typeDef);
+
+                            Visit(typeDef);
+                        }
+                        else
+                        {
+                            throw new NotImplementedException("Template is of a Type that has not been implemented yet.");
+                        }
+                    }
+                    if (typeTemplate.IsGeneric)
+                    {
+
+                    }
                 }
                 else
                     _context.UndefinedType(type);
             }
-            
-            if (!type.IsTemplateParameter && type.TypeDefinition is null)
-            {
-                var success = type.TryResolveSymbol();
 
+            if (!type.IsTemplateParameter && !type.Symbol.IsDefined)
+            {
                 if (!success && !type.IsExternal)
                 {
                     // TODO: for now unresolved external references are ignored.
@@ -413,7 +449,7 @@ namespace Zsharp.Semantics
 
         private bool SetToMatch(AstFunctionReference function, AstFunctionDefinition functionDef)
         {
-            Ast.Guard(function.FunctionType.Arguments.Count() == functionDef.FunctionType.Parameters.Count(), 
+            Ast.Guard(function.FunctionType.Arguments.Count() == functionDef.FunctionType.Parameters.Count(),
                 "Number of Parameters don't match between function reference and definition");
 
             bool hasReplacements = false;

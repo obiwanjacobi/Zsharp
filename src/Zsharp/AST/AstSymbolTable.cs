@@ -80,7 +80,7 @@ namespace Zsharp.AST
 
         public AstSymbol AddSymbol(IAstIdentifierSite identifierSite, AstSymbolKind kind, AstNode node)
         {
-            var name = identifierSite.Identifier.SymbolName.CanonicalName.FullName
+            var name = identifierSite.Identifier.SymbolName.CanonicalName
                 ?? throw new ArgumentException("No identifier name.", nameof(identifierSite));
 
             return AddSymbol(name, kind, node);
@@ -106,7 +106,7 @@ namespace Zsharp.AST
         public bool TryResolveDefinition(AstSymbol symbol)
         {
             Ast.Guard(symbol, "Symbol is null.");
-            if (symbol.HasOverloads || symbol.Definition is not null)
+            if (symbol.IsDefined)
                 return true;
 
             var childSymbol = symbol;
@@ -217,7 +217,7 @@ namespace Zsharp.AST
             symbol = FindSymbolInModules(symbolName, kind);
             if (symbol is not null)
                 return symbol;
-            
+
             var index = 0;
             var parts = symbolName.Parts.ToList();
             var symbolTable = FindParentSymbolTableRecursiveByNamespace(parts[index++]);
@@ -237,7 +237,7 @@ namespace Zsharp.AST
                     if (tableSite is not null)
                         symbolTable = tableSite.SymbolTable;
                 }
-                
+
                 var table = FindChildSymbolTableByNamespace(part);
                 if (table is not null)
                     symbolTable = table;

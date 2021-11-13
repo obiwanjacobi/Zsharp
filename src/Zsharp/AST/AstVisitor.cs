@@ -67,7 +67,7 @@
             parameter.VisitChildren(this);
         }
 
-        public virtual void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
+        public virtual void VisitFunctionParameterArgument(AstFunctionParameterArgument argument)
         {
             argument.VisitChildren(this);
         }
@@ -172,7 +172,7 @@
             templateParameter.VisitChildren(this);
         }
 
-        public virtual void VisitTemplateParameterReference(AstTemplateParameterArgument templateArgument)
+        public virtual void VisitTemplateParameterArgument(AstTemplateParameterArgument templateArgument)
         {
             templateArgument.VisitChildren(this);
         }
@@ -180,11 +180,6 @@
         public virtual void VisitGenericParameterDefinition(AstGenericParameterDefinition genericParameter)
         {
             genericParameter.VisitChildren(this);
-        }
-
-        public virtual void VisitGenericParameterReference(AstGenericParameterArgument genericArgument)
-        {
-            genericArgument.VisitChildren(this);
         }
 
         public virtual void VisitVariableDefinition(AstVariableDefinition variable)

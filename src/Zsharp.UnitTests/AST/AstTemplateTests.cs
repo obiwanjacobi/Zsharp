@@ -83,7 +83,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionReference>(0);
-            fn.IsTemplate.Should().BeTrue();
+            fn.IsTemplateOrGeneric.Should().BeTrue();
             var tp = fn.TemplateArguments.First();
             tp.TypeReference.Identifier.NativeFullName.Should().Be("U8");
         }

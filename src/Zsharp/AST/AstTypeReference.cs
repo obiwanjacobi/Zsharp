@@ -1,5 +1,5 @@
-﻿using Antlr4.Runtime;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
@@ -17,7 +17,7 @@ namespace Zsharp.AST
         {
             Context = typeToCopy.Context;
             if (typeToCopy.HasIdentifier)
-            { 
+            {
                 this.SetIdentifier(typeToCopy.Identifier.MakeCopy());
                 Identifier.SymbolName.Postfix = string.Empty;
             }
@@ -31,6 +31,8 @@ namespace Zsharp.AST
 
         public virtual bool TryResolveSymbol()
             => Symbol.SymbolTable.TryResolveDefinition(Symbol);
+
+        public virtual bool IsTemplateOrGeneric => false;
 
         public virtual bool IsExternal => false;
         public bool IsInferred { get; set; }

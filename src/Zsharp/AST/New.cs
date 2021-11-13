@@ -63,8 +63,6 @@ namespace Zsharp.AST
 
         public static AstGenericParameterDefinition AstGenericParameterDefinition(Template_param_anyContext context)
             => new(context);
-        public static AstGenericParameterArgument AstGenericParameterArgument(Template_param_useContext context)
-            => new(context);
 
         public static AstIdentifier AstIdentifier(Identifier_typeContext context)
             => new(context, AstIdentifierKind.Type);

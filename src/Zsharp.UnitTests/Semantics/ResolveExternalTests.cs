@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using Zsharp.AST;
 
 namespace Zsharp.UnitTests.Semantics
@@ -22,6 +23,7 @@ namespace Zsharp.UnitTests.Semantics
 
             var assign = file.CodeBlock.LineAt<AstAssignment>(0);
             assign.Expression.RHS.FunctionReference.FunctionDefinition.Should().NotBeNull();
+            assign.Expression.RHS.FunctionReference.FunctionDefinition.IsExternal.Should().BeTrue();
         }
 
         [TestMethod]
@@ -44,11 +46,11 @@ namespace Zsharp.UnitTests.Semantics
         }
 
         [TestMethod]
-        public void ExternalGenericType()
+        public void ExternalGenericTypeUse()
         {
             const string code =
                 "import System.Collections.Generic.*" + Tokens.NewLine +
-                "l = List<Str>()" + Tokens.NewLine
+                "l: List<Str>" + Tokens.NewLine
                 ;
 
             var moduleLoader = new AssemblyManagerBuilder()
@@ -57,8 +59,15 @@ namespace Zsharp.UnitTests.Semantics
 
             var file = Compile.File(code, moduleLoader);
 
-            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
-            assign.Should().NotBeNull();
+            var variable = file.CodeBlock.LineAt<AstVariableDefinition>(0);
+            var typeRef = variable.TypeReference as AstTypeReferenceType;
+            typeRef.IsTemplateOrGeneric.Should().BeTrue();
+
+            var templArg = typeRef.TemplateArguments.ElementAt(0);
+            templArg.HasParameterDefinition.Should().BeTrue();
+            templArg.ParameterDefinitionAs<AstGenericParameterDefinition>().Should().NotBeNull();
+            var templType = templArg.TypeReference as AstTypeReferenceType;
+            templType.TypeDefinition.Should().NotBeNull();
         }
 
         [TestMethod]

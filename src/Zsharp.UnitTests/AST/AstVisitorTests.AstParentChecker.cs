@@ -62,7 +62,7 @@ namespace Zsharp.UnitTests.AST
                 parameter.Parent.Should().NotBeNull();
                 parameter.VisitChildren(this);
             }
-            public override void VisitFunctionParameterReference(AstFunctionParameterArgument argument)
+            public override void VisitFunctionParameterArgument(AstFunctionParameterArgument argument)
             {
                 argument.Parent.Should().NotBeNull();
                 argument.VisitChildren(this);
@@ -132,7 +132,7 @@ namespace Zsharp.UnitTests.AST
                 templateParameter.Parent.Should().NotBeNull();
                 templateParameter.VisitChildren(this);
             }
-            public override void VisitTemplateParameterReference(AstTemplateParameterArgument templateArgument)
+            public override void VisitTemplateParameterArgument(AstTemplateParameterArgument templateArgument)
             {
                 templateArgument.Parent.Should().NotBeNull();
                 templateArgument.VisitChildren(this);

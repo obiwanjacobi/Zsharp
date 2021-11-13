@@ -10,6 +10,10 @@ namespace Zsharp.AST
             : base(nodeKind)
         { }
 
+        private readonly List<AstTemplateParameter> _parameterList = new();
+        public T TemplateParameterAt<T>(int index) where T : AstTemplateParameter
+            => (T)_parameterList[index];
+
         // true when type is a template definition
         public bool IsTemplate => _templateParameters.Count > 0;
 
@@ -22,6 +26,7 @@ namespace Zsharp.AST
             if (templateParameter is null)
                 return false;
 
+            _parameterList.Add(templateParameter);
             _templateParameters.Add(templateParameter);
             templateParameter.SetParent(this);
             Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
@@ -40,6 +45,7 @@ namespace Zsharp.AST
             if (genericParameter is null)
                 return false;
 
+            _parameterList.Add(genericParameter);
             _genericParameters.Add(genericParameter);
             genericParameter.SetParent(this);
             Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);

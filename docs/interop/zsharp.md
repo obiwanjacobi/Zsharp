@@ -51,6 +51,9 @@ DbNull | ?? |
 dynamic/Object | Dyn |
 void | Void | ?
 
+> TBD: Convert classes to structs with the properties of the classes as -potentially readonly- fields? class methods will be exposed as self-bound (to the struct) functions.
+We currently have no readonly fields for structs.
+
 > Casting and Conversion
 
 The standard Z# cast functions (use the Type name as cast function name) will map nicely.

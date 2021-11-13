@@ -25,7 +25,7 @@ namespace Zsharp.AST
             => this.SafeSetParent(ref _expression, expression);
 
         public override void Accept(AstVisitor visitor)
-            => visitor.VisitFunctionParameterReference(this);
+            => visitor.VisitFunctionParameterArgument(this);
 
         public override void VisitChildren(AstVisitor visitor)
         {

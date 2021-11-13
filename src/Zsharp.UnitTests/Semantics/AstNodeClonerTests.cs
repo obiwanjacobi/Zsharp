@@ -89,7 +89,7 @@ namespace Zsharp.UnitTests.Semantics
             where T : AstTemplateParameterArgument
         {
             cloned.TemplateArguments.Should().BeEquivalentTo(origin.TemplateArguments);
-            cloned.IsTemplate.Should().Be(origin.IsTemplate);
+            cloned.IsTemplateOrGeneric.Should().Be(origin.IsTemplateOrGeneric);
         }
 
         private void AssertEquivalent(AstCodeBlock cloned, AstCodeBlock origin)
