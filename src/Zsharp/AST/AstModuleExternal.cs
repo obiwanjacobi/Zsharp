@@ -2,10 +2,10 @@
 {
     public class AstModuleExternal : AstModule
     {
-        public AstModuleExternal(string moduleName, AstSymbolTable? parentTable = null)
+        public AstModuleExternal(AstName moduleName, AstSymbolTable? parentTable = null)
             : base(AstModuleLocality.External)
         {
-            var symbolName = AstSymbolName.Parse(moduleName, AstNameKind.External);
+            var symbolName = new AstSymbolName(moduleName);
             SymbolTable = new AstSymbolTable(symbolName.CanonicalName.FullName, parentTable);
             this.SetIdentifier(new AstIdentifier(symbolName, AstIdentifierKind.Module));
         }

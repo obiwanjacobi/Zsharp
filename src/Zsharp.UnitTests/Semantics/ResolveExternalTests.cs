@@ -49,7 +49,7 @@ namespace Zsharp.UnitTests.Semantics
         public void ExternalGenericTypeUse()
         {
             const string code =
-                "import System.Collections.Generic.*" + Tokens.NewLine +
+                "import System.Collections.Generic.List" + Tokens.NewLine +
                 "l: List<Str>" + Tokens.NewLine
                 ;
 

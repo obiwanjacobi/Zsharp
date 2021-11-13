@@ -109,7 +109,7 @@ namespace Zsharp.AST
             {
                 return _definitions
                     .OfType<T>()
-                    .SingleOrDefault(d => d.IsTemplate);
+                    .SingleOrDefault(d => d.IsTemplate || d.IsGeneric);
             }
 
             return ParentSymbol?.TemplateDefinitionAs<T>();

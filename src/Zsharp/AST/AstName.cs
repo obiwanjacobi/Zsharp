@@ -56,7 +56,7 @@ namespace Zsharp.AST
             Postfix = nameToCopy.Postfix;
         }
 
-        private NamePart[] _parts;
+        private readonly NamePart[] _parts;
         public IEnumerable<string> Parts => _parts.Select(p => p.ToString()!);
 
         public AstNameKind Kind { get; }
@@ -69,7 +69,7 @@ namespace Zsharp.AST
         public int GetArgumentCount()
         {
             if (String.IsNullOrEmpty(Postfix))
-                return  0;
+                return 0;
 
             string[] parts;
             if (Postfix.Contains(ArgumentDelimiter))
@@ -88,6 +88,9 @@ namespace Zsharp.AST
         public string Name => $"{Prefix}{Symbol}{Postfix}";
         public string FullName
             => String.IsNullOrEmpty(Namespace) ? $"{Name}" : $"{Namespace}.{Name}";
+
+        public string WithoutPostfix
+            => String.IsNullOrEmpty(Namespace) ? $"{Prefix}{Symbol}" : $"{Namespace}.{Prefix}{Symbol}";
 
         public override string ToString()
             => FullName;
@@ -122,6 +125,9 @@ namespace Zsharp.AST
             return new AstName(parts, nameKind);
         }
 
+        private static readonly AstName _empty = new(new NamePart[0], AstNameKind.Local);
+        public static AstName Empty => _empty;
+
         private static NamePart PartToCanonical(NamePart part)
         {
             if (String.IsNullOrEmpty(part.Name))
@@ -131,7 +137,7 @@ namespace Zsharp.AST
             var canonical = part.Name.Replace("_", String.Empty);
             // preserve casing of first letter
             return new NamePart(canonical[0] + canonical[1..].ToLowerInvariant())
-            { 
+            {
                 Prefix = part.Prefix,
                 Postfix = part.Postfix
             };
@@ -154,15 +160,15 @@ namespace Zsharp.AST
             var namePart = _parts[_nameIndex];
 
             if (namePart.Prefix.Length == 0)
-            { 
+            {
                 Prefix = ParsePrefix(namePart.Name);
                 namePart.Prefix = Prefix;
                 namePart.Name = namePart.Name[Prefix.Length..];
             }
             if (namePart.Postfix.Length == 0)
-            { 
+            {
                 Postfix = ParsePostfix(namePart.Name);
-                namePart.Postfix =Postfix;
+                namePart.Postfix = Postfix;
                 namePart.Name = namePart.Name[..^Postfix.Length];
             }
         }
@@ -198,7 +204,7 @@ namespace Zsharp.AST
         private string PartsToString(int offset, int length)
             => String.Join(Separator, _parts.Skip(offset).Take(length));
 
-        private static string[] Prefixes = { "get_", "set_", "init_", "op_" };
+        private static readonly string[] Prefixes = { "get_", "set_", "init_", "op_" };
 
         //---------------------------------------------------------------------
 

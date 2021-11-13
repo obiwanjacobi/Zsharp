@@ -307,9 +307,7 @@ namespace Zsharp.Semantics
         {
             templateArgument.VisitChildren(this);
 
-            var parent = templateArgument.ParentAs<AstTypeReferenceType>();
-
-            var templDef = parent?.TemplateDefinition;
+            var templDef = templateArgument.ParentAs<AstTypeReferenceType>()?.TemplateDefinition;
             if (templDef is not null)
             {
                 var param = templDef.TemplateParameterAt<AstTemplateParameter>(templateArgument.OrderIndex);
@@ -333,7 +331,7 @@ namespace Zsharp.Semantics
 
             if (type.IsTemplateOrGeneric)
             {
-                var typeTemplate = type.TypeDefinition as AstTypeDefinitionTemplate;
+                var typeTemplate = type.TemplateDefinition;
                 if (typeTemplate is null)
                     typeTemplate = FindTemplateDefinition<AstTypeDefinitionTemplate>(type, AstSymbolKind.Type);
 

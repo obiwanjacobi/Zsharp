@@ -14,7 +14,7 @@ namespace Zsharp.AST
         public T TemplateParameterAt<T>(int index) where T : AstTemplateParameter
             => (T)_parameterList[index];
 
-        // true when type is a template definition
+        // true when type is a template/generic definition
         public bool IsTemplate => _templateParameters.Count > 0;
 
         private readonly List<AstTemplateParameterDefinition> _templateParameters = new();

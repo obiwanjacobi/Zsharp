@@ -42,12 +42,12 @@ namespace Zsharp.External
             builder.AddTo(module);
         }
 
-        private AstModuleExternal GetModule(string moduleName)
+        private AstModuleExternal GetModule(AstName moduleName)
         {
-            if (!_modules.TryGetValue(moduleName, out AstModuleExternal? module))
+            if (!_modules.TryGetValue(moduleName.FullName, out AstModuleExternal? module))
             {
                 module = new AstModuleExternal(moduleName, SymbolTable);
-                _modules.Add(moduleName, module);
+                _modules.Add(moduleName.FullName, module);
             }
 
             return module;
@@ -64,7 +64,11 @@ namespace Zsharp.External
 
         public AstModuleExternal? LoadExact(string fullModuleName)
         {
-            _modules.TryGetValue(fullModuleName, out AstModuleExternal? module);
+            if (!_modules.TryGetValue(fullModuleName, out AstModuleExternal? module))
+            {
+                module = _modules.Values
+                    .SingleOrDefault(m => m.Identifier.SymbolName.CanonicalName.WithoutPostfix == fullModuleName);
+            }
             return module;
         }
 

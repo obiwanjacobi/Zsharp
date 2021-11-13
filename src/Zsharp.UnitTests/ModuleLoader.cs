@@ -19,7 +19,8 @@ namespace Zsharp.UnitTests
 
             if (mod is null)
             {
-                mod = new AstModuleExternal(fullModuleName, SymbolTable);
+                var name = AstName.ParseFullName(fullModuleName);
+                mod = new AstModuleExternal(name, SymbolTable);
                 Modules.Add(mod);
             }
             return mod;

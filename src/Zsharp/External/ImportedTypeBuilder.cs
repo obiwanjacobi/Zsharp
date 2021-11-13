@@ -15,12 +15,12 @@ namespace Zsharp.External
         public ImportedTypeBuilder(ExternalTypeRepository typeRepository)
         {
             _typeRepository = typeRepository;
-            ModuleName = String.Empty;
+            ModuleName = AstName.Empty;
         }
 
         public void Build(TypeMetadata typeDefinition)
         {
-            ModuleName = AstSymbolName.ToCanonical(typeDefinition.FullName);
+            ModuleName = AstName.FromExternal(typeDefinition.Namespace, typeDefinition.Name);
 
             if (typeDefinition.IsEnum)
             {
@@ -43,7 +43,7 @@ namespace Zsharp.External
                     $"No implementation for Type {typeDefinition.FullName}");
         }
 
-        public string ModuleName { get; private set; }
+        public AstName ModuleName { get; private set; }
 
         public AstTypeDefinitionExternal? StructType { get; private set; }
 
