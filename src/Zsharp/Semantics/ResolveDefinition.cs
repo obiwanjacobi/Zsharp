@@ -329,7 +329,7 @@ namespace Zsharp.Semantics
 
             var success = type.TryResolveSymbol();
 
-            if (type.IsTemplateOrGeneric)
+            if (type.IsTemplateOrGeneric && type.TypeDefinition is null)
             {
                 var typeTemplate = type.TemplateDefinition;
                 if (typeTemplate is null)
@@ -337,7 +337,7 @@ namespace Zsharp.Semantics
 
                 if (typeTemplate is not null)
                 {
-                    var symbol = type.Symbol;
+                    var symbolTable = type.Symbol.SymbolTable;
 
                     if (typeTemplate.IsTemplate)
                     {
@@ -345,7 +345,7 @@ namespace Zsharp.Semantics
                         {
                             var typeDef = new AstTemplateInstanceStruct(structTemplate);
                             typeDef.Instantiate(type);
-                            symbol.AddNode(typeDef);
+                            symbolTable.Add(typeDef);
 
                             Visit(typeDef);
                         }
@@ -353,7 +353,7 @@ namespace Zsharp.Semantics
                         {
                             var typeDef = new AstTemplateInstanceType(intrinsicTemplate);
                             typeDef.Instantiate(type);
-                            symbol.AddNode(typeDef);
+                            symbolTable.Add(typeDef);
 
                             Visit(typeDef);
                         }

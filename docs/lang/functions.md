@@ -1132,6 +1132,7 @@ arr = s.Add(42)     // chained calls can be spread over multiple lines
 ```
 
 ```C#
+add(42).to(arr)
 is(someVar).biggerThan(42)
 does<SomeType>().implement<SomeInterface>()
 does<SomeType>().implementMethod(MethodName)

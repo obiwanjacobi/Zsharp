@@ -45,6 +45,7 @@ namespace Zsharp.AST
                 // Defer resolve-definition untill after the template has been instantiated.
                 DeferResolveDefinition = true;
             }
+
             return false;
         }
 

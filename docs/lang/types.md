@@ -1129,7 +1129,7 @@ d.MyFunc = _    // function is removed
 > Parsing free data structures (json) into a dynamic type.
 
 ```csharp
-d: Dyn <= "{ 'data':'hello world'}"
+d: Dyn <= "{ 'data':'hello world' }"
 if d?#data
     // use d.data
 ```
@@ -1140,7 +1140,6 @@ if d?#data
 
 Represents the .NET `System.Object` type for reference cases.
 (External) Type definitions still use `System.Object` as base type.
-
 
 ```C#
 funcAny(): Any

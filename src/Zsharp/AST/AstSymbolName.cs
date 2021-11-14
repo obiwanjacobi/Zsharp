@@ -17,7 +17,7 @@ namespace Zsharp.AST
             if (symbolName.Kind == AstNameKind.Canonical)
             {
                 _native = _canonical = symbolName ?? throw new ArgumentNullException(nameof(symbolName));
-            }    
+            }
             else
             {
                 _native = symbolName ?? throw new ArgumentNullException(nameof(symbolName));
@@ -25,19 +25,19 @@ namespace Zsharp.AST
             }
         }
 
-        private AstName? _native;
+        private readonly AstName? _native;
         public AstName NativeName
             => _native ?? throw new InvalidOperationException("NativeName was not set.");
 
-        private AstName? _canonical;
+        private readonly AstName? _canonical;
         public AstName CanonicalName
             => _canonical ?? throw new InvalidOperationException("CanonicalName was not set.");
 
         public string Postfix
         {
-            get {  return _native!.Postfix; }
+            get { return _native!.Postfix; }
             set
-            { 
+            {
                 _native!.Postfix = value;
                 _canonical!.Postfix = value;
             }
@@ -45,20 +45,19 @@ namespace Zsharp.AST
 
         /// <summary>For template/generic definitions: MyType%1</summary>
         public void SetParameterCounts(int templateParameterCount, int genericParameterCount)
-        { 
-            var postfix = $"{AstName.TemplateDelimiter}{templateParameterCount + genericParameterCount}";
-            NativeName.Postfix = postfix;
-            CanonicalName.Postfix = postfix;
+        {
+            var count = templateParameterCount + genericParameterCount;
+            NativeName.SetTemplateParameterCount(count);
+            CanonicalName.SetTemplateParameterCount(count);
         }
 
-        /// <summary>For template/generic references: MyType<T></summary>
+        /// <summary>For template/generic references: MyType;Str</summary>
         public void AddTemplateArgument(string? name)
         {
             if (!String.IsNullOrEmpty(name))
             {
-                var postfix = $"{AstName.ArgumentDelimiter}{name}";
-                NativeName.Postfix += postfix;
-                CanonicalName.Postfix += postfix;
+                NativeName.AddTemplateArgument(name);
+                CanonicalName.AddTemplateArgument(name);
             }
         }
 
@@ -70,12 +69,6 @@ namespace Zsharp.AST
         public static AstSymbolName Parse(string symbolName, AstNameKind nameKind = AstNameKind.Local)
         {
             var native = AstName.ParseFullName(symbolName, nameKind);
-            return new AstSymbolName(native);
-        }
-
-        public static AstSymbolName ParseCanonical(string canonicalName)
-        {
-            var native = AstName.ParseFullName(canonicalName, AstNameKind.Canonical);
             return new AstSymbolName(native);
         }
     }

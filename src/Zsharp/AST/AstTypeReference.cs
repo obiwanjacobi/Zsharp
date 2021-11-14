@@ -19,7 +19,6 @@ namespace Zsharp.AST
             if (typeToCopy.HasIdentifier)
             {
                 this.SetIdentifier(typeToCopy.Identifier.MakeCopy());
-                Identifier.SymbolName.Postfix = string.Empty;
             }
             if (typeToCopy.HasSymbol)
                 TrySetSymbol(typeToCopy.Symbol);
@@ -30,7 +29,10 @@ namespace Zsharp.AST
             => Symbol.DefinitionAs<AstTypeDefinition>();
 
         public virtual bool TryResolveSymbol()
-            => Symbol.SymbolTable.TryResolveDefinition(Symbol);
+        {
+            var success = Symbol.SymbolTable.TryResolveDefinition(Symbol);
+            return success;
+        }
 
         public virtual bool IsTemplateOrGeneric => false;
 

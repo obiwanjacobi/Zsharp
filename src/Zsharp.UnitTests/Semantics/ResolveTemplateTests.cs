@@ -32,6 +32,24 @@ namespace Zsharp.UnitTests.Semantics
         }
 
         [TestMethod]
+        public void StructTemplate_ReuseInstantiationType()
+        {
+            const string code =
+                "Struct<#T>" + Tokens.NewLine +
+                Tokens.Indent1 + "Id: T" + Tokens.NewLine +
+                "s = Struct<U8>" + Tokens.NewLine +
+                Tokens.Indent1 + "Id = 42" + Tokens.NewLine +
+                "t = Struct<U8>" + Tokens.NewLine +
+                Tokens.Indent1 + "Id = 101" + Tokens.NewLine
+                ;
+
+            var file = Compile.File(code);
+            var v1 = file.CodeBlock.LineAt<AstAssignment>(1).Variable as AstVariableDefinition;
+            var v2 = file.CodeBlock.LineAt<AstAssignment>(2).Variable as AstVariableDefinition;
+            v1.TypeReference.TypeDefinition.Should().Be(v2.TypeReference.TypeDefinition);
+        }
+
+        [TestMethod]
         public void TemplateIntrinsicTypeUsage()
         {
             const string code =

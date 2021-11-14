@@ -19,16 +19,21 @@ namespace Zsharp.AST
         public const char Separator = '.';
         public const char TemplateDelimiter = '%';
         public const char GenericDelimiter = '`';
+        public const char ReferenceDelimiter = '&';
+        public const char PointerDelimiter = '*';
         public const char ArgumentDelimiter = ';';
+        public const char TypeDelimiter = ':';
 
-        private AstName(NamePart[] parts, AstNameKind nameKind)
+        private AstName(NamePart[] parts, AstNameKind nameKind, bool unparsed = false)
         {
             Prefix = String.Empty;
             Postfix = String.Empty;
             Kind = nameKind;
 
             _parts = parts;
-            ParseParts();
+
+            if (!unparsed)
+                ParseParts();
         }
         /// <summary>For external names</summary>
         private AstName(string @namespace, string name, AstNameKind nameKind)
@@ -48,9 +53,9 @@ namespace Zsharp.AST
         }
         public AstName(AstName nameToCopy)
         {
-            _parts = new NamePart[nameToCopy._parts.Length];
-            nameToCopy._parts.CopyTo(_parts, 0);
+            _parts = nameToCopy._parts.Select(p => new NamePart(p)).ToArray();
             _nameIndex = nameToCopy._nameIndex;
+            _parameterCount = nameToCopy._parameterCount;
             Kind = nameToCopy.Kind;
             Prefix = nameToCopy.Prefix;
             Postfix = nameToCopy.Postfix;
@@ -66,22 +71,6 @@ namespace Zsharp.AST
         public string Prefix { get; set; }
         public string Postfix { get; set; }
 
-        public int GetArgumentCount()
-        {
-            if (String.IsNullOrEmpty(Postfix))
-                return 0;
-
-            string[] parts;
-            if (Postfix.Contains(ArgumentDelimiter))
-            {
-                parts = Postfix.Split(new[] { ArgumentDelimiter }, StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Any()) return parts.Length;
-            }
-
-            parts = Postfix.Split(new[] { TemplateDelimiter, GenericDelimiter }, StringSplitOptions.RemoveEmptyEntries);
-            return parts.Select(p => Int32.Parse(p)).Sum();
-        }
-
         private int _nameIndex;
         public string Namespace => PartsToString(0, _nameIndex);
         public string Symbol => _parts[_nameIndex].Name;
@@ -92,15 +81,34 @@ namespace Zsharp.AST
         public string WithoutPostfix
             => String.IsNullOrEmpty(Namespace) ? $"{Prefix}{Symbol}" : $"{Namespace}.{Prefix}{Symbol}";
 
+        private int _parameterCount = 0;
+        public int ParameterCount => _parameterCount;
+
+        /// <summary>For template/generic definitions: MyType%1</summary>
+        public void SetTemplateParameterCount(int count)
+        {
+            _parameterCount = count;
+            Postfix = $"{AstName.TemplateDelimiter}{_parameterCount}";
+        }
+
+        /// <summary>For template/generic references: MyType;Str</summary>
+        public void AddTemplateArgument(string? name)
+        {
+            _parameterCount += 1;
+            Postfix += $"{AstName.ArgumentDelimiter}{name}";
+        }
+
         public override string ToString()
             => FullName;
 
         public AstName ToCanonical()
         {
-            var canonical = new AstName(_parts.Select(PartToCanonical).ToArray(), AstNameKind.Canonical);
-            canonical.Prefix = Prefix;
-            canonical.Postfix = Postfix;
-            return canonical;
+            return new AstName(_parts.Select(PartToCanonical).ToArray(), AstNameKind.Canonical)
+            {
+                Prefix = Prefix,
+                Postfix = Postfix,
+                _parameterCount = _parameterCount
+            };
         }
 
         public static AstName FromLocal(string name, string @namespace = "")
@@ -124,6 +132,9 @@ namespace Zsharp.AST
 
             return new AstName(parts, nameKind);
         }
+
+        public static AstName CreateUnparsed(string functionTypeName, AstNameKind nameKind = AstNameKind.Local)
+            => new(new[] { new NamePart(functionTypeName) }, nameKind, unparsed: true);
 
         private static readonly AstName _empty = new(new NamePart[0], AstNameKind.Local);
         public static AstName Empty => _empty;
@@ -171,6 +182,8 @@ namespace Zsharp.AST
                 namePart.Postfix = Postfix;
                 namePart.Name = namePart.Name[..^Postfix.Length];
             }
+
+            _parameterCount = ParseParameterCount();
         }
 
         private string ParsePrefix(string name)
@@ -199,6 +212,24 @@ namespace Zsharp.AST
             }
 
             return postfix;
+        }
+
+        private int ParseParameterCount()
+        {
+            if (String.IsNullOrEmpty(Postfix))
+                return 0;
+
+            string[] parts;
+            if (Postfix.Contains(ArgumentDelimiter))
+            {
+                parts = Postfix.Split(ArgumentDelimiter, StringSplitOptions.RemoveEmptyEntries);
+                return parts.Length;
+            }
+
+            parts = Postfix.Split(
+                new[] { TemplateDelimiter, GenericDelimiter, ReferenceDelimiter, PointerDelimiter },
+                StringSplitOptions.RemoveEmptyEntries);
+            return parts.Select(p => Int32.Parse(p)).Sum();
         }
 
         private string PartsToString(int offset, int length)

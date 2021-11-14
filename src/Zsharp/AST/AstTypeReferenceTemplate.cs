@@ -17,7 +17,7 @@ namespace Zsharp.AST
             foreach (var templateArgument in typeToCopy.TemplateArguments)
             {
                 var newTemplateArg = new AstTemplateParameterArgument(templateArgument);
-                this.AddTemplateArgument(newTemplateArg);
+                TryAddTemplateArgument(newTemplateArg, modifyName: false);
             }
 
             IsTemplateParameter = typeToCopy.IsTemplateParameter;
@@ -35,6 +35,9 @@ namespace Zsharp.AST
         public IEnumerable<AstTemplateParameterArgument> TemplateArguments => _templateArguments;
 
         public bool TryAddTemplateArgument(AstTemplateParameterArgument templateArgument)
+            => TryAddTemplateArgument(templateArgument, modifyName: true);
+
+        private bool TryAddTemplateArgument(AstTemplateParameterArgument templateArgument, bool modifyName)
         {
             Ast.Guard(Identifier, "Identifier not set - cannot register template argument.");
             if (templateArgument is null)
@@ -43,7 +46,7 @@ namespace Zsharp.AST
             templateArgument.OrderIndex = _templateArguments.Count;
             _templateArguments.Add(templateArgument);
             templateArgument.SetParent(this);
-            if (templateArgument.HasTypeReference)
+            if (templateArgument.HasTypeReference && modifyName)
                 Identifier.SymbolName.AddTemplateArgument(templateArgument.TypeReference.Identifier.NativeFullName);
 
             return true;

@@ -8,8 +8,6 @@ namespace Zsharp.AST
         public AstFunctionDefinitionExternal(MethodMetadata method, bool hasSelfParameter)
             : base(new AstTypeDefinitionFunction())
         {
-            var declType = method.GetDeclaringType();
-
             MethodDefinition = method;
             HasSelfParameter = hasSelfParameter;
         }

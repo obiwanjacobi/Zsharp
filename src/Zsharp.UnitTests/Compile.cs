@@ -37,6 +37,11 @@ namespace Zsharp.UnitTests
         private static readonly string _dotNetBasePath = RuntimeEnvironment.GetRuntimeDirectory();
         private readonly AssemblyManager _assemblyManager = new(_dotNetBasePath);
 
+        public AssemblyManagerBuilder(bool preloadDependencies = true)
+        {
+            _assemblyManager.PreloadDependencies = preloadDependencies;
+        }
+
         public AssemblyManager AssemblyManager => _assemblyManager;
 
         public IAstModuleLoader ToModuleLoader()

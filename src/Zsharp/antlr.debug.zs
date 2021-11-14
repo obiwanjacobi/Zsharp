@@ -1,2 +1,6 @@
-fn: <#T>(p: U8): T
-    return T
+Struct<#T>
+    Id: T
+s = Struct<U8>
+    Id = 42
+t = Struct<U8>
+    Id = 101

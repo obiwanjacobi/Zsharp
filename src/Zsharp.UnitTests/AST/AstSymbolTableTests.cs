@@ -48,7 +48,7 @@ namespace Zsharp.UnitTests.AST
                 "" + Tokens.NewLine
                 ;
 
-            var moduleLoader = new AssemblyManagerBuilder()
+            var moduleLoader = new AssemblyManagerBuilder(preloadDependencies: false)
                 .AddZsharpRuntime()
                 .ToModuleLoader();
 

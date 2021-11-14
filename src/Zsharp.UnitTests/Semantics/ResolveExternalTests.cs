@@ -71,6 +71,34 @@ namespace Zsharp.UnitTests.Semantics
         }
 
         [TestMethod]
+        public void ExternalGenericTypeConstruction()
+        {
+            const string code =
+                "import System.Collections.Generic.List" + Tokens.NewLine +
+                "l = List<Str>()" + Tokens.NewLine
+                ;
+
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddSystemCollections()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
+
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
+
+            var expr = assign.Expression;
+            expr.Should().NotBeNull();
+            expr.RHS.FunctionReference.Should().NotBeNull();
+
+
+            var variable = assign.Variable as AstVariableDefinition;
+            variable.Should().NotBeNull();
+            var typeRef = variable.TypeReference;
+            var typeDef = typeRef.TypeDefinition;
+            typeDef.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void ExternalFunctionArray()
         {
             const string code =

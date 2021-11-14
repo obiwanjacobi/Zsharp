@@ -70,7 +70,7 @@ namespace Zsharp.AST
         public IEnumerable<T> ReferencesAs<T>() where T : class
             => _references.OfType<T>();
 
-        public string Key => MakeKey(SymbolName.Symbol, SymbolKind, SymbolName.GetArgumentCount());
+        public string Key => MakeKey(SymbolName.Symbol, SymbolKind, SymbolName.ParameterCount);
 
         public AstName SymbolName { get; }
 
@@ -137,7 +137,7 @@ namespace Zsharp.AST
             {
                 if (overload.IsTemplateOrGeneric)
                 {
-                    return FunctionOverloads.SingleOrDefault(def => def.Identifier.SymbolName.CanonicalName.GetArgumentCount() == overload.Identifier.SymbolName.CanonicalName.GetArgumentCount());
+                    return FunctionOverloads.SingleOrDefault(def => def.Identifier.SymbolName.CanonicalName.ParameterCount == overload.Identifier.SymbolName.CanonicalName.ParameterCount);
                 }
 
                 return FunctionOverloads.SingleOrDefault(def => def.FunctionType.OverloadKey == overload.FunctionType.OverloadKey);

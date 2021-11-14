@@ -1,8 +1,8 @@
-﻿using Antlr4.Runtime;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
@@ -79,7 +79,7 @@ namespace Zsharp.AST
                     name.Append(',');
 
                 if (parameter.HasTypeReference)
-                { 
+                {
                     functionSymbols.TryAdd(parameter.TypeReference);
                     name.Append(parameter.TypeReference.Identifier.CanonicalFullName);
                 }
@@ -92,14 +92,15 @@ namespace Zsharp.AST
             if (HasTypeReference)
             {
                 contextSymbols.TryAdd(TypeReference);
-                
+
                 name.Append("): ")
                     .Append(TypeReference.Identifier.CanonicalFullName);
             }
             else
                 name.Append(')');
 
-            Identifier.SymbolName = AstSymbolName.ParseCanonical(name.ToString());
+            var canonical = AstName.CreateUnparsed(name.ToString(), AstNameKind.Canonical);
+            Identifier.SymbolName = new AstSymbolName(canonical);
         }
 
         public override string ToString()

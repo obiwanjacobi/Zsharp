@@ -20,6 +20,8 @@ namespace Zsharp.External
 
         public IEnumerable<AssemblyMetadata> Assemblies => _assemblies.Values;
 
+        public bool PreloadDependencies { get; set; }
+
         public AssemblyMetadata? LoadAssembly(AssemblyName assemblyName)
         {
             return LoadAssembly($"{assemblyName.Name}.dll");
@@ -48,7 +50,8 @@ namespace Zsharp.External
             {
                 _assemblies.Add(assemblyMetadata.FullName, assemblyMetadata);
 
-                LoadDependencies(assemblyMetadata);
+                if (PreloadDependencies)
+                    LoadDependencies(assemblyMetadata);
             }
         }
 

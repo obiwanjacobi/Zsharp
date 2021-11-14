@@ -186,7 +186,7 @@ namespace Zsharp.AST
         private AstSymbol? FindSymbolLocal(AstName name, AstSymbolKind kind)
         {
             AstSymbol? symbol = null;
-            var key = AstSymbol.MakeKey(name.Symbol, kind, name.GetArgumentCount());
+            var key = AstSymbol.MakeKey(name.Symbol, kind, name.ParameterCount);
             if (_table.ContainsKey(key))
             {
                 symbol = _table[key];

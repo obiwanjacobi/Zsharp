@@ -1,8 +1,8 @@
-﻿using Antlr4.Runtime;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
@@ -149,7 +149,9 @@ namespace Zsharp.AST
             else
                 name.Append(')');
 
-            Identifier.SymbolName = AstSymbolName.ParseCanonical(name.ToString());
+            var canonical = AstName.CreateUnparsed(name.ToString(), AstNameKind.Canonical);
+            Identifier.SymbolName = new AstSymbolName(canonical);
+
             symbolTable.Add(this);
             return symbolTable.TryResolveDefinition(Symbol);
         }

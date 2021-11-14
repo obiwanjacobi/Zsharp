@@ -47,12 +47,16 @@ namespace Zsharp.UnitTests.AST
                 "import System.*" + Tokens.NewLine
                 ;
 
-            var file = Build.File(code, Compile.CreateModuleLoader());
+            var moduleLoader = new AssemblyManagerBuilder(preloadDependencies: false)
+                .AddSystemAll()
+                .ToModuleLoader();
+
+            var file = Build.File(code, moduleLoader);
             var symbols = file.SymbolTable;
             symbols.Symbols.Any(e => e is null).Should().BeFalse();
 
-            foreach(var mod in symbols.FindSymbols(AstSymbolKind.Module))
-            { 
+            foreach (var mod in symbols.FindSymbols(AstSymbolKind.Module))
+            {
                 mod.SymbolName.FullName.Should().StartWith("System.");
             }
         }

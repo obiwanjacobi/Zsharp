@@ -92,7 +92,11 @@ namespace Zsharp.External
 
                     if (method.IsStatic)
                     {
-                        var aliasName = AstName.ParseFullName($"{typeDefinition.Name}{function.Identifier.SymbolName.CanonicalName.Name}");
+                        var typeDefName = AstName.FromExternal(String.Empty, typeDefinition.Name);
+                        var typeName = StructType?.Identifier.SymbolName.CanonicalName.WithoutPostfix
+                            ?? typeDefName.WithoutPostfix;
+
+                        var aliasName = AstName.ParseFullName($"{typeName}{function.Identifier.SymbolName.CanonicalName.Name}");
                         _aliases.TryAdd(function, aliasName.FullName);
                     }
                 }
