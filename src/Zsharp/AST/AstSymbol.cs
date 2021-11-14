@@ -135,12 +135,15 @@ namespace Zsharp.AST
         {
             if (HasDefinition)
             {
-                if (overload.IsTemplateOrGeneric)
+                var fnDef = FunctionOverloads.SingleOrDefault(def => def.FunctionType.OverloadKey == overload.FunctionType.OverloadKey);
+
+                if (fnDef is null &&
+                    overload.IsTemplateOrGeneric)
                 {
-                    return FunctionOverloads.SingleOrDefault(def => def.Identifier.SymbolName.CanonicalName.ParameterCount == overload.Identifier.SymbolName.CanonicalName.ParameterCount);
+                    fnDef = FunctionOverloads.SingleOrDefault(def => def.Identifier.SymbolName.CanonicalName.ParameterCount == overload.Identifier.SymbolName.CanonicalName.ParameterCount);
                 }
 
-                return FunctionOverloads.SingleOrDefault(def => def.FunctionType.OverloadKey == overload.FunctionType.OverloadKey);
+                return fnDef;
             }
 
             return ParentSymbol?.FindFunctionDefinition(overload);

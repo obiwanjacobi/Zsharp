@@ -43,6 +43,7 @@
     Secondary dependencies could wait until really needed. Knowing the correct `usings` to emit would probably be enough?
     The ResolveDefinition phase would need to be aware of lazy loaded externals in order not to fail them when a secondairy dependecy's definition cannot be resolved.'
 - try to map C# compiler messages to Z# source code locations.
+- Import statement is a ModuleReference and can be registered in the SymbolTable as such.
 
 ---
 

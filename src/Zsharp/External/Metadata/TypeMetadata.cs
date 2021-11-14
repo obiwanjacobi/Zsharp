@@ -72,11 +72,16 @@ namespace Zsharp.External.Metadata
             {
                 _methods.AddRange(_type.GetMethods()
                     .Where(m => m.IsPublic)
-                    .Select(m => new MethodMetadata(m)));
+                    .Select(m => new MethodMetadata(m))
+                    .Concat(
+                        _type.GetConstructors()
+                        .Where(c => c.IsPublic)
+                        .Select(c => new MethodMetadata(c))
+                    ));
             }
             return _methods;
         }
 
-        public bool HasConstructors => _type.GetConstructors().Any();
+        public bool HasConstructors => _type.GetConstructors().Any(c => c.IsPublic);
     }
 }

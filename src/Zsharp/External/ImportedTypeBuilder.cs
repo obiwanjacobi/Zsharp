@@ -131,8 +131,9 @@ namespace Zsharp.External
         private AstFunctionDefinitionExternal CreateFunction(MethodMetadata method)
         {
             var declType = method.GetDeclaringType();
+            var isCtor = method.Name == ".ctor";
             var function = new AstFunctionDefinitionExternal(method, !method.IsStatic);
-            var methodName = method.Name == ".ctor" ? declType.Name : method.Name;
+            var methodName = isCtor ? declType.Name : method.Name;
             var name = AstName.FromExternal(declType.FullName, methodName);
             function.SetIdentifier(new AstIdentifier(name, AstIdentifierKind.Function));
 
@@ -140,7 +141,7 @@ namespace Zsharp.External
             function.FunctionType.SetTypeReference(typeRef);
 
             AstFunctionParameterDefinition funcParam;
-            if (!method.IsStatic)
+            if (!method.IsStatic && !isCtor)
             {
                 funcParam = CreateParameter(AstIdentifierIntrinsic.Self, declType);
                 function.FunctionType.TryAddParameter(funcParam);
