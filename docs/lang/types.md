@@ -1042,6 +1042,22 @@ MyStruct : BaseStruct
     addFld2: I32
 ```
 
+But more consistent would be something like:
+
+```csharp
+MyStruct: BaseStruct + { fld1: Str, fld2: I32 }
+```
+
+Or can we write subtracting like this?
+
+```csharp
+MyStruct: BaseStruct - 
+    fld1: Str
+    fld2: I32
+```
+
+Which is kind of confusing...
+
 ---
 
 ### Multiple Inheritance

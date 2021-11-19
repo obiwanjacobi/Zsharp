@@ -35,6 +35,8 @@ Function interfaces are syntactically different from Object interfaces - so an o
 
 ## Object Interface
 
+> TBD Not sure about the interface 'type' with functions in its scope.
+
 Object interfaces are a template for one or more functions. Usually used as a means to polymorphism.
 
 An object interface can declare one or more functions. It must have the `self` keyword as a first parameter.
@@ -239,5 +241,15 @@ if not s.hasParent()
 // access extra field
 s.Parent        // set to p
 ```
+
+---
+
+> TBD
+
+Pivot the interface and function?
+
+Have an interface with a lot of different methods or have different interfaces with one method?
+
+SupportEditing.Enabled vs. SupportEnabled.Editing
 
 ---

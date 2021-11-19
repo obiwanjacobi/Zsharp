@@ -113,6 +113,29 @@ x = a ?+ o
 x = o ?+ a
 ```
 
+> TBD: chaining bools with `?`
+
+```csharp
+tryFn(p: U8): Bool
+    ...
+
+// here we would need '?' to mean 'false' !!
+b = tryFn(42)?tryFn(101)
+b = tryFn(42) or tryFn(101)     // more logical
+
+// self-bound example
+tryFn(self: Str, p: U8): Bool
+    ...
+
+s = "42"
+// use auto-fluent syntax?
+b = s.tryFn(42) or/and 
+    .tryFn(101)
+
+// pattern matching ??
+b = s is tryFn(42) or tryFn(101)    // weird
+```
+
 ---
 
 ## Type operators

@@ -269,7 +269,8 @@ x = a.Fld1  // U8
 y = a.Fld2  // Str
 
 // deconstruct - creates new vars
-(fld1, fld2) = a
+(fld1, fld2) = a        // -or-
+fld1, fld2 = a
 // build new tuple from vars
 b = { fld1, fld2 }
 
@@ -286,7 +287,8 @@ x = { 42, "42" }
 x.Item1 // Error: Item1 does not exist
 
 // to use, must deconstruct in order
-(n, s) = x
+(n, s) = x      // -or-
+n, s = x
 // n = 42 (U8)
 // s = "42" (Str)
 ```

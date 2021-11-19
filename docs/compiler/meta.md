@@ -286,3 +286,5 @@ Invocation always uses `#` to indicate the compile-time nature of the result (yo
 Problem here is that some pragma's start a new scope and others don't. How to fix that?
 
 > TBD: Transparently pass custom meta programs to roslyn source generators?
+
+> TBD: Allow compile time code to build code using (perhaps) a builder pattern. TypeBuilder, FunctionBuilder and CodeBuilder.

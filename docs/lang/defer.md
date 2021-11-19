@@ -99,3 +99,14 @@ defer d.Dispose()       // implicit
 > TBD: can the compiler figure out what disposable resources are left 'floating' when it exits the function and automatically clean those up?
 
 - The disposable resource that was not passed to any function, assigned to a (global) variable or returned from the function.
+
+> TBD: can the whole `defer` mechanism be replaced by simply following the C# `using` (IDispose) mechanism? How useful is `defer` in a Garbage-Collected language?
+
+```csharp
+// scoped
+resource := AcquireResource()
+use resource
+    // use resource here
+
+
+```

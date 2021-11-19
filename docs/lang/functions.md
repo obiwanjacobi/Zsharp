@@ -254,6 +254,22 @@ allowedFn(editable = false)
 
 ---
 
+### Parameter Arguments
+
+> TBD
+
+Make a distinction in accessing parameters in the function implementation.
+
+The goal is to separate parameter references from local variables (or captures).
+
+```csharp
+fn: (p: U8): Str
+    return Str(Args.p)      // local Args namespace?
+    return Str(fn.p)           // nested inside function name(space)
+```
+
+---
+
 ### Parameter Containers
 
 Use anonymous types or Tuples, Structs and Maps (Dictionaries) as a parameter container.
@@ -344,6 +360,14 @@ MyFunc(p: U8, p2: U16): (field1: U8, field2: U16)
         field1 = p
         field2 = p2
     }
+
+// unnamed fields?
+MyFunc(p: U8, p2: U16): (U8, U16)
+    return p, p2
+
+// not a tuple?
+MyFunc(p: U8, p2: U16): U8, U16
+    return p, p2
 ```
 
 The caller has to handle the return value (just like with Error). There is syntax to explicitly ignore the return value.
@@ -938,6 +962,15 @@ Call([sum.Ptr()](p)
     sum() = sum() + p
     ...
 )
+```
+
+Lambda could be a nameless (function type) definition that can have parameters being applied to it...
+
+```csharp
+// (p: U8): Str 
+(p) -> Str(p)       // how to apply 42?
+((Fn)(p) -> Str(p))(42)         // WTF!
+Fn<(p): Str> -> Str(p)(42)      // ??
 ```
 
 ---
