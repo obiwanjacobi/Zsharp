@@ -198,6 +198,8 @@ sealed class MyEnum : IEquatable<MyEnum>, IComparable<MyEnum>
 
 TBD
 
+Combine enums with normal types and allow extra members per enum option. (SmartEnums/Java-enums).
+
 Extend enum to be more like Rust enums?
 https://doc.rust-lang.org/rust-by-example/custom_types/enum.html
 They're more like union types.

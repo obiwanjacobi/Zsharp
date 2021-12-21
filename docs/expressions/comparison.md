@@ -37,3 +37,9 @@ a = 42
 if a = myFunc()      // ok, compare return value with 42 (a=42)
     ...
 ```
+
+---
+
+TBD
+
+Chain the equals operator? `if a = b = c = d`?
