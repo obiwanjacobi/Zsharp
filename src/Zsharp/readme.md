@@ -27,6 +27,9 @@
 - Importing External modules does not find nested public types (Zsharp.Runtime.Conversion.Checked).
 - Import External Modules also loads in all external-to-the-module referenced types (like System.Object).
     we need Module level dependency detection (and loading) and reference resolvement (SymbolTable).
+- Make external module loading lazy. Only load in the types of local referenced symbols. 
+    Secondary dependencies could wait until really needed. Knowing the correct `usings` to emit would probably be enough?
+    The ResolveDefinition phase would need to be aware of lazy loaded externals in order not to fail them when a secondary dependency's definition cannot be resolved.'
 - AstModuleManager should not return AstModuleExternal instances, but AstModule instances (move Aliases to AstModule).
 - AstTypeReference.MakeCopy should not add to same symboltable.
 - SymbolTable: different flavors of FindSymbol (FindDefintion) do not use the same algorithm to find symbols.
@@ -34,16 +37,18 @@
 - .NET struct interop
 - A faster file stream (ICharStream) based on `Span<T>` or Memory<T>`?
 - Try to get template and generic parameter counts up-front so we don't have to mutate the type-name as the nodes are visited (currently).
-- Rename parameters on references to arguments. Parameters are for defintions, arguments are the provided values to the parameters.
 - Refactor function overload resolvement (ResolveDefinition) to use AstFunctionArgumentMap.
 - Function with return type should give error if no expression of said type is returned from impl.
 - Conversion Functions as Type in a template function do not work: `fn: <T>(p: U8): T; return T(p)`.
 - External/imported generic parameters are not correctly marked (IsTemplate/IsTemplateParameter)
-- Make external module loading lazy. Only load in the types of local referenced symbols. 
-    Secondary dependencies could wait until really needed. Knowing the correct `usings` to emit would probably be enough?
-    The ResolveDefinition phase would need to be aware of lazy loaded externals in order not to fail them when a secondairy dependecy's definition cannot be resolved.'
 - try to map C# compiler messages to Z# source code locations.
 - Import statement is a ModuleReference and can be registered in the SymbolTable as such.
+- FunctionType
+    - Generic parameters are part of the function type.
+    - Function parameters types are part of a function type - move the parameters defs/refs back to function.
+    - Return Type
+- AstTypeDefinitionEnum (AstTypeDefinitionWithField) can never be a template bus has template code (AstTypeDefinitionTemplate)
+- AstTemplateInstanceType may not be needed (does nothing now?)
 
 ---
 

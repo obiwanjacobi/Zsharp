@@ -82,7 +82,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var p = fn.FunctionType.Parameters.FirstOrDefault();
+            var p = fn.Parameters.FirstOrDefault();
             var id = p.Identifier;
 
             id.Should().NotBeNull();
@@ -99,7 +99,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var p = fn.FunctionType.Parameters.FirstOrDefault();
+            var p = fn.Parameters.FirstOrDefault();
             p.TypeReference.Should().NotBeNull();
             p.Identifier.NativeFullName.Should().Be("self");
         }

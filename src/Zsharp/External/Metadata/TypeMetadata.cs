@@ -15,9 +15,11 @@ namespace Zsharp.External.Metadata
             _type = type ?? throw new ArgumentNullException(nameof(type));
         }
 
-        public string Namespace => _type.Namespace ?? String.Empty;
+        public string Namespace => _type.IsGenericParameter
+            ? String.Empty
+            : _type.Namespace ?? String.Empty;
         public string Name => _type.Name;
-        public string FullName => _type.FullName ?? String.Empty;
+        public string FullName => _type.FullName ?? _type.Name;
 
         public bool IsArray => _type.IsArray;
         public bool IsEnum => _type.IsEnum;
@@ -25,6 +27,7 @@ namespace Zsharp.External.Metadata
         public bool IsClass => _type.IsClass;
         public bool IsInterface => _type.IsInterface;
 
+        public bool IsGenericParameter => _type.IsGenericParameter;
         public bool ContainsGenericParameter => _type.ContainsGenericParameters;
 
         private readonly List<GenericParameterMetadata> _genTypes = new();

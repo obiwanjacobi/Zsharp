@@ -51,7 +51,10 @@ namespace Zsharp.Semantics
                     if (typeRef is not null)
                     {
                         // TODO: depending on the operator the type may need to be enlarged.
-                        expression.SetTypeReference(typeRef!.MakeCopy());
+                        var exprTypeRef = typeRef.MakeCopy();
+                        expression.SetTypeReference(exprTypeRef);
+                        SymbolTable!.Add(exprTypeRef);
+
                         Visit(expression.TypeReference);
                     }
                 }
@@ -121,11 +124,19 @@ namespace Zsharp.Semantics
 
                     var typeRef = def?.TypeReference;
                     if (typeRef is not null)
-                        var.SetTypeReference(typeRef.MakeCopy());
+                    {
+                        var varTypeRef = typeRef.MakeCopy();
+                        var.SetTypeReference(varTypeRef);
+                        SymbolTable!.Add(varTypeRef);
+                    }
                 }
 
                 if (var.HasTypeReference)
-                    operand.SetTypeReference(var.TypeReference.MakeCopy());
+                {
+                    var opTypeRef = var.TypeReference.MakeCopy();
+                    operand.SetTypeReference(opTypeRef);
+                    SymbolTable!.Add(opTypeRef);
+                }
             }
 
             var fld = operand.FieldReference;
@@ -135,14 +146,18 @@ namespace Zsharp.Semantics
                 if (enumOptDef is not null)
                 {
                     var enumDef = enumOptDef.ParentAs<AstTypeDefinitionEnum>();
-                    operand.SetTypeReference(AstTypeReferenceType.From(enumDef!));
+                    var opTypeRef = AstTypeReferenceType.From(enumDef!);
+                    operand.SetTypeReference(opTypeRef);
+                    SymbolTable!.Add(opTypeRef);
                 }
             }
 
             var fn = operand.FunctionReference;
             if (fn?.FunctionType.HasTypeReference ?? false)
             {
-                operand.SetTypeReference(fn.FunctionType.TypeReference.MakeCopy());
+                var opTypeRef = fn.FunctionType.TypeReference.MakeCopy();
+                operand.SetTypeReference(opTypeRef);
+                SymbolTable!.Add(opTypeRef);
             }
 
             if (operand.HasTypeReference)
@@ -153,8 +168,8 @@ namespace Zsharp.Semantics
         {
             var typeRef = AstTypeReferenceType.From(typeDef);
             typeRef.IsInferred = true;
-            SymbolTable!.Add(typeRef);
             operand.SetTypeReference(typeRef);
+            SymbolTable!.Add(typeRef);
         }
 
         public override void VisitAssignment(AstAssignment assign)
@@ -170,7 +185,10 @@ namespace Zsharp.Semantics
                 AstTypeReference? typeRef = null;
                 // Variable.TypeReference is usually null.
                 if (varRef.HasTypeReference)
+                {
                     typeRef = varRef.TypeReference.MakeCopy();
+                    SymbolTable!.Add(typeRef);
+                }
 
                 // It is set only when type is explicitly in source code, or has been inferred.
                 var varDef = new AstVariableDefinition(typeRef);
@@ -185,7 +203,7 @@ namespace Zsharp.Semantics
                 assign.VisitChildren(this);
             }
 
-            if (!assign.Variable!.HasTypeReference)
+            if (!assign.Variable.HasTypeReference)
             {
                 // typeless assign of var (x = 42)
                 var expr = assign.Expression;
@@ -199,10 +217,13 @@ namespace Zsharp.Semantics
                 {
                     typeRef = AstTypeReferenceType.From(def);
                     assign.Variable.SetTypeReference(typeRef);
+                    SymbolTable!.Add(typeRef);
                 }
                 else
                 {
-                    assign.Variable.SetTypeReference(typeRef.MakeCopy());
+                    var varTypeRef = typeRef.MakeCopy();
+                    assign.Variable.SetTypeReference(varTypeRef);
+                    SymbolTable!.Add(varTypeRef);
                 }
 
                 Visit(assign.Variable.TypeReference);
@@ -240,34 +261,26 @@ namespace Zsharp.Semantics
 
             if (function.FunctionDefinition is null)
             {
-                if (!function.TryResolveSymbol())
+                var success = function.TryResolveSymbol();
+
+                if (function.IsTemplateOrGeneric)
                 {
-                    if (function.IsTemplateOrGeneric)
+                    var templateFunction = function.FunctionDefinition;
+                    if (templateFunction is null)
+                        templateFunction = FindTemplateDefinition<AstFunctionDefinition>(function, AstSymbolKind.Function);
+
+                    if (templateFunction is not null)
                     {
-                        var symbol = function.Symbol;
-                        var templateFunction = FindTemplateDefinition<AstFunctionDefinition>(function, AstSymbolKind.Function);
+                        var templateInstance = new AstTemplateInstanceFunction(templateFunction);
+                        templateInstance.Instantiate(_context, function);
 
-                        if (templateFunction is not null)
-                        {
-                            if (!templateFunction.IsExternal)
-                            {
-                                var typeDef = new AstTemplateInstanceFunction(templateFunction!);
-                                typeDef.Instantiate(_context, function);
-                                symbol.AddNode(typeDef);
-
-                                Visit(typeDef);
-                            }
-                            else
-                            {
-                                symbol.AddNode(templateFunction);
-                            }
-                        }
+                        Visit(templateInstance);
                     }
                 }
 
                 // in case of overloads, TryResolve may succeed (finding the correct Symbol)
                 // but FunctionDefinition may still be null (FunctionReference.OverloadKey does not match functionDef)
-                if (!function.DeferResolveDefinition &&
+                if (success && !function.DeferResolveDefinition &&
                     function.FunctionDefinition is null)
                 {
                     if (!MatchFunctionToDefinition(function))
@@ -299,7 +312,9 @@ namespace Zsharp.Semantics
 
             if (!argument.HasTypeReference)
             {
-                argument.SetTypeReference(argument.Expression.TypeReference.MakeCopy());
+                var argTypeRef = argument.Expression.TypeReference.MakeCopy();
+                argument.SetTypeReference(argTypeRef);
+                SymbolTable!.Add(argTypeRef);
             }
         }
 
@@ -307,6 +322,7 @@ namespace Zsharp.Semantics
         {
             templateArgument.VisitChildren(this);
 
+            // this code works for template and generic parameters.
             var templDef = templateArgument.ParentAs<AstTypeReferenceType>()?.TemplateDefinition;
             if (templDef is not null)
             {
@@ -359,7 +375,8 @@ namespace Zsharp.Semantics
                         }
                         else
                         {
-                            throw new NotImplementedException("Template is of a Type that has not been implemented yet.");
+                            throw new NotImplementedException(
+                                $"Template of Type {typeTemplate.GetType().Name} has not been implemented yet.");
                         }
                     }
                     if (typeTemplate.IsGeneric)
@@ -447,12 +464,12 @@ namespace Zsharp.Semantics
 
         private bool SetToMatch(AstFunctionReference function, AstFunctionDefinition functionDef)
         {
-            Ast.Guard(function.FunctionType.Arguments.Count() == functionDef.FunctionType.Parameters.Count(),
+            Ast.Guard(function.FunctionType.Arguments.Count() == functionDef.Parameters.Count(),
                 "Number of Parameters don't match between function reference and definition");
 
             bool hasReplacements = false;
             var arguments = function.FunctionType.Arguments.ToList();
-            var parameterDefs = functionDef.FunctionType.Parameters.ToList();
+            var parameterDefs = functionDef.Parameters.ToList();
             for (int i = 0; i < arguments.Count; i++)
             {
                 var parameter = arguments[i];

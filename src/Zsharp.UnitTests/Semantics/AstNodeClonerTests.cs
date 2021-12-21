@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
-using Zsharp;
 using Zsharp.AST;
 
 namespace Zsharp.UnitTests.Semantics
@@ -12,10 +11,10 @@ namespace Zsharp.UnitTests.Semantics
     {
         private readonly Compiler _compiler = new(new ModuleLoader());
 
-        private T Clone<T>(T node) where T : AstNode, IAstCodeBlockLine
+        private T Clone<T>(T node, AstSymbolTable symbolTable) where T : AstNode, IAstCodeBlockLine
         {
             var uut = new AstNodeCloner(_compiler.Context);
-            return uut.Clone<T>(node);
+            return uut.Clone<T>(node, symbolTable);
         }
 
         #region Assertions
@@ -214,11 +213,10 @@ namespace Zsharp.UnitTests.Semantics
                 return;
 
             cloned.Context.Should().BeEquivalentTo(origin.Context);
-            cloned.TypeDefinition.Should().BeEquivalentTo(origin.TypeDefinition);
 
-            // clone is proxied of origin
-            //cloned.IsProxy.Should().Be(origin.IsProxy);
-            //AssertEquivalent(cloned.TypeOrigin, origin.TypeOrigin);
+            // cloner does not (always) 'copy' definitions
+            if (cloned.TypeDefinition is not null)
+                cloned.TypeDefinition.Should().BeEquivalentTo(origin.TypeDefinition);
 
             AssertEquivalent(cloned as AstTypeReferenceTemplate, origin as AstTypeReferenceTemplate);
         }
@@ -248,7 +246,7 @@ namespace Zsharp.UnitTests.Semantics
             cloned.Context.Should().BeEquivalentTo(origin.Context);
             cloned.IsIntrinsic.Should().Be(origin.IsIntrinsic);
             cloned.FunctionType.OverloadKey.Should().Be(origin.FunctionType.OverloadKey);
-            cloned.FunctionType.Parameters.Should().BeEquivalentTo(origin.FunctionType.Parameters);
+            cloned.Parameters.Should().BeEquivalentTo(origin.Parameters);
         }
 
         private void AssertEquivalent(AstFunctionReference cloned, AstFunctionReference origin)
@@ -315,7 +313,7 @@ namespace Zsharp.UnitTests.Semantics
             var file = Compile.File(code);
             var origin = file.CodeBlock.LineAt<AstVariableDefinition>(0);
 
-            var cloned = Clone(origin);
+            var cloned = Clone(origin, file.SymbolTable);
 
             AssertEquivalent(cloned, origin);
         }
@@ -330,7 +328,7 @@ namespace Zsharp.UnitTests.Semantics
             var file = Compile.File(code);
             var origin = file.CodeBlock.LineAt<AstAssignment>(0);
 
-            var cloned = Clone(origin);
+            var cloned = Clone(origin, file.SymbolTable);
 
             AssertEquivalent(cloned, origin);
         }
@@ -346,7 +344,7 @@ namespace Zsharp.UnitTests.Semantics
             var file = Compile.File(code);
             var origin = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
 
-            var cloned = Clone(origin);
+            var cloned = Clone(origin, file.SymbolTable);
 
             AssertEquivalent(cloned, origin);
         }
@@ -362,7 +360,7 @@ namespace Zsharp.UnitTests.Semantics
             var file = Compile.File(code);
             var origin = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
 
-            var cloned = Clone(origin);
+            var cloned = Clone(origin, file.SymbolTable);
 
             AssertEquivalent(cloned, origin);
         }
@@ -378,7 +376,7 @@ namespace Zsharp.UnitTests.Semantics
             var file = Compile.File(code);
             var origin = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
 
-            var cloned = Clone(origin);
+            var cloned = Clone(origin, file.SymbolTable);
 
             AssertEquivalent(cloned, origin);
         }

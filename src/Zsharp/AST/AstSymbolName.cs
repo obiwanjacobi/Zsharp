@@ -44,9 +44,8 @@ namespace Zsharp.AST
         }
 
         /// <summary>For template/generic definitions: MyType%1</summary>
-        public void SetParameterCounts(int templateParameterCount, int genericParameterCount)
+        public void SetParameterCount(int count)
         {
-            var count = templateParameterCount + genericParameterCount;
             NativeName.SetTemplateParameterCount(count);
             CanonicalName.SetTemplateParameterCount(count);
         }

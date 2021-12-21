@@ -7,8 +7,7 @@ using Antlr4.Runtime;
 namespace Zsharp.AST
 {
     public class AstTypeDefinitionFunction : AstTypeDefinition,
-        IAstTypeReferenceSite,
-        IAstFunctionParameters<AstFunctionParameterDefinition>
+        IAstTypeReferenceSite
     {
         internal AstTypeDefinitionFunction()
         {
@@ -21,28 +20,30 @@ namespace Zsharp.AST
             Context = context;
         }
 
-        private readonly List<AstFunctionParameterDefinition> _parameters = new();
-        public IEnumerable<AstFunctionParameterDefinition> Parameters => _parameters;
+        private readonly List<AstTypeReference> _parameterTypes = new();
+        public IEnumerable<AstTypeReference> ParameterTypes => _parameterTypes;
 
-        public bool TryAddParameter(AstFunctionParameterDefinition param)
+        public bool TryAddParameterType(AstTypeReference typeReference)
         {
-            if (param is not null &&
-                param.TrySetParent(this))
+            if (typeReference is not null &&
+                typeReference.TrySetParent(this))
             {
-                // always make sure 'self' is first param
-                if (param.HasIdentifier && param.Identifier == AstIdentifierIntrinsic.Self)
-                    _parameters.Insert(0, param);
-                else
-                    _parameters.Add(param);
+                _parameterTypes.Add(typeReference!);
                 return true;
             }
             return false;
         }
 
+        public void AddParameterType(AstTypeReference typeReference)
+        {
+            if (!TryAddParameterType(typeReference))
+                throw new InternalErrorException(
+                    "Parameter TypeReference was already set (parent) or null.");
+        }
+
         public string OverloadKey =>
-            String.Join(String.Empty, _parameters
-                .Where(p => p.HasTypeReference)
-                .Select(p => p.TypeReference.Identifier.SymbolName.CanonicalName.FullName));
+            String.Join(String.Empty, _parameterTypes
+                .Select(t => t.Identifier.SymbolName.CanonicalName.FullName));
 
         public bool HasTypeReference => _typeReference is not null;
 
@@ -58,7 +59,7 @@ namespace Zsharp.AST
 
         public override void VisitChildren(AstVisitor visitor)
         {
-            foreach (var param in Parameters)
+            foreach (var param in _parameterTypes)
             {
                 param.Accept(visitor);
             }
@@ -67,31 +68,28 @@ namespace Zsharp.AST
                 TypeReference.Accept(visitor);
         }
 
-        public void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
+        public void CreateSymbols(AstSymbolTable? functionSymbols, AstSymbolTable? parentSymbols)
         {
+            Ast.Guard(functionSymbols is not null || parentSymbols is not null, "One of the SymbolTable parameters must be specified.");
             Ast.Guard(!HasSymbol, "Symbol already set. Call CreateSymbols only once.");
             var contextSymbols = parentSymbols ?? functionSymbols;
 
             var name = new StringBuilder();
-            foreach (var parameter in Parameters)
+            foreach (var parameterType in _parameterTypes)
             {
                 if (name.Length > 0)
                     name.Append(',');
 
-                if (parameter.HasTypeReference)
-                {
-                    functionSymbols.TryAdd(parameter.TypeReference);
-                    name.Append(parameter.TypeReference.Identifier.CanonicalFullName);
-                }
-                else
-                    name.Append('?');
+                if (!parameterType.HasSymbol)
+                    contextSymbols?.TryAdd(parameterType);
+                name.Append(parameterType.Identifier.CanonicalFullName);
             }
 
             name.Insert(0, '(');
 
             if (HasTypeReference)
             {
-                contextSymbols.TryAdd(TypeReference);
+                contextSymbols?.TryAdd(TypeReference);
 
                 name.Append("): ")
                     .Append(TypeReference.Identifier.CanonicalFullName);
@@ -101,6 +99,8 @@ namespace Zsharp.AST
 
             var canonical = AstName.CreateUnparsed(name.ToString(), AstNameKind.Canonical);
             Identifier.SymbolName = new AstSymbolName(canonical);
+
+            contextSymbols?.Add(this);
         }
 
         public override string ToString()
@@ -108,16 +108,13 @@ namespace Zsharp.AST
             var txt = new StringBuilder();
 
             txt.Append('(');
-            for (int i = 0; i < Parameters.Count(); i++)
+            for (int i = 0; i < _parameterTypes.Count; i++)
             {
                 if (i > 0)
                     txt.Append(", ");
 
-                var p = Parameters.ElementAt(i);
+                var p = _parameterTypes[i];
                 txt.Append(p.Identifier.NativeFullName);
-                txt.Append(": ");
-                if (p.HasTypeReference)
-                    txt.Append(p.TypeReference.Identifier.NativeFullName);
             }
             txt.Append(')');
 

@@ -6,6 +6,7 @@ using Antlr4.Runtime;
 namespace Zsharp.AST
 {
     public abstract class AstFunctionDefinition : AstFunction,
+        IAstFunctionParameters<AstFunctionParameterDefinition>,
         IAstTemplateSite<AstTemplateParameterDefinition>,
         IAstGenericSite<AstGenericParameterDefinition>
     {
@@ -35,27 +36,61 @@ namespace Zsharp.AST
             }
         }
 
-        public override bool TrySetSymbol(AstSymbol? symbol)
+        private readonly List<AstFunctionParameterDefinition> _parameters = new();
+        public IEnumerable<AstFunctionParameterDefinition> Parameters => _parameters;
+
+        public bool TryAddParameter(AstFunctionParameterDefinition param)
         {
-            var success = base.TrySetSymbol(symbol);
-            if (success)
+            if (param is not null &&
+                param.TrySetParent(this))
             {
-                symbol!.SymbolTable.Add(FunctionType);
+                FunctionType.AddParameterType(param.TypeReference.MakeCopy());
+
+                // always make sure 'self' is first param
+                if (param.HasIdentifier && param.Identifier == AstIdentifierIntrinsic.Self)
+                    _parameters.Insert(0, param);
+                else
+                    _parameters.Add(param);
+                return true;
             }
-            return success;
+            return false;
         }
 
-        public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
+        public override void CreateSymbols(AstSymbolTable? functionSymbols, AstSymbolTable? parentSymbols)
         {
+            Ast.Guard(functionSymbols is not null || parentSymbols is not null, "One of the SymbolTable parameters must be specified.");
             Ast.Guard(!HasSymbol, "Symbol already set. Call CreateSymbols only once.");
 
             FunctionType.CreateSymbols(functionSymbols, parentSymbols);
 
-            var contextSymbols = parentSymbols ?? functionSymbols;
-            contextSymbols.Add(this);
+            foreach (var param in _parameters)
+            {
+                functionSymbols?.Add(param);
+                if (param.HasTypeReference && !param.TypeReference.HasSymbol)
+                    parentSymbols?.Add(param.TypeReference);
+            }
+
+            foreach (var templParam in TemplateParameters)
+            {
+                functionSymbols?.TryAdd(templParam);
+            }
+
+            parentSymbols?.Add(this);
+        }
+
+        public override bool TrySetIdentifier(AstIdentifier identifier)
+        {
+            if (base.TrySetIdentifier(identifier))
+            {
+                Identifier.SymbolName.SetParameterCount(_parameterList.Count);
+                return true;
+            }
+            return false;
         }
 
         private readonly List<AstTemplateParameter> _parameterList = new();
+        public IEnumerable<AstTemplateParameter> ParameterList => _parameterList;
+
         public T TemplateParameterAt<T>(int index) where T : AstTemplateParameter
             => (T)_parameterList[index];
 
@@ -66,14 +101,14 @@ namespace Zsharp.AST
 
         public virtual bool TryAddTemplateParameter(AstTemplateParameterDefinition templateParameter)
         {
-            Ast.Guard(HasIdentifier, "Identifier not set - cannot register template parameter.");
             if (templateParameter is null)
                 return false;
 
             _parameterList.Add(templateParameter);
             _templateParameters.Add(templateParameter);
             templateParameter.SetParent(this);
-            Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
+            if (HasIdentifier)
+                Identifier.SymbolName.SetParameterCount(_parameterList.Count);
 
             return true;
         }
@@ -85,14 +120,14 @@ namespace Zsharp.AST
 
         public virtual bool TryAddGenericParameter(AstGenericParameterDefinition genericParameter)
         {
-            Ast.Guard(HasIdentifier, "Identifier not set - cannot register generic parameter.");
             if (genericParameter is null)
                 return false;
 
             _parameterList.Add(genericParameter);
             _genericParameters.Add(genericParameter);
             genericParameter.SetParent(this);
-            Identifier.SymbolName.SetParameterCounts(_templateParameters.Count, _genericParameters.Count);
+            if (HasIdentifier)
+                Identifier.SymbolName.SetParameterCount(_parameterList.Count);
 
             return true;
         }
@@ -101,7 +136,19 @@ namespace Zsharp.AST
             => visitor.VisitFunctionDefinition(this);
 
         public override void VisitChildren(AstVisitor visitor)
-            => FunctionType.Accept(visitor);
+        {
+            FunctionType.Accept(visitor);
+
+            foreach (var param in _parameterList)
+            {
+                param.Accept(visitor);
+            }
+
+            foreach (var param in Parameters)
+            {
+                param.Accept(visitor);
+            }
+        }
 
         public override string ToString()
         {

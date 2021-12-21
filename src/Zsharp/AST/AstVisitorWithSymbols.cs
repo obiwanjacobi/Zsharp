@@ -1,15 +1,17 @@
 ﻿using Zsharp.AST;
 
-namespace Zsharp.Semantics
+namespace Zsharp
 {
     public abstract class AstVisitorWithSymbols : AstVisitor
     {
         private AstSymbolTable? _globalSymbols;
         private AstSymbolTable? _symbolTable;
 
-        protected AstSymbolTable? GlobalSymbols => _globalSymbols;
+        protected AstSymbolTable GlobalSymbols => _globalSymbols
+            ?? throw new InternalErrorException("No Global SymbolTable was set.");
 
-        protected AstSymbolTable? SymbolTable => _symbolTable ?? _globalSymbols;
+        protected AstSymbolTable SymbolTable => _symbolTable ?? _globalSymbols ??
+            throw new InternalErrorException("No SymbolTable was set.");
 
         public override void VisitCodeBlock(AstCodeBlock codeBlock)
         {

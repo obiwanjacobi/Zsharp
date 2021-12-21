@@ -32,7 +32,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var t = fn.FunctionType.Parameters.First().TypeReference;
+            var t = fn.Parameters.First().TypeReference;
             t.Identifier.NativeFullName.Should().Be("U8");
         }
 
@@ -46,10 +46,10 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var t = fn.FunctionType.Parameters.ElementAt(0).TypeReference;
+            var t = fn.Parameters.ElementAt(0).TypeReference;
             t.Identifier.NativeFullName.Should().Be("U8");
 
-            t = fn.FunctionType.Parameters.ElementAt(1).TypeReference;
+            t = fn.Parameters.ElementAt(1).TypeReference;
             t.Identifier.NativeFullName.Should().Be("Str");
         }
 
@@ -63,7 +63,7 @@ namespace Zsharp.UnitTests.AST
 
             var file = Build.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
-            var t = fn.FunctionType.Parameters.First().TypeReference;
+            var t = fn.Parameters.First().TypeReference;
             t.Identifier.NativeFullName.Should().Be("SomeType");
         }
 

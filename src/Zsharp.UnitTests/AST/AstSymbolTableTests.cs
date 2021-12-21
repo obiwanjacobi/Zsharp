@@ -142,6 +142,25 @@ namespace Zsharp.UnitTests.AST
         }
 
         [TestMethod]
+        public void FunctionName_WithParameters()
+        {
+            const string code =
+                "fn: (p: U8)" + Tokens.NewLine +
+                Tokens.Indent1 + "v = 42" + Tokens.NewLine
+                ;
+
+            var file = Build.File(code);
+            var symbols = file.SymbolTable;
+            symbols.Symbols.Should().HaveCount(4);
+            var fn = symbols.FindSymbol("fn", AstSymbolKind.Function);
+            fn.SymbolKind.Should().Be(AstSymbolKind.Function);
+
+            symbols = fn.DefinitionAs<AstFunctionDefinitionImpl>()!.SymbolTable;
+            symbols.Symbols.Should().HaveCount(2);
+            symbols.FindSymbol("v", AstSymbolKind.Variable).Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void FunctionDefinitionType()
         {
             const string code =

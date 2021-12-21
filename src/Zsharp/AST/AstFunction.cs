@@ -1,4 +1,4 @@
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
@@ -16,10 +16,10 @@ namespace Zsharp.AST
         public bool HasIdentifier => _identifier is not null;
 
         private AstIdentifier? _identifier;
-        public AstIdentifier Identifier 
+        public AstIdentifier Identifier
             => _identifier ?? throw new InternalErrorException("No Identifier was set.");
 
-        public bool TrySetIdentifier(AstIdentifier identifier)
+        public virtual bool TrySetIdentifier(AstIdentifier identifier)
         {
             Ast.Guard(identifier.IdentifierKind == AstIdentifierKind.Function, "Identifier must be of kind Function");
             return Ast.SafeSet(ref _identifier, identifier);

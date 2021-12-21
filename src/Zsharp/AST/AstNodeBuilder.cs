@@ -1,8 +1,8 @@
-﻿using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using Zsharp.Parser;
 using static Zsharp.Parser.ZsharpParser;
 
@@ -242,11 +242,12 @@ namespace Zsharp.AST
         private void VisitFunctionParameter(AstFunctionParameterDefinition parameter)
         {
             var function = _builderContext.GetCurrent<AstFunctionDefinitionImpl>();
-            function.FunctionType.AddParameter(parameter);
 
             _builderContext.SetCurrent(parameter);
             _ = VisitChildren(parameter.Context);
             _builderContext.RevertCurrent();
+
+            function.AddParameter(parameter);
         }
 
         public override object? VisitFunction_call(Function_callContext context)

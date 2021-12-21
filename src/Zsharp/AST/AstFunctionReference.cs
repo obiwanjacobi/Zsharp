@@ -33,7 +33,7 @@ namespace Zsharp.AST
             {
                 var funcDef = FunctionDefinition;
                 if (funcDef is not null)
-                    FunctionType.SetDefinition(symbolTable, funcDef.FunctionType);
+                    return FunctionType.SetDefinition(symbolTable, funcDef);
                 return true;
             }
 
@@ -42,7 +42,7 @@ namespace Zsharp.AST
             {
                 // We found a template parameter with the exact same name as the function reference.
                 // This means that this function reference represents a conversion function for a template type (T).
-                // Defer resolve-definition untill after the template has been instantiated.
+                // Defer resolve-definition until after the template has been instantiated.
                 DeferResolveDefinition = true;
             }
 
@@ -63,7 +63,7 @@ namespace Zsharp.AST
             {
                 templateArgument.OrderIndex = _templateArguments.Count;
                 _templateArguments.Add(templateArgument);
-
+                templateArgument.SetParent(this);
                 Identifier.SymbolName.AddTemplateArgument(templateArgument.TypeReference.Identifier.NativeFullName);
                 return true;
             }
@@ -74,7 +74,14 @@ namespace Zsharp.AST
             => visitor.VisitFunctionReference(this);
 
         public override void VisitChildren(AstVisitor visitor)
-            => FunctionType.Accept(visitor);
+        {
+            FunctionType.Accept(visitor);
+
+            foreach (var arg in TemplateArguments)
+            {
+                arg.Accept(visitor);
+            }
+        }
 
         public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
         {

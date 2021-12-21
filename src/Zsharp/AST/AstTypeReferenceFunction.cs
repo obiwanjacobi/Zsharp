@@ -115,9 +115,9 @@ namespace Zsharp.AST
             }
         }
 
-        public bool SetDefinition(AstSymbolTable symbolTable, AstTypeDefinitionFunction functionTypeDef)
+        public bool SetDefinition(AstSymbolTable symbolTable, AstFunctionDefinition functionDef)
         {
-            var map = new AstFunctionArgumentMap(functionTypeDef.Parameters, Arguments);
+            var map = new AstFunctionArgumentMap(functionDef.Parameters, Arguments);
             var name = new StringBuilder();
 
             for (int i = 0; i < map.Count; i++)
@@ -130,6 +130,7 @@ namespace Zsharp.AST
 
                 var paramTypeRef = p.TypeReference.MakeCopy();
                 a.TrySetTypeReference(paramTypeRef);
+                symbolTable.Add(paramTypeRef);
 
                 if (name.Length > 0)
                     name.Append(',');
@@ -138,8 +139,9 @@ namespace Zsharp.AST
 
             name.Insert(0, '(');
 
-            var typeRef = functionTypeDef.TypeReference.MakeCopy();
+            var typeRef = functionDef.FunctionType.TypeReference.MakeCopy();
             this.SetTypeReference(typeRef);
+            symbolTable.Add(typeRef);
 
             if (typeRef.Identifier != AstIdentifierIntrinsic.Void)
             {

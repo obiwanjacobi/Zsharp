@@ -23,7 +23,7 @@ namespace Zsharp.UnitTests.Semantics
             var file = Compile.File(code, moduleLoader);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(0);
             var intrinsic = fn.SymbolTable.FindDefinition<AstFunctionDefinition>("U16", AstSymbolKind.Function);
-            intrinsic.FunctionType.Parameters.First().IsSelf.Should().BeTrue();
+            intrinsic.Parameters.First().IsSelf.Should().BeTrue();
         }
 
         [TestMethod]
@@ -41,7 +41,7 @@ namespace Zsharp.UnitTests.Semantics
             var file = Compile.File(code);
             var fn = file.CodeBlock.LineAt<AstFunctionDefinitionImpl>(2);
             var intrinsic = fn.SymbolTable.FindDefinition<AstFunctionDefinition>("U16", AstSymbolKind.Function);
-            intrinsic.FunctionType.Parameters.First().IsSelf.Should().BeTrue();
+            intrinsic.Parameters.First().IsSelf.Should().BeTrue();
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Zsharp.AST
+﻿namespace Zsharp.AST
 {
     public class AstTemplateInstanceFunction : AstFunctionDefinition,
         IAstCodeBlockSite, IAstSymbolTableSite, IAstTemplateInstance
@@ -24,10 +21,19 @@ namespace Zsharp.AST
         {
             Context = function.Context;
             _templateArguments = new AstTemplateArgumentMap(
-                TemplateDefinition.TemplateParameters, function.TemplateArguments);
+                TemplateDefinition.ParameterList, function.TemplateArguments);
 
-            var cloner = new AstNodeCloner(context, TemplateDefinition.Indent);
+            var cloner = new AstNodeCloner(context, TemplateDefinition.Indent)
+            {
+                CloneCodeBlock = TemplateDefinition.IsTemplate
+            };
             cloner.Clone(function, TemplateDefinition, this, _templateArguments);
+
+            if (TemplateDefinition.IsGeneric &&
+                TemplateDefinition is AstFunctionDefinitionImpl funcImpl)
+            {
+                _codeBlock = funcImpl.CodeBlock;
+            }
         }
 
         public bool HasCodeBlock => _codeBlock is not null;
@@ -38,7 +44,8 @@ namespace Zsharp.AST
 
         public bool TrySetCodeBlock(AstCodeBlock? codeBlock)
         {
-            if (this.SafeSetParent(ref _codeBlock, codeBlock))
+            if (TemplateDefinition.IsTemplate &&
+                this.SafeSetParent(ref _codeBlock, codeBlock))
             {
                 _codeBlock!.Indent = Indent + 1;
                 AddFunctionSymbols();
@@ -51,10 +58,9 @@ namespace Zsharp.AST
         {
             get
             {
-                var codeBlock = CodeBlock;
-                if (codeBlock is not null)
+                if (HasCodeBlock)
                 {
-                    return codeBlock.SymbolTable;
+                    return CodeBlock.SymbolTable;
                 }
 
                 var site = ParentAs<IAstSymbolTableSite>() ??
@@ -72,7 +78,7 @@ namespace Zsharp.AST
         /// </summary>
         private void AddFunctionSymbols()
         {
-            foreach (var param in FunctionType.Parameters)
+            foreach (var param in Parameters)
             {
                 // function parameters are registered as variables
                 SymbolTable.AddSymbol(param.Identifier.SymbolName.CanonicalName.FullName, AstSymbolKind.Variable, param);

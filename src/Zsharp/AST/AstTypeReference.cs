@@ -20,13 +20,11 @@ namespace Zsharp.AST
             {
                 this.SetIdentifier(typeToCopy.Identifier.MakeCopy());
             }
-            if (typeToCopy.HasSymbol)
-                TrySetSymbol(typeToCopy.Symbol);
             IsInferred = typeToCopy.IsInferred;
         }
 
         public virtual AstTypeDefinition? TypeDefinition
-            => Symbol.DefinitionAs<AstTypeDefinition>();
+            => HasSymbol ? Symbol.DefinitionAs<AstTypeDefinition>() : null;
 
         public virtual bool TryResolveSymbol()
         {

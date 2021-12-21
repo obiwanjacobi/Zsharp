@@ -144,13 +144,13 @@ namespace Zsharp.External
             if (!method.IsStatic && !isCtor)
             {
                 funcParam = CreateParameter(AstIdentifierIntrinsic.Self, declType);
-                function.FunctionType.TryAddParameter(funcParam);
+                function.TryAddParameter(funcParam);
             }
 
             foreach (var p in method.Parameters)
             {
                 funcParam = CreateParameter(new AstIdentifier(p.Name, AstIdentifierKind.Parameter), p.ParameterType);
-                function.FunctionType.TryAddParameter(funcParam);
+                function.TryAddParameter(funcParam);
             }
 
             AddGenericParametersTo(function, method.GenericParameters);

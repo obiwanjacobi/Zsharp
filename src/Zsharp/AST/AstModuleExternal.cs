@@ -52,7 +52,7 @@
                 function.FunctionType.SetTypeReference(typeRef);
             }
 
-            function.CreateSymbols(SymbolTable);
+            function.CreateSymbols(null, SymbolTable);
             function.Symbol.SymbolLocality = AstSymbolLocality.Imported;
         }
     }

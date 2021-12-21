@@ -99,7 +99,7 @@ namespace Zsharp.EmitCS
                 MethodModifiers = MethodModifiers.Static,
             };
 
-            foreach (var parameter in function.FunctionType.Parameters)
+            foreach (var parameter in function.Parameters)
             {
                 method.AddParameter(
                     new CSharp.Parameter(

@@ -166,14 +166,18 @@ namespace Zsharp.AST
                 {
                     Ast.Guard(Definition is null, "Definition is already set.");
                 }
+
+                Ast.Guard(!_definitions.Contains(node), "Duplicate Symbol Definition registration.");
                 _definitions.Add(node);
             }
             else if (SymbolKind == AstSymbolKind.Function && node is AstFunctionDefinition)
             {
+                Ast.Guard(!_definitions.Contains(node), "Duplicate FunctionDefinition Symbol registration.");
                 _definitions.Add(node);
             }
-            else if (!_references.Contains(node))
+            else
             {
+                Ast.Guard(!_references.Contains(node), "Duplicate Symbol Reference registration.");
                 _references.Add(node);
             }
         }

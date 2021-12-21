@@ -20,6 +20,9 @@ namespace Zsharp.AST
             this.SetTypeReference(argumentToCopy.TypeReference.MakeCopy());
         }
 
+        public override bool TrySetIdentifier(AstIdentifier identifier)
+            => throw new InternalErrorException("Template or Generic Arguments do not have an Identifier.");
+
         public int OrderIndex { get; set; }
 
         public bool HasParameterDefinition => _parameterDefinition is not null;

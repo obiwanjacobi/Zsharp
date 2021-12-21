@@ -1,5 +1,4 @@
 ﻿using Antlr4.Runtime;
-using System;
 
 namespace Zsharp.AST
 {
@@ -19,12 +18,7 @@ namespace Zsharp.AST
         { }
 
         public override AstTypeReferenceType MakeCopy()
-        {
-            var typeRef = new AstTypeReferenceType(this);
-            if (HasSymbol)
-                Symbol.AddNode(typeRef);
-            return typeRef;
-        }
+            => new(this);
 
         public static AstTypeReferenceType From(AstTypeDefinition typeDef)
         {

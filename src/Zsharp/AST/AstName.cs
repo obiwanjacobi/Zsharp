@@ -88,7 +88,10 @@ namespace Zsharp.AST
         public void SetTemplateParameterCount(int count)
         {
             _parameterCount = count;
-            Postfix = $"{AstName.TemplateDelimiter}{_parameterCount}";
+            if (count == 0)
+                Postfix = String.Empty;
+            else
+                Postfix = $"{AstName.TemplateDelimiter}{_parameterCount}";
         }
 
         /// <summary>For template/generic references: MyType;Str</summary>

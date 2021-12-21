@@ -103,7 +103,30 @@ namespace Zsharp.UnitTests.Semantics
         {
             const string code =
                 "import Zsharp.Runtime.Types" + Tokens.NewLine +
+                // TODO: T needs to be resolved to C16
+                "arr = Array<C16>(2)" + Tokens.NewLine
+                ;
+
+            var moduleLoader = new AssemblyManagerBuilder()
+                .AddZsharpRuntime()
+                .ToModuleLoader();
+
+            var file = Compile.File(code, moduleLoader);
+            var assign = file.CodeBlock.LineAt<AstAssignment>(0);
+            var fn = assign.Expression.RHS.FunctionReference;
+            var typeRef = fn.FunctionType.TypeReference;
+            typeRef.TypeDefinition.Should().NotBeNull();
+            typeRef.Symbol.Definition.Should().NotBeNull();
+            typeRef.Identifier.CanonicalFullName.Should().Be("C16");
+        }
+
+        [TestMethod]
+        public void ExternalFunctionArray_UseRetVal()
+        {
+            const string code =
+                "import Zsharp.Runtime.Types" + Tokens.NewLine +
                 "import System.Console" + Tokens.NewLine +
+                // TODO: T needs to be resolved to C16
                 "arr = Array<C16>(2)" + Tokens.NewLine +
                 "WriteLine(arr)" + Tokens.NewLine
                 ;

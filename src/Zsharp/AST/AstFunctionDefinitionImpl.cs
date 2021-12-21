@@ -1,5 +1,5 @@
-﻿using Antlr4.Runtime;
-using System;
+﻿using System;
+using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
@@ -45,21 +45,6 @@ namespace Zsharp.AST
                 var site = ParentAs<IAstSymbolTableSite>() ??
                     throw new InvalidOperationException("Function Parent not a SymbolTable Site.");
                 return site.SymbolTable;
-            }
-        }
-
-        public override void CreateSymbols(AstSymbolTable functionSymbols, AstSymbolTable? parentSymbols = null)
-        {
-            base.CreateSymbols(functionSymbols, parentSymbols);
-
-            foreach (var parameter in FunctionType.Parameters)
-            {
-                functionSymbols.TryAdd(parameter);
-            }
-
-            foreach (var templParam in TemplateParameters)
-            {
-                SymbolTable.TryAdd(templParam);
             }
         }
 

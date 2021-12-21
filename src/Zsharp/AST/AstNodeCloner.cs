@@ -6,62 +6,48 @@ namespace Zsharp.AST
     /// <summary>
     /// Clones templated code into an instantiation.
     /// </summary>
-    public class AstNodeCloner : AstVisitor
+    public class AstNodeCloner : AstVisitorWithSymbols
     {
         private readonly AstBuilderContext? _context;
         private readonly AstCurrentContext _current;
         private AstTemplateArgumentMap? _argumentMap;
 
-        public AstNodeCloner()
-        {
-            _current = new AstCurrentContext();
-        }
-
         public AstNodeCloner(CompilerContext context, uint indent = 0)
         {
             _current = _context = new AstBuilderContext(context, indent);
+            CloneCodeBlock = true;
+
+            SetSymbolTable(context.IntrinsicSymbols);
         }
+
+        public bool CloneCodeBlock { get; set; }
 
         public void Clone(AstFunctionReference functionRef,
             AstFunctionDefinition templateFunctionDef, AstTemplateInstanceFunction instanceFunction,
             AstTemplateArgumentMap argumentMap)
         {
-            if (templateFunctionDef is AstFunctionDefinition functionDef)
-            {
-                _argumentMap = argumentMap;
-                _current.SetCurrent(instanceFunction.FunctionType);
-                _current.SetCurrent(instanceFunction);
-                functionDef.VisitChildren(this);
-                _current.RevertCurrent();
-                _current.RevertCurrent();
+            _argumentMap = argumentMap;
 
-                instanceFunction.SetIdentifier(functionRef.Identifier);
+            SetSymbolTable(functionRef.Symbol.SymbolTable);
 
-                AstSymbolTable symbols;
-                if (templateFunctionDef is IAstSymbolTableSite symbolSite)
-                {
-                    // registered in impl function defs symbol table
-                    symbols = symbolSite.SymbolTable;
-                }
-                else
-                {
-                    // intrinsics are registered in root symbol table
-                    symbols = functionRef.Symbol.SymbolTable.GetRootTable();
-                }
+            _current.SetCurrent(instanceFunction.FunctionType);
+            _current.SetCurrent(instanceFunction);
+            templateFunctionDef.VisitChildren(this);
+            _current.RevertCurrent();
+            _current.RevertCurrent();
 
-                instanceFunction.CreateSymbols(symbols);
-            }
-            else
-            {
-                throw new NotImplementedException(
-                    "[Interop] .NET Generics not implemented yet.");
-            }
+            // sets the same name as the template fn ref (Array<U8>) instead of the fn def (Array%1)
+            // TODO: what if the reference used an alias? Name has to be rebuilt using (template) types.
+            instanceFunction.SetIdentifier(functionRef.Identifier);
+            instanceFunction.CreateSymbols(null, SymbolTable);
         }
 
-        public T? Clone<T>(T node) where T : AstNode, IAstCodeBlockLine
+        public T? Clone<T>(T node, AstSymbolTable symbolTable) where T : AstNode, IAstCodeBlockLine
         {
-            Ast.Guard(_context is not null, "Must construct with CompilerContext.");
-            AstCodeBlock cb = new AstCodeBlock("Clone", _context!.CompilerContext.IntrinsicSymbols);
+            Ast.Guard(_context is not null, "Must construct AstNodeCloner with CompilerContext.");
+
+            SetSymbolTable(symbolTable);
+            AstCodeBlock cb = new AstCodeBlock("Clone", symbolTable);
 
             _current.SetCurrent(cb);
             Visit(node);
@@ -87,22 +73,27 @@ namespace Zsharp.AST
 
         public override void VisitCodeBlock(AstCodeBlock codeBlock)
         {
+            if (!CloneCodeBlock)
+                return;
+
             var cb = new AstCodeBlock(
                 codeBlock.SymbolTable.Name, codeBlock.SymbolTable!.ParentTable!, codeBlock.Context);
 
             var site = _current.GetCurrent<IAstCodeBlockSite>();
             site.SetCodeBlock(cb);
 
+            var symbolTable = SetSymbolTable(cb.SymbolTable);
             _current.SetCurrent(cb);
             codeBlock.VisitChildren(this);
             _current.RevertCurrent();
+            SetSymbolTable(symbolTable);
         }
 
         public override void VisitFunctionDefinition(AstFunctionDefinition function)
         {
             if (function is AstFunctionDefinitionImpl functionDef)
             {
-                var fnDef = new AstFunctionDefinitionImpl((Function_defContext)functionDef.Context!);
+                var fnDef = new AstFunctionDefinitionImpl(functionDef.Context!);
                 fnDef.SetIdentifier(functionDef.Identifier);
 
                 var codeBlock = _current.GetCurrent<AstCodeBlock>();
@@ -115,8 +106,11 @@ namespace Zsharp.AST
                 _current.RevertCurrent();
 
                 var symbols = _current.GetCurrent<IAstSymbolTableSite>();
-                fnDef.CreateSymbols(symbols.SymbolTable);
+                fnDef.CreateSymbols(fnDef.SymbolTable, symbols.SymbolTable);
             }
+            else
+                throw new InternalErrorException(
+                    $"AstNodeCloner.VisitFunctionDefinition cannot clone a '{function.GetType().Name}' instance.");
         }
 
         public override void VisitFunctionParameterDefinition(AstFunctionParameterDefinition parameter)
@@ -130,13 +124,12 @@ namespace Zsharp.AST
 
             paramDef.TrySetIdentifier(parameter.Identifier);
 
-            var fnDef = _current.GetCurrent<AstFunctionDefinition>();
-            fnDef.FunctionType.AddParameter(paramDef);
-
             _current.SetCurrent(paramDef);
             parameter.VisitChildren(this);
             _current.RevertCurrent();
 
+            var fnDef = _current.GetCurrent<AstFunctionDefinition>();
+            fnDef.AddParameter(paramDef);
             // parameter symbols are registered with FunctionDefinition.CreateSymbols()
         }
 
@@ -175,7 +168,72 @@ namespace Zsharp.AST
             _current.RevertCurrent();
             _current.RevertCurrent();
 
+            SymbolTable.Add(fnRef);
+
             return fnRef;
+        }
+
+        public override void VisitGenericParameterDefinition(AstGenericParameterDefinition genericParameter)
+        {
+            var genParamSite = _current.GetCurrent<IAstGenericSite<AstGenericParameterDefinition>>();
+            genParamSite.AddGenericParameter(new AstGenericParameterDefinition(genericParameter));
+
+            base.VisitGenericParameterDefinition(genericParameter);
+        }
+
+        public override void VisitTemplateParameterDefinition(AstTemplateParameterDefinition templateParameter)
+        {
+            base.VisitTemplateParameterDefinition(templateParameter);
+            throw new NotImplementedException();
+        }
+
+        public override void VisitTemplateParameterArgument(AstTemplateParameterArgument templateArgument)
+        {
+            base.VisitTemplateParameterArgument(templateArgument);
+            throw new NotImplementedException();
+        }
+
+        public override void VisitTemplateInstanceFunction(AstTemplateInstanceFunction templateFunction)
+        {
+            base.VisitTemplateInstanceFunction(templateFunction);
+            throw new NotImplementedException();
+        }
+
+        public override void VisitTemplateInstanceStruct(AstTemplateInstanceStruct structTemplate)
+        {
+            base.VisitTemplateInstanceStruct(structTemplate);
+            throw new NotImplementedException();
+        }
+
+        public override void VisitTemplateInstanceType(AstTemplateInstanceType typeTemplate)
+        {
+            base.VisitTemplateInstanceType(typeTemplate);
+            throw new NotImplementedException();
+        }
+
+        public override void VisitTypeDefinitionFunction(AstTypeDefinitionFunction function)
+        {
+            // FunctionTypes for FunctionDefinitions are created when the FunctionDefinition is created.
+            // Implement our own 'VisitChildren' because otherwise the parameter types are added through IAstTypeReferenceSite.
+            //function.VisitChildren(this);
+
+            // ParameterTypes are added when FunctionParameters are added
+            //foreach (var paramType in function.ParameterTypes)
+            //{
+            //    functionTypeDef.AddParameterType(CloneTypeReference(paramType));
+            //}
+
+            if (function.HasTypeReference)
+            {
+                var functionTypeDef = _current.GetCurrent<AstTypeDefinitionFunction>();
+                functionTypeDef.SetTypeReference(CloneTypeReference(function.TypeReference));
+            }
+        }
+
+        public override void VisitTypeReferenceFunction(AstTypeReferenceFunction function)
+        {
+            // FunctionTypes for FunctionReferences are created when the FunctionReference is created.
+            function.VisitChildren(this);
         }
 
         public override void VisitExpression(AstExpression expression)
@@ -223,15 +281,22 @@ namespace Zsharp.AST
             if (operand.VariableReference is not null)
                 child = CloneVariableReference(operand.VariableReference);
 
-            Ast.Guard(child, "Expression Operand yielded no AstNode.");
+            Ast.Guard(child, "Clone Expression Operand yielded no AstNode.");
             var op = new AstExpressionOperand(child!);
 
             _current.SetCurrent(op);
-            CloneTypeReference(operand.TypeReference);
+            var typeRef = CloneTypeReference(operand.TypeReference);
             _current.RevertCurrent();
+            op.SetTypeReference(typeRef);
 
             var exp = _current.GetCurrent<AstExpression>();
             exp.Add(op);
+        }
+
+        public override void VisitExpressionRange(AstExpressionRange range)
+        {
+            base.VisitExpressionRange(range);
+            throw new NotImplementedException();
         }
 
         private static AstLiteralBoolean CloneLiteralBoolean(AstLiteralBoolean literal)
@@ -387,7 +452,11 @@ namespace Zsharp.AST
         }
 
         public override void VisitTypeReferenceType(AstTypeReferenceType type)
-            => CloneTypeReference(type);
+        {
+            var typeRef = CloneTypeReference(type);
+            var site = _current.GetCurrent<IAstTypeReferenceSite>();
+            site.SetTypeReference(typeRef);
+        }
 
         private AstTypeReference CloneTypeReference(AstTypeReference type)
         {
@@ -421,8 +490,7 @@ namespace Zsharp.AST
             else
                 typeRef = type.MakeCopy();
 
-            var site = _current.GetCurrent<IAstTypeReferenceSite>();
-            site.SetTypeReference(typeRef);
+            SymbolTable.Add(typeRef);
 
             return typeRef;
         }

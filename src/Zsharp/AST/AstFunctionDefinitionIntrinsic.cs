@@ -19,10 +19,10 @@ namespace Zsharp.AST
 
         public void SetSelfParameter(AstTypeDefinitionIntrinsic type)
         {
-            Ast.Guard(!FunctionType.Parameters.Any(), "A Self parameter has to be first.");
+            Ast.Guard(!Parameters.Any(), "A Self parameter has to be first.");
             var parameter = new AstFunctionParameterDefinition(AstIdentifierIntrinsic.Self);
             parameter.SetTypeReference(AstTypeReferenceType.From(type));
-            FunctionType.AddParameter(parameter);
+            this.AddParameter(parameter);
         }
 
         public override bool IsIntrinsic => true;
@@ -33,7 +33,7 @@ namespace Zsharp.AST
         }
 
         private static void AddIntrinsicSymbol(AstSymbolTable symbols, AstFunctionDefinitionIntrinsic function)
-            => function.CreateSymbols(symbols);
+            => function.CreateSymbols(null, symbols);
 
         private void SetTypeReference(AstTypeDefinitionIntrinsic type)
             => FunctionType.SetTypeReference(AstTypeReferenceType.From(type));

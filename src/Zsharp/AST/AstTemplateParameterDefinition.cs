@@ -1,9 +1,9 @@
-﻿using Antlr4.Runtime;
+﻿using System.Collections.Generic;
+using Antlr4.Runtime;
 
 namespace Zsharp.AST
 {
-    public class AstTemplateParameterDefinition : AstTemplateParameter,
-        IAstIdentifierSite
+    public class AstTemplateParameterDefinition : AstTemplateParameter
     {
         internal AstTemplateParameterDefinition(ParserRuleContext context)
             : base(context)
@@ -14,22 +14,12 @@ namespace Zsharp.AST
             this.SetIdentifier(identifier);
         }
 
-        protected AstTemplateParameterDefinition()
-        { }
+        public AstTypeReference? DefaultType { get; internal set; }
 
-        public virtual bool IsIntrinsic => false;
+        private readonly List<AstTypeReference> _constraintTypes = new();
+        public IEnumerable<AstTypeReference> ConstraintTypes => _constraintTypes;
 
-        public bool HasIdentifier => _identifier != null;
-
-        private AstIdentifier? _identifier;
-        public AstIdentifier Identifier
-            => _identifier ?? throw new InternalErrorException("No Identifier was set.");
-
-        public bool TrySetIdentifier(AstIdentifier identifier)
-        {
-            Ast.Guard(identifier.IdentifierKind == AstIdentifierKind.TemplateParameter, "Identifier must be of kind TemplateParameter");
-            return Ast.SafeSet(ref _identifier, identifier);
-        }
+        public void AddConstraintType(AstTypeReference typeReference) => _constraintTypes.Add(typeReference);
 
         public override void Accept(AstVisitor visitor)
             => visitor.VisitTemplateParameterDefinition(this);

@@ -44,7 +44,7 @@ namespace Zsharp.Dgml
                 case AstNodeKind.File:
                     return WriteFile((AstFile)node);
                 case AstNodeKind.Function:
-                    return WriteFunction((AstFunctionDefinitionImpl)node, parentId);
+                    return WriteFunction((AstFunctionDefinition)node, parentId);
                 case AstNodeKind.Struct:
                     return WriteStruct((AstTypeDefinitionStruct)node, parentId);
                 case AstNodeKind.Enum:
@@ -97,14 +97,14 @@ namespace Zsharp.Dgml
             return node;
         }
 
-        public Node WriteFunction(AstFunctionDefinitionImpl function, string parentId)
+        public Node WriteFunction(AstFunctionDefinition function, string parentId)
         {
             var identifier = function.Identifier;
             var name = identifier.NativeFullName;
             var node = CreateNode(name, function.NodeKind);
             _ = CreateLink(parentId, node.Id);
 
-            var paramNames = String.Join(", ", function.FunctionType.Parameters
+            var paramNames = String.Join(", ", function.Parameters
                 .Select(p => $"{p.Identifier.NativeFullName}: {p.TypeReference.Identifier.NativeFullName}"));
             if (paramNames.Length > 0)
             {
@@ -113,9 +113,11 @@ namespace Zsharp.Dgml
                 _ = CreateLink(node.Id, paramNode.Id, ContainsCategory);
             }
 
-            if (function.CodeBlock.Lines.Any())
+
+            if (function is IAstCodeBlockSite codeBlockSite &&
+                codeBlockSite.CodeBlock.Lines.Any())
             {
-                WriteCodeBlock(function.CodeBlock, node.Id);
+                WriteCodeBlock(codeBlockSite.CodeBlock, node.Id);
             }
 
             return node;
@@ -151,7 +153,7 @@ namespace Zsharp.Dgml
                 case AstNodeKind.Branch:
                     return WriteBranch((AstBranch)codeBlockItem, codeBlockId);
                 case AstNodeKind.Function:
-                    return WriteFunction((AstFunctionDefinitionImpl)codeBlockItem, codeBlockId);
+                    return WriteFunction((AstFunctionDefinition)codeBlockItem, codeBlockId);
                 case AstNodeKind.Enum:
                     return WriteEnum((AstTypeDefinitionEnum)codeBlockItem, codeBlockId);
                 case AstNodeKind.Struct:
@@ -301,21 +303,21 @@ namespace Zsharp.Dgml
 
             var str = operand.LiteralString;
             if (str is not null)
-            { 
+            {
                 type = str.NodeKind;
                 value = str.Value;
             }
 
             var varRef = operand.VariableReference;
             if (varRef is not null)
-            { 
+            {
                 type = varRef.NodeKind;
                 value = varRef.AsString();
             }
 
             var funRef = operand.FunctionReference;
             if (funRef is not null)
-            { 
+            {
                 type = funRef.NodeKind;
                 value = funRef.AsString();
             }

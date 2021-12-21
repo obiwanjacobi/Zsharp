@@ -9,7 +9,7 @@ The `AstBuilder`, `AstNodeBuilder` and `AstExpressionBuilder` classes perform th
 
 `AstSymbol` instances are maintained in a `AstSymbolTable` and symbol tables are organized in a hierarchy.
 
-```
+```txt
 Intrinsic Symbols
 |
 -- File Symbols --> External Module Symbols
@@ -28,17 +28,17 @@ Intrinsic Symbols
 `AstSymbol` instances are stored in the symbol table that represent the scope they were encountered at.
 For example a function definition will be placed in the file's symbol table. That symbol entry will be linked to any references to the function and/or defined aliases found elsewhere. If an `AstSymbol` instance does not contain a definition, its parent (recursively) will.
 
-The `TryResolve` method on AstXxxxReference types is used to resolve the symbol entry with the definition for that reference. This is done by searching parent symbol tables for the same symbol name and linking the resulting `AstSymbol` instances.
+The `TryResolveDefinition` method on AstXxxxReference types is used to resolve the symbol entry with the definition for that reference. This is done by searching parent symbol tables for the same symbol name and linking the resulting `AstSymbol` instances.
 
-### TryResolve
+### TryResolveDefinition
 
-After the AST is built, the resolve-definition phase is started. This will walk (visitor) the AST tree and check if each AST node has a symbol definition. The `TryResolve` on an AST node (for a reference) searches the Symbol Table hierarchy for a symbol entry of the same name with a symbol definition set. When found the symbol of the reference is linked to the symbol entry of the definition.
+After the AST is built, the resolve-definition phase is started. This will walk (visitor) the AST tree and check if each AST node has a symbol definition. The `TryResolveDefinition` on an AST node (for a reference) searches the Symbol Table hierarchy for a symbol entry of the same name with a symbol definition set. When found the symbol of the reference is linked to the symbol entry of the definition.
 
 ### Resolve Function References
 
 Function References have to be matched to a Function Definition. However, not all type information can always be inferred from the function reference's location.
 
-The introduction of a 'FunctionType' isolates the function parameters and the return type. In order to match a function reference to its definition, assuming the identifiers match, their FunctionTypes have to be compared in an 'open' and flexible way.
+The introduction of a 'FunctionType' isolates the function parameter types and the return type. In order to match a function reference to its definition, assuming the identifiers match, their FunctionTypes have to be compared in an 'open' and flexible way.
 
 Template parameters are on the function, not the function type, but they too have to be matched - although this is much simpler.
 
@@ -56,11 +56,11 @@ In the File-level symbol table (where the import statements are declared) only r
 
 When `TryResolve` on a type or function is called and the definition of a symbol cannot be found in the immediate symbol table hierarchy, these module entries are use to try to resolve the definition. If no definition is found a compiler error is generated (undefined type/function).
 
-### TryResolve External Symbols
+### Resolve External Symbols
 
 External modules can have dependencies on other external modules. All of them will be loaded by the ModuleManager. When the resolve-definition phase starts in the compiler, these external module symbols also have to be resolved. They can have references between modules and references to the Z# compiler intrinsic symbols (root symbol table).
 
-```
+```txt
 Module Manager
 |
 --- SymbolTable
@@ -118,6 +118,8 @@ Symbol Name resolution for references to its definitions:
 
 This puts a `Array<U8>` reference with the `Array%1` symbol definition. The instantiation for `Array<U8>` is added to the same Symbol. This is similar to function overloads. With a `TemplateInstanceAs<T>` function it is possible to select the correct template instantiation for a specific combination of template arguments.
 
+
+
 At a later time a search for symbols with template/generic arguments could result in multiple 'overloads' when the argument count is not matched exactly (definition should have equal or more template parameters). This would indicate a partial application of a templated type or function - which should result in a new (generated) templated type or function.
 
 ---
@@ -157,3 +159,50 @@ Is a DotName
 - Find the table that is either the namespace of the first part or has the symbol.
 - follow the parts either using the symbols and/or the table hierarchy.
 - check with imported modules
+
+## Template Instantiation
+
+mixed/hybrid template generic function
+
+`fn: <#T, G>(p: G): T`
+
+AstFunctionDefinition <#T>
+    - TemplateParameterDefinition #T
+    AstTypeDefinitionFunction <G>(p: G): T
+    - GenericParameterDefinition #T
+
+usage
+
+`fn<U8, U8>(48)`
+
+AstFunctionReference <U8, U8>
+    AstTypeReferenceFunction (U8): ?
+
+During Resolve Definition
+
+AstTemplateInstanceFunction (cloned AstFunctionDefinition)
+    TemplateDefinition = AstFunctionDefinition
+    CodeBlock => cloned code with types replaced
+    AstTypeDefinitionFunction
+
+After Resolve Definition
+
+AstFunctionReference <U8>
+    FunctionDefinition = AstTemplateInstanceFunction
+    AstTypeReferenceFunction <U8>(U8): U8
+
+
+
+| Code | Definition | Instance | Reference |
+|------|------------|----------|-----------|
+| `MyStruct` | AstTypeDefinition | - | AstTypeReference
+| `MyStruct<T>` | AstTypeDefinition | AstTemplateInstanceStruct | AstTypeReference
+| `Array<G>`?? | AstTypeDefinition | AstTemplateInstanceType | AstTypeReference
+| `fn: (p: U8): Str` | AstFunctionDefinition | - | AstFunctionReference
+| | AstTypeDefinitionFunction | - | AstTypeReferenceFunction
+| `fn: <#T>(p: T): Str` | AstFunctionDefinition | AstTemplateInstanceFunction | AstFunctionReference
+| | AstTypeDefinitionFunction | AstTypeDefinitionFunction | AstTypeReferenceFunction
+| `fn: <G>(p: G): Str` | AstFunctionDefinition | AstTemplateInstanceFunction | AstFunctionReference
+| | AstTypeDefinitionFunction | AstTypeDefinitionFunction | AstTypeReferenceFunction
+| `fn: <#T, G>(p: G): T` | AstFunctionDefinition | AstTemplateInstanceFunction | AstFunctionReference
+| | AstTypeDefinitionFunction | AstTypeDefinitionFunction | AstTypeReferenceFunction

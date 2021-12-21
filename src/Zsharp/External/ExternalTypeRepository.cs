@@ -18,14 +18,20 @@ namespace Zsharp.External
                     if (!_zsharpTypeMap.TryGetValue(typeReference.Name, out var identifier))
                         identifier = new AstIdentifier(name!, AstIdentifierKind.Type);
 
-                    var typeRef = new AstTypeReferenceType(identifier);
+                    var typeRef = new AstTypeReferenceType(identifier)
+                    {
+                        IsGenericParameter = typeReference.IsGenericParameter
+                    };
                     _typeReferences.Add(key, typeRef);
                 }
                 else
                 {
                     name = AstName.FromExternal(typeReference.Namespace, typeReference.Name);
-                    
-                    var typeRef = new AstTypeReferenceExternal(typeReference);
+
+                    var typeRef = new AstTypeReferenceExternal(typeReference)
+                    {
+                        IsGenericParameter = typeReference.IsGenericParameter
+                    };
                     typeRef.SetIdentifier(new AstIdentifier(name, AstIdentifierKind.Type));
                     _typeReferences.Add(key, typeRef);
                 }
@@ -39,11 +45,11 @@ namespace Zsharp.External
             if (typeReference.IsArray)
             {
                 if (typeReference.ContainsGenericParameter)
-                { 
+                {
                     zsharpName = AstName.ParseFullName("Array%1");
                 }
                 else
-                { 
+                {
                     var elementType = typeReference.GetElementType();
                     zsharpName = AstName.ParseFullName($"Array;{ToZsharpScalarType(elementType.Name)}");
                 }
@@ -67,7 +73,7 @@ namespace Zsharp.External
             return nativeName;
         }
 
-        private static Dictionary<string, AstIdentifier> _zsharpTypeMap = new()
+        private static readonly Dictionary<string, AstIdentifier> _zsharpTypeMap = new()
         {
             { "Byte", AstIdentifierIntrinsic.U8 },
             { "UInt16", AstIdentifierIntrinsic.U16 },

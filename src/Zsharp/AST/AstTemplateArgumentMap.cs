@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Zsharp.AST
 {
-    public sealed class AstTemplateArgumentMap 
-        : AstParameterArgumentMap<AstTemplateParameterDefinition, AstTemplateParameterArgument>
+    public sealed class AstTemplateArgumentMap
+        : AstParameterArgumentMap<AstTemplateParameter, AstTemplateParameterArgument>
     {
         public AstTemplateArgumentMap(
-            IEnumerable<AstTemplateParameterDefinition> templateParameters,
+            IEnumerable<AstTemplateParameter> templateParameters,
             IEnumerable<AstTemplateParameterArgument> templateArguments)
             : base(templateParameters, templateArguments)
         { }
@@ -33,7 +32,7 @@ namespace Zsharp.AST
         }
 
         private static readonly AstTemplateArgumentMap _empty
-            = new (Enumerable.Empty<AstTemplateParameterDefinition>(), Enumerable.Empty<AstTemplateParameterArgument>());
+            = new(Enumerable.Empty<AstTemplateParameterDefinition>(), Enumerable.Empty<AstTemplateParameterArgument>());
 
         public static AstTemplateArgumentMap Empty => _empty;
     }
