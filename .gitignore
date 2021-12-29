@@ -246,3 +246,5 @@ ModelManifest.xml
 
 # Antlr
 .antlr/
+
+.ionide
