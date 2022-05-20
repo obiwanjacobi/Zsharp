@@ -839,6 +839,8 @@ s: OneOfThese
 // a property that matches T
 if s.type = Struct1
     ...
+
+// can also use a match expression
 ```
 
 This would be basically how the type would be stored...

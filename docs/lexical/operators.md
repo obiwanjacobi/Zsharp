@@ -55,8 +55,10 @@ Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `n
 More mathematic concepts as operators?
 PI (and other constants), rad, deg, vectors, matrix, infinity, sin, cos, tan (inv), rounding (floor, ceiling), medium, mean, average, factorial/permutation/combination, sum...
 
+Float and double comparison operators? Need a range. Operator for comparison range/accuracy?
+
 Operator that cascades the left value?
-So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`. See also [match expression](../expressions/match.md).
+So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`. See also [match expression](../expressions/match.md). Would also work with `if c in (42, 101)`.
 
 | Operator | Fn Name | Description
 |--|--|--
@@ -91,6 +93,8 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `#` | Pragma / Attribute access / Execute at compile-time
 | `#!` | Compile-time code definition (perhaps only `#`)
 | `##` | Temporary comment (compiler warning)
+| `#_` | Comment
+| `__` | (Alternate) Comments
 
 `#!` does make the distinction clear between compile-time functions and for instance inline exported functions: `#export fun: ()...` vs. `#! fun: () ...`.
 

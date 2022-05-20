@@ -83,9 +83,11 @@ Keyword | Description
 `errdefer` | defers execution till exit with error
 `out` | opposite of in?
 `var` | thread local?
+`val` | constant value?
 `def` | default? (looks like define!)
 `ref` | explicit reference? / read-only pointer?
 `deref` | unpack a reference (too similar to defer)
+`rec` | recursive function?
 `use` | inline module imports? IDisposable wrapper?
 `any` | a type that can be anything (object) (not a keyword but a type?)
 `asm` | inline assembly (IL?)

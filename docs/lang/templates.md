@@ -211,10 +211,19 @@ repeatX: <count: U16>()     // Error!
     ...
 ```
 
+```csharp
+// Error: cannot use the same name for template and function parameters
+repeatX: <#count: U16>(count: U16)
+    ...
+```
+
 Example
 
 ```csharp
 fn<#T, #ret: T>(): T
+    return ret
+// -or- ?
+fn<#ret: T, #T>(): T
     return ret
 
 // Can we infer T?
@@ -259,7 +268,7 @@ The goal is to insert code into a template that is compiled as a new whole. The 
 // takes a function template parameter 'as code'
 repeat: <#fn: Fn<U8>>(c: U8)
     loop n in [0..c]
-        fn(n)   // need '#'?
+        fn(n)   // need '#'? => no
 
 // optionally use #! to not emit the fn in the binary
 #! doThisFn: (p: U8)
@@ -288,8 +297,6 @@ t = TemplateType
 t = TemplateType<Str>
     field1 = "42"       // Str
 ```
-
-> Note: Inconsistency with function parameter defaults => which are not supported. Should we support both or neither?
 
 ---
 
@@ -433,6 +440,10 @@ MyType<OtherType<SameType1, SameType2>, SameType1, SameType2> myType
 MyOtherType<T1, T2> = MyType<OtherType<T1, T2>, T1, T2>
 // usage of alias
 MyOtherType<SameType1, SameType2> myOtherType
+
+// use template param as default for other template param
+ReuseType<T1, T2=T1>
+    ...
 ```
 
 ---

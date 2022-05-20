@@ -676,6 +676,7 @@ fn: (): U8
 // no param => no parens
 a = fn
 ```
+> How does this differ from taking a reference to a function (function pointer)?
 
 ```csharp
 fn: (p: U8): U8
@@ -743,7 +744,7 @@ s: Struct1
     ...
 
 // calls fn(s.fld1)
-s.fnStruct()
+x = s.fnStruct()
 ```
 
 > `.NET`: When the type of the `self` parameter is being compiled, the function is generated as a class method. If the `self` type is external the function is generated as an extension method.
@@ -1308,7 +1309,7 @@ Allows the function call and execution to take place only at compile time. The f
 // use
 a = compileTimeFn()
 // results in (in binary)
-a = 42
+// a = 42
 ```
 
 See also [Compile-Time Code](../compiler/meta.md#Compile-Time-Code)

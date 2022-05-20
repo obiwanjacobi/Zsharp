@@ -6,6 +6,8 @@ This choice eliminates the problem of nested block comments and keeps parsing si
 
 _A comment starts when `//` is encountered and continues for the rest of the line until a new-line character is seen._
 
+> Looking into moving to `__` for comments (double discard) to reserve `//` for roots (math).
+
 A comment starting at the beginning of the line:
 
 ```C#
