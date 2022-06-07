@@ -10,9 +10,6 @@ Perhaps use `Ptr` to simulate a raw buffer pointer but with a size attached to i
 
 The template type `Ptr<T>` is used to represent a pointer.
 
-> The number of bits used for a pointer into memory depends on the memory model: 16, 20, 24 ...?
-When bank switching and extended memory is worked out this number is configured for the compiler to use.
-
 ```C#
 ptr: Ptr<U8>        // pointer to an U8
 ```
@@ -178,8 +175,8 @@ MyStruct : OtherStruct
     ...
 
 ptr = Ptr<MyStruct>
-cast: OtherStruct = ptr     // ok, cast to derived type
-p = cast                    // ok, is original type
+cast: OtherStruct = ptr     // ok, cast to base type
+p: MyStruct = cast          // ok, is original type
 ```
 
 ```C#

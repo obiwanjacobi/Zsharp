@@ -246,5 +246,4 @@ ModelManifest.xml
 
 # Antlr
 .antlr/
-
-.ionide
+.ionide/symbolCache.db

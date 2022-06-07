@@ -65,7 +65,7 @@ _ = s&.boundFn()&.boundFn()
 
 ---
 
-Optional fields in structs:
+## Optional fields in Structs
 
 ```C#
 MyStruct
@@ -134,7 +134,7 @@ Do we also need a `Bind` (SelectMany) function?
 
 ---
 
-Adding or removing optional to an existing declaration is a breaking change, when at a logical level it should be considered a compatible change in most cases... How could we fix that?
+> TBD: Adding or removing optional to an existing declaration is a breaking change, when at a logical level it should be considered a compatible change in most cases... How could we fix that?
 
 ---
 
@@ -167,6 +167,14 @@ endDate: Opt<DateTime> =
     // what if days Opt is not set?
     date.Select(d => d.AddDays(days))
 ```
+
+> TBD: We may add the `Nullable<T>` members for compatibility.
+
+---
+
+> TBD
+
+Boolean operators on optional values?
 
 ---
 
