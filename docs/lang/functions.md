@@ -1469,6 +1469,8 @@ Using `Sync()` and `Async()` conversion functions mitigates the problem of funct
 
 > Compiler should warn for sync/async call-chains that switch multiple times (very inefficient).
 
+> `IAsyncEnumerable<T>` does not use a `Task<T>` as a return value: `public async IAsyncEnumerable<string> GetNamesAsync()`
+
 ---
 
 ### Async Task Cancellation
