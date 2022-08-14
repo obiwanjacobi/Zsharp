@@ -87,17 +87,24 @@ namespace Zsharp.External
             {
                 foreach (var method in methodGroup)
                 {
-                    var function = CreateFunction(method);
-                    _functions.Add(function);
-
-                    if (method.IsStatic)
+                    try
                     {
-                        var typeDefName = AstName.FromExternal(String.Empty, typeDefinition.Name);
-                        var typeName = StructType?.Identifier.SymbolName.CanonicalName.WithoutPostfix
-                            ?? typeDefName.WithoutPostfix;
+                        var function = CreateFunction(method);
+                        _functions.Add(function);
 
-                        var aliasName = AstName.ParseFullName($"{typeName}{function.Identifier.SymbolName.CanonicalName.Name}");
-                        _aliases.TryAdd(function, aliasName.FullName);
+                        if (method.IsStatic)
+                        {
+                            var typeDefName = AstName.FromExternal(String.Empty, typeDefinition.Name);
+                            var typeName = StructType?.Identifier.SymbolName.CanonicalName.WithoutPostfix
+                                ?? typeDefName.WithoutPostfix;
+
+                            var aliasName = AstName.ParseFullName($"{typeName}{function.Identifier.SymbolName.CanonicalName.Name}");
+                            _aliases.TryAdd(function, aliasName.FullName);
+                        }
+                    }
+                    catch (NotSupportedException)
+                    {
+                        // Some .NET6 new additions to the BCL have signatures that are not supported by Reflection
                     }
                 }
             }

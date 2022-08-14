@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -60,8 +61,14 @@ namespace Zsharp.UnitTests
             var files = Directory.EnumerateFiles(_dotNetBasePath, "System.*.dll");
 
             foreach (var file in files)
-                _assemblyManager.LoadAssembly(file);
-
+            { 
+                try
+                { 
+                   _assemblyManager.LoadAssembly(file);
+                }
+                catch (BadImageFormatException)
+                { }
+            }
             return this;
         }
 
