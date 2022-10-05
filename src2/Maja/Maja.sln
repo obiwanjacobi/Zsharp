@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maja.Compiler", "Maja.Compiler\Maja.Compiler.csproj", "{693ED838-B353-430B-93D2-DE20F756F4CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maja.UnitTests", "Maja.UnitTests\Maja.UnitTests.csproj", "{993D5F79-BA6D-4BCA-A87C-FFFB66081528}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{693ED838-B353-430B-93D2-DE20F756F4CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{693ED838-B353-430B-93D2-DE20F756F4CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{693ED838-B353-430B-93D2-DE20F756F4CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{693ED838-B353-430B-93D2-DE20F756F4CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{993D5F79-BA6D-4BCA-A87C-FFFB66081528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{993D5F79-BA6D-4BCA-A87C-FFFB66081528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{993D5F79-BA6D-4BCA-A87C-FFFB66081528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{993D5F79-BA6D-4BCA-A87C-FFFB66081528}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A3F918C-B759-47E5-B845-239179CB0297}
+	EndGlobalSection
+EndGlobal
