@@ -161,6 +161,7 @@ with (s, v)     // use '()' for lists?
     // matches parameters on type (U8)
     if pred()
         // specified U8 -> overrule context
+        // allow self-params to be implicit?
         fn(101)
 ```
 

@@ -183,6 +183,22 @@ s =^ "Constant"     // Imm<Str>
 
 ---
 
+## Canonical String Constants
+
+Where the name of the constant is the same as the value of the constant.
+
+```csharp
+$ConstantAsValue
+// ConstantAsValue: Str = "ConstantAsValue"
+
+s = "This is a {ConstantAsValue}"
+// s = 'This is a ConstantAsValue'
+```
+
+Also possible with enums.
+
+---
+
 > TBD
 
 - Regex literals `regEx = #"$[0-9]^"` (syntax?) `regEx = /$[0-9]^/`

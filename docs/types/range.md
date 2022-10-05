@@ -1,6 +1,6 @@
 # Range
 
-A Range encapsulates a range of indices and optionally a step value.
+A Range encapsulates a range of indices and optionally a step value or a sequence of numbers.
 
 Given an array of integers:
 
@@ -23,6 +23,8 @@ Reverse|-8|-7|-6|-5|-4|-3|-2|-1
 [..-1]      // till one before end
 ```
 
+> Note negative values in ranges used for indexing arrays and lists, mean 'count backward from the end of the array'. Negative numbers in range expressions to generate number sequences mean literal negative numbers.
+
 ```csharp
 rng = Range(1, 6)     // allow??
 ```
@@ -33,6 +35,15 @@ arr = (1, 2, 3, 4, 5, 6)
 x = arr[0, 3, 1, 4]
 // x: Array<U8> = (1, 4, 2, 5)
 // x cannot be a Slice
+```
+
+> TBD
+
+A range results in a (virtual) list with numbers. So shouldn't the syntax reflex a list?
+
+```csharp
+rng = (0..10)       // range from 0 to 9 -incl.
+stp = (0..10: 2)    // 0, 2, 4, 6, 8
 ```
 
 ### Step
@@ -51,7 +62,7 @@ A third optional parameter for a range is the step the value takes on each itera
 
 If no step is specified it is always 1. This means that non-normalized ranges with start > end, will not iterate - a behavior that is most useful/common/expected I think.
 
-> `.NET`: how does C# behave concerning non-normalized ranges and iteration?
+> `.NET`: how does C# behave concerning non-normalized ranges and iteration? => Throws an `ArgumentOutOfRangeException` on `Range` ctor.    
 
 ### Dimensions
 
@@ -110,7 +121,11 @@ if x in [0..100]
 ```
 
 That would also mean this: `Range<T>` to allow for floats etc.
-Step would only be needed in a loop/iter scenario.
+Step would only be needed for integers but mandatory for floating point numbers.
+
+```csharp
+flt = [0.0..1.0: 0.2]  // 0.0, 0.2, 0.4, 0.6, 0.8
+```
 
 ## Iterators
 
@@ -179,6 +194,21 @@ loop v in arr[1..-2]    // 2, 3
 Add a negative sign to do a reverse range?
 
 ```csharp
-loop n in -[0..8]
+loop n in [8..0]    // reverse range
+loop n in -[0..8]   // neg operator on fwd range
     for_n_7_6_5_4_3_2_1_0
+```
+
+---
+
+> TBD
+
+Have syntax for standard 'sub-array' behavior of `.NET` `Range` usage?
+
+I think .NET copies over the array elements when indexing with a range.
+
+```csharp
+arr = (0, 1, 2, 3, 4, 5, 6, 7, 8)
+sub = arr.[0..5]        // dot operator
+sub = arr.copy([0..5])  // explicit function
 ```

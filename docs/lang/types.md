@@ -817,10 +817,10 @@ s: OneOfThese
     ...
 
 v = match s
-    s1: Struct1 => s1.fld1
-    s2: Struct2 => s2.val2
-    s3: Struct3 => s3.bla
-    s4: Struct4 => s4.myfld
+    s1: Struct1 -> s1.fld1
+    s2: Struct2 -> s2.val2
+    s3: Struct3 -> s3.bla
+    s4: Struct4 -> s4.myfld
 ```
 
 > The type-id is stored with the instance. Access with `#varId` or something?
@@ -844,6 +844,25 @@ if s.type = Struct1
 ```
 
 This would be basically how the type would be stored...
+
+> TBD
+
+Discriminated Unions are similar except they name the type of the union/variant.
+
+```csharp
+
+OneOrTheOther :|    // <= special syntax is required
+    s1: Struct1
+    s2: Struct2
+
+s := OnOrTheOther
+    s1 = Struct1
+        ...
+
+v = match s
+    .s1 -> s1.fld1
+    .s2 -> s2.val1
+```
 
 ---
 

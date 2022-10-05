@@ -45,7 +45,7 @@ Using the dot-notation the items inside the module can be accessed.
 NewName()       // calls MyFunc
 ```
 
-> We now have a function alias syntax. This is not needed anymore.
+The difference between `import` aliasing and other types of aliasing is that the original names are not brought into scope with `import` aliasing. With 'normal' aliasing both the original identifier as well as the alias are in scope.
 
 When module names look the same:
 
@@ -68,7 +68,7 @@ When module names look the same:
 
 ---
 
-> A way to import modules into a local scope?
+> TBD: A way to import modules into a local scope?
 
 ```csharp
 fn: ()
@@ -78,7 +78,9 @@ fn: ()
         ...
 ```
 
-Does loading at runtime (`use`) require the containing function to have an `Err<T>` return type? Will the program be aborted when the module is not found or can it be handled gracefully?
+The advantage of specifying `import` in a local scope is that the code unit (type, function etc.) can be moved (refactoring) to a different file without the dependencies needing to be reviewed and file-level imports to be added.
+
+Does loading at runtime (`use`) require the containing function to have an `Err<T>` return type? Will the program be aborted when the module is not found or can it be handled gracefully? (yes)
 
 ```csharp
 fn: ()
@@ -89,8 +91,6 @@ fn: ()
 Does `use` return a type that represents the loaded module? Something like `Err<Ptr<ModuleInfo>>`?
 
 ---
-
-> TBD: how does the import find the module and/or the assembly the module code is in?
 
 Be explicit about what assembly to use to import the name/namespace? (for .NET compatibility)
 

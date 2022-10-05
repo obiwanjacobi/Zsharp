@@ -45,3 +45,28 @@ r: Ref<U8> = a.Ref()    // convert 'a' to a Ref (explicit var)
 r = a.Ref()             // convert 'a' to a Ref (implicit var)
 r: Ref<U8> = 42         // Error! cannot take ref from a literal
 ```
+
+---
+
+## TBD
+
+Copy-on-write
+
+- Find a way to limit a reference's reach. When passing the same thing to multiple places, control (let it be controlled by the receiver?) who sees these changes? Make a copy at some point - with all the problems that come with making copies...
+
+```csharp
+a = 42
+r = a.CopyOnWriteRef()
+a = 101
+// a = 101
+// r = 42
+```
+
+---
+
+> match all C# struct ref scenarios
+> - in / out / ref
+> - readonly
+> - ref return
+> - scoped keyword
+> - `readonly ref readonly int constant`

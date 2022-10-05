@@ -293,6 +293,27 @@ c = fn::Parameters
 fn(...c)
 ```
 
+A template trick to allow any struct with the correct properties to be passed as function arguments.
+
+```csharp
+fn: <#A>(A args)
+    x = args.param1
+    y = args.param2
+
+MyStruct
+    param1: U8
+    param2: Str
+    other: I64
+
+s = MyStruct
+    ...
+
+// Type A (MyStruct) must have param1 and param2 fields
+fn(s)
+```
+
+---
+
 > TBD
 
 Interpret the function parameters `(param: U8)` as a tuple. That means that all functions have only one actual param, which is a single tuple and is passed by reference (as an optimization), but by value conceptually.
@@ -321,6 +342,7 @@ p = fn.Parameters
 
 // call
 fn(p)
+fn(...p)    // spread?
 // same as
 fn(42, "42")
 ```
@@ -329,11 +351,22 @@ fn(42, "42")
 
 Will there be an automatic overload of `fn` (using an immutable ptr to the parameter structure instance) or does the compiler unpack the structure at the call site to call the original function?
 
-> Will overloaded functions share one parameter structure with all the parameters - or - each have an individual parameter structure?
+> Will overloaded functions share one parameter structure with all the parameters - or - each have an individual parameter structure? (can we overload structs?)
 
 > The compiler generated option should allow being mapped from a real object.
 
 Perhaps a 'service' function type uses this principle but calls it a 'message' (like gRPC). Would also return a message in that case. Implementation could be gRPC for interop.
+
+---
+
+### Implicit Parameters
+
+> TBD
+
+- Implicit arguments at call site
+- Implicit parameters at declaration
+
+Related to context variables?
 
 ---
 
@@ -1406,18 +1439,19 @@ t2: Task<U8> = work2Async()
 > I don't like the use of a(n awaited) Task as if it were a value...
 
 ```csharp
-fn1: (p: U8): Str
+// async functions
+asyncFn1: (p: U8): Task<Str>
     ...
-fn2: ()
+asyncFn2: (): Task
     ...
-fn3: (s: Str): Bool
+asyncFn3: (s: Str): Task<Bool>
     ...
 
-result = InvokeAsync(() => fn1(42), fn2, () => fn3("42"))
+result = InvokeAsync(() -> asyncFn1(42), asyncFn2, () -> asyncFn3("42"))
 r1, _, r3 = ...result // deconstruct result
 
 // parallel operator?
-r1, _, r3 =>> (fn1(42), fn2(), fn3("42"))
+r1, _, r3 =>> (asyncFn1(42), asyncFn2(), asyncFn3("42"))
 
 // the results are of type Error<T> where T is the return type of the called function.
 // Error<T>: Exception or T
@@ -1446,7 +1480,11 @@ syncFn: (p: U8): U8
 // should work the same in an async-context
 syncContext: (): U8
     // call sync function as async task
-    t: Task<U8> = syncFn(42).Async()
+    t: Task<U8> = #async syncFn(42)         // pragma?
+    t: Task<U8> = InvokeAsync(() -> syncFn(42))   // as a lambda
+    [] async    // async capture block
+        v = syncFn()
+
     // syncFn is running on a different thread
     // do other stuff
     // await result (U8)
@@ -1463,6 +1501,7 @@ syncContext: (): U8
     return asyncFn(42)
     // or explicit '.Sync()' conversion needed
     return asyncFn(42).Sync()
+    return #sync asyncFn(42)
 ```
 
 Using `Sync()` and `Async()` conversion functions mitigates the problem of function coloring (functions have to be called/handled different depending on their traits).
@@ -1585,10 +1624,6 @@ Defining traits also declare on what type of syntax element they can be applied 
 ---
 
 ## TBD
-
----
-
-> TBD
 
 Declarative code: see if we can find a syntax that would make it easy to call lots of functions in a declarative style. Think of the code that is needed to initialize a GUI with all its controls to create and properties to set.
 https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md

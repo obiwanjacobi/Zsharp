@@ -230,13 +230,12 @@ arr3D = Array<U8>(4, 3, 2)
 
 > TBD
 
-Math with numerical arrays?
+Array programming: Math with numerical arrays?
 
 ```csharp
 arr1 = (1, 2, 3, 4, 5)
 arr2 = (6, 7, 8, 9, 0)
 
-// what if not the same length?
 arr3 = arr1 + arr2  // (7, 9, 11, 13, 5)
 
 // require type of fixed size?
@@ -246,6 +245,42 @@ v2 = (4, 5, 6)
 
 v3 = v1 + v2    // (5, 7, 9)
 v3 = v1 * v2    // (4, 10, 18)
+```
+
+Or use different operators to distinguish them from normal arithmetic operators:
+
+```csharp
+arr1 = ()
+arr2 = ()
+
+// fits nicely because we don't have these as inc/dec operators.
+arr3 = arr1 ++ arr2
+arr4 = arr2 -- arr1
+```
+
+| Operator | Description
+|---|---
+| `++` | apply `+` operator between all items of two arrays.
+| `--` | apply `-` operator between all items of two arrays.
+| `//` | apply `/` operator between all items of two arrays.
+| `**` | apply `*` operator between all items of two arrays.
+| `%%` | apply `%` operator between all items of two arrays.
+| `///` | apply `//` operator between all items of two arrays.
+| `***` | apply `**` operator between all items of two arrays.
+| more...?
+
+If arrays are not of equal length:
+
+```csharp
+arr1 = (1, 2, 3, 4, 5)
+arr2 = (6, 7, 8)
+
+arr3 = arr1 ++ arr2
+// arr3 = (7, 8, 11, 4, 5)
+
+arr4 = arr2 -- arr1
+// arr4 = (5, 5, 5)
+// is the rest of arr1 concatenated, or zero used for missing values in arr2 (producing negative results)?
 ```
 
 ---

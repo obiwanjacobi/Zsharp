@@ -2,6 +2,8 @@
 
 Z# also contains a couple of functional programming features that are described here.
 
+## Pure Functions
+
 A pure function is a function that returns the exact same result given the same inputs without any side effects.
 
 A pure function -without side-effects- can be recognized by the lack of (mutable?) captures and the presence of immutable (only in-) parameters. It also has to have a return value.
@@ -15,10 +17,15 @@ Pure functions cannot call impure functions, ever.
 ```
 
 The question is can the compiler detect that.
+Yes, it should be able to detect that if (and only if) it has information on all the calls that are made (recursive).
+This will become a problem when doing interop with .NET because .NET methods do not contain this data.
+Assuming all .NET methods are impure, because they can throw Exceptions, will quickly lead to not being able to create pure functions at all (I fear).
+
+There are also cases where impure functions may be viewed as pure when the side-effect is not of interest to the program. Like `Console.WriteLine` and logging could be viewed as 'transparent'.
 
 ```csharp
 // has imm param but potentially writes to globalVar
-sideEffect: [globalVar.Ptr()](p: Ptr<Imm<U8>>)
+sideEffectFn: [globalVar.Ptr()](p: Ptr<Imm<U8>>)
 // takes two params and produces result - no side effects
 pureFn: (x: U8, y: U8): U16
 
@@ -28,13 +35,18 @@ pureFn: (x: U8, y: U8): U16
 pureFnMaybe: [globalVar](x: U8, y: U8): U16
 
 // special syntax to promise purity?
-// on the return type? (haskal uses IO for impure)
+// on the return type? (haskell uses IO for impure)
 pureFn: [globalVar](x: U8, y: U8): Pure<U16>
 // with a 'pure' keyword?
 pure pureFn: [globalVar](x: U8, y: U8): U16
 // with a 'fun' keyword?
 fun pureFn: [globalVar](x: U8, y: U8): U16
 ```
+
+### .NET Exceptions
+
+We have to come to terms with .NET Exceptions. Throwing Exceptions makes any function impure. But as long as the Exception is thrown in the truly exceptional cases, it can be viewed as an abort (panic) that bypasses the normal execution flow.
+This allows a pure function to call .NET (BCL) code that may throw exceptions and still be considered a pure function.
 
 ---
 
@@ -44,10 +56,10 @@ A higher order function is a function that takes or returns another function (or
 
 ```csharp
 // a function that returns a function
-pureFn: (arr: Arr<U8>): Fn<(U8): U8>
+highFn: (arr: Arr<U8>): Fn<(U8): U8>
     ...
-// call pureFn and call the function it returns
-v = pureFn([1,2])(42)
+// call highFn and call the function it returns
+v = highFn([1,2])(42)
 ```
 
 > TBD: Syntax for function partial application, composition and currying?
@@ -69,7 +81,7 @@ fn: (p: U8, s: Str): Bool
     ...
 
 // expression body => composition
-fnPartial (p: Str) = fn(42, p)
+fnPartial (s: Str) = fn(42, s)
 
 // calls fn(42, "42")
 b = fnPartial("42")

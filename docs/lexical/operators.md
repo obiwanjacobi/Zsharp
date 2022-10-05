@@ -8,6 +8,31 @@ Of these wellknown functions there are two flavors: unchecked and checked implem
 
 Note that `checked` and `unchecked` do not refer to the .NET variants. It only means that any conversion the operator does is checked to be correct (or not checked).
 
+> TBD
+
+Add specific operators for arithmetic operations for saturation (ignoring overflow and filling up till full) and wrapping (wrapping around to start over again when full) behavior.
+
+Postfix arithmetic operator with:
+
+| Operator | Description
+|--|--
+| `!` | Overflow/Underflow will cause an exception. (`.NET checked`)
+| `|` | Overflow/underflow will wrap around. (`.NET unchecked`)
+| `~` | Overflow/underflow will saturate.
+
+(Zig has explicit operators too)
+
+```csharp
+a: U8 = 245
+b: U8 = 125
+
+c: U8 = a +! b  // overflow exception (370 > U8)
+c: U8 = a +| b  // wrap around (115)
+c: U8 = a +~ b  // saturate (255)
+```
+
+> Is checked `!`  the default?
+
 ---
 
 ## Operator Symbols
@@ -31,7 +56,7 @@ Arithmetic, bitwise and logical operators.
 | `>=` | IsGreaterEqual | Greater or Equal
 | `=<` | IsLesserEqual | Smaller or Equal
 | `?` | AsBoolean | Boolean postfix
-| `? :` | - | Ternary Conditional (if-else)
+| `? :` | - | Ternary Conditional (if-else) (don't like the `:` used for types everywhere else)
 | `and` | LogicAnd | Logical And
 | `or` | LogicOr | Logical Or
 | `xor` | LogicXor | Logical Xor
@@ -92,6 +117,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `->` | Line continuation (instead of indent)
 | `#` | Pragma / Attribute access / Execute at compile-time
 | `#!` | Compile-time code definition (perhaps only `#`)
+| `#!` | Compile-time error (alt)
 | `##` | Temporary comment (compiler warning)
 | `#_` | Comment
 | `__` | (Alternate) Comments
@@ -117,15 +143,13 @@ x = a ?+ o
 x = o ?+ a
 ```
 
-> TBD: chaining bools with `?`
+> TBD: chaining bools with `?` => No, use `or`.
 
 ```csharp
 tryFn(p: U8): Bool
     ...
 
-// here we would need '?' to mean 'false' !!
-b = tryFn(42)?tryFn(101)
-b = tryFn(42) or tryFn(101)     // more logical
+b = tryFn(42) or tryFn(101)
 
 // self-bound example
 tryFn(self: Str, p: U8): Bool
@@ -150,6 +174,7 @@ b = s is tryFn(42) or tryFn(101)    // weird
 | `?` | `Opt<T>`  | Optional; T or Nothing
 | `*` | `Ptr<T>`  | Pointer to T
 | `^` | `Imm<T>`  | Immutable T
+| `%` | `Atom<T>`  | Atomic T
 
 ---
 
@@ -163,7 +188,7 @@ To be determined:
 |---|---
 | `\` | reserved
 | `|` | reserved
-| `$` | auto-constant string checked by compiler.
+| `$` | to string / auto-constant string checked by compiler.
 | `!` | reserved (factorial?)
 | `?.` | Safe Navigation (1) -or-
 | `&.` | Safe Navigation (2)
@@ -211,7 +236,9 @@ Operators for working with `Array<T>` and `List<T>` types.
 | Operator | Description
 |---|---
 | `+=` | add item to array/list
+| `<+=` | alt - add item to array/list
 | `-=` | remove item from array/list
+| `<-=` | alt - remove item from array/list
 | `^=` | insert item into array/list
 | `&=` | add item to array/list/tree as a child
 | `|=` | insert item to array/list/tree as a child
@@ -285,6 +312,7 @@ Goal is to have a quick and easy way to convert from a normal data type `T` to o
 | `=?` | `Opt<T>` = `T`
 | `=*` | `Ptr<T>` = `T` (`Ptr()` conversion)
 | `=^` | `Imm<T>` = `T`
+| `=%` | `Atom<T>` = `T`
 
 ```csharp
 a: U8 = 42
@@ -292,18 +320,21 @@ err =! a    // err: Err<U8>
 opt =? a    // opt: Opt<U8>
 ptr =* a    // ptr: Ptr<U8>
 imm =^ a    // imm: Imm<U8>
+atom =% a    // atom: Atom<U8>
 
 // as parameters inline
 fnErr(!a)
 fnOpt(?a)
 fnPtr(*a)
 fnImm(^a)
+fnAtom(%a)
 
 // or named parameters
 fnErr(err =! a)
 fnOpt(opt =? a)
 fnPtr(ptr =* a)
 fnImm(imm =^ a)
+fnAtom(imm =% a)
 ```
 
 > Or are these conversions implicit?
@@ -335,6 +366,12 @@ x: U16 = !(a ** a)
 > TBD
 
 - allow custom defined operators? `.>>.`, `|<<` etc. Requires identifiers to be less strict. Also requires escape characters in function definition symbol: `''.>>.'': (...): Bool`. The names would be considered normal functions and therefor -to be used as operators- would need to adhere to the infix function rules.
+
+Then there is also a `.NET` interop problem. How are these operators exposed to (for instance) a C# program?
+We could spell out each character to make a unique name that is still callable from other .NET languages.
+
+- '`.>>.`' => `op_dotgtgtdot`
+- '`|<<`' => `op_pipeltlt`
 
 ---
 

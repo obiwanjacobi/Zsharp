@@ -2,7 +2,7 @@
 
 In general converting to a type is done by using the target type name to convert to as a function name.
 
-This is very similar to [Type Constructors](types.md$Type-Constructors), which are also functions with the same name as the Type to be created. Conversion functions are seen as a special type of constructor (or factory) function. One thing that is special about them is that the first parameter is a `self` parameter of the source Type to convert from.
+This is very similar to [Type Constructors](types.md#Type-Constructors), which are also functions with the same name as the Type to be created. Conversion functions are seen as a special type of constructor (or factory) function. One thing that is special about them is that the first parameter is a `self` parameter of the source Type to convert from.
 
 ```csharp
 TargetType: (self: SourceType): TargetType

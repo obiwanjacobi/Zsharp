@@ -63,6 +63,22 @@ Inheritance makes the structure bigger.
 
 > Multiple inheritance is not supported at this moment.
 
+> TBD: default to 'closed' structured and explicitly 'opening' them up for inheritance. Syntax is iffy.
+
+```csharp
+// Any looks weird
+MyStruct: Open<>
+MyStruct: Open<Any>
+    ...
+
+OpenDerived: Open<MyStruct>
+    ...
+
+// closed even if MyStruct is open
+ClosedDerived: MyStruct
+    ...
+```
+
 Here is an example of containment:
 
 ```C#
@@ -427,4 +443,5 @@ MyStruct
 
 > TBD
 
+- Have a different syntax for accessing mutable and immutable data. The source code will tell you explicitly. Not sure about the details.
 - Allow YAML/JSON/XAML/XML to be used inline for declaring hierarchical data? Not sure how to separate the YAML/JSON/XAML/XML syntax from the Z# syntax.

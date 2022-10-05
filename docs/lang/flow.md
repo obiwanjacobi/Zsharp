@@ -195,6 +195,8 @@ loop c
 
 Loop or else
 
+> TBD: Most cases can probably be refactored into simpler code..?
+
 ```csharp
 x = 0
 loop n in [0..x]
@@ -333,7 +335,7 @@ loop n in [0..3] and s in [2..9]
 The 'or' keyword allows the fastest side to end the loop.
 
 ```csharp
-loop n in [0..x] or 42
+loop n in [0..x] or 42 // 42 is the max loop count here
 ```
 
 ---
@@ -344,7 +346,7 @@ TODO
 Only loops with function bodies (.NET: TPL and PLINQ).
 
 ```csharp
-// operator? (implies AsParallel)
+// what operator? (implies AsParallel)
 loop [0..10] ->> LogInt
 
 // (static) partition function
@@ -384,7 +386,9 @@ An array of values that are cycled through each time it is read.
 `Cycle<T>` is a self-restarting iterator (enumerator).
 
 ```csharp
-c = Cycle(1, 2, 3, 4, 5)
+l = (1, 2, 3, 4, 5)
+c = Cycle(l)
+c = Cycle(l, 3)     // max 3 cycles (?)
 
 m = c   // 1
 n = c   // 2
@@ -399,11 +403,12 @@ t = c   // 3
 For use in loops typically.
 
 ```csharp
-c = Cycle(1, 2, 3, 4, 5)
+l = (1, 2, 3, 4, 5)
+c = Cycle(l)
 
-loop i in [0..10]
+loop i in [0..10] and n in c
     // i = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-    // c = 1, 2, 3, 4, 5, 1, 2, 3, 4, 5
+    // n = 1, 2, 3, 4, 5, 1, 2, 3, 4, 5
 ```
 
 Of course a `Cycle` can be constructed with a range.

@@ -55,16 +55,14 @@ Bit<3>#max  // 7
 Bit<3>#name // 'Bit3'
 ```
 
-> Perhaps have a very short version of `#name` (no space) for it will be used most often.
+> Perhaps have a very short version of `#$name` (no space) for it will be used most often. (`#` = compile-time, `$` = string)
 
 ```csharp
 a = 42
-#a              // 'a'
-#U8             // 'U8'
-#MyFunction     // 'MyFunction'
+#$a              // 'a'
+#$U8             // 'U8'
+#$MyFunction     // 'MyFunction'
 ```
-
-This may be conflicting with pragmas. Symbol must be in scope, resolvement will be up to parent scopes as usual.
 
 ---
 
@@ -239,10 +237,11 @@ Syntax?
 #inline     // pragma (hint)
 @inline()   // compiler function
 {inline}    // extension/decorator
-inlineFn: (p: U8): Bool => p = 42
+[[inline]]  // extension/decorator
+inlineFn: (p: U8): Bool -> p = 42
 ```
 
-> The function alias syntax `=` could be used for inline functions...
+> The expression body function syntax `=` could be used for inline functions...
 
 | Hint | Description
 |--|--

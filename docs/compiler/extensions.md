@@ -130,3 +130,20 @@ AstAddAt(ast, <ast-node-ref>)
 astFn1 = Ast.Get(fn1)
 astFn1 += ast   // add ast node to function
 ```
+
+## Remote Decoration
+
+> TBD
+
+To solve the issue of having to add dependencies of decorators needed for a framework or wanting to decorate a type you do not own.
+A way to add decorators to a function or struct without needing to change that source code.
+
+```csharp
+someFunction: (p: U8): U8
+
+[[someFunction:FnDecorator]]
+[[someFunction:p:ParamDecorator]]
+```
+
+If the sourceCode of `someFunction` is available then the attributes will be placed on the resulting code.
+If no sourceCode is available the function/type has to be replaced (proxy).
