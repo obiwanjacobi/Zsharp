@@ -4,8 +4,7 @@
         "mode": "external",
         "outputDir": "Parser",
         "language": "CSharp",
-        //"package": "Zsharp.Parser",
-        "package": "Maja.Compiler.Parser",
+        "package": "Zsharp.Parser",
         "listeners": false,
         "visitors": true
     },

@@ -11,17 +11,6 @@
             "printParseTree": false,
             "visualParseTree": true,
             "internalConsoleOptions": "neverOpen"
-        },
-        {
-            "name": "Maja.NET",
-            "type": "antlr-debug",
-            "request": "launch",
-            "input": "./src2/Maja/Maja.Compiler/antlr.debug.maja",
-            "grammar": "./src2/Maja/Maja.Compiler/MajaParser.g4",
-            "startRule": "compilation_unit",
-            "printParseTree": false,
-            "visualParseTree": true,
-            "internalConsoleOptions": "neverOpen"
         }
     ]
 }
