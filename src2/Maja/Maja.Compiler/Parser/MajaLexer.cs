@@ -36,7 +36,7 @@ public partial class MajaLexer : Dentlr.DentlrLexer {
 	public const int
 		INDENT=1, DEDENT=2, COMMENTstart=3, COMMENTwarning=4, COMMENT=5, RET=6, 
 		PUB=7, USE=8, SELF=9, IDENTIFIER=10, PARENopen=11, PARENclose=12, ANGLEopen=13, 
-		ANGLEclose=14, HASH=15, COLON=16, DOT=17, EQ=18, UNUSED=19, COMMA=20, 
+		ANGLEclose=14, HASH=15, COLON=16, DOT=17, EQ=18, DISCARD=19, COMMA=20, 
 		SP=21, EOL=22;
 	public static string[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
@@ -50,7 +50,7 @@ public partial class MajaLexer : Dentlr.DentlrLexer {
 		"COMMENTstart", "COMMENTwarning", "COMMENT", "RET", "PUB", "USE", "SELF", 
 		"IDENTIFIER", "ALPHA", "DIGIT2", "DIGIT8", "DIGIT10", "DIGIT16", "PARENopen", 
 		"PARENclose", "ANGLEopen", "ANGLEclose", "HASH", "COLON", "DOT", "EQ", 
-		"UNUSED", "COMMA", "SP", "EOL"
+		"DISCARD", "COMMA", "SP", "EOL"
 	};
 
 
@@ -71,7 +71,7 @@ public partial class MajaLexer : Dentlr.DentlrLexer {
 	private static readonly string[] _SymbolicNames = {
 		null, "INDENT", "DEDENT", "COMMENTstart", "COMMENTwarning", "COMMENT", 
 		"RET", "PUB", "USE", "SELF", "IDENTIFIER", "PARENopen", "PARENclose", 
-		"ANGLEopen", "ANGLEclose", "HASH", "COLON", "DOT", "EQ", "UNUSED", "COMMA", 
+		"ANGLEopen", "ANGLEclose", "HASH", "COLON", "DOT", "EQ", "DISCARD", "COMMA", 
 		"SP", "EOL"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);

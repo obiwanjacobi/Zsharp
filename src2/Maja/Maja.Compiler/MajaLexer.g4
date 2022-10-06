@@ -12,7 +12,7 @@ PUB: 'pub';
 USE: 'use';
 SELF: 'self';
 
-IDENTIFIER: ALPHA (ALPHA | DIGIT10 | UNUSED)*;
+IDENTIFIER: ALPHA (ALPHA | DIGIT10 | DISCARD)*;
 fragment ALPHA: [a-zA-Z];
 fragment DIGIT2: [0-1];
 fragment DIGIT8: [0-7];
@@ -27,7 +27,7 @@ HASH: '#';
 COLON: ':';
 DOT: '.';
 EQ: '=';
-UNUSED: '_';
+DISCARD: '_';
 COMMA: ',';
 SP: ' ';
 EOL: ('\r'? '\n' | '\r') | EOF;

@@ -5,6 +5,6 @@ namespace Maja.Compiler.Syntax;
 
 public sealed record PublicExportSyntax : SyntaxNode
 {
-    public IEnumerable<QualifiedNameSyntax> Names
+    public IEnumerable<QualifiedNameSyntax> QualifiedNames
         => Children.OfType<QualifiedNameSyntax>();
 }

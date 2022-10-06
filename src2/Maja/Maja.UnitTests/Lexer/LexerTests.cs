@@ -41,4 +41,32 @@ public class LexerTests
 
         AssertTokens(tokens, expected);
     }
+
+    [Fact]
+    public void FunctionDecl()
+    {
+        const string code =
+            "fn: ()" + Tokens.EOL +
+            Tokens.INDENT1 + "ret" + Tokens.EOL
+            ;
+
+        var tokens = LexTokens(code);
+        var expected = new[]
+        {
+            MajaLexer.IDENTIFIER,
+            MajaLexer.COLON,
+            MajaLexer.SP,
+            MajaLexer.PARENopen,
+            MajaLexer.PARENclose,
+            MajaLexer.EOL,
+            MajaLexer.INDENT,
+            MajaLexer.SP,
+            MajaLexer.SP,
+            MajaLexer.RET,
+            MajaLexer.EOL,
+            MajaLexer.DEDENT,
+        };
+
+        AssertTokens(tokens, expected);
+    }
 }

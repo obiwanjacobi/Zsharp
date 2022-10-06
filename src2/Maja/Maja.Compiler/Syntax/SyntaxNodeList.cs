@@ -6,6 +6,10 @@ namespace Maja.Compiler.Syntax;
 
 public class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
 {
+    internal SyntaxNodeList()
+        : base(new List<SyntaxNode>())
+    { }
+
     internal SyntaxNodeList(IList<SyntaxNode> nodeList)
         : base(nodeList)
     { }
@@ -15,12 +19,12 @@ public class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
     {
         get
         {
-            Debug.Assert(_parent is not null);
+            Debug.Assert(_parent is not null, "This is (part of) a root SyntaxNode or the Parent was not set.");
             return _parent!;
         }
         internal set
         {
-            Debug.Assert(value is not null);
+            Debug.Assert(value is not null, "Cannot clear a SyntaxNodeList.Parent with null.");
             _parent = value;
 
             foreach (var node in this.Items)

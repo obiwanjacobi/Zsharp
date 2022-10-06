@@ -32,49 +32,53 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
             Children = new SyntaxNodeList(base.VisitCompilation_unit(context))
         } };
 
-    public override SyntaxNode[] VisitDecl_pub1(Decl_pub1Context context)
+    public override SyntaxNode[] VisitPub1_decl(Pub1_declContext context)
         => new[] { new PublicExportSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitDecl_pub1(context))
+            Children = new SyntaxNodeList(base.VisitPub1_decl(context))
         } };
 
-    public override SyntaxNode[] VisitDecl_pub2(Decl_pub2Context context)
+    public override SyntaxNode[] VisitPub2_decl(Pub2_declContext context)
         => new[] { new PublicExportSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitDecl_pub2(context))
+            Children = new SyntaxNodeList(base.VisitPub2_decl(context))
         } };
 
-    public override SyntaxNode[] VisitDecl_use(Decl_useContext context)
+    public override SyntaxNode[] VisitUse_decl(Use_declContext context)
         => new[] { new UseImportSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitDecl_use(context))
+            Children = new SyntaxNodeList(base.VisitUse_decl(context))
         } };
 
     public override SyntaxNode[] VisitCode_block(Code_blockContext context)
-    {
-        return base.VisitCode_block(context);
-    }
+        => new[] { new CodeBlockSyntax
+        {
+            Location = Location(context),
+            Children = new SyntaxNodeList(base.VisitCode_block(context))
+        } };
 
-    public override SyntaxNode[] VisitDecl_member(Decl_memberContext context)
+    public override SyntaxNode[] VisitMembers_decl(Members_declContext context)
     {
-        return base.VisitDecl_member(context);
+        return base.VisitMembers_decl(context);
     }
 
     //
     // Functions
     //
 
-    public override SyntaxNode[] VisitDecl_function(Decl_functionContext context)
-    {
-        return base.VisitDecl_function(context);
-    }
+    public override SyntaxNode[] VisitFunction_decl(Function_declContext context)
+        => new[]{ new FunctionDelcarationSyntax
+        {
+            Location = Location(context),
+            Children = new SyntaxNodeList(base.VisitFunction_decl(context))
+        } };
 
-    public override SyntaxNode[] VisitDecl_function_local(Decl_function_localContext context)
+    public override SyntaxNode[] VisitFunction_decl_local(Function_decl_localContext context)
     {
-        return base.VisitDecl_function_local(context);
+        return base.VisitFunction_decl_local(context);
     }
 
     public override SyntaxNode[] VisitParameter_list(Parameter_listContext context)
@@ -96,29 +100,29 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     // Types
     //
 
-    public override SyntaxNode[] VisitDecl_type(Decl_typeContext context)
+    public override SyntaxNode[] VisitType_decl(Type_declContext context)
     {
-        return base.VisitDecl_type(context);
+        return base.VisitType_decl(context);
     }
 
-    public override SyntaxNode[] VisitDecl_type_members(Decl_type_membersContext context)
+    public override SyntaxNode[] VisitType_decl_members(Type_decl_membersContext context)
     {
-        return base.VisitDecl_type_members(context);
+        return base.VisitType_decl_members(context);
     }
 
-    public override SyntaxNode[] VisitDecl_member_enum(Decl_member_enumContext context)
+    public override SyntaxNode[] VisitMember_enum(Member_enumContext context)
     {
-        return base.VisitDecl_member_enum(context);
+        return base.VisitMember_enum(context);
     }
 
-    public override SyntaxNode[] VisitDecl_member_field(Decl_member_fieldContext context)
+    public override SyntaxNode[] VisitMember_field(Member_fieldContext context)
     {
-        return base.VisitDecl_member_field(context);
+        return base.VisitMember_field(context);
     }
 
-    public override SyntaxNode[] VisitDecl_member_rule(Decl_member_ruleContext context)
+    public override SyntaxNode[] VisitMember_rule(Member_ruleContext context)
     {
-        return base.VisitDecl_member_rule(context);
+        return base.VisitMember_rule(context);
     }
 
     public override SyntaxNode[] VisitType_parameter_list(Type_parameter_listContext context)
@@ -165,9 +169,9 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     // Variables
     //
 
-    public override SyntaxNode[] VisitDecl_variable(Decl_variableContext context)
+    public override SyntaxNode[] VisitVariable_decl(Variable_declContext context)
     {
-        return base.VisitDecl_variable(context);
+        return base.VisitVariable_decl(context);
     }
 
     //
@@ -196,19 +200,16 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     public override SyntaxNode[] VisitName_identifier(Name_identifierContext context)
         => new[] { new NameSyntax(context.GetText())
         {
-            Location = Location(context)
+            Location = Location(context),
+            Children = new SyntaxNodeList()
         } };
 
     public override SyntaxNode[] VisitName_qualified(Name_qualifiedContext context)
         => new[] { new QualifiedNameSyntax(context.GetText())
         {
-            Location = Location(context)
+            Location = Location(context),
+            Children = new SyntaxNodeList()
         } };
-
-    public override SyntaxNode[] VisitName_rule(Name_ruleContext context)
-    {
-        return base.VisitName_rule(context);
-    }
 
     //
     // Statements
@@ -223,4 +224,11 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     {
         return base.VisitStatement_flow(context);
     }
+
+    public override SyntaxNode[] VisitStatement_ret(Statement_retContext context)
+        => new[] { new StatementReturnSyntax
+        {
+            Location = Location(context),
+            Children = new SyntaxNodeList()
+        } };
 }

@@ -21,6 +21,6 @@ public class ModuleParserTests
             ;
 
         var result = Parse(code);
-        result.decl_pub1().Should().NotBeNull();
+        result.pub1_decl().Should().NotBeNull();
     }
 }

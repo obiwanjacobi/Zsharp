@@ -11,6 +11,6 @@ public sealed record CompilationUnitSyntax : SyntaxNode
     public IEnumerable<PublicExportSyntax> PublicExports
         => Children.OfType<PublicExportSyntax>();
 
-    //public IEnumerable<SyntaxNode> Members
-    //    => Children.OfType<MemberSyntax>();
+    public IEnumerable<MemberDeclarationSyntax> Members
+        => Children.OfType<MemberDeclarationSyntax>();
 }
