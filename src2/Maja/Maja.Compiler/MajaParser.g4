@@ -12,10 +12,10 @@ membersDecl: functionDecl | typeDecl | variableDecl;
 
 statement: statementFlow | statementExpression;
 statementFlow: statementRet;
-statementRet: Ret;// Sp expression?;
+statementRet: Ret (Sp expression)?;
 statementExpression: expression;
 
-functionDecl: nameIdentifier Colon Sp typeParameterList? parameterList newline indent codeBlock dedent;
+functionDecl: nameIdentifier Colon Sp typeParameterList? parameterList (Colon Sp type)? newline indent codeBlock dedent;
 functionDeclLocal: indent functionDecl dedent;
 parameterList: ParenOpen (parameter (Comma Sp parameter)*)? ParenClose;
 parameter: nameIdentifier Colon Sp type;

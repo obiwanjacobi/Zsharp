@@ -11,6 +11,9 @@ public sealed record FunctionDelcarationSyntax: MemberDeclarationSyntax
     public IEnumerable<ParameterSyntax> Parameters
         => Children.OfType<ParameterSyntax>();
 
+    public TypeSyntax? ReturnType
+        => Children.OfType<TypeSyntax>().SingleOrDefault();
+
     public CodeBlockSyntax CodeBlock
         => Children.OfType<CodeBlockSyntax>().Single();
 }

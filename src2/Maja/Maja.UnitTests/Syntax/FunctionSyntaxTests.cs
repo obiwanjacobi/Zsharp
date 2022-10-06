@@ -18,7 +18,7 @@ public class FunctionSyntaxTests
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
         var fn = result.Members.First().As<FunctionDelcarationSyntax>();
-        fn.Identifier.Name.Should().Be("fn");
+        fn.Identifier.Value.Should().Be("fn");
         fn.CodeBlock.Statements.Should().HaveCount(1);
         var ret = fn.CodeBlock.Statements.First().As<StatementReturnSyntax>();
         ret.Should().NotBeNull();
@@ -35,10 +35,28 @@ public class FunctionSyntaxTests
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
         var fn = result.Members.First().As<FunctionDelcarationSyntax>();
-        fn.Identifier.Name.Should().Be("fn");
+        fn.Identifier.Value.Should().Be("fn");
         fn.Parameters.Should().HaveCount(1);
         var param = fn.Parameters.First().As<ParameterSyntax>();
-        param.Name.Name.Should().Be("p");
-        param.Type.Name.Name.Should().Be("U8");
+        param.Name.Value.Should().Be("p");
+        param.Type.Name.Value.Should().Be("U8");
+    }
+
+    [Fact]
+    public void FnRetVal()
+    {
+        const string code =
+            "fn: (): U8" + Tokens.EOL +
+            Tokens.INDENT1 + "ret 42" + Tokens.EOL
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        fn.Identifier.Value.Should().Be("fn");
+        fn.ReturnType!.Name.Value.Should().Be("U8");
+        var ret = fn.CodeBlock.Statements.First().As<StatementReturnSyntax>();
+        ret.Expression.Should().NotBeNull();
+        ret.Expression.As<ExpressionLiteralSyntax>().Value.Should().Be("42");
     }
 }

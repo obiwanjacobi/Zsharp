@@ -1,4 +1,7 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Linq;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Maja.Compiler.Parser;
 using static Maja.Compiler.Parser.MajaParser;
 
@@ -10,6 +13,26 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
 
     public SyntaxNodeBuilder(string sourceName)
         => SourceName = sourceName ?? throw new System.ArgumentNullException(nameof(sourceName));
+
+    private SyntaxNode[] PassThroughOrCreate<SyntaxT, ContextT>(ContextT context, Func<ContextT, SyntaxNode[]> baseCall)
+        where SyntaxT : SyntaxNode, new()
+        where ContextT : ParserRuleContext
+    {
+        var children = baseCall(context);
+
+        // attempt to simplify nested expression hierarchies
+        if (children.Length == 1
+            && children.First() is SyntaxT)
+        {
+            return children;
+        }
+
+        return new[] { new SyntaxT
+        {
+            Location = Location(context),
+            Children = new SyntaxNodeList(children)
+        } };
+    }
 
     protected override SyntaxNode[] AggregateResult(SyntaxNode[] aggregate, SyntaxNode[] nextResult)
     {
@@ -178,14 +201,26 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     //
 
     public override SyntaxNode[] VisitExpression(ExpressionContext context)
-    {
-        return base.VisitExpression(context);
-    }
+        => PassThroughOrCreate<ExpressionSyntax, ExpressionContext>(context, base.VisitExpression);
 
     public override SyntaxNode[] VisitExpressionConst(ExpressionConstContext context)
     {
         return base.VisitExpressionConst(context);
     }
+
+    public override SyntaxNode[] VisitExpressionLiteral(ExpressionLiteralContext context)
+            => new[] { new ExpressionLiteralSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = new SyntaxNodeList()
+        } };
+
+    public override SyntaxNode[] VisitExpressionLiteralBool(ExpressionLiteralBoolContext context)
+        => new[] { new ExpressionLiteralBoolSyntax
+        {
+            Location = Location(context),
+            Children = new SyntaxNodeList()
+        } };
 
     public override SyntaxNode[] VisitExpressionRule(ExpressionRuleContext context)
     {
@@ -228,6 +263,6 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         => new[] { new StatementReturnSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList()
+            Children = new SyntaxNodeList(base.VisitStatementRet(context))
         } };
 }

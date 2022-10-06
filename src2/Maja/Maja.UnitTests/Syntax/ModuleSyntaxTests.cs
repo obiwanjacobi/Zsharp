@@ -46,6 +46,6 @@ public class ModuleSyntaxTests
         result.Should().NotBeNull();
         var uses = result.UseImports.ToArray();
         uses.Should().HaveCount(1);
-        uses[0].QualifiedName.Name.Should().Be("qualified.name");
+        uses[0].QualifiedName.Value.Should().Be("qualified.name");
     }
 }
