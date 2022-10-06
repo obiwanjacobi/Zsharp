@@ -260,9 +260,17 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     }
 
     public override SyntaxNode[] VisitStatementRet(StatementRetContext context)
-        => new[] { new StatementReturnSyntax
+    {
+        var children = base.VisitStatementRet(context);
+        var list = children is not null
+            ? new SyntaxNodeList(children)
+            : new SyntaxNodeList();
+
+        return new[] { new StatementReturnSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitStatementRet(context))
+            Children = list
         } };
+    }
+        
 }
