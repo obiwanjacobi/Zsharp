@@ -223,7 +223,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         } };
 
     public override SyntaxNode[] VisitExpressionLiteralBool(ExpressionLiteralBoolContext context)
-        => new[] { new ExpressionLiteralBoolSyntax
+        => new[] { new ExpressionLiteralBoolSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New()

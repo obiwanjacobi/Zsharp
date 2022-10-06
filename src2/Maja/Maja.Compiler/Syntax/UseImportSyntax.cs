@@ -6,4 +6,7 @@ public sealed record UseImportSyntax : SyntaxNode
 {
     public QualifiedNameSyntax QualifiedName
         => Children.OfType<QualifiedNameSyntax>().Single();
+
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+        => visitor.OnUseImport(this);
 }

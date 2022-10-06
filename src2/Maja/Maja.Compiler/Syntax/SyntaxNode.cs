@@ -2,7 +2,7 @@
 
 namespace Maja.Compiler.Syntax;
 
-public abstract partial record SyntaxNode
+public abstract partial record SyntaxNode : ISyntaxVisitable
 {
     // leading/trailing tokens
 
@@ -37,5 +37,7 @@ public abstract partial record SyntaxNode
 
     public override string ToString()
         => $"{GetType().Name}: {Location}";
+
+    public abstract R Accept<R>(ISyntaxVisitor<R> visitor);
 }
 

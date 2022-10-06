@@ -6,6 +6,9 @@ public record NameSyntax: SyntaxNode
         => Value = name ?? throw new System.ArgumentNullException(nameof(name));
 
     public string Value { get; }
+
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+        => visitor.OnName(this);
 }
 
 public sealed record QualifiedNameSyntax : NameSyntax

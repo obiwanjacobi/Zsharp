@@ -16,4 +16,7 @@ public sealed record FunctionDelcarationSyntax: MemberDeclarationSyntax
 
     public CodeBlockSyntax CodeBlock
         => Children.OfType<CodeBlockSyntax>().Single();
+
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+        => visitor.OnFunctionDeclaration(this);
 }

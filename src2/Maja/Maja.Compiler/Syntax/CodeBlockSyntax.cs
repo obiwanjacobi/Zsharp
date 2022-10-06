@@ -10,4 +10,7 @@ public sealed record CodeBlockSyntax: SyntaxNode
 
     public IEnumerable<StatementSyntax> Statements
         => Children.OfType<StatementSyntax>();
+
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+        => visitor.OnCodeBlock(this);
 }

@@ -13,4 +13,7 @@ public sealed record CompilationUnitSyntax : SyntaxNode
 
     public IEnumerable<MemberDeclarationSyntax> Members
         => Children.OfType<MemberDeclarationSyntax>();
+
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+        => visitor.OnCompilationUnit(this);
 }
