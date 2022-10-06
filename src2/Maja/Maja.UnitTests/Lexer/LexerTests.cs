@@ -31,12 +31,12 @@ public class LexerTests
         var tokens = LexTokens(code);
         var expected = new[]
         {
-            MajaLexer.PUB,
-            MajaLexer.SP,
-            MajaLexer.IDENTIFIER,
-            MajaLexer.DOT,
-            MajaLexer.IDENTIFIER,
-            MajaLexer.EOL
+            MajaLexer.Pub,
+            MajaLexer.Sp,
+            MajaLexer.Identifier,
+            MajaLexer.Dot,
+            MajaLexer.Identifier,
+            MajaLexer.Eol
         };
 
         AssertTokens(tokens, expected);
@@ -53,18 +53,18 @@ public class LexerTests
         var tokens = LexTokens(code);
         var expected = new[]
         {
-            MajaLexer.IDENTIFIER,
-            MajaLexer.COLON,
-            MajaLexer.SP,
-            MajaLexer.PARENopen,
-            MajaLexer.PARENclose,
-            MajaLexer.EOL,
-            MajaLexer.INDENT,
-            MajaLexer.SP,
-            MajaLexer.SP,
-            MajaLexer.RET,
-            MajaLexer.EOL,
-            MajaLexer.DEDENT,
+            MajaLexer.Identifier,
+            MajaLexer.Colon,
+            MajaLexer.Sp,
+            MajaLexer.ParenOpen,
+            MajaLexer.ParenClose,
+            MajaLexer.Eol,
+            MajaLexer.Indent,
+            MajaLexer.Sp,
+            MajaLexer.Sp,
+            MajaLexer.Ret,
+            MajaLexer.Eol,
+            MajaLexer.Dedent,
         };
 
         AssertTokens(tokens, expected);

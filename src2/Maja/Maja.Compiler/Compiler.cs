@@ -16,7 +16,7 @@ internal sealed class Compiler
     {
         _inputStream = new AntlrInputStream();
         _lexer = new MajaLexer(_inputStream);
-        _lexer.InitializeTokens(MajaLexer.INDENT, MajaLexer.DEDENT, MajaLexer.EOL);
+        _lexer.InitializeTokens(MajaLexer.Indent, MajaLexer.Dedent, MajaLexer.Eol);
         _tokens = new CommonTokenStream(_lexer);
         _parser = new MajaParser(_tokens);
     }
@@ -27,8 +27,8 @@ internal sealed class Compiler
         _tokens.Reset();
 
         var builder = new SyntaxNodeBuilder(sourceName);
-        var cu = _parser.compilation_unit();
-        var nodes = builder.VisitCompilation_unit(cu);
+        var cu = _parser.compilationUnit();
+        var nodes = builder.VisitCompilationUnit(cu);
         return (CompilationUnitSyntax)nodes[0];
     }
 
@@ -55,7 +55,7 @@ internal sealed class Compiler
             name = sourceName
         };
         var lexer = new MajaLexer(stream);
-        lexer.InitializeTokens(MajaLexer.INDENT, MajaLexer.DEDENT, MajaLexer.EOL);
+        lexer.InitializeTokens(MajaLexer.Indent, MajaLexer.Dedent, MajaLexer.Eol);
 
 #if DEBUG
         lexer.RemoveErrorListeners();

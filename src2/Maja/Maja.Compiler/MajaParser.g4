@@ -1,51 +1,80 @@
 parser grammar MajaParser;
 options { tokenVocab=MajaLexer; }
 
-compilation_unit: (use_decl | pub1_decl | pub2_decl | newline)* (members_decl | newline)*;
+compilationUnit: (useDecl | pub1Decl | pub2Decl | newline)* (membersDecl | newline)*;
 
-pub1_decl: PUB SP+ name_qualified_list newline;
-pub2_decl: PUB newline indent name_qualified_list newline dedent;
-use_decl: USE SP+ name_qualified newline;
+pub1Decl: Pub Sp+ nameQualifiedList newline;
+pub2Decl: Pub newline indent nameQualifiedList newline dedent;
+useDecl: Use Sp+ nameQualified newline;
 
-code_block: (statement | members_decl | newline)+;
-members_decl: function_decl | type_decl | variable_decl;
+codeBlock: (statement | membersDecl | newline)+;
+membersDecl: functionDecl | typeDecl | variableDecl;
 
-statement: statement_flow;
-statement_flow: statement_ret;
-statement_ret: RET;// SP expression?;
+statement: statementFlow | statementExpression;
+statementFlow: statementRet;
+statementRet: Ret;// Sp expression?;
+statementExpression: expression;
 
-function_decl: name_identifier COLON SP type_parameter_list? parameter_list newline indent code_block dedent;
-function_decl_local: indent function_decl dedent;
-parameter_list: PARENopen (parameter | parameter_self (COMMA SP parameter)*)? PARENclose;
-parameter: name_identifier COLON SP type;
-parameter_self: SELF COLON SP type;
+functionDecl: nameIdentifier Colon Sp typeParameterList? parameterList newline indent codeBlock dedent;
+functionDeclLocal: indent functionDecl dedent;
+parameterList: ParenOpen (parameter (Comma Sp parameter)*)? ParenClose;
+parameter: nameIdentifier Colon Sp type;
+argumentList: ParenOpen (argument (Comma argument)*)? ParenClose;
+argument: (nameIdentifier Eq)? expression;
 
-type_decl: name_identifier type_parameter_list? (COLON SP type)? DISCARD? newline (indent type_decl_members dedent)?;
-type_decl_members: ((member_enum | member_field | member_rule) newline)+;
-type: name_identifier type_argument_list?;
-type_parameter_list: ANGLEopen type_parameter (COMMA SP type_parameter)* ANGLEclose;
-type_parameter: generic_parameter | template_parameter | value_parameter;
-generic_parameter: name_identifier;
-template_parameter: HASH name_identifier;
-value_parameter: expression;
-type_argument_list: ANGLEopen type_argument (COMMA SP type_argument)* ANGLEclose;
-type_argument: name_identifier | expression;
+typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? Discard? newline (indent typeDeclMembers dedent)?;
+typeDeclMembers: ((memberEnum | memberField | memberRule) newline)+;
+type: nameIdentifier typeArgumentList?;
+typeParameterList: AngleOpen typeParameter (Comma Sp typeParameter)* AngleClose;
+typeParameter: parameterGeneric | parameterTemplate | parameterValue;
+parameterGeneric: nameIdentifier;
+parameterTemplate: Hash nameIdentifier;
+parameterValue: expression;
+typeArgumentList: AngleOpen typeArgument (Comma Sp typeArgument)* AngleClose;
+typeArgument: nameIdentifier | expression;
 
-member_enum: name_identifier (SP EQ SP expression_const)?;
-member_field: name_identifier COLON SP type;
-member_rule: HASH name_identifier SP expression_rule;
+memberEnum: nameIdentifier (Sp Eq Sp expressionConst)?;
+memberField: nameIdentifier Colon Sp type;
+memberRule: Hash nameIdentifier Sp expressionRule;
 
-variable_decl: name_identifier SP? COLON (SP type)? (EQ expression)?;
+variableDecl: nameIdentifier Sp? Colon (Sp type)? (Eq expression)?;
 
-expression: expression_const;
-expression_const:;
-expression_rule:;
+expression:
+      expressionConst
+    | expression expressionOperatorBinary expression
+    | expressionOperatorUnaryPrefix expression
+    | ParenOpen expression ParenClose
+    | expression argumentList
+    ;
+expressionConst: expressionLiteral | expressionLiteralBool;
+expressionRule:;
 
-name_qualified: name_identifier (DOT name_identifier)*;
-name_qualified_list: name_qualified (COMMA SP+ name_qualified)*;
-name_identifier: IDENTIFIER;
-name_identifier_list: name_identifier (COMMA SP+ name_identifier)*;
+expressionOperatorBinary: expressionOperatorArithmetic | expressionOperatorLogic | expressionOperatorComparison | expressionOperatorBits;
+expressionOperatorUnaryPrefix: expressionOperatorArithmeticUnaryPrefix | expressionOperatorLogicUnaryPrefix | expressionOperatorBitsUnaryPrefix;
 
-indent: INDENT SP+;
-dedent: DEDENT;
-newline: SP* COMMENT? EOL;
+expressionOperatorArithmetic: Plus | Minus | Divide | Multiply | Mod | Power | Root;
+expressionOperatorArithmeticUnaryPrefix: Minus;
+expressionOperatorLogic: And | Or;
+expressionOperatorLogicUnaryPrefix: Not;
+expressionOperatorComparison: Eq | Neq | AngleClose | AngleOpen | GtEq | LtEq;
+expressionOperatorBits: BitAnd | BitOr | BitXor_Imm | BitShiftL | Minus? AngleClose AngleClose | BitRollL | BitRollR;
+expressionOperatorBitsUnaryPrefix: BitNot;
+expressionOperatorAssignment: Eq;
+
+expressionLiteralBool: True | False;
+expressionLiteral: number | String;
+
+nameQualified: nameIdentifier (Dot nameIdentifier)+;
+nameQualifiedList: nameQualified (Comma Sp+ nameQualified)*;
+nameIdentifier: Identifier;
+nameIdentifierList: nameIdentifier (Comma Sp+ nameIdentifier)*;
+
+number: NumberBin 
+    | NumberDec | NumberDecPrefix
+    | NumberHex
+    | NumberOct
+    | Character;
+
+indent: Indent Sp+;
+dedent: Dedent;
+newline: Sp* Comment? Eol;

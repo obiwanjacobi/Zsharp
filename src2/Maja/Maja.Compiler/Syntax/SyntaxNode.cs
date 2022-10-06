@@ -4,14 +4,12 @@ namespace Maja.Compiler.Syntax;
 
 public abstract partial record SyntaxNode
 {
+    // leading/trailing tokens
+
     private SyntaxNode? _parent;
-    public SyntaxNode Parent
+    public SyntaxNode? Parent
     {
-        get
-        {
-            Debug.Assert(_parent is not null, "This is a root SyntaxNode or the Parent was not set.");
-            return _parent!;
-        }
+        get { return _parent!; }
         internal set
         {
             Debug.Assert(value is not null, "Cannot clear a SyntaxNode.Parent with null.");
@@ -36,5 +34,8 @@ public abstract partial record SyntaxNode
     }
 
     public SyntaxLocation Location { get; init; }
+
+    public override string ToString()
+        => $"{GetType().Name}: {Location}";
 }
 

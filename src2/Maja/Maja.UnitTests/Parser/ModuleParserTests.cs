@@ -6,10 +6,10 @@ namespace Maja.UnitTests.Parser;
 
 public class ModuleParserTests
 {
-    private static Compilation_unitContext Parse(string code)
+    private static CompilationUnitContext Parse(string code)
     {
         var parser = Maja.Compiler.Compiler.CreateParser(code);
-        var parseTree = parser.compilation_unit();
+        var parseTree = parser.compilationUnit();
         return parseTree;
     }
 
@@ -21,6 +21,6 @@ public class ModuleParserTests
             ;
 
         var result = Parse(code);
-        result.pub1_decl().Should().NotBeNull();
+        result.pub1Decl().Should().NotBeNull();
     }
 }
