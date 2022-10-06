@@ -30,7 +30,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         return new[] { new SyntaxT
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(children)
+            Children = SyntaxNodeList.New(children)
         } };
     }
 
@@ -52,35 +52,35 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         => new[] { new CompilationUnitSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitCompilationUnit(context))
+            Children = SyntaxNodeList.New(base.VisitCompilationUnit(context))
         } };
 
     public override SyntaxNode[] VisitPub1Decl(Pub1DeclContext context)
         => new[] { new PublicExportSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitPub1Decl(context))
+            Children = SyntaxNodeList.New(base.VisitPub1Decl(context))
         } };
 
     public override SyntaxNode[] VisitPub2Decl(Pub2DeclContext context)
         => new[] { new PublicExportSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitPub2Decl(context))
+            Children = SyntaxNodeList.New(base.VisitPub2Decl(context))
         } };
 
     public override SyntaxNode[] VisitUseDecl(UseDeclContext context)
         => new[] { new UseImportSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitUseDecl(context))
+            Children = SyntaxNodeList.New(base.VisitUseDecl(context))
         } };
 
     public override SyntaxNode[] VisitCodeBlock(CodeBlockContext context)
         => new[] { new CodeBlockSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitCodeBlock(context))
+            Children = SyntaxNodeList.New(base.VisitCodeBlock(context))
         } };
 
     public override SyntaxNode[] VisitMembersDecl(MembersDeclContext context)
@@ -96,7 +96,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         => new[]{ new FunctionDelcarationSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitFunctionDecl(context))
+            Children = SyntaxNodeList.New(base.VisitFunctionDecl(context))
         } };
 
     public override SyntaxNode[] VisitFunctionDeclLocal(FunctionDeclLocalContext context)
@@ -113,7 +113,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         => new[] { new ParameterSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitParameter(context))
+            Children = SyntaxNodeList.New(base.VisitParameter(context))
         } };
 
     //
@@ -184,7 +184,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         => new[] { new TypeSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList(base.VisitType(context))
+            Children = SyntaxNodeList.New(base.VisitType(context))
         } };
 
     //
@@ -212,14 +212,14 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
             => new[] { new ExpressionLiteralSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = new SyntaxNodeList()
+            Children = SyntaxNodeList.New()
         } };
 
     public override SyntaxNode[] VisitExpressionLiteralBool(ExpressionLiteralBoolContext context)
         => new[] { new ExpressionLiteralBoolSyntax
         {
             Location = Location(context),
-            Children = new SyntaxNodeList()
+            Children = SyntaxNodeList.New()
         } };
 
     public override SyntaxNode[] VisitExpressionRule(ExpressionRuleContext context)
@@ -235,14 +235,14 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         => new[] { new NameSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = new SyntaxNodeList()
+            Children = SyntaxNodeList.New()
         } };
 
     public override SyntaxNode[] VisitNameQualified(NameQualifiedContext context)
         => new[] { new QualifiedNameSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = new SyntaxNodeList()
+            Children = SyntaxNodeList.New()
         } };
 
     //
