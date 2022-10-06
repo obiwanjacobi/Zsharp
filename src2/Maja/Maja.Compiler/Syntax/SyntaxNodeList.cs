@@ -14,6 +14,11 @@ public class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
         : base(nodeList)
     { }
 
+    internal static SyntaxNodeList New(IList<SyntaxNode> nodeList)
+        => nodeList is not null
+            ? new SyntaxNodeList(nodeList)
+            : new SyntaxNodeList();
+
     private SyntaxNode? _parent;
     public SyntaxNode Parent
     {
