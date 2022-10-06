@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
 using Maja.Compiler.Parser;
 using static Maja.Compiler.Parser.MajaParser;
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Visits the Antlr parse tree context objects and generates the Syntax Model instances.
+/// </summary>
 internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
 {
     private readonly string SourceName;
@@ -21,7 +23,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         var children = baseCall(context);
 
         // attempt to simplify nested expression hierarchies
-        if (children.Length == 1
+        if (children?.Length == 1
             && children.First() is SyntaxT)
         {
             return children;
@@ -85,6 +87,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
 
     public override SyntaxNode[] VisitMembersDecl(MembersDeclContext context)
     {
+        // This level is represented by a base class.
         return base.VisitMembersDecl(context);
     }
 
@@ -106,6 +109,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
 
     public override SyntaxNode[] VisitParameterList(ParameterListContext context)
     {
+        // This level is not represented.
         return base.VisitParameterList(context);
     }
 
@@ -192,9 +196,11 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     //
 
     public override SyntaxNode[] VisitVariableDecl(VariableDeclContext context)
-    {
-        return base.VisitVariableDecl(context);
-    }
+        => new[] { new VariableDeclarationSyntax
+        {
+            Location = Location(context),
+            Children = SyntaxNodeList.New(base.VisitVariableDecl(context))
+        } };
 
     //
     // Expressions
@@ -205,6 +211,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
 
     public override SyntaxNode[] VisitExpressionConst(ExpressionConstContext context)
     {
+        // This level is represented by a base class.
         return base.VisitExpressionConst(context);
     }
 
@@ -251,11 +258,13 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
 
     public override SyntaxNode[] VisitStatement(StatementContext context)
     {
+        // This level is represented by a base class.
         return base.VisitStatement(context);
     }
 
     public override SyntaxNode[] VisitStatementFlow(StatementFlowContext context)
     {
+        // This level is not represented.
         return base.VisitStatementFlow(context);
     }
 
