@@ -22,7 +22,7 @@ parameter: nameIdentifier Colon Sp type;
 argumentList: ParenOpen (argument (Comma argument)*)? ParenClose;
 argument: (nameIdentifier Eq)? expression;
 
-typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? Discard? newline (indent typeDeclMembers dedent)?;
+typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? (Discard newline | newline indent typeDeclMembers dedent);
 typeDeclMembers: ((memberEnum | memberField | memberRule) newline)+;
 type: nameIdentifier typeArgumentList?;
 typeParameterList: AngleOpen typeParameter (Comma Sp typeParameter)* AngleClose;
@@ -38,13 +38,13 @@ memberField: nameIdentifier Colon Sp type;
 memberRule: Hash nameIdentifier Sp expressionRule;
 
 variableDecl: nameIdentifier Sp? Colon (Sp type)? (Eq Sp expression)?;
+variableAssignment: nameIdentifier Sp Eq Sp expression;
 
-expression:
-      expressionConst
-    | expression expressionOperatorBinary expression
-    | expressionOperatorUnaryPrefix expression
-    | ParenOpen expression ParenClose
-    | expression argumentList
+expression: expressionConst
+    | expression expressionOperatorBinary expression    // binary expression
+    | expressionOperatorUnaryPrefix expression          // unary expression
+    | ParenOpen expression ParenClose                   // precendence
+    | expression argumentList                           // invocation expression
     ;
 expressionConst: expressionLiteral | expressionLiteralBool;
 expressionRule:;

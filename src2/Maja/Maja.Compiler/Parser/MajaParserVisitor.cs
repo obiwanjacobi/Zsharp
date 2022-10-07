@@ -213,6 +213,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitVariableDecl([NotNull] MajaParser.VariableDeclContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.variableAssignment"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVariableAssignment([NotNull] MajaParser.VariableAssignmentContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
