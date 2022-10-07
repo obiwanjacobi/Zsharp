@@ -4,8 +4,6 @@ namespace Maja.Compiler.Syntax;
 
 public abstract partial record SyntaxNode : ISyntaxVisitable
 {
-    // leading/trailing tokens
-
     protected SyntaxNode(string text)
         => Text = text;
 
@@ -21,7 +19,9 @@ public abstract partial record SyntaxNode : ISyntaxVisitable
             _parent = value;
         }
     }
-
+    
+    public SyntaxLocation Location { get; init; }
+    
     private SyntaxNodeList? _nodeList;
     public SyntaxNodeList Children
     {
@@ -38,7 +38,37 @@ public abstract partial record SyntaxNode : ISyntaxVisitable
         }
     }
 
-    public SyntaxLocation Location { get; init; }
+    private SyntaxTokenList? _leadingTokens;
+    public SyntaxTokenList LeadingTokens
+    {
+        get
+        {
+            Debug.Assert(_leadingTokens is not null, "SyntaxNode is uninitialized. LeadingTokens are not set.");
+            return _leadingTokens!;
+        }
+        init
+        {
+            Debug.Assert(value is not null, "Cannot clear the SyntaxNode.LeadingTokens list with null.");
+            _leadingTokens = value;
+            _leadingTokens.Parent = this;
+        }
+    }
+
+    private SyntaxTokenList? _trailingTokens;
+    public SyntaxTokenList TrailingTokens
+    {
+        get
+        {
+            Debug.Assert(_trailingTokens is not null, "SyntaxNode is uninitialized. TrailingTokens are not set.");
+            return _trailingTokens!;
+        }
+        init
+        {
+            Debug.Assert(value is not null, "Cannot clear the SyntaxNode.TrailingTokens list with null.");
+            _trailingTokens = value;
+            _trailingTokens.Parent = this;
+        }
+    }
 
     public override string ToString()
         => $"{GetType().Name}: {Location}";

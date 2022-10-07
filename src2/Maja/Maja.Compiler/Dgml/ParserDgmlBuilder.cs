@@ -1,4 +1,6 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 
 namespace Maja.Dgml
 {
@@ -9,7 +11,10 @@ namespace Maja.Dgml
         public ParserDgmlBuilder()
         {
             _builder.CreateCommon();
+            IncludeTokens = true;
         }
+
+        public bool IncludeTokens { get; set; }
 
         public static void Save(ParserRuleContext context, string filePath = "parser.dgml")
         {
@@ -30,8 +35,20 @@ namespace Maja.Dgml
                     var childNode = WriteContext(childCtx);
                     var link = _builder.CreateLink(node.Id, childNode.Id);
                 }
+                else if (IncludeTokens &&
+                    child is TerminalNodeImpl termChild)
+                {
+                    var childNode = WriteTerminal(termChild);
+                    var link = _builder.CreateLink(node.Id, childNode.Id);
+                }
             }
             return node;
+        }
+
+        public Node WriteTerminal(TerminalNodeImpl terminalNode)
+        {
+            var typeName = "Token";
+            return _builder.CreateNode(typeName, $"'{terminalNode.GetText()}'", typeName);
         }
     }
 }
