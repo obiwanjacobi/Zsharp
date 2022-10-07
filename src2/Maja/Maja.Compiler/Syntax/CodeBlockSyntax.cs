@@ -5,6 +5,10 @@ namespace Maja.Compiler.Syntax;
 
 public sealed record CodeBlockSyntax: SyntaxNode
 {
+    public CodeBlockSyntax(string text) 
+        : base(text)
+    { }
+
     public IEnumerable<MemberDeclarationSyntax> Members
         => Children.OfType<MemberDeclarationSyntax>();
 

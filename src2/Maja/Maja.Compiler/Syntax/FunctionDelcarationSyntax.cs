@@ -5,6 +5,10 @@ namespace Maja.Compiler.Syntax;
 
 public sealed record FunctionDelcarationSyntax: MemberDeclarationSyntax
 {
+    public FunctionDelcarationSyntax(string text)
+        : base(text)
+    { }
+
     public NameSyntax Identifier
         => Children.OfType<NameSyntax>().Single();
 

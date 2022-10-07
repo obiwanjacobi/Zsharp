@@ -2,7 +2,8 @@
 
 public record ExpressionSyntax : SyntaxNode
 {
-    public ExpressionSyntax(bool precedence = false)
+    public ExpressionSyntax(string text, bool precedence)
+        : base(text)
         => Precedence = precedence;
 
     /// <summary>

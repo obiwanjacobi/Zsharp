@@ -5,6 +5,10 @@ namespace Maja.Compiler.Syntax;
 
 public sealed record CompilationUnitSyntax : SyntaxNode
 {
+    public CompilationUnitSyntax(string text)
+        : base(text)
+    { }
+
     public IEnumerable<UseImportSyntax> UseImports
         => Children.OfType<UseImportSyntax>();
 

@@ -4,6 +4,10 @@ namespace Maja.Compiler.Syntax;
 
 public sealed record UseImportSyntax : SyntaxNode
 {
+    public UseImportSyntax(string text)
+        : base(text)
+    { }
+
     public QualifiedNameSyntax QualifiedName
         => Children.OfType<QualifiedNameSyntax>().Single();
 

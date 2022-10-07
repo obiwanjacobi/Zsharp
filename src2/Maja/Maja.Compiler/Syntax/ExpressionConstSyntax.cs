@@ -3,10 +3,18 @@
 namespace Maja.Compiler.Syntax;
 
 public abstract record ExpressionConstSyntax : ExpressionSyntax
-{ }
+{
+    protected ExpressionConstSyntax(string text, bool precedence = false)
+        : base(text, precedence)
+    { }
+}
 
 public record ExpressionLiteralSyntax : ExpressionConstSyntax
 {
+    public ExpressionLiteralSyntax(string text)
+        : base(text, false)
+    { }
+
     public LiteralNumberSyntax? LiteralNumber
         => Children.OfType<LiteralNumberSyntax>().SingleOrDefault();
 
@@ -19,13 +27,11 @@ public record ExpressionLiteralSyntax : ExpressionConstSyntax
 
 public record ExpressionLiteralBoolSyntax : ExpressionConstSyntax
 {
-    public ExpressionLiteralBoolSyntax(string value)
+    public ExpressionLiteralBoolSyntax(string text)
+        : base(text, false)
     {
-        Text = value;
-        Value = value.ToUpper() == "TRUE";
+        Value = text.ToUpper() == "TRUE";
     }
-
-    public string Text { get; }
 
     public bool Value { get; }
 

@@ -4,6 +4,10 @@ namespace Maja.Compiler.Syntax;
 
 public sealed record VariableDeclarationSyntax : MemberDeclarationSyntax
 {
+    public VariableDeclarationSyntax(string text)
+        : base(text)
+    { }
+
     public NameSyntax Name
         => Children.OfType<NameSyntax>().Single();
 

@@ -34,35 +34,35 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     //
 
     public override SyntaxNode[] VisitCompilationUnit(CompilationUnitContext context)
-        => new[] { new CompilationUnitSyntax
+        => new[] { new CompilationUnitSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitCompilationUnit(context))
         } };
 
     public override SyntaxNode[] VisitPub1Decl(Pub1DeclContext context)
-        => new[] { new PublicExportSyntax
+        => new[] { new PublicExportSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitPub1Decl(context))
         } };
 
     public override SyntaxNode[] VisitPub2Decl(Pub2DeclContext context)
-        => new[] { new PublicExportSyntax
+        => new[] { new PublicExportSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitPub2Decl(context))
         } };
 
     public override SyntaxNode[] VisitUseDecl(UseDeclContext context)
-        => new[] { new UseImportSyntax
+        => new[] { new UseImportSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitUseDecl(context))
         } };
 
     public override SyntaxNode[] VisitCodeBlock(CodeBlockContext context)
-        => new[] { new CodeBlockSyntax
+        => new[] { new CodeBlockSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitCodeBlock(context))
@@ -79,7 +79,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     //
 
     public override SyntaxNode[] VisitFunctionDecl(FunctionDeclContext context)
-        => new[]{ new FunctionDelcarationSyntax
+        => new[]{ new FunctionDelcarationSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitFunctionDecl(context))
@@ -97,7 +97,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     }
 
     public override SyntaxNode[] VisitParameter(ParameterContext context)
-        => new[] { new ParameterSyntax
+        => new[] { new ParameterSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitParameter(context))
@@ -168,7 +168,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     }
 
     public override SyntaxNode[] VisitType(TypeContext context)
-        => new[] { new TypeSyntax
+        => new[] { new TypeSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitType(context))
@@ -179,7 +179,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     //
 
     public override SyntaxNode[] VisitVariableDecl(VariableDeclContext context)
-        => new[] { new VariableDeclarationSyntax
+        => new[] { new VariableDeclarationSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitVariableDecl(context))
@@ -208,7 +208,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
                 newChildren.Add(child);
         }
 
-        return new[] { new ExpressionSyntax(precedence)
+        return new[] { new ExpressionSyntax(context.GetText(), precedence)
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(newChildren)
@@ -222,7 +222,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     }
 
     public override SyntaxNode[] VisitExpressionLiteral(ExpressionLiteralContext context)
-        => new[] { new ExpressionLiteralSyntax
+        => new[] { new ExpressionLiteralSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitExpressionLiteral(context))
@@ -307,7 +307,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     }
 
     public override SyntaxNode[] VisitStatementRet(StatementRetContext context)
-        => new[] { new StatementReturnSyntax
+        => new[] { new StatementReturnSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(base.VisitStatementRet(context))

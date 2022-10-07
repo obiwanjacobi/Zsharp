@@ -2,10 +2,9 @@
 
 public sealed record ExpressionOperatorSyntax : SyntaxNode
 {
-    public ExpressionOperatorSyntax(string value)
-        => Value = value;
-
-    public string Value { get; }
+    public ExpressionOperatorSyntax(string text)
+        : base(text)
+    { }
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionOperator(this);

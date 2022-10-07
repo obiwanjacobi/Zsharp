@@ -6,6 +6,11 @@ public abstract partial record SyntaxNode : ISyntaxVisitable
 {
     // leading/trailing tokens
 
+    protected SyntaxNode(string text)
+        => Text = text;
+
+    public string Text { get; }
+
     private SyntaxNode? _parent;
     public SyntaxNode? Parent
     {

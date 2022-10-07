@@ -2,7 +2,7 @@
 
 namespace Maja.Dgml
 {
-    public class ParserDgmlBuilder //: MajaParserBaseVisitor<Node>
+    public class ParserDgmlBuilder
     {
         private readonly DgmlBuilder _builder = new("ParserRuleContext");
 

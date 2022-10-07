@@ -2,4 +2,7 @@
 
 public abstract record MemberDeclarationSyntax : SyntaxNode
 {
+    protected MemberDeclarationSyntax(string text)
+        : base(text)
+    { }
 }

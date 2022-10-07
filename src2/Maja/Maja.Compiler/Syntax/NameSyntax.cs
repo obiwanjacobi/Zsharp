@@ -3,9 +3,8 @@
 public record NameSyntax: SyntaxNode
 {
     public NameSyntax(string name)
-        => Value = name ?? throw new System.ArgumentNullException(nameof(name));
-
-    public string Value { get; }
+        : base(name)
+    { }
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnName(this);

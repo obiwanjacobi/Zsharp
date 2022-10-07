@@ -2,10 +2,9 @@
 
 public sealed record LiteralNumberSyntax : SyntaxNode
 {
-    public LiteralNumberSyntax(string value)
-        => Value = value;
-
-    public string Value { get; }
+    public LiteralNumberSyntax(string text)
+        : base(text)
+    { }
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralNumber(this);
@@ -13,10 +12,9 @@ public sealed record LiteralNumberSyntax : SyntaxNode
 
 public sealed record LiteralStringSyntax : SyntaxNode
 {
-    public LiteralStringSyntax(string value)
-        => Value = value;
-
-    public string Value { get; }
+    public LiteralStringSyntax(string text)
+        : base(text)
+    { }
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralString(this);

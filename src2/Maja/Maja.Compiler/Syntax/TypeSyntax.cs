@@ -4,6 +4,10 @@ namespace Maja.Compiler.Syntax;
 
 public sealed record TypeSyntax: SyntaxNode
 {
+    public TypeSyntax(string text)
+        : base(text)
+    { }
+
     public NameSyntax Name
         => Children.OfType<NameSyntax>().Single();
 

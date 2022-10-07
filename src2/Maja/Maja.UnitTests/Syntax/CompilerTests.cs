@@ -12,9 +12,9 @@ public class CompilerTests
         var compiler = new Maja.Compiler.Compiler();
 
         var pass1 = compiler.Parse("pub name1\n", nameof(Parse_Multiple));
-        pass1.Children[0].Children[0].As<NameSyntax>().Value.Should().Be("name1");
+        pass1.Children[0].Children[0].As<NameSyntax>().Text.Should().Be("name1");
 
         var pass2 = compiler.Parse("pub name2\n", nameof(Parse_Multiple));
-        pass2.Children[0].Children[0].As<NameSyntax>().Value.Should().Be("name2");
+        pass2.Children[0].Children[0].As<NameSyntax>().Text.Should().Be("name2");
     }
 }

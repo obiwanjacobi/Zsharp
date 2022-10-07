@@ -4,6 +4,10 @@ namespace Maja.Compiler.Syntax;
 
 public sealed record StatementReturnSyntax: StatementSyntax
 {
+    public StatementReturnSyntax(string text)
+        : base(text)
+    { }
+
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 
