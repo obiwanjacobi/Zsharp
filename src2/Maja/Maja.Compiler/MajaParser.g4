@@ -37,7 +37,9 @@ memberEnum: nameIdentifier (Sp Eq Sp expressionConst)?;
 memberField: nameIdentifier Colon Sp type;
 memberRule: Hash nameIdentifier Sp expressionRule;
 
-variableDecl: nameIdentifier Sp? Colon (Sp type)? (Eq Sp expression)?;
+variableDecl: variableDeclTyped | variableDeclInferred;
+variableDeclTyped: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
+variableDeclInferred: nameIdentifier Sp Colon Eq Sp expression;
 variableAssignment: nameIdentifier Sp Eq Sp expression;
 
 expression: expressionConst
