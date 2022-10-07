@@ -11,7 +11,7 @@ namespace Maja.Dgml
             _builder.CreateCommon();
         }
 
-        public static void Save(SyntaxNode syntaxNode, string filePath = "parser.dgml")
+        public static void Save(SyntaxNode syntaxNode, string filePath = "syntax.dgml")
         {
             var builder = new SyntaxDgmlBuilder();
             builder.WriteNode(syntaxNode);
