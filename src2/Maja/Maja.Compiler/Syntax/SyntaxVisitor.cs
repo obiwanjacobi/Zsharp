@@ -26,6 +26,8 @@ public interface ISyntaxVisitor<R>
     R OnExpressionLiteral(ExpressionLiteralSyntax node);
     R OnExpressionLiteralBool(ExpressionLiteralBoolSyntax node);
 
+    R OnExpressionOperator(ExpressionOperatorSyntax node);
+
     R OnName(NameSyntax node);
 }
 
@@ -84,6 +86,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => VisitChildren(node);
 
     public virtual R OnExpressionLiteralBool(ExpressionLiteralBoolSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnExpressionOperator(ExpressionOperatorSyntax node)
         => VisitChildren(node);
 
     public virtual R OnName(NameSyntax node)

@@ -41,7 +41,7 @@ variableDecl: nameIdentifier Sp? Colon (Sp type)? (Eq Sp expression)?;
 variableAssignment: nameIdentifier Sp Eq Sp expression;
 
 expression: expressionConst
-    | expression expressionOperatorBinary expression    // binary expression
+    | expression Sp expressionOperatorBinary Sp expression    // binary expression
     | expressionOperatorUnaryPrefix expression          // unary expression
     | ParenOpen expression ParenClose                   // precendence
     | expression argumentList                           // invocation expression

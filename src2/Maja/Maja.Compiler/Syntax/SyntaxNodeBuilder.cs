@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
 using Maja.Compiler.Parser;
@@ -15,26 +16,6 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
 
     public SyntaxNodeBuilder(string sourceName)
         => SourceName = sourceName ?? throw new System.ArgumentNullException(nameof(sourceName));
-
-    private SyntaxNode[] PassThroughOrCreate<SyntaxT, ContextT>(ContextT context, Func<ContextT, SyntaxNode[]> baseCall)
-        where SyntaxT : SyntaxNode, new()
-        where ContextT : ParserRuleContext
-    {
-        var children = baseCall(context);
-
-        // attempt to simplify nested expression hierarchies
-        if (children?.Length == 1
-            && children.First() is SyntaxT)
-        {
-            return children;
-        }
-
-        return new[] { new SyntaxT
-        {
-            Location = Location(context),
-            Children = SyntaxNodeList.New(children)
-        } };
-    }
 
     protected override SyntaxNode[] AggregateResult(SyntaxNode[] aggregate, SyntaxNode[] nextResult)
     {
@@ -207,7 +188,27 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     //
 
     public override SyntaxNode[] VisitExpression(ExpressionContext context)
-        => PassThroughOrCreate<ExpressionSyntax, ExpressionContext>(context, base.VisitExpression);
+    {
+        var children = base.VisitExpression(context);
+        if (children.Length == 1) return children;
+
+        var newChildren = new List<SyntaxNode>();
+
+        foreach (var child in children)
+        {
+            // unpack nested ExpressionSyntax nodes
+            if (child.GetType().Name == nameof(ExpressionSyntax))
+                newChildren.AddRange(child.Children);
+            else
+                newChildren.Add(child);
+        }
+
+        return new[] { new ExpressionSyntax
+        {
+            Location = Location(context),
+            Children = SyntaxNodeList.New(newChildren)
+        } };
+    }
 
     public override SyntaxNode[] VisitExpressionConst(ExpressionConstContext context)
     {
@@ -233,6 +234,24 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     {
         return base.VisitExpressionRule(context);
     }
+
+    //
+    // Expression Operators
+    //
+
+    public override SyntaxNode[] VisitExpressionOperatorBinary(ExpressionOperatorBinaryContext context)
+        => new[] { new ExpressionOperatorSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = SyntaxNodeList.New()
+        } };
+
+    public override SyntaxNode[] VisitExpressionOperatorUnaryPrefix(ExpressionOperatorUnaryPrefixContext context)
+        => new[] { new ExpressionOperatorSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = SyntaxNodeList.New()
+        } };
 
     //
     // Identifiers
