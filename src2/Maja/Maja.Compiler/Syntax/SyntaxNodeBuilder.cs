@@ -189,21 +189,24 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
 
     public override SyntaxNode[] VisitExpression(ExpressionContext context)
     {
+        var precedence = context.ParenOpen() is not null;
         var children = base.VisitExpression(context);
-        if (children.Length == 1) return children;
+        if (children.Length == 1 && !precedence) return children;
 
         var newChildren = new List<SyntaxNode>();
-
         foreach (var child in children)
         {
             // unpack nested ExpressionSyntax nodes
-            if (child.GetType().Name == nameof(ExpressionSyntax))
+            if (child is ExpressionSyntax childExpr &&
+                !childExpr.Precedence &&
+                // because 'is' also matches on derived types
+                child.GetType().Name == nameof(ExpressionSyntax))
                 newChildren.AddRange(child.Children);
             else
                 newChildren.Add(child);
         }
 
-        return new[] { new ExpressionSyntax
+        return new[] { new ExpressionSyntax(precedence)
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(newChildren)
@@ -217,6 +220,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     }
 
     public override SyntaxNode[] VisitExpressionLiteral(ExpressionLiteralContext context)
+            // TODO: child can be Number or String literal
             => new[] { new ExpressionLiteralSyntax(context.GetText())
         {
             Location = Location(context),
