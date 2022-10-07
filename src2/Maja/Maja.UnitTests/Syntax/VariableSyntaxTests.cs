@@ -32,6 +32,6 @@ public class VariableSyntaxTests
         result.Members.Should().HaveCount(1);
         var v = result.Members.First().As<VariableDeclarationSyntax>();
         v.Name.Value.Should().Be("x");
-        v.Expression.As<ExpressionLiteralSyntax>().Value.Should().Be("42");
+        v.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Value.Should().Be("42");
     }
 }

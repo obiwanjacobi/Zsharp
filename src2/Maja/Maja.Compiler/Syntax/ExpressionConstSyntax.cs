@@ -1,16 +1,17 @@
-﻿namespace Maja.Compiler.Syntax;
+﻿using System.Linq;
+
+namespace Maja.Compiler.Syntax;
 
 public abstract record ExpressionConstSyntax : ExpressionSyntax
 { }
 
 public record ExpressionLiteralSyntax : ExpressionConstSyntax
 {
-    public ExpressionLiteralSyntax(string value)
-    {
-        Value = value;
-    }
+    public LiteralNumberSyntax? LiteralNumber
+        => Children.OfType<LiteralNumberSyntax>().SingleOrDefault();
 
-    public string Value { get; }
+    public LiteralStringSyntax? LiteralString
+        => Children.OfType<LiteralStringSyntax>().SingleOrDefault();
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteral(this);
@@ -20,10 +21,13 @@ public record ExpressionLiteralBoolSyntax : ExpressionConstSyntax
 {
     public ExpressionLiteralBoolSyntax(string value)
     {
-        Value = value;
+        Text = value;
+        Value = value.ToUpper() == "TRUE";
     }
 
-    public string Value { get; }
+    public string Text { get; }
+
+    public bool Value { get; }
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteralBool(this);

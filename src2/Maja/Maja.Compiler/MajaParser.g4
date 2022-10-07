@@ -62,13 +62,14 @@ expressionOperatorBitsUnaryPrefix: BitNot;
 expressionOperatorAssignment: Eq;
 
 expressionLiteralBool: True | False;
-expressionLiteral: number | String;
+expressionLiteral: number | string;
 
 nameQualified: nameIdentifier (Dot nameIdentifier)+;
 nameQualifiedList: nameQualified (Comma Sp+ nameQualified)*;
 nameIdentifier: Identifier;
 nameIdentifierList: nameIdentifier (Comma Sp+ nameIdentifier)*;
 
+string: String;
 number: NumberBin 
     | NumberDec | NumberDecPrefix
     | NumberHex

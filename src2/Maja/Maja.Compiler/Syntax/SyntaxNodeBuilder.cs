@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Maja.Compiler.Parser;
 using static Maja.Compiler.Parser.MajaParser;
 
@@ -220,15 +222,28 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     }
 
     public override SyntaxNode[] VisitExpressionLiteral(ExpressionLiteralContext context)
-            // TODO: child can be Number or String literal
-            => new[] { new ExpressionLiteralSyntax(context.GetText())
+        => new[] { new ExpressionLiteralSyntax
+        {
+            Location = Location(context),
+            Children = SyntaxNodeList.New(base.VisitExpressionLiteral(context))
+        } };
+
+    public override SyntaxNode[] VisitExpressionLiteralBool(ExpressionLiteralBoolContext context)
+        => new[] { new ExpressionLiteralBoolSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New()
         } };
 
-    public override SyntaxNode[] VisitExpressionLiteralBool(ExpressionLiteralBoolContext context)
-        => new[] { new ExpressionLiteralBoolSyntax(context.GetText())
+    public override SyntaxNode[] VisitNumber(NumberContext context)
+        => new[] { new LiteralNumberSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = SyntaxNodeList.New()
+        } };
+
+    public override SyntaxNode[] VisitString(StringContext context)
+        => new[] { new LiteralStringSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New()

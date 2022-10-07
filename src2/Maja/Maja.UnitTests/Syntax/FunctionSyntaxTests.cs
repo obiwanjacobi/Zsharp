@@ -57,6 +57,6 @@ public class FunctionSyntaxTests
         fn.ReturnType!.Name.Value.Should().Be("U8");
         var ret = fn.CodeBlock.Statements.First().As<StatementReturnSyntax>();
         ret.Expression.Should().NotBeNull();
-        ret.Expression.As<ExpressionLiteralSyntax>().Value.Should().Be("42");
+        ret.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Value.Should().Be("42");
     }
 }

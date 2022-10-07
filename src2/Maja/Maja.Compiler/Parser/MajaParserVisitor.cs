@@ -333,6 +333,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitNameIdentifierList([NotNull] MajaParser.NameIdentifierListContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.string"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitString([NotNull] MajaParser.StringContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.number"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
