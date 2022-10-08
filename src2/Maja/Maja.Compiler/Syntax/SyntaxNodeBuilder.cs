@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using Maja.Compiler.Parser;
 using static Maja.Compiler.Parser.MajaParser;
 
@@ -8,14 +10,15 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Visits the Antlr parse tree context objects and generates the Syntax Model instances.
 /// </summary>
-internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
+internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToken[]>
 {
+    private static readonly SyntaxNodeOrToken[] Empty = Array.Empty<SyntaxNodeOrToken>();
     private readonly string SourceName;
 
     public SyntaxNodeBuilder(string sourceName)
         => SourceName = sourceName ?? throw new System.ArgumentNullException(nameof(sourceName));
 
-    protected override SyntaxNode[] AggregateResult(SyntaxNode[] aggregate, SyntaxNode[] nextResult)
+    protected override SyntaxNodeOrToken[] AggregateResult(SyntaxNodeOrToken[] aggregate, SyntaxNodeOrToken[] nextResult)
     {
         if (aggregate is null) return nextResult;
         return aggregate.Append(nextResult);
@@ -25,46 +28,99 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
         => new(SourceName, context.Start.Line, context.Start.Column,
             new SyntaxSpan(context.SourceInterval.a, context.SourceInterval.b));
 
+    private SyntaxLocation Location(ITerminalNode node)
+        => new(SourceName, node.Symbol.Line, node.Symbol.Column,
+            new SyntaxSpan(node.SourceInterval.a, node.SourceInterval.b));
+
+
+    public override SyntaxNodeOrToken[] VisitTerminal(ITerminalNode node)
+    {
+        var location = Location(node);
+        SyntaxToken? token = SyntaxToken.TryNew(node.GetText(), location);
+        if (token is not null)
+        {
+            return new[] { new SyntaxNodeOrToken(token!) };
+        }
+        return Empty;
+    }
+
+    private static SyntaxNodeList Children<T>(Func<T, SyntaxNodeOrToken[]> visitChildren, T context)
+        where T: ParserRuleContext
+    {
+        var children = new List<SyntaxNode>();
+        var tokens = new List<SyntaxToken>();
+        SyntaxNode? lastNode = null;
+
+        foreach (var child in visitChildren(context))
+        {
+            if (child.Token is SyntaxToken token)
+            {
+                tokens.Add(token);
+            }
+            if (child.Node is SyntaxNode node)
+            {
+                if (tokens.Count > 0)
+                {
+                    if (lastNode is null)
+                        node.LeadingTokens = SyntaxTokenList.New(tokens);
+                    else
+                        lastNode.TrailingTokens = SyntaxTokenList.New(tokens);
+                    tokens.Clear();
+                }
+                children.Add(node);
+                lastNode = node;
+            }
+        }
+
+        if (children.Count == 0) return SyntaxNodeList.New();
+        return SyntaxNodeList.New(children);
+    }
+
     //
     // Module
     //
 
-    public override SyntaxNode[] VisitCompilationUnit(CompilationUnitContext context)
-        => new[] { new CompilationUnitSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitCompilationUnit(CompilationUnitContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new CompilationUnitSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitCompilationUnit(context))
-        } };
+            Children = Children(base.VisitCompilationUnit, context)
+        } )};
 
-    public override SyntaxNode[] VisitPub1Decl(Pub1DeclContext context)
-        => new[] { new PublicExportSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitPub1Decl(Pub1DeclContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new PublicExportSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitPub1Decl(context))
-        } };
+            Children = Children(base.VisitPub1Decl, context)
+        } )};
 
-    public override SyntaxNode[] VisitPub2Decl(Pub2DeclContext context)
-        => new[] { new PublicExportSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitPub2Decl(Pub2DeclContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new PublicExportSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitPub2Decl(context))
-        } };
+            Children = Children(base.VisitPub2Decl, context)
+        } )};
 
-    public override SyntaxNode[] VisitUseDecl(UseDeclContext context)
-        => new[] { new UseImportSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitUseDecl(UseDeclContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new UseImportSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitUseDecl(context))
-        } };
+            Children = Children(base.VisitUseDecl, context)
+        } )};
 
-    public override SyntaxNode[] VisitCodeBlock(CodeBlockContext context)
-        => new[] { new CodeBlockSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitCodeBlock(CodeBlockContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new CodeBlockSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitCodeBlock(context))
-        } };
+            Children = Children(base.VisitCodeBlock, context)
+        } )};
 
-    public override SyntaxNode[] VisitMembersDecl(MembersDeclContext context)
+    public override SyntaxNodeOrToken[] VisitMembersDecl(MembersDeclContext context)
     {
         // This level is represented by a base class.
         return base.VisitMembersDecl(context);
@@ -74,122 +130,135 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     // Functions
     //
 
-    public override SyntaxNode[] VisitFunctionDecl(FunctionDeclContext context)
-        => new[]{ new FunctionDelcarationSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitFunctionDecl(FunctionDeclContext context)
+        => new[]{ new SyntaxNodeOrToken(
+            new FunctionDelcarationSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitFunctionDecl(context))
-        } };
+            Children = Children(base.VisitFunctionDecl, context)
+        } )};
 
-    public override SyntaxNode[] VisitFunctionDeclLocal(FunctionDeclLocalContext context)
+    public override SyntaxNodeOrToken[] VisitFunctionDeclLocal(FunctionDeclLocalContext context)
     {
         return base.VisitFunctionDeclLocal(context);
     }
 
-    public override SyntaxNode[] VisitParameterList(ParameterListContext context)
+    public override SyntaxNodeOrToken[] VisitParameterList(ParameterListContext context)
     {
         // This level is not represented.
         return base.VisitParameterList(context);
     }
 
-    public override SyntaxNode[] VisitParameter(ParameterContext context)
-        => new[] { new ParameterSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitParameter(ParameterContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new ParameterSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitParameter(context))
-        } };
+            Children = Children(base.VisitParameter, context)
+        } )};
 
     //
     // Types
     //
 
-    public override SyntaxNode[] VisitTypeDecl(TypeDeclContext context)
+    public override SyntaxNodeOrToken[] VisitTypeDecl(TypeDeclContext context)
     {
         return base.VisitTypeDecl(context);
     }
 
-    public override SyntaxNode[] VisitTypeDeclMembers(TypeDeclMembersContext context)
+    public override SyntaxNodeOrToken[] VisitTypeDeclMembers(TypeDeclMembersContext context)
     {
         return base.VisitTypeDeclMembers(context);
     }
 
-    public override SyntaxNode[] VisitMemberEnum(MemberEnumContext context)
+    public override SyntaxNodeOrToken[] VisitMemberEnum(MemberEnumContext context)
     {
         return base.VisitMemberEnum(context);
     }
 
-    public override SyntaxNode[] VisitMemberField(MemberFieldContext context)
+    public override SyntaxNodeOrToken[] VisitMemberField(MemberFieldContext context)
     {
         return base.VisitMemberField(context);
     }
 
-    public override SyntaxNode[] VisitMemberRule(MemberRuleContext context)
+    public override SyntaxNodeOrToken[] VisitMemberRule(MemberRuleContext context)
     {
         return base.VisitMemberRule(context);
     }
 
-    public override SyntaxNode[] VisitTypeParameterList(TypeParameterListContext context)
+    public override SyntaxNodeOrToken[] VisitTypeParameterList(TypeParameterListContext context)
     {
         return base.VisitTypeParameterList(context);
     }
 
-    public override SyntaxNode[] VisitTypeParameter(TypeParameterContext context)
+    public override SyntaxNodeOrToken[] VisitTypeParameter(TypeParameterContext context)
     {
         return base.VisitTypeParameter(context);
     }
 
-    public override SyntaxNode[] VisitTypeArgumentList(TypeArgumentListContext context)
+    public override SyntaxNodeOrToken[] VisitTypeArgumentList(TypeArgumentListContext context)
     {
         return base.VisitTypeArgumentList(context);
     }
 
-    public override SyntaxNode[] VisitTypeArgument(TypeArgumentContext context)
+    public override SyntaxNodeOrToken[] VisitTypeArgument(TypeArgumentContext context)
     {
         return base.VisitTypeArgument(context);
     }
 
-    public override SyntaxNode[] VisitParameterTemplate(ParameterTemplateContext context)
+    public override SyntaxNodeOrToken[] VisitParameterTemplate(ParameterTemplateContext context)
     {
         return base.VisitParameterTemplate(context);
     }
 
-    public override SyntaxNode[] VisitParameterGeneric(ParameterGenericContext context)
+    public override SyntaxNodeOrToken[] VisitParameterGeneric(ParameterGenericContext context)
     {
         return base.VisitParameterGeneric(context);
     }
 
-    public override SyntaxNode[] VisitParameterValue(ParameterValueContext context)
+    public override SyntaxNodeOrToken[] VisitParameterValue(ParameterValueContext context)
     {
         return base.VisitParameterValue(context);
     }
 
-    public override SyntaxNode[] VisitType(TypeContext context)
-        => new[] { new TypeSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitType(TypeContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new TypeSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitType(context))
-        } };
+            Children = Children(base.VisitType, context)
+        } )};
 
     //
     // Variables
     //
 
-    public override SyntaxNode[] VisitVariableDecl(VariableDeclContext context)
-        => new[] { new VariableDeclarationSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitVariableDeclTyped(VariableDeclTypedContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new VariableDeclarationTypedSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitVariableDecl(context))
-        } };
+            Children = Children(base.VisitVariableDeclTyped, context)
+        } )};
+
+    public override SyntaxNodeOrToken[] VisitVariableDeclInferred(VariableDeclInferredContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new VariableDeclarationInferredSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = Children(base.VisitVariableDeclInferred, context)
+        } )};
 
     //
     // Expressions
     //
 
-    public override SyntaxNode[] VisitExpression(ExpressionContext context)
+    public override SyntaxNodeOrToken[] VisitExpression(ExpressionContext context)
     {
         var precedence = context.ParenOpen() is not null;
-        var children = base.VisitExpression(context);
-        if (children.Length == 1 && !precedence) return children;
+        var children = Children(base.VisitExpression, context);
+        if (children.Count == 1 && !precedence) 
+            return new[] { new SyntaxNodeOrToken(children[0]) };
 
         var newChildren = new List<SyntaxNode>();
         foreach (var child in children)
@@ -199,53 +268,58 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
                 !childExpr.Precedence &&
                 // because 'is' also matches on derived types
                 child.GetType().Name == nameof(ExpressionSyntax))
-                newChildren.AddRange(child.Children);
+                newChildren.AddRange(childExpr.Children);
             else
                 newChildren.Add(child);
         }
 
-        return new[] { new ExpressionSyntax(context.GetText(), precedence)
+        return new[] { new SyntaxNodeOrToken(
+            new ExpressionSyntax(context.GetText(), precedence)
         {
             Location = Location(context),
             Children = SyntaxNodeList.New(newChildren)
-        } };
+        } )};
     }
 
-    public override SyntaxNode[] VisitExpressionConst(ExpressionConstContext context)
+    public override SyntaxNodeOrToken[] VisitExpressionConst(ExpressionConstContext context)
     {
         // This level is represented by a base class.
         return base.VisitExpressionConst(context);
     }
 
-    public override SyntaxNode[] VisitExpressionLiteral(ExpressionLiteralContext context)
-        => new[] { new ExpressionLiteralSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitExpressionLiteral(ExpressionLiteralContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new ExpressionLiteralSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitExpressionLiteral(context))
-        } };
+            Children = Children(base.VisitExpressionLiteral, context)
+        } )};
 
-    public override SyntaxNode[] VisitExpressionLiteralBool(ExpressionLiteralBoolContext context)
-        => new[] { new ExpressionLiteralBoolSyntax(context.GetText())
-        {
-            Location = Location(context),
-            Children = SyntaxNodeList.New()
-        } };
-
-    public override SyntaxNode[] VisitNumber(NumberContext context)
-        => new[] { new LiteralNumberSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitExpressionLiteralBool(ExpressionLiteralBoolContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new ExpressionLiteralBoolSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New()
-        } };
+        } )};
 
-    public override SyntaxNode[] VisitString(StringContext context)
-        => new[] { new LiteralStringSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitNumber(NumberContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new LiteralNumberSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New()
-        } };
+        } )};
 
-    public override SyntaxNode[] VisitExpressionRule(ExpressionRuleContext context)
+    public override SyntaxNodeOrToken[] VisitString(StringContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new LiteralStringSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = SyntaxNodeList.New()
+        } )};
+
+    public override SyntaxNodeOrToken[] VisitExpressionRule(ExpressionRuleContext context)
     {
         return base.VisitExpressionRule(context);
     }
@@ -254,58 +328,63 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNode[]>
     // Expression Operators
     //
 
-    public override SyntaxNode[] VisitExpressionOperatorBinary(ExpressionOperatorBinaryContext context)
-        => new[] { new ExpressionOperatorSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorBinary(ExpressionOperatorBinaryContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new ExpressionOperatorSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New()
-        } };
+        } )};
 
-    public override SyntaxNode[] VisitExpressionOperatorUnaryPrefix(ExpressionOperatorUnaryPrefixContext context)
-        => new[] { new ExpressionOperatorSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorUnaryPrefix(ExpressionOperatorUnaryPrefixContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new ExpressionOperatorSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New()
-        } };
+        } )};
 
     //
     // Identifiers
     //
 
-    public override SyntaxNode[] VisitNameIdentifier(NameIdentifierContext context)
-        => new[] { new NameSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitNameIdentifier(NameIdentifierContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new NameSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New()
-        } };
+        } )};
 
-    public override SyntaxNode[] VisitNameQualified(NameQualifiedContext context)
-        => new[] { new QualifiedNameSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitNameQualified(NameQualifiedContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new QualifiedNameSyntax(context.GetText())
         {
             Location = Location(context),
             Children = SyntaxNodeList.New()
-        } };
+        } )};
 
     //
     // Statements
     //
 
-    public override SyntaxNode[] VisitStatement(StatementContext context)
+    public override SyntaxNodeOrToken[] VisitStatement(StatementContext context)
     {
         // This level is represented by a base class.
         return base.VisitStatement(context);
     }
 
-    public override SyntaxNode[] VisitStatementFlow(StatementFlowContext context)
+    public override SyntaxNodeOrToken[] VisitStatementFlow(StatementFlowContext context)
     {
         // This level is not represented.
         return base.VisitStatementFlow(context);
     }
 
-    public override SyntaxNode[] VisitStatementRet(StatementRetContext context)
-        => new[] { new StatementReturnSyntax(context.GetText())
+    public override SyntaxNodeOrToken[] VisitStatementRet(StatementRetContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new StatementReturnSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = SyntaxNodeList.New(base.VisitStatementRet(context))
-        } };
+            Children = Children(base.VisitStatementRet, context)
+        } )};
 }

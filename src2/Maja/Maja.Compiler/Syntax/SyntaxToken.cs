@@ -21,16 +21,16 @@ public abstract record SyntaxToken(string Text)
 
     public SyntaxLocation Location { get; init; }
 
-    public static SyntaxToken New(string text, SyntaxLocation location)
+    public static SyntaxToken? TryNew(string text, SyntaxLocation location)
     {
-        if (WhitespaceToken.IsValid(text))
-            return new WhitespaceToken(text)
+        if (NewlineToken.IsValid(text))
+            return new NewlineToken(text)
             {
                 Location = location
             };
 
-        if (NewlineToken.IsValid(text))
-            return new NewlineToken(text)
+        if (WhitespaceToken.IsValid(text))
+            return new WhitespaceToken(text)
             {
                 Location = location
             };
@@ -53,7 +53,8 @@ public abstract record SyntaxToken(string Text)
                 Location = location
             };
 
-        throw new InvalidOperationException("No suitable SyntaxToken.");
+        return null;
+        //throw new InvalidOperationException("No suitable SyntaxToken.");
     }
 }
 

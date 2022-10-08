@@ -15,7 +15,7 @@ namespace Maja.UnitTests.Syntax
 
             var builder = new SyntaxNodeBuilder(nameof(ModuleSyntaxTests));
             var syntax = builder.VisitCompilationUnit(parseTree);
-            return (CompilationUnitSyntax)syntax[0];
+            return (CompilationUnitSyntax)syntax[0].Node!;
         }
     }
 }

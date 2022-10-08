@@ -6,8 +6,10 @@ namespace Maja.Compiler.Syntax;
 
 public class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
 {
+    private static readonly List<SyntaxNode> Empty = new();
+
     private SyntaxNodeList()
-        : base(new List<SyntaxNode>())
+        : base(Empty)
     { }
 
     private SyntaxNodeList(IList<SyntaxNode> nodeList)

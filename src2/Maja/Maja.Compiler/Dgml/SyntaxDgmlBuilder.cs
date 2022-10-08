@@ -9,6 +9,8 @@ namespace Maja.Dgml
         public SyntaxDgmlBuilder()
         {
             _builder.CreateCommon();
+            _builder.CreateCategory("LT", "LT");
+            _builder.CreateCategory("TT", "TT");
         }
 
         public static void Save(SyntaxNode syntaxNode, string filePath = "syntax.dgml")
@@ -23,11 +25,37 @@ namespace Maja.Dgml
             var typeName = syntaxNode.GetType().Name;
             var node = _builder.CreateNode(typeName, syntaxNode.Text, typeName);
 
+            if (syntaxNode.HasLeadingTokens)
+            {
+                foreach (var child in syntaxNode.LeadingTokens)
+                {
+                    var childToken = WriteToken(child);
+                    var link = _builder.CreateLink(node.Id, childToken.Id, "LT");
+                }
+            }
+
             foreach (var child in syntaxNode.Children)
             {
                 var childNode = WriteNode(child);
                 var link = _builder.CreateLink(node.Id, childNode.Id);
             }
+
+            if (syntaxNode.HasTrailingTokens)
+            {
+                foreach (var child in syntaxNode.TrailingTokens)
+                {
+                    var childToken = WriteToken(child);
+                    var link = _builder.CreateLink(node.Id, childToken.Id, "TT");
+                }
+            }
+
+            return node;
+        }
+
+        public Node WriteToken(SyntaxToken syntaxToken)
+        {
+            var typeName = syntaxToken.GetType().Name;
+            var node = _builder.CreateNode(typeName, $"'{syntaxToken.Text}'", typeName);
             return node;
         }
     }

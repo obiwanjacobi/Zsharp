@@ -38,6 +38,8 @@ public abstract partial record SyntaxNode : ISyntaxVisitable
         }
     }
 
+    public bool HasLeadingTokens => _leadingTokens is not null;
+
     private SyntaxTokenList? _leadingTokens;
     public SyntaxTokenList LeadingTokens
     {
@@ -46,13 +48,15 @@ public abstract partial record SyntaxNode : ISyntaxVisitable
             Debug.Assert(_leadingTokens is not null, "SyntaxNode is uninitialized. LeadingTokens are not set.");
             return _leadingTokens!;
         }
-        init
+        internal set
         {
             Debug.Assert(value is not null, "Cannot clear the SyntaxNode.LeadingTokens list with null.");
             _leadingTokens = value;
             _leadingTokens.Parent = this;
         }
     }
+
+    public bool HasTrailingTokens => _trailingTokens is not null;
 
     private SyntaxTokenList? _trailingTokens;
     public SyntaxTokenList TrailingTokens
@@ -62,7 +66,7 @@ public abstract partial record SyntaxNode : ISyntaxVisitable
             Debug.Assert(_trailingTokens is not null, "SyntaxNode is uninitialized. TrailingTokens are not set.");
             return _trailingTokens!;
         }
-        init
+        internal set
         {
             Debug.Assert(value is not null, "Cannot clear the SyntaxNode.TrailingTokens list with null.");
             _trailingTokens = value;

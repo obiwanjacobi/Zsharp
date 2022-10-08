@@ -29,7 +29,7 @@ internal sealed class Compiler
         var builder = new SyntaxNodeBuilder(sourceName);
         var cu = _parser.compilationUnit();
         var nodes = builder.VisitCompilationUnit(cu);
-        return (CompilationUnitSyntax)nodes[0];
+        return (CompilationUnitSyntax)nodes[0].Node!;
     }
 
     public static MajaParser CreateParser(string code, string sourceName = "")

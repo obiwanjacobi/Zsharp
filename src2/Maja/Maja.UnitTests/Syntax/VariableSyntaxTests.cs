@@ -16,7 +16,7 @@ public class VariableSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
         v.Name.Text.Should().Be("x");
         v.Type!.Name.Text.Should().Be("U8");
     }
@@ -30,7 +30,7 @@ public class VariableSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<VariableDeclarationInferredSyntax>();
         v.Name.Text.Should().Be("x");
         v.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
     }

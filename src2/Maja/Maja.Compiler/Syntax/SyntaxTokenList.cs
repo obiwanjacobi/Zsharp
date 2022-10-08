@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
 public class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
 {
+    private static readonly List<SyntaxToken> Empty = new();
+
     private SyntaxTokenList()
-        : base(new List<SyntaxToken>())
+        : base(Empty)
     { }
 
-    private SyntaxTokenList(IList<SyntaxToken> tokenList)
-        : base(tokenList)
+    private SyntaxTokenList(IEnumerable<SyntaxToken> tokenList)
+        : base(tokenList.ToList())
     { }
 
     internal static SyntaxTokenList New(IList<SyntaxToken>? tokenList = null)

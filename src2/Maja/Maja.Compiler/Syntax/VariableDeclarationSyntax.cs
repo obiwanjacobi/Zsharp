@@ -2,7 +2,7 @@
 
 namespace Maja.Compiler.Syntax;
 
-public sealed record VariableDeclarationSyntax : MemberDeclarationSyntax
+public abstract record VariableDeclarationSyntax : MemberDeclarationSyntax
 {
     public VariableDeclarationSyntax(string text)
         : base(text)
@@ -11,12 +11,26 @@ public sealed record VariableDeclarationSyntax : MemberDeclarationSyntax
     public NameSyntax Name
         => Children.OfType<NameSyntax>().Single();
 
-    public TypeSyntax? Type
-        => Children.OfType<TypeSyntax>().SingleOrDefault();
-
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnVariableDeclaration(this);
+}
+
+public sealed record VariableDeclarationTypedSyntax : VariableDeclarationSyntax
+{
+    public VariableDeclarationTypedSyntax(string text)
+        : base(text)
+    { }
+
+    public TypeSyntax? Type
+        => Children.OfType<TypeSyntax>().SingleOrDefault();
+}
+
+public sealed record VariableDeclarationInferredSyntax : VariableDeclarationSyntax
+{
+    public VariableDeclarationInferredSyntax(string text)
+        : base(text)
+    { }
 }
