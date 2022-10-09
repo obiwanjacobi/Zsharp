@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Maja.Compiler.Parser;
 using static Maja.Compiler.Parser.MajaParser;
@@ -36,10 +38,12 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     public override SyntaxNodeOrToken[] VisitTerminal(ITerminalNode node)
     {
         var location = Location(node);
+        // TODO: create token based on type (id) from lexer.
+        // MajaLexer.And etc.
         SyntaxToken? token = SyntaxToken.TryNew(node.GetText(), location);
-        if (token is not null)
+        if (token is SyntaxToken knownToken)
         {
-            return new[] { new SyntaxNodeOrToken(token!) };
+            return new[] { new SyntaxNodeOrToken(knownToken) };
         }
         return Empty;
     }
@@ -72,7 +76,9 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             }
         }
 
-        if (children.Count == 0) return SyntaxNodeList.New();
+        if (lastNode is not null && tokens.Count > 0)
+            lastNode.TrailingTokens = SyntaxTokenList.New(tokens);
+
         return SyntaxNodeList.New(children);
     }
 
@@ -253,34 +259,31 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     // Expressions
     //
 
-    public override SyntaxNodeOrToken[] VisitExpression(ExpressionContext context)
+    public override SyntaxNodeOrToken[] VisitExpressionPrecedence(ExpressionPrecedenceContext context)
     {
-        var precedence = context.ParenOpen() is not null;
-        var children = Children(base.VisitExpression, context);
-        if (children.Count == 1 && !precedence) 
-            return new[] { new SyntaxNodeOrToken(children[0]) };
-
-        var newChildren = new List<SyntaxNode>();
-        foreach (var child in children)
+        var children = Children(base.VisitExpressionPrecedence, context);
+        foreach (ExpressionSyntax child in children)
         {
-            // unpack nested ExpressionSyntax nodes
-            if (child is ExpressionSyntax childExpr &&
-                !childExpr.Precedence &&
-                // because 'is' also matches on derived types
-                child.GetType().Name == nameof(ExpressionSyntax))
-                newChildren.AddRange(childExpr.Children);
-            else
-                newChildren.Add(child);
+            child.Precedence = true;
         }
 
-        return new[] { new SyntaxNodeOrToken(
-            new ExpressionSyntax(context.GetText(), precedence)
-        {
-            Location = Location(context),
-            Children = SyntaxNodeList.New(newChildren)
-        } )};
+        return children.Select(c => new SyntaxNodeOrToken(c)).ToArray();
     }
 
+    public override SyntaxNodeOrToken[] VisitExpressionBinary(ExpressionBinaryContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new ExpressionBinarySyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitExpressionBinary, context)
+            } )};
+
+
+    public override SyntaxNodeOrToken[] VisitExpressionConstant([NotNull] ExpressionConstantContext context)
+    {
+        // This level is represented by a base class.
+        return base.VisitExpressionConstant(context);
+    }
     public override SyntaxNodeOrToken[] VisitExpressionConst(ExpressionConstContext context)
     {
         // This level is represented by a base class.
@@ -318,6 +321,23 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             Location = Location(context),
             Children = SyntaxNodeList.New()
         } )};
+
+    public override SyntaxNodeOrToken[] VisitExpressionInvocation(ExpressionInvocationContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new ExpressionInvocationSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitExpressionInvocation, context)
+            } )};
+
+    public override SyntaxNodeOrToken[] VisitArgument(ArgumentContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new ArgumentSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitArgument, context)
+            }
+            )};
 
     public override SyntaxNodeOrToken[] VisitExpressionRule(ExpressionRuleContext context)
     {

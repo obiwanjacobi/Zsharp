@@ -23,7 +23,12 @@ namespace Maja.Dgml
         public Node WriteNode(SyntaxNode syntaxNode)
         {
             var typeName = syntaxNode.GetType().Name;
-            var node = _builder.CreateNode(typeName, syntaxNode.Text, typeName);
+            var label = syntaxNode.Text;
+            if (syntaxNode is ExpressionSyntax exprSyntax &&
+                exprSyntax.Precedence)
+                label = $"({label})";
+
+            var node = _builder.CreateNode(typeName, label, typeName);
 
             if (syntaxNode.HasLeadingTokens)
             {

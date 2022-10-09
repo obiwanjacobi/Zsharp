@@ -15,6 +15,7 @@ public interface ISyntaxVisitor<R>
 
     R OnFunctionDeclaration(FunctionDelcarationSyntax node);
     R OnParameter(ParameterSyntax node);
+    R OnArgument(ArgumentSyntax node);
 
     R OnType(TypeSyntax node);
 
@@ -71,6 +72,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => VisitChildren(node);
 
     public virtual R OnParameter(ParameterSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnArgument(ArgumentSyntax node)
         => VisitChildren(node);
 
     public virtual R OnType(TypeSyntax node)

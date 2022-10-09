@@ -19,7 +19,7 @@ functionDecl: nameIdentifier Colon Sp typeParameterList? parameterList (Colon Sp
 functionDeclLocal: indent functionDecl dedent;
 parameterList: ParenOpen (parameter (Comma Sp parameter)*)? ParenClose;
 parameter: nameIdentifier Colon Sp type;
-argumentList: ParenOpen (argument (Comma argument)*)? ParenClose;
+argumentList: ParenOpen (argument (Comma Sp argument)*)? ParenClose;
 argument: (nameIdentifier Eq)? expression;
 
 typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? (Discard newline | newline indent typeDeclMembers dedent);
@@ -33,7 +33,7 @@ parameterValue: expression;
 typeArgumentList: AngleOpen typeArgument (Comma Sp typeArgument)* AngleClose;
 typeArgument: nameIdentifier | expression;
 
-memberEnum: nameIdentifier (Sp Eq Sp expressionConst)?;
+memberEnum: nameIdentifier (Sp Eq Sp expressionConstant)?;
 memberField: nameIdentifier Colon Sp type;
 memberRule: Hash nameIdentifier Sp expressionRule;
 
@@ -42,13 +42,15 @@ variableDeclTyped: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
 variableDeclInferred: nameIdentifier Sp Colon Eq Sp expression;
 variableAssignment: nameIdentifier Sp Eq Sp expression;
 
-expression: expressionConst
-    | expression Sp expressionOperatorBinary Sp expression    // binary expression
-    | expressionOperatorUnaryPrefix expression          // unary expression
-    | ParenOpen expression ParenClose                   // precendence
-    | expression argumentList                           // invocation expression
+expression: 
+      expressionConstant                                    #expressionConst
+    | expression Sp expressionOperatorBinary Sp expression  #expressionBinary
+    | expressionOperatorUnaryPrefix expression              #expressionUnaryPrefix
+    | ParenOpen expression ParenClose                       #expressionPrecedence
+    | expression argumentList                               #expressionInvocation
+    | nameIdentifier                                        #expressionIdentifier
     ;
-expressionConst: expressionLiteral | expressionLiteralBool;
+expressionConstant: expressionLiteral | expressionLiteralBool;
 expressionRule:;
 
 expressionOperatorBinary: expressionOperatorArithmetic | expressionOperatorLogic | expressionOperatorComparison | expressionOperatorBits;

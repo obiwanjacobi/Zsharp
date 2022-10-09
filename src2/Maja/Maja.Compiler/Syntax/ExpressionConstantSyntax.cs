@@ -2,17 +2,17 @@
 
 namespace Maja.Compiler.Syntax;
 
-public abstract record ExpressionConstSyntax : ExpressionSyntax
+public abstract record ExpressionConstantSyntax : ExpressionSyntax
 {
-    protected ExpressionConstSyntax(string text, bool precedence = false)
-        : base(text, precedence)
+    protected ExpressionConstantSyntax(string text)
+        : base(text)
     { }
 }
 
-public record ExpressionLiteralSyntax : ExpressionConstSyntax
+public record ExpressionLiteralSyntax : ExpressionConstantSyntax
 {
     public ExpressionLiteralSyntax(string text)
-        : base(text, false)
+        : base(text)
     { }
 
     public LiteralNumberSyntax? LiteralNumber
@@ -25,12 +25,12 @@ public record ExpressionLiteralSyntax : ExpressionConstSyntax
         => visitor.OnExpressionLiteral(this);
 }
 
-public record ExpressionLiteralBoolSyntax : ExpressionConstSyntax
+public record ExpressionLiteralBoolSyntax : ExpressionConstantSyntax
 {
     public ExpressionLiteralBoolSyntax(string text)
-        : base(text, false)
+        : base(text)
     {
-        Value = text.ToUpper() == "TRUE";
+        Value = text == "true";
     }
 
     public bool Value { get; }

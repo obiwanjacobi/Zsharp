@@ -212,3 +212,18 @@ arr = (0, 1, 2, 3, 4, 5, 6, 7, 8)
 sub = arr.[0..5]        // dot operator
 sub = arr.copy([0..5])  // explicit function
 ```
+
+---
+
+> TBD
+
+Use a specific range syntax to indicate if the indices are inclusive or exclusive.
+
+```csharp
+incl = [1..6]       // 1 and 6 are both part of the range
+excl = (1..6)       // 1 and 6 are not part of the range
+half = [1..6)       // 1 is incl, 6 is excl
+other = (1..6]      // 1 is excl, 6 is incl
+```
+
+https://www.cuemath.com/algebra/interval-notation

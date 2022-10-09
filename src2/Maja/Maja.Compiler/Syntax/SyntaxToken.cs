@@ -23,6 +23,8 @@ public abstract record SyntaxToken(string Text)
 
     public static SyntaxToken? TryNew(string text, SyntaxLocation location)
     {
+        // TODO: create based on token.type (id) from lexer
+
         if (NewlineToken.IsValid(text))
             return new NewlineToken(text)
             {
@@ -120,7 +122,8 @@ public record PunctuationToken : SyntaxToken
         text[0] is '.' or ',' or ';' or ':';
 }
 
-// () {} [] <>
+// TODO: split up
+// () {} [] <> 
 public record GroupToken : SyntaxToken
 {
     public GroupToken(string Text)

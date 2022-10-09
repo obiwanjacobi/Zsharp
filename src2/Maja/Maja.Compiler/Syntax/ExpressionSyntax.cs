@@ -1,15 +1,14 @@
-﻿namespace Maja.Compiler.Syntax;
+﻿using System.Linq;
+
+namespace Maja.Compiler.Syntax;
 
 public record ExpressionSyntax : SyntaxNode
 {
-    public ExpressionSyntax(string text, bool precedence)
+    public ExpressionSyntax(string text)
         : base(text)
-        => Precedence = precedence;
+    { }
 
-    /// <summary>
-    /// Indication that '()' was around this expression
-    /// </summary>
-    public bool Precedence { get; }
+    public bool Precedence { get; internal set; }
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpression(this);

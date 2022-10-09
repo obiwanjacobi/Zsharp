@@ -231,17 +231,53 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitVariableAssignment([NotNull] MajaParser.VariableAssignmentContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.expression"/>.
+	/// Visit a parse tree produced by the <c>expressionIdentifier</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpression([NotNull] MajaParser.ExpressionContext context);
+	Result VisitExpressionIdentifier([NotNull] MajaParser.ExpressionIdentifierContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.expressionConst"/>.
+	/// Visit a parse tree produced by the <c>expressionInvocation</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionInvocation([NotNull] MajaParser.ExpressionInvocationContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionUnaryPrefix</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionUnaryPrefix([NotNull] MajaParser.ExpressionUnaryPrefixContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionBinary</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionBinary([NotNull] MajaParser.ExpressionBinaryContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionConst</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExpressionConst([NotNull] MajaParser.ExpressionConstContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionPrecedence</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionPrecedence([NotNull] MajaParser.ExpressionPrecedenceContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.expressionConstant"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionConstant([NotNull] MajaParser.ExpressionConstantContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.expressionRule"/>.
 	/// </summary>

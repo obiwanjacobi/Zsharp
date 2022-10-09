@@ -17,7 +17,7 @@ public class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
     { }
 
     internal static SyntaxNodeList New(IList<SyntaxNode>? nodeList = null)
-        => nodeList is not null
+        => nodeList is not null && nodeList.Count > 0
             ? new SyntaxNodeList(nodeList)
             : new SyntaxNodeList();
 
