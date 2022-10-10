@@ -40,7 +40,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         var location = Location(node);
         // TODO: create token based on type (id) from lexer.
         // MajaLexer.And etc.
-        SyntaxToken? token = SyntaxToken.TryNew(node.GetText(), location);
+        SyntaxToken? token = SyntaxToken.TryNew(/*node.Symbol.Type,*/ node.GetText(), location);
         if (token is SyntaxToken knownToken)
         {
             return new[] { new SyntaxNodeOrToken(knownToken) };
@@ -54,11 +54,26 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         var children = new List<SyntaxNode>();
         var tokens = new List<SyntaxToken>();
         SyntaxNode? lastNode = null;
+        WhitespaceToken? lastWhitespace = null;
 
         foreach (var child in visitChildren(context))
         {
             if (child.Token is SyntaxToken token)
             {
+                // special whitespace chaining
+                if (token is WhitespaceToken whitespace)
+                {
+                    if (lastWhitespace is not null)
+                    { 
+                        tokens.Remove(lastWhitespace);
+
+                        lastWhitespace = lastWhitespace.Append(whitespace);
+                        token = lastWhitespace;
+                    }
+                    else lastWhitespace = whitespace;
+                }
+                else lastWhitespace = null;
+                
                 tokens.Add(token);
             }
             if (child.Node is SyntaxNode node)

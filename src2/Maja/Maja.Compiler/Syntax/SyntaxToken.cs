@@ -24,6 +24,7 @@ public abstract record SyntaxToken(string Text)
     public static SyntaxToken? TryNew(string text, SyntaxLocation location)
     {
         // TODO: create based on token.type (id) from lexer
+        // How to deal with Sp+ ??
 
         if (NewlineToken.IsValid(text))
             return new NewlineToken(text)
@@ -43,8 +44,26 @@ public abstract record SyntaxToken(string Text)
                 Location = location
             };
 
-        if (GroupToken.IsValid(text))
-            return new GroupToken(text)
+        if (RoundBracketToken.IsValid(text))
+            return new RoundBracketToken(text)
+            {
+                Location = location
+            };
+
+        if (SquareBracketToken.IsValid(text))
+            return new SquareBracketToken(text)
+            {
+                Location = location
+            };
+
+        if (CurlyBracketToken.IsValid(text))
+            return new CurlyBracketToken(text)
+            {
+                Location = location
+            };
+
+        if (AngleBracketToken.IsValid(text))
+            return new AngleBracketToken(text)
             {
                 Location = location
             };
@@ -56,7 +75,6 @@ public abstract record SyntaxToken(string Text)
             };
 
         return null;
-        //throw new InvalidOperationException("No suitable SyntaxToken.");
     }
 }
 
@@ -96,6 +114,12 @@ public record WhitespaceToken : SyntaxToken
         : base(Text)
     { }
 
+    public WhitespaceToken Append(WhitespaceToken token)
+        => new(Text + token.Text)
+        {
+            Location = Location.Append(token.Location)
+        };
+
     public static bool IsValid(string text)
         => text is not null && String.IsNullOrWhiteSpace(text);
 }
@@ -122,18 +146,47 @@ public record PunctuationToken : SyntaxToken
         text[0] is '.' or ',' or ';' or ':';
 }
 
-// TODO: split up
-// () {} [] <> 
-public record GroupToken : SyntaxToken
+public record RoundBracketToken : SyntaxToken
 {
-    public GroupToken(string Text)
+    public RoundBracketToken(string Text)
         : base(Text)
     { }
 
     public static bool IsValid(string text)
         => text.Length == 1 &&
-        text[0] is '(' or ')'
-        or '[' or ']' 
-        or '{' or '}'
-        or '<' or '>';
+        text[0] is '(' or ')';
 }
+
+public record SquareBracketToken : SyntaxToken
+{
+    public SquareBracketToken(string Text)
+        : base(Text)
+    { }
+
+    public static bool IsValid(string text)
+        => text.Length == 1 &&
+        text[0] is '[' or ']';
+}
+
+public record CurlyBracketToken : SyntaxToken
+{
+    public CurlyBracketToken(string Text)
+        : base(Text)
+    { }
+
+    public static bool IsValid(string text)
+        => text.Length == 1 &&
+        text[0] is '{' or '}';
+}
+
+public record AngleBracketToken : SyntaxToken
+{
+    public AngleBracketToken(string Text)
+        : base(Text)
+    { }
+
+    public static bool IsValid(string text)
+        => text.Length == 1 &&
+        text[0] is '<' or '>';
+}
+
