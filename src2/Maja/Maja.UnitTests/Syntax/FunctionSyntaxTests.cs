@@ -43,6 +43,30 @@ public class FunctionSyntaxTests
     }
 
     [Fact]
+    public void FnParamsIndent()
+    {
+        const string code =
+            "fn: (" + Tokens.EOL +
+            Tokens.INDENT1 + "p1: U8" + Tokens.EOL +
+            Tokens.INDENT1 + "p2: Str" + Tokens.EOL +
+            ")" + Tokens.EOL +
+            Tokens.INDENT1 + "ret" + Tokens.EOL
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        fn.Identifier.Text.Should().Be("fn");
+        fn.Parameters.Should().HaveCount(2);
+        var param = fn.Parameters.First().As<ParameterSyntax>();
+        param.Name.Text.Should().Be("p1");
+        param.Type.Name.Text.Should().Be("U8");
+        param = fn.Parameters.Skip(1).First().As<ParameterSyntax>();
+        param.Name.Text.Should().Be("p2");
+        param.Type.Name.Text.Should().Be("Str");
+    }
+
+    [Fact]
     public void FnRetVal()
     {
         const string code =

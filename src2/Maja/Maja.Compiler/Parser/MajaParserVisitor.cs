@@ -105,6 +105,18 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitParameterList([NotNull] MajaParser.ParameterListContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.parameterListComma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitParameterListComma([NotNull] MajaParser.ParameterListCommaContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.parameterListIndent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitParameterListIndent([NotNull] MajaParser.ParameterListIndentContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.parameter"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -116,6 +128,18 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitArgumentList([NotNull] MajaParser.ArgumentListContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.argumentListComma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitArgumentListComma([NotNull] MajaParser.ArgumentListCommaContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.argumentListIndent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitArgumentListIndent([NotNull] MajaParser.ArgumentListIndentContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.argument"/>.
 	/// </summary>

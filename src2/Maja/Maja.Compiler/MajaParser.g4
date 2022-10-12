@@ -14,11 +14,15 @@ statementFlow: statementRet;
 statementRet: Ret (Sp expression)?;
 statementExpression: expression;
 
-functionDecl: nameIdentifier Colon Sp typeParameterList? parameterList (Colon Sp type)? newline Indent codeBlock Dedent;
+functionDecl: nameIdentifier Colon freeSpace typeParameterList? parameterList (Colon Sp type)? newline Indent codeBlock Dedent;
 functionDeclLocal: Indent functionDecl Dedent;
-parameterList: ParenOpen (parameter (Comma Sp parameter)*)? ParenClose;
+parameterList: ParenOpen newline? (parameterListComma | parameterListIndent)? ParenClose;
+parameterListComma: parameter (Comma Sp parameter)*;
+parameterListIndent: Indent (parameter newline)+ Dedent;
 parameter: nameIdentifier Colon Sp type;
-argumentList: ParenOpen (argument (Comma Sp argument)*)? ParenClose;
+argumentList: ParenOpen argumentListComma ParenClose;
+argumentListComma: argument (Comma Sp argument)*;
+argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Eq)? expression;
 
 typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? (Discard newline | newline Indent typeDeclMembers Dedent);
