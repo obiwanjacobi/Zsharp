@@ -109,20 +109,12 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             Children = Children(base.VisitCompilationUnit, context)
         } )};
 
-    public override SyntaxNodeOrToken[] VisitPub1Decl(Pub1DeclContext context)
+    public override SyntaxNodeOrToken[] VisitPubDecl(PubDeclContext context)
         => new[] { new SyntaxNodeOrToken(
             new PublicExportSyntax(context.GetText())
         {
             Location = Location(context),
-            Children = Children(base.VisitPub1Decl, context)
-        } )};
-
-    public override SyntaxNodeOrToken[] VisitPub2Decl(Pub2DeclContext context)
-        => new[] { new SyntaxNodeOrToken(
-            new PublicExportSyntax(context.GetText())
-        {
-            Location = Location(context),
-            Children = Children(base.VisitPub2Decl, context)
+            Children = Children(base.VisitPubDecl, context)
         } )};
 
     public override SyntaxNodeOrToken[] VisitUseDecl(UseDeclContext context)

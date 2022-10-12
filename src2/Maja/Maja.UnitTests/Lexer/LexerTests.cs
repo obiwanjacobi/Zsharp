@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Antlr4.Runtime;
-using FluentAssertions;
 using Maja.Compiler.Parser;
 using Xunit;
 
@@ -10,16 +9,6 @@ public class LexerTests
 {
     private static IList<IToken> LexTokens(string code)
         => Maja.Compiler.Compiler.CreateLexer(code, nameof(LexerTests)).GetAllTokens();
-
-    private static void AssertTokens(IEnumerable<IToken> lexedTokens, int[] expectedTokens)
-    {
-        int i = 0;
-        foreach (var token in lexedTokens)
-        {
-            token.Type.Should().Be(expectedTokens[i]);
-            i++;
-        }
-    }
 
     [Fact]
     public void Pub1()
@@ -39,7 +28,60 @@ public class LexerTests
             MajaLexer.Eol
         };
 
-        AssertTokens(tokens, expected);
+        Tokens.Assert(tokens, expected);
+    }
+
+    [Fact]
+    public void Pub2()
+    {
+        const string code =
+            "pub" + Tokens.EOL +
+            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            ;
+
+        var tokens = LexTokens(code);
+        var expected = new[]
+        {
+            MajaLexer.Pub,
+            MajaLexer.Eol,
+            MajaLexer.Indent,
+            MajaLexer.Identifier,
+            MajaLexer.Dot,
+            MajaLexer.Identifier,
+            MajaLexer.Eol,
+            MajaLexer.Dedent
+        };
+
+        Tokens.Assert(tokens, expected);
+    }
+
+    [Fact]
+    public void Pub3()
+    {
+        const string code =
+            "pub" + Tokens.EOL +
+            Tokens.INDENT1 + "qualified.name" + Tokens.EOL +
+            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            ;
+
+        var tokens = LexTokens(code);
+        var expected = new[]
+        {
+            MajaLexer.Pub,
+            MajaLexer.Eol,
+            MajaLexer.Indent,
+            MajaLexer.Identifier,
+            MajaLexer.Dot,
+            MajaLexer.Identifier,
+            MajaLexer.Eol,
+            MajaLexer.Identifier,
+            MajaLexer.Dot,
+            MajaLexer.Identifier,
+            MajaLexer.Eol,
+            MajaLexer.Dedent
+        };
+
+        Tokens.Assert(tokens, expected);
     }
 
     [Fact]
@@ -60,13 +102,11 @@ public class LexerTests
             MajaLexer.ParenClose,
             MajaLexer.Eol,
             MajaLexer.Indent,
-            MajaLexer.Sp,
-            MajaLexer.Sp,
             MajaLexer.Ret,
             MajaLexer.Eol,
             MajaLexer.Dedent,
         };
 
-        AssertTokens(tokens, expected);
+        Tokens.Assert(tokens, expected);
     }
 }

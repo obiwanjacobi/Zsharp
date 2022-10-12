@@ -14,13 +14,49 @@ public class ModuleParserTests
     }
 
     [Fact]
-    public void DeclPub1()
+    public void DeclPubSingle()
     {
         const string code =
             "pub qualified.name" + Tokens.EOL
             ;
 
         var result = Parse(code);
-        result.pub1Decl().Should().NotBeNull();
+        result.pubDecl().Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void DeclPubMultiple()
+    {
+        const string code =
+            "pub qualified.name, qualified.name" + Tokens.EOL
+            ;
+
+        var result = Parse(code);
+        result.pubDecl().Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void DeclPubSingleIndent()
+    {
+        const string code =
+            "pub" + Tokens.EOL +
+            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            ;
+
+        var result = Parse(code);
+        result.pubDecl().Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void DeclPubMultipleIndent()
+    {
+        const string code =
+            "pub" + Tokens.EOL +
+            Tokens.INDENT1 + "qualified.name" + Tokens.EOL +
+            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            ;
+
+        var result = Parse(code);
+        result.pubDecl().Should().HaveCount(1);
     }
 }

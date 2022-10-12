@@ -39,17 +39,11 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitCompilationUnit([NotNull] MajaParser.CompilationUnitContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.pub1Decl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.pubDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPub1Decl([NotNull] MajaParser.Pub1DeclContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.pub2Decl"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPub2Decl([NotNull] MajaParser.Pub2DeclContext context);
+	Result VisitPubDecl([NotNull] MajaParser.PubDeclContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.useDecl"/>.
 	/// </summary>
@@ -369,6 +363,18 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitNameQualifiedList([NotNull] MajaParser.NameQualifiedListContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.nameQualifiedListComma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNameQualifiedListComma([NotNull] MajaParser.NameQualifiedListCommaContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.nameQualifiedListIndent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNameQualifiedListIndent([NotNull] MajaParser.NameQualifiedListIndentContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.nameIdentifier"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -380,6 +386,18 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitNameIdentifierList([NotNull] MajaParser.NameIdentifierListContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.nameIdentifierListComma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNameIdentifierListComma([NotNull] MajaParser.NameIdentifierListCommaContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.nameIdentifierListIndent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNameIdentifierListIndent([NotNull] MajaParser.NameIdentifierListIndentContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.string"/>.
 	/// </summary>
@@ -393,22 +411,16 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitNumber([NotNull] MajaParser.NumberContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.indent"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitIndent([NotNull] MajaParser.IndentContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.dedent"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitDedent([NotNull] MajaParser.DedentContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.newline"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitNewline([NotNull] MajaParser.NewlineContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.freeSpace"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFreeSpace([NotNull] MajaParser.FreeSpaceContext context);
 }
 } // namespace Maja.Compiler.Parser

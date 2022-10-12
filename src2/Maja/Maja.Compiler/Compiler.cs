@@ -54,7 +54,10 @@ internal sealed class Compiler
         {
             name = sourceName
         };
-        var lexer = new MajaLexer(stream);
+        var lexer = new MajaLexer(stream)
+        {
+            WhitespaceMode = Dentlr.WhitespaceMode.Skip
+        };
         lexer.InitializeTokens(MajaLexer.Indent, MajaLexer.Dedent, MajaLexer.Eol);
 
 #if DEBUG

@@ -1,11 +1,10 @@
 parser grammar MajaParser;
 options { tokenVocab=MajaLexer; }
 
-compilationUnit: (useDecl | pub1Decl | pub2Decl | newline)* (membersDecl | newline)*;
+compilationUnit: (useDecl | pubDecl | newline)* (membersDecl | newline)*;
 
-pub1Decl: Pub Sp+ nameQualifiedList newline;
-pub2Decl: Pub newline indent nameQualifiedList newline dedent;
-useDecl: Use Sp+ nameQualified newline;
+pubDecl: Pub freeSpace nameQualifiedList;
+useDecl: Use Sp+ nameQualified;
 
 codeBlock: (statement | membersDecl | newline)+;
 membersDecl: functionDecl | typeDecl | variableDecl;
@@ -15,14 +14,14 @@ statementFlow: statementRet;
 statementRet: Ret (Sp expression)?;
 statementExpression: expression;
 
-functionDecl: nameIdentifier Colon Sp typeParameterList? parameterList (Colon Sp type)? newline indent codeBlock dedent;
-functionDeclLocal: indent functionDecl dedent;
+functionDecl: nameIdentifier Colon Sp typeParameterList? parameterList (Colon Sp type)? newline Indent codeBlock Dedent;
+functionDeclLocal: Indent functionDecl Dedent;
 parameterList: ParenOpen (parameter (Comma Sp parameter)*)? ParenClose;
 parameter: nameIdentifier Colon Sp type;
 argumentList: ParenOpen (argument (Comma Sp argument)*)? ParenClose;
 argument: (nameIdentifier Eq)? expression;
 
-typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? (Discard newline | newline indent typeDeclMembers dedent);
+typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? (Discard newline | newline Indent typeDeclMembers Dedent);
 typeDeclMembers: ((memberEnum | memberField | memberRule) newline)+;
 type: nameIdentifier typeArgumentList?;
 typeParameterList: AngleOpen typeParameter (Comma Sp typeParameter)* AngleClose;
@@ -59,19 +58,24 @@ expressionOperatorUnaryPrefix: expressionOperatorArithmeticUnaryPrefix | express
 expressionOperatorArithmetic: Plus | Minus | Divide | Multiply | Mod | Power | Root;
 expressionOperatorArithmeticUnaryPrefix: Minus;
 expressionOperatorLogic: And | Or;
-expressionOperatorLogicUnaryPrefix: Not;
+expressionOperatorLogicUnaryPrefix: <assoc=right> Not;
 expressionOperatorComparison: Eq | Neq | AngleClose | AngleOpen | GtEq | LtEq;
 expressionOperatorBits: BitAnd | BitOr | BitXor_Imm | BitShiftL | Minus? AngleClose AngleClose | BitRollL | BitRollR;
-expressionOperatorBitsUnaryPrefix: BitNot;
-expressionOperatorAssignment: Eq;
+expressionOperatorBitsUnaryPrefix: <assoc=right> BitNot;
+expressionOperatorAssignment: <assoc=right> Eq;
 
 expressionLiteralBool: True | False;
 expressionLiteral: number | string;
 
 nameQualified: nameIdentifier (Dot nameIdentifier)+;
-nameQualifiedList: nameQualified (Comma Sp+ nameQualified)*;
+nameQualifiedList: nameQualifiedListComma | nameQualifiedListIndent;
+nameQualifiedListComma: nameQualified Sp? (Comma Sp+ nameQualified)*;
+nameQualifiedListIndent: Indent (nameQualified newline)+ Dedent;
+
 nameIdentifier: Identifier;
-nameIdentifierList: nameIdentifier (Comma Sp+ nameIdentifier)*;
+nameIdentifierList: nameQualifiedListComma | nameQualifiedListIndent;
+nameIdentifierListComma: nameIdentifier Sp? (Comma Sp+ nameIdentifier)*;
+nameIdentifierListIndent: Indent (nameIdentifier newline)+ Dedent;
 
 string: String;
 number: NumberBin 
@@ -80,6 +84,5 @@ number: NumberBin
     | NumberOct
     | Character;
 
-indent: Indent Sp+;
-dedent: Dedent;
 newline: Sp* Comment? Eol;
+freeSpace: Sp+ | Comment? Eol;

@@ -36,6 +36,21 @@ public class ModuleSyntaxTests
     }
 
     [Fact]
+    public void DeclPub2_Single()
+    {
+        const string code =
+            "pub" + Tokens.EOL +
+            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Should().NotBeNull();
+        var pubs = result.PublicExports.ToArray();
+        pubs.Should().HaveCount(1);
+        pubs[0].QualifiedNames.Should().HaveCount(1);
+    }
+
+    [Fact]
     public void UseImport()
     {
         const string code =
