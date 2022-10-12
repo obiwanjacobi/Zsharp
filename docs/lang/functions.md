@@ -1347,6 +1347,20 @@ a = compileTimeFn()
 
 See also [Compile-Time Code](../compiler/meta.md#Compile-Time-Code)
 
+> TBD
+
+Allow a compile time function to return a lambda that is used at runtime.
+This would enable to build (at compile time) a list work to do at runtime.
+Not sure how this will work technically.
+
+```csharp
+#! compileTimeFn: (): Fn<U8>
+    return () -> 42
+
+fn = compileTimeFn()
+a = fn()    // 42
+```
+
 ---
 
 ## Generator Functions
