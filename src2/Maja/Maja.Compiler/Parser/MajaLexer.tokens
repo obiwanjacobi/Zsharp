@@ -1,6 +1,6 @@
 Indent=1
 Dedent=2
-CmmentStart=3
+CommentStart=3
 CommentWarning=4
 Comment=5
 Mod=6

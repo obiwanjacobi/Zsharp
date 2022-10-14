@@ -109,4 +109,47 @@ public class LexerTests
 
         Tokens.Assert(tokens, expected);
     }
+
+    [Fact]
+    public void CommentFunctionParameters()
+    {
+        const string code =
+            "fn: (" + Tokens.EOL +
+            Tokens.INDENT1 + "#_ comment p1" + Tokens.EOL +
+            Tokens.INDENT1 + "p1: U8" + Tokens.EOL +
+            Tokens.INDENT1 + "p2: Str" + Tokens.INDENT1 + "#_ comment p2" + Tokens.EOL +
+            ")" + Tokens.EOL
+            ;
+
+        var tokens = LexTokens(code);
+        var expected = new[]
+        {
+            MajaLexer.Identifier,
+            MajaLexer.Colon,
+            MajaLexer.Sp,
+            MajaLexer.ParenOpen,
+            MajaLexer.Eol,
+            MajaLexer.Indent,
+            MajaLexer.Comment,
+            MajaLexer.Eol,
+            MajaLexer.Identifier,
+            MajaLexer.Colon,
+            MajaLexer.Sp,
+            MajaLexer.Identifier,
+            MajaLexer.Eol,
+            MajaLexer.Identifier,
+            MajaLexer.Colon,
+            MajaLexer.Sp,
+            MajaLexer.Identifier,
+            MajaLexer.Sp,
+            MajaLexer.Sp,
+            MajaLexer.Comment,
+            MajaLexer.Eol,
+            MajaLexer.Dedent,
+            MajaLexer.ParenClose,
+            MajaLexer.Eol,
+        };
+
+        Tokens.Assert(tokens, expected);
+    }
 }

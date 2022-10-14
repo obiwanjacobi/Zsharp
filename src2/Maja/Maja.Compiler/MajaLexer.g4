@@ -3,9 +3,9 @@ lexer grammar MajaLexer;
 tokens { Indent, Dedent }
 options { superClass=Dentlr.DentlrLexer; }
 
-CmmentStart: '#_';
+CommentStart: '#_';
 CommentWarning: '##';
-Comment: (CmmentStart | CommentWarning) .*? ~[\r\n]+;
+Comment: (CommentStart | CommentWarning) .*? ~[\r\n]+;
 
 Mod: 'mod';
 Pub: 'pub';

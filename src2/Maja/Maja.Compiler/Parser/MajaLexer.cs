@@ -34,7 +34,7 @@ public partial class MajaLexer : Dentlr.DentlrLexer {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
-		Indent=1, Dedent=2, CmmentStart=3, CommentWarning=4, Comment=5, Mod=6, 
+		Indent=1, Dedent=2, CommentStart=3, CommentWarning=4, Comment=5, Mod=6, 
 		Pub=7, Use=8, Self=9, Ret=10, Brk=11, Cnt=12, Loop=13, If=14, Else=15, 
 		Elif=16, True=17, False=18, In=19, Not=20, And=21, Or=22, NumberBin=23, 
 		NumberOct=24, NumberDec=25, NumberDecPrefix=26, NumberHex=27, Identifier=28, 
@@ -54,7 +54,7 @@ public partial class MajaLexer : Dentlr.DentlrLexer {
 	};
 
 	public static readonly string[] ruleNames = {
-		"CmmentStart", "CommentWarning", "Comment", "Mod", "Pub", "Use", "Self", 
+		"CommentStart", "CommentWarning", "Comment", "Mod", "Pub", "Use", "Self", 
 		"Ret", "Brk", "Cnt", "Loop", "If", "Else", "Elif", "True", "False", "In", 
 		"Not", "And", "Or", "NumberBin", "NumberOct", "NumberDec", "NumberDecPrefix", 
 		"NumberHex", "Identifier", "ALPHA", "DIGIT2", "DIGIT8", "DIGIT10", "DIGIT16", 
@@ -88,7 +88,7 @@ public partial class MajaLexer : Dentlr.DentlrLexer {
 		"' '"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, "Indent", "Dedent", "CmmentStart", "CommentWarning", "Comment", 
+		null, "Indent", "Dedent", "CommentStart", "CommentWarning", "Comment", 
 		"Mod", "Pub", "Use", "Self", "Ret", "Brk", "Cnt", "Loop", "If", "Else", 
 		"Elif", "True", "False", "In", "Not", "And", "Or", "NumberBin", "NumberOct", 
 		"NumberDec", "NumberDecPrefix", "NumberHex", "Identifier", "Character", 

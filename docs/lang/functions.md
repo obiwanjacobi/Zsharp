@@ -1703,8 +1703,23 @@ myFn: (p: U8): Bool
 
 b = fn(42)      // calls fn
 
-fn <= myFn      // syntax?
+fn <= myFn      // syntax? or is this just a local alias?
 b = fn(42)      // calls myFn
+```
+
+---
+
+> TBD
+
+What is the syntax for an empty function.
+
+```csharp
+// empty function (indent)
+emptyFn: (p1: U8): Str
+    _
+
+// function interface
+protoFn: (p1: U8): Str _
 ```
 
 ---

@@ -14,13 +14,13 @@ statementFlow: statementRet;
 statementRet: Ret (Sp expression)?;
 statementExpression: expression;
 
-functionDecl: nameIdentifier Colon freeSpace typeParameterList? parameterList (Colon Sp type)? newline Indent codeBlock Dedent;
+functionDecl: nameIdentifier Colon Sp+ typeParameterList? parameterList (Colon Sp type)? newline Indent codeBlock Dedent;
 functionDeclLocal: Indent functionDecl Dedent;
-parameterList: ParenOpen newline? (parameterListComma | parameterListIndent)? ParenClose;
+parameterList: ParenOpen (parameterListComma | newline parameterListIndent)? ParenClose;
 parameterListComma: parameter (Comma Sp parameter)*;
-parameterListIndent: Indent (parameter newline)+ Dedent;
+parameterListIndent: Indent (comment* parameter newline)+ Dedent;
 parameter: nameIdentifier Colon Sp type;
-argumentList: ParenOpen argumentListComma ParenClose;
+argumentList: ParenOpen newline? (argumentListComma | argumentListIndent) ParenClose;
 argumentListComma: argument (Comma Sp argument)*;
 argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Eq)? expression;
@@ -88,5 +88,6 @@ number: NumberBin
     | NumberOct
     | Character;
 
+comment: Sp* Comment Eol;
 newline: Sp* Comment? Eol;
-freeSpace: Sp+ | Comment? Eol;
+freeSpace: Sp+ | newline;

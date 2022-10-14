@@ -435,6 +435,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitNumber([NotNull] MajaParser.NumberContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.comment"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitComment([NotNull] MajaParser.CommentContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.newline"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
