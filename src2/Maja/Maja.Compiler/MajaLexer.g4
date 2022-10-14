@@ -3,9 +3,7 @@ lexer grammar MajaLexer;
 tokens { Indent, Dedent }
 options { superClass=Dentlr.DentlrLexer; }
 
-CommentStart: '#_';
-CommentWarning: '##';
-Comment: (CommentStart | CommentWarning) .*? ~[\r\n]+;
+Comment: ('#_' | '##') .*? ~[\r\n]+;
 
 Mod: 'mod';
 Pub: 'pub';
@@ -52,8 +50,11 @@ AngleOpen: '<';
 AngleClose: '>';
 BracketOpen: '[';
 BracketClose: ']';
+CurlyOpen: '{';
+CurlyClose: '}';
 Hash: '#';
 Colon: ':';
+SemiColon: ';';
 Dot: '.';
 Range: '..';
 Spread: '...';

@@ -20,6 +20,9 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     public SyntaxNodeBuilder(string sourceName)
         => SourceName = sourceName ?? throw new System.ArgumentNullException(nameof(sourceName));
 
+    protected override SyntaxNodeOrToken[] DefaultResult
+        => Empty;
+
     protected override SyntaxNodeOrToken[] AggregateResult(SyntaxNodeOrToken[] aggregate, SyntaxNodeOrToken[] nextResult)
     {
         if (aggregate is null) return nextResult;
@@ -34,13 +37,10 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         => new(SourceName, node.Symbol.Line, node.Symbol.Column,
             new SyntaxSpan(node.SourceInterval.a, node.SourceInterval.b));
 
-
     public override SyntaxNodeOrToken[] VisitTerminal(ITerminalNode node)
     {
         var location = Location(node);
-        // TODO: create token based on type (id) from lexer.
-        // MajaLexer.And etc.
-        SyntaxToken? token = SyntaxToken.TryNew(/*node.Symbol.Type,*/ node.GetText(), location);
+        SyntaxToken? token = SyntaxToken.TryNew(node.Symbol.Type, node.GetText(), location);
         if (token is SyntaxToken knownToken)
         {
             return new[] { new SyntaxNodeOrToken(knownToken) };
