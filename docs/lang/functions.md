@@ -664,7 +664,7 @@ isMagicValue: (self: MyEnum): Bool
 
 e = MyEnum.MagicValue
 
-b = e.IsMagicValue()        // true
+b = e.isMagicValue()        // true
 ```
 
 ---
