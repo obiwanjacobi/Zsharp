@@ -22,6 +22,24 @@ public class VariableSyntaxTests
     }
 
     [Fact]
+    public void VarTypeArgValue()
+    {
+        const string code =
+            "x: Bit<4>" + Tokens.EOL
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
+        v.Name.Text.Should().Be("x");
+        v.Type!.Name.Text.Should().Be("Bit");
+        v.Type!.Arguments.Should().HaveCount(1);
+        var arg = v.Type!.Arguments.First().As<TypeArgumentSyntax>();
+        arg.Expression.Should().NotBeNull();
+        arg.Expression!.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("4");
+    }
+
+    [Fact]
     public void VarAssignmentInfer()
     {
         const string code =

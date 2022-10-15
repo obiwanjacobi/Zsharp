@@ -2,7 +2,7 @@
 
 namespace Maja.Compiler.Syntax;
 
-public abstract partial record SyntaxNode : ISyntaxVisitable
+public abstract partial record SyntaxNode
 {
     protected SyntaxNode(string text)
         => Text = text;

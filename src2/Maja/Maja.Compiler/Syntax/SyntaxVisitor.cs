@@ -1,12 +1,9 @@
 ﻿namespace Maja.Compiler.Syntax;
 
-public interface ISyntaxVisitable
-{
-    R Accept<R>(ISyntaxVisitor<R> visitor);
-}
-
 public interface ISyntaxVisitor<R>
 {
+    R Default { get; }
+
     R OnCompilationUnit(CompilationUnitSyntax node);
     R OnPublicExport(PublicExportSyntax node);
     R OnUseImport(UseImportSyntax node);
@@ -18,6 +15,10 @@ public interface ISyntaxVisitor<R>
     R OnArgument(ArgumentSyntax node);
 
     R OnType(TypeSyntax node);
+    R OnTypeParameterGeneric(TypeParameterGenericSyntax node);
+    R OnTypeParameterTemplate(TypeParameterTemplateSyntax node);
+    R OnTypeParameterValue(TypeParameterValueSyntax node);
+    R OnTypeArgument(TypeArgumentSyntax node);
 
     R OnVariableDeclaration(VariableDeclarationSyntax node);
 
@@ -39,10 +40,12 @@ public interface ISyntaxVisitor<R>
 public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     where R: new()
 {
+    public virtual R Default => default(R);
+
     protected virtual R VisitChildren<T>(T node)
         where T: SyntaxNode
     {
-        R result = default;
+        R result = Default;
 
         foreach (var child in node.Children)
         {
@@ -78,6 +81,18 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => VisitChildren(node);
 
     public virtual R OnType(TypeSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnTypeParameterGeneric(TypeParameterGenericSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnTypeParameterTemplate(TypeParameterTemplateSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnTypeParameterValue(TypeParameterValueSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnTypeArgument(TypeArgumentSyntax node)
         => VisitChildren(node);
 
     public virtual R OnVariableDeclaration(VariableDeclarationSyntax node)

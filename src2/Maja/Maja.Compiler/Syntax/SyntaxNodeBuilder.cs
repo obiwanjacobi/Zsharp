@@ -133,12 +133,6 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             Children = Children(base.VisitCodeBlock, context)
         } )};
 
-    public override SyntaxNodeOrToken[] VisitMembersDecl(MembersDeclContext context)
-    {
-        // This level is represented by a base class.
-        return base.VisitMembersDecl(context);
-    }
-
     //
     // Functions
     //
@@ -150,17 +144,6 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             Location = Location(context),
             Children = Children(base.VisitFunctionDecl, context)
         } )};
-
-    public override SyntaxNodeOrToken[] VisitFunctionDeclLocal(FunctionDeclLocalContext context)
-    {
-        return base.VisitFunctionDeclLocal(context);
-    }
-
-    public override SyntaxNodeOrToken[] VisitParameterList(ParameterListContext context)
-    {
-        // This level is not represented.
-        return base.VisitParameterList(context);
-    }
 
     public override SyntaxNodeOrToken[] VisitParameter(ParameterContext context)
         => new[] { new SyntaxNodeOrToken(
@@ -179,11 +162,6 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         return base.VisitTypeDecl(context);
     }
 
-    public override SyntaxNodeOrToken[] VisitTypeDeclMembers(TypeDeclMembersContext context)
-    {
-        return base.VisitTypeDeclMembers(context);
-    }
-
     public override SyntaxNodeOrToken[] VisitMemberEnum(MemberEnumContext context)
     {
         return base.VisitMemberEnum(context);
@@ -199,40 +177,41 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         return base.VisitMemberRule(context);
     }
 
-    public override SyntaxNodeOrToken[] VisitTypeParameterList(TypeParameterListContext context)
-    {
-        return base.VisitTypeParameterList(context);
-    }
-
-    public override SyntaxNodeOrToken[] VisitTypeParameter(TypeParameterContext context)
-    {
-        return base.VisitTypeParameter(context);
-    }
-
-    public override SyntaxNodeOrToken[] VisitTypeArgumentList(TypeArgumentListContext context)
-    {
-        return base.VisitTypeArgumentList(context);
-    }
-
     public override SyntaxNodeOrToken[] VisitTypeArgument(TypeArgumentContext context)
-    {
-        return base.VisitTypeArgument(context);
-    }
+        => new[] { new SyntaxNodeOrToken(
+            new TypeArgumentSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitTypeArgument, context)
+            }
+            )};
+    
+    public override SyntaxNodeOrToken[] VisitTypeParameterTemplate(TypeParameterTemplateContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new TypeParameterTemplateSyntax(context.GetText())
+            {
+                Location= Location(context),
+                Children = Children(base.VisitTypeParameterTemplate, context)
+            }
+            )};
 
-    public override SyntaxNodeOrToken[] VisitParameterTemplate(ParameterTemplateContext context)
-    {
-        return base.VisitParameterTemplate(context);
-    }
+    public override SyntaxNodeOrToken[] VisitTypeParameterGeneric(TypeParameterGenericContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new TypeParameterGenericSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitTypeParameterGeneric, context)
+            }
+            )};
 
-    public override SyntaxNodeOrToken[] VisitParameterGeneric(ParameterGenericContext context)
-    {
-        return base.VisitParameterGeneric(context);
-    }
-
-    public override SyntaxNodeOrToken[] VisitParameterValue(ParameterValueContext context)
-    {
-        return base.VisitParameterValue(context);
-    }
+    public override SyntaxNodeOrToken[] VisitTypeParameterValue(TypeParameterValueContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new TypeParameterValueSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitTypeParameterValue, context)
+            }
+            )};
 
     public override SyntaxNodeOrToken[] VisitType(TypeContext context)
         => new[] { new SyntaxNodeOrToken(

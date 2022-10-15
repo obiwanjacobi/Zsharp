@@ -153,11 +153,11 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeDecl([NotNull] MajaParser.TypeDeclContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMembers"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberList"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeDeclMembers([NotNull] MajaParser.TypeDeclMembersContext context);
+	Result VisitTypeDeclMemberList([NotNull] MajaParser.TypeDeclMemberListContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.type"/>.
 	/// </summary>
@@ -171,35 +171,59 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeParameterList([NotNull] MajaParser.TypeParameterListContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeParameterListComma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeParameterListComma([NotNull] MajaParser.TypeParameterListCommaContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeParameterListIndent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeParameterListIndent([NotNull] MajaParser.TypeParameterListIndentContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.typeParameter"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitTypeParameter([NotNull] MajaParser.TypeParameterContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.parameterGeneric"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.typeParameterGeneric"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitParameterGeneric([NotNull] MajaParser.ParameterGenericContext context);
+	Result VisitTypeParameterGeneric([NotNull] MajaParser.TypeParameterGenericContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.parameterTemplate"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.typeParameterTemplate"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitParameterTemplate([NotNull] MajaParser.ParameterTemplateContext context);
+	Result VisitTypeParameterTemplate([NotNull] MajaParser.TypeParameterTemplateContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.parameterValue"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.typeParameterValue"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitParameterValue([NotNull] MajaParser.ParameterValueContext context);
+	Result VisitTypeParameterValue([NotNull] MajaParser.TypeParameterValueContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.typeArgumentList"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitTypeArgumentList([NotNull] MajaParser.TypeArgumentListContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeArgumentListComma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeArgumentListComma([NotNull] MajaParser.TypeArgumentListCommaContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeArgumentListIndent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeArgumentListIndent([NotNull] MajaParser.TypeArgumentListIndentContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.typeArgument"/>.
 	/// </summary>
