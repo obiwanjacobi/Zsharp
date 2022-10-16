@@ -26,7 +26,10 @@ argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Eq)? expression;
 
 typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? (Sp* Discard newline | newline Indent typeDeclMemberList Dedent);
-typeDeclMemberList: ((memberEnum | memberField | memberRule) newline)+;
+typeDeclMemberList: typeDeclMemberListEnum | typeDeclMemberListField | typeDeclMemberListRule;
+typeDeclMemberListEnum: (memberEnum newline)+;
+typeDeclMemberListField: (memberField newline)+;
+typeDeclMemberListRule: (memberRule newline)+;
 type: nameIdentifier typeArgumentList?;
 typeParameterList: AngleOpen (typeParameterListComma | newline typeParameterListIndent) AngleClose;
 typeParameterListComma: typeParameter (Comma Sp typeParameter)*;
@@ -41,7 +44,7 @@ typeArgumentListIndent: Indent (typeArgument newline)+ Dedent;
 typeArgument: type | expression;
 
 memberEnum: nameIdentifier (Sp Eq Sp expressionConstant)?;
-memberField: nameIdentifier Colon Sp type;
+memberField: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
 memberRule: Hash nameIdentifier Sp expressionRule;
 
 variableDecl: variableDeclTyped | variableDeclInferred;

@@ -159,6 +159,24 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeDeclMemberList([NotNull] MajaParser.TypeDeclMemberListContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberListEnum"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeDeclMemberListEnum([NotNull] MajaParser.TypeDeclMemberListEnumContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberListField"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeDeclMemberListField([NotNull] MajaParser.TypeDeclMemberListFieldContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberListRule"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeDeclMemberListRule([NotNull] MajaParser.TypeDeclMemberListRuleContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

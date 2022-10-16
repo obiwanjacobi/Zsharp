@@ -13,7 +13,7 @@ public class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
         : base(Empty)
     { }
 
-    private SyntaxTokenList(IEnumerable<SyntaxToken> tokenList)
+    protected SyntaxTokenList(IEnumerable<SyntaxToken> tokenList)
         : base(tokenList.ToList())
     { }
 

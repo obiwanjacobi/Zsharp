@@ -3,6 +3,7 @@
 public interface ISyntaxVisitor<R>
 {
     R Default { get; }
+    R AggregateResult(R aggregate, R newResult);
 
     R OnCompilationUnit(CompilationUnitSyntax node);
     R OnPublicExport(PublicExportSyntax node);
@@ -15,10 +16,16 @@ public interface ISyntaxVisitor<R>
     R OnArgument(ArgumentSyntax node);
 
     R OnType(TypeSyntax node);
+    R OnTypeDeclaration(TypeDeclarationSyntax node);
+
     R OnTypeParameterGeneric(TypeParameterGenericSyntax node);
     R OnTypeParameterTemplate(TypeParameterTemplateSyntax node);
     R OnTypeParameterValue(TypeParameterValueSyntax node);
     R OnTypeArgument(TypeArgumentSyntax node);
+
+    R OnMemberEnum(MemberEnumSyntax node);
+    R OnMemberField(MemberFieldSyntax node);
+    R OnMemberRule(MemberRuleSyntax node);
 
     R OnVariableDeclaration(VariableDeclarationSyntax node);
 
@@ -40,8 +47,6 @@ public interface ISyntaxVisitor<R>
 public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     where R: new()
 {
-    public virtual R Default => default(R);
-
     protected virtual R VisitChildren<T>(T node)
         where T: SyntaxNode
     {
@@ -56,7 +61,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         return result;
     }
 
-    protected virtual R AggregateResult(R aggregate, R newResult)
+    public virtual R Default => default;
+
+    public virtual R AggregateResult(R aggregate, R newResult)
         => newResult;
 
     public virtual R OnCompilationUnit(CompilationUnitSyntax node)
@@ -83,6 +90,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnType(TypeSyntax node)
         => VisitChildren(node);
 
+    public virtual R OnTypeDeclaration(TypeDeclarationSyntax node)
+        => VisitChildren(node);
+
     public virtual R OnTypeParameterGeneric(TypeParameterGenericSyntax node)
         => VisitChildren(node);
 
@@ -93,6 +103,15 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => VisitChildren(node);
 
     public virtual R OnTypeArgument(TypeArgumentSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnMemberEnum(MemberEnumSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnMemberField(MemberFieldSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnMemberRule(MemberRuleSyntax node)
         => VisitChildren(node);
 
     public virtual R OnVariableDeclaration(VariableDeclarationSyntax node)

@@ -37,18 +37,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         => new(SourceName, node.Symbol.Line, node.Symbol.Column,
             new SyntaxSpan(node.SourceInterval.a, node.SourceInterval.b));
 
-    public override SyntaxNodeOrToken[] VisitTerminal(ITerminalNode node)
-    {
-        var location = Location(node);
-        SyntaxToken? token = SyntaxToken.TryNew(node.Symbol.Type, node.GetText(), location);
-        if (token is SyntaxToken knownToken)
-        {
-            return new[] { new SyntaxNodeOrToken(knownToken) };
-        }
-        return Empty;
-    }
-
-    private static SyntaxNodeList Children<T>(Func<T, SyntaxNodeOrToken[]> visitChildren, T context)
+    private static IList<SyntaxNode> ChildrenInternal<T>(Func<T, SyntaxNodeOrToken[]> visitChildren, T context)
         where T: ParserRuleContext
     {
         var children = new List<SyntaxNode>();
@@ -94,7 +83,25 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         if (lastNode is not null && tokens.Count > 0)
             lastNode.TrailingTokens = SyntaxTokenList.New(tokens);
 
+        return children;
+    }
+
+    private static SyntaxNodeList Children<T>(Func<T, SyntaxNodeOrToken[]> visitChildren, T context)
+        where T : ParserRuleContext
+    {
+        var children = ChildrenInternal(visitChildren, context);
         return SyntaxNodeList.New(children);
+    }
+
+    public override SyntaxNodeOrToken[] VisitTerminal(ITerminalNode node)
+    {
+        var location = Location(node);
+        SyntaxToken? token = SyntaxToken.TryNew(node.Symbol.Type, node.GetText(), location);
+        if (token is SyntaxToken knownToken)
+        {
+            return new[] { new SyntaxNodeOrToken(knownToken) };
+        }
+        return Empty;
     }
 
     //
@@ -158,24 +165,67 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     //
 
     public override SyntaxNodeOrToken[] VisitTypeDecl(TypeDeclContext context)
-    {
-        return base.VisitTypeDecl(context);
-    }
+        => new[] { new SyntaxNodeOrToken(
+            new TypeDeclarationSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitTypeDecl, context)
+            }
+            )};
+
+    public override SyntaxNodeOrToken[] VisitTypeDeclMemberListEnum(TypeDeclMemberListEnumContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new TypeMemberListSyntax<MemberEnumSyntax>(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitTypeDeclMemberListEnum, context)
+            }
+            )};
+
+    public override SyntaxNodeOrToken[] VisitTypeDeclMemberListField([NotNull] TypeDeclMemberListFieldContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new TypeMemberListSyntax<MemberFieldSyntax>(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitTypeDeclMemberListField, context)
+            }
+            )};
+
+    public override SyntaxNodeOrToken[] VisitTypeDeclMemberListRule([NotNull] TypeDeclMemberListRuleContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new TypeMemberListSyntax<MemberRuleSyntax>(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitTypeDeclMemberListRule, context)
+            }
+            )};
 
     public override SyntaxNodeOrToken[] VisitMemberEnum(MemberEnumContext context)
-    {
-        return base.VisitMemberEnum(context);
-    }
+        => new[] { new SyntaxNodeOrToken(
+            new MemberEnumSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitMemberEnum, context)
+            }
+            )};
 
     public override SyntaxNodeOrToken[] VisitMemberField(MemberFieldContext context)
-    {
-        return base.VisitMemberField(context);
-    }
+        => new[] { new SyntaxNodeOrToken(
+            new MemberFieldSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitMemberField, context)
+            }
+            )};
 
     public override SyntaxNodeOrToken[] VisitMemberRule(MemberRuleContext context)
-    {
-        return base.VisitMemberRule(context);
-    }
+        => new[] { new SyntaxNodeOrToken(
+            new MemberRuleSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitMemberRule, context)
+            }
+            )};
 
     public override SyntaxNodeOrToken[] VisitTypeArgument(TypeArgumentContext context)
         => new[] { new SyntaxNodeOrToken(
