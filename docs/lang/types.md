@@ -1063,6 +1063,8 @@ MyStruct : BaseStruct
     addFld2: I32
 ```
 
+> This suggests inheritance and .NET does not allow inheritance on structs.
+
 But more consistent would be something like:
 
 ```csharp
@@ -1082,6 +1084,8 @@ Which is kind of confusing...
 ---
 
 ### Multiple Inheritance
+
+> Not real inheritance!
 
 Type addition.
 
