@@ -983,6 +983,8 @@ What about marker interfaces?
 > What happens if -part of- a field is accessed through another -incompatible- type? For instance: `Str|U8` write `Str="42"` and read through `U8`. (also a problem in C).
 COM-interop (.NET) disallows this.
 
+> Implement this as discriminated union? Difference with constrained variant?
+
 ```C#
 MyUnion1: Struct1 | Struct2
 MyUnion2: Struct1 | Struct2 | Struct3
