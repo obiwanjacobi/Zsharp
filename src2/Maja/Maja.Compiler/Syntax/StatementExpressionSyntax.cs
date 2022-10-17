@@ -2,9 +2,9 @@
 
 namespace Maja.Compiler.Syntax;
 
-public sealed record ArgumentSyntax : SyntaxNode
+public sealed record StatementExpressionSyntax : StatementSyntax
 {
-    public ArgumentSyntax(string text)
+    public StatementExpressionSyntax(string text)
         : base(text)
     { }
 
@@ -12,5 +12,5 @@ public sealed record ArgumentSyntax : SyntaxNode
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
-        => visitor.OnArgument(this);
+        => visitor.OnStatementExpression(this);
 }

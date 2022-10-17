@@ -72,6 +72,22 @@ public class ExpressionSyntaxTests
     public void Invocation()
     {
         const string code =
+            "fn(42)" + Tokens.EOL
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Statements.Should().HaveCount(1);
+        var s = result.Statements.First().As<StatementExpressionSyntax>();
+        var expr = s.Expression!.As<ExpressionInvocationSyntax>();
+        expr.Identifier.Text.Should().Be("fn");
+        expr.Arguments.First().Children[0]
+            .As<ExpressionLiteralSyntax>().Text.Should().Be("42");
+    }
+
+    [Fact]
+    public void InvocationAssign()
+    {
+        const string code =
             "x := fn(42)" + Tokens.EOL
             ;
 

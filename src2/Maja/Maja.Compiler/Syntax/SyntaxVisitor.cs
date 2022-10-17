@@ -30,6 +30,7 @@ public interface ISyntaxVisitor<R>
     R OnVariableDeclaration(VariableDeclarationSyntax node);
 
     R OnStatementReturn(StatementReturnSyntax node);
+    R OnStatementExpression(StatementExpressionSyntax node);
 
     R OnExpression(ExpressionSyntax node);
     R OnExpressionLiteral(ExpressionLiteralSyntax node);
@@ -118,6 +119,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => VisitChildren(node);
 
     public virtual R OnStatementReturn(StatementReturnSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnStatementExpression(StatementExpressionSyntax node)
         => VisitChildren(node);
 
     public virtual R OnExpression(ExpressionSyntax node)

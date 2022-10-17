@@ -152,4 +152,23 @@ public class LexerTests
 
         Tokens.Assert(tokens, expected);
     }
+
+    [Fact]
+    public void FunctionInvocation()
+    {
+        const string code =
+            "fn(42)" + Tokens.EOL            ;
+
+        var tokens = LexTokens(code);
+        var expected = new[]
+        {
+            MajaLexer.Identifier,
+            MajaLexer.ParenOpen,
+            MajaLexer.NumberDec,
+            MajaLexer.ParenClose,
+            MajaLexer.Eol,
+        };
+
+        Tokens.Assert(tokens, expected);
+    }
 }

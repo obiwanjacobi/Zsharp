@@ -1,7 +1,7 @@
 parser grammar MajaParser;
 options { tokenVocab=MajaLexer; }
 
-compilationUnit: (useDecl | pubDecl | newline)* (membersDecl | newline)*;
+compilationUnit: (useDecl | pubDecl | newline)* (membersDecl | statementExpression | newline)*;
 
 pubDecl: Pub freeSpace nameQualifiedList;
 useDecl: Use Sp+ nameQualified;
@@ -25,7 +25,7 @@ argumentListComma: argument (Comma Sp argument)*;
 argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Eq)? expression;
 
-typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? (Sp* Discard newline | newline Indent typeDeclMemberList Dedent);
+typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? newline Indent typeDeclMemberList Dedent;
 typeDeclMemberList: typeDeclMemberListEnum | typeDeclMemberListField | typeDeclMemberListRule;
 typeDeclMemberListEnum: (memberEnum newline)+;
 typeDeclMemberListField: (memberField newline)+;

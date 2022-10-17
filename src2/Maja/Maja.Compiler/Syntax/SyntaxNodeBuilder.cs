@@ -38,7 +38,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             new SyntaxSpan(node.SourceInterval.a, node.SourceInterval.b));
 
     private static IList<SyntaxNode> ChildrenInternal<T>(Func<T, SyntaxNodeOrToken[]> visitChildren, T context)
-        where T: ParserRuleContext
+        where T : ParserRuleContext
     {
         var children = new List<SyntaxNode>();
         var tokens = new List<SyntaxToken>();
@@ -53,7 +53,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
                 if (token is WhitespaceToken whitespace)
                 {
                     if (lastWhitespace is not null)
-                    { 
+                    {
                         tokens.Remove(lastWhitespace);
 
                         lastWhitespace = lastWhitespace.Append(whitespace);
@@ -62,7 +62,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
                     else lastWhitespace = whitespace;
                 }
                 else lastWhitespace = null;
-                
+
                 tokens.Add(token);
             }
             if (child.Node is SyntaxNode node)
@@ -235,7 +235,7 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
                 Children = Children(base.VisitTypeArgument, context)
             }
             )};
-    
+
     public override SyntaxNodeOrToken[] VisitTypeParameterTemplate(TypeParameterTemplateContext context)
         => new[] { new SyntaxNodeOrToken(
             new TypeParameterTemplateSyntax(context.GetText())
@@ -424,17 +424,14 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     // Statements
     //
 
-    public override SyntaxNodeOrToken[] VisitStatement(StatementContext context)
-    {
-        // This level is represented by a base class.
-        return base.VisitStatement(context);
-    }
-
-    public override SyntaxNodeOrToken[] VisitStatementFlow(StatementFlowContext context)
-    {
-        // This level is not represented.
-        return base.VisitStatementFlow(context);
-    }
+    public override SyntaxNodeOrToken[] VisitStatementExpression(StatementExpressionContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new StatementExpressionSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitStatementExpression, context)
+            }
+            ) };
 
     public override SyntaxNodeOrToken[] VisitStatementRet(StatementRetContext context)
         => new[] { new SyntaxNodeOrToken(
