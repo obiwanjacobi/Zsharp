@@ -9,8 +9,11 @@ useDecl: Use Sp+ nameQualified;
 codeBlock: (statement | membersDecl | newline)+;
 membersDecl: functionDecl | typeDecl | variableDecl;
 
-statement: statementFlow | statementExpression;
+statement: statementFlow | statementExpression | statementIf;
 statementFlow: statementRet;
+statementIf: If Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;
+statementElse: Else newline Indent codeBlock Dedent;
+statementElseIf: (Else freeSpace If | Elif) Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;
 statementRet: Ret (Sp expression)?;
 statementExpression: expression;
 

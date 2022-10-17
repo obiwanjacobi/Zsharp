@@ -75,6 +75,24 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitStatementFlow([NotNull] MajaParser.StatementFlowContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.statementIf"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStatementIf([NotNull] MajaParser.StatementIfContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.statementElse"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStatementElse([NotNull] MajaParser.StatementElseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.statementElseIf"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStatementElseIf([NotNull] MajaParser.StatementElseIfContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.statementRet"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

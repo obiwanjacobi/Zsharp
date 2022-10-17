@@ -424,14 +424,29 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     // Statements
     //
 
-    public override SyntaxNodeOrToken[] VisitStatementExpression(StatementExpressionContext context)
-        => new[] { new SyntaxNodeOrToken(
-            new StatementExpressionSyntax(context.GetText())
-            {
-                Location = Location(context),
-                Children = Children(base.VisitStatementExpression, context)
-            }
-            ) };
+    public override SyntaxNodeOrToken[] VisitStatementIf(StatementIfContext context)
+    => new[] { new SyntaxNodeOrToken(
+            new StatementIfSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = Children(base.VisitStatementIf, context)
+        } )};
+
+    public override SyntaxNodeOrToken[] VisitStatementElse(StatementElseContext context)
+    => new[] { new SyntaxNodeOrToken(
+            new StatementElseSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = Children(base.VisitStatementElse, context)
+        } )};
+
+    public override SyntaxNodeOrToken[] VisitStatementElseIf(StatementElseIfContext context)
+    => new[] { new SyntaxNodeOrToken(
+            new StatementElseIfSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = Children(base.VisitStatementElseIf, context)
+        } )};
 
     public override SyntaxNodeOrToken[] VisitStatementRet(StatementRetContext context)
         => new[] { new SyntaxNodeOrToken(
@@ -440,4 +455,13 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             Location = Location(context),
             Children = Children(base.VisitStatementRet, context)
         } )};
+
+    public override SyntaxNodeOrToken[] VisitStatementExpression(StatementExpressionContext context)
+        => new[] { new SyntaxNodeOrToken(
+            new StatementExpressionSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitStatementExpression, context)
+            }
+            ) };
 }
