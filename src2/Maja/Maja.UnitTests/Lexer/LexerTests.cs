@@ -14,7 +14,7 @@ public class LexerTests
     public void Pub1()
     {
         const string code =
-            "pub qualified.name" + Tokens.EOL
+            "pub qualified.name" + Tokens.Eol
             ;
 
         var tokens = LexTokens(code);
@@ -35,8 +35,8 @@ public class LexerTests
     public void Pub2()
     {
         const string code =
-            "pub" + Tokens.EOL +
-            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            "pub" + Tokens.Eol +
+            Tokens.Indent1 + "qualified.name" + Tokens.Eol
             ;
 
         var tokens = LexTokens(code);
@@ -59,9 +59,9 @@ public class LexerTests
     public void Pub3()
     {
         const string code =
-            "pub" + Tokens.EOL +
-            Tokens.INDENT1 + "qualified.name" + Tokens.EOL +
-            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            "pub" + Tokens.Eol +
+            Tokens.Indent1 + "qualified.name" + Tokens.Eol +
+            Tokens.Indent1 + "qualified.name" + Tokens.Eol
             ;
 
         var tokens = LexTokens(code);
@@ -88,8 +88,8 @@ public class LexerTests
     public void FunctionDecl()
     {
         const string code =
-            "fn: ()" + Tokens.EOL +
-            Tokens.INDENT1 + "ret" + Tokens.EOL
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
             ;
 
         var tokens = LexTokens(code);
@@ -114,11 +114,11 @@ public class LexerTests
     public void CommentFunctionParameters()
     {
         const string code =
-            "fn: (" + Tokens.EOL +
-            Tokens.INDENT1 + "#_ comment p1" + Tokens.EOL +
-            Tokens.INDENT1 + "p1: U8" + Tokens.EOL +
-            Tokens.INDENT1 + "p2: Str" + Tokens.INDENT1 + "#_ comment p2" + Tokens.EOL +
-            ")" + Tokens.EOL
+            "fn: (" + Tokens.Eol +
+            Tokens.Indent1 + "#_ comment p1" + Tokens.Eol +
+            Tokens.Indent1 + "p1: U8" + Tokens.Eol +
+            Tokens.Indent1 + "p2: Str" + Tokens.Indent1 + "#_ comment p2" + Tokens.Eol +
+            ")" + Tokens.Eol
             ;
 
         var tokens = LexTokens(code);
@@ -157,7 +157,7 @@ public class LexerTests
     public void FunctionInvocation()
     {
         const string code =
-            "fn(42)" + Tokens.EOL            ;
+            "fn(42)" + Tokens.Eol            ;
 
         var tokens = LexTokens(code);
         var expected = new[]

@@ -11,9 +11,9 @@ public class TypeSyntaxTests
     public void TypeStruct()
     {
         const string code =
-            "Type" + Tokens.EOL +
-            Tokens.INDENT1 + "fld1: U8" + Tokens.EOL +
-            Tokens.INDENT1 + "fld2: Str" + Tokens.EOL
+            "Type" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -31,9 +31,9 @@ public class TypeSyntaxTests
     public void TypeEnum()
     {
         const string code =
-            "Type" + Tokens.EOL +
-            Tokens.INDENT1 + "Option1 = 0" + Tokens.EOL +
-            Tokens.INDENT1 + "Option2 = 1" + Tokens.EOL
+            "Type" + Tokens.Eol +
+            Tokens.Indent1 + "Option1 = 0" + Tokens.Eol +
+            Tokens.Indent1 + "Option2 = 1" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);

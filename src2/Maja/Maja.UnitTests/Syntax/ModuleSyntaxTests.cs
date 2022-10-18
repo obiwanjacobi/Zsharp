@@ -11,7 +11,7 @@ public class ModuleSyntaxTests
     public void DeclPub1_Single()
     {
         const string code =
-            "pub qualified.name" + Tokens.EOL
+            "pub qualified.name" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -25,7 +25,7 @@ public class ModuleSyntaxTests
     public void DeclPub1_Multiple()
     {
         const string code =
-            "pub qualified.name1, qualified.name2" + Tokens.EOL
+            "pub qualified.name1, qualified.name2" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -39,8 +39,8 @@ public class ModuleSyntaxTests
     public void DeclPub2_Single()
     {
         const string code =
-            "pub" + Tokens.EOL +
-            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            "pub" + Tokens.Eol +
+            Tokens.Indent1 + "qualified.name" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -54,7 +54,7 @@ public class ModuleSyntaxTests
     public void UseImport()
     {
         const string code =
-            "use qualified.name" + Tokens.EOL
+            "use qualified.name" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);

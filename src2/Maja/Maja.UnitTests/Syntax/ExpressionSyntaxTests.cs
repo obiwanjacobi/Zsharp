@@ -11,7 +11,7 @@ public class ExpressionSyntaxTests
     public void ArithmeticLiteralsSingle()
     {
         const string code =
-            "x := 42 + 101" + Tokens.EOL
+            "x := 42 + 101" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -27,7 +27,7 @@ public class ExpressionSyntaxTests
     public void ArithmeticLiteralsMultiple()
     {
         const string code =
-            "x := 42 + 101 / 2 + 2112" + Tokens.EOL
+            "x := 42 + 101 / 2 + 2112" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -49,7 +49,7 @@ public class ExpressionSyntaxTests
     public void ArithmeticLiteralsPrecedence()
     {
         const string code =
-            "x := 42 + (101 / 2) + 2112" + Tokens.EOL
+            "x := 42 + (101 / 2) + 2112" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -72,7 +72,7 @@ public class ExpressionSyntaxTests
     public void Invocation()
     {
         const string code =
-            "fn(42)" + Tokens.EOL
+            "fn(42)" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -88,7 +88,7 @@ public class ExpressionSyntaxTests
     public void InvocationAssign()
     {
         const string code =
-            "x := fn(42)" + Tokens.EOL
+            "x := fn(42)" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);

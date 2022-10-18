@@ -17,7 +17,7 @@ public class ModuleParserTests
     public void DeclPubSingle()
     {
         const string code =
-            "pub qualified.name" + Tokens.EOL
+            "pub qualified.name" + Tokens.Eol
             ;
 
         var result = Parse(code);
@@ -28,7 +28,7 @@ public class ModuleParserTests
     public void DeclPubMultiple()
     {
         const string code =
-            "pub qualified.name, qualified.name" + Tokens.EOL
+            "pub qualified.name, qualified.name" + Tokens.Eol
             ;
 
         var result = Parse(code);
@@ -39,8 +39,8 @@ public class ModuleParserTests
     public void DeclPubSingleIndent()
     {
         const string code =
-            "pub" + Tokens.EOL +
-            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            "pub" + Tokens.Eol +
+            Tokens.Indent1 + "qualified.name" + Tokens.Eol
             ;
 
         var result = Parse(code);
@@ -51,9 +51,9 @@ public class ModuleParserTests
     public void DeclPubMultipleIndent()
     {
         const string code =
-            "pub" + Tokens.EOL +
-            Tokens.INDENT1 + "qualified.name" + Tokens.EOL +
-            Tokens.INDENT1 + "qualified.name" + Tokens.EOL
+            "pub" + Tokens.Eol +
+            Tokens.Indent1 + "qualified.name" + Tokens.Eol +
+            Tokens.Indent1 + "qualified.name" + Tokens.Eol
             ;
 
         var result = Parse(code);

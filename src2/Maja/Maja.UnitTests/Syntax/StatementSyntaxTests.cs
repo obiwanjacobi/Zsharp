@@ -11,9 +11,9 @@ public class StatementSyntaxTests
     public void If()
     {
         const string code =
-            "fn: ()" + Tokens.EOL +
-            Tokens.INDENT1 + "if true" + Tokens.EOL +
-            Tokens.INDENT2 + "ret" + Tokens.EOL
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "if true" + Tokens.Eol +
+            Tokens.Indent2 + "ret" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -29,11 +29,11 @@ public class StatementSyntaxTests
     public void IfElse()
     {
         const string code =
-            "fn: ()" + Tokens.EOL +
-            Tokens.INDENT1 + "if true" + Tokens.EOL +
-            Tokens.INDENT2 + "ret" + Tokens.EOL +
-            Tokens.INDENT1 + "else" + Tokens.EOL +
-            Tokens.INDENT2 + "ret" + Tokens.EOL
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "if true" + Tokens.Eol +
+            Tokens.Indent2 + "ret" + Tokens.Eol +
+            Tokens.Indent1 + "else" + Tokens.Eol +
+            Tokens.Indent2 + "ret" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -51,11 +51,11 @@ public class StatementSyntaxTests
     public void IfElseIf()
     {
         const string code =
-            "fn: ()" + Tokens.EOL +
-            Tokens.INDENT1 + "if true" + Tokens.EOL +
-            Tokens.INDENT2 + "ret" + Tokens.EOL +
-            Tokens.INDENT1 + "elif false" + Tokens.EOL +
-            Tokens.INDENT2 + "ret" + Tokens.EOL
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "if true" + Tokens.Eol +
+            Tokens.Indent2 + "ret" + Tokens.Eol +
+            Tokens.Indent1 + "elif false" + Tokens.Eol +
+            Tokens.Indent2 + "ret" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);

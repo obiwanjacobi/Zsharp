@@ -11,8 +11,8 @@ public class FunctionSyntaxTests
     public void Fn()
     {
         const string code =
-            "fn: ()" + Tokens.EOL +
-            Tokens.INDENT1 + "ret" + Tokens.EOL
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -28,8 +28,8 @@ public class FunctionSyntaxTests
     public void FnParams()
     {
         const string code =
-            "fn: (p: U8)" + Tokens.EOL +
-            Tokens.INDENT1 + "ret" + Tokens.EOL
+            "fn: (p: U8)" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -46,11 +46,11 @@ public class FunctionSyntaxTests
     public void FnParamsIndent()
     {
         const string code =
-            "fn: (" + Tokens.EOL +
-            Tokens.INDENT1 + "p1: U8" + Tokens.EOL +
-            Tokens.INDENT1 + "p2: Str" + Tokens.EOL +
-            ")" + Tokens.EOL +
-            Tokens.INDENT1 + "ret" + Tokens.EOL
+            "fn: (" + Tokens.Eol +
+            Tokens.Indent1 + "p1: U8" + Tokens.Eol +
+            Tokens.Indent1 + "p2: Str" + Tokens.Eol +
+            ")" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -70,8 +70,8 @@ public class FunctionSyntaxTests
     public void FnRetVal()
     {
         const string code =
-            "fn: (): U8" + Tokens.EOL +
-            Tokens.INDENT1 + "ret 42" + Tokens.EOL
+            "fn: (): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret 42" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);

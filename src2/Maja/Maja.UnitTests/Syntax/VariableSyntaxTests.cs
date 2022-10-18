@@ -11,7 +11,7 @@ public class VariableSyntaxTests
     public void VarType()
     {
         const string code =
-            "x: U8" + Tokens.EOL
+            "x: U8" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -25,7 +25,7 @@ public class VariableSyntaxTests
     public void VarTypeArgs()
     {
         const string code =
-            "x: Bit<U8, 4>" + Tokens.EOL
+            "x: Bit<U8, 4>" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -46,7 +46,7 @@ public class VariableSyntaxTests
     public void VarAssignmentInfer()
     {
         const string code =
-            "x := 42" + Tokens.EOL
+            "x := 42" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);

@@ -6,10 +6,10 @@ namespace Maja.UnitTests;
 
 internal static class Tokens
 {
-    public const string EOL = "\n";
-    public const string INDENT1 = "  ";
-    public const string INDENT2 = "    ";
-    public const string INDENT3 = "      ";
+    public const string Eol = "\n";
+    public const string Indent1 = "  ";
+    public const string Indent2 = "    ";
+    public const string Indent3 = "      ";
 
     public static void Assert(IEnumerable<IToken> lexedTokens, int[] expectedTokens)
     {

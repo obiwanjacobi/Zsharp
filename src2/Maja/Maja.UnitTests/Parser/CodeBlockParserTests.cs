@@ -17,7 +17,7 @@ public class CodeBlockParserTests
     public void CommentSingle()
     {
         const string code =
-            "#_ comment" + Tokens.EOL
+            "#_ comment" + Tokens.Eol
             ;
 
         var result = Parse(code);
@@ -30,9 +30,9 @@ public class CodeBlockParserTests
     public void CommentMultiple()
     {
         const string code =
-            "#_ comment 1" + Tokens.EOL +
-            "#_ comment 2" + Tokens.EOL +
-            "## warning" + Tokens.EOL
+            "#_ comment 1" + Tokens.Eol +
+            "#_ comment 2" + Tokens.Eol +
+            "## warning" + Tokens.Eol
             ;
 
         var result = Parse(code);
@@ -45,12 +45,12 @@ public class CodeBlockParserTests
     public void CommentFunctionParameters()
     {
         const string code =
-            "fn: (" + Tokens.EOL +
-            Tokens.INDENT1 + "#_ comment p1" + Tokens.EOL +
-            Tokens.INDENT1 + "p1: U8" + Tokens.EOL +
-            Tokens.INDENT1 + "p2: Str" + Tokens.INDENT1 + "#_ comment p2" + Tokens.EOL +
-            ")" + Tokens.EOL +
-            Tokens.INDENT1 + "ret" + Tokens.EOL
+            "fn: (" + Tokens.Eol +
+            Tokens.Indent1 + "#_ comment p1" + Tokens.Eol +
+            Tokens.Indent1 + "p1: U8" + Tokens.Eol +
+            Tokens.Indent1 + "p2: Str" + Tokens.Indent1 + "#_ comment p2" + Tokens.Eol +
+            ")" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
             ;
 
         var result = Parse(code);
