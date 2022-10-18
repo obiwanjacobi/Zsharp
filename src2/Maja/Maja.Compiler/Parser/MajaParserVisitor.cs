@@ -267,6 +267,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeArgument([NotNull] MajaParser.TypeArgumentContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.memberEnumValue"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMemberEnumValue([NotNull] MajaParser.MemberEnumValueContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.memberEnum"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

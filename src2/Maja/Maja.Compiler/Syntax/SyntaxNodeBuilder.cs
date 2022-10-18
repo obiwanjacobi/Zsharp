@@ -209,6 +209,15 @@ internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             }
             )};
 
+    public override SyntaxNodeOrToken[] VisitMemberEnumValue([NotNull] MemberEnumValueContext context)
+    => new[] { new SyntaxNodeOrToken(
+            new MemberEnumSyntax(context.GetText())
+            {
+                Location = Location(context),
+                Children = Children(base.VisitMemberEnumValue, context)
+            }
+            )};
+
     public override SyntaxNodeOrToken[] VisitMemberField(MemberFieldContext context)
         => new[] { new SyntaxNodeOrToken(
             new MemberFieldSyntax(context.GetText())

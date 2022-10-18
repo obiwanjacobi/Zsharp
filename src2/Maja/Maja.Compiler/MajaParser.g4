@@ -29,8 +29,8 @@ argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Eq)? expression;
 
 typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? newline Indent typeDeclMemberList Dedent;
-typeDeclMemberList: typeDeclMemberListEnum | typeDeclMemberListField | typeDeclMemberListRule;
-typeDeclMemberListEnum: (memberEnum newline)+;
+typeDeclMemberList: (typeDeclMemberListEnum | typeDeclMemberListField | typeDeclMemberListRule)+;
+typeDeclMemberListEnum: (memberEnumValue newline)+ | ((memberEnum (Comma freeSpace memberEnum)*)+ newline);
 typeDeclMemberListField: (memberField newline)+;
 typeDeclMemberListRule: (memberRule newline)+;
 type: nameIdentifier typeArgumentList?;
@@ -46,7 +46,8 @@ typeArgumentListComma: typeArgument (Comma Sp typeArgument)*;
 typeArgumentListIndent: Indent (typeArgument newline)+ Dedent;
 typeArgument: type | expression;
 
-memberEnum: nameIdentifier (Sp Eq Sp expressionConstant)?;
+memberEnumValue: nameIdentifier (Sp Eq Sp expressionConstant)?;
+memberEnum: nameIdentifier;
 memberField: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
 memberRule: Hash nameIdentifier Sp expressionRule;
 
@@ -64,7 +65,7 @@ expression:
     | nameIdentifier                                        #expressionIdentifier
     ;
 expressionConstant: expressionLiteral | expressionLiteralBool;
-expressionRule:;
+expressionRule: Hash Identifier expression;
 
 expressionOperatorBinary: expressionOperatorArithmetic | expressionOperatorLogic | expressionOperatorComparison | expressionOperatorBits;
 expressionOperatorUnaryPrefix: expressionOperatorArithmeticUnaryPrefix | expressionOperatorLogicUnaryPrefix | expressionOperatorBitsUnaryPrefix;
