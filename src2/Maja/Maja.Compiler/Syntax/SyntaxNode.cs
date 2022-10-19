@@ -2,14 +2,23 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Base class for all nodes in the SyntaxTree.
+/// </summary>
 public abstract partial record SyntaxNode
 {
     protected SyntaxNode(string text)
         => Text = text;
 
+    /// <summary>
+    /// The source text this node represents.
+    /// </summary>
     public string Text { get; }
 
     private SyntaxNode? _parent;
+    /// <summary>
+    /// The parent of this node. Only the root node has no parent.
+    /// </summary>
     public SyntaxNode? Parent
     {
         get { return _parent!; }
@@ -19,10 +28,16 @@ public abstract partial record SyntaxNode
             _parent = value;
         }
     }
-    
+
+    /// <summary>
+    /// Source location fo this syntax node.
+    /// </summary>
     public SyntaxLocation Location { get; init; }
-    
+
     private SyntaxNodeList? _nodeList;
+    /// <summary>
+    /// A list of child nodes contained in this node.
+    /// </summary>
     public SyntaxNodeList Children
     {
         get
@@ -38,9 +53,16 @@ public abstract partial record SyntaxNode
         }
     }
 
-    public bool HasLeadingTokens => _leadingTokens is not null;
+    /// <summary>
+    /// Indicates if the LeadingTokens can be called.
+    /// </summary>
+    public bool HasLeadingTokens
+        => _leadingTokens is not null;
 
     private SyntaxTokenList? _leadingTokens;
+    /// <summary>
+    /// A list of tokens preceding this syntax node.
+    /// </summary>
     public SyntaxTokenList LeadingTokens
     {
         get
@@ -56,9 +78,16 @@ public abstract partial record SyntaxNode
         }
     }
 
-    public bool HasTrailingTokens => _trailingTokens is not null;
+    /// <summary>
+    /// Indicates if the TrailingTokens can be called.
+    /// </summary>
+    public bool HasTrailingTokens
+        => _trailingTokens is not null;
 
     private SyntaxTokenList? _trailingTokens;
+    /// <summary>
+    /// A list of tokens following this syntax node.
+    /// </summary>
     public SyntaxTokenList TrailingTokens
     {
         get

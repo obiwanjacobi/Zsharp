@@ -3,22 +3,34 @@ using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Common base class for members of a type declaration.
+/// </summary>
 public abstract record TypeMemberSyntax : SyntaxNode
 {
     public TypeMemberSyntax(string text)
         : base(text)
     { }
 
+    /// <summary>
+    /// The name or identifier of the member.
+    /// </summary>
     public NameSyntax Name
         => Children.OfType<NameSyntax>().Single();
 }
 
+/// <summary>
+/// Represents a type enum member.
+/// </summary>
 public sealed record MemberEnumSyntax : TypeMemberSyntax
 {
     public MemberEnumSyntax(string text)
         : base(text)
     { }
 
+    /// <summary>
+    /// The enum value expression, if specified.
+    /// </summary>
     public ExpressionConstantSyntax? Expression
         => Children.OfType<ExpressionConstantSyntax>().SingleOrDefault();
 
@@ -26,15 +38,24 @@ public sealed record MemberEnumSyntax : TypeMemberSyntax
         => visitor.OnMemberEnum(this);
 }
 
+/// <summary>
+/// Represent a type field member.
+/// </summary>
 public sealed record MemberFieldSyntax : TypeMemberSyntax
 {
     public MemberFieldSyntax(string text)
         : base(text)
     { }
 
+    /// <summary>
+    /// The type of the field.
+    /// </summary>
     public TypeSyntax Type
         => Children.OfType<TypeSyntax>().Single();
 
+    /// <summary>
+    /// The field initialization expression.
+    /// </summary>
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 
@@ -42,6 +63,9 @@ public sealed record MemberFieldSyntax : TypeMemberSyntax
         => visitor.OnMemberField(this);
 }
 
+/// <summary>
+/// Represents a validation rule of a type declaration.
+/// </summary>
 public sealed record MemberRuleSyntax : TypeMemberSyntax
 {
     public MemberRuleSyntax(string text)
@@ -55,7 +79,10 @@ public sealed record MemberRuleSyntax : TypeMemberSyntax
         => visitor.OnMemberRule(this);
 }
 
-
+/// <summary>
+/// A typed list of type members.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public sealed record TypeMemberListSyntax<T> : SyntaxNode
     where T : TypeMemberSyntax
 {

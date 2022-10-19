@@ -7,10 +7,17 @@ using Maja.Compiler.Parser;
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// A common type for all sytnax tokens.
+/// </summary>
+/// <param name="Text">The textual representation of the token.</param>
 public abstract record SyntaxToken(string Text)
 {
     private SyntaxNode? _parent;
-    public SyntaxNode? Parent
+    /// <summary>
+    /// The parent syntax node of this token.
+    /// </summary>
+    public SyntaxNode Parent
     {
         get { return _parent!; }
         internal set
@@ -20,8 +27,18 @@ public abstract record SyntaxToken(string Text)
         }
     }
 
+    /// <summary>
+    /// The source location of this syntax token.
+    /// </summary>
     public SyntaxLocation Location { get; init; }
 
+    /// <summary>
+    /// Creates a new token based on the tokenId.
+    /// </summary>
+    /// <param name="tokenId">The (Lexer) token id.</param>
+    /// <param name="text">The textual representation of the token.</param>
+    /// <param name="location">The source location of the token.</param>
+    /// <returns>Returns null if the token could not be created.</returns>
     public static SyntaxToken? TryNew(int tokenId, string text, SyntaxLocation location)
     {
         if (NewlineToken.IsValid(tokenId))
@@ -82,6 +99,9 @@ public abstract record SyntaxToken(string Text)
     }
 }
 
+/// <summary>
+/// Represents a keyword token.
+/// </summary>
 public sealed record KeywordToken : SyntaxToken
 {
     public KeywordToken(string Text)
@@ -114,6 +134,9 @@ public sealed record KeywordToken : SyntaxToken
         => Tokens.Contains(tokenId);
 }
 
+/// <summary>
+/// Represents a whitespace token.
+/// </summary>
 public sealed record WhitespaceToken : SyntaxToken
 {
     public WhitespaceToken(string Text)
@@ -130,6 +153,9 @@ public sealed record WhitespaceToken : SyntaxToken
         => tokenId == MajaLexer.Sp;
 }
 
+/// <summary>
+/// Represents a newline token.
+/// </summary>
 public sealed record NewlineToken : SyntaxToken
 {
     public NewlineToken(string Text)
@@ -140,7 +166,9 @@ public sealed record NewlineToken : SyntaxToken
         => tokenId == MajaLexer.Eol;
 }
 
-// .,;:
+/// <summary>
+/// Represents a punctuation token: .,;:
+/// </summary>
 public sealed record PunctuationToken : SyntaxToken
 {
     public PunctuationToken(string Text)
@@ -148,10 +176,13 @@ public sealed record PunctuationToken : SyntaxToken
     { }
 
     public static bool IsValid(int tokenId)
-        => tokenId is MajaLexer.Dot or MajaLexer.Comma 
+        => tokenId is MajaLexer.Dot or MajaLexer.Comma
             or MajaLexer.Colon or MajaLexer.SemiColon;
 }
 
+/// <summary>
+/// Represents a parenthesis token: ()
+/// </summary>
 public sealed record RoundBracketToken : SyntaxToken
 {
     public RoundBracketToken(string Text)
@@ -162,6 +193,9 @@ public sealed record RoundBracketToken : SyntaxToken
         => tokenId is MajaLexer.ParenOpen or MajaLexer.ParenClose;
 }
 
+/// <summary>
+/// Represents the token: []
+/// </summary>
 public sealed record SquareBracketToken : SyntaxToken
 {
     public SquareBracketToken(string Text)
@@ -172,6 +206,9 @@ public sealed record SquareBracketToken : SyntaxToken
         => tokenId is MajaLexer.BracketOpen or MajaLexer.BracketClose;
 }
 
+/// <summary>
+/// Represents the token: {}
+/// </summary>
 public sealed record CurlyBracketToken : SyntaxToken
 {
     public CurlyBracketToken(string Text)
@@ -182,6 +219,9 @@ public sealed record CurlyBracketToken : SyntaxToken
         => tokenId is MajaLexer.CurlyOpen or MajaLexer.CurlyClose;
 }
 
+/// <summary>
+/// Represents the token: <>
+/// </summary>
 public sealed record AngleBracketToken : SyntaxToken
 {
     public AngleBracketToken(string Text)
@@ -192,12 +232,15 @@ public sealed record AngleBracketToken : SyntaxToken
         => tokenId is MajaLexer.AngleOpen or MajaLexer.AngleClose;
 }
 
+/// <summary>
+/// Represents a single line comment token.
+/// </summary>
 public sealed record CommentToken : SyntaxToken
 {
     public CommentToken(string Text)
         : base(Text)
     { }
 
-   public static bool IsValid(int tokenId)
-        => tokenId == MajaLexer.Comment;
+    public static bool IsValid(int tokenId)
+         => tokenId == MajaLexer.Comment;
 }

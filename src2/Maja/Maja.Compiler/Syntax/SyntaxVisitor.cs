@@ -1,5 +1,9 @@
 ﻿namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// The syntax node visitor interface.
+/// </summary>
+/// <typeparam name="R">The return type of all the VisitXxxx methods.</typeparam>
 public interface ISyntaxVisitor<R>
 {
     R Default { get; }
@@ -49,6 +53,10 @@ public interface ISyntaxVisitor<R>
 }
 
 #nullable disable
+/// <summary>
+/// A base class that walks the node hierarchy.
+/// </summary>
+/// <typeparam name="R">The return type of the VisitXxxx methods.</typeparam>
 public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     where R : new()
 {

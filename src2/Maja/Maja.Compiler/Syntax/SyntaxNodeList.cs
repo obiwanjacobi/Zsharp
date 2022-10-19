@@ -4,7 +4,10 @@ using System.Diagnostics;
 
 namespace Maja.Compiler.Syntax;
 
-public class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
+/// <summary>
+/// A list of (child) syntax nodes.
+/// </summary>
+public sealed class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
 {
     private static readonly List<SyntaxNode> Empty = new();
 
@@ -16,12 +19,20 @@ public class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
         : base(nodeList)
     { }
 
+    /// <summary>
+    /// Returns a new instance for the specified nodeList.
+    /// </summary>
+    /// <param name="nodeList">Can be null.</param>
+    /// <returns>Never returns null.</returns>
     internal static SyntaxNodeList New(IList<SyntaxNode>? nodeList = null)
         => nodeList is not null && nodeList.Count > 0
             ? new SyntaxNodeList(nodeList)
             : new SyntaxNodeList();
 
     private SyntaxNode? _parent;
+    /// <summary>
+    /// The syntax node this list is part of and will tag all nodes added.
+    /// </summary>
     public SyntaxNode Parent
     {
         get

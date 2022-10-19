@@ -12,12 +12,12 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Visits the Antlr parse tree context objects and generates the Syntax Model instances.
 /// </summary>
-internal sealed class SyntaxNodeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToken[]>
+internal sealed class ParserNodeConvertor : MajaParserBaseVisitor<SyntaxNodeOrToken[]>
 {
     private static readonly SyntaxNodeOrToken[] Empty = Array.Empty<SyntaxNodeOrToken>();
     private readonly string SourceName;
 
-    public SyntaxNodeBuilder(string sourceName)
+    public ParserNodeConvertor(string sourceName)
         => SourceName = sourceName ?? throw new System.ArgumentNullException(nameof(sourceName));
 
     protected override SyntaxNodeOrToken[] DefaultResult

@@ -2,15 +2,24 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Represents a type argument.
+/// </summary>
 public sealed record TypeArgumentSyntax : SyntaxNode
 {
     public TypeArgumentSyntax(string text)
         : base(text)
     { }
 
+    /// <summary>
+    /// The type specified as the argument.
+    /// </summary>
     public TypeSyntax? Type
         => Children.OfType<TypeSyntax>().SingleOrDefault();
 
+    /// <summary>
+    /// The 'type' value expression as the argument.
+    /// </summary>
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 

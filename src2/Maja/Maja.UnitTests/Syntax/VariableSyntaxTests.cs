@@ -33,11 +33,11 @@ public class VariableSyntaxTests
         var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
         v.Name.Text.Should().Be("x");
         v.Type!.Name.Text.Should().Be("Bit");
-        v.Type!.Arguments.Should().HaveCount(2);
-        var arg = v.Type!.Arguments.First().As<TypeArgumentSyntax>();
+        v.Type!.TypeArguments.Should().HaveCount(2);
+        var arg = v.Type!.TypeArguments.First().As<TypeArgumentSyntax>();
         arg.Type.Should().NotBeNull();
         arg.Type!.Name.Text.Should().Be("U8");
-        arg = v.Type!.Arguments.Skip(1).First().As<TypeArgumentSyntax>();
+        arg = v.Type!.TypeArguments.Skip(1).First().As<TypeArgumentSyntax>();
         arg.Expression.Should().NotBeNull();
         arg.Expression!.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("4");
     }

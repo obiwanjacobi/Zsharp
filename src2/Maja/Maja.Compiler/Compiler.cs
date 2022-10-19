@@ -26,7 +26,7 @@ internal sealed class Compiler
         _inputStream.Load(new StringReader(code), AntlrInputStream.InitialBufferSize, AntlrInputStream.ReadBufferSize);
         _tokens.Reset();
 
-        var builder = new SyntaxNodeBuilder(sourceName);
+        var builder = new ParserNodeConvertor(sourceName);
         var cu = _parser.compilationUnit();
         var nodes = builder.VisitCompilationUnit(cu);
         return (CompilationUnitSyntax)nodes[0].Node!;

@@ -2,19 +2,31 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Common base class for type parameters.
+/// </summary>
 public abstract record TypeParameterSyntax : SyntaxNode
 {
     protected TypeParameterSyntax(string text)
         : base(text)
     { }
 
+    /// <summary>
+    /// The name of the type parameter.
+    /// </summary>
     public NameSyntax Name
         => Children.OfType<NameSyntax>().Single();
 
+    /// <summary>
+    /// The type of the parameter, if specified.
+    /// </summary>
     public TypeSyntax? Type
         => Children.OfType<TypeSyntax>().SingleOrDefault();
 }
 
+/// <summary>
+/// A generic type parameter (.NET).
+/// </summary>
 public sealed record TypeParameterGenericSyntax : TypeParameterSyntax
 {
     public TypeParameterGenericSyntax(string text)
@@ -25,6 +37,9 @@ public sealed record TypeParameterGenericSyntax : TypeParameterSyntax
         => visitor.OnTypeParameterGeneric(this);
 }
 
+/// <summary>
+/// A template type parameter (#)
+/// </summary>
 public sealed record TypeParameterTemplateSyntax : TypeParameterSyntax
 {
     public TypeParameterTemplateSyntax(string text)
@@ -35,6 +50,9 @@ public sealed record TypeParameterTemplateSyntax : TypeParameterSyntax
         => visitor.OnTypeParameterTemplate(this);
 }
 
+/// <summary>
+/// A scalar value type parameter.
+/// </summary>
 public sealed record TypeParameterValueSyntax : TypeParameterSyntax
 {
     public TypeParameterValueSyntax(string text)

@@ -2,6 +2,9 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// An expression who's value can be determined at compile time.
+/// </summary>
 public abstract record ExpressionConstantSyntax : ExpressionSyntax
 {
     protected ExpressionConstantSyntax(string text)
@@ -9,15 +12,24 @@ public abstract record ExpressionConstantSyntax : ExpressionSyntax
     { }
 }
 
+/// <summary>
+/// An expression that represents a literal value.
+/// </summary>
 public record ExpressionLiteralSyntax : ExpressionConstantSyntax
 {
     public ExpressionLiteralSyntax(string text)
         : base(text)
     { }
 
+    /// <summary>
+    /// Set when the literal expression represents a number value.
+    /// </summary>
     public LiteralNumberSyntax? LiteralNumber
         => Children.OfType<LiteralNumberSyntax>().SingleOrDefault();
 
+    /// <summary>
+    /// Set when the literal expression represents a string value.
+    /// </summary>
     public LiteralStringSyntax? LiteralString
         => Children.OfType<LiteralStringSyntax>().SingleOrDefault();
 
@@ -25,6 +37,9 @@ public record ExpressionLiteralSyntax : ExpressionConstantSyntax
         => visitor.OnExpressionLiteral(this);
 }
 
+/// <summary>
+/// An expression that represents a literal boolean value.
+/// </summary>
 public record ExpressionLiteralBoolSyntax : ExpressionConstantSyntax
 {
     public ExpressionLiteralBoolSyntax(string text)
@@ -33,6 +48,9 @@ public record ExpressionLiteralBoolSyntax : ExpressionConstantSyntax
         Value = text == "true";
     }
 
+    /// <summary>
+    /// The parsed boolean value.
+    /// </summary>
     public bool Value { get; }
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)

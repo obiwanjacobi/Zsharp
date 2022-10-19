@@ -20,3 +20,8 @@ It implements a `Location` property that represents where in the source code the
 ### CompilationUnitSyntax
 
 The `CompilationUnitSyntax` is the root of the syntax tree.
+
+### SyntaxToken
+
+A token that is not central to understanding the code.
+`SyntaxToken`s are added to `SyntaxNode`s either in the `LeadingTokens` or the `TrailingTokens` list based on where they occurred.

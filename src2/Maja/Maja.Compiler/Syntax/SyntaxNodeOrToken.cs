@@ -1,5 +1,8 @@
 ﻿namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// A wrapper for either a SyntaxNode or a SyntaxToken.
+/// </summary>
 internal record struct SyntaxNodeOrToken
 {
     public SyntaxNodeOrToken(SyntaxNode node)

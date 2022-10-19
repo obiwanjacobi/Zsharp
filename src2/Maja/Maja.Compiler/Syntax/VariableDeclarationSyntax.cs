@@ -2,32 +2,51 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Common base class for a variable declaration.
+/// </summary>
 public abstract record VariableDeclarationSyntax : MemberDeclarationSyntax
 {
     public VariableDeclarationSyntax(string text)
         : base(text)
     { }
 
+    /// <summary>
+    /// The name or identifier of the variable.
+    /// </summary>
     public NameSyntax Name
         => Children.OfType<NameSyntax>().Single();
 
+    /// <summary>
+    /// The initialization expression, if specified.
+    /// </summary>
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 }
 
+/// <summary>
+/// Represents a variable declaration with an explicit type.
+/// </summary>
 public sealed record VariableDeclarationTypedSyntax : VariableDeclarationSyntax
 {
     public VariableDeclarationTypedSyntax(string text)
         : base(text)
     { }
 
-    public TypeSyntax? Type
-        => Children.OfType<TypeSyntax>().SingleOrDefault();
+    /// <summary>
+    /// The type specified for the variable.
+    /// </summary>
+    public TypeSyntax Type
+        => Children.OfType<TypeSyntax>().Single();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnVariableDeclarationTyped(this);
 }
 
+/// <summary>
+/// Represents a variable declaration where it's type is to be inferred.
+/// Expression is set.
+/// </summary>
 public sealed record VariableDeclarationInferredSyntax : VariableDeclarationSyntax
 {
     public VariableDeclarationInferredSyntax(string text)

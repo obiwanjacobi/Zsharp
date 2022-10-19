@@ -5,7 +5,10 @@ using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
-public class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
+/// <summary>
+/// A list of syntax tokens.
+/// </summary>
+public sealed class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
 {
     private static readonly List<SyntaxToken> Empty = new();
 
@@ -13,16 +16,24 @@ public class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
         : base(Empty)
     { }
 
-    protected SyntaxTokenList(IEnumerable<SyntaxToken> tokenList)
+    private SyntaxTokenList(IEnumerable<SyntaxToken> tokenList)
         : base(tokenList.ToList())
     { }
 
-    internal static SyntaxTokenList New(IList<SyntaxToken>? tokenList = null)
+    /// <summary>
+    /// Creates a new instance for the specified tokenList.
+    /// </summary>
+    /// <param name="tokenList">Can be null.</param>
+    /// <returns>Never returns null.</returns>
+    internal static SyntaxTokenList New(IList<SyntaxToken>? tokenList)
         => tokenList is not null
             ? new SyntaxTokenList(tokenList)
             : new SyntaxTokenList();
 
     private SyntaxNode? _parent;
+    /// <summary>
+    /// The parent syntax node this list belongs to.
+    /// </summary>
     public SyntaxNode Parent
     {
         get

@@ -2,12 +2,18 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Represents a use import statement.
+/// </summary>
 public sealed record UseImportSyntax : SyntaxNode
 {
     public UseImportSyntax(string text)
         : base(text)
     { }
 
+    /// <summary>
+    /// The qualified name of the import.
+    /// </summary>
     public QualifiedNameSyntax QualifiedName
         => Children.OfType<QualifiedNameSyntax>().Single();
 

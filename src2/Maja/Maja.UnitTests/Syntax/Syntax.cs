@@ -13,7 +13,7 @@ namespace Maja.UnitTests.Syntax
             //if (errs.Any())
             //    throw new Exception(String.Join(Environment.NewLine, errs));
 
-            var builder = new SyntaxNodeBuilder(nameof(ModuleSyntaxTests));
+            var builder = new ParserNodeConvertor(nameof(ModuleSyntaxTests));
             var syntax = builder.VisitCompilationUnit(parseTree);
             return (CompilationUnitSyntax)syntax[0].Node!;
         }

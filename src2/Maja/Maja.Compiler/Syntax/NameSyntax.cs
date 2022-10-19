@@ -1,5 +1,8 @@
 ﻿namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Represents a name or identifier.
+/// </summary>
 public record NameSyntax : SyntaxNode
 {
     public NameSyntax(string name)
@@ -10,6 +13,9 @@ public record NameSyntax : SyntaxNode
         => visitor.OnName(this);
 }
 
+/// <summary>
+/// Represents a dot name or identifier.
+/// </summary>
 public sealed record QualifiedNameSyntax : NameSyntax
 {
     public QualifiedNameSyntax(string name)

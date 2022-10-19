@@ -2,12 +2,18 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Represents the ret statement.
+/// </summary>
 public sealed record StatementReturnSyntax : StatementSyntax
 {
     public StatementReturnSyntax(string text)
         : base(text)
     { }
 
+    /// <summary>
+    /// The expression of the return value, if any.
+    /// </summary>
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 
