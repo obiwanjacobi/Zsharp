@@ -21,6 +21,6 @@ public sealed record CompilationUnitSyntax : SyntaxNode
     public IEnumerable<StatementSyntax> Statements
         => Children.OfType<StatementSyntax>();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnCompilationUnit(this);
 }

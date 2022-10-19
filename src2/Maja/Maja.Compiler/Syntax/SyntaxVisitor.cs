@@ -8,7 +8,6 @@ public interface ISyntaxVisitor<R>
     R OnCompilationUnit(CompilationUnitSyntax node);
     R OnPublicExport(PublicExportSyntax node);
     R OnUseImport(UseImportSyntax node);
-
     R OnCodeBlock(CodeBlockSyntax node);
 
     R OnFunctionDeclaration(FunctionDelcarationSyntax node);
@@ -27,7 +26,8 @@ public interface ISyntaxVisitor<R>
     R OnMemberField(MemberFieldSyntax node);
     R OnMemberRule(MemberRuleSyntax node);
 
-    R OnVariableDeclaration(VariableDeclarationSyntax node);
+    R OnVariableDeclarationTyped(VariableDeclarationTypedSyntax node);
+    R OnVariableDeclarationInferred(VariableDeclarationInferredSyntax node);
 
     R OnStatementIf(StatementIfSyntax node);
     R OnStatementElseIf(StatementElseIfSyntax node);
@@ -35,7 +35,8 @@ public interface ISyntaxVisitor<R>
     R OnStatementReturn(StatementReturnSyntax node);
     R OnStatementExpression(StatementExpressionSyntax node);
 
-    R OnExpression(ExpressionSyntax node);
+    R OnExpressionBinary(ExpressionBinarySyntax node);
+    R OnExpressionInvocation(ExpressionInvocationSyntax node);
     R OnExpressionLiteral(ExpressionLiteralSyntax node);
     R OnExpressionLiteralBool(ExpressionLiteralBoolSyntax node);
 
@@ -49,10 +50,10 @@ public interface ISyntaxVisitor<R>
 
 #nullable disable
 public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
-    where R: new()
+    where R : new()
 {
     protected virtual R VisitChildren<T>(T node)
-        where T: SyntaxNode
+        where T : SyntaxNode
     {
         R result = Default;
 
@@ -118,7 +119,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnMemberRule(MemberRuleSyntax node)
         => VisitChildren(node);
 
-    public virtual R OnVariableDeclaration(VariableDeclarationSyntax node)
+    public virtual R OnVariableDeclarationTyped(VariableDeclarationTypedSyntax node)
+        => VisitChildren(node);
+    public virtual R OnVariableDeclarationInferred(VariableDeclarationInferredSyntax node)
         => VisitChildren(node);
 
     public virtual R OnStatementIf(StatementIfSyntax node)
@@ -136,7 +139,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnStatementExpression(StatementExpressionSyntax node)
         => VisitChildren(node);
 
-    public virtual R OnExpression(ExpressionSyntax node)
+    public virtual R OnExpressionBinary(ExpressionBinarySyntax node)
+        => VisitChildren(node);
+    public virtual R OnExpressionInvocation(ExpressionInvocationSyntax node)
         => VisitChildren(node);
 
     public virtual R OnExpressionLiteral(ExpressionLiteralSyntax node)

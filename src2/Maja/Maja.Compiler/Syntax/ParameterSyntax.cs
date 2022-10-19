@@ -2,7 +2,7 @@
 
 namespace Maja.Compiler.Syntax;
 
-public sealed record ParameterSyntax: SyntaxNode
+public sealed record ParameterSyntax : SyntaxNode
 {
     public ParameterSyntax(string text)
         : base(text)
@@ -14,6 +14,6 @@ public sealed record ParameterSyntax: SyntaxNode
     public TypeSyntax Type
         => Children.OfType<TypeSyntax>().Single();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnParameter(this);
 }

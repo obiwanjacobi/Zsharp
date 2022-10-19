@@ -19,7 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace Zsharp.Parser {
+namespace Maja.Compiler.Parser {
 using System;
 using System.IO;
 using System.Text;
@@ -511,4 +511,4 @@ public partial class ZsharpLexer : Lexer {
 
 
 }
-} // namespace Zsharp.Parser
+} // namespace Maja.Compiler.Parser

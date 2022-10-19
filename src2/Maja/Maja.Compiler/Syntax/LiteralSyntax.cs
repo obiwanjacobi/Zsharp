@@ -16,6 +16,6 @@ public sealed record LiteralStringSyntax : SyntaxNode
         : base(text)
     { }
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralString(this);
 }

@@ -21,7 +21,7 @@ public sealed record TypeParameterGenericSyntax : TypeParameterSyntax
         : base(text)
     { }
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterGeneric(this);
 }
 
@@ -31,7 +31,7 @@ public sealed record TypeParameterTemplateSyntax : TypeParameterSyntax
         : base(text)
     { }
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterTemplate(this);
 }
 
@@ -44,7 +44,7 @@ public sealed record TypeParameterValueSyntax : TypeParameterSyntax
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterValue(this);
 }
 

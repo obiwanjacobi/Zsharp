@@ -14,6 +14,6 @@ public sealed record TypeArgumentSyntax : SyntaxNode
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeArgument(this);
 }

@@ -21,7 +21,7 @@ public record ExpressionLiteralSyntax : ExpressionConstantSyntax
     public LiteralStringSyntax? LiteralString
         => Children.OfType<LiteralStringSyntax>().SingleOrDefault();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteral(this);
 }
 
@@ -35,6 +35,6 @@ public record ExpressionLiteralBoolSyntax : ExpressionConstantSyntax
 
     public bool Value { get; }
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteralBool(this);
 }

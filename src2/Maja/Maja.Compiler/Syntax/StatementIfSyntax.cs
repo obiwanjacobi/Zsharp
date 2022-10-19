@@ -30,7 +30,7 @@ public sealed record StatementElseIfSyntax : StatementIfSyntax
         : base(text)
     { }
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementElseIf(this);
 }
 
@@ -43,6 +43,6 @@ public sealed record StatementElseSyntax : StatementSyntax
     public CodeBlockSyntax CodeBlock
         => Children.OfType<CodeBlockSyntax>().Single();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementElse(this);
 }

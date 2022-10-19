@@ -13,9 +13,6 @@ public abstract record VariableDeclarationSyntax : MemberDeclarationSyntax
 
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
-
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
-        => visitor.OnVariableDeclaration(this);
 }
 
 public sealed record VariableDeclarationTypedSyntax : VariableDeclarationSyntax
@@ -26,6 +23,9 @@ public sealed record VariableDeclarationTypedSyntax : VariableDeclarationSyntax
 
     public TypeSyntax? Type
         => Children.OfType<TypeSyntax>().SingleOrDefault();
+
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+        => visitor.OnVariableDeclarationTyped(this);
 }
 
 public sealed record VariableDeclarationInferredSyntax : VariableDeclarationSyntax
@@ -33,4 +33,7 @@ public sealed record VariableDeclarationInferredSyntax : VariableDeclarationSynt
     public VariableDeclarationInferredSyntax(string text)
         : base(text)
     { }
+
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+        => visitor.OnVariableDeclarationInferred(this);
 }

@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
-public sealed record CodeBlockSyntax: SyntaxNode
+public sealed record CodeBlockSyntax : SyntaxNode
 {
-    public CodeBlockSyntax(string text) 
+    public CodeBlockSyntax(string text)
         : base(text)
     { }
 
@@ -15,6 +15,6 @@ public sealed record CodeBlockSyntax: SyntaxNode
     public IEnumerable<StatementSyntax> Statements
         => Children.OfType<StatementSyntax>();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnCodeBlock(this);
 }

@@ -6,6 +6,6 @@ public sealed record ExpressionOperatorSyntax : SyntaxNode
         : base(text)
     { }
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionOperator(this);
 }

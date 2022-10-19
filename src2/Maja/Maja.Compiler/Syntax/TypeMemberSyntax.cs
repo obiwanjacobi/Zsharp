@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
-public abstract record TypeMemberSyntax: SyntaxNode
+public abstract record TypeMemberSyntax : SyntaxNode
 {
     public TypeMemberSyntax(string text)
         : base(text)
@@ -22,7 +22,7 @@ public sealed record MemberEnumSyntax : TypeMemberSyntax
     public ExpressionConstantSyntax? Expression
         => Children.OfType<ExpressionConstantSyntax>().SingleOrDefault();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberEnum(this);
 }
 
@@ -38,7 +38,7 @@ public sealed record MemberFieldSyntax : TypeMemberSyntax
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberField(this);
 }
 
@@ -51,7 +51,7 @@ public sealed record MemberRuleSyntax : TypeMemberSyntax
     public ExpressionSyntax? Expression
         => Children.OfType<ExpressionSyntax>().SingleOrDefault();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberRule(this);
 }
 
@@ -66,10 +66,10 @@ public sealed record TypeMemberListSyntax<T> : SyntaxNode
     public IEnumerable<T> Members
         => Children.Cast<T>();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
     {
         var result = visitor.Default;
-        
+
         foreach (var member in Children)
         {
             var r = member.Accept(visitor);

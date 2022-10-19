@@ -1,12 +1,12 @@
 ﻿namespace Maja.Compiler.Syntax;
 
-public record NameSyntax: SyntaxNode
+public record NameSyntax : SyntaxNode
 {
     public NameSyntax(string name)
         : base(name)
     { }
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnName(this);
 }
 

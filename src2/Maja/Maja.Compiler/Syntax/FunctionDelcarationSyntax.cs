@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
-public sealed record FunctionDelcarationSyntax: MemberDeclarationSyntax
+public sealed record FunctionDelcarationSyntax : MemberDeclarationSyntax
 {
     public FunctionDelcarationSyntax(string text)
         : base(text)
@@ -21,6 +21,6 @@ public sealed record FunctionDelcarationSyntax: MemberDeclarationSyntax
     public CodeBlockSyntax CodeBlock
         => Children.OfType<CodeBlockSyntax>().Single();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnFunctionDeclaration(this);
 }

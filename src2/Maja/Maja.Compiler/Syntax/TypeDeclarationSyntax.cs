@@ -24,6 +24,6 @@ public sealed record TypeDeclarationSyntax : MemberDeclarationSyntax
     public TypeMemberListSyntax<MemberRuleSyntax> Rules
         => Children.OfType<TypeMemberListSyntax<MemberRuleSyntax>>().Single();
 
-    public override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeDeclaration(this);
 }

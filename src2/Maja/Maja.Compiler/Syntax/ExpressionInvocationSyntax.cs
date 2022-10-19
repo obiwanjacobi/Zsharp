@@ -14,4 +14,7 @@ public sealed record ExpressionInvocationSyntax : ExpressionSyntax
 
     public IEnumerable<ArgumentSyntax> Arguments
         => Children.OfType<ArgumentSyntax>();
+
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+        => visitor.OnExpressionInvocation(this);
 }

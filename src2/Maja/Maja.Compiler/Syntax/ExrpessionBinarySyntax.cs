@@ -16,4 +16,7 @@ public sealed record ExpressionBinarySyntax : ExpressionSyntax
 
     public ExpressionSyntax Right
         => Children.OfType<ExpressionSyntax>().Skip(1).Single();
+
+    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+        => visitor.OnExpressionBinary(this);
 }
