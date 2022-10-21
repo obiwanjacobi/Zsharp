@@ -1,7 +1,7 @@
 ﻿namespace Maja.Compiler.Syntax;
 
 // the root/accessor of the syntax tree
-// implements a change mechanism for SyntaxNodes
+// implements helper methods and probably cache
 public class SyntaxTree
 {
 }

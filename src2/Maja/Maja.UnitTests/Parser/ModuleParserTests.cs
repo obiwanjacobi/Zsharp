@@ -8,7 +8,7 @@ public class ModuleParserTests
 {
     private static CompilationUnitContext Parse(string code)
     {
-        var parser = Maja.Compiler.Compiler.CreateParser(code);
+        var parser = Maja.Compiler.Compiler.CreateParser(code, nameof(ModuleParserTests), throwOnError: true);
         var parseTree = parser.compilationUnit();
         return parseTree;
     }

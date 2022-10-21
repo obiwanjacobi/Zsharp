@@ -32,23 +32,24 @@ internal sealed class Compiler
         return (CompilationUnitSyntax)nodes[0].Node!;
     }
 
-    public static MajaParser CreateParser(string code, string sourceName = "")
+    public static MajaParser CreateParser(string code, string sourceName = "", bool throwOnError = false)
     {
-        var lexer = CreateLexer(code, sourceName);
+        var lexer = CreateLexer(code, sourceName, throwOnError);
         var tokenStream = new CommonTokenStream(lexer);
         var parser = new MajaParser(tokenStream);
         //parser.RemoveErrorListeners();
         //parser.AddErrorListener(new AstErrorHandlerParser(Context));
 
-#if DEBUG
-        parser.RemoveErrorListeners();
-        parser.AddErrorListener(new ThrowingErrorListener<IToken>());
-#endif
+        if (throwOnError)
+        {
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(new ThrowingErrorListener<IToken>());
+        }
 
         return parser;
     }
 
-    public static MajaLexer CreateLexer(string code, string sourceName = "")
+    public static MajaLexer CreateLexer(string code, string sourceName = "", bool throwOnError = false)
     {
         var stream = new AntlrInputStream(code)
         {
@@ -60,10 +61,11 @@ internal sealed class Compiler
         };
         lexer.InitializeTokens(MajaLexer.Indent, MajaLexer.Dedent, MajaLexer.Eol);
 
-#if DEBUG
-        lexer.RemoveErrorListeners();
-        lexer.AddErrorListener(new ThrowingErrorListener<int>());
-#endif
+        if (throwOnError)
+        {
+            lexer.RemoveErrorListeners();
+            lexer.AddErrorListener(new ThrowingErrorListener<int>());
+        }
 
         return lexer;
     }

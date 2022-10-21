@@ -25,6 +25,7 @@ public abstract partial record SyntaxNode
         internal set
         {
             Debug.Assert(value is not null, "Cannot clear a SyntaxNode.Parent with null.");
+            Debug.Assert(_parent is null, "SyntaxNode.Parent is already set.");
             _parent = value;
         }
     }

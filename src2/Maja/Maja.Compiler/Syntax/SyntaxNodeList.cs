@@ -43,6 +43,7 @@ public sealed class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
         internal set
         {
             Debug.Assert(value is not null, "Cannot clear a SyntaxNodeList.Parent with null.");
+            Debug.Assert(_parent is null, "SyntaxNodeList.Parent is already set.");
             _parent = value;
 
             foreach (var node in this.Items)

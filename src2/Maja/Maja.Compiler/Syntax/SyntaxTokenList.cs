@@ -44,6 +44,7 @@ public sealed class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
         internal set
         {
             Debug.Assert(value is not null, "Cannot clear a SyntaxTokenList.Parent with null.");
+            Debug.Assert(_parent is null, "SyntaxTokenList.Parent is already set.");
             _parent = value;
 
             foreach (var token in this.Items)

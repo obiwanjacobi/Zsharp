@@ -8,7 +8,7 @@ namespace Maja.UnitTests.Lexer;
 public class LexerTests
 {
     private static IList<IToken> LexTokens(string code)
-        => Maja.Compiler.Compiler.CreateLexer(code, nameof(LexerTests)).GetAllTokens();
+        => Maja.Compiler.Compiler.CreateLexer(code, nameof(LexerTests), throwOnError: true).GetAllTokens();
 
     [Fact]
     public void Pub1()
@@ -157,7 +157,7 @@ public class LexerTests
     public void FunctionInvocation()
     {
         const string code =
-            "fn(42)" + Tokens.Eol            ;
+            "fn(42)" + Tokens.Eol;
 
         var tokens = LexTokens(code);
         var expected = new[]

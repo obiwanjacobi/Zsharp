@@ -1,4 +1,7 @@
-﻿using Maja.Compiler.Syntax;
+﻿using System;
+using System.Linq;
+using Maja.Compiler;
+using Maja.Compiler.Syntax;
 
 namespace Maja.UnitTests.Syntax
 {
@@ -9,9 +12,9 @@ namespace Maja.UnitTests.Syntax
             var parser = Maja.Compiler.Compiler.CreateParser(code);
             var parseTree = parser.compilationUnit();
 
-            //var errs = parseTree.Errors().Select(e => e.Text);
-            //if (errs.Any())
-            //    throw new Exception(String.Join(Environment.NewLine, errs));
+            var errs = parseTree.Errors().Select(e => e.Text);
+            if (errs.Any())
+                throw new Exception(String.Join(Environment.NewLine, errs));
 
             var builder = new ParserNodeConvertor(nameof(ModuleSyntaxTests));
             var syntax = builder.VisitCompilationUnit(parseTree);

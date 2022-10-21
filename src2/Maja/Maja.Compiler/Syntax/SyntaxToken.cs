@@ -8,7 +8,7 @@ using Maja.Compiler.Parser;
 namespace Maja.Compiler.Syntax;
 
 /// <summary>
-/// A common type for all sytnax tokens.
+/// A common type for all syntax tokens.
 /// </summary>
 /// <param name="Text">The textual representation of the token.</param>
 public abstract record SyntaxToken(string Text)
@@ -23,6 +23,7 @@ public abstract record SyntaxToken(string Text)
         internal set
         {
             Debug.Assert(value is not null, "Cannot clear a SyntaxToken.Parent with null.");
+            Debug.Assert(_parent is null, "SyntaxToken.Parent is already set.");
             _parent = value;
         }
     }
