@@ -8,9 +8,19 @@ namespace Maja.Dgml
 
         public SyntaxDgmlBuilder()
         {
-            _builder.CreateCommon();
-            _builder.CreateCategory("LT", "LT");
-            _builder.CreateCategory("TT", "TT");
+            _builder.CreateCategory("LeadingTokens", "LeadingTokens");
+            _builder.CreateCategory("TrailingTokens", "TrailingTokens");
+            var style = _builder.CreateStyleForCaregory("LeadingTokens", StyleTargetType.Link);
+            style.Setters.Add("Stroke", "Yellow");
+            style = _builder.CreateStyleForCaregory("TrailingTokens", StyleTargetType.Link);
+            style.Setters.Add("Stroke", "Blue");
+
+            _builder.CreateCategory("Token", "Token");
+            _builder.CreateCategory("Error", "Error");
+            style = _builder.CreateStyleForCaregory("Token");
+            style.Setters.Add("Background", "Green");
+            style = _builder.CreateStyleForCaregory("Error");
+            style.Setters.Add("Background", "Red");
         }
 
         public static void Save(SyntaxNode syntaxNode, string filePath = "syntax.dgml")
@@ -32,11 +42,7 @@ namespace Maja.Dgml
 
             if (syntaxNode.HasLeadingTokens)
             {
-                foreach (var child in syntaxNode.LeadingTokens)
-                {
-                    var childToken = WriteToken(child);
-                    var link = _builder.CreateLink(node.Id, childToken.Id, "LT");
-                }
+                WriteTokens(syntaxNode.LeadingTokens, node.Id, "LeadingTokens");
             }
 
             foreach (var child in syntaxNode.ChildNodes)
@@ -47,14 +53,20 @@ namespace Maja.Dgml
 
             if (syntaxNode.HasTrailingTokens)
             {
-                foreach (var child in syntaxNode.TrailingTokens)
-                {
-                    var childToken = WriteToken(child);
-                    var link = _builder.CreateLink(node.Id, childToken.Id, "TT");
-                }
+                WriteTokens(syntaxNode.TrailingTokens, node.Id, "TrailingTokens");
             }
 
             return node;
+        }
+
+        private void WriteTokens(SyntaxTokenList tokens, string nodeId, string category)
+        {
+            foreach (var child in tokens)
+            {
+                var childToken = WriteToken(child);
+                childToken.Category = child.HasError ? "Error" : "Token";
+                var link = _builder.CreateLink(nodeId, childToken.Id, category);
+            }
         }
 
         public Node WriteToken(SyntaxToken syntaxToken)

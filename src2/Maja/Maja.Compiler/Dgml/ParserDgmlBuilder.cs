@@ -9,7 +9,13 @@ namespace Maja.Dgml
 
         public ParserDgmlBuilder()
         {
-            _builder.CreateCommon();
+            _builder.CreateCategory("Token", "Token");
+            _builder.CreateCategory("Error", "Error");
+            var style = _builder.CreateStyleForCaregory("Token");
+            style.Setters.Add("Background", "Green");
+            style = _builder.CreateStyleForCaregory("Error");
+            style.Setters.Add("Background", "Red");
+
             IncludeTokens = true;
         }
 
@@ -34,16 +40,20 @@ namespace Maja.Dgml
                     var childNode = WriteContext(childCtx);
                     var link = _builder.CreateLink(node.Id, childNode.Id);
                 }
-                else if (IncludeTokens &&
-                    child is TerminalNodeImpl termChild)
+                else if (IncludeTokens)
                 {
-                    var childNode = WriteTerminal(termChild);
-                    var link = _builder.CreateLink(node.Id, childNode.Id);
-                }
-                else
-                {
-                    var childNode = _builder.CreateNode(typeName, $"<{child.GetText()}>", "Unknown");
-                    var link = _builder.CreateLink(node.Id, childNode.Id);
+                    if (child is IErrorNode errChild)
+                    {
+                        var childNode = WriteTerminal((TerminalNodeImpl)errChild);
+                        childNode.Category = "Error";
+                        var link = _builder.CreateLink(node.Id, childNode.Id);
+                    }
+                    else if (child is TerminalNodeImpl termChild)
+                    {
+                        var childNode = WriteTerminal(termChild);
+                        childNode.Category = "Token";
+                        var link = _builder.CreateLink(node.Id, childNode.Id);
+                    }
                 }
             }
             return node;

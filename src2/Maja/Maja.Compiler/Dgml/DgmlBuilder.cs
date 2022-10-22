@@ -13,12 +13,11 @@ public class DgmlBuilder
 
     public DgmlBuilder(string? title = null)
     {
-        _graph = new();
-        _graph.Title = title;
-    }
+        _graph = new()
+        {
+            Title = title
+        };
 
-    public virtual void CreateCommon()
-    {
         var category = CreateCategory(ContainsCategory, ContainsCategory);
         category.IsContainment = true;
     }
@@ -47,7 +46,7 @@ public class DgmlBuilder
             i++;
             string digits = "1";
             if (i < name.Length)
-            { 
+            {
                 var number = int.Parse(name[i..]);
                 number++;
                 digits = number.ToString();
@@ -91,6 +90,19 @@ public class DgmlBuilder
         return link;
     }
 
+    public Link? FindLink(string sourceId, string targetId)
+    {
+        foreach (var l in _graph.Links)
+        {
+            if (l.Source == sourceId && l.Target == targetId)
+            {
+                return l;
+            }
+        }
+
+        return null;
+    }
+
     public Category CreateCategory(string id, string label)
     {
         var category = new Category
@@ -103,17 +115,19 @@ public class DgmlBuilder
         return category;
     }
 
-    public Link? FindLink(string sourceId, string targetId)
+    public Style CreateStyleForCaregory(string category, StyleTargetType targetType = StyleTargetType.Node)
     {
-        foreach (var l in _graph.Links)
+        var style = new Style
         {
-            if (l.Source == sourceId && l.Target == targetId)
-            {
-                return l;
-            }
-        }
+            TargetType = targetType,
+            GroupLabel = category,
+            ValueLabel = category
+        };
 
-        return null;
+        style.HasCategory(category);
+
+        _graph.Styles.Add(style);
+        return style;
     }
 
     private int NextId() => ++_id;
