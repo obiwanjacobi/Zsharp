@@ -3,7 +3,7 @@
 /// <summary>
 /// A wrapper for either a SyntaxNode or a SyntaxToken.
 /// </summary>
-internal record struct SyntaxNodeOrToken
+public record struct SyntaxNodeOrToken
 {
     public SyntaxNodeOrToken(SyntaxNode node)
     {
@@ -19,4 +19,19 @@ internal record struct SyntaxNodeOrToken
 
     public SyntaxNode? Node { get; }
     public SyntaxToken? Token { get; }
+
+    public SyntaxNode? Parent
+    {
+        get
+        {
+            return Node?.Parent ?? Token?.Parent;
+        }
+        internal set
+        {
+            if (Node is SyntaxNode node)
+                node.Parent = value;
+            if (Token is SyntaxToken token)
+                token.Parent = value!;
+        }
+    }
 }

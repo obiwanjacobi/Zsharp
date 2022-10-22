@@ -16,13 +16,13 @@ public sealed record CodeBlockSyntax : SyntaxNode
     /// Filtered collection of only member (function, type and variable) declarations.
     /// </summary>
     public IEnumerable<MemberDeclarationSyntax> Members
-        => Children.OfType<MemberDeclarationSyntax>();
+        => ChildNodes.OfType<MemberDeclarationSyntax>();
 
     /// <summary>
     /// Filtered collection of only statements.
     /// </summary>
     public IEnumerable<StatementSyntax> Statements
-        => Children.OfType<StatementSyntax>();
+        => ChildNodes.OfType<StatementSyntax>();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnCodeBlock(this);

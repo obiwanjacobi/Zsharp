@@ -15,7 +15,7 @@ public sealed record StatementReturnSyntax : StatementSyntax
     /// The expression of the return value, if any.
     /// </summary>
     public ExpressionSyntax? Expression
-        => Children.OfType<ExpressionSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementReturn(this);

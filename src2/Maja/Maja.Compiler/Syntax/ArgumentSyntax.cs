@@ -15,7 +15,7 @@ public sealed record ArgumentSyntax : SyntaxNode
     /// The expression that represent the argument.
     /// </summary>
     public ExpressionSyntax? Expression
-        => Children.OfType<ExpressionSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnArgument(this);

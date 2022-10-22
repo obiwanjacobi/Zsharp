@@ -1,5 +1,4 @@
-﻿using System;
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
 namespace Maja.Dgml
@@ -31,7 +30,7 @@ namespace Maja.Dgml
             foreach (var child in context.children)
             {
                 if (child is ParserRuleContext childCtx)
-                { 
+                {
                     var childNode = WriteContext(childCtx);
                     var link = _builder.CreateLink(node.Id, childNode.Id);
                 }
@@ -39,6 +38,11 @@ namespace Maja.Dgml
                     child is TerminalNodeImpl termChild)
                 {
                     var childNode = WriteTerminal(termChild);
+                    var link = _builder.CreateLink(node.Id, childNode.Id);
+                }
+                else
+                {
+                    var childNode = _builder.CreateNode(typeName, $"<{child.GetText()}>", "Unknown");
                     var link = _builder.CreateLink(node.Id, childNode.Id);
                 }
             }

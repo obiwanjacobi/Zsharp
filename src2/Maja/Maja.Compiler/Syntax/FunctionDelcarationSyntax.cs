@@ -16,25 +16,25 @@ public sealed record FunctionDelcarationSyntax : MemberDeclarationSyntax
     /// The name of the declared function.
     /// </summary>
     public NameSyntax Identifier
-        => Children.OfType<NameSyntax>().Single();
+        => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
     /// A collection of parameters, if any.
     /// </summary>
     public IEnumerable<ParameterSyntax> Parameters
-        => Children.OfType<ParameterSyntax>();
+        => ChildNodes.OfType<ParameterSyntax>();
 
     /// <summary>
     /// The return type of the function, if specified.
     /// </summary>
     public TypeSyntax? ReturnType
-        => Children.OfType<TypeSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<TypeSyntax>().SingleOrDefault();
 
     /// <summary>
     /// The function body.
     /// </summary>
     public CodeBlockSyntax CodeBlock
-        => Children.OfType<CodeBlockSyntax>().Single();
+        => ChildNodes.OfType<CodeBlockSyntax>().Single();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnFunctionDeclaration(this);

@@ -16,31 +16,31 @@ public sealed record TypeDeclarationSyntax : MemberDeclarationSyntax
     /// The name of the type.
     /// </summary>
     public NameSyntax Name
-        => Children.OfType<NameSyntax>().Single();
+        => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
     /// The type parameters, if any.
     /// </summary>
     public IEnumerable<TypeParameterSyntax> TypeParameters
-        => Children.OfType<TypeParameterSyntax>();
+        => ChildNodes.OfType<TypeParameterSyntax>();
 
     /// <summary>
     /// The enumeration list.
     /// </summary>
     public TypeMemberListSyntax<MemberEnumSyntax> Enums
-        => Children.OfType<TypeMemberListSyntax<MemberEnumSyntax>>().Single();
+        => ChildNodes.OfType<TypeMemberListSyntax<MemberEnumSyntax>>().Single();
 
     /// <summary>
     /// The field list.
     /// </summary>
     public TypeMemberListSyntax<MemberFieldSyntax> Fields
-        => Children.OfType<TypeMemberListSyntax<MemberFieldSyntax>>().Single();
+        => ChildNodes.OfType<TypeMemberListSyntax<MemberFieldSyntax>>().Single();
 
     /// <summary>
     /// The rule list.
     /// </summary>
     public TypeMemberListSyntax<MemberRuleSyntax> Rules
-        => Children.OfType<TypeMemberListSyntax<MemberRuleSyntax>>().Single();
+        => ChildNodes.OfType<TypeMemberListSyntax<MemberRuleSyntax>>().Single();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeDeclaration(this);

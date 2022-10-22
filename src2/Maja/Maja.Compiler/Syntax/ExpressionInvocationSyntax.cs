@@ -16,13 +16,13 @@ public sealed record ExpressionInvocationSyntax : ExpressionSyntax
     /// The name of the function being invoced.
     /// </summary>
     public NameSyntax Identifier
-        => Children.OfType<NameSyntax>().Single();
+        => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
     /// The list of function arguments, if any.
     /// </summary>
     public IEnumerable<ArgumentSyntax> Arguments
-        => Children.OfType<ArgumentSyntax>();
+        => ChildNodes.OfType<ArgumentSyntax>();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionInvocation(this);

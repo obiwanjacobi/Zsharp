@@ -16,7 +16,7 @@ public abstract record TypeMemberSyntax : SyntaxNode
     /// The name or identifier of the member.
     /// </summary>
     public NameSyntax Name
-        => Children.OfType<NameSyntax>().Single();
+        => ChildNodes.OfType<NameSyntax>().Single();
 }
 
 /// <summary>
@@ -32,7 +32,7 @@ public sealed record MemberEnumSyntax : TypeMemberSyntax
     /// The enum value expression, if specified.
     /// </summary>
     public ExpressionConstantSyntax? Expression
-        => Children.OfType<ExpressionConstantSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<ExpressionConstantSyntax>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberEnum(this);
@@ -51,13 +51,13 @@ public sealed record MemberFieldSyntax : TypeMemberSyntax
     /// The type of the field.
     /// </summary>
     public TypeSyntax Type
-        => Children.OfType<TypeSyntax>().Single();
+        => ChildNodes.OfType<TypeSyntax>().Single();
 
     /// <summary>
     /// The field initialization expression.
     /// </summary>
     public ExpressionSyntax? Expression
-        => Children.OfType<ExpressionSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberField(this);
@@ -73,7 +73,7 @@ public sealed record MemberRuleSyntax : TypeMemberSyntax
     { }
 
     public ExpressionSyntax? Expression
-        => Children.OfType<ExpressionSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberRule(this);
@@ -91,13 +91,13 @@ public sealed record TypeMemberListSyntax<T> : SyntaxNode
     { }
 
     public IEnumerable<T> Members
-        => Children.Cast<T>();
+        => ChildNodes.Cast<T>();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
     {
         var result = visitor.Default;
 
-        foreach (var member in Children)
+        foreach (var member in ChildNodes)
         {
             var r = member.Accept(visitor);
             result = visitor.AggregateResult(result, r);

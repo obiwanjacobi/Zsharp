@@ -15,13 +15,13 @@ public abstract record VariableDeclarationSyntax : MemberDeclarationSyntax
     /// The name or identifier of the variable.
     /// </summary>
     public NameSyntax Name
-        => Children.OfType<NameSyntax>().Single();
+        => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
     /// The initialization expression, if specified.
     /// </summary>
     public ExpressionSyntax? Expression
-        => Children.OfType<ExpressionSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 }
 
 /// <summary>
@@ -37,7 +37,7 @@ public sealed record VariableDeclarationTypedSyntax : VariableDeclarationSyntax
     /// The type specified for the variable.
     /// </summary>
     public TypeSyntax Type
-        => Children.OfType<TypeSyntax>().Single();
+        => ChildNodes.OfType<TypeSyntax>().Single();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnVariableDeclarationTyped(this);

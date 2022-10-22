@@ -18,9 +18,9 @@ public class ExpressionSyntaxTests
         result.Members.Should().HaveCount(1);
         var v = result.Members.First().As<VariableDeclarationSyntax>();
         var expr = v.Expression!.As<ExpressionSyntax>();
-        expr.Children[0].As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
-        expr.Children[1].As<ExpressionOperatorSyntax>().Text.Should().Be("+");
-        expr.Children[2].As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("101");
+        expr.ChildNodes[0].As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
+        expr.ChildNodes[1].As<ExpressionOperatorSyntax>().Text.Should().Be("+");
+        expr.ChildNodes[2].As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("101");
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public class ExpressionSyntaxTests
         var s = result.Statements.First().As<StatementExpressionSyntax>();
         var expr = s.Expression!.As<ExpressionInvocationSyntax>();
         expr.Identifier.Text.Should().Be("fn");
-        expr.Arguments.First().Children[0]
+        expr.Arguments.First().ChildNodes[0]
             .As<ExpressionLiteralSyntax>().Text.Should().Be("42");
     }
 
@@ -96,7 +96,7 @@ public class ExpressionSyntaxTests
         var v = result.Members.First().As<VariableDeclarationSyntax>();
         var expr = v.Expression!.As<ExpressionInvocationSyntax>();
         expr.Identifier.Text.Should().Be("fn");
-        expr.Arguments.First().Children[0]
+        expr.Arguments.First().ChildNodes[0]
             .As<ExpressionLiteralSyntax>().Text.Should().Be("42");
     }
 }

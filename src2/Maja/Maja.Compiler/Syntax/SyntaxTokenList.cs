@@ -26,7 +26,7 @@ public sealed class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
     /// <param name="tokenList">Can be null.</param>
     /// <returns>Never returns null.</returns>
     internal static SyntaxTokenList New(IList<SyntaxToken>? tokenList)
-        => tokenList is not null
+        => tokenList is not null && tokenList.Count > 0
             ? new SyntaxTokenList(tokenList)
             : new SyntaxTokenList();
 
@@ -38,7 +38,7 @@ public sealed class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
     {
         get
         {
-            Debug.Assert(_parent is not null, "This is (part of) a root SyntaxToken or the Parent was not set.");
+            Debug.Assert(_parent is not null, "This SyntaxTokenList is (part of) a root SyntaxToken or the Parent was not set.");
             return _parent!;
         }
         internal set
@@ -47,7 +47,7 @@ public sealed class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
             Debug.Assert(_parent is null, "SyntaxTokenList.Parent is already set.");
             _parent = value;
 
-            foreach (var token in this.Items)
+            foreach (var token in Items)
             {
                 token.Parent = _parent;
             }

@@ -15,13 +15,13 @@ public sealed record ParameterSyntax : SyntaxNode
     /// The name of the parameter.
     /// </summary>
     public NameSyntax Name
-        => Children.OfType<NameSyntax>().Single();
+        => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
     /// The type of the parameter.
     /// </summary>
     public TypeSyntax Type
-        => Children.OfType<TypeSyntax>().Single();
+        => ChildNodes.OfType<TypeSyntax>().Single();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnParameter(this);

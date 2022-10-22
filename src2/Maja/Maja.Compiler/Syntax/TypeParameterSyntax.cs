@@ -15,13 +15,13 @@ public abstract record TypeParameterSyntax : SyntaxNode
     /// The name of the type parameter.
     /// </summary>
     public NameSyntax Name
-        => Children.OfType<NameSyntax>().Single();
+        => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
     /// The type of the parameter, if specified.
     /// </summary>
     public TypeSyntax? Type
-        => Children.OfType<TypeSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<TypeSyntax>().SingleOrDefault();
 }
 
 /// <summary>
@@ -60,7 +60,7 @@ public sealed record TypeParameterValueSyntax : TypeParameterSyntax
     { }
 
     public ExpressionSyntax? Expression
-        => Children.OfType<ExpressionSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterValue(this);

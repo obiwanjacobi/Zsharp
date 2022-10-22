@@ -65,7 +65,7 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     {
         R result = Default;
 
-        foreach (var child in node.Children)
+        foreach (var child in node.ChildNodes)
         {
             var newResult = child.Accept(this);
             result = AggregateResult(result, newResult);

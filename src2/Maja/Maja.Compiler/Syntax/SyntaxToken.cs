@@ -245,3 +245,13 @@ public sealed record CommentToken : SyntaxToken
     public static bool IsValid(int tokenId)
          => tokenId == MajaLexer.Comment;
 }
+
+/// <summary>
+/// Represents a syntax error token.
+/// </summary>
+public sealed record ErrorToken : SyntaxToken
+{
+    public ErrorToken(string Text)
+        : base(Text)
+    { }
+}

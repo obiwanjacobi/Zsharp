@@ -16,7 +16,7 @@ public sealed record PublicExportSyntax : SyntaxNode
     /// The qualified names specified at the export statement.
     /// </summary>
     public IEnumerable<QualifiedNameSyntax> QualifiedNames
-        => Children.OfType<QualifiedNameSyntax>();
+        => ChildNodes.OfType<QualifiedNameSyntax>();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnPublicExport(this);

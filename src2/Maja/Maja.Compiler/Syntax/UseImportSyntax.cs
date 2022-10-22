@@ -15,7 +15,7 @@ public sealed record UseImportSyntax : SyntaxNode
     /// The qualified name of the import.
     /// </summary>
     public QualifiedNameSyntax QualifiedName
-        => Children.OfType<QualifiedNameSyntax>().Single();
+        => ChildNodes.OfType<QualifiedNameSyntax>().Single();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnUseImport(this);

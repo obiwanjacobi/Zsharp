@@ -37,7 +37,7 @@ public sealed class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
     {
         get
         {
-            Debug.Assert(_parent is not null, "This is (part of) a root SyntaxNode or the Parent was not set.");
+            Debug.Assert(_parent is not null, "This SyntaxNodeList is (part of) a root SyntaxNode or the Parent was not set.");
             return _parent!;
         }
         internal set
@@ -46,7 +46,7 @@ public sealed class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
             Debug.Assert(_parent is null, "SyntaxNodeList.Parent is already set.");
             _parent = value;
 
-            foreach (var node in this.Items)
+            foreach (var node in Items)
             {
                 node.Parent = _parent;
             }

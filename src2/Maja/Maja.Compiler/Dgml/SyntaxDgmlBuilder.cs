@@ -39,7 +39,7 @@ namespace Maja.Dgml
                 }
             }
 
-            foreach (var child in syntaxNode.Children)
+            foreach (var child in syntaxNode.ChildNodes)
             {
                 var childNode = WriteNode(child);
                 var link = _builder.CreateLink(node.Id, childNode.Id);

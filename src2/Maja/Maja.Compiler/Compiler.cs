@@ -37,14 +37,16 @@ internal sealed class Compiler
         var lexer = CreateLexer(code, sourceName, throwOnError);
         var tokenStream = new CommonTokenStream(lexer);
         var parser = new MajaParser(tokenStream);
-        //parser.RemoveErrorListeners();
-        //parser.AddErrorListener(new AstErrorHandlerParser(Context));
 
         if (throwOnError)
         {
             parser.RemoveErrorListeners();
             parser.AddErrorListener(new ThrowingErrorListener<IToken>());
         }
+#if DEBUG
+        else
+            parser.AddErrorListener(new DiagnosticErrorListener());
+#endif
 
         return parser;
     }

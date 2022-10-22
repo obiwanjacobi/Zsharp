@@ -15,7 +15,7 @@ public sealed record StatementExpressionSyntax : StatementSyntax
     /// The expression of this statement.
     /// </summary>
     public ExpressionSyntax Expression
-        => Children.OfType<ExpressionSyntax>().Single();
+        => ChildNodes.OfType<ExpressionSyntax>().Single();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementExpression(this);

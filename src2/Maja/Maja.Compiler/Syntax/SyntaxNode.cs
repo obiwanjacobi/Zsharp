@@ -39,18 +39,38 @@ public abstract partial record SyntaxNode
     /// <summary>
     /// A list of child nodes contained in this node.
     /// </summary>
-    public SyntaxNodeList Children
+    public SyntaxNodeList ChildNodes
     {
         get
         {
-            Debug.Assert(_nodeList is not null, "SyntaxNode is uninitialized. Children are not set.");
+            Debug.Assert(_nodeList is not null, "SyntaxNode is uninitialized. ChildNodes are not set.");
             return _nodeList!;
         }
         init
         {
-            Debug.Assert(value is not null, "Cannot clear the SyntaxNode.Children list with null.");
+            Debug.Assert(value is not null, "Cannot clear the SyntaxNode.ChildNodes list with null.");
+            Debug.Assert(_nodeList is null, "The SyntaxNode.ChildNodes list is already set.");
             _nodeList = value;
             _nodeList.Parent = this;
+        }
+    }
+
+    private SyntaxNodeOrTokenList? _nodeOrTokenList;
+    /// <summary>
+    /// A list of child nodes contained in this node.
+    /// </summary>
+    public SyntaxNodeOrTokenList Children
+    {
+        get
+        {
+            Debug.Assert(_nodeOrTokenList is not null, "SyntaxNode is uninitialized. ChildNodes are not set.");
+            return _nodeOrTokenList!;
+        }
+        init
+        {
+            Debug.Assert(value is not null, "Cannot clear the SyntaxNode.ChildNodes list with null.");
+            Debug.Assert(_nodeOrTokenList is null, "The SyntaxNode.ChildNodes list is already set.");
+            _nodeOrTokenList = value;
         }
     }
 

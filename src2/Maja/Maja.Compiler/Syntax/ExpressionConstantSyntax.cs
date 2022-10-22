@@ -25,13 +25,13 @@ public record ExpressionLiteralSyntax : ExpressionConstantSyntax
     /// Set when the literal expression represents a number value.
     /// </summary>
     public LiteralNumberSyntax? LiteralNumber
-        => Children.OfType<LiteralNumberSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<LiteralNumberSyntax>().SingleOrDefault();
 
     /// <summary>
     /// Set when the literal expression represents a string value.
     /// </summary>
     public LiteralStringSyntax? LiteralString
-        => Children.OfType<LiteralStringSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<LiteralStringSyntax>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteral(this);

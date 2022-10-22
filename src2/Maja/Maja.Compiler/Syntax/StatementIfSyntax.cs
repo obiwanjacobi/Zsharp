@@ -15,25 +15,25 @@ public record StatementIfSyntax : StatementSyntax
     /// The condition expression of the if statement.
     /// </summary>
     public ExpressionSyntax Expression
-        => Children.OfType<ExpressionSyntax>().Single();
+        => ChildNodes.OfType<ExpressionSyntax>().Single();
 
     /// <summary>
     /// The code executed when the condition expression evaluates to true.
     /// </summary>
     public CodeBlockSyntax CodeBlock
-        => Children.OfType<CodeBlockSyntax>().Single();
+        => ChildNodes.OfType<CodeBlockSyntax>().Single();
 
     /// <summary>
     /// The 'else' branch, if any.
     /// </summary>
     public StatementElseSyntax? Else
-        => Children.OfType<StatementElseSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<StatementElseSyntax>().SingleOrDefault();
 
     /// <summary>
     /// The 'else if' branch if any.
     /// </summary>
     public StatementElseIfSyntax? ElseIf
-        => Children.OfType<StatementElseIfSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<StatementElseIfSyntax>().SingleOrDefault();
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementIf(this);
@@ -65,7 +65,7 @@ public sealed record StatementElseSyntax : StatementSyntax
     /// The code that is executed when the if-condition evaluates to false.
     /// </summary>
     public CodeBlockSyntax CodeBlock
-        => Children.OfType<CodeBlockSyntax>().Single();
+        => ChildNodes.OfType<CodeBlockSyntax>().Single();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementElse(this);

@@ -15,13 +15,13 @@ public sealed record TypeArgumentSyntax : SyntaxNode
     /// The type specified as the argument.
     /// </summary>
     public TypeSyntax? Type
-        => Children.OfType<TypeSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<TypeSyntax>().SingleOrDefault();
 
     /// <summary>
     /// The 'type' value expression as the argument.
     /// </summary>
     public ExpressionSyntax? Expression
-        => Children.OfType<ExpressionSyntax>().SingleOrDefault();
+        => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeArgument(this);

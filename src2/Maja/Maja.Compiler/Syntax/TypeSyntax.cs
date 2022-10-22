@@ -16,13 +16,13 @@ public sealed record TypeSyntax : SyntaxNode
     /// The name (or alias) of the type referenced.
     /// </summary>
     public NameSyntax Name
-        => Children.OfType<NameSyntax>().Single();
+        => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
     /// The type arguments, if any.
     /// </summary>
     public IEnumerable<TypeArgumentSyntax> TypeArguments
-        => Children.OfType<TypeArgumentSyntax>();
+        => ChildNodes.OfType<TypeArgumentSyntax>();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnType(this);

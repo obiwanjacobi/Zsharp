@@ -16,25 +16,25 @@ public sealed record CompilationUnitSyntax : SyntaxNode
     /// Filtered collection of use import entries.
     /// </summary>
     public IEnumerable<UseImportSyntax> UseImports
-        => Children.OfType<UseImportSyntax>();
+        => ChildNodes.OfType<UseImportSyntax>();
 
     /// <summary>
     /// Filtered collection of pubilc export entries.
     /// </summary>
     public IEnumerable<PublicExportSyntax> PublicExports
-        => Children.OfType<PublicExportSyntax>();
+        => ChildNodes.OfType<PublicExportSyntax>();
 
     /// <summary>
     /// Filtered collection of member (function, type and variable) declarations.
     /// </summary>
     public IEnumerable<MemberDeclarationSyntax> Members
-        => Children.OfType<MemberDeclarationSyntax>();
+        => ChildNodes.OfType<MemberDeclarationSyntax>();
 
     /// <summary>
     /// Filtered collection of statements.
     /// </summary>
     public IEnumerable<StatementSyntax> Statements
-        => Children.OfType<StatementSyntax>();
+        => ChildNodes.OfType<StatementSyntax>();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnCompilationUnit(this);
