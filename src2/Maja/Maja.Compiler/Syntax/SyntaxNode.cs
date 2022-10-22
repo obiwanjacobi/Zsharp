@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
@@ -14,6 +15,9 @@ public abstract partial record SyntaxNode
     /// The source text this node represents.
     /// </summary>
     public string Text { get; }
+
+    public bool HasError
+        => Children.Any(c => c.HasError);
 
     private SyntaxNode? _parent;
     /// <summary>
@@ -31,7 +35,7 @@ public abstract partial record SyntaxNode
     }
 
     /// <summary>
-    /// Source location fo this syntax node.
+    /// Source location for this syntax node.
     /// </summary>
     public SyntaxLocation Location { get; init; }
 
@@ -57,7 +61,7 @@ public abstract partial record SyntaxNode
 
     private SyntaxNodeOrTokenList? _nodeOrTokenList;
     /// <summary>
-    /// A list of child nodes contained in this node.
+    /// A list of child nodes and tokens contained in this node.
     /// </summary>
     public SyntaxNodeOrTokenList Children
     {

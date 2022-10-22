@@ -1,4 +1,6 @@
-﻿namespace Maja.Compiler.Syntax;
+﻿using System;
+
+namespace Maja.Compiler.Syntax;
 
 /// <summary>
 /// A wrapper for either a SyntaxNode or a SyntaxToken.
@@ -21,17 +23,11 @@ public record struct SyntaxNodeOrToken
     public SyntaxToken? Token { get; }
 
     public SyntaxNode? Parent
-    {
-        get
-        {
-            return Node?.Parent ?? Token?.Parent;
-        }
-        internal set
-        {
-            if (Node is SyntaxNode node)
-                node.Parent = value;
-            if (Token is SyntaxToken token)
-                token.Parent = value!;
-        }
-    }
+        => Node?.Parent ?? Token?.Parent;
+
+    public string Text
+        => Node?.Text ?? Token?.Text ?? String.Empty;
+
+    public bool HasError
+        => Node?.HasError ?? Token?.HasError ?? false;
 }

@@ -34,65 +34,82 @@ public abstract record SyntaxToken(string Text)
     public SyntaxLocation Location { get; init; }
 
     /// <summary>
-    /// Creates a new token based on the tokenId.
+    /// Unique (Lexer) type Id for the token.
     /// </summary>
-    /// <param name="tokenId">The (Lexer) token id.</param>
+    public int TokenTypeId { get; init; }
+
+    public virtual bool HasError
+        => false;
+
+    /// <summary>
+    /// Creates a new token based on the tokenTypeId.
+    /// </summary>
+    /// <param name="tokenTypeId">The (Lexer) token id.</param>
     /// <param name="text">The textual representation of the token.</param>
     /// <param name="location">The source location of the token.</param>
     /// <returns>Returns null if the token could not be created.</returns>
-    public static SyntaxToken? TryNew(int tokenId, string text, SyntaxLocation location)
+    public static SyntaxToken? TryNew(int tokenTypeId, string text, SyntaxLocation location)
     {
-        if (NewlineToken.IsValid(tokenId))
+        if (NewlineToken.IsValid(tokenTypeId))
             return new NewlineToken(text)
             {
+                TokenTypeId = tokenTypeId,
                 Location = location
             };
 
-        if (WhitespaceToken.IsValid(tokenId))
+        if (WhitespaceToken.IsValid(tokenTypeId))
             return new WhitespaceToken(text)
             {
+                TokenTypeId = tokenTypeId,
                 Location = location
             };
 
-        if (PunctuationToken.IsValid(tokenId))
+        if (PunctuationToken.IsValid(tokenTypeId))
             return new PunctuationToken(text)
             {
+                TokenTypeId = tokenTypeId,
                 Location = location
             };
 
-        if (RoundBracketToken.IsValid(tokenId))
+        if (RoundBracketToken.IsValid(tokenTypeId))
             return new RoundBracketToken(text)
             {
+                TokenTypeId = tokenTypeId,
                 Location = location
             };
 
-        if (SquareBracketToken.IsValid(tokenId))
+        if (SquareBracketToken.IsValid(tokenTypeId))
             return new SquareBracketToken(text)
             {
+                TokenTypeId = tokenTypeId,
                 Location = location
             };
 
-        if (CurlyBracketToken.IsValid(tokenId))
+        if (CurlyBracketToken.IsValid(tokenTypeId))
             return new CurlyBracketToken(text)
             {
+                TokenTypeId = tokenTypeId,
                 Location = location
             };
 
-        if (AngleBracketToken.IsValid(tokenId))
+        if (AngleBracketToken.IsValid(tokenTypeId))
             return new AngleBracketToken(text)
             {
+                TokenTypeId = tokenTypeId,
                 Location = location
             };
 
-        if (CommentToken.IsValid(tokenId))
+        if (CommentToken.IsValid(tokenTypeId))
             return new CommentToken(text)
             {
+                TokenTypeId = tokenTypeId,
                 Location = location
             };
 
-        if (KeywordToken.IsValid(tokenId))
+        if (KeywordToken.IsValid(tokenTypeId))
             return new KeywordToken(text)
             {
+                TokenTypeId = tokenTypeId,
                 Location = location
             };
 
@@ -131,8 +148,8 @@ public sealed record KeywordToken : SyntaxToken
             MajaLexer.Use
         });
 
-    public static bool IsValid(int tokenId)
-        => Tokens.Contains(tokenId);
+    public static bool IsValid(int tokenTypeId)
+        => Tokens.Contains(tokenTypeId);
 }
 
 /// <summary>
@@ -150,8 +167,8 @@ public sealed record WhitespaceToken : SyntaxToken
             Location = Location.Append(token.Location)
         };
 
-    public static bool IsValid(int tokenId)
-        => tokenId == MajaLexer.Sp;
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId == MajaLexer.Sp;
 }
 
 /// <summary>
@@ -163,8 +180,8 @@ public sealed record NewlineToken : SyntaxToken
         : base(Text)
     { }
 
-    public static bool IsValid(int tokenId)
-        => tokenId == MajaLexer.Eol;
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId == MajaLexer.Eol;
 }
 
 /// <summary>
@@ -176,8 +193,8 @@ public sealed record PunctuationToken : SyntaxToken
         : base(Text)
     { }
 
-    public static bool IsValid(int tokenId)
-        => tokenId is MajaLexer.Dot or MajaLexer.Comma
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId is MajaLexer.Dot or MajaLexer.Comma
             or MajaLexer.Colon or MajaLexer.SemiColon;
 }
 
@@ -190,8 +207,8 @@ public sealed record RoundBracketToken : SyntaxToken
         : base(Text)
     { }
 
-    public static bool IsValid(int tokenId)
-        => tokenId is MajaLexer.ParenOpen or MajaLexer.ParenClose;
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId is MajaLexer.ParenOpen or MajaLexer.ParenClose;
 }
 
 /// <summary>
@@ -203,8 +220,8 @@ public sealed record SquareBracketToken : SyntaxToken
         : base(Text)
     { }
 
-    public static bool IsValid(int tokenId)
-        => tokenId is MajaLexer.BracketOpen or MajaLexer.BracketClose;
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId is MajaLexer.BracketOpen or MajaLexer.BracketClose;
 }
 
 /// <summary>
@@ -216,8 +233,8 @@ public sealed record CurlyBracketToken : SyntaxToken
         : base(Text)
     { }
 
-    public static bool IsValid(int tokenId)
-        => tokenId is MajaLexer.CurlyOpen or MajaLexer.CurlyClose;
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId is MajaLexer.CurlyOpen or MajaLexer.CurlyClose;
 }
 
 /// <summary>
@@ -229,8 +246,8 @@ public sealed record AngleBracketToken : SyntaxToken
         : base(Text)
     { }
 
-    public static bool IsValid(int tokenId)
-        => tokenId is MajaLexer.AngleOpen or MajaLexer.AngleClose;
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId is MajaLexer.AngleOpen or MajaLexer.AngleClose;
 }
 
 /// <summary>
@@ -242,16 +259,20 @@ public sealed record CommentToken : SyntaxToken
         : base(Text)
     { }
 
-    public static bool IsValid(int tokenId)
-         => tokenId == MajaLexer.Comment;
+    public static bool IsValid(int tokenTypeId)
+         => tokenTypeId == MajaLexer.Comment;
 }
 
 /// <summary>
 /// Represents a syntax error token.
+/// TokenTypeId holds the expected token type id.
 /// </summary>
 public sealed record ErrorToken : SyntaxToken
 {
     public ErrorToken(string Text)
         : base(Text)
     { }
+
+    public override bool HasError
+        => true;
 }

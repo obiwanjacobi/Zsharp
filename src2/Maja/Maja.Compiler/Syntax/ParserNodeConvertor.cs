@@ -116,9 +116,11 @@ internal sealed class ParserNodeConvertor : MajaParserBaseVisitor<SyntaxNodeOrTo
     }
 
     public override SyntaxNodeOrToken[] VisitErrorNode(IErrorNode node)
+        // TODO: use context information to build a better error message.
         => new[] { new SyntaxNodeOrToken(
             new ErrorToken(node.GetText())
         {
+            TokenTypeId = node.Symbol.Type,
             Location = Location(node)
         } )};
 
