@@ -145,7 +145,7 @@ It should be possible for custom types to implement custom formatting. Most like
 MyStruct
     ...
 
-format(self: MyStruct, ctx: FormatContext): Str
+format: (self: MyStruct, ctx: FormatContext): Str
     return custom_formating_impl
 ```
 
@@ -247,14 +247,14 @@ regex = Rx("$[a-z]*")
 - Literal embedded Xml, Json, Yaml etc.
 
 ```csharp
-"""@Xml
+@Xml"""
 <?xml version="1.0"?>
 <document xmlns="example">
     <line attr="42" />
 </document>
 """
 
-"""@Json
+@Json"""
 {
     "property": "value",
     "array": [
@@ -284,7 +284,7 @@ Most useful when allowing to inject programmatic constructs like loops and value
 This idea can be extended to created embedded (declarative) DSLs.
 
 ```csharp
-"""@Html
+@Html"""
 html
     header
         style
@@ -296,7 +296,7 @@ html
 ```
 
 ```csharp
-"""@Wpf
+@Wpf"""
 // xaml like wpf dsl?        
 """
 ```
