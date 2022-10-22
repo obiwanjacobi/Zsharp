@@ -1,4 +1,5 @@
-﻿using Maja.Compiler.Parser;
+﻿using System.Linq;
+using Maja.Compiler.Parser;
 
 namespace Maja.Compiler.Syntax;
 
@@ -88,6 +89,26 @@ internal static class ExpressionOperatorMap
                     //MajaLexer.Xor => ExpressionOperatorKind.Xor,
                     _ => ExpressionOperatorKind.Unknown
                 },
+            _ => ExpressionOperatorKind.Unknown
+        };
+    }
+
+    public static ExpressionOperatorKind ToOperatorKind(this int[] tokenTypeIds,
+        ExpressionOperatorCategory category)
+    {
+        if (tokenTypeIds.Length == 1)
+            return tokenTypeIds[0].ToOperatorKind(category);
+
+        if (category != ExpressionOperatorCategory.Bitwise)
+            return ExpressionOperatorKind.Unknown;
+
+        if (!tokenTypeIds.All(t => t == MajaLexer.AngleClose))
+            return ExpressionOperatorKind.Unknown;
+
+        return tokenTypeIds.Length switch
+        {
+            2 => ExpressionOperatorKind.BitShiftRight,
+            3 => ExpressionOperatorKind.BitShiftRightSign,
             _ => ExpressionOperatorKind.Unknown
         };
     }

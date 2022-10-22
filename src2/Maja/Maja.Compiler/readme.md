@@ -4,7 +4,6 @@
 
 [ ] Syntax: Now records. Use class for ref-equality? /bc immutable state
 [ ] SyntaxNode: DescendentNodes, AncestorsAndSelf, AncestorOrSelf etc.
-[ ] ExpressionOperator: Implement mapping multi-token operators to kind.
 [ ] ErrorNode: Use context info to built better error message.
 
 ### Done
@@ -14,6 +13,7 @@ Started. Have ErrorToken with description.
 Made SyntaxNodeOrToken public and added SyntaxNodeOrTokenList.
 [x] Expression: Expression kind enum (logical, arithmetic, bitwise etc expression)
 [x] ExpressionOperator: kind enum (with precedence?)
+[x] ExpressionOperator: Implement mapping multi-token operators to kind.
 
 ## Descisions
 

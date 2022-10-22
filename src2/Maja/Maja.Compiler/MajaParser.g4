@@ -75,7 +75,7 @@ expressionOperatorArithmeticUnaryPrefix: Minus;
 expressionOperatorLogic: And | Or;
 expressionOperatorLogicUnaryPrefix: <assoc=right> Not;
 expressionOperatorComparison: Eq | Neq | AngleClose | AngleOpen | GtEq | LtEq;
-expressionOperatorBits: BitAnd | BitOr | BitXor_Imm | BitShiftL | Minus? AngleClose AngleClose | BitRollL | BitRollR;
+expressionOperatorBits: BitAnd | BitOr | BitXor_Imm | BitShiftL | AngleClose? AngleClose AngleClose | BitRollL | BitRollR;
 expressionOperatorBitsUnaryPrefix: <assoc=right> BitNot;
 expressionOperatorAssignment: <assoc=right> Eq;
 

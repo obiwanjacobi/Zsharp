@@ -4180,7 +4180,6 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode AngleClose(int i) {
 			return GetToken(MajaParser.AngleClose, i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Minus() { return GetToken(MajaParser.Minus, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BitRollL() { return GetToken(MajaParser.BitRollL, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BitRollR() { return GetToken(MajaParser.BitRollR, 0); }
 		public ExpressionOperatorBitsContext(ParserRuleContext parent, int invokingState)
@@ -4200,7 +4199,6 @@ public partial class MajaParser : Parser {
 	public ExpressionOperatorBitsContext expressionOperatorBits() {
 		ExpressionOperatorBitsContext _localctx = new ExpressionOperatorBitsContext(Context, State);
 		EnterRule(_localctx, 114, RULE_expressionOperatorBits);
-		int _la;
 		try {
 			State = 611;
 			ErrorHandler.Sync(this);
@@ -4234,19 +4232,18 @@ public partial class MajaParser : Parser {
 				}
 				break;
 			case AngleClose:
-			case Minus:
 				EnterOuterAlt(_localctx, 5);
 				{
 				State = 605;
 				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-				if (_la==Minus) {
+				switch ( Interpreter.AdaptivePredict(TokenStream,60,Context) ) {
+				case 1:
 					{
 					State = 604;
-					Match(Minus);
+					Match(AngleClose);
 					}
+					break;
 				}
-
 				State = 607;
 				Match(AngleClose);
 				State = 608;
@@ -5818,7 +5815,7 @@ public partial class MajaParser : Parser {
 		'\x4', '\x2', '\x2', '\x259', 's', '\x3', '\x2', '\x2', '\x2', '\x25A', 
 		'\x266', '\a', '\x38', '\x2', '\x2', '\x25B', '\x266', '\a', '\x39', '\x2', 
 		'\x2', '\x25C', '\x266', '\a', ';', '\x2', '\x2', '\x25D', '\x266', '\a', 
-		'<', '\x2', '\x2', '\x25E', '\x260', '\a', '\x32', '\x2', '\x2', '\x25F', 
+		'<', '\x2', '\x2', '\x25E', '\x260', '\a', '\"', '\x2', '\x2', '\x25F', 
 		'\x25E', '\x3', '\x2', '\x2', '\x2', '\x25F', '\x260', '\x3', '\x2', '\x2', 
 		'\x2', '\x260', '\x261', '\x3', '\x2', '\x2', '\x2', '\x261', '\x262', 
 		'\a', '\"', '\x2', '\x2', '\x262', '\x266', '\a', '\"', '\x2', '\x2', 

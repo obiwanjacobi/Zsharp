@@ -605,13 +605,9 @@ internal sealed class ParserNodeConvertor : MajaParserBaseVisitor<SyntaxNodeOrTo
         if (tokenCount < 1)
             return ExpressionOperatorKind.Unknown;
 
-        if (tokenCount > 1)
-            // todo implement multi-token operators
-            //return tokens.Select(t => t.Symbol.Type).ToArray().MapToKind(category);
-            return ExpressionOperatorKind.Unknown;
-
-        var token = tokens.Single();
-        return token.Symbol.Type.ToOperatorKind(category);
+        return tokens.Select(t => t.Symbol.Type)
+            .ToArray()
+            .ToOperatorKind(category);
     }
 
     public override SyntaxNodeOrToken[] VisitExpressionOperatorArithmetic(ExpressionOperatorArithmeticContext context)
