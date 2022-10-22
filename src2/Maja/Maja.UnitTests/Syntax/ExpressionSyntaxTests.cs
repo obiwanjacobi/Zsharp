@@ -17,10 +17,13 @@ public class ExpressionSyntaxTests
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
         var v = result.Members.First().As<VariableDeclarationSyntax>();
-        var expr = v.Expression!.As<ExpressionSyntax>();
-        expr.ChildNodes[0].As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
-        expr.ChildNodes[1].As<ExpressionOperatorSyntax>().Text.Should().Be("+");
-        expr.ChildNodes[2].As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("101");
+        var expr = v.Expression!.As<ExpressionBinarySyntax>();
+        expr.Left.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
+        expr.Operator.Text.Should().Be("+");
+        expr.Operator.Kind.Should().Be(ExpressionOperatorKind.Plus);
+        expr.Operator.Category.Should().Be(ExpressionOperatorCategory.Arithmetic);
+        expr.Operator.Cardinality.Should().Be(ExpressionOperatorCardinality.Binary);
+        expr.Right.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("101");
     }
 
     [Fact]
@@ -34,13 +37,13 @@ public class ExpressionSyntaxTests
         result.Members.Should().HaveCount(1);
         var v = result.Members.First().As<VariableDeclarationSyntax>();
         var lvl0 = v.Expression!.As<ExpressionBinarySyntax>();
-            var lvl1 = lvl0.Left.As<ExpressionBinarySyntax>();
-                var lvl2 = lvl1.Left.As<ExpressionBinarySyntax>();
-                lvl2.Left.As<ExpressionLiteralSyntax>().Text.Should().Be("42");
-                lvl2.Operator.Text.Should().Be("+");
-                lvl2.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("101");
-            lvl1.Operator.Text.Should().Be("/");
-            lvl1.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2");
+        var lvl1 = lvl0.Left.As<ExpressionBinarySyntax>();
+        var lvl2 = lvl1.Left.As<ExpressionBinarySyntax>();
+        lvl2.Left.As<ExpressionLiteralSyntax>().Text.Should().Be("42");
+        lvl2.Operator.Text.Should().Be("+");
+        lvl2.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("101");
+        lvl1.Operator.Text.Should().Be("/");
+        lvl1.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2");
         lvl0.Operator.Text.Should().Be("+");
         lvl0.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2112");
     }
@@ -56,14 +59,14 @@ public class ExpressionSyntaxTests
         result.Members.Should().HaveCount(1);
         var v = result.Members.First().As<VariableDeclarationSyntax>();
         var lvl0 = v.Expression!.As<ExpressionBinarySyntax>();
-            var lvl1 = lvl0.Left.As<ExpressionBinarySyntax>();
-            lvl1.Left.As<ExpressionLiteralSyntax>().Text.Should().Be("42");
-            lvl1.Operator.Text.Should().Be("+");
-                var lvl2 = lvl1.Right.As<ExpressionBinarySyntax>();
-                lvl2.Precedence.Should().BeTrue();
-                lvl2.Left.As<ExpressionLiteralSyntax>().Text.Should().Be("101");
-                lvl2.Operator.Text.Should().Be("/");
-                lvl2.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2");
+        var lvl1 = lvl0.Left.As<ExpressionBinarySyntax>();
+        lvl1.Left.As<ExpressionLiteralSyntax>().Text.Should().Be("42");
+        lvl1.Operator.Text.Should().Be("+");
+        var lvl2 = lvl1.Right.As<ExpressionBinarySyntax>();
+        lvl2.Precedence.Should().BeTrue();
+        lvl2.Left.As<ExpressionLiteralSyntax>().Text.Should().Be("101");
+        lvl2.Operator.Text.Should().Be("/");
+        lvl2.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2");
         lvl0.Operator.Text.Should().Be("+");
         lvl0.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2112");
     }

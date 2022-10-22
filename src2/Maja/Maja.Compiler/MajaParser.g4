@@ -70,7 +70,7 @@ expressionRule: Hash Identifier expression;
 expressionOperatorBinary: expressionOperatorArithmetic | expressionOperatorLogic | expressionOperatorComparison | expressionOperatorBits;
 expressionOperatorUnaryPrefix: expressionOperatorArithmeticUnaryPrefix | expressionOperatorLogicUnaryPrefix | expressionOperatorBitsUnaryPrefix;
 
-expressionOperatorArithmetic: Plus | Minus | Divide | Multiply | Mod | Power | Root;
+expressionOperatorArithmetic: Plus | Minus | Divide | Multiply | Modulo | Power | Root;
 expressionOperatorArithmeticUnaryPrefix: Minus;
 expressionOperatorLogic: And | Or;
 expressionOperatorLogicUnaryPrefix: <assoc=right> Not;

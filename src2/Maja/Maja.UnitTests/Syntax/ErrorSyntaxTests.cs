@@ -36,6 +36,6 @@ public class ErrorSyntaxTests
         var result = Syntax.Parse(code, throwOnError: false);
         result.HasError.Should().BeTrue();
         // Parser cannot make anything of this: all error tokens
-        result.Children.All(c => c.HasError).Should().BeTrue();
+        result.Children.Should().AllSatisfy(c => c.HasError.Should().BeTrue());
     }
 }

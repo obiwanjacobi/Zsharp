@@ -1,4 +1,6 @@
-﻿namespace Maja.Compiler.Syntax;
+﻿using Maja.Compiler.Parser;
+
+namespace Maja.Compiler.Syntax;
 
 /// <summary>
 /// Represents an expression operator.
@@ -9,6 +11,84 @@ public sealed record ExpressionOperatorSyntax : SyntaxNode
         : base(text)
     { }
 
+    public int Precedence { get; init; }
+
+    public ExpressionOperatorKind Kind { get; init; }
+
+    public ExpressionOperatorCategory Category { get; init; }
+
+    public ExpressionOperatorCardinality Cardinality { get; init; }
+
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionOperator(this);
+}
+
+internal static class ExpressionOperatorMap
+{
+    public static int ToOperatorPrecedence(this ExpressionOperatorKind kind,
+        ExpressionOperatorCardinality cardinality)
+    {
+        return (int)kind + ((5 - (int)cardinality) << 8);
+    }
+
+    public static ExpressionOperatorKind ToOperatorKind(this int tokenTypeId,
+        ExpressionOperatorCategory category)
+    {
+        return category switch
+        {
+            ExpressionOperatorCategory.Arithmetic =>
+                tokenTypeId switch
+                {
+                    MajaLexer.Plus => ExpressionOperatorKind.Plus,
+                    MajaLexer.Minus => ExpressionOperatorKind.Minus,
+                    MajaLexer.Multiply => ExpressionOperatorKind.Multiply,
+                    MajaLexer.Divide => ExpressionOperatorKind.Divide,
+                    MajaLexer.Modulo => ExpressionOperatorKind.Modulo,
+                    MajaLexer.Power => ExpressionOperatorKind.Power,
+                    MajaLexer.Root => ExpressionOperatorKind.Root,
+                    _ => ExpressionOperatorKind.Unknown
+                },
+            ExpressionOperatorCategory.Assignment =>
+                tokenTypeId switch
+                {
+                    MajaLexer.Eq => ExpressionOperatorKind.Assignment,
+                    _ => ExpressionOperatorKind.Unknown
+                },
+            ExpressionOperatorCategory.Bitwise =>
+                tokenTypeId switch
+                {
+                    MajaLexer.BitAnd => ExpressionOperatorKind.BitAnd,
+                    MajaLexer.BitNot => ExpressionOperatorKind.BitNot,
+                    MajaLexer.BitOr => ExpressionOperatorKind.BitOr,
+                    MajaLexer.BitRollL => ExpressionOperatorKind.BitRollLeft,
+                    MajaLexer.BitRollR => ExpressionOperatorKind.BitRollRight,
+                    MajaLexer.BitShiftL => ExpressionOperatorKind.BitShiftLeft,
+                    //MajaLexer.BitAnd => ExpressionOperatorKind.BitShiftRight,
+                    //MajaLexer.BitAnd => ExpressionOperatorKind.BitShiftRightSign,
+                    MajaLexer.BitXor_Imm => ExpressionOperatorKind.BitXor,
+                    _ => ExpressionOperatorKind.Unknown
+                },
+            ExpressionOperatorCategory.Comparison =>
+                tokenTypeId switch
+                {
+                    MajaLexer.Eq => ExpressionOperatorKind.Equals,
+                    MajaLexer.Neq => ExpressionOperatorKind.NotEquals,
+                    MajaLexer.AngleClose => ExpressionOperatorKind.Greater,
+                    MajaLexer.GtEq => ExpressionOperatorKind.GreaterOrEquals,
+                    MajaLexer.AngleOpen => ExpressionOperatorKind.Lesser,
+                    MajaLexer.LtEq => ExpressionOperatorKind.LesserOrEquals,
+                    _ => ExpressionOperatorKind.Unknown
+                },
+            ExpressionOperatorCategory.Logic =>
+                tokenTypeId switch
+                {
+                    MajaLexer.And => ExpressionOperatorKind.And,
+                    MajaLexer.Not => ExpressionOperatorKind.Not,
+                    MajaLexer.Or => ExpressionOperatorKind.Or,
+                    //MajaLexer.Xor => ExpressionOperatorKind.Xor,
+                    _ => ExpressionOperatorKind.Unknown
+                },
+            _ => ExpressionOperatorKind.Unknown
+        };
+    }
 }

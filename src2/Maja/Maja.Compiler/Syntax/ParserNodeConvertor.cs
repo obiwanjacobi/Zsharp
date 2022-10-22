@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
@@ -571,13 +572,23 @@ internal sealed class ParserNodeConvertor : MajaParserBaseVisitor<SyntaxNodeOrTo
     // Expression Operators
     //
 
-    public override SyntaxNodeOrToken[] VisitExpressionOperatorBinary(ExpressionOperatorBinaryContext context)
+    private SyntaxNodeOrToken[] CreateOperator<T>(
+        ExpressionOperatorCategory category, ExpressionOperatorCardinality cardinality,
+        Func<T, SyntaxNodeOrToken[]> getChildren, T context)
+        where T : ParserRuleContext
     {
-        var children = Children(base.VisitExpressionOperatorBinary, context);
+        var children = Children(getChildren, context);
+
+        var kind = DetermineOperatorKind(category, context);
+        var precedence = kind.ToOperatorPrecedence(cardinality);
 
         return new[] { new SyntaxNodeOrToken(
             new ExpressionOperatorSyntax(context.GetText())
         {
+            Precedence = precedence,
+            Kind = kind,
+            Category = category,
+            Cardinality = cardinality,
             Location = Location(context),
             Children = children.All,
             ChildNodes = children.Nodes,
@@ -585,19 +596,71 @@ internal sealed class ParserNodeConvertor : MajaParserBaseVisitor<SyntaxNodeOrTo
         } )};
     }
 
-    public override SyntaxNodeOrToken[] VisitExpressionOperatorUnaryPrefix(ExpressionOperatorUnaryPrefixContext context)
+    private ExpressionOperatorKind DetermineOperatorKind(
+        ExpressionOperatorCategory category, ParserRuleContext context)
     {
-        var children = Children(base.VisitExpressionOperatorUnaryPrefix, context);
+        var tokens = context.children.OfType<TerminalNodeImpl>();
+        var tokenCount = tokens.Count();
 
-        return new[] { new SyntaxNodeOrToken(
-            new ExpressionOperatorSyntax(context.GetText())
-        {
-            Location = Location(context),
-            Children = children.All,
-            ChildNodes = children.Nodes,
-            TrailingTokens = children.Tokens
-        } )};
+        if (tokenCount < 1)
+            return ExpressionOperatorKind.Unknown;
+
+        if (tokenCount > 1)
+            // todo implement multi-token operators
+            //return tokens.Select(t => t.Symbol.Type).ToArray().MapToKind(category);
+            return ExpressionOperatorKind.Unknown;
+
+        var token = tokens.Single();
+        return token.Symbol.Type.ToOperatorKind(category);
     }
+
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorArithmetic(ExpressionOperatorArithmeticContext context)
+        => CreateOperator(
+            ExpressionOperatorCategory.Arithmetic,
+            ExpressionOperatorCardinality.Binary,
+            base.VisitExpressionOperatorArithmetic, context);
+
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorArithmeticUnaryPrefix(ExpressionOperatorArithmeticUnaryPrefixContext context)
+        => CreateOperator(
+            ExpressionOperatorCategory.Arithmetic,
+            ExpressionOperatorCardinality.Unary,
+            base.VisitExpressionOperatorArithmeticUnaryPrefix, context);
+
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorBits(ExpressionOperatorBitsContext context)
+        => CreateOperator(
+            ExpressionOperatorCategory.Bitwise,
+            ExpressionOperatorCardinality.Binary,
+            base.VisitExpressionOperatorBits, context);
+
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorBitsUnaryPrefix(ExpressionOperatorBitsUnaryPrefixContext context)
+        => CreateOperator(
+            ExpressionOperatorCategory.Bitwise,
+            ExpressionOperatorCardinality.Unary,
+            base.VisitExpressionOperatorBitsUnaryPrefix, context);
+
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorAssignment(ExpressionOperatorAssignmentContext context)
+        => CreateOperator(
+            ExpressionOperatorCategory.Assignment,
+            ExpressionOperatorCardinality.Unary,
+            base.VisitExpressionOperatorAssignment, context);
+
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorComparison(ExpressionOperatorComparisonContext context)
+        => CreateOperator(
+            ExpressionOperatorCategory.Comparison,
+            ExpressionOperatorCardinality.Binary,
+            base.VisitExpressionOperatorComparison, context);
+
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorLogic(ExpressionOperatorLogicContext context)
+        => CreateOperator(
+            ExpressionOperatorCategory.Logic,
+            ExpressionOperatorCardinality.Binary,
+            base.VisitExpressionOperatorLogic, context);
+
+    public override SyntaxNodeOrToken[] VisitExpressionOperatorLogicUnaryPrefix(ExpressionOperatorLogicUnaryPrefixContext context)
+        => CreateOperator(
+            ExpressionOperatorCategory.Logic,
+            ExpressionOperatorCardinality.Unary,
+            base.VisitExpressionOperatorLogicUnaryPrefix, context);
 
     //
     // Identifiers
