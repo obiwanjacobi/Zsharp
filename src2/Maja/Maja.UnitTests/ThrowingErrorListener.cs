@@ -2,7 +2,7 @@
 using System.IO;
 using Antlr4.Runtime;
 
-namespace Maja.Compiler;
+namespace Maja.UnitTests;
 
 internal sealed class ThrowingErrorListener<TSymbol> : IAntlrErrorListener<TSymbol>
 {

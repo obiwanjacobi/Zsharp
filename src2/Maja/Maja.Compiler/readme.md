@@ -14,6 +14,7 @@ Made SyntaxNodeOrToken public and added SyntaxNodeOrTokenList.
 [x] Expression: Expression kind enum (logical, arithmetic, bitwise etc expression)
 [x] ExpressionOperator: kind enum (with precedence?)
 [x] ExpressionOperator: Implement mapping multi-token operators to kind.
+[x] Compiler: move to SyntaxTree and remove.
 
 ## Descisions
 

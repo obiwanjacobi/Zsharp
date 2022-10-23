@@ -9,7 +9,7 @@ namespace Maja.UnitTests.Syntax
     {
         public static CompilationUnitSyntax Parse(string code, bool throwOnError = true)
         {
-            var parser = Maja.Compiler.Compiler.CreateParser(code, "SyntaxTests", false);
+            var parser = Compiler.CreateParser(code, "SyntaxTests", false);
             var parseTree = parser.compilationUnit();
 
             if (throwOnError)

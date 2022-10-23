@@ -8,7 +8,7 @@ public class CodeBlockParserTests
 {
     private static CompilationUnitContext Parse(string code)
     {
-        var parser = Maja.Compiler.Compiler.CreateParser(code, nameof(CodeBlockParserTests), throwOnError: true);
+        var parser = Compiler.CreateParser(code, nameof(CodeBlockParserTests), throwOnError: true);
         var parseTree = parser.compilationUnit();
         return parseTree;
     }

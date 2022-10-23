@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Maja.Compiler\Maja.Compiler.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Compilation\" />
+  </ItemGroup>
+
 </Project>
