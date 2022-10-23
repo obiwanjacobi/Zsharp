@@ -11,6 +11,9 @@ public sealed record TypeArgumentSyntax : SyntaxNode
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.TypeArgument;
+
     /// <summary>
     /// The type specified as the argument.
     /// </summary>

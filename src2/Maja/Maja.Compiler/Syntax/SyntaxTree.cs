@@ -43,7 +43,5 @@ public class SyntaxTree
 
     private CompilationUnitSyntax? _root;
     public CompilationUnitSyntax Root
-    {
-        get { return _root ?? throw new InvalidOperationException("No root SyntaxNode was initialized."); }
-    }
+        => _root ?? throw new InvalidOperationException("Root was not initialized.");
 }

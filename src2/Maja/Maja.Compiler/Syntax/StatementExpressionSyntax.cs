@@ -11,6 +11,9 @@ public sealed record StatementExpressionSyntax : StatementSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.StatementExpression;
+
     /// <summary>
     /// The expression of this statement.
     /// </summary>

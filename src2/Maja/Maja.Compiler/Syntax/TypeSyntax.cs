@@ -12,6 +12,9 @@ public sealed record TypeSyntax : SyntaxNode
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.Type;
+
     /// <summary>
     /// The name (or alias) of the type referenced.
     /// </summary>

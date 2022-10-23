@@ -12,6 +12,9 @@ public sealed record FunctionDelcarationSyntax : MemberDeclarationSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.FunctionDeclaration;
+
     /// <summary>
     /// The name of the declared function.
     /// </summary>

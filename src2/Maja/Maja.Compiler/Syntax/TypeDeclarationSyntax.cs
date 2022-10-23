@@ -12,6 +12,9 @@ public sealed record TypeDeclarationSyntax : MemberDeclarationSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.TypeDeclaration;
+
     /// <summary>
     /// The name of the type.
     /// </summary>

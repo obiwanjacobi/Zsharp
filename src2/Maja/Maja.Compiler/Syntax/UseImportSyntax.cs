@@ -11,6 +11,9 @@ public sealed record UseImportSyntax : SyntaxNode
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.UseImportDirective;
+
     /// <summary>
     /// The qualified name of the import.
     /// </summary>

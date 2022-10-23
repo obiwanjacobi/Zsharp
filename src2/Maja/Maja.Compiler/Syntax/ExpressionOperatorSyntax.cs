@@ -14,11 +14,14 @@ public sealed record ExpressionOperatorSyntax : SyntaxNode
 
     public int Precedence { get; init; }
 
-    public ExpressionOperatorKind Kind { get; init; }
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.ExpressionOperator;
 
-    public ExpressionOperatorCategory Category { get; init; }
+    public ExpressionOperatorKind OperatorKind { get; init; }
 
-    public ExpressionOperatorCardinality Cardinality { get; init; }
+    public ExpressionOperatorCategory OperatorCategory { get; init; }
+
+    public ExpressionOperatorCardinality OperatorCardinality { get; init; }
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionOperator(this);

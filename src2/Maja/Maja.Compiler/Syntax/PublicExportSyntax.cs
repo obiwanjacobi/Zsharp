@@ -12,6 +12,9 @@ public sealed record PublicExportSyntax : SyntaxNode
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.PublicExportDirective;
+
     /// <summary>
     /// The qualified names specified at the export statement.
     /// </summary>

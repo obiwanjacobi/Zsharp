@@ -12,6 +12,9 @@ public sealed record CompilationUnitSyntax : SyntaxNode
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.CompilationUnit;
+
     /// <summary>
     /// Filtered collection of use import entries.
     /// </summary>
@@ -19,7 +22,7 @@ public sealed record CompilationUnitSyntax : SyntaxNode
         => ChildNodes.OfType<UseImportSyntax>();
 
     /// <summary>
-    /// Filtered collection of pubilc export entries.
+    /// Filtered collection of public export entries.
     /// </summary>
     public IEnumerable<PublicExportSyntax> PublicExports
         => ChildNodes.OfType<PublicExportSyntax>();

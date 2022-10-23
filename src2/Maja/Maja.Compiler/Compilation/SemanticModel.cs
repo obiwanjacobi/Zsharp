@@ -8,5 +8,25 @@
         {
             _compilation = compilation;
         }
+
+        //public Symbol GetDeclaredSymbol(MemberDeclarationSyntax declarationSyntax)
+        //{
+
+        //}
+
+        //public Symbol GetDeclaredSymbol(TypeDeclarationSyntax typeDeclaration)
+        //{
+
+        //}
+
+        //public Symbol GetDeclaredSymbol(FunctionDelcarationSyntax functionDelcaration)
+        //{
+
+        //}
+
+        //public Symbol GetDeclaredSymbol(VariableDeclarationSyntax variableDeclaration)
+        //{
+
+        //}
     }
 }

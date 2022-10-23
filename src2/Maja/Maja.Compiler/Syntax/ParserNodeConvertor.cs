@@ -586,9 +586,9 @@ internal sealed class ParserNodeConvertor : MajaParserBaseVisitor<SyntaxNodeOrTo
             new ExpressionOperatorSyntax(context.GetText())
         {
             Precedence = precedence,
-            Kind = kind,
-            Category = category,
-            Cardinality = cardinality,
+            OperatorKind = kind,
+            OperatorCategory = category,
+            OperatorCardinality = cardinality,
             Location = Location(context),
             Children = children.All,
             ChildNodes = children.Nodes,

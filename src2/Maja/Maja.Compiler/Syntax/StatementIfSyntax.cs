@@ -11,6 +11,9 @@ public record StatementIfSyntax : StatementSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.StatementIf;
+
     /// <summary>
     /// The condition expression of the if statement.
     /// </summary>
@@ -48,6 +51,9 @@ public sealed record StatementElseIfSyntax : StatementIfSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.StatementElseIf;
+
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementElseIf(this);
 }
@@ -60,6 +66,9 @@ public sealed record StatementElseSyntax : StatementSyntax
     public StatementElseSyntax(string text)
         : base(text)
     { }
+
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.StatementElse;
 
     /// <summary>
     /// The code that is executed when the if-condition evaluates to false.

@@ -33,6 +33,9 @@ public sealed record VariableDeclarationTypedSyntax : VariableDeclarationSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.TypedVariableDeclaration;
+
     /// <summary>
     /// The type specified for the variable.
     /// </summary>
@@ -52,6 +55,9 @@ public sealed record VariableDeclarationInferredSyntax : VariableDeclarationSynt
     public VariableDeclarationInferredSyntax(string text)
         : base(text)
     { }
+
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.InferredVariableDeclaration;
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnVariableDeclarationInferred(this);

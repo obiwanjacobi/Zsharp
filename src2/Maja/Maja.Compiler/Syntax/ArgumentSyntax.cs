@@ -11,6 +11,9 @@ public sealed record ArgumentSyntax : SyntaxNode
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.FunctionArgument;
+
     /// <summary>
     /// The expression that represent the argument.
     /// </summary>

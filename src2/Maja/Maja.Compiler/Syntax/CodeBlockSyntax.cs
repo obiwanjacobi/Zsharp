@@ -12,6 +12,9 @@ public sealed record CodeBlockSyntax : SyntaxNode
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.CodeBlock;
+
     /// <summary>
     /// Filtered collection of only member (function, type and variable) declarations.
     /// </summary>

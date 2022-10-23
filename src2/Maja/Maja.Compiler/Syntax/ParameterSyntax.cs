@@ -11,6 +11,9 @@ public sealed record ParameterSyntax : SyntaxNode
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.FunctionParameter;
+
     /// <summary>
     /// The name of the parameter.
     /// </summary>

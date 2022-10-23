@@ -16,6 +16,8 @@ public abstract partial record SyntaxNode
     /// </summary>
     public string Text { get; }
 
+    public abstract SyntaxKind SyntaxKind { get; }
+
     public bool HasError
         => Children.Any(c => c.HasError);
 

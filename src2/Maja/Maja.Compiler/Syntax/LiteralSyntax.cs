@@ -9,6 +9,9 @@ public sealed record LiteralNumberSyntax : SyntaxNode
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.LiteralNumber;
+
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralNumber(this);
 }
@@ -21,6 +24,9 @@ public sealed record LiteralStringSyntax : SyntaxNode
     public LiteralStringSyntax(string text)
         : base(text)
     { }
+
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.LiteralString;
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralString(this);

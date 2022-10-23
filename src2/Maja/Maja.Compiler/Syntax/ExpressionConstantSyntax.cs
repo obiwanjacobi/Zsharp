@@ -21,6 +21,9 @@ public record ExpressionLiteralSyntax : ExpressionConstantSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.LiteralExpression;
+
     /// <summary>
     /// Set when the literal expression represents a number value.
     /// </summary>
@@ -47,6 +50,9 @@ public record ExpressionLiteralBoolSyntax : ExpressionConstantSyntax
     {
         Value = text == "true";
     }
+
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.LiteralBoolExpression;
 
     /// <summary>
     /// The parsed boolean value.

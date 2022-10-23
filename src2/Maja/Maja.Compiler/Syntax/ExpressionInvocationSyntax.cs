@@ -12,6 +12,9 @@ public sealed record ExpressionInvocationSyntax : ExpressionSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.InvocationExpression;
+
     /// <summary>
     /// The name of the function being invoced.
     /// </summary>

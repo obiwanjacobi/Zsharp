@@ -11,6 +11,9 @@ public sealed record StatementReturnSyntax : StatementSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.StatementReturn;
+
     /// <summary>
     /// The expression of the return value, if any.
     /// </summary>

@@ -11,6 +11,9 @@ public sealed record ExpressionBinarySyntax : ExpressionSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.BinaryExpression;
+
     /// <summary>
     /// The left part of the expression.
     /// </summary>

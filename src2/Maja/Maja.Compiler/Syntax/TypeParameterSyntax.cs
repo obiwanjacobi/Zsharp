@@ -33,6 +33,9 @@ public sealed record TypeParameterGenericSyntax : TypeParameterSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.GenericTypeParameter;
+
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterGeneric(this);
 }
@@ -46,6 +49,9 @@ public sealed record TypeParameterTemplateSyntax : TypeParameterSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.TemplateTypeParameter;
+
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterTemplate(this);
 }
@@ -58,6 +64,9 @@ public sealed record TypeParameterValueSyntax : TypeParameterSyntax
     public TypeParameterValueSyntax(string text)
         : base(text)
     { }
+
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.ValueTypeParameter;
 
     public ExpressionSyntax? Expression
         => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();

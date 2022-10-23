@@ -9,6 +9,9 @@ public record NameSyntax : SyntaxNode
         : base(name)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.NameIdentifier;
+
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnName(this);
 }
@@ -21,4 +24,7 @@ public sealed record QualifiedNameSyntax : NameSyntax
     public QualifiedNameSyntax(string name)
         : base(name)
     { }
+
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.QualifiedNameIdentifier;
 }

@@ -28,6 +28,9 @@ public sealed record MemberEnumSyntax : TypeMemberSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.MemberEnum;
+
     /// <summary>
     /// The enum value expression, if specified.
     /// </summary>
@@ -46,6 +49,9 @@ public sealed record MemberFieldSyntax : TypeMemberSyntax
     public MemberFieldSyntax(string text)
         : base(text)
     { }
+
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.MemberField;
 
     /// <summary>
     /// The type of the field.
@@ -72,6 +78,9 @@ public sealed record MemberRuleSyntax : TypeMemberSyntax
         : base(text)
     { }
 
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.MemberRule;
+
     public ExpressionSyntax? Expression
         => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
@@ -89,6 +98,9 @@ public sealed record TypeMemberListSyntax<T> : SyntaxNode
     public TypeMemberListSyntax(string text)
         : base(text)
     { }
+
+    public override SyntaxKind SyntaxKind
+        => SyntaxKind.MemberList;
 
     public IEnumerable<T> Members
         => ChildNodes.Cast<T>();
