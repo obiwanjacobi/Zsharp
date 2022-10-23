@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Maja.Compiler;
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.Syntax;
 
 namespace Maja.UnitTests.Syntax

@@ -1,9 +1,9 @@
 ﻿using System;
 using Maja.Compiler.Syntax;
 
-namespace Maja.Compiler;
+namespace Maja.Compiler.Diagnostics;
 
-public enum CompilerMessageKind
+public enum DiagnosticMessageKind
 {
     Trace,
     Info,
@@ -12,9 +12,9 @@ public enum CompilerMessageKind
     Critical,
 }
 
-public record CompilerMessage
+public record DiagnosticMessage
 {
-    public CompilerMessage(CompilerMessageKind messageType, SyntaxLocation location, Exception exception)
+    public DiagnosticMessage(DiagnosticMessageKind messageType, SyntaxLocation location, Exception exception)
     {
         MessageKind = messageType;
         Location = location;
@@ -22,7 +22,7 @@ public record CompilerMessage
         Error = exception;
     }
 
-    public CompilerMessageKind MessageKind { get; }
+    public DiagnosticMessageKind MessageKind { get; }
     public string Text { get; }
     public SyntaxLocation Location { get; }
     public Exception? Error { get; }
