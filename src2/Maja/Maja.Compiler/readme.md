@@ -29,3 +29,14 @@ Only necessary when tree is allowed to change.
 Only necessary when tree is allowed to change.
 - [NotDoing] SyntaxNodeBuilder: new class to create/change a SyntaxTree. Fluent interface.
 Only necessary when tree is allowed to change.
+
+
+## Notes
+
+- Lexer does actual value extraction? (number token to int)
+- assignment expression are not binary expression. You need a different tree (right-assoc).
+Analyze if all our assignment variations (arrays etc) will fit in an expression.
+- CodeBlock is a statement?
+- No Binder/Binding/BoundNode: internal Intermediate Representation (IR)? Incl. Symbols & lowering/rewriting etc.
+Analysis is done through the public SemanticModel. Symbols are also public.
+- Else /ElseIf is not a root-statement. Should not derive from Statement base?

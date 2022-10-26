@@ -1,6 +1,13 @@
 ﻿namespace Maja.Compiler.Symbol;
 
-public record Symbol
+public abstract record Symbol
 {
-    public SymbolKind Kind { get; }
+    protected Symbol(string name)
+    {
+        Name = name;
+    }
+
+    public string Name { get; }
+
+    public abstract SymbolKind Kind { get; }
 }

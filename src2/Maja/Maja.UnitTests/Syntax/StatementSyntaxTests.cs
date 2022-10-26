@@ -18,7 +18,7 @@ public class StatementSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        var fn = result.Members.First().As<FunctionDeclarationSyntax>();
         fn.CodeBlock.Statements.Should().HaveCount(1);
         var statIf = fn.CodeBlock.Statements.First().As<StatementIfSyntax>();
         statIf.Expression.Text.Should().Be("true");
@@ -38,7 +38,7 @@ public class StatementSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        var fn = result.Members.First().As<FunctionDeclarationSyntax>();
         fn.CodeBlock.Statements.Should().HaveCount(1);
         var statIf = fn.CodeBlock.Statements.First().As<StatementIfSyntax>();
         statIf.Expression.Text.Should().Be("true");
@@ -60,7 +60,7 @@ public class StatementSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        var fn = result.Members.First().As<FunctionDeclarationSyntax>();
         fn.CodeBlock.Statements.Should().HaveCount(1);
         var statIf = fn.CodeBlock.Statements.First().As<StatementIfSyntax>();
         statIf.Expression.Text.Should().Be("true");

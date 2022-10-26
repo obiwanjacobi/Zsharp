@@ -14,7 +14,7 @@ public interface ISyntaxVisitor<R>
     R OnUseImport(UseImportSyntax node);
     R OnCodeBlock(CodeBlockSyntax node);
 
-    R OnFunctionDeclaration(FunctionDelcarationSyntax node);
+    R OnFunctionDeclaration(FunctionDeclarationSyntax node);
     R OnParameter(ParameterSyntax node);
     R OnArgument(ArgumentSyntax node);
 
@@ -39,6 +39,7 @@ public interface ISyntaxVisitor<R>
     R OnStatementReturn(StatementReturnSyntax node);
     R OnStatementExpression(StatementExpressionSyntax node);
 
+    R OnExpressionUnary(ExpressionUnarySyntax node);
     R OnExpressionBinary(ExpressionBinarySyntax node);
     R OnExpressionInvocation(ExpressionInvocationSyntax node);
     R OnExpressionLiteral(ExpressionLiteralSyntax node);
@@ -91,7 +92,7 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnCodeBlock(CodeBlockSyntax node)
         => VisitChildren(node);
 
-    public virtual R OnFunctionDeclaration(FunctionDelcarationSyntax node)
+    public virtual R OnFunctionDeclaration(FunctionDeclarationSyntax node)
         => VisitChildren(node);
 
     public virtual R OnParameter(ParameterSyntax node)
@@ -147,14 +148,16 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnStatementExpression(StatementExpressionSyntax node)
         => VisitChildren(node);
 
+    public virtual R OnExpressionUnary(ExpressionUnarySyntax node)
+        => VisitChildren(node);
     public virtual R OnExpressionBinary(ExpressionBinarySyntax node)
         => VisitChildren(node);
+
     public virtual R OnExpressionInvocation(ExpressionInvocationSyntax node)
         => VisitChildren(node);
 
     public virtual R OnExpressionLiteral(ExpressionLiteralSyntax node)
         => VisitChildren(node);
-
     public virtual R OnExpressionLiteralBool(ExpressionLiteralBoolSyntax node)
         => VisitChildren(node);
 

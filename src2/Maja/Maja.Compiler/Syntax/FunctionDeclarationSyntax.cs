@@ -6,9 +6,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a function declaration.
 /// </summary>
-public sealed record FunctionDelcarationSyntax : MemberDeclarationSyntax
+public sealed record FunctionDeclarationSyntax : MemberDeclarationSyntax
 {
-    public FunctionDelcarationSyntax(string text)
+    public FunctionDeclarationSyntax(string text)
         : base(text)
     { }
 

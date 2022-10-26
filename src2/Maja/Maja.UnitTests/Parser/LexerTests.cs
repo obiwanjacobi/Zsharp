@@ -3,7 +3,7 @@ using Antlr4.Runtime;
 using Maja.Compiler.Parser;
 using Xunit;
 
-namespace Maja.UnitTests.Lexer;
+namespace Maja.UnitTests.Parser;
 
 public class LexerTests
 {

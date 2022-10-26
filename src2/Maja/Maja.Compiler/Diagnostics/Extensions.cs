@@ -14,7 +14,7 @@ internal static class Extensions
         if (ctx.exception is not null)
         {
             var location = SyntaxLocation.From(ctx);
-            errors.Add(new DiagnosticMessage(DiagnosticMessageKind.Error, location, ctx.exception));
+            errors.Add(new DiagnosticMessage(location, ctx.exception));
         }
 
         if (ctx.children is not null)

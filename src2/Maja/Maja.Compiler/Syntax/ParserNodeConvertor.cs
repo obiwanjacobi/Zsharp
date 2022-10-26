@@ -194,7 +194,7 @@ internal sealed class ParserNodeConvertor : MajaParserBaseVisitor<SyntaxNodeOrTo
         var children = Children(base.VisitFunctionDecl, context);
 
         return new[]{ new SyntaxNodeOrToken(
-            new FunctionDelcarationSyntax(context.GetText())
+            new FunctionDeclarationSyntax(context.GetText())
         {
             Location = Location(context),
             Children = children.All,

@@ -14,12 +14,19 @@ public enum DiagnosticMessageKind
 
 public record DiagnosticMessage
 {
-    public DiagnosticMessage(DiagnosticMessageKind messageType, SyntaxLocation location, Exception exception)
+    public DiagnosticMessage(SyntaxLocation location, Exception exception)
     {
-        MessageKind = messageType;
+        MessageKind = DiagnosticMessageKind.Error;
         Location = location;
         Text = exception.Message;
         Error = exception;
+    }
+
+    public DiagnosticMessage(DiagnosticMessageKind kind, SyntaxLocation location, string message)
+    {
+        MessageKind = DiagnosticMessageKind.Error;
+        Location = location;
+        Text = message;
     }
 
     public DiagnosticMessageKind MessageKind { get; }

@@ -18,7 +18,7 @@ public class ErrorSyntaxTests
 
         var result = Syntax.Parse(code, throwOnError: false);
         result.HasError.Should().BeTrue();
-        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        var fn = result.Members.First().As<FunctionDeclarationSyntax>();
         fn.ReturnType!.Name.HasTrailingTokens.Should().BeTrue();
         var err = fn.ReturnType!.Name.TrailingTokens.Single().As<ErrorToken>();
         err.Text.Should().Contain("missing Identifier");

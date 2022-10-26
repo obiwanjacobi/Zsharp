@@ -1,4 +1,6 @@
-﻿using Maja.Compiler.Syntax;
+﻿using System;
+using System.Collections.Generic;
+using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.Compilation;
 
@@ -7,11 +9,11 @@ namespace Maja.Compiler.Compilation;
 /// </summary>
 public sealed class Compilation
 {
-    private readonly SyntaxTree _syntaxTree;
+    private readonly List<SyntaxTree> _syntaxTrees = new();
 
     internal Compilation(SyntaxTree syntaxTree)
     {
-        _syntaxTree = syntaxTree;
+        _syntaxTrees.Add(syntaxTree);
     }
 
     public static Compilation Create(
@@ -23,6 +25,9 @@ public sealed class Compilation
 
     public SemanticModel GetSemanticModel(SyntaxTree tree)
     {
-        return new SemanticModel(this);
+        if (!_syntaxTrees.Contains(tree))
+            throw new ArgumentException("Specified SyntaxTree does not belong to this Compilation.");
+
+        return new SemanticModel(this, tree);
     }
 }

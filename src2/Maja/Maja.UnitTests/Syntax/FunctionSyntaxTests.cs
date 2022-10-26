@@ -17,7 +17,7 @@ public class FunctionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        var fn = result.Members.First().As<FunctionDeclarationSyntax>();
         fn.Identifier.Text.Should().Be("fn");
         fn.CodeBlock.Statements.Should().HaveCount(1);
         var ret = fn.CodeBlock.Statements.First().As<StatementReturnSyntax>();
@@ -34,7 +34,7 @@ public class FunctionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        var fn = result.Members.First().As<FunctionDeclarationSyntax>();
         fn.Identifier.Text.Should().Be("fn");
         fn.Parameters.Should().HaveCount(1);
         var param = fn.Parameters.First().As<ParameterSyntax>();
@@ -55,7 +55,7 @@ public class FunctionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        var fn = result.Members.First().As<FunctionDeclarationSyntax>();
         fn.Identifier.Text.Should().Be("fn");
         fn.Parameters.Should().HaveCount(2);
         var param = fn.Parameters.First().As<ParameterSyntax>();
@@ -76,7 +76,7 @@ public class FunctionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var fn = result.Members.First().As<FunctionDelcarationSyntax>();
+        var fn = result.Members.First().As<FunctionDeclarationSyntax>();
         fn.Identifier.Text.Should().Be("fn");
         fn.ReturnType!.Name.Text.Should().Be("U8");
         var ret = fn.CodeBlock.Statements.First().As<StatementReturnSyntax>();
