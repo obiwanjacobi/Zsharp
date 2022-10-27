@@ -370,6 +370,23 @@ Related to context variables?
 
 ---
 
+### Parameter Validation
+
+> TBD
+
+Some way to do basic parameter validation in a structured manner.
+
+```csharp
+fn: [c]<T>(p1: U8, p2: Str): Bool
+    // same rules as for types?
+    #p1 =< 42
+    #p2.Length < 100
+    ...
+```
+
+These validation rules could then be emitted as a separate function that can be inlined at the call site to prevent 'expensive' calls only to find out the params were not valid.
+This is only useful when the calls are expensive enough, so not for normal in process calls that require no dispatching, marshalling or any other type of processing.
+
 ## Return values
 
 Returning multiple values from a function is only possible using a (custom) structure type or a tuple/anonymous structure.
