@@ -2,7 +2,7 @@
 
 namespace Maja.Compiler.IR;
 
-internal class IrNumber
+internal static class IrNumber
 {
     internal static object ParseNumber(string text)
     {

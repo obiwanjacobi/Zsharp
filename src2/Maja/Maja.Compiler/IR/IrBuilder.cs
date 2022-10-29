@@ -11,7 +11,7 @@ namespace Maja.Compiler.IR;
 /// <summary>
 /// Builds the intermediate representation tree from the syntax tree(s).
 /// </summary>
-internal class IrBuilder
+internal sealed class IrBuilder
 {
     private readonly DiagnosticList _diagnostics = new();
     private readonly Stack<IrScope> _scopes = new();

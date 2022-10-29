@@ -2,7 +2,7 @@
 
 namespace Maja.Compiler.IR;
 
-internal class IrImport : IrNode
+internal sealed class IrImport : IrNode
 {
     public IrImport(UseImportSyntax syntax)
         : base(syntax)

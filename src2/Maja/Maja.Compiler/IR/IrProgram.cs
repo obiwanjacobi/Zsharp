@@ -5,7 +5,7 @@ using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR
 {
-    internal class IrProgram : IrNode
+    internal sealed class IrProgram : IrNode
     {
         public IrProgram(SyntaxNode syntax, IrScope scope, IrCompilation root,
             IEnumerable<DiagnosticMessage> diagnostics)

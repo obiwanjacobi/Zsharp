@@ -22,7 +22,7 @@ internal sealed class IrStatementIf : IrStatement
         => (StatementIfSyntax)base.Syntax;
 }
 
-internal class IrElseClause : IrNode
+internal sealed class IrElseClause : IrNode
 {
     public IrElseClause(StatementElseSyntax syntax, IrCodeBlock codeBlock)
         : base(syntax)
@@ -36,7 +36,7 @@ internal class IrElseClause : IrNode
         => (StatementElseSyntax)base.Syntax;
 }
 
-internal class IrElseIfClause : IrNode
+internal sealed class IrElseIfClause : IrNode
 {
     public IrElseIfClause(StatementElseIfSyntax syntax, IrExpression condition, IrCodeBlock codeBlock)
         : base(syntax)

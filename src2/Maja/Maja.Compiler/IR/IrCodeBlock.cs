@@ -3,7 +3,7 @@ using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR
 {
-    internal class IrCodeBlock : IrNode
+    internal sealed class IrCodeBlock : IrNode
     {
         public IrCodeBlock(CodeBlockSyntax syntax,
             IEnumerable<IrStatement> statements, IEnumerable<IrDeclaration> declarations)

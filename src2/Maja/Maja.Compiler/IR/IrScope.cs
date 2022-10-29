@@ -5,7 +5,7 @@ using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.IR;
 
-internal class IrScope
+internal sealed class IrScope
 {
     private Dictionary<string, Symbol.Symbol>? _symbols;
 

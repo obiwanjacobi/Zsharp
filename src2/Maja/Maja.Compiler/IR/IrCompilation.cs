@@ -4,7 +4,7 @@ using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR
 {
-    internal class IrCompilation : IrNode
+    internal sealed class IrCompilation : IrNode
     {
         public IrCompilation(SyntaxNode syntax,
             IEnumerable<IrImport> imports, IEnumerable<IrExport> exports,
