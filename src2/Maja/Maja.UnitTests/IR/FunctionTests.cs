@@ -48,7 +48,7 @@ public class FunctionTests
         //fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().HaveCount(2);
-        fn.ReturnType.Should().Be(TypeSymbol.Bool);
+        fn.ReturnType!.Symbol.Should().Be(TypeSymbol.Bool);
         // scope
         fn.Scope.Symbols.Should().HaveCount(2);
         // symbol
