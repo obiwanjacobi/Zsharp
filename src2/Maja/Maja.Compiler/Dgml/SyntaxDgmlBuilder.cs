@@ -2,7 +2,7 @@
 
 namespace Maja.Dgml
 {
-    public class SyntaxDgmlBuilder
+    public sealed class SyntaxDgmlBuilder
     {
         private readonly DgmlBuilder _builder = new("SyntaxNode");
 

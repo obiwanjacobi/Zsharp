@@ -94,7 +94,7 @@ public abstract partial class SyntaxNode
     {
         get
         {
-            Debug.Assert(_leadingTokens is not null, "SyntaxNode is uninitialized. LeadingTokens are not set.");
+            //Debug.Assert(_leadingTokens is not null, "SyntaxNode is uninitialized. LeadingTokens are not set.");
             return _leadingTokens!;
         }
         internal set
@@ -119,7 +119,7 @@ public abstract partial class SyntaxNode
     {
         get
         {
-            Debug.Assert(_trailingTokens is not null, "SyntaxNode is uninitialized. TrailingTokens are not set.");
+            //Debug.Assert(_trailingTokens is not null, "SyntaxNode is uninitialized. TrailingTokens are not set.");
             return _trailingTokens!;
         }
         internal set
