@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Antlr4.Runtime;
 using Maja.Compiler.Parser;
 
@@ -9,24 +8,27 @@ namespace Maja.Compiler.Syntax;
 // implements helper methods and probably cache
 public class SyntaxTree
 {
-    private readonly AntlrInputStream _inputStream;
-    private readonly MajaLexer _lexer;
-    private readonly CommonTokenStream _tokens;
-    private readonly MajaParser _parser;
+    private AntlrInputStream? _inputStream;
+    private MajaLexer? _lexer;
+    private CommonTokenStream? _tokens;
+    private MajaParser? _parser;
 
     private SyntaxTree()
-    {
-        _inputStream = new AntlrInputStream();
-        _lexer = new MajaLexer(_inputStream);
-        _lexer.InitializeTokens(MajaLexer.Indent, MajaLexer.Dedent, MajaLexer.Eol);
-        _tokens = new CommonTokenStream(_lexer);
-        _parser = new MajaParser(_tokens);
-    }
+    { }
 
     private CompilationUnitSyntax ParseInternal(string code, string sourceName)
     {
-        _inputStream.Load(new StringReader(code), AntlrInputStream.InitialBufferSize, AntlrInputStream.ReadBufferSize);
-        _tokens.Reset();
+        _inputStream = new AntlrInputStream(code)
+        {
+            name = sourceName
+        };
+        _lexer = new MajaLexer(_inputStream)
+        {
+            WhitespaceMode = Dentlr.WhitespaceMode.Skip
+        };
+        _lexer.InitializeTokens(MajaLexer.Indent, MajaLexer.Dedent, MajaLexer.Eol);
+        _tokens = new CommonTokenStream(_lexer);
+        _parser = new MajaParser(_tokens);
 
         var builder = new ParserNodeConvertor(sourceName);
         var cu = _parser.compilationUnit();

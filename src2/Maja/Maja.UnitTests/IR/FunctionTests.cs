@@ -19,8 +19,7 @@ public class FunctionTests
         program.Root.Should().NotBeNull();
         program.Root.Members.Should().HaveCount(1);
         var fn = program.Root.Members[0].As<IrFunctionDeclaration>();
-        // TODO:
-        //fn.Body.Statements.Should().HaveCount(1);
+        fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().BeEmpty();
         fn.ReturnType.Should().BeNull();
@@ -44,8 +43,7 @@ public class FunctionTests
         program.Root.Should().NotBeNull();
         program.Root.Members.Should().HaveCount(1);
         var fn = program.Root.Members[0].As<IrFunctionDeclaration>();
-        // TODO:
-        //fn.Body.Statements.Should().HaveCount(1);
+        fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().HaveCount(2);
         fn.ReturnType!.Symbol.Should().Be(TypeSymbol.Bool);
