@@ -6,7 +6,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a public export entry.
 /// </summary>
-public sealed record PublicExportSyntax : SyntaxNode
+public sealed class PublicExportSyntax : SyntaxNode
 {
     public PublicExportSyntax(string text)
         : base(text)

@@ -6,7 +6,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Base class for all nodes in the SyntaxTree.
 /// </summary>
-public abstract partial record SyntaxNode
+public abstract partial class SyntaxNode
 {
     protected SyntaxNode(string text)
         => Text = text;

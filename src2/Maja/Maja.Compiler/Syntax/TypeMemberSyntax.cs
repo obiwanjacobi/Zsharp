@@ -6,7 +6,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Common base class for members of a type declaration.
 /// </summary>
-public abstract record TypeMemberSyntax : SyntaxNode
+public abstract class TypeMemberSyntax : SyntaxNode
 {
     public TypeMemberSyntax(string text)
         : base(text)
@@ -22,7 +22,7 @@ public abstract record TypeMemberSyntax : SyntaxNode
 /// <summary>
 /// Represents a type enum member.
 /// </summary>
-public sealed record MemberEnumSyntax : TypeMemberSyntax
+public sealed class MemberEnumSyntax : TypeMemberSyntax
 {
     public MemberEnumSyntax(string text)
         : base(text)
@@ -44,7 +44,7 @@ public sealed record MemberEnumSyntax : TypeMemberSyntax
 /// <summary>
 /// Represent a type field member.
 /// </summary>
-public sealed record MemberFieldSyntax : TypeMemberSyntax
+public sealed class MemberFieldSyntax : TypeMemberSyntax
 {
     public MemberFieldSyntax(string text)
         : base(text)
@@ -72,7 +72,7 @@ public sealed record MemberFieldSyntax : TypeMemberSyntax
 /// <summary>
 /// Represents a validation rule of a type declaration.
 /// </summary>
-public sealed record MemberRuleSyntax : TypeMemberSyntax
+public sealed class MemberRuleSyntax : TypeMemberSyntax
 {
     public MemberRuleSyntax(string text)
         : base(text)
@@ -92,7 +92,7 @@ public sealed record MemberRuleSyntax : TypeMemberSyntax
 /// A typed list of type members.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed record TypeMemberListSyntax<T> : SyntaxNode
+public sealed class TypeMemberListSyntax<T> : SyntaxNode
     where T : TypeMemberSyntax
 {
     public TypeMemberListSyntax(string text)

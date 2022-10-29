@@ -5,7 +5,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a use import statement.
 /// </summary>
-public sealed record UseImportSyntax : SyntaxNode
+public sealed class UseImportSyntax : SyntaxNode
 {
     public UseImportSyntax(string text)
         : base(text)

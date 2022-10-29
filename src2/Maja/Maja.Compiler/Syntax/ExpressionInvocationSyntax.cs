@@ -6,7 +6,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a function invocation.
 /// </summary>
-public sealed record ExpressionInvocationSyntax : ExpressionSyntax
+public sealed class ExpressionInvocationSyntax : ExpressionSyntax
 {
     public ExpressionInvocationSyntax(string text)
         : base(text)
@@ -16,7 +16,7 @@ public sealed record ExpressionInvocationSyntax : ExpressionSyntax
         => SyntaxKind.InvocationExpression;
 
     /// <summary>
-    /// The name of the function being invoced.
+    /// The name of the function being invoked.
     /// </summary>
     public NameSyntax Identifier
         => ChildNodes.OfType<NameSyntax>().Single();

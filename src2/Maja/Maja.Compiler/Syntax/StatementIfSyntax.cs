@@ -5,7 +5,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents the 'if' statement.
 /// </summary>
-public record StatementIfSyntax : StatementSyntax
+public class StatementIfSyntax : StatementSyntax
 {
     public StatementIfSyntax(string text)
         : base(text)
@@ -45,7 +45,7 @@ public record StatementIfSyntax : StatementSyntax
 /// <summary>
 /// Represents an else-if branch for an if statement.
 /// </summary>
-public sealed record StatementElseIfSyntax : StatementIfSyntax
+public sealed class StatementElseIfSyntax : StatementIfSyntax
 {
     public StatementElseIfSyntax(string text)
         : base(text)
@@ -61,7 +61,7 @@ public sealed record StatementElseIfSyntax : StatementIfSyntax
 /// <summary>
 /// Represents an else branch for an if statement.
 /// </summary>
-public sealed record StatementElseSyntax : StatementSyntax
+public sealed class StatementElseSyntax : StatementSyntax
 {
     public StatementElseSyntax(string text)
         : base(text)

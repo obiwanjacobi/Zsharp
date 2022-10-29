@@ -5,7 +5,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents the ret statement.
 /// </summary>
-public sealed record StatementReturnSyntax : StatementSyntax
+public sealed class StatementReturnSyntax : StatementSyntax
 {
     public StatementReturnSyntax(string text)
         : base(text)

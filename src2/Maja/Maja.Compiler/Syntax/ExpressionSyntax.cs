@@ -3,7 +3,7 @@
 /// <summary>
 /// Common base class for all expression nodes types.
 /// </summary>
-public abstract record ExpressionSyntax : SyntaxNode
+public abstract class ExpressionSyntax : SyntaxNode
 {
     public ExpressionSyntax(string text)
         : base(text)

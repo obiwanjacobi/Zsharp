@@ -6,7 +6,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// A block of code typically representing a scope.
 /// </summary>
-public sealed record CodeBlockSyntax : SyntaxNode
+public sealed class CodeBlockSyntax : SyntaxNode
 {
     public CodeBlockSyntax(string text)
         : base(text)

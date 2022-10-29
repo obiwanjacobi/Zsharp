@@ -5,7 +5,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represent the case where an expression is used as a statement.
 /// </summary>
-public sealed record StatementExpressionSyntax : StatementSyntax
+public sealed class StatementExpressionSyntax : StatementSyntax
 {
     public StatementExpressionSyntax(string text)
         : base(text)

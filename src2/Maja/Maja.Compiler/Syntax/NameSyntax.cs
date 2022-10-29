@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a name or identifier.
 /// </summary>
-public record NameSyntax : SyntaxNode
+public class NameSyntax : SyntaxNode
 {
     public NameSyntax(string name)
         : base(name)
@@ -19,7 +19,7 @@ public record NameSyntax : SyntaxNode
 /// <summary>
 /// Represents a dot name or identifier.
 /// </summary>
-public sealed record QualifiedNameSyntax : NameSyntax
+public sealed class QualifiedNameSyntax : NameSyntax
 {
     public QualifiedNameSyntax(string name)
         : base(name)

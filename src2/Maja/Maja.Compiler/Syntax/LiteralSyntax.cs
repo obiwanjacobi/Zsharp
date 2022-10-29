@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a literal numerical value.
 /// </summary>
-public sealed record LiteralNumberSyntax : ExpressionSyntax
+public sealed class LiteralNumberSyntax : ExpressionSyntax
 {
     public LiteralNumberSyntax(string text)
         : base(text)
@@ -19,7 +19,7 @@ public sealed record LiteralNumberSyntax : ExpressionSyntax
 /// <summary>
 /// Represents a literal string value.
 /// </summary>
-public sealed record LiteralStringSyntax : ExpressionSyntax
+public sealed class LiteralStringSyntax : ExpressionSyntax
 {
     public LiteralStringSyntax(string text)
         : base(text)

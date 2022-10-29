@@ -6,7 +6,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a reference to a type by name.
 /// </summary>
-public sealed record TypeSyntax : SyntaxNode
+public sealed class TypeSyntax : SyntaxNode
 {
     public TypeSyntax(string text)
         : base(text)

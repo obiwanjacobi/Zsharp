@@ -6,7 +6,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a type declaration.
 /// </summary>
-public sealed record TypeDeclarationSyntax : MemberDeclarationSyntax
+public sealed class TypeDeclarationSyntax : MemberDeclarationSyntax
 {
     public TypeDeclarationSyntax(string text)
         : base(text)

@@ -5,7 +5,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// An expression with an infix operator.
 /// </summary>
-public sealed record ExpressionBinarySyntax : ExpressionSyntax
+public sealed class ExpressionBinarySyntax : ExpressionSyntax
 {
     public ExpressionBinarySyntax(string text)
         : base(text)

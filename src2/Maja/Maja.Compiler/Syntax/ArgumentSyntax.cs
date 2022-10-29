@@ -5,7 +5,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// An argument for a function parameter.
 /// </summary>
-public sealed record ArgumentSyntax : SyntaxNode
+public sealed class ArgumentSyntax : SyntaxNode
 {
     public ArgumentSyntax(string text)
         : base(text)

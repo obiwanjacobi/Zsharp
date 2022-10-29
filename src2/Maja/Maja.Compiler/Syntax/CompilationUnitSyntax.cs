@@ -6,7 +6,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Root Syntax Node.
 /// </summary>
-public sealed record CompilationUnitSyntax : SyntaxNode
+public sealed class CompilationUnitSyntax : SyntaxNode
 {
     public CompilationUnitSyntax(string text)
         : base(text)

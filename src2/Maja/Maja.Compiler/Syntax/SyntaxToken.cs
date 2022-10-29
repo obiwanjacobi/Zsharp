@@ -11,8 +11,13 @@ namespace Maja.Compiler.Syntax;
 /// A common type for all syntax tokens.
 /// </summary>
 /// <param name="Text">The textual representation of the token.</param>
-public abstract record SyntaxToken(string Text)
+public abstract class SyntaxToken
 {
+    internal SyntaxToken(string text)
+    {
+        Text = text;
+    }
+
     private SyntaxNode? _parent;
     /// <summary>
     /// The parent syntax node of this token.
@@ -40,6 +45,8 @@ public abstract record SyntaxToken(string Text)
 
     public virtual bool HasError
         => false;
+
+    public string Text { get; }
 
     /// <summary>
     /// Creates a new token based on the tokenTypeId.
@@ -120,7 +127,7 @@ public abstract record SyntaxToken(string Text)
 /// <summary>
 /// Represents a keyword token.
 /// </summary>
-public sealed record KeywordToken : SyntaxToken
+public sealed class KeywordToken : SyntaxToken
 {
     public KeywordToken(string Text)
         : base(Text)
@@ -155,7 +162,7 @@ public sealed record KeywordToken : SyntaxToken
 /// <summary>
 /// Represents a whitespace token.
 /// </summary>
-public sealed record WhitespaceToken : SyntaxToken
+public sealed class WhitespaceToken : SyntaxToken
 {
     public WhitespaceToken(string Text)
         : base(Text)
@@ -174,7 +181,7 @@ public sealed record WhitespaceToken : SyntaxToken
 /// <summary>
 /// Represents a newline token.
 /// </summary>
-public sealed record NewlineToken : SyntaxToken
+public sealed class NewlineToken : SyntaxToken
 {
     public NewlineToken(string Text)
         : base(Text)
@@ -187,7 +194,7 @@ public sealed record NewlineToken : SyntaxToken
 /// <summary>
 /// Represents a punctuation token: .,;:
 /// </summary>
-public sealed record PunctuationToken : SyntaxToken
+public sealed class PunctuationToken : SyntaxToken
 {
     public PunctuationToken(string Text)
         : base(Text)
@@ -201,7 +208,7 @@ public sealed record PunctuationToken : SyntaxToken
 /// <summary>
 /// Represents a parenthesis token: ()
 /// </summary>
-public sealed record RoundBracketToken : SyntaxToken
+public sealed class RoundBracketToken : SyntaxToken
 {
     public RoundBracketToken(string Text)
         : base(Text)
@@ -214,7 +221,7 @@ public sealed record RoundBracketToken : SyntaxToken
 /// <summary>
 /// Represents the token: []
 /// </summary>
-public sealed record SquareBracketToken : SyntaxToken
+public sealed class SquareBracketToken : SyntaxToken
 {
     public SquareBracketToken(string Text)
         : base(Text)
@@ -227,7 +234,7 @@ public sealed record SquareBracketToken : SyntaxToken
 /// <summary>
 /// Represents the token: {}
 /// </summary>
-public sealed record CurlyBracketToken : SyntaxToken
+public sealed class CurlyBracketToken : SyntaxToken
 {
     public CurlyBracketToken(string Text)
         : base(Text)
@@ -240,7 +247,7 @@ public sealed record CurlyBracketToken : SyntaxToken
 /// <summary>
 /// Represents the token: <>
 /// </summary>
-public sealed record AngleBracketToken : SyntaxToken
+public sealed class AngleBracketToken : SyntaxToken
 {
     public AngleBracketToken(string Text)
         : base(Text)
@@ -253,7 +260,7 @@ public sealed record AngleBracketToken : SyntaxToken
 /// <summary>
 /// Represents a single line comment token.
 /// </summary>
-public sealed record CommentToken : SyntaxToken
+public sealed class CommentToken : SyntaxToken
 {
     public CommentToken(string Text)
         : base(Text)
@@ -267,7 +274,7 @@ public sealed record CommentToken : SyntaxToken
 /// Represents a syntax error token.
 /// TokenTypeId holds the expected token type id.
 /// </summary>
-public sealed record ErrorToken : SyntaxToken
+public sealed class ErrorToken : SyntaxToken
 {
     public ErrorToken(string Text)
         : base(Text)

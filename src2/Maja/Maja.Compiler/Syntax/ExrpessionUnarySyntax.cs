@@ -5,7 +5,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// An expression with a prefix operator.
 /// </summary>
-public sealed record ExpressionUnarySyntax : ExpressionSyntax
+public sealed class ExpressionUnarySyntax : ExpressionSyntax
 {
     public ExpressionUnarySyntax(string text)
         : base(text)
