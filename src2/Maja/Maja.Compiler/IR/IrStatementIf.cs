@@ -4,7 +4,7 @@ namespace Maja.Compiler.IR;
 
 internal sealed class IrStatementIf : IrStatement
 {
-    public IrStatementIf(SyntaxNode syntax, IrExpression condition, IrScope codeBlock, IrElseClause? elseClause, IrElseIfClause? elifClause)
+    public IrStatementIf(StatementIfSyntax syntax, IrExpression condition, IrCodeBlock codeBlock, IrElseClause? elseClause, IrElseIfClause? elifClause)
         : base(syntax)
     {
         Condition = condition;
@@ -14,25 +14,31 @@ internal sealed class IrStatementIf : IrStatement
     }
 
     public IrExpression Condition { get; }
-    public IrScope CodeBlock { get; }
+    public IrCodeBlock CodeBlock { get; }
     public IrElseClause? ElseClause { get; }
     public IrElseIfClause? ElseIfClause { get; }
+
+    public new StatementIfSyntax Syntax
+        => (StatementIfSyntax)base.Syntax;
 }
 
 internal class IrElseClause : IrNode
 {
-    public IrElseClause(SyntaxNode syntax, IrScope codeBlock)
+    public IrElseClause(StatementElseSyntax syntax, IrCodeBlock codeBlock)
         : base(syntax)
     {
         CodeBlock = codeBlock;
     }
 
-    public IrScope CodeBlock { get; }
+    public IrCodeBlock CodeBlock { get; }
+
+    public new StatementElseSyntax Syntax
+        => (StatementElseSyntax)base.Syntax;
 }
 
 internal class IrElseIfClause : IrNode
 {
-    public IrElseIfClause(SyntaxNode syntax, IrExpression condition, IrScope codeBlock)
+    public IrElseIfClause(StatementElseIfSyntax syntax, IrExpression condition, IrCodeBlock codeBlock)
         : base(syntax)
     {
         Condition = condition;
@@ -40,5 +46,8 @@ internal class IrElseIfClause : IrNode
     }
 
     public IrExpression Condition { get; }
-    public IrScope CodeBlock { get; }
+    public IrCodeBlock CodeBlock { get; }
+
+    public new StatementElseIfSyntax Syntax
+        => (StatementElseIfSyntax)base.Syntax;
 }

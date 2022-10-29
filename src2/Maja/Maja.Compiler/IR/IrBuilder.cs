@@ -1,32 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
 
-internal class IrFactory
+/// <summary>
+/// Builds the intermediate representation tree from the syntax tree(s).
+/// </summary>
+internal class IrBuilder
 {
     private readonly DiagnosticList _diagnostics = new();
+    private readonly Stack<IrScope> _scopes = new();
+
     public IEnumerable<DiagnosticMessage> Diagnostics
         => _diagnostics;
 
-    private IrFactory() { }
+    private IrBuilder()
+    {
+        _scopes.Push(new IrGlobalScope());
+    }
 
-    public static IrScope GlobalScope(SyntaxTree syntaxTree)
+    private void PushScope(IrScope scope) => _scopes.Push(scope);
+    private IrScope PopScope() => _scopes.Pop();
+    private IrScope CurrentScope => _scopes.Peek();
+
+    public static IrProgram Program(SyntaxTree syntaxTree)
     {
         // TODO: check for syntax diagnostics - exit if any
         // syntaxTree.Diagnostics;
 
-        var factory = new IrFactory();
+        var builder = new IrBuilder();
+        builder.PushScope(new IrModuleScope(builder.CurrentScope));
 
-        var scope = factory.Module(syntaxTree.Root);
+        var compilation = builder.Compilation(syntaxTree.Root);
 
-        return scope;
+        var scope = builder.PopScope();
+        return new IrProgram(syntaxTree.Root, scope, compilation, builder.Diagnostics);
     }
 
-    private IrModuleScope Module(CompilationUnitSyntax root)
+    private IrCompilation Compilation(CompilationUnitSyntax root)
     {
         var exports = PublicExports(root.PublicExports);
         var imports = UseImports(root.UseImports);
@@ -34,7 +50,7 @@ internal class IrFactory
         var members = Declarations(root.Members);
         var statements = Statements(root.Statements);
 
-        return new IrModuleScope(root, exports, imports, statements, members);
+        return new IrCompilation(root, imports, exports, statements, members);
     }
 
     private IEnumerable<IrDeclaration> Declarations(IEnumerable<MemberDeclarationSyntax> syntax)
@@ -43,17 +59,7 @@ internal class IrFactory
 
         foreach (var mbr in syntax)
         {
-            //var decl = mbr switch
-            //{
-            //    FunctionDeclarationSyntax fd => FunctionDeclaration(fd),
-            //    VariableDeclarationTypedSyntax vtd => VariableTypedDeclaration(vtd),
-            //    VariableDeclarationInferredSyntax vid => VariableInferredDeclaration(vid),
-            //    TypeDeclarationSyntax td => TypeDeclaration(td),
-            //    _ => throw new NotSupportedException($"IR: No support for Declaration {mbr.SyntaxKind}")
-            //};
-
             IrDeclaration decl;
-
             switch (mbr.SyntaxKind)
             {
                 case SyntaxKind.FunctionDeclaration:
@@ -80,46 +86,131 @@ internal class IrFactory
 
     private IrTypeDeclaration TypeDeclaration(TypeDeclarationSyntax syntax)
     {
-        throw new NotImplementedException();
+        var symbol = new TypeSymbol(syntax.Name.Text);
+
+        var enums = TypeMemberEnums(syntax.Enums);
+        var fields = TypeMemberFields(syntax.Fields);
+        var rules = TypeMemberRules(syntax.Rules);
+
+        return new IrTypeDeclaration(syntax, symbol, enums, fields, rules);
+    }
+
+    private IEnumerable<IrTypeMemberEnum> TypeMemberEnums(TypeMemberListSyntax<MemberEnumSyntax> syntax)
+    {
+        var enums = new List<IrTypeMemberEnum>();
+
+        int id = 0;
+        foreach (var synEnum in syntax.Members)
+        {
+            IrExpression? expr = null;
+            if (synEnum.Expression is ExpressionSyntax synExpr)
+            {
+                expr = Expression(synExpr);
+
+                if (expr.ConstantValue is null)
+                    _diagnostics.EnumValueNotConstant(synExpr.Location, synExpr.Text);
+            }
+
+            var val = expr?.ConstantValue?.Value ?? id;
+            var typeSymbol = expr?.TypeSymbol ?? TypeSymbol.I64;
+            var symbol = new EnumSymbol(synEnum.Name.Text, typeSymbol);
+            var enm = new IrTypeMemberEnum(synEnum, symbol, expr, val);
+            enums.Add(enm);
+            id++;
+        }
+
+        return enums;
+    }
+
+    private IEnumerable<IrTypeMemberField> TypeMemberFields(TypeMemberListSyntax<MemberFieldSyntax> syntax)
+    {
+        var fields = new List<IrTypeMemberField>();
+
+        foreach (var synFld in syntax.Members)
+        {
+            var type = Type(synFld.Type)!;
+            IrExpression? defExpr = null;
+            if (synFld.Expression is ExpressionSyntax synExpr)
+                defExpr = Expression(synExpr);
+
+            var symbol = new FieldSymbol(synFld.Name.Text, type.Symbol);
+            var fld = new IrTypeMemberField(synFld, symbol, type, defExpr);
+            fields.Add(fld);
+        }
+
+        return fields;
+    }
+
+    private IEnumerable<IrTypeMemberRule> TypeMemberRules(TypeMemberListSyntax<MemberRuleSyntax> syntax)
+    {
+        var rules = new List<IrTypeMemberRule>();
+
+        foreach (var synRule in syntax.Members)
+        {
+            var symbol = new RuleSymbol(synRule.Name.Text);
+            var expr = Expression(synRule.Expression);
+
+            var fld = new IrTypeMemberRule(synRule, symbol, expr);
+            rules.Add(fld);
+        }
+
+        return rules;
     }
 
     private IrVariableDeclaration VariableInferredDeclaration(VariableDeclarationInferredSyntax syntax)
     {
-        var varSymbol = new VariableSymbol(syntax.Name.Text);
         var initializer = Expression(syntax.Expression!);
-
-        return new IrVariableDeclaration(syntax, varSymbol, initializer.Type, initializer);
+        var symbol = new VariableSymbol(syntax.Name.Text, initializer.TypeSymbol);
+        return new IrVariableDeclaration(syntax, symbol, initializer);
     }
 
     private IrVariableDeclaration VariableTypedDeclaration(VariableDeclarationTypedSyntax syntax)
     {
-        var varSymbol = new VariableSymbol(syntax.Name.Text);
         IrExpression? initializer = null;
         if (syntax.Expression is ExpressionSyntax synExpr)
             initializer = Expression(synExpr);
-        var type = new TypeSymbol(syntax.Type.Name.Text);
 
-        return new IrVariableDeclaration(syntax, varSymbol, type, initializer);
+        var type = new TypeSymbol(syntax.Type.Name.Text);
+        var symbol = new VariableSymbol(syntax.Name.Text, type);
+
+        return new IrVariableDeclaration(syntax, symbol, initializer);
     }
 
     private IrFunctionDeclaration FunctionDeclaration(FunctionDeclarationSyntax syntax)
     {
-        var block = CodeBlock(syntax.CodeBlock);
-        var prms = Parameters(syntax.Parameters);
-        IrType? type = null;
-        if (syntax.ReturnType is TypeSyntax retType)
-            type = Type(retType);
-        //functionDeclaration.TypeParameters;
+        var parameters = Parameters(syntax.Parameters);
+        var returnType = Type(syntax.ReturnType);
+        //syntax.TypeParameters;
 
-        return new IrFunctionDeclaration(syntax, prms, type, block);
+        var symbol = new FunctionSymbol(syntax.Identifier.Text,
+            parameters.Select(p => p.Symbol), returnType?.Symbol);
+        if (!CurrentScope.TryDeclareFunction(symbol))
+        {
+            _diagnostics.FunctionAlreadyDelcared(syntax.Location, symbol.Name);
+        }
+
+        var scope = new IrScope(CurrentScope);
+        PushScope(scope);
+        var index = scope.TryDeclareVariables(parameters.Select(p => p.Symbol));
+        if (index >= 0)
+        {
+            var arrParams = parameters.ToArray();
+            _diagnostics.ParameterNameAlreadyDeclared(
+                arrParams[index].Syntax.Location, arrParams[index].Symbol.Name);
+        }
+
+        var block = CodeBlock(syntax.CodeBlock);
+        PopScope();
+
+        return new IrFunctionDeclaration(syntax, symbol, parameters, returnType, scope, block);
     }
 
-    private IrScope CodeBlock(CodeBlockSyntax syntax)
+    private IrCodeBlock CodeBlock(CodeBlockSyntax syntax)
     {
         var declarations = Declarations(syntax.Members);
         var statements = Statements(syntax.Statements);
 
-        return new IrScope(syntax, statements, declarations);
+        return new IrCodeBlock(syntax, statements, declarations);
     }
 
     private IEnumerable<IrStatement> Statements(IEnumerable<StatementSyntax> statements)
@@ -142,8 +233,8 @@ internal class IrFactory
 
     private IrStatementIf StatementIf(StatementIfSyntax syntax)
     {
-        var codeBlock = CodeBlock(syntax.CodeBlock);
         var condition = Expression(syntax.Expression);
+        var codeBlock = CodeBlock(syntax.CodeBlock);
 
         IrElseClause? elseStat = null;
         IrElseIfClause? elifStat = null;
@@ -181,9 +272,7 @@ internal class IrFactory
     }
 
     private IrExpressionLiteral LiteralBoolExpression(ExpressionLiteralBoolSyntax syntax)
-    {
-        return new IrExpressionLiteral(syntax, TypeSymbol.Bool, syntax.Value);
-    }
+        => new(syntax, TypeSymbol.Bool, syntax.Value);
 
     private IrExpressionLiteral LiteralExpression(ExpressionLiteralSyntax syntax)
     {
@@ -201,8 +290,7 @@ internal class IrFactory
     {
         var left = Expression(syntax.Left);
         var right = Expression(syntax.Right);
-        // TODO: remove hardcoded type I64
-        var op = new IrBinaryOperator(syntax.Operator, TypeSymbol.I64);
+        var op = new IrBinaryOperator(syntax.Operator, left.TypeSymbol);
 
         return new IrExpressionBinary(syntax, left, op, right);
     }
@@ -222,13 +310,17 @@ internal class IrFactory
 
     private IrParameter Parameter(ParameterSyntax param)
     {
-        var name = new ParameterSymbol(param.Name.Text);
         var type = Type(param.Type);
-        return new IrParameter(param, name, type);
+        Debug.Assert(type is not null);
+        var symbol = new ParameterSymbol(param.Name.Text, type!.Symbol);
+
+        return new IrParameter(param, symbol, type);
     }
 
-    private IrType Type(TypeSyntax type)
+    private IrType? Type(TypeSyntax? type)
     {
+        if (type is null) return null;
+
         var name = new TypeSymbol(type.Name.Text);
         return new IrType(type, name);
     }

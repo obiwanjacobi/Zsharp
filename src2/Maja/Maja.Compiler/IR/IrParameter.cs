@@ -5,7 +5,7 @@ namespace Maja.Compiler.IR
 {
     internal sealed class IrParameter : IrNode
     {
-        public IrParameter(SyntaxNode syntax, ParameterSymbol symbol, IrType type)
+        public IrParameter(ParameterSyntax syntax, ParameterSymbol symbol, IrType type)
             : base(syntax)
         {
             Symbol = symbol;
@@ -14,5 +14,8 @@ namespace Maja.Compiler.IR
 
         public ParameterSymbol Symbol { get; }
         public IrType Type { get; }
+
+        public new ParameterSyntax Syntax
+        => (ParameterSyntax)base.Syntax;
     }
 }

@@ -81,8 +81,8 @@ public sealed record MemberRuleSyntax : TypeMemberSyntax
     public override SyntaxKind SyntaxKind
         => SyntaxKind.MemberRule;
 
-    public ExpressionSyntax? Expression
-        => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
+    public ExpressionSyntax Expression
+        => ChildNodes.OfType<ExpressionSyntax>().Single();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberRule(this);

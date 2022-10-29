@@ -125,6 +125,9 @@ internal sealed class IrBinaryOperator : IrNode
     public IrBinaryOperatorKind Kind { get; }
     public TypeSymbol OperandType { get; }
     public TypeSymbol TargetType { get; }
+
+    public new ExpressionOperatorSyntax Syntax
+        => (ExpressionOperatorSyntax)base.Syntax;
 }
 
 internal enum IrUnaryOperatorKind
@@ -163,4 +166,7 @@ internal sealed class IrUnaryOperator : IrNode
 
     public IrUnaryOperatorKind Kind { get; }
     public TypeSymbol OperandType { get; }
+
+    public new ExpressionOperatorSyntax Syntax
+        => (ExpressionOperatorSyntax)base.Syntax;
 }

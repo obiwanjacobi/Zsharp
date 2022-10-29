@@ -9,4 +9,3 @@ public sealed record DiscardSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Discard;
 }
-

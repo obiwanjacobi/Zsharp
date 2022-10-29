@@ -3,6 +3,7 @@
 public record TypeSymbol : Symbol
 {
     // built-in types
+    public static readonly TypeSymbol Void = new("Void");
     public static readonly TypeSymbol Bool = new("Bool");
     public static readonly TypeSymbol U8 = new("U8");
     public static readonly TypeSymbol I8 = new("I8");

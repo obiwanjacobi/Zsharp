@@ -9,4 +9,3 @@ public sealed record AssemblySymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Assembly;
 }
-

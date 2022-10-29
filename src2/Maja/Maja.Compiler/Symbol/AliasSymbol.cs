@@ -9,4 +9,3 @@ public sealed record AliasSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Alias;
 }
-

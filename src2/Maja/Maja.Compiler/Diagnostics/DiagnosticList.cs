@@ -8,7 +8,7 @@ namespace Maja.Compiler.Diagnostics
     {
         private readonly List<DiagnosticMessage> _messages = new();
 
-        public DiagnosticMessage Add(DiagnosticMessageKind kind, SyntaxLocation location, string message)
+        private DiagnosticMessage Add(DiagnosticMessageKind kind, SyntaxLocation location, string message)
         {
             // TODO: check for duplicates
 
@@ -23,10 +23,13 @@ namespace Maja.Compiler.Diagnostics
         IEnumerator IEnumerable.GetEnumerator()
             => _messages.GetEnumerator();
 
-        // make error specific reporting methods.
-        public void AddXxxx(SyntaxLocation location, string param1)
-        {
+        public DiagnosticMessage FunctionAlreadyDelcared(SyntaxLocation location, string functionName)
+            => Add(DiagnosticMessageKind.Error, location, $"Function '{functionName} is already declared.");
 
-        }
+        public DiagnosticMessage ParameterNameAlreadyDeclared(SyntaxLocation location, string parameterName)
+            => Add(DiagnosticMessageKind.Error, location, $"Parameter name '{parameterName} is already declared.");
+
+        public DiagnosticMessage EnumValueNotConstant(SyntaxLocation location, string expr)
+            => Add(DiagnosticMessageKind.Error, location, $"Enum initialization value expression '{expr}' is not a compiler constant.");
     }
 }
