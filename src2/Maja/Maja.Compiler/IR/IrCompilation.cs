@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR
@@ -10,15 +11,15 @@ namespace Maja.Compiler.IR
             IEnumerable<IrStatement> statements, IEnumerable<IrDeclaration> members)
             : base(syntax)
         {
-            Imports = imports;
-            Exports = exports;
-            Statements = statements;
-            Members = members;
+            Imports = imports.ToImmutableArray();
+            Exports = exports.ToImmutableArray();
+            Statements = statements.ToImmutableArray();
+            Members = members.ToImmutableArray();
         }
 
-        public IEnumerable<IrImport> Imports { get; }
-        public IEnumerable<IrExport> Exports { get; }
-        public IEnumerable<IrStatement> Statements { get; }
-        public IEnumerable<IrDeclaration> Members { get; }
+        public ImmutableArray<IrImport> Imports { get; }
+        public ImmutableArray<IrExport> Exports { get; }
+        public ImmutableArray<IrStatement> Statements { get; }
+        public ImmutableArray<IrDeclaration> Members { get; }
     }
 }

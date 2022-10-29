@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Maja.UnitTests.Compilation;
 
-public class CompilationiTests
+public class CompilationTests
 {
     [Fact]
     public void Compilation1()
