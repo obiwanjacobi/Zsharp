@@ -15,6 +15,7 @@ Made SyntaxNodeOrToken public and added SyntaxNodeOrTokenList.
 [x] ExpressionOperator: kind enum (with precedence?)
 [x] ExpressionOperator: Implement mapping multi-token operators to kind.
 [x] Compiler: move to SyntaxTree and remove.
+[x] Syntax: Else /ElseIf is not a statement. Should not derive from Statement base.
 
 ## Descisions
 
@@ -39,4 +40,3 @@ Analyze if all our assignment variations (arrays etc) will fit in an expression.
 - CodeBlock is a statement?
 - No Binder/Binding/BoundNode: internal Intermediate Representation (IR)? Incl. Symbols & lowering/rewriting etc.
 Analysis is done through the public SemanticModel. Symbols are also public.
-- Else /ElseIf is not a root-statement. Should not derive from Statement base?
