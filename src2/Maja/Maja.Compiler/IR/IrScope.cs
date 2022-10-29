@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Maja.Compiler.Symbol;
 
@@ -28,7 +29,7 @@ internal class IrScope
     public bool TryDeclareFunction(FunctionSymbol symbol)
         => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
 
-    public bool TryLookupSymbol(string name, out Symbol.Symbol? symbol)
+    public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
     {
         if (SymbolTable.TryLookupSymbol(ref _symbols, name, out symbol))
         {
@@ -44,7 +45,7 @@ internal class IrScope
         return false;
     }
 
-    public bool TryLookupSymbol<T>(string name, out T? symbol)
+    public bool TryLookupSymbol<T>(string name, [NotNullWhen(true)] out T? symbol)
         where T : Symbol.Symbol
     {
         if (SymbolTable.TryLookupSymbol<T>(ref _symbols, name, out symbol))

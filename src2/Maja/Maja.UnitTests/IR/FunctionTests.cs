@@ -49,6 +49,10 @@ public class FunctionTests
         fn.ReturnType!.Symbol.Should().Be(TypeSymbol.Bool);
         // scope
         fn.Scope.Symbols.Should().HaveCount(2);
+        fn.Scope.TryLookupSymbol("p1", out var p1).Should().BeTrue();
+        fn.Scope.TryLookupSymbol("p2", out var p2).Should().BeTrue();
+        p1!.Kind.Should().Be(SymbolKind.Variable);
+        p2!.Kind.Should().Be(SymbolKind.Variable);
         // symbol
         fn.Symbol.Name.Should().Be("fn");
         fn.Symbol.Parameters.Should().HaveCount(2);

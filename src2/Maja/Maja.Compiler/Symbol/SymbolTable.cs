@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Maja.Compiler.Symbol;
 
@@ -19,7 +20,7 @@ internal static class SymbolTable
         return true;
     }
 
-    public static bool TryLookupSymbol(ref Dictionary<string, Symbol>? table, string name, out Symbol? symbol)
+    public static bool TryLookupSymbol(ref Dictionary<string, Symbol>? table, string name, [NotNullWhen(true)] out Symbol? symbol)
     {
         if (table is null)
         {
@@ -30,7 +31,7 @@ internal static class SymbolTable
         return table.TryGetValue(name, out symbol);
     }
 
-    public static bool TryLookupSymbol<T>(ref Dictionary<string, Symbol>? table, string name, out T? symbol)
+    public static bool TryLookupSymbol<T>(ref Dictionary<string, Symbol>? table, string name, [NotNullWhen(true)] out T? symbol)
         where T : Symbol
     {
         if (TryLookupSymbol(ref table, name, out var genSym) &&
