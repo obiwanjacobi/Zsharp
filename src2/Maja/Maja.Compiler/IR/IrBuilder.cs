@@ -75,7 +75,7 @@ internal class IrBuilder
                     decl = TypeDeclaration((TypeDeclarationSyntax)mbr);
                     break;
                 default:
-                    throw new NotSupportedException($"IR: No support for Declaration {mbr.SyntaxKind}");
+                    throw new NotSupportedException($"IR: No support for Declaration '{mbr.SyntaxKind}'");
             }
 
             declarations.Add(decl);
@@ -219,16 +219,26 @@ internal class IrBuilder
 
         foreach (var stat in statements)
         {
-            var irStat = stat switch
+            IrStatement irStat = stat switch
             {
                 StatementIfSyntax ifs => StatementIf(ifs),
-                _ => throw new NotSupportedException($"IR: No support for statement {stat.SyntaxKind}.")
+                StatementReturnSyntax ret => StatementReturn(ret),
+                _ => throw new NotSupportedException($"IR: No support for Statement '{stat.SyntaxKind}'.")
             };
 
             irStats.Add(irStat);
         }
 
         return irStats;
+    }
+
+    private IrStatementReturn StatementReturn(StatementReturnSyntax syntax)
+    {
+        IrExpression? expr = null;
+        if (syntax.Expression is ExpressionSyntax synExpr)
+            expr = Expression(synExpr);
+
+        return new IrStatementReturn(syntax, expr);
     }
 
     private IrStatementIf StatementIf(StatementIfSyntax syntax)
@@ -261,7 +271,7 @@ internal class IrBuilder
             ExpressionLiteralSyntax le => LiteralExpression(le),
             ExpressionLiteralBoolSyntax lbe => LiteralBoolExpression(lbe),
             ExpressionInvocationSyntax ie => InvocationExpression(ie),
-            _ => throw new NotSupportedException($"IR: No support for Expression {syntax.SyntaxKind}.")
+            _ => throw new NotSupportedException($"IR: No support for Expression '{syntax.SyntaxKind}'.")
         };
     }
 

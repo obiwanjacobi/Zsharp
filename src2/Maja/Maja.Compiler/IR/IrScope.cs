@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.IR;
@@ -14,6 +15,9 @@ internal class IrScope
     }
 
     public IrScope? Parent { get; }
+
+    public IEnumerable<Symbol.Symbol> Symbols
+        => _symbols?.Values ?? Enumerable.Empty<Symbol.Symbol>();
 
     public bool TryDeclareVariable(VariableSymbol symbol)
         => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);

@@ -9,13 +9,13 @@ public sealed record FunctionSymbol : Symbol
         : base(name)
     {
         Parameters = parameters;
-        ReturnType = returnType;
+        ReturnType = returnType ?? TypeSymbol.Void;
     }
 
     public override SymbolKind Kind
         => SymbolKind.Function;
 
     public IEnumerable<ParameterSymbol> Parameters { get; }
-    public TypeSymbol? ReturnType { get; }
+    public TypeSymbol ReturnType { get; }
 }
 
