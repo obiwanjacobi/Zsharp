@@ -59,24 +59,14 @@ internal sealed class IrBuilder
 
         foreach (var mbr in syntax)
         {
-            IrDeclaration decl;
-            switch (mbr.SyntaxKind)
+            IrDeclaration decl = mbr switch
             {
-                case SyntaxKind.FunctionDeclaration:
-                    decl = FunctionDeclaration((FunctionDeclarationSyntax)mbr);
-                    break;
-                case SyntaxKind.TypedVariableDeclaration:
-                    decl = VariableTypedDeclaration((VariableDeclarationTypedSyntax)mbr);
-                    break;
-                case SyntaxKind.InferredVariableDeclaration:
-                    decl = VariableInferredDeclaration((VariableDeclarationInferredSyntax)mbr);
-                    break;
-                case SyntaxKind.TypeDeclaration:
-                    decl = TypeDeclaration((TypeDeclarationSyntax)mbr);
-                    break;
-                default:
-                    throw new NotSupportedException($"IR: No support for Declaration '{mbr.SyntaxKind}'");
-            }
+                FunctionDeclarationSyntax fds => FunctionDeclaration(fds),
+                VariableDeclarationTypedSyntax vdt => VariableTypedDeclaration(vdt),
+                VariableDeclarationInferredSyntax vdi => VariableInferredDeclaration(vdi),
+                TypeDeclarationSyntax tds => TypeDeclaration(tds),
+                _ => throw new NotSupportedException($"IR: No support for Declaration '{mbr.SyntaxKind}'")
+            };
 
             declarations.Add(decl);
         }

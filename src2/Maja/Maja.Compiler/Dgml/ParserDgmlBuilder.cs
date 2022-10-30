@@ -33,26 +33,29 @@ namespace Maja.Dgml
             var typeName = context.GetType().Name;
             var node = _builder.CreateNode(typeName, context.GetText(), typeName);
 
-            foreach (var child in context.children)
+            if (context.children is not null)
             {
-                if (child is ParserRuleContext childCtx)
+                foreach (var child in context.children)
                 {
-                    var childNode = WriteContext(childCtx);
-                    var link = _builder.CreateLink(node.Id, childNode.Id);
-                }
-                else if (IncludeTokens)
-                {
-                    if (child is IErrorNode errChild)
+                    if (child is ParserRuleContext childCtx)
                     {
-                        var childNode = WriteTerminal((TerminalNodeImpl)errChild);
-                        childNode.Category = "Error";
+                        var childNode = WriteContext(childCtx);
                         var link = _builder.CreateLink(node.Id, childNode.Id);
                     }
-                    else if (child is TerminalNodeImpl termChild)
+                    else if (IncludeTokens)
                     {
-                        var childNode = WriteTerminal(termChild);
-                        childNode.Category = "Token";
-                        var link = _builder.CreateLink(node.Id, childNode.Id);
+                        if (child is IErrorNode errChild)
+                        {
+                            var childNode = WriteTerminal((TerminalNodeImpl)errChild);
+                            childNode.Category = "Error";
+                            var link = _builder.CreateLink(node.Id, childNode.Id);
+                        }
+                        else if (child is TerminalNodeImpl termChild)
+                        {
+                            var childNode = WriteTerminal(termChild);
+                            childNode.Category = "Token";
+                            var link = _builder.CreateLink(node.Id, childNode.Id);
+                        }
                     }
                 }
             }

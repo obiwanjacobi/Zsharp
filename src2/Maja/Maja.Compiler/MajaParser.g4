@@ -23,7 +23,7 @@ parameterList: ParenOpen (parameterListComma | newline parameterListIndent)? Par
 parameterListComma: parameter (Comma Sp parameter)*;
 parameterListIndent: Indent (comment* parameter newline)+ Dedent;
 parameter: nameIdentifier Colon Sp type (Eq expression)?;
-argumentList: ParenOpen newline? (argumentListComma | argumentListIndent) ParenClose;
+argumentList: ParenOpen newline? (argumentListComma | argumentListIndent)? ParenClose;
 argumentListComma: argument (Comma Sp argument)*;
 argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Eq)? expression;
@@ -60,8 +60,8 @@ expression:
       expressionConstant                                    #expressionConst
     | expression Sp expressionOperatorBinary Sp expression  #expressionBinary
     | expressionOperatorUnaryPrefix expression              #expressionUnaryPrefix
-    | ParenOpen expression ParenClose                       #expressionPrecedence
     | expression argumentList                               #expressionInvocation
+    | ParenOpen expression ParenClose                       #expressionPrecedence
     | nameIdentifier                                        #expressionIdentifier
     ;
 expressionConstant: expressionLiteral | expressionLiteralBool;

@@ -1449,14 +1449,14 @@ public partial class MajaParser : Parser {
 	public partial class ArgumentListContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ParenOpen() { return GetToken(MajaParser.ParenOpen, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ParenClose() { return GetToken(MajaParser.ParenClose, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext newline() {
+			return GetRuleContext<NewlineContext>(0);
+		}
 		[System.Diagnostics.DebuggerNonUserCode] public ArgumentListCommaContext argumentListComma() {
 			return GetRuleContext<ArgumentListCommaContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ArgumentListIndentContext argumentListIndent() {
 			return GetRuleContext<ArgumentListIndentContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext newline() {
-			return GetRuleContext<NewlineContext>(0);
 		}
 		public ArgumentListContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -1519,8 +1519,10 @@ public partial class MajaParser : Parser {
 				argumentListIndent();
 				}
 				break;
+			case ParenClose:
+				break;
 			default:
-				throw new NoViableAltException(this);
+				break;
 			}
 			State = 309;
 			Match(ParenClose);
@@ -3674,7 +3676,7 @@ public partial class MajaParser : Parser {
 						_localctx = new ExpressionInvocationContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
 						State = 564;
-						if (!(Precpred(Context, 2))) throw new FailedPredicateException(this, "Precpred(Context, 2)");
+						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
 						State = 565;
 						argumentList();
 						}
@@ -5286,7 +5288,7 @@ public partial class MajaParser : Parser {
 	private bool expression_sempred(ExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0: return Precpred(Context, 5);
-		case 1: return Precpred(Context, 2);
+		case 1: return Precpred(Context, 3);
 		}
 		return true;
 	}
@@ -5447,7 +5449,7 @@ public partial class MajaParser : Parser {
 		'\x84', '\x86', '\x88', '\x8A', '\x8C', '\x8E', '\x90', '\x92', '\x94', 
 		'\x96', '\x2', '\a', '\x3', '\x2', '\x31', '\x37', '\x3', '\x2', '\x15', 
 		'\x16', '\x4', '\x2', '!', '\"', '-', '\x30', '\x3', '\x2', '\x11', '\x12', 
-		'\x4', '\x2', '\x17', '\x1B', '\x1D', '\x1D', '\x2', '\x2EE', '\x2', '\x9D', 
+		'\x4', '\x2', '\x17', '\x1B', '\x1D', '\x1D', '\x2', '\x2EF', '\x2', '\x9D', 
 		'\x3', '\x2', '\x2', '\x2', '\x4', '\xA8', '\x3', '\x2', '\x2', '\x2', 
 		'\x6', '\xAC', '\x3', '\x2', '\x2', '\x2', '\b', '\xB7', '\x3', '\x2', 
 		'\x2', '\x2', '\n', '\xBE', '\x3', '\x2', '\x2', '\x2', '\f', '\xC3', 
@@ -5606,27 +5608,28 @@ public partial class MajaParser : Parser {
 		'\x132', '\x135', '\x3', '\x2', '\x2', '\x2', '\x133', '\x136', '\x5', 
 		'(', '\x15', '\x2', '\x134', '\x136', '\x5', '*', '\x16', '\x2', '\x135', 
 		'\x133', '\x3', '\x2', '\x2', '\x2', '\x135', '\x134', '\x3', '\x2', '\x2', 
-		'\x2', '\x136', '\x137', '\x3', '\x2', '\x2', '\x2', '\x137', '\x138', 
-		'\a', ' ', '\x2', '\x2', '\x138', '\'', '\x3', '\x2', '\x2', '\x2', '\x139', 
-		'\x13F', '\x5', ',', '\x17', '\x2', '\x13A', '\x13B', '\a', 'G', '\x2', 
-		'\x2', '\x13B', '\x13C', '\a', 'H', '\x2', '\x2', '\x13C', '\x13E', '\x5', 
-		',', '\x17', '\x2', '\x13D', '\x13A', '\x3', '\x2', '\x2', '\x2', '\x13E', 
-		'\x141', '\x3', '\x2', '\x2', '\x2', '\x13F', '\x13D', '\x3', '\x2', '\x2', 
-		'\x2', '\x13F', '\x140', '\x3', '\x2', '\x2', '\x2', '\x140', ')', '\x3', 
-		'\x2', '\x2', '\x2', '\x141', '\x13F', '\x3', '\x2', '\x2', '\x2', '\x142', 
-		'\x146', '\a', '\x3', '\x2', '\x2', '\x143', '\x144', '\x5', ',', '\x17', 
-		'\x2', '\x144', '\x145', '\x5', '\x94', 'K', '\x2', '\x145', '\x147', 
-		'\x3', '\x2', '\x2', '\x2', '\x146', '\x143', '\x3', '\x2', '\x2', '\x2', 
-		'\x147', '\x148', '\x3', '\x2', '\x2', '\x2', '\x148', '\x146', '\x3', 
-		'\x2', '\x2', '\x2', '\x148', '\x149', '\x3', '\x2', '\x2', '\x2', '\x149', 
-		'\x14A', '\x3', '\x2', '\x2', '\x2', '\x14A', '\x14B', '\a', '\x4', '\x2', 
-		'\x2', '\x14B', '+', '\x3', '\x2', '\x2', '\x2', '\x14C', '\x14D', '\x5', 
-		'\x86', '\x44', '\x2', '\x14D', '\x14E', '\a', '-', '\x2', '\x2', '\x14E', 
-		'\x150', '\x3', '\x2', '\x2', '\x2', '\x14F', '\x14C', '\x3', '\x2', '\x2', 
-		'\x2', '\x14F', '\x150', '\x3', '\x2', '\x2', '\x2', '\x150', '\x151', 
-		'\x3', '\x2', '\x2', '\x2', '\x151', '\x152', '\x5', '`', '\x31', '\x2', 
-		'\x152', '-', '\x3', '\x2', '\x2', '\x2', '\x153', '\x155', '\x5', '\x86', 
-		'\x44', '\x2', '\x154', '\x156', '\x5', ':', '\x1E', '\x2', '\x155', '\x154', 
+		'\x2', '\x135', '\x136', '\x3', '\x2', '\x2', '\x2', '\x136', '\x137', 
+		'\x3', '\x2', '\x2', '\x2', '\x137', '\x138', '\a', ' ', '\x2', '\x2', 
+		'\x138', '\'', '\x3', '\x2', '\x2', '\x2', '\x139', '\x13F', '\x5', ',', 
+		'\x17', '\x2', '\x13A', '\x13B', '\a', 'G', '\x2', '\x2', '\x13B', '\x13C', 
+		'\a', 'H', '\x2', '\x2', '\x13C', '\x13E', '\x5', ',', '\x17', '\x2', 
+		'\x13D', '\x13A', '\x3', '\x2', '\x2', '\x2', '\x13E', '\x141', '\x3', 
+		'\x2', '\x2', '\x2', '\x13F', '\x13D', '\x3', '\x2', '\x2', '\x2', '\x13F', 
+		'\x140', '\x3', '\x2', '\x2', '\x2', '\x140', ')', '\x3', '\x2', '\x2', 
+		'\x2', '\x141', '\x13F', '\x3', '\x2', '\x2', '\x2', '\x142', '\x146', 
+		'\a', '\x3', '\x2', '\x2', '\x143', '\x144', '\x5', ',', '\x17', '\x2', 
+		'\x144', '\x145', '\x5', '\x94', 'K', '\x2', '\x145', '\x147', '\x3', 
+		'\x2', '\x2', '\x2', '\x146', '\x143', '\x3', '\x2', '\x2', '\x2', '\x147', 
+		'\x148', '\x3', '\x2', '\x2', '\x2', '\x148', '\x146', '\x3', '\x2', '\x2', 
+		'\x2', '\x148', '\x149', '\x3', '\x2', '\x2', '\x2', '\x149', '\x14A', 
+		'\x3', '\x2', '\x2', '\x2', '\x14A', '\x14B', '\a', '\x4', '\x2', '\x2', 
+		'\x14B', '+', '\x3', '\x2', '\x2', '\x2', '\x14C', '\x14D', '\x5', '\x86', 
+		'\x44', '\x2', '\x14D', '\x14E', '\a', '-', '\x2', '\x2', '\x14E', '\x150', 
+		'\x3', '\x2', '\x2', '\x2', '\x14F', '\x14C', '\x3', '\x2', '\x2', '\x2', 
+		'\x14F', '\x150', '\x3', '\x2', '\x2', '\x2', '\x150', '\x151', '\x3', 
+		'\x2', '\x2', '\x2', '\x151', '\x152', '\x5', '`', '\x31', '\x2', '\x152', 
+		'-', '\x3', '\x2', '\x2', '\x2', '\x153', '\x155', '\x5', '\x86', '\x44', 
+		'\x2', '\x154', '\x156', '\x5', ':', '\x1E', '\x2', '\x155', '\x154', 
 		'\x3', '\x2', '\x2', '\x2', '\x155', '\x156', '\x3', '\x2', '\x2', '\x2', 
 		'\x156', '\x15A', '\x3', '\x2', '\x2', '\x2', '\x157', '\x158', '\a', 
 		'(', '\x2', '\x2', '\x158', '\x159', '\a', 'H', '\x2', '\x2', '\x159', 
@@ -5786,7 +5789,7 @@ public partial class MajaParser : Parser {
 		'\x231', '\x232', '\a', 'H', '\x2', '\x2', '\x232', '\x233', '\x5', '\x66', 
 		'\x34', '\x2', '\x233', '\x234', '\a', 'H', '\x2', '\x2', '\x234', '\x235', 
 		'\x5', '`', '\x31', '\b', '\x235', '\x239', '\x3', '\x2', '\x2', '\x2', 
-		'\x236', '\x237', '\f', '\x4', '\x2', '\x2', '\x237', '\x239', '\x5', 
+		'\x236', '\x237', '\f', '\x5', '\x2', '\x2', '\x237', '\x239', '\x5', 
 		'&', '\x14', '\x2', '\x238', '\x230', '\x3', '\x2', '\x2', '\x2', '\x238', 
 		'\x236', '\x3', '\x2', '\x2', '\x2', '\x239', '\x23C', '\x3', '\x2', '\x2', 
 		'\x2', '\x23A', '\x238', '\x3', '\x2', '\x2', '\x2', '\x23A', '\x23B', 

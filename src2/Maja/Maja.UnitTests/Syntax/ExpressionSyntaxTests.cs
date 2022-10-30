@@ -91,6 +91,21 @@ public class ExpressionSyntaxTests
     public void InvocationAssign()
     {
         const string code =
+            "x := fn()" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var expr = v.Expression!.As<ExpressionInvocationSyntax>();
+        expr.Identifier.Text.Should().Be("fn");
+        expr.Arguments.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void InvocationAssignParam()
+    {
+        const string code =
             "x := fn(42)" + Tokens.Eol
             ;
 
