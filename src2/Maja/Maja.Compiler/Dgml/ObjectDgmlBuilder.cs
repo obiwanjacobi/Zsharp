@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -20,9 +21,12 @@ internal class ObjectDgmlBuilder
 {
     public record PropertyConfiguration
     {
+        // name to identify the property
         public string Name { get; init; } = String.Empty;
+        // skip property if true
+        public bool Exclude { get; init; }
+        // continue on property values if true
         public bool Navigate { get; init; }
-        public bool IsCollection { get; init; }
     }
 
     public record ObjectConfiguration
@@ -31,10 +35,15 @@ internal class ObjectDgmlBuilder
         public IEnumerable<PropertyConfiguration> Properties { get; init; }
             = Enumerable.Empty<PropertyConfiguration>();
 
+        // use all properties on the object.
+        // property config can still exclude some
         public bool IncludeAllProperties { get; init; }
-
+        // include items in collections if true
+        public bool IterateCollections { get; init; }
+        // How many nodes deep should the dgml display
         public int MaxNavigationDepth { get; init; }
 
+        // basic default config used if no config is specified
         public static readonly ObjectConfiguration Default = new()
         {
             MaxNavigationDepth = 5,
@@ -55,8 +64,11 @@ internal class ObjectDgmlBuilder
     }
 
     public static void Save(object instance, string filePath = "object.dgml")
+        => Save(null, instance, filePath);
+
+    public static void Save(ObjectConfiguration? config, object instance, string filePath = "object.dgml")
     {
-        var builder = new ObjectDgmlBuilder();
+        var builder = new ObjectDgmlBuilder(config);
         builder.WriteObject(instance);
         builder._builder.SaveAs(filePath);
     }
@@ -68,12 +80,23 @@ internal class ObjectDgmlBuilder
         var name = GetObjectInstanceName(instance);
         var objNode = _builder.CreateNode(type.Name, name, type.Name);
 
-        foreach (var prop in type.GetProperties())
+        if (instance is IEnumerable collection)
         {
-            if (CanWriteProperty(instance, prop))
+            foreach (var item in collection)
             {
-                var propNode = WriteProperty(instance, prop, depth);
-                _ = _builder.CreateLink(objNode.Id, propNode.Id);
+                var childNode = WriteObject(item);
+                _ = _builder.CreateLink(objNode.Id, childNode.Id);
+            }
+        }
+        else
+        {
+            foreach (var prop in type.GetProperties())
+            {
+                if (CanWriteProperty(instance, prop))
+                {
+                    var propNode = WriteProperty(instance, prop, depth);
+                    _ = _builder.CreateLink(objNode.Id, propNode.Id);
+                }
             }
         }
 
@@ -107,30 +130,35 @@ internal class ObjectDgmlBuilder
             return false;
         }
 
-        if (_config.IncludeAllProperties)
-            return true;
+        var propCfg = _config.Properties.SingleOrDefault(p => p.Name == prop.Name);
+        if (propCfg is not null)
+            return !propCfg.Exclude;
 
-        return _config.Properties.Any(p => p.Name == prop.Name);
+        return _config.IncludeAllProperties;
     }
 
     private bool CanNavigateProperty(object instance, PropertyInfo prop, int depth)
     {
-        if (prop.PropertyType.Namespace.StartsWith("System"))
+        if (prop.PropertyType.Name == "String")
             return false;
-        if (prop.DeclaringType.Namespace.StartsWith("System"))
+
+        if (_config.IterateCollections &&
+            prop.PropertyType.IsAssignableTo(typeof(IEnumerable)))
+            return true;
+
+        if (prop.PropertyType.Namespace?.StartsWith("System") ?? false)
+            return false;
+        if (prop.PropertyType.Namespace?.StartsWith("Microsoft") ?? false)
             return false;
 
         if (_config.MaxNavigationDepth < depth)
             return false;
 
-        if (_config.IncludeAllProperties)
-            return true;
-
         var propCfg = _config.Properties.SingleOrDefault(p => p.Name == prop.Name);
         if (propCfg is not null)
-            return propCfg.Navigate;
+            return !propCfg.Exclude && propCfg.Navigate;
 
-        return false;
+        return _config.IncludeAllProperties;
     }
 
     private string GetObjectInstanceName(object instance)

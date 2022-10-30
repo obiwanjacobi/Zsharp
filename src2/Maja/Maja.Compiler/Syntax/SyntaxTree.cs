@@ -30,10 +30,8 @@ public class SyntaxTree
         _tokens = new CommonTokenStream(_lexer);
         _parser = new MajaParser(_tokens);
 
-        var builder = new ParserNodeConvertor(sourceName);
         var cu = _parser.compilationUnit();
-        var nodes = builder.VisitCompilationUnit(cu);
-        return (CompilationUnitSyntax)nodes[0].Node!;
+        return SyntaxTreeBuilder.Build(cu, sourceName);
     }
 
     public static SyntaxTree Parse(string code, string sourceName = "")
