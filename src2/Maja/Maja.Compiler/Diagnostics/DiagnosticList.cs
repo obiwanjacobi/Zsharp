@@ -31,5 +31,11 @@ namespace Maja.Compiler.Diagnostics
 
         public DiagnosticMessage EnumValueNotConstant(SyntaxLocation location, string expr)
             => Add(DiagnosticMessageKind.Error, location, $"Enum initialization value expression '{expr}' is not a compiler constant.");
+
+        public DiagnosticMessage FunctionNotFound(SyntaxLocation location, string functionName)
+            => Add(DiagnosticMessageKind.Error, location, $"Function reference '{functionName}' cannot be resolved. Function not found.");
+
+        public DiagnosticMessage CannotAssignVariableWithVoid(SyntaxLocation location, string variableName)
+            => Add(DiagnosticMessageKind.Error, location, $"Cannot assign Void to variable '{variableName}'.");
     }
 }

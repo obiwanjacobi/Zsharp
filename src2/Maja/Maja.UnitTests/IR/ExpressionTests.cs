@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
 using Xunit;
@@ -27,15 +28,35 @@ public class ExpressionTests
     public void InvocationAssign()
     {
         const string code =
+            "fn: (): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret 42" + Tokens.Eol +
             "x := fn()" + Tokens.Eol
             ;
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var v = program.Root.Members[0].As<IrVariableDeclaration>();
+        program.Root.Members.Should().HaveCount(2);
+        var v = program.Root.Members[1].As<IrVariableDeclaration>();
         v.Symbol.Name.Should().Be("x");
-        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.I64);
+        v.Symbol.Type.Should().Be(TypeSymbol.U8);
+        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
         v.Initializer!.ConstantValue.Should().BeNull();
+        v.Type.Should().Be(TypeSymbol.U8);
+    }
+
+    [Fact]
+    public void InvocationAssign_ErrorCannotAssignVoid()
+    {
+        const string code =
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol +
+            "x := fn()" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Diagnostics.Should().HaveCount(1);
+        var err = program.Diagnostics[0];
+        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
+        err.Text.Should().Contain("Cannot assign Void").And.Contain("x");
     }
 }

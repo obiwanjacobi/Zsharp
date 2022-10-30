@@ -150,8 +150,12 @@ internal sealed class IrBuilder
     private IrVariableDeclaration VariableInferredDeclaration(VariableDeclarationInferredSyntax syntax)
     {
         var initializer = Expression(syntax.Expression!);
+        if (initializer.TypeSymbol == TypeSymbol.Void)
+        {
+            _diagnostics.CannotAssignVariableWithVoid(syntax.Expression!.Location, syntax.Name.Text);
+        }
         var symbol = new VariableSymbol(syntax.Name.Text, initializer.TypeSymbol);
-        return new IrVariableDeclaration(syntax, symbol, initializer);
+        return new IrVariableDeclaration(syntax, symbol, initializer.TypeSymbol, initializer);
     }
 
     private IrVariableDeclaration VariableTypedDeclaration(VariableDeclarationTypedSyntax syntax)
@@ -163,7 +167,7 @@ internal sealed class IrBuilder
         var type = new TypeSymbol(syntax.Type.Name.Text);
         var symbol = new VariableSymbol(syntax.Name.Text, type);
 
-        return new IrVariableDeclaration(syntax, symbol, initializer);
+        return new IrVariableDeclaration(syntax, symbol, type, initializer);
     }
 
     private IrFunctionDeclaration FunctionDeclaration(FunctionDeclarationSyntax syntax)
@@ -267,8 +271,34 @@ internal sealed class IrBuilder
 
     private IrExpressionInvocation InvocationExpression(ExpressionInvocationSyntax syntax)
     {
-        // TODO: implement
-        return new IrExpressionInvocation(syntax, TypeSymbol.I64);
+        var args = Arguments(syntax.Arguments);
+        if (!CurrentScope.TryLookupSymbol<FunctionSymbol>(syntax.Identifier.Text, out var symbol))
+        {
+            _diagnostics.FunctionNotFound(syntax.Location, syntax.Identifier.Text);
+        }
+        var type = symbol?.ReturnType ?? TypeSymbol.I64;
+        return new IrExpressionInvocation(syntax, symbol, args, type);
+    }
+
+    private IEnumerable<IrArgument> Arguments(IEnumerable<ArgumentSyntax> arguments)
+    {
+        var args = new List<IrArgument>();
+        foreach (var synArg in arguments)
+        {
+            var arg = Argument(synArg);
+            args.Add(arg);
+        }
+        return args;
+    }
+
+    private IrArgument Argument(ArgumentSyntax syntax)
+    {
+        var expr = Expression(syntax.Expression);
+        VariableSymbol? argSymbol = null;
+        if (syntax.Name is NameSyntax paramName)
+            argSymbol = new VariableSymbol(paramName.Text, null);
+
+        return new IrArgument(syntax, expr, argSymbol);
     }
 
     private IrExpressionLiteral LiteralBoolExpression(ExpressionLiteralBoolSyntax syntax)

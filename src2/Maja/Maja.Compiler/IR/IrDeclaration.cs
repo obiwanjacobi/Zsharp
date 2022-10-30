@@ -37,14 +37,16 @@ internal sealed class IrFunctionDeclaration : IrDeclaration
 
 internal sealed class IrVariableDeclaration : IrDeclaration
 {
-    public IrVariableDeclaration(VariableDeclarationSyntax syntax, VariableSymbol symbol, IrExpression? initializer)
+    public IrVariableDeclaration(VariableDeclarationSyntax syntax, VariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
         : base(syntax)
     {
         Symbol = symbol;
+        Type = type;
         Initializer = initializer;
     }
 
     public VariableSymbol Symbol { get; }
+    public TypeSymbol Type { get; }
     public IrExpression? Initializer { get; }
 
     public new VariableDeclarationSyntax Syntax

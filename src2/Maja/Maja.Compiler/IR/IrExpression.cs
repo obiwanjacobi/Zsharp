@@ -1,4 +1,6 @@
-﻿using Maja.Compiler.IR.Lower;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using Maja.Compiler.IR.Lower;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 
@@ -23,12 +25,19 @@ internal abstract class IrExpression : IrNode
 
 internal sealed class IrExpressionInvocation : IrExpression
 {
-    public IrExpressionInvocation(ExpressionInvocationSyntax syntax, TypeSymbol type)
+    public IrExpressionInvocation(ExpressionInvocationSyntax syntax,
+        FunctionSymbol? symbol, IEnumerable<IrArgument> args, TypeSymbol type)
         : base(syntax, type)
-    { }
+    {
+        Symbol = symbol;
+        Args = args.ToImmutableArray();
+    }
 
     public new ExpressionInvocationSyntax Syntax
         => (ExpressionInvocationSyntax)base.Syntax;
+
+    public FunctionSymbol? Symbol { get; }
+    public ImmutableArray<IrArgument> Args { get; }
 }
 
 internal sealed class IrExpressionLiteral : IrExpression
