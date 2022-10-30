@@ -217,6 +217,7 @@ internal sealed class IrBuilder
             {
                 StatementIfSyntax ifs => StatementIf(ifs),
                 StatementReturnSyntax ret => StatementReturn(ret),
+                StatementExpressionSyntax ses => StatementExpression(ses),
                 _ => throw new NotSupportedException($"IR: No support for Statement '{stat.SyntaxKind}'.")
             };
 
@@ -224,6 +225,12 @@ internal sealed class IrBuilder
         }
 
         return irStats;
+    }
+
+    private IrStatementExpression StatementExpression(StatementExpressionSyntax syntax)
+    {
+        var expr = Expression(syntax.Expression);
+        return new IrStatementExpression(syntax, expr);
     }
 
     private IrStatementReturn StatementReturn(StatementReturnSyntax syntax)

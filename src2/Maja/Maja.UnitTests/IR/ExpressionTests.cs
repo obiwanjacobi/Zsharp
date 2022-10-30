@@ -45,6 +45,27 @@ public class ExpressionTests
     }
 
     [Fact]
+    public void Invocation()
+    {
+        const string code =
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol +
+            "fn()" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Members.Should().HaveCount(1);
+        program.Root.Statements.Should().HaveCount(1);
+        var fn = program.Root.Statements[0]
+            .As<IrStatementExpression>().Expression
+            .As<IrExpressionInvocation>();
+        fn.Symbol!.Name.Should().Be("fn");
+        fn.Arguments.Should().HaveCount(0);
+
+    }
+
+    [Fact]
     public void InvocationAssign_ErrorCannotAssignVoid()
     {
         const string code =
