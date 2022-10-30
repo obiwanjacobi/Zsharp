@@ -38,15 +38,19 @@ internal sealed class IrElseClause : IrNode
 
 internal sealed class IrElseIfClause : IrNode
 {
-    public IrElseIfClause(StatementElseIfSyntax syntax, IrExpression condition, IrCodeBlock codeBlock)
+    public IrElseIfClause(StatementElseIfSyntax syntax, IrExpression condition, IrCodeBlock codeBlock, IrElseClause? elseClause, IrElseIfClause? elifClause)
         : base(syntax)
     {
         Condition = condition;
         CodeBlock = codeBlock;
+        ElseClause = elseClause;
+        ElseIfClause = elifClause;
     }
 
     public IrExpression Condition { get; }
     public IrCodeBlock CodeBlock { get; }
+    public IrElseClause? ElseClause { get; }
+    public IrElseIfClause? ElseIfClause { get; }
 
     public new StatementElseIfSyntax Syntax
         => (StatementElseIfSyntax)base.Syntax;

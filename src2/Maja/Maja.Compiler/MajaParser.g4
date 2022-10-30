@@ -1,7 +1,7 @@
 parser grammar MajaParser;
 options { tokenVocab=MajaLexer; }
 
-compilationUnit: (useDecl | pubDecl | newline)* (membersDecl | statementExpression | newline)*;
+compilationUnit: (useDecl | pubDecl | newline)* (membersDecl | statement | newline)*;
 
 pubDecl: Pub freeSpace nameQualifiedList;
 useDecl: Use Sp+ nameQualified;
@@ -9,8 +9,8 @@ useDecl: Use Sp+ nameQualified;
 codeBlock: (statement | membersDecl | newline)+;
 membersDecl: functionDecl | typeDecl | variableDecl;
 
-statement: statementFlow | statementExpression | statementIf;
-statementFlow: statementRet;
+statement: statementFlow | statementExpression;
+statementFlow: statementRet | statementIf;
 statementIf: If Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;
 statementElse: Else newline Indent codeBlock Dedent;
 statementElseIf: (Else freeSpace If | Elif) Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;

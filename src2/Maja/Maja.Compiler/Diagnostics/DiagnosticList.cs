@@ -37,5 +37,14 @@ namespace Maja.Compiler.Diagnostics
 
         public DiagnosticMessage CannotAssignVariableWithVoid(SyntaxLocation location, string variableName)
             => Add(DiagnosticMessageKind.Error, location, $"Cannot assign Void to variable '{variableName}'.");
+
+        public DiagnosticMessage VariableNotFound(SyntaxLocation location, string variableName)
+            => Add(DiagnosticMessageKind.Error, location, $"Variable reference '{variableName}' cannot be resolved. Variable not found.");
+
+        public DiagnosticMessage VariableAlreadyDeclared(SyntaxLocation location, string variableName)
+            => Add(DiagnosticMessageKind.Error, location, $"Variable name '{variableName}' is already declared.");
+
+        public DiagnosticMessage TypeNotFound(SyntaxLocation location, string typeName)
+            => Add(DiagnosticMessageKind.Error, location, $"Type reference '{typeName}' cannot be resolved. Type not found.");
     }
 }

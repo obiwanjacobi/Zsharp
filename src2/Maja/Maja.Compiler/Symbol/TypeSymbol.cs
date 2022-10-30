@@ -2,6 +2,8 @@
 
 public record TypeSymbol : Symbol
 {
+    internal static readonly TypeSymbol Unknown = new("<unknown>");
+
     // built-in types
     public static readonly TypeSymbol Void = new("Void");
     public static readonly TypeSymbol Bool = new("Bool");

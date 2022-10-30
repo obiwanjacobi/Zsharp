@@ -18,8 +18,8 @@ public sealed class ExpressionInvocationSyntax : ExpressionSyntax
     /// <summary>
     /// The name of the function being invoked.
     /// </summary>
-    public NameSyntax Identifier
-        => ChildNodes.OfType<NameSyntax>().Single();
+    public ExpressionIdentifierSyntax Identifier
+        => ChildNodes.OfType<ExpressionIdentifierSyntax>().Single();
 
     /// <summary>
     /// The list of function arguments, if any.

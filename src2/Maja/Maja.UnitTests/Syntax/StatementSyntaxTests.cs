@@ -26,6 +26,21 @@ public class StatementSyntaxTests
     }
 
     [Fact]
+    public void GlobalIf()
+    {
+        const string code =
+            "if true" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Statements.Should().HaveCount(1);
+        var statIf = result.Statements.First().As<StatementIfSyntax>();
+        statIf.Expression.Text.Should().Be("true");
+        statIf.CodeBlock.Statements.Should().HaveCount(1);
+    }
+
+    [Fact]
     public void IfElse()
     {
         const string code =

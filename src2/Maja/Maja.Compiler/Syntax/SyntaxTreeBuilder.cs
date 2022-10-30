@@ -474,17 +474,6 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         } )};
     }
 
-    public override SyntaxNodeOrToken[] VisitExpressionConstant([NotNull] ExpressionConstantContext context)
-    {
-        // This level is represented by a base class.
-        return base.VisitExpressionConstant(context);
-    }
-    public override SyntaxNodeOrToken[] VisitExpressionConst(ExpressionConstContext context)
-    {
-        // This level is represented by a base class.
-        return base.VisitExpressionConst(context);
-    }
-
     public override SyntaxNodeOrToken[] VisitExpressionLiteral(ExpressionLiteralContext context)
     {
         var children = Children(base.VisitExpressionLiteral, context);
@@ -505,6 +494,20 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
 
         return new[] { new SyntaxNodeOrToken(
             new ExpressionLiteralBoolSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = children.All,
+            ChildNodes = children.Nodes,
+            TrailingTokens = children.Tokens
+        } )};
+    }
+
+    public override SyntaxNodeOrToken[] VisitExpressionIdentifier(ExpressionIdentifierContext context)
+    {
+        var children = Children(base.VisitExpressionIdentifier, context);
+
+        return new[] { new SyntaxNodeOrToken(
+            new ExpressionIdentifierSyntax(context.GetText())
         {
             Location = Location(context),
             Children = children.All,

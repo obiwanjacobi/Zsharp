@@ -5,6 +5,7 @@
 [ ] Syntax: Now records. Use class for ref-equality? /bc immutable state
 [ ] SyntaxNode: DescendentNodes, AncestorsAndSelf, AncestorOrSelf etc.
 [ ] ErrorNode: Use context info to built better error message.
+[ ] 'if true' places the 'if' token at the ExpressionLiteralBoolSyntax node.
 
 ### Done
 [x] Parser: Error handling: MissingTokens, SkippedTokens

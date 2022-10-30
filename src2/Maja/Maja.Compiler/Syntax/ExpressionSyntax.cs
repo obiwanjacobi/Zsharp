@@ -10,7 +10,7 @@ public abstract class ExpressionSyntax : SyntaxNode
     { }
 
     /// <summary>
-    /// Indicates that this expression whas enclosed in parenthesis.
+    /// Indicates that this expression was enclosed in parenthesis.
     /// </summary>
     public bool Precedence { get; internal set; }
 }

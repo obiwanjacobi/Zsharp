@@ -72,6 +72,25 @@ public class ExpressionSyntaxTests
     }
 
     [Fact]
+    public void ComparisonSingle()
+    {
+        const string code =
+            "x := y + 42" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var expr = v.Expression!.As<ExpressionBinarySyntax>();
+        expr.Left.As<ExpressionIdentifierSyntax>().Name.Text.Should().Be("y");
+        expr.Right.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
+        expr.Operator.Text.Should().Be("+");
+        expr.Operator.OperatorKind.Should().Be(ExpressionOperatorKind.Plus);
+        expr.Operator.OperatorCategory.Should().Be(ExpressionOperatorCategory.Arithmetic);
+        expr.Operator.OperatorCardinality.Should().Be(ExpressionOperatorCardinality.Binary);
+    }
+
+    [Fact]
     public void Invocation()
     {
         const string code =

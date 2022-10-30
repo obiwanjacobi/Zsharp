@@ -155,6 +155,12 @@ internal sealed class IrBuilder
             _diagnostics.CannotAssignVariableWithVoid(syntax.Expression!.Location, syntax.Name.Text);
         }
         var symbol = new VariableSymbol(syntax.Name.Text, initializer.TypeSymbol);
+
+        if (!CurrentScope.TryDeclareVariable(symbol))
+        {
+            _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
+        }
+
         return new IrVariableDeclaration(syntax, symbol, initializer.TypeSymbol, initializer);
     }
 
@@ -164,10 +170,19 @@ internal sealed class IrBuilder
         if (syntax.Expression is ExpressionSyntax synExpr)
             initializer = Expression(synExpr);
 
-        var type = new TypeSymbol(syntax.Type.Name.Text);
-        var symbol = new VariableSymbol(syntax.Name.Text, type);
+        if (!CurrentScope.TryLookupSymbol<TypeSymbol>(syntax.Type.Name.Text, out var typeSymbol))
+        {
+            _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
+            typeSymbol = TypeSymbol.Unknown;
+        }
+        var symbol = new VariableSymbol(syntax.Name.Text, typeSymbol);
 
-        return new IrVariableDeclaration(syntax, symbol, type, initializer);
+        if (!CurrentScope.TryDeclareVariable(symbol))
+        {
+            _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
+        }
+
+        return new IrVariableDeclaration(syntax, symbol, typeSymbol, initializer);
     }
 
     private IrFunctionDeclaration FunctionDeclaration(FunctionDeclarationSyntax syntax)
@@ -258,10 +273,31 @@ internal sealed class IrBuilder
         {
             var elifBlock = CodeBlock(elifSyntax.CodeBlock);
             var elifCondition = Expression(elifSyntax.Expression);
-            elifStat = new IrElseIfClause(elifSyntax, elifCondition, elifBlock);
+            var nested = ElseIfClause(elifSyntax);
+            elifStat = new IrElseIfClause(elifSyntax, elifCondition, elifBlock, nested.elseStat, nested.elifStat);
         }
 
         return new IrStatementIf(syntax, condition, codeBlock, elseStat, elifStat);
+    }
+
+    private (IrElseClause? elseStat, IrElseIfClause? elifStat) ElseIfClause(StatementElseIfSyntax syntax)
+    {
+        IrElseClause? elseStat = null;
+        IrElseIfClause? elifStat = null;
+        if (syntax.Else is StatementElseSyntax elseSyntax)
+        {
+            var elseBlock = CodeBlock(elseSyntax.CodeBlock);
+            elseStat = new IrElseClause(elseSyntax, elseBlock);
+        }
+        else if (syntax.ElseIf is StatementElseIfSyntax elifSyntax)
+        {
+            var elifBlock = CodeBlock(elifSyntax.CodeBlock);
+            var elifCondition = Expression(elifSyntax.Expression);
+            var nested = ElseIfClause(elifSyntax);
+            elifStat = new IrElseIfClause(elifSyntax, elifCondition, elifBlock, nested.elseStat, nested.elifStat);
+        }
+
+        return (elseStat, elifStat);
     }
 
     private IrExpression Expression(ExpressionSyntax syntax)
@@ -272,8 +308,21 @@ internal sealed class IrBuilder
             ExpressionLiteralSyntax le => LiteralExpression(le),
             ExpressionLiteralBoolSyntax lbe => LiteralBoolExpression(lbe),
             ExpressionInvocationSyntax ie => InvocationExpression(ie),
+            ExpressionIdentifierSyntax ide => IdentifierExpression(ide),
             _ => throw new NotSupportedException($"IR: No support for Expression '{syntax.SyntaxKind}'.")
         };
+    }
+
+    private IrExpressionIdentifier IdentifierExpression(ExpressionIdentifierSyntax syntax)
+    {
+        if (!CurrentScope.TryLookupSymbol<VariableSymbol>(syntax.Name.Text, out var symbol))
+        {
+            _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
+            symbol = new VariableSymbol(syntax.Name.Text, TypeSymbol.Unknown);
+        }
+        var type = symbol!.Type ?? TypeSymbol.Unknown;
+
+        return new IrExpressionIdentifier(syntax, symbol!, type);
     }
 
     private IrExpressionInvocation InvocationExpression(ExpressionInvocationSyntax syntax)
@@ -282,8 +331,11 @@ internal sealed class IrBuilder
         if (!CurrentScope.TryLookupSymbol<FunctionSymbol>(syntax.Identifier.Text, out var symbol))
         {
             _diagnostics.FunctionNotFound(syntax.Location, syntax.Identifier.Text);
+            symbol = new FunctionSymbol(syntax.Identifier.Text, Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown);
         }
-        var type = symbol?.ReturnType ?? TypeSymbol.I64;
+
+        var type = symbol!.ReturnType ?? TypeSymbol.Unknown;
+
         return new IrExpressionInvocation(syntax, symbol, args, type);
     }
 

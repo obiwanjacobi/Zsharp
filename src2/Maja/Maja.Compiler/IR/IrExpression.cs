@@ -26,7 +26,7 @@ internal abstract class IrExpression : IrNode
 internal sealed class IrExpressionInvocation : IrExpression
 {
     public IrExpressionInvocation(ExpressionInvocationSyntax syntax,
-        FunctionSymbol? symbol, IEnumerable<IrArgument> arguments, TypeSymbol type)
+        FunctionSymbol symbol, IEnumerable<IrArgument> arguments, TypeSymbol type)
         : base(syntax, type)
     {
         Symbol = symbol;
@@ -36,7 +36,7 @@ internal sealed class IrExpressionInvocation : IrExpression
     public new ExpressionInvocationSyntax Syntax
         => (ExpressionInvocationSyntax)base.Syntax;
 
-    public FunctionSymbol? Symbol { get; }
+    public FunctionSymbol Symbol { get; }
     public ImmutableArray<IrArgument> Arguments { get; }
 }
 
