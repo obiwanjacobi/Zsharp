@@ -37,7 +37,7 @@ public sealed class MemberEnumSyntax : TypeMemberSyntax
     public ExpressionConstantSyntax? Expression
         => ChildNodes.OfType<ExpressionConstantSyntax>().SingleOrDefault();
 
-    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberEnum(this);
 }
 
@@ -65,7 +65,7 @@ public sealed class MemberFieldSyntax : TypeMemberSyntax
     public ExpressionSyntax? Expression
         => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
-    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberField(this);
 }
 
@@ -84,7 +84,7 @@ public sealed class MemberRuleSyntax : TypeMemberSyntax
     public ExpressionSyntax Expression
         => ChildNodes.OfType<ExpressionSyntax>().Single();
 
-    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberRule(this);
 }
 
@@ -102,10 +102,10 @@ public sealed class TypeMemberListSyntax<T> : SyntaxNode
     public override SyntaxKind SyntaxKind
         => SyntaxKind.MemberList;
 
-    public IEnumerable<T> Members
+    public IEnumerable<T> Items
         => ChildNodes.Cast<T>();
 
-    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
     {
         var result = visitor.Default;
 

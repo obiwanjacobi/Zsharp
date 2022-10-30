@@ -100,7 +100,7 @@ internal sealed class IrBuilder
         var enums = new List<IrTypeMemberEnum>();
 
         int id = 0;
-        foreach (var synEnum in syntax.Members)
+        foreach (var synEnum in syntax.Items)
         {
             IrExpression? expr = null;
             if (synEnum.Expression is ExpressionSyntax synExpr)
@@ -126,7 +126,7 @@ internal sealed class IrBuilder
     {
         var fields = new List<IrTypeMemberField>();
 
-        foreach (var synFld in syntax.Members)
+        foreach (var synFld in syntax.Items)
         {
             var type = Type(synFld.Type)!;
             IrExpression? defExpr = null;
@@ -145,7 +145,7 @@ internal sealed class IrBuilder
     {
         var rules = new List<IrTypeMemberRule>();
 
-        foreach (var synRule in syntax.Members)
+        foreach (var synRule in syntax.Items)
         {
             var symbol = new RuleSymbol(synRule.Name.Text);
             var expr = Expression(synRule.Expression);
