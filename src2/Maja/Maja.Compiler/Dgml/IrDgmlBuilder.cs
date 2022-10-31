@@ -1,6 +1,6 @@
 ﻿using Maja.Compiler.IR;
 
-namespace Maja.Compiler.Dgml;
+namespace Maja.Dgml;
 
 internal sealed class IrDgmlBuilder
 {

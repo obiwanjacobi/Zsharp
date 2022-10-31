@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Maja.Dgml;
 
-namespace Maja.Compiler.Dgml;
+namespace Maja.Dgml;
 
 /// <summary>
 /// Configure what properties to include for each type
