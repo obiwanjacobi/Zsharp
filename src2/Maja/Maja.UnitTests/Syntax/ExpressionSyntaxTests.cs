@@ -75,7 +75,7 @@ public class ExpressionSyntaxTests
     public void ComparisonSingle()
     {
         const string code =
-            "x := y + 42" + Tokens.Eol
+            "x := y = 42" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
@@ -84,9 +84,9 @@ public class ExpressionSyntaxTests
         var expr = v.Expression!.As<ExpressionBinarySyntax>();
         expr.Left.As<ExpressionIdentifierSyntax>().Name.Text.Should().Be("y");
         expr.Right.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
-        expr.Operator.Text.Should().Be("+");
-        expr.Operator.OperatorKind.Should().Be(ExpressionOperatorKind.Plus);
-        expr.Operator.OperatorCategory.Should().Be(ExpressionOperatorCategory.Arithmetic);
+        expr.Operator.Text.Should().Be("=");
+        expr.Operator.OperatorKind.Should().Be(ExpressionOperatorKind.Equals);
+        expr.Operator.OperatorCategory.Should().Be(ExpressionOperatorCategory.Comparison);
         expr.Operator.OperatorCardinality.Should().Be(ExpressionOperatorCardinality.Binary);
     }
 
