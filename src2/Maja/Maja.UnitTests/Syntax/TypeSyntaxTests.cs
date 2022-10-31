@@ -20,11 +20,11 @@ public class TypeSyntaxTests
         result.Members.Should().HaveCount(1);
         var t = result.Members.First().As<TypeDeclarationSyntax>();
         t.Name.Text.Should().Be("Type");
-        t.Fields.Items.Should().HaveCount(2);
-        t.Fields.Items.First().Name.Text.Should().Be("fld1");
-        t.Fields.Items.First().Type.Name.Text.Should().Be("U8");
-        t.Fields.Items.Skip(1).First().Name.Text.Should().Be("fld2");
-        t.Fields.Items.Skip(1).First().Type.Name.Text.Should().Be("Str");
+        t.Fields!.Items.Should().HaveCount(2);
+        t.Fields!.Items.First().Name.Text.Should().Be("fld1");
+        t.Fields!.Items.First().Type.Name.Text.Should().Be("U8");
+        t.Fields!.Items.Skip(1).First().Name.Text.Should().Be("fld2");
+        t.Fields!.Items.Skip(1).First().Type.Name.Text.Should().Be("Str");
     }
 
     [Fact]
@@ -39,9 +39,9 @@ public class TypeSyntaxTests
         result.Members.Should().HaveCount(1);
         var t = result.Members.First().As<TypeDeclarationSyntax>();
         t.Name.Text.Should().Be("Type");
-        t.Enums.Items.Should().HaveCount(2);
-        t.Enums.Items.First().Name.Text.Should().Be("Option1");
-        t.Enums.Items.Skip(1).First().Name.Text.Should().Be("Option2");
+        t.Enums!.Items.Should().HaveCount(2);
+        t.Enums!.Items.First().Name.Text.Should().Be("Option1");
+        t.Enums!.Items.Skip(1).First().Name.Text.Should().Be("Option2");
     }
 
     [Fact]
@@ -57,11 +57,11 @@ public class TypeSyntaxTests
         result.Members.Should().HaveCount(1);
         var t = result.Members.First().As<TypeDeclarationSyntax>();
         t.Name.Text.Should().Be("Type");
-        t.Enums.Items.Should().HaveCount(2);
-        t.Enums.Items.First().Name.Text.Should().Be("Option1");
-        t.Enums.Items.First().Expression!.Text.Should().Be("0");
-        t.Enums.Items.Skip(1).First().Name.Text.Should().Be("Option2");
-        t.Enums.Items.Skip(1).First().Expression!.Text.Should().Be("1");
+        t.Enums!.Items.Should().HaveCount(2);
+        t.Enums!.Items.First().Name.Text.Should().Be("Option1");
+        t.Enums!.Items.First().Expression!.Text.Should().Be("0");
+        t.Enums!.Items.Skip(1).First().Name.Text.Should().Be("Option2");
+        t.Enums!.Items.Skip(1).First().Expression!.Text.Should().Be("1");
     }
 
     [Fact]
@@ -79,14 +79,14 @@ public class TypeSyntaxTests
         var t = result.Members.First().As<TypeDeclarationSyntax>();
         t.Name.Text.Should().Be("Type");
 
-        t.Enums.Items.Should().HaveCount(2);
-        t.Enums.Items.First().Name.Text.Should().Be("Option1");
-        t.Enums.Items.Skip(1).First().Name.Text.Should().Be("Option2");
+        t.Enums!.Items.Should().HaveCount(2);
+        t.Enums!.Items.First().Name.Text.Should().Be("Option1");
+        t.Enums!.Items.Skip(1).First().Name.Text.Should().Be("Option2");
 
-        t.Fields.Items.Should().HaveCount(2);
-        t.Fields.Items.First().Name.Text.Should().Be("fld1");
-        t.Fields.Items.First().Type.Name.Text.Should().Be("U8");
-        t.Fields.Items.Skip(1).First().Name.Text.Should().Be("fld2");
-        t.Fields.Items.Skip(1).First().Type.Name.Text.Should().Be("Str");
+        t.Fields!.Items.Should().HaveCount(2);
+        t.Fields!.Items.First().Name.Text.Should().Be("fld1");
+        t.Fields!.Items.First().Type.Name.Text.Should().Be("U8");
+        t.Fields!.Items.Skip(1).First().Name.Text.Should().Be("fld2");
+        t.Fields!.Items.Skip(1).First().Type.Name.Text.Should().Be("Str");
     }
 }
