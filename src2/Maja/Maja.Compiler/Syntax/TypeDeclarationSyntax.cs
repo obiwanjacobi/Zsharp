@@ -30,20 +30,20 @@ public sealed class TypeDeclarationSyntax : MemberDeclarationSyntax
     /// <summary>
     /// The enumeration list.
     /// </summary>
-    public TypeMemberListSyntax<MemberEnumSyntax> Enums
-        => ChildNodes.OfType<TypeMemberListSyntax<MemberEnumSyntax>>().Single();
+    public TypeMemberListSyntax<MemberEnumSyntax>? Enums
+        => ChildNodes.OfType<TypeMemberListSyntax<MemberEnumSyntax>>().SingleOrDefault();
 
     /// <summary>
     /// The field list.
     /// </summary>
-    public TypeMemberListSyntax<MemberFieldSyntax> Fields
-        => ChildNodes.OfType<TypeMemberListSyntax<MemberFieldSyntax>>().Single();
+    public TypeMemberListSyntax<MemberFieldSyntax>? Fields
+        => ChildNodes.OfType<TypeMemberListSyntax<MemberFieldSyntax>>().SingleOrDefault();
 
     /// <summary>
     /// The rule list.
     /// </summary>
-    public TypeMemberListSyntax<MemberRuleSyntax> Rules
-        => ChildNodes.OfType<TypeMemberListSyntax<MemberRuleSyntax>>().Single();
+    public TypeMemberListSyntax<MemberRuleSyntax>? Rules
+        => ChildNodes.OfType<TypeMemberListSyntax<MemberRuleSyntax>>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeDeclaration(this);

@@ -85,8 +85,11 @@ internal sealed class IrBuilder
         return new IrTypeDeclaration(syntax, symbol, enums, fields, rules);
     }
 
-    private IEnumerable<IrTypeMemberEnum> TypeMemberEnums(TypeMemberListSyntax<MemberEnumSyntax> syntax)
+    private IEnumerable<IrTypeMemberEnum> TypeMemberEnums(TypeMemberListSyntax<MemberEnumSyntax>? syntax)
     {
+        if (syntax is null)
+            return Enumerable.Empty<IrTypeMemberEnum>();
+
         var enums = new List<IrTypeMemberEnum>();
 
         int id = 0;
@@ -112,8 +115,11 @@ internal sealed class IrBuilder
         return enums;
     }
 
-    private IEnumerable<IrTypeMemberField> TypeMemberFields(TypeMemberListSyntax<MemberFieldSyntax> syntax)
+    private IEnumerable<IrTypeMemberField> TypeMemberFields(TypeMemberListSyntax<MemberFieldSyntax>? syntax)
     {
+        if (syntax is null)
+            return Enumerable.Empty<IrTypeMemberField>();
+
         var fields = new List<IrTypeMemberField>();
 
         foreach (var synFld in syntax.Items)
@@ -131,8 +137,11 @@ internal sealed class IrBuilder
         return fields;
     }
 
-    private IEnumerable<IrTypeMemberRule> TypeMemberRules(TypeMemberListSyntax<MemberRuleSyntax> syntax)
+    private IEnumerable<IrTypeMemberRule> TypeMemberRules(TypeMemberListSyntax<MemberRuleSyntax>? syntax)
     {
+        if (syntax is null)
+            return Enumerable.Empty<IrTypeMemberRule>();
+
         var rules = new List<IrTypeMemberRule>();
 
         foreach (var synRule in syntax.Items)

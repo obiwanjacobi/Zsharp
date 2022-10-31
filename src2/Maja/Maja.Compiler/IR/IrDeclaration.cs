@@ -60,15 +60,15 @@ internal sealed class IrTypeDeclaration : IrDeclaration
         : base(syntax)
     {
         Symbol = symbol;
-        Enums = enums;
-        Fields = fields;
-        Rules = rules;
+        Enums = enums.ToImmutableArray();
+        Fields = fields.ToImmutableArray();
+        Rules = rules.ToImmutableArray();
     }
 
     public TypeSymbol Symbol { get; }
-    public IEnumerable<IrTypeMemberEnum> Enums { get; }
-    public IEnumerable<IrTypeMemberField> Fields { get; }
-    public IEnumerable<IrTypeMemberRule> Rules { get; }
+    public ImmutableArray<IrTypeMemberEnum> Enums { get; }
+    public ImmutableArray<IrTypeMemberField> Fields { get; }
+    public ImmutableArray<IrTypeMemberRule> Rules { get; }
 
     public new TypeDeclarationSyntax Syntax
         => (TypeDeclarationSyntax)base.Syntax;
