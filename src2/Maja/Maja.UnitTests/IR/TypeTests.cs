@@ -69,4 +69,18 @@ public class TypeTests
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
         err.Text.Should().Contain("Type 'MyType' is already declared.");
     }
+
+    [Fact]
+    public void TypeNotFound_Error()
+    {
+        const string code =
+            "x: MyType" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Diagnostics.Should().HaveCount(1);
+        var err = program.Diagnostics[0];
+        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
+        err.Text.Should().Contain("Type reference 'MyType' cannot be resolved. Type not found.");
+    }
 }

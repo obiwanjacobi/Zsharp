@@ -107,7 +107,7 @@ internal sealed class IrBuilder
 
         if (!CurrentScope.TryDeclareType(symbol))
         {
-            _diagnostics.TypeAlreadyDelcared(syntax.Location, syntax.Name.Text);
+            _ = _diagnostics.TypeAlreadyDelcared(syntax.Location, syntax.Name.Text);
         }
 
         return new IrTypeDeclaration(syntax, symbol, enums, fields, rules);
@@ -120,7 +120,7 @@ internal sealed class IrBuilder
 
         var enums = new List<IrTypeMemberEnum>();
 
-        int id = 0;
+        var id = 0;
         foreach (var synEnum in syntax.Items)
         {
             IrExpression? expr = null;
@@ -129,7 +129,7 @@ internal sealed class IrBuilder
                 expr = Expression(synExpr);
 
                 if (expr.ConstantValue is null)
-                    _diagnostics.EnumValueNotConstant(synExpr.Location, synExpr.Text);
+                    _ = _diagnostics.EnumValueNotConstant(synExpr.Location, synExpr.Text);
             }
 
             var val = expr?.ConstantValue?.Value ?? id;
@@ -189,13 +189,13 @@ internal sealed class IrBuilder
         var initializer = Expression(syntax.Expression!);
         if (initializer.TypeSymbol == TypeSymbol.Void)
         {
-            _diagnostics.CannotAssignVariableWithVoid(syntax.Expression!.Location, syntax.Name.Text);
+            _ = _diagnostics.CannotAssignVariableWithVoid(syntax.Expression!.Location, syntax.Name.Text);
         }
         var symbol = new VariableSymbol(syntax.Name.Text, initializer.TypeSymbol);
 
         if (!CurrentScope.TryDeclareVariable(symbol))
         {
-            _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
+            _ = _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
         return new IrVariableDeclaration(syntax, symbol, initializer.TypeSymbol, initializer);
@@ -209,14 +209,14 @@ internal sealed class IrBuilder
 
         if (!CurrentScope.TryLookupSymbol<TypeSymbol>(syntax.Type.Name.Text, out var typeSymbol))
         {
-            _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
+            _ = _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
             typeSymbol = TypeSymbol.Unknown;
         }
         var symbol = new VariableSymbol(syntax.Name.Text, typeSymbol);
 
         if (!CurrentScope.TryDeclareVariable(symbol))
         {
-            _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
+            _ = _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
         return new IrVariableDeclaration(syntax, symbol, typeSymbol, initializer);
@@ -232,7 +232,7 @@ internal sealed class IrBuilder
             parameters.Select(p => p.Symbol), returnType?.Symbol);
         if (!CurrentScope.TryDeclareFunction(symbol))
         {
-            _diagnostics.FunctionAlreadyDelcared(syntax.Location, symbol.Name);
+            _ = _diagnostics.FunctionAlreadyDelcared(syntax.Location, symbol.Name);
         }
 
         var scope = new IrScope(syntax.Identifier.Text, CurrentScope);
@@ -241,12 +241,12 @@ internal sealed class IrBuilder
         if (index >= 0)
         {
             var arrParams = parameters.ToArray();
-            _diagnostics.ParameterNameAlreadyDeclared(
+            _ = _diagnostics.ParameterNameAlreadyDeclared(
                 arrParams[index].Syntax.Location, arrParams[index].Symbol.Name);
         }
 
         var block = CodeBlock(syntax.CodeBlock);
-        PopScope();
+        _ = PopScope();
 
         return new IrFunctionDeclaration(syntax, symbol, parameters, returnType, scope, block);
     }
@@ -354,7 +354,7 @@ internal sealed class IrBuilder
     {
         if (!CurrentScope.TryLookupSymbol<VariableSymbol>(syntax.Name.Text, out var symbol))
         {
-            _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
+            _ = _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
             symbol = new VariableSymbol(syntax.Name.Text, TypeSymbol.Unknown);
         }
         var type = symbol!.Type ?? TypeSymbol.Unknown;
@@ -367,7 +367,7 @@ internal sealed class IrBuilder
         var args = Arguments(syntax.Arguments);
         if (!CurrentScope.TryLookupSymbol<FunctionSymbol>(syntax.Identifier.Text, out var symbol))
         {
-            _diagnostics.FunctionNotFound(syntax.Location, syntax.Identifier.Text);
+            _ = _diagnostics.FunctionNotFound(syntax.Location, syntax.Identifier.Text);
             symbol = new FunctionSymbol(syntax.Identifier.Text, Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown);
         }
 
@@ -397,10 +397,10 @@ internal sealed class IrBuilder
         return new IrArgument(syntax, expr, argSymbol);
     }
 
-    private IrExpressionLiteral LiteralBoolExpression(ExpressionLiteralBoolSyntax syntax)
+    private static IrExpressionLiteral LiteralBoolExpression(ExpressionLiteralBoolSyntax syntax)
         => new(syntax, TypeSymbol.Bool, syntax.Value);
 
-    private IrExpressionLiteral LiteralExpression(ExpressionLiteralSyntax syntax)
+    private static IrExpressionLiteral LiteralExpression(ExpressionLiteralSyntax syntax)
     {
         object value = syntax.LiteralString?.Text
             ?? IrNumber.ParseNumber(syntax.LiteralNumber?.Text!);
@@ -434,24 +434,29 @@ internal sealed class IrBuilder
         return prms;
     }
 
-    private IrParameter Parameter(ParameterSyntax param)
+    private IrParameter Parameter(ParameterSyntax syntax)
     {
-        var type = Type(param.Type);
+        var type = Type(syntax.Type);
         Debug.Assert(type is not null);
-        var symbol = new ParameterSymbol(param.Name.Text, type!.Symbol);
+        var symbol = new ParameterSymbol(syntax.Name.Text, type!.Symbol);
 
-        return new IrParameter(param, symbol, type);
+        return new IrParameter(syntax, symbol, type);
     }
 
-    private IrType? Type(TypeSyntax? type)
+    private IrType? Type(TypeSyntax? syntax)
     {
-        if (type is null) return null;
+        if (syntax is null) return null;
 
-        var name = new TypeSymbol(type.Name.Text);
-        return new IrType(type, name);
+        if (!CurrentScope.TryLookupSymbol<TypeSymbol>(syntax.Name.Text, out var symbol))
+        {
+            _ = _diagnostics.TypeNotFound(syntax.Location, syntax.Name.Text);
+            symbol = new TypeSymbol(syntax.Name.Text);
+        }
+
+        return new IrType(syntax, symbol);
     }
 
-    private IEnumerable<IrImport> UseImports(IEnumerable<UseImportSyntax> syntax)
+    private static IEnumerable<IrImport> UseImports(IEnumerable<UseImportSyntax> syntax)
     {
         var imports = new List<IrImport>();
 
@@ -464,7 +469,7 @@ internal sealed class IrBuilder
         return imports;
     }
 
-    private IEnumerable<IrExport> PublicExports(IEnumerable<PublicExportSyntax> syntax)
+    private static IEnumerable<IrExport> PublicExports(IEnumerable<PublicExportSyntax> syntax)
     {
         var exports = new List<IrExport>();
 
@@ -477,7 +482,7 @@ internal sealed class IrBuilder
         return exports;
     }
 
-    private IEnumerable<IrExport> PublicExport(PublicExportSyntax syntax)
+    private static IEnumerable<IrExport> PublicExport(PublicExportSyntax syntax)
     {
         var exports = new List<IrExport>();
         foreach (var qn in syntax.QualifiedNames)
