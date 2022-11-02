@@ -17,11 +17,16 @@ internal class IrScope
     }
 
     public string Name { get; }
+    public virtual string FullName
+        => Parent!.FullName + "." + Name;
 
     public IrScope? Parent { get; }
 
     public IEnumerable<Symbol.Symbol> Symbols
         => _symbols?.Values ?? Enumerable.Empty<Symbol.Symbol>();
+
+    protected bool TryDeclareSymbol(Symbol.Symbol symbol)
+        => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
 
     public bool TryDeclareVariable(VariableSymbol symbol)
         => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
@@ -32,12 +37,9 @@ internal class IrScope
     public bool TryDeclareFunction(FunctionSymbol symbol)
         => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
 
-    public bool TryDeclareModule(ModuleSymbol symbol)
-        => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
-
     public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
     {
-        if (SymbolTable.TryLookupSymbol(ref _symbols, name, out symbol))
+        if (SymbolTable.TryLookupSymbol(_symbols, name, out symbol))
         {
             return true;
         }
@@ -54,7 +56,7 @@ internal class IrScope
     public bool TryLookupSymbol<T>(string name, [NotNullWhen(true)] out T? symbol)
         where T : Symbol.Symbol
     {
-        if (SymbolTable.TryLookupSymbol<T>(ref _symbols, name, out symbol))
+        if (SymbolTable.TryLookupSymbol<T>(_symbols, name, out symbol))
         {
             return true;
         }
@@ -89,6 +91,9 @@ internal sealed class IrModuleScope : IrScope
     public IrModuleScope(string name, IrScope parent)
         : base(name, parent)
     { }
+
+    public override string FullName
+        => Name;
 }
 
 internal sealed class IrGlobalScope : IrScope
@@ -118,6 +123,12 @@ internal sealed class IrGlobalScope : IrScope
     private void DeclareType(TypeSymbol symbol)
     {
         if (!TryDeclareType(symbol))
-            throw new InvalidOperationException($"TypeSymbol {symbol.Name} could not be declared in the global scope!");
+            throw new InvalidOperationException($"TypeSymbol {symbol.Name} could not be declared in the global scope! Duplicates?");
     }
+
+    public bool TryDeclareModule(ModuleSymbol symbol)
+        => TryDeclareSymbol(symbol);
+
+    public override string FullName
+        => String.Empty;
 }

@@ -20,7 +20,7 @@ internal static class SymbolTable
         return true;
     }
 
-    public static bool TryLookupSymbol(ref Dictionary<string, Symbol>? table, string name,
+    public static bool TryLookupSymbol(Dictionary<string, Symbol>? table, string name,
         [NotNullWhen(true)] out Symbol? symbol)
     {
         if (table is null)
@@ -32,11 +32,11 @@ internal static class SymbolTable
         return table.TryGetValue(name, out symbol);
     }
 
-    public static bool TryLookupSymbol<T>(ref Dictionary<string, Symbol>? table, string name,
+    public static bool TryLookupSymbol<T>(Dictionary<string, Symbol>? table, string name,
         [NotNullWhen(true)] out T? symbol)
         where T : Symbol
     {
-        if (TryLookupSymbol(ref table, name, out var genSym) &&
+        if (TryLookupSymbol(table, name, out var genSym) &&
             genSym is T typedSym)
         {
             symbol = typedSym;

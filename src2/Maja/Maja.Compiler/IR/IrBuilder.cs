@@ -56,7 +56,7 @@ internal sealed class IrBuilder
         }
 
         var symbol = new ModuleSymbol(name);
-        if (!CurrentScope.TryDeclareModule(symbol))
+        if (!((IrGlobalScope)CurrentScope).TryDeclareModule(symbol))
             _ = CurrentScope.TryLookupSymbol(name, out symbol);
 
         // TODO: would like to return the existing IrModule as well...
