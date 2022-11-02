@@ -34,12 +34,34 @@ internal sealed class IrBuilder
         // syntaxTree.Diagnostics;
 
         var builder = new IrBuilder();
-        builder.PushScope(new IrModuleScope(builder.CurrentScope));
+
+        var module = builder.Module(syntaxTree.Root);
+        builder.PushScope(new IrModuleScope(module.Symbol.Name, builder.CurrentScope));
 
         var compilation = builder.Compilation(syntaxTree.Root);
 
         var scope = builder.PopScope();
         return new IrProgram(syntaxTree.Root, scope, compilation, builder.Diagnostics);
+    }
+
+    private IrModule Module(CompilationUnitSyntax syntax)
+    {
+        SyntaxNode syn = syntax;
+        var name = "default";
+
+        if (syntax.Module is not null)
+        {
+            syn = syntax.Module;
+            name = syntax.Module.Identifier.Text;
+        }
+
+        var symbol = new ModuleSymbol(name);
+        if (!CurrentScope.TryDeclareModule(symbol))
+            _ = CurrentScope.TryLookupSymbol(name, out symbol);
+
+        // TODO: would like to return the existing IrModule as well...
+
+        return new IrModule(syn, symbol!);
     }
 
     private IrCompilation Compilation(CompilationUnitSyntax root)
@@ -207,7 +229,7 @@ internal sealed class IrBuilder
             _diagnostics.FunctionAlreadyDelcared(syntax.Location, symbol.Name);
         }
 
-        var scope = new IrScope(CurrentScope);
+        var scope = new IrScope(syntax.Identifier.Text, CurrentScope);
         PushScope(scope);
         var index = scope.TryDeclareVariables(parameters.Select(p => p.Symbol));
         if (index >= 0)

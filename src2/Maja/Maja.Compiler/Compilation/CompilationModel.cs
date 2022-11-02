@@ -1,15 +1,18 @@
-﻿using Maja.Compiler.Syntax;
+﻿using Maja.Compiler.IR;
+using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.Compilation
 {
-    public sealed class SemanticModel
+    public sealed class CompilationModel
     {
         private readonly Compilation _compilation;
+        private readonly IrProgram _program;
 
-        internal SemanticModel(Compilation compilation, SyntaxTree syntaxTree)
+        internal CompilationModel(Compilation compilation, SyntaxTree syntaxTree)
         {
             _compilation = compilation;
             SyntaxTree = syntaxTree;
+            _program = IrBuilder.Program(syntaxTree);
         }
 
         public SyntaxTree SyntaxTree { get; }

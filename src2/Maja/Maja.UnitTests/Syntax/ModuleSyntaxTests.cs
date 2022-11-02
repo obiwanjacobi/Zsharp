@@ -1,6 +1,5 @@
 using System.Linq;
 using FluentAssertions;
-using Maja.Compiler.Syntax;
 using Xunit;
 
 namespace Maja.UnitTests.Syntax;
@@ -8,7 +7,20 @@ namespace Maja.UnitTests.Syntax;
 public class ModuleSyntaxTests
 {
     [Fact]
-    public void DeclPub1_Single()
+    public void DirectiveModule()
+    {
+        const string code =
+            "mod qualified.name" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Should().NotBeNull();
+        result.Module.Should().NotBeNull();
+        result.Module!.Identifier.Text.Should().Be("qualified.name");
+    }
+
+    [Fact]
+    public void DirectivePub1_Single()
     {
         const string code =
             "pub qualified.name" + Tokens.Eol
@@ -22,7 +34,7 @@ public class ModuleSyntaxTests
     }
 
     [Fact]
-    public void DeclPub1_Multiple()
+    public void DirectivePub1_Multiple()
     {
         const string code =
             "pub qualified.name1, qualified.name2" + Tokens.Eol
@@ -36,7 +48,7 @@ public class ModuleSyntaxTests
     }
 
     [Fact]
-    public void DeclPub2_Single()
+    public void DirectivePub2_Single()
     {
         const string code =
             "pub" + Tokens.Eol +
@@ -51,7 +63,7 @@ public class ModuleSyntaxTests
     }
 
     [Fact]
-    public void UseImport()
+    public void DirectiveUseImport()
     {
         const string code =
             "use qualified.name" + Tokens.Eol

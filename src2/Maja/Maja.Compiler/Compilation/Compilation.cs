@@ -23,11 +23,11 @@ public sealed class Compilation
         return new Compilation(syntaxTree);
     }
 
-    public SemanticModel GetSemanticModel(SyntaxTree tree)
+    public CompilationModel GetModel(SyntaxTree tree)
     {
         if (!_syntaxTrees.Contains(tree))
             throw new ArgumentException("Specified SyntaxTree does not belong to this Compilation.");
 
-        return new SemanticModel(this, tree);
+        return new CompilationModel(this, tree);
     }
 }

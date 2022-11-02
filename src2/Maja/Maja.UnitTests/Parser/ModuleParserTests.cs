@@ -21,7 +21,7 @@ public class ModuleParserTests
             ;
 
         var result = Parse(code);
-        result.pubDecl().Should().HaveCount(1);
+        result.directivePub().Should().HaveCount(1);
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class ModuleParserTests
             ;
 
         var result = Parse(code);
-        result.pubDecl().Should().HaveCount(1);
+        result.directivePub().Should().HaveCount(1);
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class ModuleParserTests
             ;
 
         var result = Parse(code);
-        result.pubDecl().Should().HaveCount(1);
+        result.directivePub().Should().HaveCount(1);
     }
 
     [Fact]
@@ -57,6 +57,6 @@ public class ModuleParserTests
             ;
 
         var result = Parse(code);
-        result.pubDecl().Should().HaveCount(1);
+        result.directivePub().Should().HaveCount(1);
     }
 }

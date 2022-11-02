@@ -10,10 +10,13 @@ internal class IrScope
 {
     private Dictionary<string, Symbol.Symbol>? _symbols;
 
-    public IrScope(IrScope? parent)
+    public IrScope(string name, IrScope? parent)
     {
+        Name = name;
         Parent = parent;
     }
+
+    public string Name { get; }
 
     public IrScope? Parent { get; }
 
@@ -27,6 +30,9 @@ internal class IrScope
         => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
 
     public bool TryDeclareFunction(FunctionSymbol symbol)
+        => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
+
+    public bool TryDeclareModule(ModuleSymbol symbol)
         => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
 
     public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
@@ -80,15 +86,15 @@ internal class IrScope
 
 internal sealed class IrModuleScope : IrScope
 {
-    public IrModuleScope(IrScope parent)
-        : base(parent)
+    public IrModuleScope(string name, IrScope parent)
+        : base(name, parent)
     { }
 }
 
 internal sealed class IrGlobalScope : IrScope
 {
     public IrGlobalScope()
-        : base(null)
+        : base("global", null)
     {
         // register all built-in types
         DeclareType(TypeSymbol.Bool);

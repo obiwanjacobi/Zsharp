@@ -1,10 +1,11 @@
 parser grammar MajaParser;
 options { tokenVocab=MajaLexer; }
 
-compilationUnit: (useDecl | pubDecl | newline)* (membersDecl | statement | newline)*;
+compilationUnit: directiveMod? (directiveUse | directivePub | newline)* (membersDecl | statement | newline)*;
 
-pubDecl: Pub freeSpace nameQualifiedList;
-useDecl: Use Sp+ nameQualified;
+directiveMod: Mod freeSpace nameQualified;
+directivePub: Pub freeSpace nameQualifiedList;
+directiveUse: Use Sp+ nameQualified;
 
 codeBlock: (statement | membersDecl | newline)+;
 membersDecl: functionDecl | typeDecl | variableDecl;

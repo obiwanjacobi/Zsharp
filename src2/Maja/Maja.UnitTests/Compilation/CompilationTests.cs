@@ -15,7 +15,7 @@ public class CompilationTests
 
         var tree = SyntaxTree.Parse(code, "CompilationTests");
         var comp = Maja.Compiler.Compilation.Compilation.Create(tree);
-        var model = comp.GetSemanticModel(tree);
+        var model = comp.GetModel(tree);
 
         model.Should().NotBeNull();
     }

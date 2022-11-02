@@ -39,17 +39,23 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitCompilationUnit([NotNull] MajaParser.CompilationUnitContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.pubDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.directiveMod"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPubDecl([NotNull] MajaParser.PubDeclContext context);
+	Result VisitDirectiveMod([NotNull] MajaParser.DirectiveModContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.useDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.directivePub"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUseDecl([NotNull] MajaParser.UseDeclContext context);
+	Result VisitDirectivePub([NotNull] MajaParser.DirectivePubContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.directiveUse"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDirectiveUse([NotNull] MajaParser.DirectiveUseContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.codeBlock"/>.
 	/// </summary>

@@ -10,6 +10,7 @@ public interface ISyntaxVisitor<R>
     R AggregateResult(R aggregate, R newResult);
 
     R OnCompilationUnit(CompilationUnitSyntax node);
+    R OnModule(ModuleSyntax node);
     R OnPublicExport(PublicExportSyntax node);
     R OnUseImport(UseImportSyntax node);
     R OnCodeBlock(CodeBlockSyntax node);
@@ -82,6 +83,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => newResult;
 
     public virtual R OnCompilationUnit(CompilationUnitSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnModule(ModuleSyntax node)
         => VisitChildren(node);
 
     public virtual R OnPublicExport(PublicExportSyntax node)

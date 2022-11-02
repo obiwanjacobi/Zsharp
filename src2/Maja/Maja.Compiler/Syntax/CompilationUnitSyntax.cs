@@ -15,6 +15,9 @@ public sealed class CompilationUnitSyntax : SyntaxNode
     public override SyntaxKind SyntaxKind
         => SyntaxKind.CompilationUnit;
 
+    public ModuleSyntax? Module
+        => ChildNodes.OfType<ModuleSyntax>().SingleOrDefault();
+
     /// <summary>
     /// Filtered collection of use import entries.
     /// </summary>

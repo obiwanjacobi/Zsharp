@@ -150,9 +150,23 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         } )};
     }
 
-    public override SyntaxNodeOrToken[] VisitPubDecl(PubDeclContext context)
+    public override SyntaxNodeOrToken[] VisitDirectiveMod(DirectiveModContext context)
     {
-        var children = Children(base.VisitPubDecl, context);
+        var children = Children(base.VisitDirectiveMod, context);
+
+        return new[] { new SyntaxNodeOrToken(
+            new ModuleSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = children.All,
+            ChildNodes = children.Nodes,
+            TrailingTokens = children.Tokens
+        } )};
+    }
+
+    public override SyntaxNodeOrToken[] VisitDirectivePub(DirectivePubContext context)
+    {
+        var children = Children(base.VisitDirectivePub, context);
 
         return new[] { new SyntaxNodeOrToken(
             new PublicExportSyntax(context.GetText())
@@ -164,9 +178,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         } )};
     }
 
-    public override SyntaxNodeOrToken[] VisitUseDecl(UseDeclContext context)
+    public override SyntaxNodeOrToken[] VisitDirectiveUse(DirectiveUseContext context)
     {
-        var children = Children(base.VisitUseDecl, context);
+        var children = Children(base.VisitDirectiveUse, context);
 
         return new[] { new SyntaxNodeOrToken(
             new UseImportSyntax(context.GetText())
