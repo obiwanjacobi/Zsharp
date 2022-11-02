@@ -18,6 +18,18 @@ public class ModuleTests
     }
 
     [Fact]
+    public void Module()
+    {
+        const string code =
+            "mod qualified.name" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Module.Should().NotBeNull();
+        program.Module.Symbol.Name.Should().Be("qualified.name");
+    }
+
+    [Fact]
     public void Export()
     {
         const string code =

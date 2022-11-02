@@ -11,6 +11,10 @@ namespace Maja.Compiler.IR
             Symbol = symbol;
         }
 
+        // can be null if no mod keyword was found
+        public ModuleSyntax? ModuleSyntax
+            => base.Syntax as ModuleSyntax;
+
         public ModuleSymbol Symbol { get; }
     }
 }

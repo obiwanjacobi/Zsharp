@@ -40,8 +40,8 @@ internal sealed class IrBuilder
 
         var compilation = builder.Compilation(syntaxTree.Root);
 
-        var scope = builder.PopScope();
-        return new IrProgram(syntaxTree.Root, scope, compilation, builder.Diagnostics);
+        var scope = (IrModuleScope)builder.PopScope();
+        return new IrProgram(syntaxTree.Root, scope, module, compilation, builder.Diagnostics);
     }
 
     private IrModule Module(CompilationUnitSyntax syntax)
