@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
 using Xunit;
@@ -57,5 +58,22 @@ public class FunctionTests
         fn.Symbol.Name.Should().Be("fn");
         fn.Symbol.Parameters.Should().HaveCount(2);
         fn.Symbol.ReturnType.Should().Be(TypeSymbol.Bool);
+    }
+
+    [Fact]
+    public void FuncDuplicate_Error()
+    {
+        const string code =
+            "fn: (p1: U8, p2: Str): Bool" + Tokens.Eol +
+            Tokens.Indent1 + "ret false" + Tokens.Eol +
+            "fn: (p1: U8, p2: Str): Bool" + Tokens.Eol +
+            Tokens.Indent1 + "ret false" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Diagnostics.Should().HaveCount(1);
+        var err = program.Diagnostics[0];
+        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
+        err.Text.Should().Contain("Function 'fn' is already declared.");
     }
 }

@@ -98,11 +98,17 @@ internal sealed class IrBuilder
 
     private IrTypeDeclaration TypeDeclaration(TypeDeclarationSyntax syntax)
     {
-        var symbol = new TypeSymbol(syntax.Name.Text);
-
         var enums = TypeMemberEnums(syntax.Enums);
         var fields = TypeMemberFields(syntax.Fields);
         var rules = TypeMemberRules(syntax.Rules);
+
+        // TODO: add enums, fields and rules
+        var symbol = new TypeSymbol(syntax.Name.Text);
+
+        if (!CurrentScope.TryDeclareType(symbol))
+        {
+            _diagnostics.TypeAlreadyDelcared(syntax.Location, syntax.Name.Text);
+        }
 
         return new IrTypeDeclaration(syntax, symbol, enums, fields, rules);
     }

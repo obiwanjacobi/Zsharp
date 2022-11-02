@@ -24,10 +24,13 @@ namespace Maja.Compiler.Diagnostics
             => _messages.GetEnumerator();
 
         public DiagnosticMessage FunctionAlreadyDelcared(SyntaxLocation location, string functionName)
-            => Add(DiagnosticMessageKind.Error, location, $"Function '{functionName} is already declared.");
+            => Add(DiagnosticMessageKind.Error, location, $"Function '{functionName}' is already declared.");
 
         public DiagnosticMessage ParameterNameAlreadyDeclared(SyntaxLocation location, string parameterName)
-            => Add(DiagnosticMessageKind.Error, location, $"Parameter name '{parameterName} is already declared.");
+            => Add(DiagnosticMessageKind.Error, location, $"Parameter name '{parameterName}' is already declared.");
+
+        public DiagnosticMessage TypeAlreadyDelcared(SyntaxLocation location, string typeName)
+            => Add(DiagnosticMessageKind.Error, location, $"Type '{typeName}' is already declared.");
 
         public DiagnosticMessage EnumValueNotConstant(SyntaxLocation location, string expr)
             => Add(DiagnosticMessageKind.Error, location, $"Enum initialization value expression '{expr}' is not a compiler constant.");

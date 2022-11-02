@@ -80,4 +80,18 @@ public class ExpressionTests
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
         err.Text.Should().Contain("Cannot assign Void").And.Contain("x");
     }
+
+    [Fact]
+    public void Invocation_ErrorNotFound()
+    {
+        const string code =
+            "x := fn()" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Diagnostics.Should().HaveCount(1);
+        var err = program.Diagnostics[0];
+        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
+        err.Text.Should().Contain("Function reference 'fn' cannot be resolved. Function not found.");
+    }
 }

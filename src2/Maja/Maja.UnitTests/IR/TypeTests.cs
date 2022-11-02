@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
 using Xunit;
@@ -50,5 +51,22 @@ public class TypeTests
         type.Fields[1].DefaultValue.Should().BeNull();
         type.Fields[1].Symbol.Name.Should().Be("fld2");
         type.Fields[1].Type.Symbol.Should().Be(TypeSymbol.Str);
+    }
+
+    [Fact]
+    public void TypeDuplicate_Error()
+    {
+        const string code =
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Diagnostics.Should().HaveCount(1);
+        var err = program.Diagnostics[0];
+        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
+        err.Text.Should().Contain("Type 'MyType' is already declared.");
     }
 }
