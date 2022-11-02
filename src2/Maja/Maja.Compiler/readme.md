@@ -2,10 +2,11 @@
 
 ## TODO
 
-[ ] Syntax: Now records. Use class for ref-equality? /bc immutable state
 [ ] SyntaxNode: DescendentNodes, AncestorsAndSelf, AncestorOrSelf etc.
 [ ] ErrorNode: Use context info to built better error message.
 [ ] 'if true' places the 'if' token at the ExpressionLiteralBoolSyntax node.
+[ ] TypeSymbol: add enums, fields and rules symbols
+[ ] VarDeclTyped+init: init expression type is not the same as var type.
 
 ### Done
 [x] Parser: Error handling: MissingTokens, SkippedTokens
@@ -17,6 +18,7 @@ Made SyntaxNodeOrToken public and added SyntaxNodeOrTokenList.
 [x] ExpressionOperator: Implement mapping multi-token operators to kind.
 [x] Compiler: move to SyntaxTree and remove.
 [x] Syntax: Else /ElseIf is not a statement. Should not derive from Statement base.
+[x] Syntax: Now records. Use class for ref-equality? /bc immutable state
 
 ## Descisions
 
@@ -35,9 +37,7 @@ Only necessary when tree is allowed to change.
 
 ## Notes
 
-- Lexer does actual value extraction? (number token to int)
 - assignment expression are not binary expression. You need a different tree (right-assoc).
 Analyze if all our assignment variations (arrays etc) will fit in an expression.
+Or Assignment is a statement?
 - CodeBlock is a statement?
-- No Binder/Binding/BoundNode: internal Intermediate Representation (IR)? Incl. Symbols & lowering/rewriting etc.
-Analysis is done through the public SemanticModel. Symbols are also public.
