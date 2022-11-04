@@ -32,7 +32,27 @@ Then each type has its own way of specifying its implementation:
 
 > **_All type names start with a Capital letter_**
 
-> TBD: instead of making a distinction between structs and enums and custom types, have one type that can be a combination of any of these aspects - except custom data types are always a singular value, but can be combined with enum-values.
+> TBD: instead of making a distinction between structs and enums and custom types, have one type that can be a combination of any of these aspects - except custom data types are always a singular value, but can be combined with enum-values -or- can `#rules` also be applied to structs and enums?
+
+```csharp
+MyType
+    Option1, Option2
+    fld1: U8
+    fld2: Str
+    #fld1 > 42  // -or-
+    #fld1.value > 42
+```
+
+How to declare different Enum types?
+
+```csharp
+MyType
+    Option1: U8, Option2: U8
+    Option10: Str, Option11: Str
+    fld1: U8
+    fld2: Str
+    #fld1 > 42
+```
 
 ---
 
