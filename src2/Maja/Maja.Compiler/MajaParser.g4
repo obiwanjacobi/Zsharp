@@ -1,14 +1,14 @@
 parser grammar MajaParser;
 options { tokenVocab=MajaLexer; }
 
-compilationUnit: directiveMod? (directiveUse | directivePub | newline)* (membersDecl | statement | newline)*;
+compilationUnit: directiveMod? (directiveUse | directivePub | newline)* (declarationMembers | statement | newline)*;
 
 directiveMod: Mod freeSpace nameQualified;
 directivePub: Pub freeSpace nameQualifiedList;
 directiveUse: Use Sp+ nameQualified;
 
-codeBlock: (statement | membersDecl | newline)+;
-membersDecl: functionDecl | typeDecl | variableDecl;
+codeBlock: (statement | declarationMembers | newline)+;
+declarationMembers: declarationFunction | declarationType | declarationVariable;
 
 statement: statementFlow | statementExpression;
 statementFlow: statementRet | statementIf;
@@ -18,8 +18,8 @@ statementElseIf: (Else freeSpace If | Elif) Sp expression newline Indent codeBlo
 statementRet: Ret (Sp expression)?;
 statementExpression: expression;
 
-functionDecl: nameIdentifier Colon freeSpace typeParameterList? parameterList (Colon Sp type)? newline Indent codeBlock Dedent;
-functionDeclLocal: Indent functionDecl Dedent;
+declarationFunction: nameIdentifier Colon freeSpace typeParameterList? parameterList (Colon Sp type)? newline Indent codeBlock Dedent;
+declarationFunctionLocal: Indent declarationFunction Dedent;
 parameterList: ParenOpen (parameterListComma | newline parameterListIndent)? ParenClose;
 parameterListComma: parameter (Comma Sp parameter)*;
 parameterListIndent: Indent (comment* parameter newline)+ Dedent;
@@ -29,11 +29,11 @@ argumentListComma: argument (Comma Sp argument)*;
 argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Eq)? expression;
 
-typeDecl: nameIdentifier typeParameterList? (Colon Sp type)? newline Indent typeDeclMemberList Dedent;
-typeDeclMemberList: (typeDeclMemberListEnum | typeDeclMemberListField | typeDeclMemberListRule)+;
-typeDeclMemberListEnum: (memberEnumValue newline)+ | ((memberEnum (Comma freeSpace memberEnum)*)+ newline);
-typeDeclMemberListField: (memberField newline)+;
-typeDeclMemberListRule: (memberRule newline)+;
+declarationType: nameIdentifier typeParameterList? (Colon Sp type)? newline Indent declarationTypeMemberList Dedent;
+declarationTypeMemberList: (declarationTypeMemberListEnum | declarationTypeMemberListField | declarationTypeMemberListRule)+;
+declarationTypeMemberListEnum: (memberEnumValue newline)+ | ((memberEnum (Comma freeSpace memberEnum)*)+ newline);
+declarationTypeMemberListField: (memberField newline)+;
+declarationTypeMemberListRule: (memberRule newline)+;
 type: nameIdentifier typeArgumentList?;
 typeParameterList: AngleOpen (typeParameterListComma | newline typeParameterListIndent) AngleClose;
 typeParameterListComma: typeParameter (Comma Sp typeParameter)*;
@@ -52,9 +52,9 @@ memberEnum: nameIdentifier;
 memberField: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
 memberRule: Hash nameIdentifier Sp expressionRule;
 
-variableDecl: variableDeclTyped | variableDeclInferred;
-variableDeclTyped: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
-variableDeclInferred: nameIdentifier Sp Colon Eq Sp expression;
+declarationVariable: declarationVariableTyped | declarationVariableInferred;
+declarationVariableTyped: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
+declarationVariableInferred: nameIdentifier Sp Colon Eq Sp expression;
 variableAssignment: nameIdentifier Sp Eq Sp expression;
 
 expression: 

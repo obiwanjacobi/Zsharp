@@ -210,9 +210,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     // Functions
     //
 
-    public override SyntaxNodeOrToken[] VisitFunctionDecl(FunctionDeclContext context)
+    public override SyntaxNodeOrToken[] VisitDeclarationFunction(DeclarationFunctionContext context)
     {
-        var children = Children(base.VisitFunctionDecl, context);
+        var children = Children(base.VisitDeclarationFunction, context);
 
         return new[]{ new SyntaxNodeOrToken(
             new FunctionDeclarationSyntax(context.GetText())
@@ -242,9 +242,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     // Types
     //
 
-    public override SyntaxNodeOrToken[] VisitTypeDecl(TypeDeclContext context)
+    public override SyntaxNodeOrToken[] VisitDeclarationType(DeclarationTypeContext context)
     {
-        var children = Children(base.VisitTypeDecl, context);
+        var children = Children(base.VisitDeclarationType, context);
 
         return new[] { new SyntaxNodeOrToken(
             new TypeDeclarationSyntax(context.GetText())
@@ -256,9 +256,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         } )};
     }
 
-    public override SyntaxNodeOrToken[] VisitTypeDeclMemberListEnum(TypeDeclMemberListEnumContext context)
+    public override SyntaxNodeOrToken[] VisitDeclarationTypeMemberListEnum(DeclarationTypeMemberListEnumContext context)
     {
-        var children = Children(base.VisitTypeDeclMemberListEnum, context);
+        var children = Children(base.VisitDeclarationTypeMemberListEnum, context);
 
         return new[] { new SyntaxNodeOrToken(
             new TypeMemberListSyntax<MemberEnumSyntax>(context.GetText())
@@ -270,9 +270,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         } )};
     }
 
-    public override SyntaxNodeOrToken[] VisitTypeDeclMemberListField([NotNull] TypeDeclMemberListFieldContext context)
+    public override SyntaxNodeOrToken[] VisitDeclarationTypeMemberListField(DeclarationTypeMemberListFieldContext context)
     {
-        var children = Children(base.VisitTypeDeclMemberListField, context);
+        var children = Children(base.VisitDeclarationTypeMemberListField, context);
 
         return new[] { new SyntaxNodeOrToken(
             new TypeMemberListSyntax<MemberFieldSyntax>(context.GetText())
@@ -284,9 +284,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         } )};
     }
 
-    public override SyntaxNodeOrToken[] VisitTypeDeclMemberListRule([NotNull] TypeDeclMemberListRuleContext context)
+    public override SyntaxNodeOrToken[] VisitDeclarationTypeMemberListRule(DeclarationTypeMemberListRuleContext context)
     {
-        var children = Children(base.VisitTypeDeclMemberListRule, context);
+        var children = Children(base.VisitDeclarationTypeMemberListRule, context);
 
         return new[] { new SyntaxNodeOrToken(
             new TypeMemberListSyntax<MemberRuleSyntax>(context.GetText())
@@ -428,9 +428,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     // Variables
     //
 
-    public override SyntaxNodeOrToken[] VisitVariableDeclTyped(VariableDeclTypedContext context)
+    public override SyntaxNodeOrToken[] VisitDeclarationVariableTyped(DeclarationVariableTypedContext context)
     {
-        var children = Children(base.VisitVariableDeclTyped, context);
+        var children = Children(base.VisitDeclarationVariableTyped, context);
 
         return new[] { new SyntaxNodeOrToken(
             new VariableDeclarationTypedSyntax(context.GetText())
@@ -442,9 +442,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         } )};
     }
 
-    public override SyntaxNodeOrToken[] VisitVariableDeclInferred(VariableDeclInferredContext context)
+    public override SyntaxNodeOrToken[] VisitDeclarationVariableInferred(DeclarationVariableInferredContext context)
     {
-        var children = Children(base.VisitVariableDeclInferred, context);
+        var children = Children(base.VisitDeclarationVariableInferred, context);
 
         return new[] { new SyntaxNodeOrToken(
             new VariableDeclarationInferredSyntax(context.GetText())

@@ -63,11 +63,11 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitCodeBlock([NotNull] MajaParser.CodeBlockContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.membersDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationMembers"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMembersDecl([NotNull] MajaParser.MembersDeclContext context);
+	Result VisitDeclarationMembers([NotNull] MajaParser.DeclarationMembersContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.statement"/>.
 	/// </summary>
@@ -111,17 +111,17 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitStatementExpression([NotNull] MajaParser.StatementExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.functionDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationFunction"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFunctionDecl([NotNull] MajaParser.FunctionDeclContext context);
+	Result VisitDeclarationFunction([NotNull] MajaParser.DeclarationFunctionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.functionDeclLocal"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationFunctionLocal"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFunctionDeclLocal([NotNull] MajaParser.FunctionDeclLocalContext context);
+	Result VisitDeclarationFunctionLocal([NotNull] MajaParser.DeclarationFunctionLocalContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.parameterList"/>.
 	/// </summary>
@@ -171,35 +171,35 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitArgument([NotNull] MajaParser.ArgumentContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationType"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeDecl([NotNull] MajaParser.TypeDeclContext context);
+	Result VisitDeclarationType([NotNull] MajaParser.DeclarationTypeContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberList"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationTypeMemberList"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeDeclMemberList([NotNull] MajaParser.TypeDeclMemberListContext context);
+	Result VisitDeclarationTypeMemberList([NotNull] MajaParser.DeclarationTypeMemberListContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberListEnum"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationTypeMemberListEnum"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeDeclMemberListEnum([NotNull] MajaParser.TypeDeclMemberListEnumContext context);
+	Result VisitDeclarationTypeMemberListEnum([NotNull] MajaParser.DeclarationTypeMemberListEnumContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberListField"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationTypeMemberListField"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeDeclMemberListField([NotNull] MajaParser.TypeDeclMemberListFieldContext context);
+	Result VisitDeclarationTypeMemberListField([NotNull] MajaParser.DeclarationTypeMemberListFieldContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberListRule"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationTypeMemberListRule"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeDeclMemberListRule([NotNull] MajaParser.TypeDeclMemberListRuleContext context);
+	Result VisitDeclarationTypeMemberListRule([NotNull] MajaParser.DeclarationTypeMemberListRuleContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.type"/>.
 	/// </summary>
@@ -297,23 +297,23 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitMemberRule([NotNull] MajaParser.MemberRuleContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.variableDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationVariable"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableDecl([NotNull] MajaParser.VariableDeclContext context);
+	Result VisitDeclarationVariable([NotNull] MajaParser.DeclarationVariableContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.variableDeclTyped"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationVariableTyped"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableDeclTyped([NotNull] MajaParser.VariableDeclTypedContext context);
+	Result VisitDeclarationVariableTyped([NotNull] MajaParser.DeclarationVariableTypedContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.variableDeclInferred"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationVariableInferred"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableDeclInferred([NotNull] MajaParser.VariableDeclInferredContext context);
+	Result VisitDeclarationVariableInferred([NotNull] MajaParser.DeclarationVariableInferredContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.variableAssignment"/>.
 	/// </summary>

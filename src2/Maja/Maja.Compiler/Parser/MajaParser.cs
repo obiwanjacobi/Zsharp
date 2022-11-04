@@ -50,48 +50,49 @@ public partial class MajaParser : Parser {
 		Sp=70, Eol=71;
 	public const int
 		RULE_compilationUnit = 0, RULE_directiveMod = 1, RULE_directivePub = 2, 
-		RULE_directiveUse = 3, RULE_codeBlock = 4, RULE_membersDecl = 5, RULE_statement = 6, 
-		RULE_statementFlow = 7, RULE_statementIf = 8, RULE_statementElse = 9, 
+		RULE_directiveUse = 3, RULE_codeBlock = 4, RULE_declarationMembers = 5, 
+		RULE_statement = 6, RULE_statementFlow = 7, RULE_statementIf = 8, RULE_statementElse = 9, 
 		RULE_statementElseIf = 10, RULE_statementRet = 11, RULE_statementExpression = 12, 
-		RULE_functionDecl = 13, RULE_functionDeclLocal = 14, RULE_parameterList = 15, 
+		RULE_declarationFunction = 13, RULE_declarationFunctionLocal = 14, RULE_parameterList = 15, 
 		RULE_parameterListComma = 16, RULE_parameterListIndent = 17, RULE_parameter = 18, 
 		RULE_argumentList = 19, RULE_argumentListComma = 20, RULE_argumentListIndent = 21, 
-		RULE_argument = 22, RULE_typeDecl = 23, RULE_typeDeclMemberList = 24, 
-		RULE_typeDeclMemberListEnum = 25, RULE_typeDeclMemberListField = 26, RULE_typeDeclMemberListRule = 27, 
-		RULE_type = 28, RULE_typeParameterList = 29, RULE_typeParameterListComma = 30, 
-		RULE_typeParameterListIndent = 31, RULE_typeParameter = 32, RULE_typeParameterGeneric = 33, 
-		RULE_typeParameterTemplate = 34, RULE_typeParameterValue = 35, RULE_typeArgumentList = 36, 
-		RULE_typeArgumentListComma = 37, RULE_typeArgumentListIndent = 38, RULE_typeArgument = 39, 
-		RULE_memberEnumValue = 40, RULE_memberEnum = 41, RULE_memberField = 42, 
-		RULE_memberRule = 43, RULE_variableDecl = 44, RULE_variableDeclTyped = 45, 
-		RULE_variableDeclInferred = 46, RULE_variableAssignment = 47, RULE_expression = 48, 
-		RULE_expressionConstant = 49, RULE_expressionRule = 50, RULE_expressionOperatorBinary = 51, 
-		RULE_expressionOperatorUnaryPrefix = 52, RULE_expressionOperatorArithmetic = 53, 
-		RULE_expressionOperatorArithmeticUnaryPrefix = 54, RULE_expressionOperatorLogic = 55, 
-		RULE_expressionOperatorLogicUnaryPrefix = 56, RULE_expressionOperatorComparison = 57, 
-		RULE_expressionOperatorBits = 58, RULE_expressionOperatorBitsUnaryPrefix = 59, 
-		RULE_expressionOperatorAssignment = 60, RULE_expressionLiteralBool = 61, 
-		RULE_expressionLiteral = 62, RULE_nameQualified = 63, RULE_nameQualifiedList = 64, 
-		RULE_nameQualifiedListComma = 65, RULE_nameQualifiedListIndent = 66, RULE_nameIdentifier = 67, 
-		RULE_nameIdentifierList = 68, RULE_nameIdentifierListComma = 69, RULE_nameIdentifierListIndent = 70, 
-		RULE_string = 71, RULE_number = 72, RULE_comment = 73, RULE_newline = 74, 
-		RULE_freeSpace = 75;
+		RULE_argument = 22, RULE_declarationType = 23, RULE_declarationTypeMemberList = 24, 
+		RULE_declarationTypeMemberListEnum = 25, RULE_declarationTypeMemberListField = 26, 
+		RULE_declarationTypeMemberListRule = 27, RULE_type = 28, RULE_typeParameterList = 29, 
+		RULE_typeParameterListComma = 30, RULE_typeParameterListIndent = 31, RULE_typeParameter = 32, 
+		RULE_typeParameterGeneric = 33, RULE_typeParameterTemplate = 34, RULE_typeParameterValue = 35, 
+		RULE_typeArgumentList = 36, RULE_typeArgumentListComma = 37, RULE_typeArgumentListIndent = 38, 
+		RULE_typeArgument = 39, RULE_memberEnumValue = 40, RULE_memberEnum = 41, 
+		RULE_memberField = 42, RULE_memberRule = 43, RULE_declarationVariable = 44, 
+		RULE_declarationVariableTyped = 45, RULE_declarationVariableInferred = 46, 
+		RULE_variableAssignment = 47, RULE_expression = 48, RULE_expressionConstant = 49, 
+		RULE_expressionRule = 50, RULE_expressionOperatorBinary = 51, RULE_expressionOperatorUnaryPrefix = 52, 
+		RULE_expressionOperatorArithmetic = 53, RULE_expressionOperatorArithmeticUnaryPrefix = 54, 
+		RULE_expressionOperatorLogic = 55, RULE_expressionOperatorLogicUnaryPrefix = 56, 
+		RULE_expressionOperatorComparison = 57, RULE_expressionOperatorBits = 58, 
+		RULE_expressionOperatorBitsUnaryPrefix = 59, RULE_expressionOperatorAssignment = 60, 
+		RULE_expressionLiteralBool = 61, RULE_expressionLiteral = 62, RULE_nameQualified = 63, 
+		RULE_nameQualifiedList = 64, RULE_nameQualifiedListComma = 65, RULE_nameQualifiedListIndent = 66, 
+		RULE_nameIdentifier = 67, RULE_nameIdentifierList = 68, RULE_nameIdentifierListComma = 69, 
+		RULE_nameIdentifierListIndent = 70, RULE_string = 71, RULE_number = 72, 
+		RULE_comment = 73, RULE_newline = 74, RULE_freeSpace = 75;
 	public static readonly string[] ruleNames = {
 		"compilationUnit", "directiveMod", "directivePub", "directiveUse", "codeBlock", 
-		"membersDecl", "statement", "statementFlow", "statementIf", "statementElse", 
-		"statementElseIf", "statementRet", "statementExpression", "functionDecl", 
-		"functionDeclLocal", "parameterList", "parameterListComma", "parameterListIndent", 
+		"declarationMembers", "statement", "statementFlow", "statementIf", "statementElse", 
+		"statementElseIf", "statementRet", "statementExpression", "declarationFunction", 
+		"declarationFunctionLocal", "parameterList", "parameterListComma", "parameterListIndent", 
 		"parameter", "argumentList", "argumentListComma", "argumentListIndent", 
-		"argument", "typeDecl", "typeDeclMemberList", "typeDeclMemberListEnum", 
-		"typeDeclMemberListField", "typeDeclMemberListRule", "type", "typeParameterList", 
-		"typeParameterListComma", "typeParameterListIndent", "typeParameter", 
-		"typeParameterGeneric", "typeParameterTemplate", "typeParameterValue", 
+		"argument", "declarationType", "declarationTypeMemberList", "declarationTypeMemberListEnum", 
+		"declarationTypeMemberListField", "declarationTypeMemberListRule", "type", 
+		"typeParameterList", "typeParameterListComma", "typeParameterListIndent", 
+		"typeParameter", "typeParameterGeneric", "typeParameterTemplate", "typeParameterValue", 
 		"typeArgumentList", "typeArgumentListComma", "typeArgumentListIndent", 
 		"typeArgument", "memberEnumValue", "memberEnum", "memberField", "memberRule", 
-		"variableDecl", "variableDeclTyped", "variableDeclInferred", "variableAssignment", 
-		"expression", "expressionConstant", "expressionRule", "expressionOperatorBinary", 
-		"expressionOperatorUnaryPrefix", "expressionOperatorArithmetic", "expressionOperatorArithmeticUnaryPrefix", 
-		"expressionOperatorLogic", "expressionOperatorLogicUnaryPrefix", "expressionOperatorComparison", 
+		"declarationVariable", "declarationVariableTyped", "declarationVariableInferred", 
+		"variableAssignment", "expression", "expressionConstant", "expressionRule", 
+		"expressionOperatorBinary", "expressionOperatorUnaryPrefix", "expressionOperatorArithmetic", 
+		"expressionOperatorArithmeticUnaryPrefix", "expressionOperatorLogic", 
+		"expressionOperatorLogicUnaryPrefix", "expressionOperatorComparison", 
 		"expressionOperatorBits", "expressionOperatorBitsUnaryPrefix", "expressionOperatorAssignment", 
 		"expressionLiteralBool", "expressionLiteral", "nameQualified", "nameQualifiedList", 
 		"nameQualifiedListComma", "nameQualifiedListIndent", "nameIdentifier", 
@@ -175,11 +176,11 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext newline(int i) {
 			return GetRuleContext<NewlineContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public MembersDeclContext[] membersDecl() {
-			return GetRuleContexts<MembersDeclContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationMembersContext[] declarationMembers() {
+			return GetRuleContexts<DeclarationMembersContext>();
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public MembersDeclContext membersDecl(int i) {
-			return GetRuleContext<MembersDeclContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationMembersContext declarationMembers(int i) {
+			return GetRuleContext<DeclarationMembersContext>(i);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public StatementContext[] statement() {
 			return GetRuleContexts<StatementContext>();
@@ -268,7 +269,7 @@ public partial class MajaParser : Parser {
 				case 1:
 					{
 					State = 163;
-					membersDecl();
+					declarationMembers();
 					}
 					break;
 				case 2:
@@ -464,11 +465,11 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public StatementContext statement(int i) {
 			return GetRuleContext<StatementContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public MembersDeclContext[] membersDecl() {
-			return GetRuleContexts<MembersDeclContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationMembersContext[] declarationMembers() {
+			return GetRuleContexts<DeclarationMembersContext>();
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public MembersDeclContext membersDecl(int i) {
-			return GetRuleContext<MembersDeclContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationMembersContext declarationMembers(int i) {
+			return GetRuleContext<DeclarationMembersContext>(i);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext[] newline() {
 			return GetRuleContexts<NewlineContext>();
@@ -514,7 +515,7 @@ public partial class MajaParser : Parser {
 				case 2:
 					{
 					State = 188;
-					membersDecl();
+					declarationMembers();
 					}
 					break;
 				case 3:
@@ -542,33 +543,33 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class MembersDeclContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public FunctionDeclContext functionDecl() {
-			return GetRuleContext<FunctionDeclContext>(0);
+	public partial class DeclarationMembersContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationFunctionContext declarationFunction() {
+			return GetRuleContext<DeclarationFunctionContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public TypeDeclContext typeDecl() {
-			return GetRuleContext<TypeDeclContext>(0);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationTypeContext declarationType() {
+			return GetRuleContext<DeclarationTypeContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public VariableDeclContext variableDecl() {
-			return GetRuleContext<VariableDeclContext>(0);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationVariableContext declarationVariable() {
+			return GetRuleContext<DeclarationVariableContext>(0);
 		}
-		public MembersDeclContext(ParserRuleContext parent, int invokingState)
+		public DeclarationMembersContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_membersDecl; } }
+		public override int RuleIndex { get { return RULE_declarationMembers; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitMembersDecl(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationMembers(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public MembersDeclContext membersDecl() {
-		MembersDeclContext _localctx = new MembersDeclContext(Context, State);
-		EnterRule(_localctx, 10, RULE_membersDecl);
+	public DeclarationMembersContext declarationMembers() {
+		DeclarationMembersContext _localctx = new DeclarationMembersContext(Context, State);
+		EnterRule(_localctx, 10, RULE_declarationMembers);
 		try {
 			State = 197;
 			ErrorHandler.Sync(this);
@@ -577,21 +578,21 @@ public partial class MajaParser : Parser {
 				EnterOuterAlt(_localctx, 1);
 				{
 				State = 194;
-				functionDecl();
+				declarationFunction();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
 				State = 195;
-				typeDecl();
+				declarationType();
 				}
 				break;
 			case 3:
 				EnterOuterAlt(_localctx, 3);
 				{
 				State = 196;
-				variableDecl();
+				declarationVariable();
 				}
 				break;
 			}
@@ -1071,7 +1072,7 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class FunctionDeclContext : ParserRuleContext {
+	public partial class DeclarationFunctionContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public NameIdentifierContext nameIdentifier() {
 			return GetRuleContext<NameIdentifierContext>(0);
 		}
@@ -1100,23 +1101,23 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
 			return GetRuleContext<TypeContext>(0);
 		}
-		public FunctionDeclContext(ParserRuleContext parent, int invokingState)
+		public DeclarationFunctionContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_functionDecl; } }
+		public override int RuleIndex { get { return RULE_declarationFunction; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunctionDecl(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationFunction(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public FunctionDeclContext functionDecl() {
-		FunctionDeclContext _localctx = new FunctionDeclContext(Context, State);
-		EnterRule(_localctx, 26, RULE_functionDecl);
+	public DeclarationFunctionContext declarationFunction() {
+		DeclarationFunctionContext _localctx = new DeclarationFunctionContext(Context, State);
+		EnterRule(_localctx, 26, RULE_declarationFunction);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
@@ -1174,36 +1175,36 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class FunctionDeclLocalContext : ParserRuleContext {
+	public partial class DeclarationFunctionLocalContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Indent() { return GetToken(MajaParser.Indent, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public FunctionDeclContext functionDecl() {
-			return GetRuleContext<FunctionDeclContext>(0);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationFunctionContext declarationFunction() {
+			return GetRuleContext<DeclarationFunctionContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Dedent() { return GetToken(MajaParser.Dedent, 0); }
-		public FunctionDeclLocalContext(ParserRuleContext parent, int invokingState)
+		public DeclarationFunctionLocalContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_functionDeclLocal; } }
+		public override int RuleIndex { get { return RULE_declarationFunctionLocal; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunctionDeclLocal(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationFunctionLocal(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public FunctionDeclLocalContext functionDeclLocal() {
-		FunctionDeclLocalContext _localctx = new FunctionDeclLocalContext(Context, State);
-		EnterRule(_localctx, 28, RULE_functionDeclLocal);
+	public DeclarationFunctionLocalContext declarationFunctionLocal() {
+		DeclarationFunctionLocalContext _localctx = new DeclarationFunctionLocalContext(Context, State);
+		EnterRule(_localctx, 28, RULE_declarationFunctionLocal);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 265;
 			Match(Indent);
 			State = 266;
-			functionDecl();
+			declarationFunction();
 			State = 267;
 			Match(Dedent);
 			}
@@ -1803,7 +1804,7 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class TypeDeclContext : ParserRuleContext {
+	public partial class DeclarationTypeContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public NameIdentifierContext nameIdentifier() {
 			return GetRuleContext<NameIdentifierContext>(0);
 		}
@@ -1811,8 +1812,8 @@ public partial class MajaParser : Parser {
 			return GetRuleContext<NewlineContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Indent() { return GetToken(MajaParser.Indent, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public TypeDeclMemberListContext typeDeclMemberList() {
-			return GetRuleContext<TypeDeclMemberListContext>(0);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationTypeMemberListContext declarationTypeMemberList() {
+			return GetRuleContext<DeclarationTypeMemberListContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Dedent() { return GetToken(MajaParser.Dedent, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public TypeParameterListContext typeParameterList() {
@@ -1823,23 +1824,23 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
 			return GetRuleContext<TypeContext>(0);
 		}
-		public TypeDeclContext(ParserRuleContext parent, int invokingState)
+		public DeclarationTypeContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_typeDecl; } }
+		public override int RuleIndex { get { return RULE_declarationType; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTypeDecl(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationType(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public TypeDeclContext typeDecl() {
-		TypeDeclContext _localctx = new TypeDeclContext(Context, State);
-		EnterRule(_localctx, 46, RULE_typeDecl);
+	public DeclarationTypeContext declarationType() {
+		DeclarationTypeContext _localctx = new DeclarationTypeContext(Context, State);
+		EnterRule(_localctx, 46, RULE_declarationType);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
@@ -1875,7 +1876,7 @@ public partial class MajaParser : Parser {
 			State = 357;
 			Match(Indent);
 			State = 358;
-			typeDeclMemberList();
+			declarationTypeMemberList();
 			State = 359;
 			Match(Dedent);
 			}
@@ -1891,42 +1892,42 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class TypeDeclMemberListContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public TypeDeclMemberListEnumContext[] typeDeclMemberListEnum() {
-			return GetRuleContexts<TypeDeclMemberListEnumContext>();
+	public partial class DeclarationTypeMemberListContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationTypeMemberListEnumContext[] declarationTypeMemberListEnum() {
+			return GetRuleContexts<DeclarationTypeMemberListEnumContext>();
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public TypeDeclMemberListEnumContext typeDeclMemberListEnum(int i) {
-			return GetRuleContext<TypeDeclMemberListEnumContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationTypeMemberListEnumContext declarationTypeMemberListEnum(int i) {
+			return GetRuleContext<DeclarationTypeMemberListEnumContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public TypeDeclMemberListFieldContext[] typeDeclMemberListField() {
-			return GetRuleContexts<TypeDeclMemberListFieldContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationTypeMemberListFieldContext[] declarationTypeMemberListField() {
+			return GetRuleContexts<DeclarationTypeMemberListFieldContext>();
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public TypeDeclMemberListFieldContext typeDeclMemberListField(int i) {
-			return GetRuleContext<TypeDeclMemberListFieldContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationTypeMemberListFieldContext declarationTypeMemberListField(int i) {
+			return GetRuleContext<DeclarationTypeMemberListFieldContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public TypeDeclMemberListRuleContext[] typeDeclMemberListRule() {
-			return GetRuleContexts<TypeDeclMemberListRuleContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationTypeMemberListRuleContext[] declarationTypeMemberListRule() {
+			return GetRuleContexts<DeclarationTypeMemberListRuleContext>();
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public TypeDeclMemberListRuleContext typeDeclMemberListRule(int i) {
-			return GetRuleContext<TypeDeclMemberListRuleContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationTypeMemberListRuleContext declarationTypeMemberListRule(int i) {
+			return GetRuleContext<DeclarationTypeMemberListRuleContext>(i);
 		}
-		public TypeDeclMemberListContext(ParserRuleContext parent, int invokingState)
+		public DeclarationTypeMemberListContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_typeDeclMemberList; } }
+		public override int RuleIndex { get { return RULE_declarationTypeMemberList; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTypeDeclMemberList(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationTypeMemberList(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public TypeDeclMemberListContext typeDeclMemberList() {
-		TypeDeclMemberListContext _localctx = new TypeDeclMemberListContext(Context, State);
-		EnterRule(_localctx, 48, RULE_typeDeclMemberList);
+	public DeclarationTypeMemberListContext declarationTypeMemberList() {
+		DeclarationTypeMemberListContext _localctx = new DeclarationTypeMemberListContext(Context, State);
+		EnterRule(_localctx, 48, RULE_declarationTypeMemberList);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
@@ -1942,19 +1943,19 @@ public partial class MajaParser : Parser {
 				case 1:
 					{
 					State = 361;
-					typeDeclMemberListEnum();
+					declarationTypeMemberListEnum();
 					}
 					break;
 				case 2:
 					{
 					State = 362;
-					typeDeclMemberListField();
+					declarationTypeMemberListField();
 					}
 					break;
 				case 3:
 					{
 					State = 363;
-					typeDeclMemberListRule();
+					declarationTypeMemberListRule();
 					}
 					break;
 				}
@@ -1976,7 +1977,7 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class TypeDeclMemberListEnumContext : ParserRuleContext {
+	public partial class DeclarationTypeMemberListEnumContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public MemberEnumValueContext[] memberEnumValue() {
 			return GetRuleContexts<MemberEnumValueContext>();
 		}
@@ -2005,23 +2006,23 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public FreeSpaceContext freeSpace(int i) {
 			return GetRuleContext<FreeSpaceContext>(i);
 		}
-		public TypeDeclMemberListEnumContext(ParserRuleContext parent, int invokingState)
+		public DeclarationTypeMemberListEnumContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_typeDeclMemberListEnum; } }
+		public override int RuleIndex { get { return RULE_declarationTypeMemberListEnum; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTypeDeclMemberListEnum(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationTypeMemberListEnum(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public TypeDeclMemberListEnumContext typeDeclMemberListEnum() {
-		TypeDeclMemberListEnumContext _localctx = new TypeDeclMemberListEnumContext(Context, State);
-		EnterRule(_localctx, 50, RULE_typeDeclMemberListEnum);
+	public DeclarationTypeMemberListEnumContext declarationTypeMemberListEnum() {
+		DeclarationTypeMemberListEnumContext _localctx = new DeclarationTypeMemberListEnumContext(Context, State);
+		EnterRule(_localctx, 50, RULE_declarationTypeMemberListEnum);
 		int _la;
 		try {
 			int _alt;
@@ -2109,7 +2110,7 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class TypeDeclMemberListFieldContext : ParserRuleContext {
+	public partial class DeclarationTypeMemberListFieldContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public MemberFieldContext[] memberField() {
 			return GetRuleContexts<MemberFieldContext>();
 		}
@@ -2122,23 +2123,23 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext newline(int i) {
 			return GetRuleContext<NewlineContext>(i);
 		}
-		public TypeDeclMemberListFieldContext(ParserRuleContext parent, int invokingState)
+		public DeclarationTypeMemberListFieldContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_typeDeclMemberListField; } }
+		public override int RuleIndex { get { return RULE_declarationTypeMemberListField; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTypeDeclMemberListField(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationTypeMemberListField(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public TypeDeclMemberListFieldContext typeDeclMemberListField() {
-		TypeDeclMemberListFieldContext _localctx = new TypeDeclMemberListFieldContext(Context, State);
-		EnterRule(_localctx, 52, RULE_typeDeclMemberListField);
+	public DeclarationTypeMemberListFieldContext declarationTypeMemberListField() {
+		DeclarationTypeMemberListFieldContext _localctx = new DeclarationTypeMemberListFieldContext(Context, State);
+		EnterRule(_localctx, 52, RULE_declarationTypeMemberListField);
 		try {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
@@ -2178,7 +2179,7 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class TypeDeclMemberListRuleContext : ParserRuleContext {
+	public partial class DeclarationTypeMemberListRuleContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public MemberRuleContext[] memberRule() {
 			return GetRuleContexts<MemberRuleContext>();
 		}
@@ -2191,23 +2192,23 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext newline(int i) {
 			return GetRuleContext<NewlineContext>(i);
 		}
-		public TypeDeclMemberListRuleContext(ParserRuleContext parent, int invokingState)
+		public DeclarationTypeMemberListRuleContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_typeDeclMemberListRule; } }
+		public override int RuleIndex { get { return RULE_declarationTypeMemberListRule; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTypeDeclMemberListRule(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationTypeMemberListRule(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public TypeDeclMemberListRuleContext typeDeclMemberListRule() {
-		TypeDeclMemberListRuleContext _localctx = new TypeDeclMemberListRuleContext(Context, State);
-		EnterRule(_localctx, 54, RULE_typeDeclMemberListRule);
+	public DeclarationTypeMemberListRuleContext declarationTypeMemberListRule() {
+		DeclarationTypeMemberListRuleContext _localctx = new DeclarationTypeMemberListRuleContext(Context, State);
+		EnterRule(_localctx, 54, RULE_declarationTypeMemberListRule);
 		try {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
@@ -3294,30 +3295,30 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class VariableDeclContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public VariableDeclTypedContext variableDeclTyped() {
-			return GetRuleContext<VariableDeclTypedContext>(0);
+	public partial class DeclarationVariableContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationVariableTypedContext declarationVariableTyped() {
+			return GetRuleContext<DeclarationVariableTypedContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public VariableDeclInferredContext variableDeclInferred() {
-			return GetRuleContext<VariableDeclInferredContext>(0);
+		[System.Diagnostics.DebuggerNonUserCode] public DeclarationVariableInferredContext declarationVariableInferred() {
+			return GetRuleContext<DeclarationVariableInferredContext>(0);
 		}
-		public VariableDeclContext(ParserRuleContext parent, int invokingState)
+		public DeclarationVariableContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_variableDecl; } }
+		public override int RuleIndex { get { return RULE_declarationVariable; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariableDecl(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationVariable(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public VariableDeclContext variableDecl() {
-		VariableDeclContext _localctx = new VariableDeclContext(Context, State);
-		EnterRule(_localctx, 88, RULE_variableDecl);
+	public DeclarationVariableContext declarationVariable() {
+		DeclarationVariableContext _localctx = new DeclarationVariableContext(Context, State);
+		EnterRule(_localctx, 88, RULE_declarationVariable);
 		try {
 			State = 531;
 			ErrorHandler.Sync(this);
@@ -3326,14 +3327,14 @@ public partial class MajaParser : Parser {
 				EnterOuterAlt(_localctx, 1);
 				{
 				State = 529;
-				variableDeclTyped();
+				declarationVariableTyped();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
 				State = 530;
-				variableDeclInferred();
+				declarationVariableInferred();
 				}
 				break;
 			}
@@ -3349,7 +3350,7 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class VariableDeclTypedContext : ParserRuleContext {
+	public partial class DeclarationVariableTypedContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public NameIdentifierContext nameIdentifier() {
 			return GetRuleContext<NameIdentifierContext>(0);
 		}
@@ -3365,23 +3366,23 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
 			return GetRuleContext<ExpressionContext>(0);
 		}
-		public VariableDeclTypedContext(ParserRuleContext parent, int invokingState)
+		public DeclarationVariableTypedContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_variableDeclTyped; } }
+		public override int RuleIndex { get { return RULE_declarationVariableTyped; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariableDeclTyped(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationVariableTyped(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public VariableDeclTypedContext variableDeclTyped() {
-		VariableDeclTypedContext _localctx = new VariableDeclTypedContext(Context, State);
-		EnterRule(_localctx, 90, RULE_variableDeclTyped);
+	public DeclarationVariableTypedContext declarationVariableTyped() {
+		DeclarationVariableTypedContext _localctx = new DeclarationVariableTypedContext(Context, State);
+		EnterRule(_localctx, 90, RULE_declarationVariableTyped);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
@@ -3422,7 +3423,7 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class VariableDeclInferredContext : ParserRuleContext {
+	public partial class DeclarationVariableInferredContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public NameIdentifierContext nameIdentifier() {
 			return GetRuleContext<NameIdentifierContext>(0);
 		}
@@ -3435,23 +3436,23 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
 			return GetRuleContext<ExpressionContext>(0);
 		}
-		public VariableDeclInferredContext(ParserRuleContext parent, int invokingState)
+		public DeclarationVariableInferredContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_variableDeclInferred; } }
+		public override int RuleIndex { get { return RULE_declarationVariableInferred; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariableDeclInferred(this);
+			if (typedVisitor != null) return typedVisitor.VisitDeclarationVariableInferred(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public VariableDeclInferredContext variableDeclInferred() {
-		VariableDeclInferredContext _localctx = new VariableDeclInferredContext(Context, State);
-		EnterRule(_localctx, 92, RULE_variableDeclInferred);
+	public DeclarationVariableInferredContext declarationVariableInferred() {
+		DeclarationVariableInferredContext _localctx = new DeclarationVariableInferredContext(Context, State);
+		EnterRule(_localctx, 92, RULE_declarationVariableInferred);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{

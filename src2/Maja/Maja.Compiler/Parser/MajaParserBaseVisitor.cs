@@ -86,7 +86,7 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitCodeBlock([NotNull] MajaParser.CodeBlockContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.membersDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationMembers"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -94,7 +94,7 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitMembersDecl([NotNull] MajaParser.MembersDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationMembers([NotNull] MajaParser.DeclarationMembersContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.statement"/>.
 	/// <para>
@@ -166,7 +166,7 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitStatementExpression([NotNull] MajaParser.StatementExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.functionDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationFunction"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -174,9 +174,9 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFunctionDecl([NotNull] MajaParser.FunctionDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationFunction([NotNull] MajaParser.DeclarationFunctionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.functionDeclLocal"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationFunctionLocal"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -184,7 +184,7 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFunctionDeclLocal([NotNull] MajaParser.FunctionDeclLocalContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationFunctionLocal([NotNull] MajaParser.DeclarationFunctionLocalContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.parameterList"/>.
 	/// <para>
@@ -266,7 +266,7 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitArgument([NotNull] MajaParser.ArgumentContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationType"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -274,9 +274,9 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTypeDecl([NotNull] MajaParser.TypeDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationType([NotNull] MajaParser.DeclarationTypeContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberList"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationTypeMemberList"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -284,9 +284,9 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTypeDeclMemberList([NotNull] MajaParser.TypeDeclMemberListContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationTypeMemberList([NotNull] MajaParser.DeclarationTypeMemberListContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberListEnum"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationTypeMemberListEnum"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -294,9 +294,9 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTypeDeclMemberListEnum([NotNull] MajaParser.TypeDeclMemberListEnumContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationTypeMemberListEnum([NotNull] MajaParser.DeclarationTypeMemberListEnumContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberListField"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationTypeMemberListField"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -304,9 +304,9 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTypeDeclMemberListField([NotNull] MajaParser.TypeDeclMemberListFieldContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationTypeMemberListField([NotNull] MajaParser.DeclarationTypeMemberListFieldContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeDeclMemberListRule"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationTypeMemberListRule"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -314,7 +314,7 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTypeDeclMemberListRule([NotNull] MajaParser.TypeDeclMemberListRuleContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationTypeMemberListRule([NotNull] MajaParser.DeclarationTypeMemberListRuleContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.type"/>.
 	/// <para>
@@ -476,7 +476,7 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitMemberRule([NotNull] MajaParser.MemberRuleContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.variableDecl"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationVariable"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -484,9 +484,9 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVariableDecl([NotNull] MajaParser.VariableDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationVariable([NotNull] MajaParser.DeclarationVariableContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.variableDeclTyped"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationVariableTyped"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -494,9 +494,9 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVariableDeclTyped([NotNull] MajaParser.VariableDeclTypedContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationVariableTyped([NotNull] MajaParser.DeclarationVariableTypedContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.variableDeclInferred"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationVariableInferred"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -504,7 +504,7 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVariableDeclInferred([NotNull] MajaParser.VariableDeclInferredContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarationVariableInferred([NotNull] MajaParser.DeclarationVariableInferredContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.variableAssignment"/>.
 	/// <para>

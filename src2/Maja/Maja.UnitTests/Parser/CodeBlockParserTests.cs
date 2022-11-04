@@ -54,7 +54,7 @@ public class CodeBlockParserTests
             ;
 
         var result = Parse(code);
-        var fn = result.membersDecl()[0].functionDecl();
+        var fn = result.declarationMembers()[0].declarationFunction();
         var paramList = fn.parameterList().parameterListIndent();
         var comment1 = paramList.children[1].As<CommentContext>();
         comment1.GetText().Should().Contain("comment p1");

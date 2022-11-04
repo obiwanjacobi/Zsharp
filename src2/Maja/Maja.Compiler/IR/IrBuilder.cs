@@ -228,8 +228,9 @@ internal sealed class IrBuilder
         var returnType = Type(syntax.ReturnType);
         //syntax.TypeParameters;
 
+        var paramSymbols = parameters.Select(p => p.Symbol).ToArray();
         var symbol = new FunctionSymbol(syntax.Identifier.Text,
-            parameters.Select(p => p.Symbol), returnType?.Symbol);
+            paramSymbols, returnType?.Symbol);
         if (!CurrentScope.TryDeclareFunction(symbol))
         {
             _ = _diagnostics.FunctionAlreadyDelcared(syntax.Location, symbol.Name);
@@ -237,7 +238,7 @@ internal sealed class IrBuilder
 
         var scope = new IrScope(syntax.Identifier.Text, CurrentScope);
         PushScope(scope);
-        var index = scope.TryDeclareVariables(parameters.Select(p => p.Symbol));
+        var index = scope.TryDeclareVariables(paramSymbols);
         if (index >= 0)
         {
             var arrParams = parameters.ToArray();
