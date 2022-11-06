@@ -5,7 +5,7 @@ compilationUnit: directiveMod? (directiveUse | directivePub | newline)* (declara
 
 directiveMod: Mod freeSpace nameQualified;
 directivePub: Pub freeSpace nameQualifiedList;
-directiveUse: Use Sp+ nameQualified;
+directiveUse: Use freeSpace nameQualifiedList;
 
 codeBlock: (statement | declarationMembers | newline)+;
 declarationMembers: declarationFunction | declarationType | declarationVariable;

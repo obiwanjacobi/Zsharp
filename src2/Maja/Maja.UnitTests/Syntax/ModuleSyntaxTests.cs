@@ -20,7 +20,7 @@ public class ModuleSyntaxTests
     }
 
     [Fact]
-    public void DirectivePub1_Single()
+    public void DirectivePublic_Single()
     {
         const string code =
             "pub qualified.name" + Tokens.Eol
@@ -34,7 +34,7 @@ public class ModuleSyntaxTests
     }
 
     [Fact]
-    public void DirectivePub1_Multiple()
+    public void DirectivePublic_MultipleComma()
     {
         const string code =
             "pub qualified.name1, qualified.name2" + Tokens.Eol
@@ -48,7 +48,7 @@ public class ModuleSyntaxTests
     }
 
     [Fact]
-    public void DirectivePub2_Single()
+    public void DirectivePublic_SingleNewline()
     {
         const string code =
             "pub" + Tokens.Eol +
@@ -63,7 +63,7 @@ public class ModuleSyntaxTests
     }
 
     [Fact]
-    public void DirectiveUseImport()
+    public void DirectiveUseImport_Single()
     {
         const string code =
             "use qualified.name" + Tokens.Eol
@@ -73,6 +73,20 @@ public class ModuleSyntaxTests
         result.Should().NotBeNull();
         var uses = result.UseImports.ToArray();
         uses.Should().HaveCount(1);
-        uses[0].QualifiedName.Text.Should().Be("qualified.name");
+        uses[0].QualifiedNames.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void DirectiveUseImport_MultipleComma()
+    {
+        const string code =
+            "use qualified.name1, qualified.name2" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Should().NotBeNull();
+        var uses = result.UseImports.ToArray();
+        uses.Should().HaveCount(1);
+        uses[0].QualifiedNames.Should().HaveCount(2);
     }
 }

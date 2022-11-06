@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
@@ -15,10 +16,10 @@ public sealed class UseImportSyntax : SyntaxNode
         => SyntaxKind.UseImportDirective;
 
     /// <summary>
-    /// The qualified name of the import.
+    /// The qualified names of the imports.
     /// </summary>
-    public QualifiedNameSyntax QualifiedName
-        => ChildNodes.OfType<QualifiedNameSyntax>().Single();
+    public IEnumerable<QualifiedNameSyntax> QualifiedNames
+        => ChildNodes.OfType<QualifiedNameSyntax>();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnUseImport(this);

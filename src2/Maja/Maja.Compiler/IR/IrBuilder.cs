@@ -210,7 +210,7 @@ internal sealed class IrBuilder
         if (!CurrentScope.TryLookupSymbol<TypeSymbol>(syntax.Type.Name.Text, out var typeSymbol))
         {
             _ = _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
-            typeSymbol = TypeSymbol.Unknown;
+            typeSymbol = new TypeSymbol(syntax.Type.Name.Text);
         }
         var symbol = new VariableSymbol(syntax.Name.Text, typeSymbol);
 
