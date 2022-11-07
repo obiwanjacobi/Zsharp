@@ -463,9 +463,18 @@ internal sealed class IrBuilder
 
         foreach (var useImp in syntax)
         {
-            var import = new IrImport(useImp);
-            imports.Add(import);
+            var uses = UseImport(useImp);
+            imports.AddRange(uses);
         }
+
+        return imports;
+    }
+
+    private static IEnumerable<IrImport> UseImport(UseImportSyntax syntax)
+    {
+        var imports = new List<IrImport>();
+        foreach (var qn in syntax.QualifiedNames)
+            imports.Add(new IrImport(qn));
 
         return imports;
     }

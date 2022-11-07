@@ -4,7 +4,10 @@ namespace Maja.Compiler.IR;
 
 internal sealed class IrImport : IrNode
 {
-    public IrImport(UseImportSyntax syntax)
+    public IrImport(QualifiedNameSyntax syntax)
         : base(syntax)
     { }
+
+    public new QualifiedNameSyntax Syntax
+        => (QualifiedNameSyntax)base.Syntax;
 }
