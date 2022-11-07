@@ -13,4 +13,3 @@ public sealed record ParameterSymbol : Symbol
 
     public TypeSymbol Type { get; }
 }
-

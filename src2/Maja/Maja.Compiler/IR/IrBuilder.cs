@@ -47,17 +47,19 @@ internal sealed class IrBuilder
     private IrModule Module(CompilationUnitSyntax syntax)
     {
         SyntaxNode syn = syntax;
-        var name = "default";
+        SymbolName? name = null;
 
         if (syntax.Module is not null)
         {
             syn = syntax.Module;
-            name = syntax.Module.Identifier.Text;
+            name = syntax.Module.Identifier.ToSymbolName();
         }
+        else
+            name = new SymbolName(Enumerable.Empty<string>(), "default");
 
         var symbol = new ModuleSymbol(name);
         if (!((IrGlobalScope)CurrentScope).TryDeclareModule(symbol))
-            _ = CurrentScope.TryLookupSymbol(name, out symbol);
+            _ = CurrentScope.TryLookupSymbol(name.Name, out symbol);
 
         // TODO: would like to return the existing IrModule as well...
 

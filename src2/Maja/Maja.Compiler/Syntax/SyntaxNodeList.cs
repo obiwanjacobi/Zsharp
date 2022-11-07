@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
@@ -50,6 +52,15 @@ public sealed class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
             {
                 node.Parent = _parent;
             }
+        }
+    }
+
+    public IEnumerable<SyntaxNode> this[Range rng]
+    {
+        get
+        {
+            var (offset, length) = rng.GetOffsetAndLength(Items.Count);
+            return Items.Skip(offset).Take(length);
         }
     }
 }

@@ -18,4 +18,3 @@ public sealed record FunctionSymbol : Symbol
     public IEnumerable<ParameterSymbol> Parameters { get; }
     public TypeSymbol ReturnType { get; }
 }
-

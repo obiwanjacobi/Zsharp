@@ -9,4 +9,3 @@ public sealed record TypeParameterSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.TypeParameter;
 }
-

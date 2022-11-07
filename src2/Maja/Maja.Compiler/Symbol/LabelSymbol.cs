@@ -9,4 +9,3 @@ public sealed record LabelSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Label;
 }
-

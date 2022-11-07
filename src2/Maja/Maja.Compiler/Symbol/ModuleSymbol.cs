@@ -2,11 +2,14 @@
 
 public sealed record ModuleSymbol : Symbol
 {
-    public ModuleSymbol(string name)
-        : base(name)
-    { }
+    public ModuleSymbol(SymbolName name)
+        : base(name.FullName)
+    {
+        SymbolName = name;
+    }
 
     public override SymbolKind Kind
         => SymbolKind.Module;
-}
 
+    public SymbolName SymbolName { get; }
+}

@@ -84,6 +84,10 @@ public class ModuleTests
 
         var program = Ir.Build(code);
         program.Root.Imports.Should().HaveCount(1);
+        var import = program.Root.Imports[0];
+        import.SymbolName.Namespace.Name.Should().Be("qualified");
+        import.SymbolName.Name.Should().Be("name");
+        import.SymbolName.FullName.Should().Be("qualified.name");
     }
 
     [Fact]
