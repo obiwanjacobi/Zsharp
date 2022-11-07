@@ -1,6 +1,6 @@
 # Import
 
-When the code in the file depends on code located in a different module, the `import` pragma can be used to declare the location of that dependency.
+When the code in the file depends on code located in a different module, the `import` directive can be used to declare the location of that dependency.
 
 This import example indicates that the code uses one or more functions from the standard math (library) module.
 
@@ -96,9 +96,10 @@ Be explicit about what assembly to use to import the name/namespace? (for .NET c
 
 ```csharp
 # import
-    System.Core             // <= assembly
+    System.Core             // <= assembly -or-
+    System.Core.dll         // <= assembly
     System.IO.*             // <= namespace
-    System.DBNull           // < Type
+    System.DBNull           // <= Type
 ```
 
 > TBD: this would require a fallback when resolving a type and if not found, trying to locate the identifier as an assembly.
@@ -126,6 +127,8 @@ Allow import from a remote location?
 
 What format should the file be that is being imported? Is it an assembly file or something else. Should these 'modules' or 'packages' be hosted on a specific package manager's site?
 
+> remote packages/modules are downloaded at compile time. They are not resolved at runtime.
+
 Use some sort of (plugable) loader -or unpacker- during compile-time?
 
 ```csharp
@@ -146,3 +149,15 @@ Use some sort of (plugable) loader -or unpacker- during compile-time?
 > Rename `import` to `use`?
 
 > Drop the `#`?
+
+---
+
+> TBD
+
+Internal modules are always available to other internal modules.
+This means that an `import` is never needed for an internal module.
+That means that the `import` name always references an external module, which has to be .NET compatible. A Z# compiled assembly is -at first glance- indistinguishable from any other .NET assembly.
+
+The name of the module is a namespace for the code of that module. This will be compiled to a .net static class (if no file-scoped variables are defined).
+
+So how to determine the scope of the `import` name. Should it always end with a .NET type (a Z# module)?

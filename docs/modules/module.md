@@ -87,4 +87,9 @@ We may want to add a proxy to immutable objects to share the proxy (identity) an
 
 The principle of declaring a file to be part of a module can be extended to OO classes/records as well.
 A future extension could introduce the `class` or `record` keyword to interpret the file as a class implementation.
-Although currently the idea is selectively generate C# records based on the presents of self-bound functions.
+Although currently the idea is selectively generate C# records based on the presence of self-bound functions.
+
+- `module`: a namespace for 'flat' code
+- `class`/`record`: .NET class or record
+- `service`: rpc-style distributed (stateless) 'module'
+- `actor`: message based statefull object
