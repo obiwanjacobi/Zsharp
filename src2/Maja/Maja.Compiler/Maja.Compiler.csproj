@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
     <PackageReference Include="Dentlr" Version="1.0.0" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="6.0.0" />
   </ItemGroup>
 
 </Project>
