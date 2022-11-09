@@ -13,6 +13,9 @@ namespace Maja.Compiler.Syntax;
 /// <param name="Text">The textual representation of the token.</param>
 public abstract class SyntaxToken
 {
+    public const string Separator = ".";
+    public const string Discard = "_";
+
     internal SyntaxToken(string text)
     {
         Text = text;
@@ -24,7 +27,7 @@ public abstract class SyntaxToken
     /// </summary>
     public SyntaxNode Parent
     {
-        get { return _parent!; }
+        get => _parent!;
         internal set
         {
             Debug.Assert(value is not null, "Cannot clear a SyntaxToken.Parent with null.");

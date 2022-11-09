@@ -1,9 +1,11 @@
-﻿namespace Maja.Compiler.Symbol;
+﻿using Maja.Compiler.Syntax;
+
+namespace Maja.Compiler.Symbol;
 
 public sealed record DiscardSymbol : Symbol
 {
     public DiscardSymbol()
-        : base("_")
+        : base(SyntaxToken.Discard)
     { }
 
     public override SymbolKind Kind

@@ -86,6 +86,8 @@ Modules globally imported in an assembly file are available throughout the proje
 
 *) Should probably give a warning.
 
+> TBD: I don't like that the actual accessability is spread over two files (module and assembly)
+
 ---
 
 ## Project Attributes
@@ -112,6 +114,14 @@ Project dependencies can be listed in the assembly file as well.
 ```
 
 > Does this work on Linux?
+
+Other project attributes may include any property and its value. Some sort of generic way to specify?
+
+```csharp
+#prop=value
+```
+
+A lot of the content of a visual studio project file is related to IDE specific things. We don't need those - just the ones that relate to compilation.
 
 ---
 
@@ -184,6 +194,7 @@ main: (args: IEnumerable<CommandLineArgument>): I32
 Clearly this is nowhere near the information for a full project management and build system. Do we try to force everything we need into an assembly file, or do we introduce another (project) file?
 
 - a Z# version specifier with what version of the language the assembly is compatible.
+- various compiler switches (compiler profile).
 
 ---
 
@@ -200,6 +211,8 @@ What about embedded resources? How to tell the project to embed a resource.
 
 No control over naming (namespace and resource name)!
 Have a compile-time function for this? `#embedFile("image1.jpg", "namespace.resourceName")` or have an `#embed` pragma?
+
+Doing this in a module file could indicate a different scope/nesting and perhaps use the module's name as a namespace.
 
 How about string/int resources?
 
