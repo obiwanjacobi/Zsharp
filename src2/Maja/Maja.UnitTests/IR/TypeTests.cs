@@ -20,13 +20,13 @@ public class TypeTests
         program.Root.Should().NotBeNull();
         program.Root.Members.Should().HaveCount(1);
         var type = program.Root.Members[0].As<IrTypeDeclaration>();
-        type.Symbol.Name.Should().Be("MyType");
+        type.Symbol.Name.Value.Should().Be("Mytype");
         type.Enums.Should().HaveCount(2);
-        type.Enums[0].Symbol.Name.Should().Be("Option1");
+        type.Enums[0].Symbol.Name.Value.Should().Be("Option1");
         type.Enums[0].Value.Should().Be(0);
         type.Enums[0].Symbol.Type.Should().Be(TypeSymbol.I64);
         type.Enums[1].Value.Should().Be(1);
-        type.Enums[1].Symbol.Name.Should().Be("Option2");
+        type.Enums[1].Symbol.Name.Value.Should().Be("Option2");
         type.Enums[1].Symbol.Type.Should().Be(TypeSymbol.I64);
     }
 
@@ -43,13 +43,13 @@ public class TypeTests
         program.Root.Should().NotBeNull();
         program.Root.Members.Should().HaveCount(1);
         var type = program.Root.Members[0].As<IrTypeDeclaration>();
-        type.Symbol.Name.Should().Be("MyType");
+        type.Symbol.Name.Value.Should().Be("Mytype");
         type.Fields.Should().HaveCount(2);
         type.Fields[0].DefaultValue.Should().BeNull();
-        type.Fields[0].Symbol.Name.Should().Be("fld1");
+        type.Fields[0].Symbol.Name.Value.Should().Be("fld1");
         type.Fields[0].Type.Symbol.Should().Be(TypeSymbol.U8);
         type.Fields[1].DefaultValue.Should().BeNull();
-        type.Fields[1].Symbol.Name.Should().Be("fld2");
+        type.Fields[1].Symbol.Name.Value.Should().Be("fld2");
         type.Fields[1].Type.Symbol.Should().Be(TypeSymbol.Str);
     }
 

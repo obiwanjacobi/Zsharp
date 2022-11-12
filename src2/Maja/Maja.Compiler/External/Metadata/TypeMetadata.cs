@@ -96,4 +96,17 @@ public class TypeMetadata
 
     public bool HasConstructors
         => _type.GetConstructors().Any(c => c.IsPublic);
+
+    private readonly List<TypeMetadata> _nestedTypes = new();
+    public IEnumerable<TypeMetadata> GetNestedTypes()
+    {
+        if (_nestedTypes.Count == 0)
+        {
+            _nestedTypes.AddRange(_type.GetNestedTypes()
+                .Where(t => t.IsPublic)
+                .Select(t => new TypeMetadata(t))
+            );
+        }
+        return _nestedTypes;
+    }
 }

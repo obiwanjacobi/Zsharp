@@ -2,7 +2,7 @@
 
 public record VariableSymbol : Symbol
 {
-    public VariableSymbol(string name, TypeSymbol? type)
+    public VariableSymbol(SymbolName name, TypeSymbol? type)
         : base(name)
     {
         Type = type;

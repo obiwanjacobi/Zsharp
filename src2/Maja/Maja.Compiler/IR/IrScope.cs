@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Maja.Compiler.External;
 using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.IR;
@@ -38,27 +40,32 @@ internal class IrScope
         => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
 
     public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
-    {
-        if (SymbolTable.TryLookupSymbol(_symbols, name, out symbol))
-        {
-            return true;
-        }
+        => TryLookupSymbol<Symbol.Symbol>(new SymbolName(name), out symbol);
 
-        if (Parent is not null)
-        {
-            return Parent.TryLookupSymbol(name, out symbol);
-        }
-
-        symbol = null;
-        return false;
-    }
-
-    public bool TryLookupSymbol<T>(string name, [NotNullWhen(true)] out T? symbol)
+    public virtual bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
         where T : Symbol.Symbol
     {
-        if (SymbolTable.TryLookupSymbol<T>(_symbols, name, out symbol))
+        if (SymbolTable.TryLookupSymbol<T>(_symbols, name.FullName, out symbol))
         {
             return true;
+        }
+
+        if (SymbolTable.TryLookupSymbol<T>(_symbols, name.Value, out symbol) &&
+            symbol.Name.Namespace.Value == FullName)
+        {
+            return true;
+        }
+
+        if (_symbols is not null)
+        {
+            var result = _symbols.Values.Where(s => name.Matches(s.Name) >= 0);
+            if (result.Any())
+            {
+                Debug.Assert(result.Count() == 1);
+
+                symbol = (T)result.First();
+                return true;
+            }
         }
 
         if (Parent is not null)
@@ -70,12 +77,42 @@ internal class IrScope
         return false;
     }
 
+    public virtual bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out FunctionSymbol? symbol)
+    {
+        if (SymbolTable.TryLookupSymbol<FunctionSymbol>(_symbols, name.FullName, out symbol))
+        {
+            return true;
+        }
+
+        if (SymbolTable.TryLookupSymbol<FunctionSymbol>(_symbols, name.Value, out symbol) &&
+            symbol.Name.Namespace.Value == FullName)
+        {
+            return true;
+        }
+
+        if (_symbols is not null)
+        {
+            if (FunctionOverloadPicker.TryPickFunctionSymbol(
+                _symbols.Values.OfType<FunctionSymbol>(), name, argumentTypes, out symbol))
+                return true;
+        }
+
+        if (Parent is not null)
+        {
+            return Parent.TryLookupSymbol<FunctionSymbol>(name, out symbol);
+        }
+
+        symbol = null;
+        return false;
+    }
+
     public int TryDeclareVariables(IEnumerable<ParameterSymbol> parameters)
     {
-        int index = 0;
+        var index = 0;
         foreach (var param in parameters)
         {
-            var variable = new VariableSymbol(param.Name, param.Type);
+            var name = new SymbolName(param.Name.FullName);
+            var variable = new VariableSymbol(name, param.Type);
             if (!TryDeclareVariable(variable))
                 return index;
 
@@ -86,14 +123,80 @@ internal class IrScope
     }
 }
 
+internal sealed class IrFunctionScope : IrScope
+{
+    public IrFunctionScope(string name, IrScope? parent)
+        : base(name, parent)
+    { }
+}
+
 internal sealed class IrModuleScope : IrScope
 {
+    private readonly Dictionary<string, ExternalModule> _modules = new();
+
     public IrModuleScope(string name, IrScope parent)
         : base(name, parent)
     { }
 
     public override string FullName
         => Name;
+
+    public override bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
+        where T : class //Symbol.Symbol
+    {
+        if (base.TryLookupSymbol(name, out symbol!))
+            return true;
+
+        var matches = new List<Symbol.Symbol>();
+        foreach (var module in _modules.Values)
+        {
+            var tps = module.LookupTypes(name);
+            matches.AddRange(tps);
+        }
+
+        // TODO: select a match - if any
+
+        symbol = null!;
+        return false;
+    }
+
+    public override bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out FunctionSymbol? symbol)
+    {
+        if (base.TryLookupFunctionSymbol(name, argumentTypes, out symbol))
+            return true;
+
+        var matches = new List<FunctionSymbol>();
+        foreach (var module in _modules.Values)
+        {
+            var fns = module.LookupFunctions(name, argumentTypes);
+            matches.AddRange(fns);
+        }
+
+        Debug.Assert(matches.Count <= 1);
+
+        symbol = matches.FirstOrDefault();
+        return symbol is not null;
+    }
+
+    public bool TryDeclareModule(ExternalModule module)
+    {
+        var name = module.SymbolName.FullName;
+
+        if (!_modules.ContainsKey(name))
+        {
+            _modules.Add(name, module);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TryLookupModule(SymbolName partialName,
+        [NotNullWhen(true)] out ExternalModule? module)
+    {
+        module = _modules.Values.SingleOrDefault(m => partialName.Matches(m.SymbolName) != -1);
+        return module is not null;
+    }
 }
 
 internal sealed class IrGlobalScope : IrScope

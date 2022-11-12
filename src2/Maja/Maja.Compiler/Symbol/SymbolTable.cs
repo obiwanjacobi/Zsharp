@@ -13,10 +13,10 @@ internal static class SymbolTable
     {
         table ??= new Dictionary<string, Symbol>();
 
-        if (table.ContainsKey(symbol.Name))
+        if (table.ContainsKey(symbol.Name.FullName))
             return false;
 
-        table.Add(symbol.Name, symbol);
+        table.Add(symbol.Name.FullName, symbol);
         return true;
     }
 

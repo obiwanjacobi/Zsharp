@@ -2,7 +2,7 @@
 
 public sealed record RuleSymbol : Symbol
 {
-    public RuleSymbol(string name)
+    public RuleSymbol(SymbolName name)
         : base(name)
     { }
 

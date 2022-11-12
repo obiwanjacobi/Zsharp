@@ -27,7 +27,7 @@ public class FunctionTests
         // scope
         fn.Scope.Symbols.Should().BeEmpty();
         // symbol
-        fn.Symbol.Name.Should().Be("fn");
+        fn.Symbol.Name.Value.Should().Be("fn");
         fn.Symbol.Parameters.Should().BeEmpty();
         fn.Symbol.ReturnType.Should().Be(TypeSymbol.Void);
     }
@@ -55,7 +55,7 @@ public class FunctionTests
         p1!.Kind.Should().Be(SymbolKind.Variable);
         p2!.Kind.Should().Be(SymbolKind.Variable);
         // symbol
-        fn.Symbol.Name.Should().Be("fn");
+        fn.Symbol.Name.Value.Should().Be("fn");
         fn.Symbol.Parameters.Should().HaveCount(2);
         fn.Symbol.ReturnType.Should().Be(TypeSymbol.Bool);
     }
@@ -74,6 +74,6 @@ public class FunctionTests
         program.Diagnostics.Should().HaveCount(1);
         var err = program.Diagnostics[0];
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
-        err.Text.Should().Contain("Function 'fn' is already declared.");
+        err.Text.Should().Contain("Function 'default.fn' is already declared.");
     }
 }

@@ -19,7 +19,7 @@ public class ExpressionTests
         program.Root.Should().NotBeNull();
         program.Root.Members.Should().HaveCount(1);
         var v = program.Root.Members[0].As<IrVariableDeclaration>();
-        v.Symbol.Name.Should().Be("x");
+        v.Symbol.Name.Value.Should().Be("x");
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.I64);
         //v.Initializer!.ConstantValue.Should().NotBeNull();
     }
@@ -37,7 +37,7 @@ public class ExpressionTests
         program.Root.Should().NotBeNull();
         program.Root.Members.Should().HaveCount(2);
         var v = program.Root.Members[1].As<IrVariableDeclaration>();
-        v.Symbol.Name.Should().Be("x");
+        v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
         v.Initializer!.ConstantValue.Should().BeNull();
@@ -60,7 +60,7 @@ public class ExpressionTests
         var fn = program.Root.Statements[0]
             .As<IrStatementExpression>().Expression
             .As<IrExpressionInvocation>();
-        fn.Symbol!.Name.Should().Be("fn");
+        fn.Symbol!.Name.Value.Should().Be("fn");
         fn.Arguments.Should().HaveCount(0);
 
     }

@@ -1,20 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.Symbol;
 
-public sealed record NamespaceSymbol : Symbol
+public sealed record NamespaceSymbol //: Symbol
 {
     public NamespaceSymbol(IEnumerable<string> nameParts)
-        : base(SymbolName.Join(SymbolName.ToCanonical(nameParts)))
     {
-        NameParts = SymbolName.ToCanonical(nameParts).ToImmutableArray();
+        var canonicalParts = SymbolName.ToCanonical(nameParts);
+        Value = SymbolName.Join(canonicalParts);
+        NameParts = canonicalParts.ToImmutableList().WithValueSemantics();
         OriginalName = SymbolName.Join(nameParts);
     }
 
-    public override SymbolKind Kind
+    public NamespaceSymbol(string ns)
+        : this(ns.Split(SyntaxToken.Separator))
+    { }
+
+    public SymbolKind Kind
         => SymbolKind.Namespace;
 
-    public ImmutableArray<string> NameParts { get; }
+    public string Value { get; }
+    public IImmutableList<string> NameParts { get; }
     public string OriginalName { get; }
 }

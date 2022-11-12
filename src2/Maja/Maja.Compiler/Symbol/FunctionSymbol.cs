@@ -4,7 +4,7 @@ namespace Maja.Compiler.Symbol;
 
 public sealed record FunctionSymbol : Symbol
 {
-    public FunctionSymbol(string name,
+    public FunctionSymbol(SymbolName name,
         IEnumerable<ParameterSymbol> parameters, TypeSymbol? returnType)
         : base(name)
     {

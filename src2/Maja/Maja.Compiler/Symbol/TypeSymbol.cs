@@ -23,6 +23,14 @@ public record TypeSymbol : Symbol
     public static readonly TypeSymbol Str = new("Str");
 
     public TypeSymbol(string name)
+        : base(new SymbolName(name))
+    { }
+
+    public TypeSymbol(string ns, string name)
+        : base(SymbolName.Parse(ns, name))
+    { }
+
+    public TypeSymbol(SymbolName name)
         : base(name)
     { }
 

@@ -1,4 +1,5 @@
-﻿using Maja.Compiler.IR;
+﻿using Maja.Compiler.External;
+using Maja.Compiler.IR;
 using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.Compilation
@@ -8,11 +9,11 @@ namespace Maja.Compiler.Compilation
         private readonly Compilation _compilation;
         private readonly IrProgram _program;
 
-        internal CompilationModel(Compilation compilation, SyntaxTree syntaxTree)
+        internal CompilationModel(Compilation compilation, SyntaxTree syntaxTree, IExternalModuleLoader moduleLoader)
         {
             _compilation = compilation;
             SyntaxTree = syntaxTree;
-            _program = IrBuilder.Program(syntaxTree);
+            _program = IrBuilder.Program(syntaxTree, moduleLoader);
         }
 
         public SyntaxTree SyntaxTree { get; }

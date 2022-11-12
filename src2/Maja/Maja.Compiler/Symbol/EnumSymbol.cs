@@ -2,7 +2,7 @@
 
 public sealed record EnumSymbol : Symbol
 {
-    public EnumSymbol(string name, TypeSymbol type)
+    public EnumSymbol(SymbolName name, TypeSymbol type)
         : base(name)
     {
         Type = type;

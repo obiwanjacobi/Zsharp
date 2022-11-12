@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Maja.Compiler.External;
 using Maja.Compiler.Syntax;
+using Maja.External;
 
 namespace Maja.Compiler.Compilation;
 
@@ -10,17 +12,22 @@ namespace Maja.Compiler.Compilation;
 public sealed class Compilation
 {
     private readonly List<SyntaxTree> _syntaxTrees = new();
+    private readonly IExternalModuleLoader _moduleLoader;
 
-    internal Compilation(SyntaxTree syntaxTree)
+    internal Compilation(SyntaxTree syntaxTree, IExternalModuleLoader moduleLoader)
     {
         _syntaxTrees.Add(syntaxTree);
+        _moduleLoader = moduleLoader;
     }
 
     public static Compilation Create(
         SyntaxTree syntaxTree/*,
         IEnumerable<AssemblyReference> references*/)
     {
-        return new Compilation(syntaxTree);
+        var moduleLoader = new AssemblyManagerBuilder()
+            .AddSystemAll()
+            .ToModuleLoader();
+        return new Compilation(syntaxTree, moduleLoader);
     }
 
     public CompilationModel GetModel(SyntaxTree tree)
@@ -28,6 +35,6 @@ public sealed class Compilation
         if (!_syntaxTrees.Contains(tree))
             throw new ArgumentException("Specified SyntaxTree does not belong to this Compilation.");
 
-        return new CompilationModel(this, tree);
+        return new CompilationModel(this, tree, _moduleLoader);
     }
 }

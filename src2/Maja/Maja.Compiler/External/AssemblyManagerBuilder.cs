@@ -3,18 +3,20 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Maja.Compiler.External;
 
-namespace Maja.UnitTests;
+namespace Maja.External;
+
 internal class AssemblyManagerBuilder
 {
-    private static readonly string _dotNetBasePath = RuntimeEnvironment.GetRuntimeDirectory();
-    private readonly AssemblyManager _assemblyManager = new(_dotNetBasePath);
+    private static readonly string DotNetBasePath = RuntimeEnvironment.GetRuntimeDirectory();
+    private readonly AssemblyManager _assemblyManager = new(DotNetBasePath);
 
     public AssemblyManagerBuilder(bool preloadDependencies = true)
     {
         _assemblyManager.PreloadDependencies = preloadDependencies;
     }
 
-    public AssemblyManager AssemblyManager => _assemblyManager;
+    public AssemblyManager AssemblyManager
+        => _assemblyManager;
 
     public IExternalModuleLoader ToModuleLoader()
         => new ExternalModuleLoader(_assemblyManager);
@@ -35,7 +37,7 @@ internal class AssemblyManagerBuilder
     {
         AddMsCoreLib();
 
-        var files = Directory.EnumerateFiles(_dotNetBasePath, "System.*.dll");
+        var files = Directory.EnumerateFiles(DotNetBasePath, "System.*.dll");
 
         foreach (var file in files)
         {
@@ -51,25 +53,25 @@ internal class AssemblyManagerBuilder
 
     public AssemblyManagerBuilder AddMsCoreLib()
     {
-        _assemblyManager.LoadAssembly(Path.Combine(_dotNetBasePath, "mscorlib.dll"));
+        _assemblyManager.LoadAssembly(Path.Combine(DotNetBasePath, "mscorlib.dll"));
         return this;
     }
 
     public AssemblyManagerBuilder AddSystemConsole()
     {
-        _assemblyManager.LoadAssembly(Path.Combine(_dotNetBasePath, "System.Console.dll"));
+        _assemblyManager.LoadAssembly(Path.Combine(DotNetBasePath, "System.Console.dll"));
         return this;
     }
 
     public AssemblyManagerBuilder AddSystemRuntime()
     {
-        _assemblyManager.LoadAssembly(Path.Combine(_dotNetBasePath, "System.Runtime.dll"));
+        _assemblyManager.LoadAssembly(Path.Combine(DotNetBasePath, "System.Runtime.dll"));
         return this;
     }
 
     public AssemblyManagerBuilder AddSystemCollections()
     {
-        _assemblyManager.LoadAssembly(Path.Combine(_dotNetBasePath, "System.Collections.dll"));
+        _assemblyManager.LoadAssembly(Path.Combine(DotNetBasePath, "System.Collections.dll"));
         return this;
     }
 }

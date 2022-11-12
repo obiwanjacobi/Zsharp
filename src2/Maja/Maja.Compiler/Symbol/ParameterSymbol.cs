@@ -2,6 +2,8 @@
 
 public sealed record ParameterSymbol : Symbol
 {
+    public const string Self = "self";
+
     public ParameterSymbol(string name, TypeSymbol type)
         : base(name)
     {

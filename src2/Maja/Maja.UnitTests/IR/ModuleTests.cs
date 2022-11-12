@@ -26,7 +26,8 @@ public class ModuleTests
 
         var program = Ir.Build(code);
         program.Module.Should().NotBeNull();
-        program.Module.Symbol.Name.Should().Be("qualified.name");
+        program.Module.Symbol.Name.Namespace.Value.Should().Be("qualified");
+        program.Module.Symbol.Name.Value.Should().Be("name");
     }
 
     [Fact]
@@ -76,18 +77,21 @@ public class ModuleTests
     }
 
     [Fact]
-    public void Import()
+    public void Import_Name()
     {
         const string code =
-            "use qualified.name" + Tokens.Eol
+            "use qu_Alified._Name" + Tokens.Eol
             ;
 
         var program = Ir.Build(code);
         program.Root.Imports.Should().HaveCount(1);
+
         var import = program.Root.Imports[0];
-        import.SymbolName.Namespace.Name.Should().Be("qualified");
-        import.SymbolName.Name.Should().Be("name");
-        import.SymbolName.FullName.Should().Be("qualified.name");
+        import.SymbolName.Namespace.Value.Should().Be("qualified");
+        import.SymbolName.Namespace.OriginalName.Should().Be("qu_Alified");
+        import.SymbolName.Value.Should().Be("Name");
+        import.SymbolName.OriginalName.Should().Be("_Name");
+        import.SymbolName.FullName.Should().Be("qualified.Name");
     }
 
     [Fact]

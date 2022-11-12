@@ -2,7 +2,7 @@
 
 public sealed record FieldSymbol : Symbol
 {
-    public FieldSymbol(string name, TypeSymbol type)
+    public FieldSymbol(SymbolName name, TypeSymbol type)
         : base(name)
     {
         Type = type;
