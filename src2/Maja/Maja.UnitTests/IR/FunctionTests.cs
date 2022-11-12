@@ -164,6 +164,6 @@ public class FunctionTests
             .As<IrStatementExpression>().Expression
             .As<IrExpressionInvocation>();
         fn.Symbol!.Name.Value.Should().Be("fn");
-        fn.Arguments.Should().HaveCount(0);
+        fn.Arguments.Should().HaveCount(1);
     }
 }

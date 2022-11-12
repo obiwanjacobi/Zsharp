@@ -18,6 +18,8 @@ internal abstract class IrExpression : IrNode
         => null;
 
     public TypeSymbol TypeSymbol { get; }
+    public TypeInferredSymbol? TypeInferredSymbol
+        => TypeSymbol as TypeInferredSymbol;
 
     public new ExpressionSyntax Syntax
         => (ExpressionSyntax)base.Syntax;

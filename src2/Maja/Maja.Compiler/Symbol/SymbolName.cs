@@ -36,7 +36,7 @@ public record SymbolName
                 ? Value
                 : $"{Namespace.Value}.{Value}";
 
-    public int Matches(SymbolName fullName)
+    public int MatcheWith(SymbolName fullName)
     {
         // fullName: namespace.module.name
         // -match
@@ -64,6 +64,9 @@ public record SymbolName
 
     internal string DebuggerDisplay()
         => FullName;
+
+    public override string ToString()
+        => DebuggerDisplay();
 
     public static SymbolName Empty
         => new(String.Empty);

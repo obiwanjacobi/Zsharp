@@ -58,7 +58,7 @@ internal abstract class IrScope
 
         if (_symbols is not null)
         {
-            var result = _symbols.Values.Where(s => name.Matches(s.Name) >= 0);
+            var result = _symbols.Values.Where(s => name.MatcheWith(s.Name) >= 0);
             if (result.Any())
             {
                 Debug.Assert(result.Count() == 1);
@@ -194,7 +194,7 @@ internal sealed class IrModuleScope : IrScope
     public bool TryLookupModule(SymbolName partialName,
         [NotNullWhen(true)] out ExternalModule? module)
     {
-        module = _modules.Values.SingleOrDefault(m => partialName.Matches(m.SymbolName) != -1);
+        module = _modules.Values.SingleOrDefault(m => partialName.MatcheWith(m.SymbolName) != -1);
         return module is not null;
     }
 }

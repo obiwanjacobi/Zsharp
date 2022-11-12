@@ -219,20 +219,53 @@ internal sealed class IrBuilder
     private IrVariableDeclaration VariableInferredDeclaration(VariableDeclarationInferredSyntax syntax)
     {
         var initializer = Expression(syntax.Expression!);
+
         if (initializer.TypeSymbol == TypeSymbol.Void)
         {
             _diagnostics.CannotAssignVariableWithVoid(syntax.Expression!.Location, syntax.Name.Text);
         }
 
+        var types =
+            initializer.TypeInferredSymbol?.Candidates.ToArray()
+            ?? new[] { initializer.TypeSymbol };
+
+        // TODO: should this stay here?
+        // are there different ways of selecting the preferred type?
+        TypeSymbol type;
+        if (types.Contains(TypeSymbol.I64))
+            type = TypeSymbol.I64;
+        else if (types.Contains(TypeSymbol.I32))
+            type = TypeSymbol.I32;
+        else if (types.Contains(TypeSymbol.U64))
+            type = TypeSymbol.U64;
+        else if (types.Contains(TypeSymbol.U32))
+            type = TypeSymbol.U32;
+        else if (types.Contains(TypeSymbol.I16))
+            type = TypeSymbol.I16;
+        else if (types.Contains(TypeSymbol.U16))
+            type = TypeSymbol.U16;
+        else if (types.Contains(TypeSymbol.F64))
+            type = TypeSymbol.F64;
+        else if (types.Contains(TypeSymbol.F32))
+            type = TypeSymbol.F32;
+        else if (types.Contains(TypeSymbol.F96))
+            type = TypeSymbol.F96;
+        else if (types.Contains(TypeSymbol.I8))
+            type = TypeSymbol.I8;
+        else if (types.Contains(TypeSymbol.U8))
+            type = TypeSymbol.U8;
+        else
+            type = initializer.TypeSymbol;
+
         var name = new SymbolName(syntax.Name.Text);
-        var symbol = new VariableSymbol(name, initializer.TypeSymbol);
+        var symbol = new VariableSymbol(name, type);
 
         if (!CurrentScope.TryDeclareVariable(symbol))
         {
             _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
-        return new IrVariableDeclaration(syntax, symbol, initializer.TypeSymbol, initializer);
+        return new IrVariableDeclaration(syntax, symbol, type, initializer);
     }
 
     private IrVariableDeclaration VariableTypedDeclaration(VariableDeclarationTypedSyntax syntax)
@@ -450,12 +483,13 @@ internal sealed class IrBuilder
 
     private static IrExpressionLiteral LiteralExpression(ExpressionLiteralSyntax syntax)
     {
-        object value;
+        object? value;
         TypeSymbol type;
 
         if (syntax.LiteralNumber?.Text is not null)
         {
-            IrNumber.ParseNumber(syntax.LiteralNumber.Text, out value, out type);
+            var types = IrNumber.ParseNumber(syntax.LiteralNumber.Text, out value);
+            type = new TypeInferredSymbol(types);
         }
         else if (syntax.LiteralString?.Text is not null)
         {
@@ -467,7 +501,7 @@ internal sealed class IrBuilder
             throw new NotSupportedException("ExpressionLiteralSyntax could not be parsed. Empty?");
         }
 
-        return new IrExpressionLiteral(syntax, type, value);
+        return new IrExpressionLiteral(syntax, type, value!);
     }
 
     private IrExpressionBinary BinaryExpression(ExpressionBinarySyntax syntax)

@@ -20,7 +20,8 @@ public class VariableTests
         program.Root.Members.Should().HaveCount(1);
         var v = program.Root.Members[0].As<IrVariableDeclaration>();
         v.Symbol.Name.Value.Should().Be("x");
-        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.I8);
+        v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
+        v.Type.Should().Be(TypeSymbol.I64);
     }
 
     [Fact]
@@ -37,7 +38,8 @@ public class VariableTests
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
         // TODO: expression type != var type
-        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.I8);
+        v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
+        v.Type.Should().Be(TypeSymbol.U8);
     }
 
     [Fact]

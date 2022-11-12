@@ -35,10 +35,34 @@ internal static class FunctionOverloadPicker
     {
         var argTypeList = argumentTypes.ToList();
         var candidates = functions
-            .Where(fn => partialName.Matches(fn.Name) >= 0
+            .Where(fn => partialName.MatcheWith(fn.Name) >= 0
                 && fn.Parameters.Count() == argTypeList.Count
-                && argTypeList.SequenceEqual(fn.Parameters.Select(p => p.Type)));
+                && MatchArgumentTypes(argTypeList, fn.Parameters.Select(p => p.Type)));
 
         return candidates.ToArray();
+    }
+
+    public static bool MatchArgumentTypes(List<TypeSymbol> argTypeList, IEnumerable<TypeSymbol> paramTypes)
+    {
+        if (argTypeList.SequenceEqual(paramTypes))
+            return true;
+
+        var i = 0;
+        foreach (var paramType in paramTypes)
+        {
+            var argType = argTypeList[i];
+
+            if (argType is TypeInferredSymbol inferredType)
+            {
+                if (!inferredType.Candidates.Contains(paramType))
+                    return false;
+            }
+            else if (argType != paramType)
+                return false;
+
+            i++;
+        }
+
+        return true;
     }
 }

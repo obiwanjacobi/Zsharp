@@ -1,3 +1,4 @@
+using System.Linq;
 using FluentAssertions;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
@@ -15,9 +16,9 @@ public class ExpressionTests
     //[InlineData("42.42", 42.42, "F16")]
     public void ParseNumber(string text, object value, string type)
     {
-        IrNumber.ParseNumber(text, out var actualValue, out var actualType);
+        var types = IrNumber.ParseNumber(text, out var actualValue);
         actualValue.Should().Be(value);
-        actualType!.Name.Value.Should().Be(type);
+        types.Where(t => t.Name.Value == type).Should().HaveCount(1);
     }
 
     [Fact]
@@ -32,7 +33,8 @@ public class ExpressionTests
         program.Root.Members.Should().HaveCount(1);
         var v = program.Root.Members[0].As<IrVariableDeclaration>();
         v.Symbol.Name.Value.Should().Be("x");
-        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.I8);
+        v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
         //v.Initializer!.ConstantValue.Should().NotBeNull();
+        v.Type.Should().Be(TypeSymbol.I64);
     }
 }
