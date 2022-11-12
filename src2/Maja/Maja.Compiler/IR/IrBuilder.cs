@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using Maja.Compiler.Diagnostics;
@@ -449,12 +450,22 @@ internal sealed class IrBuilder
 
     private static IrExpressionLiteral LiteralExpression(ExpressionLiteralSyntax syntax)
     {
-        object value = syntax.LiteralString?.Text
-            ?? IrNumber.ParseNumber(syntax.LiteralNumber?.Text!);
+        object value;
+        TypeSymbol type;
 
-        var type = syntax.LiteralNumber != null
-            ? TypeSymbol.I64
-            : TypeSymbol.Str;
+        if (syntax.LiteralNumber?.Text is not null)
+        {
+            IrNumber.ParseNumber(syntax.LiteralNumber.Text, out value, out type);
+        }
+        else if (syntax.LiteralString?.Text is not null)
+        {
+            value = syntax.LiteralString.Text;
+            type = TypeSymbol.Str;
+        }
+        else
+        {
+            throw new NotSupportedException("ExpressionLiteralSyntax could not be parsed. Empty?");
+        }
 
         return new IrExpressionLiteral(syntax, type, value);
     }

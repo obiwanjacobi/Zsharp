@@ -25,7 +25,7 @@ internal static class MajaTypeMapper
                 "String" => TypeSymbol.Str,
                 "Void" => TypeSymbol.Void,
                 "Half" => TypeSymbol.F16,
-                "Float" => TypeSymbol.F32,
+                "Single" => TypeSymbol.F32,
                 "Double" => TypeSymbol.F64,
                 "Decimal" => TypeSymbol.F96,
                 _ => new TypeSymbol(ns, name)

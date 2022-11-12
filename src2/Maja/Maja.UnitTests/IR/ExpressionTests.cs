@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
 using Xunit;
@@ -8,6 +7,19 @@ namespace Maja.UnitTests.IR;
 
 public class ExpressionTests
 {
+    [Theory]
+    [InlineData("42", 42, "I8")]
+    [InlineData("256", 256, "I16")]
+    [InlineData("65535", 65535, "I32")]
+    [InlineData("4294967295", 4294967295, "I64")]
+    //[InlineData("42.42", 42.42, "F16")]
+    public void ParseNumber(string text, object value, string type)
+    {
+        IrNumber.ParseNumber(text, out var actualValue, out var actualType);
+        actualValue.Should().Be(value);
+        actualType!.Name.Value.Should().Be(type);
+    }
+
     [Fact]
     public void ArithmeticLiterals()
     {
@@ -20,78 +32,7 @@ public class ExpressionTests
         program.Root.Members.Should().HaveCount(1);
         var v = program.Root.Members[0].As<IrVariableDeclaration>();
         v.Symbol.Name.Value.Should().Be("x");
-        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.I64);
+        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.I8);
         //v.Initializer!.ConstantValue.Should().NotBeNull();
-    }
-
-    [Fact]
-    public void InvocationAssign()
-    {
-        const string code =
-            "fn: (): U8" + Tokens.Eol +
-            Tokens.Indent1 + "ret 42" + Tokens.Eol +
-            "x := fn()" + Tokens.Eol
-            ;
-
-        var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(2);
-        var v = program.Root.Members[1].As<IrVariableDeclaration>();
-        v.Symbol.Name.Value.Should().Be("x");
-        v.Symbol.Type.Should().Be(TypeSymbol.U8);
-        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
-        v.Initializer!.ConstantValue.Should().BeNull();
-        v.Type.Should().Be(TypeSymbol.U8);
-    }
-
-    [Fact]
-    public void Invocation()
-    {
-        const string code =
-            "fn: ()" + Tokens.Eol +
-            Tokens.Indent1 + "ret" + Tokens.Eol +
-            "fn()" + Tokens.Eol
-            ;
-
-        var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        program.Root.Statements.Should().HaveCount(1);
-        var fn = program.Root.Statements[0]
-            .As<IrStatementExpression>().Expression
-            .As<IrExpressionInvocation>();
-        fn.Symbol!.Name.Value.Should().Be("fn");
-        fn.Arguments.Should().HaveCount(0);
-
-    }
-
-    [Fact]
-    public void InvocationAssign_ErrorCannotAssignVoid()
-    {
-        const string code =
-            "fn: ()" + Tokens.Eol +
-            Tokens.Indent1 + "ret" + Tokens.Eol +
-            "x := fn()" + Tokens.Eol
-            ;
-
-        var program = Ir.Build(code, allowError: true);
-        program.Diagnostics.Should().HaveCount(1);
-        var err = program.Diagnostics[0];
-        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
-        err.Text.Should().Contain("Cannot assign Void").And.Contain("x");
-    }
-
-    [Fact]
-    public void Invocation_ErrorNotFound()
-    {
-        const string code =
-            "x := fn()" + Tokens.Eol
-            ;
-
-        var program = Ir.Build(code, allowError: true);
-        program.Diagnostics.Should().HaveCount(1);
-        var err = program.Diagnostics[0];
-        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
-        err.Text.Should().Contain("Function reference 'fn' cannot be resolved. Function not found.");
     }
 }

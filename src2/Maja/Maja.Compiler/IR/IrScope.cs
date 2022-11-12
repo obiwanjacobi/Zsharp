@@ -8,11 +8,11 @@ using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.IR;
 
-internal class IrScope
+internal abstract class IrScope
 {
     private Dictionary<string, Symbol.Symbol>? _symbols;
 
-    public IrScope(string name, IrScope? parent)
+    protected IrScope(string name, IrScope? parent)
     {
         Name = name;
         Parent = parent;
