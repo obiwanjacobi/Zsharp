@@ -20,7 +20,9 @@ public class TypeTests
         program.Root.Should().NotBeNull();
         program.Root.Members.Should().HaveCount(1);
         var type = program.Root.Members[0].As<IrTypeDeclaration>();
-        type.Symbol.Name.Value.Should().Be("Mytype");
+        var symbol = type.Symbol.As<DeclaredTypeSymbol>();
+        symbol.Name.Value.Should().Be("Mytype");
+        symbol.Enums.Should().HaveCount(2);
         type.Enums.Should().HaveCount(2);
         type.Enums[0].Symbol.Name.Value.Should().Be("Option1");
         type.Enums[0].Value.Should().Be(0);
@@ -43,7 +45,10 @@ public class TypeTests
         program.Root.Should().NotBeNull();
         program.Root.Members.Should().HaveCount(1);
         var type = program.Root.Members[0].As<IrTypeDeclaration>();
-        type.Symbol.Name.Value.Should().Be("Mytype");
+        var symbol = type.Symbol.As<DeclaredTypeSymbol>();
+        symbol.Name.Value.Should().Be("Mytype");
+        symbol.SizeInBytes.Should().Be(1);
+        symbol.Fields.Should().HaveCount(2);
         type.Fields.Should().HaveCount(2);
         type.Fields[0].DefaultValue.Should().BeNull();
         type.Fields[0].Symbol.Name.Value.Should().Be("fld1");

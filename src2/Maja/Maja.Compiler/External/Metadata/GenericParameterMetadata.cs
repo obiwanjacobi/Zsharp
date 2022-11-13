@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Maja.Compiler.External.Metadata;
 
 [DebuggerDisplay("{Name}")]
-public class GenericParameterMetadata
+internal sealed class GenericParameterMetadata
 {
     private readonly Type _genericType;
 

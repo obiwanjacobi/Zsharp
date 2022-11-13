@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.Symbol;
 
+[DebuggerDisplay("{DebuggerDisplay()]}")]
 public sealed record NamespaceSymbol //: Symbol
 {
     public NamespaceSymbol(IEnumerable<string> nameParts)
@@ -24,4 +26,9 @@ public sealed record NamespaceSymbol //: Symbol
     public string Value { get; }
     public IImmutableList<string> NameParts { get; }
     public string OriginalName { get; }
+
+    internal string DebuggerDisplay()
+        => ToString();
+    public override string ToString()
+        => $"{Value} ({OriginalName})";
 }

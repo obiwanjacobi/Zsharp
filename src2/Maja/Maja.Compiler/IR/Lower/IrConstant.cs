@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace Maja.Compiler.IR.Lower;
 
 // compile time constant
-[DebuggerDisplay("DebuggerDisplay()")]
+[DebuggerDisplay("{DebuggerDisplay()}")]
 internal class IrConstant
 {
     internal IrConstant(object value)

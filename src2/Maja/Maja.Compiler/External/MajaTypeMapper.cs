@@ -4,9 +4,9 @@ namespace Maja.Compiler.External;
 
 internal static class MajaTypeMapper
 {
-    public static TypeSymbol MapToMajaType(string ns, string name)
+    public static TypeSymbol? MapToMajaType(string ns, string name)
     {
-        TypeSymbol majaType;
+        TypeSymbol? majaType = null;
 
         if (ns == "System")
         {
@@ -28,11 +28,9 @@ internal static class MajaTypeMapper
                 "Single" => TypeSymbol.F32,
                 "Double" => TypeSymbol.F64,
                 "Decimal" => TypeSymbol.F96,
-                _ => new TypeSymbol(ns, name)
+                _ => null
             };
         }
-        else
-            majaType = new TypeSymbol(ns, name);
 
         return majaType;
     }

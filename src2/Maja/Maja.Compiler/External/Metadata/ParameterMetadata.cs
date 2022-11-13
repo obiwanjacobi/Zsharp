@@ -5,7 +5,7 @@ using System.Reflection;
 namespace Maja.Compiler.External.Metadata;
 
 [DebuggerDisplay("{Name}")]
-public class ParameterMetadata
+internal sealed class ParameterMetadata
 {
     private readonly ParameterInfo _parameter;
 

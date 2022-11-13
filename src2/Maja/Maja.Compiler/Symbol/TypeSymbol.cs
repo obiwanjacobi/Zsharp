@@ -29,10 +29,11 @@ public record TypeSymbol : Symbol
     }
 
     public TypeSymbol(string ns, string name)
-        : base(SymbolName.Parse(ns, name))
+        : base(new SymbolName(ns, name))
     { }
 
-    public TypeSymbol(SymbolName name, int sizeInBytes)
+    public TypeSymbol(SymbolName name,
+        int sizeInBytes)
         : base(name)
     {
         SizeInBytes = sizeInBytes;
@@ -40,6 +41,6 @@ public record TypeSymbol : Symbol
 
     public override SymbolKind Kind
         => SymbolKind.Type;
-
+    public virtual bool IsExternal => false;
     public int SizeInBytes { get; }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 namespace Maja.Compiler.External.Metadata;
 
 [DebuggerDisplay("{Name}")]
-public class TypeMetadata
+internal sealed class TypeMetadata
 {
     private readonly Type _type;
 
@@ -75,6 +75,27 @@ public class TypeMetadata
             ?? throw new InvalidOperationException("TypeMetadata: Element Type is null.");
 
         return new TypeMetadata(elemType);
+    }
+
+    private List<FieldMetadata> _fields = new();
+    public IEnumerable<FieldMetadata> GetPublicFields()
+    {
+        if (_fields.Count == 0)
+        {
+            _fields.AddRange(_type.GetFields()
+                .Where(fld => fld.IsPublic)
+                .Select(fld => IsEnum
+                    ? FieldMetadata.FromEnum(fld)
+                    : FieldMetadata.FromField(fld))
+                );
+
+            _fields.AddRange(_type.GetProperties()
+                .Where(prop => prop.GetGetMethod()?.IsPublic ?? false)
+                .Select(prop => FieldMetadata.FromProperty(prop))
+                );
+        }
+
+        return _fields;
     }
 
     private readonly List<MethodMetadata> _methods = new();

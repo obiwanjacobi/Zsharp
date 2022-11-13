@@ -156,8 +156,8 @@ internal sealed class IrModuleScope : IrScope
 
         // TODO: select a match - if any
 
-        symbol = null!;
-        return false;
+        symbol = (T?)matches.FirstOrDefault();
+        return symbol is not null;
     }
 
     public override bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out FunctionSymbol? symbol)

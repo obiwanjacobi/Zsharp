@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Maja.Compiler.External.Metadata;
 
 [DebuggerDisplay("{Name}")]
-public sealed class AssemblyMetadata
+internal sealed class AssemblyMetadata
 {
     private readonly Assembly _assembly;
 

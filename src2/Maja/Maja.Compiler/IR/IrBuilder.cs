@@ -90,6 +90,7 @@ internal sealed class IrBuilder
             {
                 if (!((IrModuleScope)CurrentScope).TryDeclareModule(extMod))
                 {
+                    // TODO: duplicate?
                 }
             }
             else
@@ -126,10 +127,12 @@ internal sealed class IrBuilder
         var fields = TypeMemberFields(syntax.Fields);
         var rules = TypeMemberRules(syntax.Rules);
 
-        // TODO: add enums, fields and rules + compute size
-
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
-        var symbol = new TypeSymbol(name/*, enums, fields, rules*/, 0);
+        var size = fields.Sum(f => f.Type.Symbol.SizeInBytes);
+        var symbol = new DeclaredTypeSymbol(name,
+            enums.Select(e => e.Symbol),
+            fields.Select(f => f.Symbol),
+            rules.Select(r => r.Symbol), size);
 
         if (!CurrentScope.TryDeclareType(symbol))
         {

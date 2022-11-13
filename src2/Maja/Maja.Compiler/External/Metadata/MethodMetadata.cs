@@ -8,7 +8,7 @@ using System.Reflection;
 namespace Maja.Compiler.External.Metadata;
 
 [DebuggerDisplay("{Name}")]
-public class MethodMetadata
+internal sealed class MethodMetadata
 {
     private readonly MethodInfo? _method;
     private readonly ConstructorInfo? _constructor;

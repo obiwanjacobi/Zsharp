@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Maja.Compiler.External.Metadata;
 using Maja.Compiler.Symbol;
 
@@ -8,6 +9,7 @@ namespace Maja.Compiler.External;
 internal sealed class ExternalModuleLoader : IExternalModuleLoader
 {
     private readonly AssemblyManager _assemblyManager;
+    private readonly ExternalTypeFactory _factory = new();
 
     public ExternalModuleLoader(AssemblyManager assemblyManager)
     {
@@ -30,8 +32,7 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
     private ExternalModule CreateExternalModule(SymbolName symbolName, TypeMetadata typeMetadata)
     {
         var functions = new List<FunctionSymbol>();
-
-        var type = CreateExternalType(typeMetadata.Namespace, typeMetadata.Name);
+        var type = _factory.Create(typeMetadata);
 
         foreach (var method in typeMetadata.GetPublicMethods())
         {
@@ -40,37 +41,24 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
             {
                 parameters.Add(new ParameterSymbol(ParameterSymbol.Self, type));
             }
-            foreach (var param in method.Parameters)
-            {
-                var pt = CreateExternalType(param.ParameterType.Namespace, param.ParameterType.Name);
-                var p = new ParameterSymbol(param.Name, pt);
 
-                parameters.Add(p);
-            }
+            parameters.AddRange(method.Parameters
+                .Select(p => new ParameterSymbol(p.Name,
+                    _factory.Create(p.ParameterType)))
+                );
 
-            var rt = CreateExternalType(method.ReturnType.Namespace, method.ReturnType.Name);
+            var rt = _factory.Create(method.ReturnType);
             var name = new SymbolName(typeMetadata.FullName, method.Name);
             var fn = new FunctionSymbol(name, parameters, rt);
             functions.Add(fn);
         }
 
-        var types = new List<TypeSymbol>
-        {
-            type
-        };
-        foreach (var nType in typeMetadata.GetNestedTypes())
-        {
-            var nt = CreateExternalType(nType.Namespace, nType.Name);
-            types.Add(nt);
-        }
+        var types = new List<TypeSymbol>() { type };
+        types.AddRange(typeMetadata.GetNestedTypes()
+            .Select(t => _factory.Create(t))
+            );
 
         return new ExternalModule(symbolName, functions, types);
-    }
-
-    private TypeSymbol CreateExternalType(string ns, string name)
-    {
-        // TODO: cache created types + lookup
-        return MajaTypeMapper.MapToMajaType(ns, name);
     }
 
     private bool TryLookupType(SymbolName name,
@@ -81,7 +69,7 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
         {
             foreach (var type in assembly.GetPublicTypes())
             {
-                symbolName = SymbolName.Parse(type.Namespace, type.Name);
+                symbolName = new SymbolName(type.Namespace, type.Name);
                 if (name.Equals(symbolName))
                 {
                     typeMetadata = type;

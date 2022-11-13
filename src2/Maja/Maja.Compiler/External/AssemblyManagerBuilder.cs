@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Maja.Compiler.External;
 
-internal class AssemblyManagerBuilder
+internal sealed class AssemblyManagerBuilder
 {
     private static readonly string DotNetBasePath = RuntimeEnvironment.GetRuntimeDirectory();
     private readonly AssemblyManager _assemblyManager = new(DotNetBasePath);

@@ -71,12 +71,6 @@ public record SymbolName
     public static SymbolName Empty
         => new(String.Empty);
 
-    internal static SymbolName Parse(string @namespace, string name)
-    {
-        var nsParts = @namespace.Split(SyntaxToken.Separator);
-        return new SymbolName(nsParts, name);
-    }
-
     internal static string ToCanonical(string text)
     {
         Debug.Assert(!text.Contains(SyntaxToken.Separator));

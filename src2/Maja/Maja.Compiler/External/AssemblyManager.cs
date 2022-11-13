@@ -6,7 +6,7 @@ using Maja.Compiler.External.Metadata;
 
 namespace Maja.Compiler.External;
 
-public class AssemblyManager
+internal sealed class AssemblyManager
 {
     private readonly ProbeAssemblyResolver _resolver;
     private readonly MetadataLoadContext _context;
