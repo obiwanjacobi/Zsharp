@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Maja.External.Metadata;
+namespace Maja.Compiler.External.Metadata;
 
 [DebuggerDisplay("{Name}")]
 public class TypeMetadata

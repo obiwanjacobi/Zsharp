@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Maja.Compiler.External.Metadata;
 using Maja.Compiler.Symbol;
-using Maja.External.Metadata;
 
 namespace Maja.Compiler.External;
 

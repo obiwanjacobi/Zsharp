@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 
-namespace Maja.External.Metadata;
+namespace Maja.Compiler.External.Metadata;
 
 [DebuggerDisplay("{Name}")]
 public class ParameterMetadata

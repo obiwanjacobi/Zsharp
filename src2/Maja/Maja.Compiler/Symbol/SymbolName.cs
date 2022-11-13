@@ -55,7 +55,7 @@ public record SymbolName
                     if (Namespace.NameParts[i] != fullName.Namespace.NameParts[i])
                         return -1;
                 }
-                return i;
+                return i + 1;
             }
             return 0;
         }

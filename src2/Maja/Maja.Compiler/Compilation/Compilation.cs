@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Maja.Compiler.External;
 using Maja.Compiler.Syntax;
-using Maja.External;
 
 namespace Maja.Compiler.Compilation;
 

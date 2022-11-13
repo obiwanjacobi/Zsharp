@@ -549,7 +549,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         var children = Children(base.VisitString, context);
 
         return new[] { new SyntaxNodeOrToken(
-            new LiteralStringSyntax(context.GetText())
+            new LiteralStringSyntax(context.GetText().Trim('"'))
         {
             Location = Location(context),
             Children = children.All,

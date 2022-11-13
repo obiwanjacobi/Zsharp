@@ -34,7 +34,8 @@ public class ExpressionTests
         var v = program.Root.Members[0].As<IrVariableDeclaration>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
-        //v.Initializer!.ConstantValue.Should().NotBeNull();
+        v.Initializer!.ConstantValue.Should().NotBeNull();
+        v.Initializer!.ConstantValue!.Value.Should().Be(42);
         v.Type.Should().Be(TypeSymbol.I64);
     }
 }

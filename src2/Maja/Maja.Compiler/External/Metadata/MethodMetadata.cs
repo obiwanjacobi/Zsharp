@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 
 
-namespace Maja.External.Metadata;
+namespace Maja.Compiler.External.Metadata;
 
 [DebuggerDisplay("{Name}")]
 public class MethodMetadata

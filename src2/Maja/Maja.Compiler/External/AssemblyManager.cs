@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Maja.External.Metadata;
+using Maja.Compiler.External.Metadata;
 
 namespace Maja.Compiler.External;
 

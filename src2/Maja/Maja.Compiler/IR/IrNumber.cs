@@ -1,11 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.IR;
 
 internal static class IrNumber
 {
+    internal static bool TryDecideType(TypeSymbol first, TypeSymbol second,
+        [NotNullWhen(true)] out TypeSymbol? type)
+    {
+        if (first is TypeInferredSymbol inferredFirst)
+            first = inferredFirst.GetPreferredType()
+                ?? throw new Exception("No preferred type could be found.");
+        if (second is TypeInferredSymbol inferredSecond)
+            second = inferredSecond.GetPreferredType()
+                ?? throw new Exception("No preferred type could be found.");
+
+        if ((IsInteger(first) && IsInteger(second)) ||
+            (IsFloat(first) && IsFloat(second)))
+        {
+            type = first.SizeInBytes < second.SizeInBytes
+                ? second
+                : first
+                ;
+            return true;
+        }
+
+        if (IsBoolean(first) && IsBoolean(second))
+        {
+            type = first;
+            return true;
+        }
+
+        type = null;
+        return false;
+    }
+
+    internal static bool IsBoolean(TypeSymbol type)
+        => type == TypeSymbol.Bool;
+
+    internal static bool IsInteger(TypeSymbol type)
+    {
+        return type == TypeSymbol.I8
+            || type == TypeSymbol.U8
+            || type == TypeSymbol.I16
+            || type == TypeSymbol.U16
+            || type == TypeSymbol.I32
+            || type == TypeSymbol.U32
+            || type == TypeSymbol.I64
+            || type == TypeSymbol.I64
+            ;
+    }
+
+    internal static bool IsFloat(TypeSymbol type)
+    {
+        return type == TypeSymbol.F16
+            || type == TypeSymbol.F32
+            || type == TypeSymbol.F64
+            || type == TypeSymbol.F96
+            ;
+    }
+
     internal static IEnumerable<TypeSymbol> ParseNumber(string text, out object? value)
     {
         value = null;

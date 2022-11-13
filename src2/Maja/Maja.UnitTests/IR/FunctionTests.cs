@@ -160,10 +160,12 @@ public class FunctionTests
         program.Root.Should().NotBeNull();
         program.Root.Members.Should().HaveCount(1);
         program.Root.Statements.Should().HaveCount(1);
-        var fn = program.Root.Statements[0]
-            .As<IrStatementExpression>().Expression
-            .As<IrExpressionInvocation>();
+        var fn = program.Root.Statements[0].As<IrStatementExpression>()
+            .Expression.As<IrExpressionInvocation>();
         fn.Symbol!.Name.Value.Should().Be("fn");
         fn.Arguments.Should().HaveCount(1);
+        var arg = fn.Arguments[0];
+        arg.Expression.ConstantValue.Should().NotBeNull();
+        arg.Expression.ConstantValue!.Value.Should().Be(42);
     }
 }

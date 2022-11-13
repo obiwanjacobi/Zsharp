@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using Maja.Compiler.External;
 
-namespace Maja.External;
+namespace Maja.Compiler.External;
 
 internal class AssemblyManagerBuilder
 {

@@ -126,10 +126,10 @@ internal sealed class IrBuilder
         var fields = TypeMemberFields(syntax.Fields);
         var rules = TypeMemberRules(syntax.Rules);
 
-        // TODO: add enums, fields and rules
+        // TODO: add enums, fields and rules + compute size
 
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
-        var symbol = new TypeSymbol(name/*, enums, fields, rules*/);
+        var symbol = new TypeSymbol(name/*, enums, fields, rules*/, 0);
 
         if (!CurrentScope.TryDeclareType(symbol))
         {
@@ -225,37 +225,9 @@ internal sealed class IrBuilder
             _diagnostics.CannotAssignVariableWithVoid(syntax.Expression!.Location, syntax.Name.Text);
         }
 
-        var types =
-            initializer.TypeInferredSymbol?.Candidates.ToArray()
-            ?? new[] { initializer.TypeSymbol };
-
-        // TODO: should this stay here?
-        // are there different ways of selecting the preferred type?
-        TypeSymbol type;
-        if (types.Contains(TypeSymbol.I64))
-            type = TypeSymbol.I64;
-        else if (types.Contains(TypeSymbol.I32))
-            type = TypeSymbol.I32;
-        else if (types.Contains(TypeSymbol.U64))
-            type = TypeSymbol.U64;
-        else if (types.Contains(TypeSymbol.U32))
-            type = TypeSymbol.U32;
-        else if (types.Contains(TypeSymbol.I16))
-            type = TypeSymbol.I16;
-        else if (types.Contains(TypeSymbol.U16))
-            type = TypeSymbol.U16;
-        else if (types.Contains(TypeSymbol.F64))
-            type = TypeSymbol.F64;
-        else if (types.Contains(TypeSymbol.F32))
-            type = TypeSymbol.F32;
-        else if (types.Contains(TypeSymbol.F96))
-            type = TypeSymbol.F96;
-        else if (types.Contains(TypeSymbol.I8))
-            type = TypeSymbol.I8;
-        else if (types.Contains(TypeSymbol.U8))
-            type = TypeSymbol.U8;
-        else
-            type = initializer.TypeSymbol;
+        var type =
+            initializer.TypeInferredSymbol?.GetPreferredType()
+            ?? initializer.TypeSymbol;
 
         var name = new SymbolName(syntax.Name.Text);
         var symbol = new VariableSymbol(name, type);
@@ -278,7 +250,7 @@ internal sealed class IrBuilder
         if (!CurrentScope.TryLookupSymbol<TypeSymbol>(typeName, out var typeSymbol))
         {
             _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
-            typeSymbol = new TypeSymbol(typeName);
+            typeSymbol = new TypeSymbol(typeName, 0);
         }
 
         var name = new SymbolName(syntax.Name.Text);
@@ -543,7 +515,7 @@ internal sealed class IrBuilder
         if (!CurrentScope.TryLookupSymbol<TypeSymbol>(name, out var symbol))
         {
             _diagnostics.TypeNotFound(syntax.Location, syntax.Name.Text);
-            symbol = new TypeSymbol(name);
+            symbol = new TypeSymbol(name, 0);
         }
 
         return new IrType(syntax, symbol);

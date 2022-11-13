@@ -1,7 +1,7 @@
 using FluentAssertions;
+using Maja.Compiler.External;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
-using Maja.External;
 using Xunit;
 
 namespace Maja.UnitTests.IR;
@@ -28,7 +28,7 @@ public class ExternalModuleTests
         var invoke = stat.Expression.As<IrExpressionInvocation>();
         invoke.Arguments.Should().HaveCount(1);
         invoke.Arguments[0].Expression.TypeSymbol.Should().Be(TypeSymbol.Str);
-        //invoke.Arguments[0].Expression.ConstantValue!.Value.Should().Be("Hello World!");
+        invoke.Arguments[0].Expression.ConstantValue!.Value.Should().Be("Hello World!");
         invoke.TypeSymbol.Should().Be(TypeSymbol.Void);
     }
 }
