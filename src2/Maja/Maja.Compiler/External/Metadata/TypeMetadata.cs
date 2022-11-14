@@ -77,16 +77,42 @@ internal sealed class TypeMetadata
         return new TypeMetadata(elemType);
     }
 
+    private TypeMetadata? _enumType;
+    public TypeMetadata GetEnumType()
+    {
+        if (_enumType is null)
+        {
+            var field = _type.GetField("value__");
+            if (field is null)
+                throw new InvalidOperationException($"GetEnumType failed. Type {FullName} is not an Enum.");
+
+            _enumType = new TypeMetadata(field.FieldType);
+        }
+        return _enumType;
+    }
+
     private List<FieldMetadata> _fields = new();
+    public IEnumerable<FieldMetadata> GetEnumFields()
+    {
+        if (_fields.Count == 0)
+        {
+            _fields.AddRange(_type.GetFields()
+                .Where(fld => fld.IsPublic
+                    && fld.Name != "value__")
+                .Select(fld => FieldMetadata.FromEnum(fld))
+                );
+        }
+
+        return _fields;
+    }
+
     public IEnumerable<FieldMetadata> GetPublicFields()
     {
         if (_fields.Count == 0)
         {
             _fields.AddRange(_type.GetFields()
                 .Where(fld => fld.IsPublic)
-                .Select(fld => IsEnum
-                    ? FieldMetadata.FromEnum(fld)
-                    : FieldMetadata.FromField(fld))
+                .Select(fld => FieldMetadata.FromField(fld))
                 );
 
             _fields.AddRange(_type.GetProperties()

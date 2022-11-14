@@ -5,19 +5,23 @@ namespace Maja.Compiler.Symbol;
 
 public record DeclaredTypeSymbol : TypeSymbol
 {
-    public DeclaredTypeSymbol(SymbolName name,
-        IEnumerable<EnumSymbol> enums,
-        IEnumerable<FieldSymbol> fields,
-        IEnumerable<RuleSymbol> rules,
-        int sizeInBytes)
+    protected DeclaredTypeSymbol(SymbolName name, int sizeInBytes)
         : base(name, sizeInBytes)
+    { }
+
+    public DeclaredTypeSymbol(SymbolName name,
+    IEnumerable<EnumSymbol> enums,
+    IEnumerable<FieldSymbol> fields,
+    IEnumerable<RuleSymbol> rules,
+    int sizeInBytes)
+    : base(name, sizeInBytes)
     {
         Enums = enums.ToImmutableArray();
         Fields = fields.ToImmutableArray();
         Rules = rules.ToImmutableArray();
     }
 
-    internal ImmutableArray<EnumSymbol> Enums { get; }
-    internal ImmutableArray<FieldSymbol> Fields { get; }
-    internal ImmutableArray<RuleSymbol> Rules { get; }
+    public virtual ImmutableArray<EnumSymbol> Enums { get; }
+    public virtual ImmutableArray<FieldSymbol> Fields { get; }
+    public virtual ImmutableArray<RuleSymbol> Rules { get; }
 }

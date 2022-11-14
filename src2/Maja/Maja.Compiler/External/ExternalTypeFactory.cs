@@ -5,7 +5,13 @@ using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.External;
 
-internal class ExternalTypeFactory
+internal interface IExternalTypeFactory
+{
+    IEnumerable<EnumSymbol> GetEnums(TypeMetadata type);
+    IEnumerable<FieldSymbol> GetFields(TypeMetadata type);
+}
+
+internal class ExternalTypeFactory : IExternalTypeFactory
 {
     private readonly Dictionary<string, TypeSymbol> _types = new();
 
@@ -27,45 +33,52 @@ internal class ExternalTypeFactory
         return majaType;
     }
 
+    public IEnumerable<EnumSymbol> GetEnums(TypeMetadata type)
+    {
+        if (type.IsEnum)
+        {
+            var pubFlds = type.GetEnumFields().Cast<FieldEnumMetadata>();
+            var enumType = Create(type.GetEnumType());
+            return pubFlds.Select(e => CreateEnumSymbol(e, enumType));
+        }
+
+        return Enumerable.Empty<EnumSymbol>();
+    }
+
+    public IEnumerable<FieldSymbol> GetFields(TypeMetadata type)
+    {
+        if (!type.IsEnum)
+        {
+            var pubFlds = type.GetPublicFields();
+            return pubFlds.Select(f => CreateFieldSymbol(f, type));
+        }
+
+        return Enumerable.Empty<FieldSymbol>();
+    }
+
     private ExternalDeclaredTypeSymbol CreateDeclaredType(TypeMetadata type)
     {
-        var pubFlds = type.GetPublicFields();
-        var enums = pubFlds.OfType<FieldEnumMetadata>();
-        var fields = pubFlds.OfType<FieldFieldMetadata>();
-        var props = pubFlds.OfType<FieldPropertyMetadata>();
-        // rules (null reference?)
-
-        var enumSymbols = enums.Select(e => CreateEnumSymbol(e));
-        var fieldSymbols = fields.Select(f => CreateFieldSymbol(f))
-            .Concat(props.Select(p => CreateFieldSymbol(p)));
-        var ruleSymbols = Enumerable.Empty<RuleSymbol>();
-
-        var size = fieldSymbols.Sum(f => f.Type.SizeInBytes);
+        //var size = fieldSymbols.Sum(f => f.Type.SizeInBytes);
         var name = new SymbolName(type.Namespace, type.Name);
-        return new ExternalDeclaredTypeSymbol(name, enumSymbols, fieldSymbols, ruleSymbols, size);
+        return new ExternalDeclaredTypeSymbol(name, this, type);
     }
 
-    private EnumSymbol CreateEnumSymbol(FieldEnumMetadata enumMetadata)
+    private EnumSymbol CreateEnumSymbol(FieldEnumMetadata enumMetadata, TypeSymbol enumType)
     {
         var name = new SymbolName(enumMetadata.Namespace, enumMetadata.Name);
-        //return new EnumSymbol(name, Create(enumMetadata.FieldType));
-        var type = new TypeSymbol(enumMetadata.FieldType.Namespace, enumMetadata.FieldType.Name);
-        return new EnumSymbol(name, type);
+        return new EnumSymbol(name, enumType, enumMetadata.Value!);
     }
 
-    private FieldSymbol CreateFieldSymbol(FieldFieldMetadata fieldMetadata)
+    private FieldSymbol CreateFieldSymbol(FieldMetadata fieldMetadata, TypeMetadata typeMetadata)
     {
         var name = new SymbolName(fieldMetadata.Namespace, fieldMetadata.Name);
-        //return new FieldSymbol(name, Create(fieldMetadata.FieldType));
-        var type = new TypeSymbol(fieldMetadata.FieldType.Namespace, fieldMetadata.FieldType.Name);
-        return new FieldSymbol(name, type);
-    }
 
-    private FieldSymbol CreateFieldSymbol(FieldPropertyMetadata propertyMetadata)
-    {
-        var name = new SymbolName(propertyMetadata.Namespace, propertyMetadata.Name);
-        //return new FieldSymbol(name, Create(propertyMetadata.FieldType));
-        var type = new TypeSymbol(propertyMetadata.FieldType.Namespace, propertyMetadata.FieldType.Name);
-        return new FieldSymbol(name, type);
+        if (typeMetadata.FullName == fieldMetadata.FieldType.FullName)
+        {
+            var type = new TypeSymbol(fieldMetadata.FieldType.Namespace, fieldMetadata.FieldType.Name);
+            return new FieldSymbol(name, type);
+        }
+
+        return new FieldSymbol(name, Create(fieldMetadata.FieldType));
     }
 }

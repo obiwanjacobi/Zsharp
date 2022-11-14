@@ -165,7 +165,7 @@ internal sealed class IrBuilder
             var typeSymbol = expr?.TypeSymbol ?? TypeSymbol.I64;
             var ns = CurrentScope.FullName; //+ parentType.Name?
             var name = new SymbolName(ns, synEnum.Name.Text);
-            var symbol = new EnumSymbol(name, typeSymbol);
+            var symbol = new EnumSymbol(name, typeSymbol, val);
             var enm = new IrTypeMemberEnum(synEnum, symbol, expr, val);
             enums.Add(enm);
             id++;

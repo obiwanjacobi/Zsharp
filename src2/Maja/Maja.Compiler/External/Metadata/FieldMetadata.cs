@@ -48,6 +48,9 @@ internal sealed class FieldEnumMetadata : FieldMetadata
             return _fieldType;
         }
     }
+
+    public object? Value
+        => _field.GetRawConstantValue();
 }
 
 internal sealed class FieldFieldMetadata : FieldMetadata
