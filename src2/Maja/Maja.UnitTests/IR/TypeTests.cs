@@ -18,8 +18,8 @@ public class TypeTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var type = program.Root.Members[0].As<IrTypeDeclaration>();
+        program.Root.Declarations.Should().HaveCount(1);
+        var type = program.Root.Declarations[0].As<IrTypeDeclaration>();
         var symbol = type.Symbol.As<DeclaredTypeSymbol>();
         symbol.Name.Value.Should().Be("Mytype");
         symbol.Enums.Should().HaveCount(2);
@@ -43,8 +43,8 @@ public class TypeTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var type = program.Root.Members[0].As<IrTypeDeclaration>();
+        program.Root.Declarations.Should().HaveCount(1);
+        var type = program.Root.Declarations[0].As<IrTypeDeclaration>();
         var symbol = type.Symbol.As<DeclaredTypeSymbol>();
         symbol.Name.Value.Should().Be("Mytype");
         symbol.Fields.Should().HaveCount(2);

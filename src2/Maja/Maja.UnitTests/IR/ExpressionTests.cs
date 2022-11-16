@@ -30,13 +30,13 @@ public class ExpressionTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var v = program.Root.Members[0].As<IrVariableDeclaration>();
+        program.Root.Declarations.Should().HaveCount(1);
+        var v = program.Root.Declarations[0].As<IrVariableDeclaration>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
-        v.Type.Should().Be(TypeSymbol.I64);
+        v.TypeSymbol.Should().Be(TypeSymbol.I64);
     }
 
     [Fact]
@@ -49,8 +49,8 @@ public class ExpressionTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var expr = program.Root.Members[0].As<IrFunctionDeclaration>()
+        program.Root.Declarations.Should().HaveCount(1);
+        var expr = program.Root.Declarations[0].As<IrFunctionDeclaration>()
             .Body.Statements[0].As<IrStatementExpression>()
             .Expression.As<IrExpressionBinary>();
         var left = expr.Left.As<IrExpressionIdentifier>();

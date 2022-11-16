@@ -41,12 +41,12 @@ internal sealed class IrVariableDeclaration : IrDeclaration
         : base(syntax)
     {
         Symbol = symbol;
-        Type = type;
+        TypeSymbol = type;
         Initializer = initializer;
     }
 
     public VariableSymbol Symbol { get; }
-    public TypeSymbol Type { get; }
+    public TypeSymbol TypeSymbol { get; }
     public IrExpression? Initializer { get; }
 
     public new VariableDeclarationSyntax Syntax

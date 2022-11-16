@@ -18,7 +18,7 @@ public class StatementTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
+        program.Root.Declarations.Should().HaveCount(1);
         program.Root.Statements.Should().HaveCount(1);
         var statIf = program.Root.Statements[0].As<IrStatementIf>();
         statIf.Condition.TypeSymbol.Should().Be(TypeSymbol.Bool);
@@ -38,7 +38,7 @@ public class StatementTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
+        program.Root.Declarations.Should().HaveCount(1);
         program.Root.Statements.Should().HaveCount(1);
         var statIf = program.Root.Statements[0].As<IrStatementIf>();
         statIf.Condition.TypeSymbol.Should().Be(TypeSymbol.Bool);
@@ -59,7 +59,7 @@ public class StatementTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
+        program.Root.Declarations.Should().HaveCount(1);
         program.Root.Statements.Should().HaveCount(1);
         var statIf = program.Root.Statements[0].As<IrStatementIf>();
         statIf.Condition.TypeSymbol.Should().Be(TypeSymbol.Bool);
@@ -83,7 +83,7 @@ public class StatementTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
+        program.Root.Declarations.Should().HaveCount(1);
         program.Root.Statements.Should().HaveCount(1);
         var statIf = program.Root.Statements[0].As<IrStatementIf>();
         statIf.Condition.TypeSymbol.Should().Be(TypeSymbol.Bool);

@@ -18,8 +18,8 @@ public class FunctionTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var fn = program.Root.Members[0].As<IrFunctionDeclaration>();
+        program.Root.Declarations.Should().HaveCount(1);
+        var fn = program.Root.Declarations[0].As<IrFunctionDeclaration>();
         fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().BeEmpty();
@@ -42,8 +42,8 @@ public class FunctionTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var fn = program.Root.Members[0].As<IrFunctionDeclaration>();
+        program.Root.Declarations.Should().HaveCount(1);
+        var fn = program.Root.Declarations[0].As<IrFunctionDeclaration>();
         fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().HaveCount(2);
@@ -88,7 +88,7 @@ public class FunctionTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
+        program.Root.Declarations.Should().HaveCount(1);
         program.Root.Statements.Should().HaveCount(1);
         var fn = program.Root.Statements[0]
             .As<IrStatementExpression>().Expression
@@ -108,13 +108,13 @@ public class FunctionTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(2);
-        var v = program.Root.Members[1].As<IrVariableDeclaration>();
+        program.Root.Declarations.Should().HaveCount(2);
+        var v = program.Root.Declarations[1].As<IrVariableDeclaration>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
         v.Initializer!.ConstantValue.Should().BeNull();
-        v.Type.Should().Be(TypeSymbol.U8);
+        v.TypeSymbol.Should().Be(TypeSymbol.U8);
     }
 
     [Fact]
@@ -158,7 +158,7 @@ public class FunctionTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
+        program.Root.Declarations.Should().HaveCount(1);
         program.Root.Statements.Should().HaveCount(1);
         var fn = program.Root.Statements[0].As<IrStatementExpression>()
             .Expression.As<IrExpressionInvocation>();

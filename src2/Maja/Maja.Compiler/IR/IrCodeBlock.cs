@@ -16,4 +16,7 @@ internal sealed class IrCodeBlock : IrNode
 
     public ImmutableArray<IrStatement> Statements { get; }
     public ImmutableArray<IrDeclaration> Declarations { get; }
+
+    public new CodeBlockSyntax Syntax
+        => (CodeBlockSyntax)base.Syntax;
 }

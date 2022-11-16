@@ -15,4 +15,7 @@ internal class IrArgument : IrNode
 
     public IrExpression Expression { get; }
     public VariableSymbol? Symbol { get; }
+
+    public new ArgumentSyntax Syntax
+        => (ArgumentSyntax)base.Syntax;
 }

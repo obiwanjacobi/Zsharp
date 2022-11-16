@@ -11,4 +11,7 @@ internal class IrStatementExpression : IrStatement
     }
 
     public IrExpression Expression { get; }
+
+    public new StatementExpressionSyntax Syntax
+        => (StatementExpressionSyntax)base.Syntax;
 }

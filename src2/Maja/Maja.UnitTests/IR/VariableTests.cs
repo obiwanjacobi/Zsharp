@@ -17,13 +17,13 @@ public class VariableTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var v = program.Root.Members[0].As<IrVariableDeclaration>();
+        program.Root.Declarations.Should().HaveCount(1);
+        var v = program.Root.Declarations[0].As<IrVariableDeclaration>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
-        v.Type.Should().Be(TypeSymbol.I64);
+        v.TypeSymbol.Should().Be(TypeSymbol.I64);
 
     }
 
@@ -36,15 +36,15 @@ public class VariableTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var v = program.Root.Members[0].As<IrVariableDeclaration>();
+        program.Root.Declarations.Should().HaveCount(1);
+        var v = program.Root.Declarations[0].As<IrVariableDeclaration>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
         // TODO: expression type != var type
         v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
-        v.Type.Should().Be(TypeSymbol.U8);
+        v.TypeSymbol.Should().Be(TypeSymbol.U8);
     }
 
     [Fact]
@@ -56,8 +56,8 @@ public class VariableTests
 
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
-        program.Root.Members.Should().HaveCount(1);
-        var v = program.Root.Members[0].As<IrVariableDeclaration>();
+        program.Root.Declarations.Should().HaveCount(1);
+        var v = program.Root.Declarations[0].As<IrVariableDeclaration>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
     }
