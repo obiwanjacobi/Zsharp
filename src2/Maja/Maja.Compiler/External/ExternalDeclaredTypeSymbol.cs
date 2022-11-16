@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Linq;
 using Maja.Compiler.External.Metadata;
 using Maja.Compiler.Symbol;
 
@@ -12,7 +11,7 @@ internal sealed record ExternalDeclaredTypeSymbol : DeclaredTypeSymbol
     private readonly Lazy<ImmutableArray<FieldSymbol>> _lazyFields;
 
     public ExternalDeclaredTypeSymbol(SymbolName name, IExternalTypeFactory factory, TypeMetadata typeMetadata)
-        : base(name, 0)
+        : base(name)
     {
         _lazyEnums = new Lazy<ImmutableArray<EnumSymbol>>(
             () => factory.GetEnums(typeMetadata).ToImmutableArray());
@@ -28,18 +27,4 @@ internal sealed record ExternalDeclaredTypeSymbol : DeclaredTypeSymbol
 
     public override bool IsExternal
         => true;
-
-    private int _sizeInBytes;
-    public override int SizeInBytes
-    {
-        get
-        {
-            if (_sizeInBytes == 0)
-            {
-                _sizeInBytes = Fields.Sum(f => f.Type.SizeInBytes);
-            }
-
-            return _sizeInBytes;
-        }
-    }
 }

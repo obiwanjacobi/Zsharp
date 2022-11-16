@@ -20,7 +20,7 @@ internal static class IrNumber
         if ((IsInteger(first) && IsInteger(second)) ||
             (IsFloat(first) && IsFloat(second)))
         {
-            type = first.SizeInBytes < second.SizeInBytes
+            type = first.SizeInBytes() < second.SizeInBytes()
                 ? second
                 : first
                 ;
@@ -128,5 +128,23 @@ internal static class IrNumber
         //    throw new NotSupportedException($"IR: No support for parsing number: '{text}'.");
 
         return types;
+    }
+
+    public static int SizeInBytes(this TypeSymbol typeSymbol)
+    {
+        if (!typeSymbol.IsWellknown)
+            return 0;
+
+        return typeSymbol.Name.Value[1..] switch
+        {
+            "oid" => 0,
+            "ool" => 1,
+            "8" => 1,
+            "16" => 2,
+            "32" => 4,
+            "64" => 8,
+            "96" => 12,
+            _ => 0
+        };
     }
 }

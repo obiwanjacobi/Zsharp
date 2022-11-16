@@ -128,11 +128,10 @@ internal sealed class IrBuilder
         var rules = TypeMemberRules(syntax.Rules);
 
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
-        var size = fields.Sum(f => f.Type.Symbol.SizeInBytes);
         var symbol = new DeclaredTypeSymbol(name,
             enums.Select(e => e.Symbol),
             fields.Select(f => f.Symbol),
-            rules.Select(r => r.Symbol), size);
+            rules.Select(r => r.Symbol));
 
         if (!CurrentScope.TryDeclareType(symbol))
         {
@@ -253,7 +252,7 @@ internal sealed class IrBuilder
         if (!CurrentScope.TryLookupSymbol<TypeSymbol>(typeName, out var typeSymbol))
         {
             _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
-            typeSymbol = new TypeSymbol(typeName, 0);
+            typeSymbol = new TypeSymbol(typeName);
         }
 
         var name = new SymbolName(syntax.Name.Text);
@@ -518,7 +517,7 @@ internal sealed class IrBuilder
         if (!CurrentScope.TryLookupSymbol<TypeSymbol>(name, out var symbol))
         {
             _diagnostics.TypeNotFound(syntax.Location, syntax.Name.Text);
-            symbol = new TypeSymbol(name, 0);
+            symbol = new TypeSymbol(name);
         }
 
         return new IrType(syntax, symbol);
