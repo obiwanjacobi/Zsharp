@@ -13,4 +13,7 @@ internal class IrExpressionIdentifier : IrExpression
     }
 
     public VariableSymbol Symbol { get; }
+
+    public bool IsDiscard
+        => Symbol.Kind == SymbolKind.Discard;
 }

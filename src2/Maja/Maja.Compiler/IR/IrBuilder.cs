@@ -50,8 +50,8 @@ internal sealed class IrBuilder
 
     private IrModule Module(CompilationUnitSyntax syntax)
     {
-        SyntaxNode syn = syntax;
-        SymbolName? name;
+        SyntaxNode syn;
+        SymbolName name;
 
         if (syntax.Module is not null)
         {
@@ -59,15 +59,19 @@ internal sealed class IrBuilder
             name = syntax.Module.Identifier.ToSymbolName();
         }
         else
+        {
+            syn = syntax;
             name = new SymbolName("default");
+        }
 
         var symbol = new ModuleSymbol(name);
-        if (!((IrGlobalScope)CurrentScope).TryDeclareModule(symbol))
-            _ = CurrentScope.TryLookupSymbol(name, out symbol);
+        if (!((IrGlobalScope)CurrentScope).TryDeclareModule(symbol) &&
+            CurrentScope.TryLookupSymbol<ModuleSymbol>(name, out var existingSymbol))
+            symbol = existingSymbol;
 
         // TODO: would like to return the existing IrModule as well...
 
-        return new IrModule(syn, symbol!);
+        return new IrModule(syn, symbol);
     }
 
     private IrCompilation Compilation(CompilationUnitSyntax root)
@@ -162,8 +166,7 @@ internal sealed class IrBuilder
 
             var val = expr?.ConstantValue?.Value ?? id;
             var typeSymbol = expr?.TypeSymbol ?? TypeSymbol.I64;
-            var ns = CurrentScope.FullName; //+ parentType.Name?
-            var name = new SymbolName(ns, synEnum.Name.Text);
+            var name = new SymbolName(synEnum.Name.Text);
             var symbol = new EnumSymbol(name, typeSymbol, val);
             var enm = new IrTypeMemberEnum(synEnum, symbol, expr, val);
             enums.Add(enm);
@@ -187,8 +190,7 @@ internal sealed class IrBuilder
             if (synFld.Expression is ExpressionSyntax synExpr)
                 defExpr = Expression(synExpr);
 
-            var ns = CurrentScope.FullName; //+ parentType.Name?
-            var name = new SymbolName(ns, synFld.Name.Text);
+            var name = new SymbolName(synFld.Name.Text);
             var symbol = new FieldSymbol(name, type.Symbol);
             var fld = new IrTypeMemberField(synFld, symbol, type, defExpr);
             fields.Add(fld);
@@ -206,8 +208,7 @@ internal sealed class IrBuilder
 
         foreach (var synRule in syntax.Items)
         {
-            var ns = CurrentScope.FullName; //+ parent.Name?
-            var name = new SymbolName(ns, synRule.Name.Text);
+            var name = new SymbolName(synRule.Name.Text);
             var symbol = new RuleSymbol(name);
             var expr = Expression(synRule.Expression);
 
@@ -398,16 +399,25 @@ internal sealed class IrBuilder
 
     private IrExpressionIdentifier IdentifierExpression(ExpressionIdentifierSyntax syntax)
     {
-        var name = new SymbolName(syntax.Name.Text);
-        if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out var symbol))
+        VariableSymbol? symbol;
+        if (DiscardSymbol.IsDiscard(syntax.Name.Text))
         {
-            _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
-
-            symbol = new VariableSymbol(name, TypeSymbol.Unknown);
+            symbol = new DiscardSymbol();
         }
-        var type = symbol!.Type ?? TypeSymbol.Unknown;
+        else
+        {
+            var name = new SymbolName(syntax.Name.Text);
+            if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out symbol))
+            {
+                _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
 
-        return new IrExpressionIdentifier(syntax, symbol!, type);
+                symbol = new VariableSymbol(name, TypeSymbol.Unknown);
+            }
+        }
+
+        var type = symbol.Type ?? TypeSymbol.Unknown;
+
+        return new IrExpressionIdentifier(syntax, symbol, type);
     }
 
     private IrExpressionInvocation InvocationExpression(ExpressionInvocationSyntax syntax)

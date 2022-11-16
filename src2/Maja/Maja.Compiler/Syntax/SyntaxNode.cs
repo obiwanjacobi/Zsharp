@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Maja.Compiler.Syntax;
@@ -20,6 +21,10 @@ public abstract partial class SyntaxNode
 
     public bool HasError
         => Children.Any(c => c.HasError);
+
+    public IEnumerable<ErrorToken> GetErrors()
+        => Children.Where(c => c.HasError)
+            .SelectMany(c => c.Node?.GetErrors() ?? new[] { (ErrorToken)c.Token! });
 
     private SyntaxNode? _parent;
     /// <summary>

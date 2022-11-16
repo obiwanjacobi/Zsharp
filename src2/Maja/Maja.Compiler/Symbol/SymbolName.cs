@@ -80,8 +80,13 @@ public sealed record SymbolName
 
         // remove discards '_'
         var canonical = text.Replace(SyntaxToken.Discard, String.Empty);
-        // preserve casing of first letter
-        return canonical[0] + canonical[1..].ToLowerInvariant();
+        if (!String.IsNullOrEmpty(canonical))
+        {
+            // preserve casing of first letter
+            return canonical[0] + canonical[1..].ToLowerInvariant();
+        }
+
+        return String.Empty;
     }
 
     internal static IEnumerable<string> ToCanonical(IEnumerable<string> parts)

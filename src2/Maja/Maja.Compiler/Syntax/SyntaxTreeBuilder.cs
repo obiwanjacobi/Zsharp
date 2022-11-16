@@ -31,10 +31,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         => Empty;
 
     protected override SyntaxNodeOrToken[] AggregateResult(SyntaxNodeOrToken[] aggregate, SyntaxNodeOrToken[] nextResult)
-    {
-        if (aggregate is null) return nextResult;
-        return aggregate.Append(nextResult);
-    }
+        => aggregate is null
+            ? nextResult
+            : aggregate.Append(nextResult);
 
     private SyntaxLocation Location(ParserRuleContext context)
         => new(SourceName, context.Start.Line, context.Start.Column,

@@ -29,7 +29,7 @@ NumberDec: DIGIT10+;
 NumberDecPrefix: PREFIXdec (DIGIT10 | Discard)+;
 NumberHex: PREFIXhex (DIGIT16 | Discard)+;
 
-Identifier: ALPHA (ALPHA | DIGIT10 | Discard)*;
+Identifier: (ALPHA | Discard) (ALPHA | DIGIT10 | Discard)*;
 fragment ALPHA: [a-zA-Z];
 fragment DIGIT2: [0-1];
 fragment DIGIT8: [0-7];

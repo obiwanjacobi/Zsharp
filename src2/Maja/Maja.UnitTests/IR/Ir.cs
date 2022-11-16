@@ -17,6 +17,10 @@ internal static class Ir
     public static IrProgram Build(string code, IExternalModuleLoader moduleLoader, bool allowError = false, [CallerMemberName] string source = "")
     {
         var tree = SyntaxTree.Parse(code, source);
+        if (!allowError)
+        {
+            tree.Diagnostics.Should().BeEmpty();
+        }
         var program = IrBuilder.Program(tree, moduleLoader);
         if (!allowError)
         {

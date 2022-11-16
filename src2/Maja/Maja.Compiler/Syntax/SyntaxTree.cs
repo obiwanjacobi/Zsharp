@@ -1,5 +1,6 @@
 ﻿using System;
 using Antlr4.Runtime;
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.Parser;
 
 namespace Maja.Compiler.Syntax;
@@ -14,7 +15,9 @@ public class SyntaxTree
     private MajaParser? _parser;
 
     private SyntaxTree()
-    { }
+    {
+        Diagnostics = new DiagnosticList();
+    }
 
     private CompilationUnitSyntax ParseInternal(string code, string sourceName)
     {
@@ -38,10 +41,14 @@ public class SyntaxTree
     {
         var tree = new SyntaxTree();
         tree._root = tree.ParseInternal(code, sourceName);
+        tree.Diagnostics.AddAll(tree._root.GetErrors());
+
         return tree;
     }
 
     private CompilationUnitSyntax? _root;
     public CompilationUnitSyntax Root
         => _root ?? throw new InvalidOperationException("Root was not initialized.");
+
+    public DiagnosticList Diagnostics { get; }
 }

@@ -80,7 +80,7 @@ public class ModuleTests
     public void Import_Name()
     {
         const string code =
-            "use qu_Alified._Name" + Tokens.Eol
+            "use qu_Alified.N_ame" + Tokens.Eol
             ;
 
         var program = Ir.Build(code);
@@ -90,7 +90,7 @@ public class ModuleTests
         import.SymbolName.Namespace.Value.Should().Be("qualified");
         import.SymbolName.Namespace.OriginalName.Should().Be("qu_Alified");
         import.SymbolName.Value.Should().Be("Name");
-        import.SymbolName.OriginalName.Should().Be("_Name");
+        import.SymbolName.OriginalName.Should().Be("N_ame");
         import.SymbolName.FullName.Should().Be("qualified.Name");
     }
 

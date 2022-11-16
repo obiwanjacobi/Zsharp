@@ -2,11 +2,15 @@
 
 namespace Maja.Compiler.Symbol;
 
-public sealed record DiscardSymbol : Symbol
+public sealed record DiscardSymbol : VariableSymbol
 {
     public DiscardSymbol()
-        : base(SyntaxToken.Discard)
+        : base(new SymbolName(SyntaxToken.Discard), null)
     { }
+
+    public static bool IsDiscard(string variableName)
+        => variableName.Length == 1 &&
+            variableName == SyntaxToken.Discard;
 
     public override SymbolKind Kind
         => SymbolKind.Discard;

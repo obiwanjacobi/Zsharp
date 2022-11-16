@@ -38,4 +38,24 @@ public class ExpressionTests
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
         v.Type.Should().Be(TypeSymbol.I64);
     }
+
+    [Fact]
+    public void DiscardAssignment()
+    {
+        const string code =
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "_ = 42" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Members.Should().HaveCount(1);
+        var expr = program.Root.Members[0].As<IrFunctionDeclaration>()
+            .Body.Statements[0].As<IrStatementExpression>()
+            .Expression.As<IrExpressionBinary>();
+        var left = expr.Left.As<IrExpressionIdentifier>();
+        left.IsDiscard.Should().BeTrue();
+        var right = expr.Right.As<IrExpressionLiteral>();
+        right.ConstantValue!.Value.Should().Be(42);
+    }
 }
