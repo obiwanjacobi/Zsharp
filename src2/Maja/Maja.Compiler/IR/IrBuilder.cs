@@ -34,16 +34,14 @@ internal sealed class IrBuilder
 
     public static IrProgram Program(SyntaxTree syntaxTree, IExternalModuleLoader moduleLoader)
     {
-        // TODO: check for syntax diagnostics - exit if any
-        // syntaxTree.Diagnostics;
+        if (syntaxTree.Diagnostics.Any())
+            throw new InvalidOperationException("Cannot Compile when there are syntax errors.");
 
         var builder = new IrBuilder(moduleLoader);
-
         var module = builder.Module(syntaxTree.Root);
         builder.PushScope(new IrModuleScope(module.Symbol.Name.FullName, builder.CurrentScope));
 
         var compilation = builder.Compilation(syntaxTree.Root);
-
         var scope = (IrModuleScope)builder.PopScope();
         return new IrProgram(syntaxTree.Root, scope, module, compilation, builder.Diagnostics);
     }

@@ -24,7 +24,7 @@ public record DiagnosticMessage
 
     public DiagnosticMessage(DiagnosticMessageKind kind, SyntaxLocation location, string message)
     {
-        MessageKind = DiagnosticMessageKind.Error;
+        MessageKind = kind;
         Location = location;
         Text = message;
     }
