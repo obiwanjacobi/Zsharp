@@ -5,7 +5,7 @@ using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.Symbol;
 
-[DebuggerDisplay("{DebuggerDisplay()]}")]
+[DebuggerDisplay("{DebuggerDisplay()}")]
 public sealed record NamespaceSymbol //: Symbol
 {
     public NamespaceSymbol(IEnumerable<string> nameParts)

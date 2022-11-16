@@ -23,19 +23,12 @@ internal sealed class AssemblyMetadata
     public string Location
         => _assembly.Location;
 
-    private readonly List<TypeMetadata> _types = new();
+    private List<TypeMetadata>? _types;
     public IEnumerable<TypeMetadata> GetPublicTypes()
-    {
-        if (_types.Count == 0)
-        {
-            _types.AddRange(_assembly.GetTypes()
+        => _types ??= new(_assembly.GetTypes()
                 .Where(t => t.IsPublic)
                 .Select(t => new TypeMetadata(t))
                 );
-        }
-
-        return _types;
-    }
 
     public IEnumerable<AssemblyName> GetDependencyNames()
         => _assembly.GetReferencedAssemblies();

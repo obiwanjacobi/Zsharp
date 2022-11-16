@@ -12,7 +12,6 @@ internal abstract class FieldMetadata
 
     public abstract bool IsReadOnly { get; }
     public abstract string Name { get; }
-    public abstract string Namespace { get; }
     public abstract TypeMetadata FieldType { get; }
 
     public static FieldMetadata FromEnum(FieldInfo field)
@@ -36,18 +35,10 @@ internal sealed class FieldEnumMetadata : FieldMetadata
         => _field.IsInitOnly;
     public override string Name
         => _field.Name ?? String.Empty;
-    public override string Namespace
-        => _field.DeclaringType?.Namespace ?? String.Empty;
 
     private TypeMetadata? _fieldType;
     public override TypeMetadata FieldType
-    {
-        get
-        {
-            _fieldType ??= new TypeMetadata(_field.FieldType);
-            return _fieldType;
-        }
-    }
+        => _fieldType ??= new TypeMetadata(_field.FieldType);
 
     public object? Value
         => _field.GetRawConstantValue();
@@ -66,18 +57,10 @@ internal sealed class FieldFieldMetadata : FieldMetadata
         => _field.IsInitOnly;
     public override string Name
         => _field.Name ?? String.Empty;
-    public override string Namespace
-        => _field.DeclaringType?.Namespace ?? String.Empty;
 
     private TypeMetadata? _fieldType;
     public override TypeMetadata FieldType
-    {
-        get
-        {
-            _fieldType ??= new TypeMetadata(_field.FieldType);
-            return _fieldType;
-        }
-    }
+        => _fieldType ??= new TypeMetadata(_field.FieldType);
 }
 
 internal sealed class FieldPropertyMetadata : FieldMetadata
@@ -86,23 +69,15 @@ internal sealed class FieldPropertyMetadata : FieldMetadata
 
     public FieldPropertyMetadata(PropertyInfo property)
     {
-        _property = property;
+        _property = property ?? throw new ArgumentNullException(nameof(property));
     }
 
     public override bool IsReadOnly
         => _property.GetSetMethod() is null;
     public override string Name
         => _property.Name;
-    public override string Namespace
-        => _property.DeclaringType?.Namespace ?? String.Empty;
 
     private TypeMetadata? _fieldType;
     public override TypeMetadata FieldType
-    {
-        get
-        {
-            _fieldType ??= new TypeMetadata(_property.PropertyType);
-            return _fieldType;
-        }
-    }
+        => _fieldType ??= new TypeMetadata(_property.PropertyType);
 }

@@ -7,7 +7,7 @@ using Maja.Compiler.Syntax;
 namespace Maja.Compiler.Symbol;
 
 [DebuggerDisplay("{DebuggerDisplay()}")]
-public record SymbolName
+public sealed record SymbolName
 {
     public SymbolName(string name)
         : this(Enumerable.Empty<string>(), name)

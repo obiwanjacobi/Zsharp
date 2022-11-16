@@ -42,5 +42,5 @@ public record TypeSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Type;
     public virtual bool IsExternal => false;
-    public int SizeInBytes { get; }
+    public virtual int SizeInBytes { get; }
 }

@@ -15,7 +15,7 @@ internal class ExternalTypeFactory : IExternalTypeFactory
 {
     private readonly Dictionary<string, TypeSymbol> _types = new();
 
-    private string BuildKey(TypeMetadata type)
+    private static string BuildKey(TypeMetadata type)
         => type.FullName;
 
     public TypeSymbol Create(TypeMetadata type)
@@ -33,52 +33,45 @@ internal class ExternalTypeFactory : IExternalTypeFactory
         return majaType;
     }
 
-    public IEnumerable<EnumSymbol> GetEnums(TypeMetadata type)
-    {
-        if (type.IsEnum)
-        {
-            var pubFlds = type.GetEnumFields().Cast<FieldEnumMetadata>();
-            var enumType = Create(type.GetEnumType());
-            return pubFlds.Select(e => CreateEnumSymbol(e, enumType));
-        }
-
-        return Enumerable.Empty<EnumSymbol>();
-    }
-
-    public IEnumerable<FieldSymbol> GetFields(TypeMetadata type)
-    {
-        if (!type.IsEnum)
-        {
-            var pubFlds = type.GetPublicFields();
-            return pubFlds.Select(f => CreateFieldSymbol(f, type));
-        }
-
-        return Enumerable.Empty<FieldSymbol>();
-    }
-
     private ExternalDeclaredTypeSymbol CreateDeclaredType(TypeMetadata type)
     {
-        //var size = fieldSymbols.Sum(f => f.Type.SizeInBytes);
         var name = new SymbolName(type.Namespace, type.Name);
         return new ExternalDeclaredTypeSymbol(name, this, type);
     }
 
-    private EnumSymbol CreateEnumSymbol(FieldEnumMetadata enumMetadata, TypeSymbol enumType)
+    public IEnumerable<EnumSymbol> GetEnums(TypeMetadata type)
     {
-        var name = new SymbolName(enumMetadata.Namespace, enumMetadata.Name);
+        if (!type.IsEnum)
+            return Enumerable.Empty<EnumSymbol>();
+
+        var pubFlds = type.GetEnumFields().Cast<FieldEnumMetadata>();
+        return pubFlds.Select(e => CreateEnumSymbol(e, type));
+    }
+
+    public IEnumerable<FieldSymbol> GetFields(TypeMetadata type)
+    {
+        if (type.IsEnum)
+            return Enumerable.Empty<FieldSymbol>();
+
+        var pubFlds = type.GetFields();
+        return pubFlds.Select(f => CreateFieldSymbol(f, type));
+    }
+
+    private EnumSymbol CreateEnumSymbol(FieldEnumMetadata enumMetadata, TypeMetadata typeMetadata)
+    {
+        var enumType = Create(typeMetadata.GetEnumType());
+        var name = new SymbolName(enumMetadata.Name);
         return new EnumSymbol(name, enumType, enumMetadata.Value!);
     }
 
     private FieldSymbol CreateFieldSymbol(FieldMetadata fieldMetadata, TypeMetadata typeMetadata)
     {
-        var name = new SymbolName(fieldMetadata.Namespace, fieldMetadata.Name);
+        var name = new SymbolName(fieldMetadata.Name);
 
-        if (typeMetadata.FullName == fieldMetadata.FieldType.FullName)
-        {
-            var type = new TypeSymbol(fieldMetadata.FieldType.Namespace, fieldMetadata.FieldType.Name);
-            return new FieldSymbol(name, type);
-        }
+        var type = typeMetadata.FullName == fieldMetadata.FieldType.FullName
+            ? new TypeSymbol(fieldMetadata.FieldType.Namespace, fieldMetadata.FieldType.Name)
+            : Create(fieldMetadata.FieldType);
 
-        return new FieldSymbol(name, Create(fieldMetadata.FieldType));
+        return new FieldSymbol(name, type);
     }
 }

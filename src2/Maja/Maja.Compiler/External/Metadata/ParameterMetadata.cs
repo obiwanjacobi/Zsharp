@@ -19,11 +19,5 @@ internal sealed class ParameterMetadata
 
     private TypeMetadata? _paramType;
     public TypeMetadata ParameterType
-    {
-        get
-        {
-            _paramType ??= new TypeMetadata(_parameter.ParameterType);
-            return _paramType;
-        }
-    }
+        => _paramType ??= new TypeMetadata(_parameter.ParameterType);
 }

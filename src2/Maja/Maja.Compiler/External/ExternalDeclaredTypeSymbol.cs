@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Linq;
 using Maja.Compiler.External.Metadata;
 using Maja.Compiler.Symbol;
 
@@ -27,4 +28,18 @@ internal sealed record ExternalDeclaredTypeSymbol : DeclaredTypeSymbol
 
     public override bool IsExternal
         => true;
+
+    private int _sizeInBytes;
+    public override int SizeInBytes
+    {
+        get
+        {
+            if (_sizeInBytes == 0)
+            {
+                _sizeInBytes = Fields.Sum(f => f.Type.SizeInBytes);
+            }
+
+            return _sizeInBytes;
+        }
+    }
 }

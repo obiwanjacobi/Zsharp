@@ -36,46 +36,39 @@ internal sealed class TypeMetadata
     public bool ContainsGenericParameter
         => _type.ContainsGenericParameters;
 
-    private readonly List<GenericParameterMetadata> _genTypes = new();
-    public IEnumerable<GenericParameterMetadata> GenericParameters
-    {
-        get
-        {
-            if (_genTypes.Count == 0)
-            {
-                _genTypes.AddRange(_type.GetGenericArguments()
-                    .Select(g => new GenericParameterMetadata(g)));
-            }
-            return _genTypes;
-        }
-    }
+    private List<GenericParameterMetadata>? _genTypes;
+    public IEnumerable<GenericParameterMetadata> GetGenericParameters()
+        => _genTypes ??= new(_type.GetGenericArguments()
+            .Select(g => new GenericParameterMetadata(g)));
 
     public bool IsSealed
         => _type.IsSealed;
     public bool IsAbstract
         => _type.IsAbstract;
 
+    public bool HasDeclaringType
+        => _type.DeclaringType is not null;
+
+    private TypeMetadata? _declaringType;
+    public TypeMetadata GetDeclaringType()
+        => _declaringType ??= new TypeMetadata(_type.DeclaringType
+            ?? throw new InvalidOperationException("TypeMetadata: DeclaringType is null."));
+
     public bool HasBaseType
         => _type.BaseType is not null;
 
+    private TypeMetadata? _baseType;
     public TypeMetadata GetBaseType()
-    {
-        var baseType = _type.BaseType
-            ?? throw new InvalidOperationException("TypeMetadata: BaseType is null.");
-
-        return new TypeMetadata(baseType);
-    }
+        => _baseType ??= new TypeMetadata(_type.BaseType
+            ?? throw new InvalidOperationException("TypeMetadata: BaseType is null."));
 
     public bool HasElementType
         => _type.GetElementType() is not null;
 
+    private TypeMetadata? _elemType;
     public TypeMetadata GetElementType()
-    {
-        var elemType = _type.GetElementType()
-            ?? throw new InvalidOperationException("TypeMetadata: Element Type is null.");
-
-        return new TypeMetadata(elemType);
-    }
+        => _elemType ??= new TypeMetadata(_type.GetElementType()
+            ?? throw new InvalidOperationException("TypeMetadata: Element Type is null."));
 
     private TypeMetadata? _enumType;
     public TypeMetadata GetEnumType()
@@ -91,26 +84,23 @@ internal sealed class TypeMetadata
         return _enumType;
     }
 
-    private List<FieldMetadata> _fields = new();
+    private List<FieldMetadata>? _fields;
     public IEnumerable<FieldMetadata> GetEnumFields()
     {
-        if (_fields.Count == 0)
-        {
-            _fields.AddRange(_type.GetFields()
+        _fields ??= new(_type.GetFields()
                 .Where(fld => fld.IsPublic
                     && fld.Name != "value__")
                 .Select(fld => FieldMetadata.FromEnum(fld))
-                );
-        }
+            );
 
         return _fields;
     }
 
-    public IEnumerable<FieldMetadata> GetPublicFields()
+    public IEnumerable<FieldMetadata> GetFields()
     {
-        if (_fields.Count == 0)
+        if (_fields is null)
         {
-            _fields.AddRange(_type.GetFields()
+            _fields = new(_type.GetFields()
                 .Where(fld => fld.IsPublic)
                 .Select(fld => FieldMetadata.FromField(fld))
                 );
@@ -124,36 +114,32 @@ internal sealed class TypeMetadata
         return _fields;
     }
 
-    private readonly List<MethodMetadata> _methods = new();
-    public IEnumerable<MethodMetadata> GetPublicMethods()
+    private List<FunctionMetadata>? _methods;
+    public IEnumerable<FunctionMetadata> GetFunctions()
     {
-        if (_methods.Count == 0)
-        {
-            _methods.AddRange(_type.GetMethods()
-                .Where(m => m.IsPublic)
-                .Select(m => new MethodMetadata(m))
-                .Concat(
-                    _type.GetConstructors()
-                    .Where(c => c.IsPublic)
-                    .Select(c => new MethodMetadata(c))
-                ));
-        }
+        _methods ??= new(_type.GetMethods()
+            .Where(m => m.IsPublic)
+            .Select(m => new FunctionMetadata(m))
+            .Concat(
+                _type.GetConstructors()
+                .Where(c => c.IsPublic)
+                .Select(c => new FunctionMetadata(c))
+        ));
+
         return _methods;
     }
 
     public bool HasConstructors
         => _type.GetConstructors().Any(c => c.IsPublic);
 
-    private readonly List<TypeMetadata> _nestedTypes = new();
+    private List<TypeMetadata>? _nestedTypes;
     public IEnumerable<TypeMetadata> GetNestedTypes()
     {
-        if (_nestedTypes.Count == 0)
-        {
-            _nestedTypes.AddRange(_type.GetNestedTypes()
+        _nestedTypes ??= new(_type.GetNestedTypes()
                 .Where(t => t.IsPublic)
                 .Select(t => new TypeMetadata(t))
-            );
-        }
+        );
+
         return _nestedTypes;
     }
 }

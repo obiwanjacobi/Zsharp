@@ -32,16 +32,10 @@ internal sealed class GenericParameterMetadata
     public bool NeedClass
         => (_genericType.GenericParameterAttributes & GenericParameterAttributes.ReferenceTypeConstraint) > 0;
 
-    private readonly List<TypeMetadata> _constraintTypes = new();
+    private List<TypeMetadata>? _constraintTypes;
     public IEnumerable<TypeMetadata> GetConstraintTypes()
-    {
-        if (_constraintTypes.Count == 0)
-        {
-            _constraintTypes.AddRange(
-                _genericType.GetGenericParameterConstraints()
-                .Select(t => new TypeMetadata(t))
-            );
-        }
-        return _constraintTypes;
-    }
+        => _constraintTypes ??= new(
+            _genericType.GetGenericParameterConstraints()
+            .Select(t => new TypeMetadata(t))
+        );
 }

@@ -34,7 +34,7 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
         var functions = new List<FunctionSymbol>();
         var type = _factory.Create(typeMetadata);
 
-        foreach (var method in typeMetadata.GetPublicMethods())
+        foreach (var method in typeMetadata.GetFunctions())
         {
             var parameters = new List<ParameterSymbol>();
             if (!method.IsStatic)
