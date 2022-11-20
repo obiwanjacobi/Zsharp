@@ -32,7 +32,8 @@ internal static class ExpressionOperatorMap
     public static int ToOperatorPrecedence(this ExpressionOperatorKind kind,
         ExpressionOperatorCardinality cardinality)
     {
-        return (int)kind + ((5 - (int)cardinality) << 8);
+        //return (int)kind + ((5 - (int)cardinality) << 8);
+        return (int)cardinality;
     }
 
     public static ExpressionOperatorKind ToOperatorKind(this int tokenTypeId,

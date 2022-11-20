@@ -14,6 +14,45 @@ public sealed class ExpressionBinarySyntax : ExpressionSyntax
     public override SyntaxKind SyntaxKind
         => SyntaxKind.BinaryExpression;
 
+    public bool IsPrecedenceValid
+        => CheckForPrecedence().precedenceValid;
+
+    // precedence is valid when all binary expressions are wrapped in ()
+    // or when one operator (kind) is not, but the others are.
+    private (bool precedenceValid, ExpressionOperatorKind commonOperator) CheckForPrecedence()
+    {
+        var thisOperator = Operator.OperatorKind;
+        var thisPrecedence = Precedence;
+
+        var left = Left as ExpressionBinarySyntax;
+        if (left is not null)
+        {
+            var (leftPrecedence, leftOperator) = left.CheckForPrecedence();
+            if (!leftPrecedence)
+                return (false, leftOperator);
+
+            if (leftOperator != thisOperator &&
+                leftOperator != ExpressionOperatorKind.Unknown &&
+                !thisPrecedence)
+                return (false, thisOperator);
+        }
+
+        var right = Right as ExpressionBinarySyntax;
+        if (right is not null)
+        {
+            var (rightPrecedence, rightOperator) = right.CheckForPrecedence();
+            if (!rightPrecedence)
+                return (false, rightOperator);
+
+            if (rightOperator != thisOperator &&
+                rightOperator != ExpressionOperatorKind.Unknown &&
+                !thisPrecedence)
+                return (false, thisOperator);
+        }
+
+        return (true, thisPrecedence ? ExpressionOperatorKind.Unknown : thisOperator);
+    }
+
     /// <summary>
     /// The left part of the expression.
     /// </summary>

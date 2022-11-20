@@ -14,11 +14,6 @@ public class SyntaxTree
     private CommonTokenStream? _tokens;
     private MajaParser? _parser;
 
-    private SyntaxTree()
-    {
-        Diagnostics = new DiagnosticList();
-    }
-
     private CompilationUnitSyntax ParseInternal(string code, string sourceName)
     {
         _inputStream = new AntlrInputStream(code)
@@ -33,8 +28,12 @@ public class SyntaxTree
         _tokens = new CommonTokenStream(_lexer);
         _parser = new MajaParser(_tokens);
 
-        var cu = _parser.compilationUnit();
-        return SyntaxTreeBuilder.Build(cu, sourceName);
+        var context = _parser.compilationUnit();
+        var builder = new SyntaxTreeBuilder(sourceName);
+        var nodes = builder.VisitCompilationUnit(context);
+
+        _diagnostics = builder.Diagnostics;
+        return (CompilationUnitSyntax)nodes[0].Node!;
     }
 
     public static SyntaxTree Parse(string code, string sourceName = "")
@@ -50,5 +49,7 @@ public class SyntaxTree
     public CompilationUnitSyntax Root
         => _root ?? throw new InvalidOperationException("Root was not initialized.");
 
-    public DiagnosticList Diagnostics { get; }
+    private DiagnosticList? _diagnostics;
+    public DiagnosticList Diagnostics
+        => _diagnostics ?? throw new InvalidOperationException("No Diagnostics have been initialized.");
 }

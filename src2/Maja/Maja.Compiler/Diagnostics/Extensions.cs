@@ -39,6 +39,9 @@ internal static class SyntaxDiagnostics
             diagnostics.Add(DiagnosticMessageKind.Error, err.Location, err.Text);
         }
     }
+
+    public static void ExpressionPrecedenceNotSpecified(this DiagnosticList diagnostics, SyntaxLocation location, string expression)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Expression '{expression}' requires explicit precedence specification using '()' because it uses more than one (type of) operator.");
 }
 
 internal static class IrDiagnostics

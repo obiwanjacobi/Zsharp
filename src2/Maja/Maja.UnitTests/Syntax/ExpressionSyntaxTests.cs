@@ -46,6 +46,15 @@ public class ExpressionSyntaxTests
         lvl1.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2");
         lvl0.Operator.Text.Should().Be("+");
         lvl0.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2112");
+        lvl0.IsPrecedenceValid.Should().BeFalse();
+
+        //         +
+        //        / \
+        //      '/'  2112
+        //      / \
+        //     +   2
+        //    / \
+        //  42   101
     }
 
     [Fact]
@@ -69,6 +78,15 @@ public class ExpressionSyntaxTests
         lvl2.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2");
         lvl0.Operator.Text.Should().Be("+");
         lvl0.Right.As<ExpressionLiteralSyntax>().Text.Should().Be("2112");
+        lvl0.IsPrecedenceValid.Should().BeTrue();
+
+        //          +
+        //         / \
+        //        +   2112
+        //       / \
+        //     42  '/' *precedence
+        //         / \
+        //      101   2
     }
 
     [Fact]

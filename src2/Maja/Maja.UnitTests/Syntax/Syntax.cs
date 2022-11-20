@@ -1,27 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Maja.Compiler.Syntax;
 
 namespace Maja.UnitTests.Syntax
 {
     internal static class Syntax
     {
-        //public static CompilationUnitSyntax Parse(string code, bool throwOnError = true)
-        //{
-        //    var parser = Compiler.CreateParser(code, "SyntaxTests", false);
-        //    var parseTree = parser.compilationUnit();
-
-        //    if (throwOnError)
-        //    {
-        //        var errs = parseTree.Errors().Select(e => e.Text);
-        //        if (errs.Any())
-        //            throw new Exception(String.Join(Environment.NewLine, errs));
-        //    }
-
-        //    var builder = new ParserNodeConvertor(nameof(Syntax));
-        //    var syntax = builder.VisitCompilationUnit(parseTree);
-        //    return (CompilationUnitSyntax)syntax[0].Node!;
-        //}
-
         public static CompilationUnitSyntax Parse(string code, bool throwOnError = true)
         {
             var tree = SyntaxTree.Parse(code, "SyntaxTests");
@@ -29,7 +13,9 @@ namespace Maja.UnitTests.Syntax
             if (throwOnError
                 && tree.Root.HasError)
             {
-                throw new Exception("The code has syntax errors.");
+                var errTxt = String.Join(Environment.NewLine,
+                    tree.Root.GetErrors().Select(err => err.Text));
+                throw new Exception(errTxt);
             }
 
             return tree.Root;

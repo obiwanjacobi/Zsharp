@@ -4,6 +4,7 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.Parser;
 using static Maja.Compiler.Parser.MajaParser;
 
@@ -17,15 +18,13 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     private static readonly SyntaxNodeOrToken[] Empty = Array.Empty<SyntaxNodeOrToken>();
     private readonly string SourceName;
 
-    public static CompilationUnitSyntax Build(CompilationUnitContext context, string source = "")
+    public SyntaxTreeBuilder(string sourceName)
     {
-        var builder = new SyntaxTreeBuilder(source);
-        var nodes = builder.VisitCompilationUnit(context);
-        return (CompilationUnitSyntax)nodes[0].Node!;
+        Diagnostics = new DiagnosticList();
+        SourceName = sourceName ?? throw new System.ArgumentNullException(nameof(sourceName));
     }
 
-    private SyntaxTreeBuilder(string sourceName)
-        => SourceName = sourceName ?? throw new System.ArgumentNullException(nameof(sourceName));
+    public DiagnosticList Diagnostics { get; }
 
     protected override SyntaxNodeOrToken[] DefaultResult
         => Empty;
@@ -308,7 +307,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             Children = children.All,
             ChildNodes = children.Nodes,
             TrailingTokens = children.Tokens
-        } )};
+        }) };
     }
 
     public override SyntaxNodeOrToken[] VisitMemberEnumValue([NotNull] MemberEnumValueContext context)
@@ -329,14 +328,21 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     {
         var children = Children(base.VisitMemberField, context);
 
-        return new[] { new SyntaxNodeOrToken(
-            new MemberFieldSyntax(context.GetText())
+        var node = new MemberFieldSyntax(context.GetText())
         {
             Location = Location(context),
             Children = children.All,
             ChildNodes = children.Nodes,
             TrailingTokens = children.Tokens
-        } )};
+        };
+
+        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
+            !binaryExpression.IsPrecedenceValid)
+        {
+            Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
+        }
+
+        return new[] { new SyntaxNodeOrToken(node) };
     }
 
     public override SyntaxNodeOrToken[] VisitMemberRule(MemberRuleContext context)
@@ -357,14 +363,21 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     {
         var children = Children(base.VisitTypeArgument, context);
 
-        return new[] { new SyntaxNodeOrToken(
-            new TypeArgumentSyntax(context.GetText())
+        var node = new TypeArgumentSyntax(context.GetText())
         {
             Location = Location(context),
             Children = children.All,
             ChildNodes = children.Nodes,
             TrailingTokens = children.Tokens
-        } )};
+        };
+
+        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
+            !binaryExpression.IsPrecedenceValid)
+        {
+            Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
+        }
+
+        return new[] { new SyntaxNodeOrToken(node) };
     }
 
     public override SyntaxNodeOrToken[] VisitTypeParameterTemplate(TypeParameterTemplateContext context)
@@ -431,28 +444,42 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     {
         var children = Children(base.VisitDeclarationVariableTyped, context);
 
-        return new[] { new SyntaxNodeOrToken(
-            new VariableDeclarationTypedSyntax(context.GetText())
+        var node = new VariableDeclarationTypedSyntax(context.GetText())
         {
             Location = Location(context),
             Children = children.All,
             ChildNodes = children.Nodes,
             TrailingTokens = children.Tokens
-        } )};
+        };
+
+        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
+            !binaryExpression.IsPrecedenceValid)
+        {
+            Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
+        }
+
+        return new[] { new SyntaxNodeOrToken(node) };
     }
 
     public override SyntaxNodeOrToken[] VisitDeclarationVariableInferred(DeclarationVariableInferredContext context)
     {
         var children = Children(base.VisitDeclarationVariableInferred, context);
 
-        return new[] { new SyntaxNodeOrToken(
-            new VariableDeclarationInferredSyntax(context.GetText())
+        var node = new VariableDeclarationInferredSyntax(context.GetText())
         {
             Location = Location(context),
             Children = children.All,
             ChildNodes = children.Nodes,
             TrailingTokens = children.Tokens
-        } )};
+        };
+
+        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
+            !binaryExpression.IsPrecedenceValid)
+        {
+            Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
+        }
+
+        return new[] { new SyntaxNodeOrToken(node) };
     }
 
     //
@@ -462,7 +489,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     public override SyntaxNodeOrToken[] VisitExpressionPrecedence(ExpressionPrecedenceContext context)
     {
         var children = base.VisitExpressionPrecedence(context);
-        for (int i = 0; i < children.Length; i++)
+        for (var i = 0; i < children.Length; i++)
         {
             var child = children[i];
             if (child.Node is ExpressionSyntax expr)
@@ -575,21 +602,27 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     {
         var children = Children(base.VisitArgument, context);
 
-        return new[] { new SyntaxNodeOrToken(
-            new ArgumentSyntax(context.GetText())
+        var node = new ArgumentSyntax(context.GetText())
         {
             Location = Location(context),
             Children = children.All,
             ChildNodes = children.Nodes,
             TrailingTokens = children.Tokens
+        };
+
+        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
+            !binaryExpression.IsPrecedenceValid)
+        {
+            Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
         }
-        )};
+
+        return new[] { new SyntaxNodeOrToken(node) };
     }
 
-    public override SyntaxNodeOrToken[] VisitExpressionRule(ExpressionRuleContext context)
-    {
-        return base.VisitExpressionRule(context);
-    }
+    //public override SyntaxNodeOrToken[] VisitExpressionRule(ExpressionRuleContext context)
+    //{
+    //    return base.VisitExpressionRule(context);
+    //}
 
     //
     // Expression Operators
@@ -777,13 +810,20 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     {
         var children = Children(base.VisitStatementExpression, context);
 
-        return new[] { new SyntaxNodeOrToken(
-            new StatementExpressionSyntax(context.GetText())
+        var node = new StatementExpressionSyntax(context.GetText())
         {
             Location = Location(context),
             Children = children.All,
             ChildNodes = children.Nodes,
             TrailingTokens = children.Tokens
-        } )};
+        };
+
+        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
+            !binaryExpression.IsPrecedenceValid)
+        {
+            Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
+        }
+
+        return new[] { new SyntaxNodeOrToken(node) };
     }
 }
