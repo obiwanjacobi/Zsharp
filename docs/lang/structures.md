@@ -208,11 +208,9 @@ Syntax should be the same as with the `Dyn`amic Type.
 
 ## Structure Layout
 
-The fields of a structure are layed out in the order of their definition starting at the base structure type. No alignment or filler bytes are added.
+The fields of a structure are layed out in the most optimal order. Every field's datatype has a specific byte alignment and intrinsic size. Ordering fields randomly may lead to excessive filler bytes in order to meet alignment requirements. The Z# compiler will generate a `StructLayoutAttribute(LayoutKind.Auto)` attribute for each struct. A `StructLayoutAttribute` can be used in the code to disable / override this reordering.
 
-> `.NET` does the actual layout in memory.
-
-> TBD: have an align attribute?
+> The `.NET` compiler does the actual layout in memory.
 
 ---
 
