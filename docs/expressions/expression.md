@@ -14,6 +14,45 @@ The supported expressions are divided in these categories:
 - [Bitwise](bitwise.md)
 - [Match](match.md)
 
+> TBD: Assignment is also an expression.
+
+The value returned from the assignment expression is the old/previous value of the assignment target.
+The resulting value does not have to be assigned or explicitly discarded.
+
+```csharp
+v = 42
+// here we run into a syntax problem:
+// - this means compare c to 101 and x would be Bool
+// - we don't support chained assignments
+x = v = 101
+// if we support something like this, swap would become
+v = x = v
+
+// function returns the previous value of 'self'
+add42: (self: U8): U8
+    return self += 42
+    // would even be better with auto-return of last expression value
+    self += 42
+
+v = 42
+x = v.add42()
+// x = 42
+```
+
+> TBD: Make it a different operator?
+
+```csharp
+v = 42
+// '<=' means: assign and push out previous value
+// '<=' is also used in mapping
+x = v <= 101
+// some other operator?
+x = v \= 101
+x = v != 101
+```
+
+Downside is that this allows you to embed assignments into other expression constructs (passing args ot a function) which we are trying to avoid (for readability)...
+
 ---
 
 ## Precedence

@@ -9,7 +9,7 @@ Identifiers name program entities such as variable, functions and types. These n
 - Cannot start with a digit (*TBD).
 - Can contain `_`.
 - Can contain alpha-numeric characters.
-- Valid characters lie in the ASCII range (no unicode).
+- Can end with a `'` (parameters/variables only).
 
 Here are examples of valid identifiers:
 
@@ -17,6 +17,7 @@ Here are examples of valid identifiers:
 My_Function1
 someVariable
 _hidden
+prime'
 ```
 
 Here are examples of _invalid_ identifiers:
@@ -78,7 +79,7 @@ _ = myFn(42)        // return value not used
 
 ```
 
-If an identifier starts with a `_` it is hidden from immediate public access. The field will be `internal` in .NET for an exported structure.
+If an identifier starts with a `_` it is hidden from immediate public access. The field will be `internal` in .NET for an exported structure, otherwise it'll be private.
 
 ```csharp
 MyStruct

@@ -1235,6 +1235,15 @@ c.add(4).sub(2)
 // with scope
 c.add(4)
     .sub(2)
+
+// return type of add is void!
+// need a new operator?
+c.add(4)>.sub(2)
+
+// capture?
+[c]
+    .add(4)
+    .sub(2)
 ```
 
 > TBD: Auto-Fluent syntax? `Build(p: MyStruct).>Into(target: Stream)`
@@ -1311,6 +1320,8 @@ All operators are implemented as functions. The operator is an (implicit) alias 
 All operator functions will be tested by the compiler if they confirm to the correct operator rules.
 
 For more information refer to [Lexical Operators](../lexical/operators.md).
+
+Any type can implement an operator-function.
 
 ---
 

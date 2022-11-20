@@ -8,6 +8,9 @@ The `assembly` keyword works similar to how the `module` keyword works, it names
 
 An `assembly` file cannot contain any runtime code other than (assembly-level) code attributes or use of compiler directives and compile time code. Everything else is a compiler error.
 
+> TBD: `.NET` now supports a module-initializer that runs once at assembly level.
+We could introduce an `#initialize` (similar to `#execute`) to allow to specify one.
+
 ```csharp
 // comments in front are allowed
 # assembly Name.OfMy.Assembly
@@ -113,13 +116,13 @@ Project dependencies can be listed in the assembly file as well.
 #sdk Net5.0@CoreAppSDK
 ```
 
-> Does this work on Linux?
-
 Other project attributes may include any property and its value. Some sort of generic way to specify?
 
 ```csharp
 #prop=value
 ```
+
+Same with project items?
 
 A lot of the content of a visual studio project file is related to IDE specific things. We don't need those - just the ones that relate to compilation.
 

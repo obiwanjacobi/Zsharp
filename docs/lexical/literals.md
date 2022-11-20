@@ -159,6 +159,12 @@ Related to strings are character literals. A single character can be specified u
 c = 'X'                 // C16
 ```
 
+Multi-byte character literals (max 4 chars)
+
+```csharp
+c: U64 := 'ABCD'    // 0x41424344
+```
+
 ---
 
 ## Arrays
@@ -166,7 +172,11 @@ c = 'X'                 // C16
 There is a syntax for specifying literal arrays of basic types:
 
 ```C#
-arr = (1, 2, 3, 4, 5)           // 5 elements of U8
+// default to an array
+arr = (1, 2, 3, 4, 5)           // array of 5 elements of U8
+
+// unless variable is typed
+list: List<U8> = (1, 2, 3, 4, 5)
 ```
 
 ---

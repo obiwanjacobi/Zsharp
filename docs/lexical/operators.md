@@ -31,7 +31,22 @@ c: U8 = a +| b  // wrap around (115)
 c: U8 = a +~ b  // saturate (255)
 ```
 
-> Is checked `!`  the default?
+> Is checked `!` the default?
+
+---
+
+## Precedence
+
+In order of precedence (top is highest):
+
+| Operator | Description
+|--|--
+| Unary |
+| Binary |
+| Ternary |
+
+That means that an expression with multiple (binary) expressions **MUST** use `( )`
+to indicate the order of execution - unless the operators are all the same.
 
 ---
 
@@ -47,10 +62,11 @@ Arithmetic, bitwise and logical operators.
 | `/` | ArithmeticDivide | Division
 | `%` | ArithmeticRemainder | Remainder
 | `**` | ArithmeticPower | Power (3 ** 2 = 9)
-| `//` | ArithmeticRoot | Root (9 // 2 = 3) (comments!)
-| `( )` | - | Math Precedence, Function Call, List Literal, Tuple/deconstruct
-| `=` | IsEqual | Equals (`is`?)
-| `<>` | IsNotEqual | Not Equals (`is not`?)
+| `//` | ArithmeticRoot | Root/Log (9 // 2 = 3)
+| `%%` | ArithmeticModulo | Modulo (negative numbers)
+| `( )` | - | Infix Operator Precedence, Function Call, List Literal, Tuple/deconstruct
+| `=` | IsEqual | Equals (value equality, `is` for identity?)
+| `<>` | IsNotEqual | Not Equals (value inequality, `is not` for identity?)
 | `>` | IsGreaterThan | Greater than
 | `<` | IsLesserThan | Smaller than
 | `>=` | IsGreaterEqual | Greater or Equal
@@ -61,17 +77,20 @@ Arithmetic, bitwise and logical operators.
 | `or` | LogicOr | Logical Or
 | `xor` | LogicXor | Logical Xor
 | `not` | LogicNot | Logical Negation
-| `&` | - | Bitwise And
-| `|` | - | Bitwise Or
-| `^` | - | Bitwise Exclusive Or
-| `~` | - | Bitwise Negation (complement/invert)
+| `&` | - | Bitwise And*
+| `|` | - | Bitwise Or*
+| `^` | - | Bitwise Exclusive Or*
+| `~` | - | Bitwise Negation (complement/invert)*
 | `>>` | - | Bitwise Shift Right
 | `<<` | - | Bitwise Shift Left
 | `>|` | - | Bitwise Rotate Right
 | `|<` | - | Bitwise Rotate Left
 | `->>` | - | sign extend (arithmetic) bit shift right
+| `>>>` | - | -or- sign extend (arithmetic) bit shift right
 | `=` | - | Value Assignment
 | `:=` | - | Value Assignment with inferred Type
+
+> TBD: *) we could reuse the logical operators for use as bitwise operators as well.
 
 > Ternary operators cannot contain other ternary operators. No nesting of `? :` for readability.
 
@@ -120,7 +139,6 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `#!` | Compile-time error (alt)
 | `##` | Temporary comment (compiler warning)
 | `#_` | Comment
-| `__` | (Alternate) Comments
 
 `#!` does make the distinction clear between compile-time functions and for instance inline exported functions: `#export fun: ()...` vs. `#! fun: () ...`.
 
@@ -187,11 +205,9 @@ To be determined:
 | Operator | Description
 |---|---
 | `\` | reserved
-| `|` | reserved
 | `$` | to string / auto-constant string checked by compiler.
 | `!` | reserved (factorial?)
-| `?.` | Safe Navigation (1) -or-
-| `&.` | Safe Navigation (2)
+| `?.` | Safe Navigation
 | `=>` | used in mapping / some sort of (forward) assignment? (implies?)
 | `<=` | map structure / assign struct properties
 | `()` | Function Object operator
@@ -199,7 +215,8 @@ To be determined:
 | `<|` | Reverse parameter pipe?
 | `<=>` | Swap operator
 | `::` | traits? (type of type)
-| `:=` | is/equals type (bool/condition) (also assignment with type inference)
+| `:=` | equals type (bool/condition) (also assignment with type inference)
+| `:?` | type is (C# is keyword)
 | `<:?` | type as (optional cast)
 | `<:` | down cast type
 | `:>` | up cast type? (is implicit)
@@ -225,7 +242,33 @@ Operators for strings and characters.
 | `=<~` | Case (and culture) insensitive lesser-than-or-equal - sorting.
 | `s[2..6]` | sub-string using `Range`.
 | `<+` | Concat a string.
+| `+` | alt - Concat a string.
 | `/<+` | Concat a string with path separator.
+| `x<+` | Concat a string with any (x) separator?
+
+## Float Operator Symbols
+
+Operators for floating point numbers.
+
+| Operator | Description
+|---|---
+| `=  ~` | Equals with a margin.
+| `<>  ~` | Not equals with a margin.
+| `>  ~` | Greater than with a margin.
+| `<  ~` | Lesser than with a margin.
+| `>=  ~` | Greater-than-or-equal.
+| `=<  ~` | Lesser-than-or-equal.
+
+These operators require 3 operands.
+
+```csharp
+f := 3.14
+pi := 3.1415
+
+// how to specify three operands?
+if f = pi ~ 0.01
+    // same (within margin)
+```
 
 ---
 
@@ -247,6 +290,8 @@ Operators for working with `Array<T>` and `List<T>` types.
 | `/` | split in array with chunks/tuples of n
 | `|` | zip two arrays
 | `~` | unzip (split in 2)
+| `<+` | Concat an array to another.
+| `+` | alt - concat array?
 
 Using arithmetic operators hinders supporting array programming...
 
