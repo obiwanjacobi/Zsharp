@@ -14,7 +14,7 @@ public sealed class ExpressionBinarySyntax : ExpressionSyntax
     public override SyntaxKind SyntaxKind
         => SyntaxKind.BinaryExpression;
 
-    public bool IsPrecedenceValid
+    public override bool IsPrecedenceValid
         => CheckForPrecedence().precedenceValid;
 
     // precedence is valid when all binary expressions are wrapped in ()

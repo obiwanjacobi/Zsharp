@@ -13,4 +13,7 @@ public abstract class ExpressionSyntax : SyntaxNode
     /// Indicates that this expression was enclosed in parenthesis.
     /// </summary>
     public bool Precedence { get; internal set; }
+
+    public virtual bool IsPrecedenceValid
+        => true;
 }

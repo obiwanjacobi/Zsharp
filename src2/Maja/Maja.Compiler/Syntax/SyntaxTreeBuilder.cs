@@ -336,8 +336,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             TrailingTokens = children.Tokens
         };
 
-        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
-            !binaryExpression.IsPrecedenceValid)
+        if (!(node.Expression?.IsPrecedenceValid ?? true))
         {
             Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
         }
@@ -371,8 +370,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             TrailingTokens = children.Tokens
         };
 
-        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
-            !binaryExpression.IsPrecedenceValid)
+        if (!(node.Expression?.IsPrecedenceValid ?? true))
         {
             Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
         }
@@ -452,8 +450,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             TrailingTokens = children.Tokens
         };
 
-        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
-            !binaryExpression.IsPrecedenceValid)
+        if (!(node.Expression?.IsPrecedenceValid ?? true))
         {
             Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
         }
@@ -473,8 +470,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             TrailingTokens = children.Tokens
         };
 
-        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
-            !binaryExpression.IsPrecedenceValid)
+        if (!node.Expression!.IsPrecedenceValid)
         {
             Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
         }
@@ -610,8 +606,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             TrailingTokens = children.Tokens
         };
 
-        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
-            !binaryExpression.IsPrecedenceValid)
+        if (!node.Expression.IsPrecedenceValid)
         {
             Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
         }
@@ -818,8 +813,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             TrailingTokens = children.Tokens
         };
 
-        if (node.Expression is ExpressionBinarySyntax binaryExpression &&
-            !binaryExpression.IsPrecedenceValid)
+        if (!node.Expression.IsPrecedenceValid)
         {
             Diagnostics.ExpressionPrecedenceNotSpecified(node.Location, node.Text);
         }

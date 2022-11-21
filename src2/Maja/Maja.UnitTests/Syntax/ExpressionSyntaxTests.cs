@@ -33,7 +33,7 @@ public class ExpressionSyntaxTests
             "x := 42 + 101 / 2 + 2112" + Tokens.Eol
             ;
 
-        var result = Syntax.Parse(code);
+        var result = Syntax.Parse(code, throwOnError: false);
         result.Members.Should().HaveCount(1);
         var v = result.Members.First().As<VariableDeclarationSyntax>();
         var lvl0 = v.Expression!.As<ExpressionBinarySyntax>();

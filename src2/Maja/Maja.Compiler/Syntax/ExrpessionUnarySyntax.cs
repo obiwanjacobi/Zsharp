@@ -14,6 +14,9 @@ public sealed class ExpressionUnarySyntax : ExpressionSyntax
     public override SyntaxKind SyntaxKind
         => SyntaxKind.UnaryExpression;
 
+    public override bool IsPrecedenceValid
+        => Operand.IsPrecedenceValid;
+
     /// <summary>
     /// The operand of the expression.
     /// </summary>
