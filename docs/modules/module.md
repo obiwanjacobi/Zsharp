@@ -91,3 +91,4 @@ Although currently the idea is selectively generate C# records based on the pres
 - `service`: rpc-style distributed (stateless) 'module'
 - `actor`: message based stateful object
 - `workflow`: stateful orchestration
+- `unittest`: a unit test file that is compiled into a separate assembly and can be run in unit test runners.

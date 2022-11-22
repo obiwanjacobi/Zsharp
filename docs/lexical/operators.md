@@ -41,9 +41,9 @@ In order of precedence (top is highest):
 
 | Operator | Description
 |--|--
-| Unary |
-| Binary |
-| Ternary |
+| Unary | Unary operators are always applied first
+| Binary | infix operators typically require `()`
+| Ternary | ternary operators are applied last.
 
 That means that an expression with multiple (binary) expressions **MUST** use `( )`
 to indicate the order of execution - unless the operators are all the same.
@@ -73,6 +73,7 @@ Arithmetic, bitwise and logical operators.
 | `=<` | IsLesserEqual | Smaller or Equal
 | `?` | AsBoolean | Boolean postfix
 | `? :` | - | Ternary Conditional (if-else) (don't like the `:` used for types everywhere else)
+| `? ;` | - | -alt- Ternary Conditional (if-else)
 | `and` | LogicAnd | Logical And
 | `or` | LogicOr | Logical Or
 | `xor` | LogicXor | Logical Xor
@@ -86,11 +87,12 @@ Arithmetic, bitwise and logical operators.
 | `>|` | - | Bitwise Rotate Right
 | `|<` | - | Bitwise Rotate Left
 | `->>` | - | sign extend (arithmetic) bit shift right
-| `>>>` | - | -or- sign extend (arithmetic) bit shift right
+| `>>>` | - | -alt- sign extend (arithmetic) bit shift right
 | `=` | - | Value Assignment
 | `:=` | - | Value Assignment with inferred Type
 
 > TBD: *) we could reuse the logical operators for use as bitwise operators as well.
+That also means that the bitwise short-hand operators (`&=`, `|=` or `^=`) no longer work.
 
 > Ternary operators cannot contain other ternary operators. No nesting of `? :` for readability.
 
@@ -99,9 +101,7 @@ Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `n
 More mathematic concepts as operators?
 PI (and other constants), rad, deg, vectors, matrix, infinity, sin, cos, tan (inv), rounding (floor, ceiling), medium, mean, average, factorial/permutation/combination, sum...
 
-Float and double comparison operators? Need a range. Operator for comparison range/accuracy?
-
-Operator that cascades the left value?
+Operator that cascades the left value? See C# pattern matching with `is`.
 So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`. See also [match expression](../expressions/match.md). Would also work with `if c in (42, 101)`.
 
 | Operator | Fn Name | Description
@@ -121,7 +121,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `...` | Spread operator
 | `,` | List Separator
 | `:` | (Sub)Type Specifier
-| `;` | Line break/separator
+| `;` | reserved
 | `< >` | Type Parameter
 | `( )` | Function / Tuple / Array/List initialization
 | `" "` | String Literal
@@ -242,13 +242,14 @@ Operators for strings and characters.
 | `=<~` | Case (and culture) insensitive lesser-than-or-equal - sorting.
 | `s[2..6]` | sub-string using `Range`.
 | `<+` | Concat a string.
-| `+` | alt - Concat a string.
+| `+` | alt - Concat a string?
 | `/<+` | Concat a string with path separator.
 | `x<+` | Concat a string with any (x) separator?
 
-## Float Operator Symbols
+## Comparison Operator with Margin Symbols
 
-Operators for floating point numbers.
+Operators for comparing numbers with a margin.
+Typically useful for floating point numbers.
 
 | Operator | Description
 |---|---
@@ -282,9 +283,9 @@ Operators for working with `Array<T>` and `List<T>` types.
 | `<+=` | alt - add item to array/list
 | `-=` | remove item from array/list
 | `<-=` | alt - remove item from array/list
-| `^=` | insert item into array/list
+| `^=` | insert item into array/list (front)
 | `&=` | add item to array/list/tree as a child
-| `|=` | insert item to array/list/tree as a child
+| `|=` | insert item to array/list/tree as a child (front)
 | `in` | test if item is in array/list (contains)
 | `not in` | test if item is not in array/list (not contains)
 | `/` | split in array with chunks/tuples of n
@@ -293,8 +294,6 @@ Operators for working with `Array<T>` and `List<T>` types.
 | `<+` | Concat an array to another.
 | `+` | alt - concat array?
 
-Using arithmetic operators hinders supporting array programming...
-
 ```csharp
 arr = (1, 2, 3, 4, 5)
 // add single item
@@ -302,6 +301,23 @@ arr += 6
 // remove multiple items
 arr -= (1, 3, 5)    // arr = (2, 4, 6)
 b = 4 in arr        // true
+```
+
+Using arithmetic operators for array item manipulation hinders future support of array programming where the operators are applied to the items within the array, not the array itself.
+So perhaps it would be more clear to reserve the common arithmetic operators for array programming and special adorned operators for array content manipulation.
+
+```csharp
+arr1 = (1, 2, 3, 4, 5)
+arr2 = (5, 4, 3, 2, 1)
+
+arr3 = arr1 + arr2
+// arr3 = (6, 6, 6, 6, 6)
+
+arr1 <+ 42      // arr1 = (1, 2, 3, 4, 5, 42)
+arr2 <^ 101     // arr2 = (101, 5, 4, 3, 2, 1)
+
+arr4 = arr1 + arr2
+// arr4 = (102, 7, 7, 7, 7, 43)
 ```
 
 ---
@@ -349,7 +365,8 @@ a += (x, y, z)
 
 ## Data Type Wrapper Conversion Assignment Operators
 
-Goal is to have a quick and easy way to convert from a normal data type `T` to one of the wrapper types (of T). Note the type-operator is on the right side of the equals sign.
+Goal is to have a quick and easy way to convert from a normal data type `T` to one of the wrapper types (of T).
+Note the type-operator is on the right side of the equals sign.
 
 | Operator | Description
 |---|---
@@ -389,6 +406,8 @@ fnAtom(imm =% a)
 > What if operators cause overflow (or underflow)? A bitwise shift `<<` can shift out bits - sort of the point. Does every operator determine for itself if overflow is a problem or is there a general principle?
 
 > What syntax to specifically use/call checked or unchecked operator implementations? How to ignore overflow?
+
+See `TBD` note at the top about checked, wrap around and saturate operators.
 
 ```csharp
 a = 42
@@ -433,6 +452,7 @@ Which operators will definitely not be overloadable?
 > TBD
 
 Implement operators by tagging regular functions with the operator signs.
+This seems to be the best way to also interop with normal .NET / C#.
 
 ```csharp
 // must follow the infix function rules.

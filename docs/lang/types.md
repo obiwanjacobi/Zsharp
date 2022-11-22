@@ -93,6 +93,12 @@ These map to respective .NET types:
 
 > TBD: Do we want an autoscaling `Int`eger type? (.NET `System.Numerics.BigInteger`)
 
+> TODO: Research where signed and unsigned integers should be used.
+
+Unsigned integers can never overflow, they can only wrap around. Do you still want an overflow exception in a checked context?
+
+Are sizes unsigned? Why is an index signed? Are there problems for signed integers?
+
 ### Floating Point
 
 The floating point data types are:

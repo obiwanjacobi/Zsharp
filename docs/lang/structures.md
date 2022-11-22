@@ -240,21 +240,17 @@ MyStruct2
     second: MyStruct1
 
 // in order
-v: MyStruct1 =
-    {
-        { 42, "42" },
-        { 101, "101" }
-    }
+v: MyStruct2 =
+    { 42, "42" }
+    { 101, "101" }
 
 // by name
-v: MyStruct1 =
-    {
-        first = { fld1 = 42, fld2 = "42" },
-        second = { fld1 = 101, fld2 = "101" }
-    }
+v: MyStruct2 =
+    first = { fld1 = 42, fld2 = "42" }
+    second = { fld1 = 101, fld2 = "101" }
 
 // structured by name
-v: MyStruct1 =
+v: MyStruct2 =
     first =
         fld1 = 42
         fld2 = "42"
@@ -285,6 +281,8 @@ y = a.Fld2  // Str
 // deconstruct - creates new vars
 (fld1, fld2) = a        // -or-
 fld1, fld2 = a
+fld1, fld2 = ...a       // spread operator?
+
 // build new tuple from vars
 b = { fld1, fld2 }
 
@@ -360,8 +358,17 @@ MapS1ToS2: Transform<Struct1, Struct2>
     #Struct2.fld1 = #Struct1.x
     #Struct2.fld2 = #Struct1.y
 
+// transform: <T: Transform<S, D>, S, D>(self: T, source: S): D
 s2 = MapS1ToS2.transform(s1)
+// reverseTransform: <T: Transform<S, D>, S, D>(self: T, source: D): S
 s1 = MapS1ToS2.reverseTransform(s2)
+
+// additive api: allows parameters to be passed to multiple transformations
+
+// transform: <T: Transform<S, D>, S, D>(self: T, source: S, destination: D)
+MapS1ToS2.transform(s1, s2)
+// reverseTransform: <T: Transform<S, D>, S, D>(self: T, source: D, destination: S)
+MapS1ToS2.reverseTransform(s2, s1)
 ```
 
 ```csharp

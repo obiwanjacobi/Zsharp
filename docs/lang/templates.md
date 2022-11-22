@@ -192,6 +192,18 @@ boundFn: <G, #T>(self: MyType<G, #T>)
     ...
 ```
 
+Can we get this to work also?
+
+```csharp
+transform: <T: Transform<S, D>, S, D>(self: T, source: S): D
+
+// from the specified 'T' the 'S' and 'D' types are inferred.
+
+t: Transform<Struct1, Struct2> = ...
+s1 = ...
+s2 = transform(t, s1)
+```
+
 ---
 
 ### Non-Type Template Parameters
@@ -306,6 +318,8 @@ t = TemplateType<Str>
 
 We really want to keep this as simple as possible.
 
+`.NET` does not support a variable number of generic type parameters.
+
 ---
 
 ## Template Alias
@@ -342,6 +356,7 @@ typedFn(true)       // specialization typedFn<Bool> called
 When all template parameters are specialized a concrete type or function is created that is used as a template instantiation.
 
 ---
+
 ### Partial Specialization
 
 Partial specialization means partly specifying the template parameters (not all of them). The result is another template.
@@ -385,11 +400,12 @@ Depending on our choice of how to represent Z# structs in .NET - which will prob
 
 ## Duck Typing
 
-As an example here's a template that requires the type to have a property `Name` but it does not matter what Type it is specifically. Dependencies in templates are not formalized but are deferred until actual compilation.
+As an example here's a template that requires the type to have a property `Name` but it does not matter what Type it is specifically.
+Dependencies in templates are not formalized but are deferred until actual compilation.
 
 ```csharp
 // template function
-GetNameFrom: <S>(self: S): Str
+GetNameFrom: <#S>(self: S): Str
     return self.Name
 
 MyStruct

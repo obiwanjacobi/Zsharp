@@ -79,7 +79,8 @@ _ = myFn(42)        // return value not used
 
 ```
 
-If an identifier starts with a `_` it is hidden from immediate public access. The field will be `internal` in .NET for an exported structure, otherwise it'll be private.
+If an identifier starts with a `_` it is hidden from immediate public access.
+The field will be `internal` in .NET for an exported structure, otherwise it'll be private.
 
 ```csharp
 MyStruct

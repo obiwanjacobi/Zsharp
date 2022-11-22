@@ -21,6 +21,9 @@ Reverse|-8|-7|-6|-5|-4|-3|-2|-1
 [0]         // first
 [-1]        // last
 [..-1]      // till one before end
+
+// TBD
+[3..=9]      // inclusive end?
 ```
 
 > Note negative values in ranges used for indexing arrays and lists, mean 'count backward from the end of the array'. Negative numbers in range expressions to generate number sequences mean literal negative numbers.
