@@ -269,6 +269,7 @@ internal sealed class IrBuilder
     {
         var parameters = Parameters(syntax.Parameters);
         var returnType = Type(syntax.ReturnType);
+
         //syntax.TypeParameters;
 
         var paramSymbols = parameters.Select(p => p.Symbol).ToArray();
