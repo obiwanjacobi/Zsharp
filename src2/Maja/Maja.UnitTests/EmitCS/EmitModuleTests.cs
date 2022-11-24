@@ -40,7 +40,7 @@ public class EmitModuleTests
             "x := 42" + Tokens.Eol
             ;
 
-        var emit = Emit.FromCode(code);
+        var emit = Emit.FromCode(code, _output);
         _output.WriteLine(emit);
 
         emit.Should().StartWith("namespace")

@@ -16,25 +16,26 @@ internal class CodeBuilder : IrWalker<object?>
     private readonly CSharpWriter _writer = new();
     private readonly Stack<Scope> _scopes = new();
 
-    private bool IsNamespaceScope
-        => _scopes.Count == 1;
-
     private bool IsModuleClassScope
-        => _scopes.Count == 2 && _scopes.Peek().Type is not null;
-    private CSharp.Type CurrentType
-        => _scopes.Peek().Type ?? throw new InvalidOperationException("Not a Type.");
-
+        => _scopes.Count == 2 && IsTypeScope;
+    private bool IsTypeScope
+        => _scopes.Peek().Type is not null;
     private bool IsFunctionScope
         => _scopes.Peek().Method is not null;
+    
+    private CSharp.Type CurrentType
+        => _scopes.Peek().Type ?? throw new InvalidOperationException("Not a Type.");
+    private CSharp.Method CurrentMethod
+        => _scopes.Peek().Method ?? throw new InvalidOperationException("Not a Method.");
 
     public override object? OnProgram(IrProgram program)
     {
         base.OnProgram(program);
-        _writer.CloseScope();   // namespace
-        _scopes.Pop();
+        _writer.CloseScope();
+        var ns = _scopes.Pop().Namespace;
 
         Debug.Assert(_scopes.Count == 0);
-        return null;
+        return ns;
     }
 
     public override object? OnModule(IrModule module)
@@ -82,7 +83,7 @@ internal class CodeBuilder : IrWalker<object?>
         return null;
     }
 
-    public override object OnVariableDeclaration(IrVariableDeclaration variable)
+    public override object? OnVariableDeclaration(IrVariableDeclaration variable)
     {
         var netType = MajaTypeMapper.MapToDotNetType(variable.TypeSymbol);
         
@@ -134,7 +135,7 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnExpressionLiteral(IrExpressionLiteral expression)
     {
-        _writer.Write(expression.ConstantValue!.Value?.ToString());
+        _writer.Write(expression.ConstantValue!.Value.ToString());
         return null;
     }
 

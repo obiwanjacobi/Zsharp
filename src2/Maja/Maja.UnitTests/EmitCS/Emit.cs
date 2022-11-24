@@ -3,16 +3,23 @@ using System.Runtime.CompilerServices;
 using Maja.Compiler.EmitCS;
 using Maja.Compiler.EmmitCS.CSharp.Project;
 using Maja.UnitTests.IR;
+using Xunit.Abstractions;
 
 namespace Maja.UnitTests.EmitCS;
 
 internal static class Emit
 {
-    public static string FromCode(string code)
+    public static string FromCode(string code, ITestOutputHelper? output = null)
     {
         var program = Ir.Build(code);
         var builder = new CodeBuilder();
-        builder.OnProgram(program);
+        var ns = builder.OnProgram(program);
+        if (output is not null)
+        {
+            var dump = ObjectDumper.Dump(ns);
+            output.WriteLine(dump);
+            output.WriteLine("");
+        }
         return builder.ToString();
     }
 

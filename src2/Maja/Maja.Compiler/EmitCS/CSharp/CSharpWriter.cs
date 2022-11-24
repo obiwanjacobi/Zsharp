@@ -74,7 +74,7 @@ internal sealed class CSharpWriter
             .Append(name);
     }
 
-    public void Write(string text)
+    public void Write(string? text)
         => _writer.Append(text);
 
     public void CloseScope()
