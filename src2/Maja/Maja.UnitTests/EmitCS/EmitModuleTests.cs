@@ -33,6 +33,26 @@ public class EmitModuleTests
     }
 
     [Fact]
+    public void ModuleInit()
+    {
+        const string code =
+            "mod qualified.name" + Tokens.Eol + 
+            "x := 42" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should().StartWith("namespace")
+            .And.Contain("qualified")
+            .And.Contain("class")
+            .And.Contain("static")
+            .And.Contain("name")
+            .And.Contain("x")
+            ;
+    }
+
+    [Fact]
     public void ModuleBuild()
     {
         const string code =
@@ -43,6 +63,7 @@ public class EmitModuleTests
         var output = Emit.Build(emit);
         _output.WriteLine(output);
 
-        output.Should().NotBeNullOrEmpty();
+        output.Should().NotBeNullOrEmpty()
+            .And.NotContain("ERROR");
     }
 }

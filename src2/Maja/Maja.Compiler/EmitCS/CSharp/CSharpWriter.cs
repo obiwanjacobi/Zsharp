@@ -67,11 +67,15 @@ internal sealed class CSharpWriter
         OpenScope();
     }
 
-    public void OpenScope()
+    public void WriteVariable(string? netType, string name)
     {
-        Tab().Append(OpenScopeChar).AppendLine();
-        _indent++;
+        Tab().Append(netType is null ? "var" : netType)
+            .Append(SpaceChar)
+            .Append(name);
     }
+
+    public void Write(string text)
+        => _writer.Append(text);
 
     public void CloseScope()
     {
@@ -82,6 +86,11 @@ internal sealed class CSharpWriter
     public void Using(string usingName)
         => Tab().Append("using ").Append(usingName).Append(SemiColonChar);
 
+    public void Semicolon()
+        => _writer.Append(SemiColonChar).AppendLine();
+    public void Assignment()
+        => _writer.Append(" = ");
+
     public override string ToString()
         => _writer.ToString();
 
@@ -89,4 +98,10 @@ internal sealed class CSharpWriter
         => _writer.Append(new String(SpaceChar, _indent * SpacesPerTab));
     private StringBuilder Newline()
         => _writer.AppendLine();
+
+    private void OpenScope()
+    {
+        Tab().Append(OpenScopeChar).AppendLine();
+        _indent++;
+    }
 }

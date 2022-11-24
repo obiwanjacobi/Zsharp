@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Maja.Compiler.EmitCS.CSharp;
+using Maja.Compiler.External;
 using Maja.Compiler.IR;
 
 namespace Maja.Compiler.EmitCS;
@@ -14,7 +16,18 @@ internal class CodeBuilder : IrWalker<object?>
     private readonly CSharpWriter _writer = new();
     private readonly Stack<Scope> _scopes = new();
 
-    public override object OnProgram(IrProgram program)
+    private bool IsNamespaceScope
+        => _scopes.Count == 1;
+
+    private bool IsModuleClassScope
+        => _scopes.Count == 2 && _scopes.Peek().Type is not null;
+    private CSharp.Type CurrentType
+        => _scopes.Peek().Type ?? throw new InvalidOperationException("Not a Type.");
+
+    private bool IsFunctionScope
+        => _scopes.Peek().Method is not null;
+
+    public override object? OnProgram(IrProgram program)
     {
         base.OnProgram(program);
         _writer.CloseScope();   // namespace
@@ -66,6 +79,62 @@ internal class CodeBuilder : IrWalker<object?>
     public override object? OnImport(IrImport import)
     {
         _writer.Using(import.SymbolName.FullName);
+        return null;
+    }
+
+    public override object OnVariableDeclaration(IrVariableDeclaration variable)
+    {
+        var netType = MajaTypeMapper.MapToDotNetType(variable.TypeSymbol);
+        
+        if (IsModuleClassScope)
+        {
+            var field = CSharpFactory.CreateField(variable.Symbol.Name.Value, netType);
+            CurrentType.AddField(field);
+        }
+
+        _writer.WriteVariable(netType, variable.Symbol.Name.Value);
+        var init = variable.Initializer;
+        if (init != null)
+        {
+            _writer.Assignment();
+            OnExpression(init);
+        }
+        _writer.Semicolon();
+
+        return null;
+    }
+
+    public override object? OnOperatorBinary(IrBinaryOperator op)
+    {
+        var netOperator = op.Kind switch
+        {
+            IrBinaryOperatorKind.Add => "+",
+            IrBinaryOperatorKind.And => "and",
+            IrBinaryOperatorKind.BitwiseAnd => "&&",
+            IrBinaryOperatorKind.BitwiseOr => "||",
+            IrBinaryOperatorKind.BitwiseShiftLeft => "<<",
+            IrBinaryOperatorKind.BitwiseShiftRight => ">>",
+            IrBinaryOperatorKind.BitwiseXor => "^",
+            IrBinaryOperatorKind.Divide => "/",
+            IrBinaryOperatorKind.Equals => "==",
+            IrBinaryOperatorKind.Greater => ">",
+            IrBinaryOperatorKind.GreaterOrEquals => ">=",
+            IrBinaryOperatorKind.Lesser => "<",
+            IrBinaryOperatorKind.LesserOrEquals => "<=",
+            IrBinaryOperatorKind.Modulo => "%",
+            IrBinaryOperatorKind.Multiply => "*",
+            IrBinaryOperatorKind.NotEquals => "!=",
+            IrBinaryOperatorKind.Or => "or",
+            IrBinaryOperatorKind.Subtract => "-",
+            _ => throw new NotSupportedException($"Binary Operator '{op.Kind}' is not supported.")
+        };
+        _writer.Write(netOperator);
+        return null;
+    }
+
+    public override object? OnExpressionLiteral(IrExpressionLiteral expression)
+    {
+        _writer.Write(expression.ConstantValue!.Value?.ToString());
         return null;
     }
 

@@ -25,5 +25,13 @@ internal static class CSharpFactory
             MethodModifiers = MethodModifiers.Static
         };
 
+    public static Field CreateField(string name, string typeName)
+        => new Field(name, typeName)
+        {
+            AccessModifiers = AccessModifiers.Private,
+            FieldModifiers = FieldModifiers.Static
+        };
+
+    
 
 }
