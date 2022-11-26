@@ -83,6 +83,33 @@ internal class CodeBuilder : IrWalker<object?>
         return null;
     }
 
+    public override object? OnFunctionDeclaration(IrFunctionDeclaration function)
+    {
+        var netType = MajaTypeMapper.MapToDotNetType(function.ReturnType.Symbol);
+        var method = CSharpFactory.CreateMethod(
+            function.Symbol.Name.Value,  netType);
+        CurrentType.AddMethod(method);
+
+        // TODO: is export?
+
+        _writer.StartMethod(method);
+        var result = OnParameters(function.Parameters);
+        _writer.OpenMethodBody();
+        result = AggregateResult(result, OnCodeBlock(function.Body));
+        _writer.CloseScope();
+        return result;
+    }
+
+    public override object? OnParameter(IrParameter parameter)
+    {
+        var netType = MajaTypeMapper.MapToDotNetType(parameter.Type.Symbol);
+        var p = CSharpFactory.CreateParameter(parameter.Symbol.Name.Value, netType);
+        CurrentMethod.AddParameter(p);
+
+        _writer.WriteParameter(p);
+        return null;
+    }
+
     public override object? OnVariableDeclaration(IrVariableDeclaration variable)
     {
         var netType = MajaTypeMapper.MapToDotNetType(variable.TypeSymbol);
@@ -94,15 +121,24 @@ internal class CodeBuilder : IrWalker<object?>
         }
 
         _writer.WriteVariable(netType, variable.Symbol.Name.Value);
+        var result = Default;
         var init = variable.Initializer;
         if (init != null)
         {
             _writer.Assignment();
-            OnExpression(init);
+            result = OnExpression(init);
         }
-        _writer.Semicolon();
+        _writer.EndOfLine();
 
-        return null;
+        return result;
+    }
+
+    public override object? OnStatementReturn(IrStatementReturn statement)
+    {
+        _writer.WriteReturn();
+        var result = OnOptionalExpression(Default, statement.Expression);
+        _writer.EndOfLine();
+        return result;
     }
 
     public override object? OnOperatorBinary(IrBinaryOperator op)

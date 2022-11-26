@@ -58,8 +58,15 @@ internal sealed class CSharpWriter
             .Append('(');
     }
 
-    public string Parameter(Parameter parameter)
-        => $"{parameter.TypeName} {parameter.Name}";
+    public void WriteParameter(Parameter parameter, string? defaultValue = null)
+    {
+        _writer.Append(parameter.TypeName)
+            .Append(SpaceChar)
+            .Append(parameter.Name);
+
+        if (!String.IsNullOrEmpty(defaultValue))
+            _writer.Append("=").Append(defaultValue);
+    }
 
     public void OpenMethodBody()
     {
@@ -74,6 +81,9 @@ internal sealed class CSharpWriter
             .Append(name);
     }
 
+    public void WriteReturn()
+        => Tab().Append("return ");
+
     public void Write(string? text)
         => _writer.Append(text);
 
@@ -86,7 +96,7 @@ internal sealed class CSharpWriter
     public void Using(string usingName)
         => Tab().Append("using ").Append(usingName).Append(SemiColonChar);
 
-    public void Semicolon()
+    public void EndOfLine()
         => _writer.Append(SemiColonChar).AppendLine();
     public void Assignment()
         => _writer.Append(" = ");

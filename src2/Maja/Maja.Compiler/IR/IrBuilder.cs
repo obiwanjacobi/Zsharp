@@ -59,7 +59,7 @@ internal sealed class IrBuilder
         else
         {
             syn = syntax;
-            name = new SymbolName("default");
+            name = new SymbolName("root");
         }
 
         var symbol = new ModuleSymbol(name);
@@ -268,14 +268,14 @@ internal sealed class IrBuilder
     private IrFunctionDeclaration FunctionDeclaration(FunctionDeclarationSyntax syntax)
     {
         var parameters = Parameters(syntax.Parameters);
-        var returnType = Type(syntax.ReturnType);
+        var returnType = Type(syntax.ReturnType) ?? IrType.Void;
 
         //syntax.TypeParameters;
 
         var paramSymbols = parameters.Select(p => p.Symbol).ToArray();
         var ns = CurrentScope.FullName;
         var name = new SymbolName(ns, syntax.Identifier.Text);
-        var symbol = new FunctionSymbol(name, paramSymbols, returnType?.Symbol);
+        var symbol = new FunctionSymbol(name, paramSymbols, returnType.Symbol);
         if (!CurrentScope.TryDeclareFunction(symbol))
         {
             _diagnostics.FunctionAlreadyDelcared(syntax.Location, symbol.Name.FullName);

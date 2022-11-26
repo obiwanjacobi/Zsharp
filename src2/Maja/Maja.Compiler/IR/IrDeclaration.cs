@@ -15,7 +15,7 @@ internal abstract class IrDeclaration : IrNode
 internal sealed class IrFunctionDeclaration : IrDeclaration
 {
     public IrFunctionDeclaration(FunctionDeclarationSyntax syntax, FunctionSymbol symbol,
-        IEnumerable<IrParameter> parameters, IrType? returnType, IrScope scope, IrCodeBlock codeBlock)
+        IEnumerable<IrParameter> parameters, IrType returnType, IrScope scope, IrCodeBlock codeBlock)
         : base(syntax)
     {
         Parameters = parameters.ToImmutableArray();
@@ -27,7 +27,7 @@ internal sealed class IrFunctionDeclaration : IrDeclaration
 
     public FunctionSymbol Symbol { get; }
     public ImmutableArray<IrParameter> Parameters { get; }
-    public IrType? ReturnType { get; }
+    public IrType ReturnType { get; }
     public IrCodeBlock Body { get; }
     public IrScope Scope { get; }
 

@@ -15,4 +15,8 @@ internal sealed class IrType : IrNode
 
     public new TypeSyntax Syntax
         => (TypeSyntax)base.Syntax;
+
+    private static readonly IrType _void = new(new TypeSyntax("void"), TypeSymbol.Void);
+    public static IrType Void
+        => _void;
 }

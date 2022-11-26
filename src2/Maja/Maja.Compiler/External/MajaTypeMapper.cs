@@ -36,40 +36,41 @@ internal static class MajaTypeMapper
         return majaType;
     }
 
-    public static string? MapToDotNetType(TypeSymbol majaType)
+    public static string MapToDotNetType(TypeSymbol majaType)
     {
         if (majaType == TypeSymbol.Bool)
-            return typeof(bool).FullName;
+            return typeof(bool).FullName!;
         else if (majaType == TypeSymbol.U8)
-            return typeof(byte).FullName;
+            return typeof(byte).FullName!;
         else if (majaType == TypeSymbol.I8)
-            return typeof(sbyte).FullName;
+            return typeof(sbyte).FullName!;
         else if (majaType == TypeSymbol.U16)
-            return typeof(ushort).FullName;
+            return typeof(ushort).FullName!;
         else if (majaType == TypeSymbol.I16)
-            return typeof(short).FullName;
+            return typeof(short).FullName!;
         else if (majaType == TypeSymbol.U32)
-            return typeof(uint).FullName;
+            return typeof(uint).FullName!;
         else if (majaType == TypeSymbol.I32)
-            return typeof(int).FullName;
+            return typeof(int).FullName!;
         else if (majaType == TypeSymbol.U64)
-            return typeof(ulong).FullName;
+            return typeof(ulong).FullName!;
         else if (majaType == TypeSymbol.I64)
-            return typeof(long).FullName;
+            return typeof(long).FullName!;
         else if (majaType == TypeSymbol.C16)
-            return typeof(char).FullName;
+            return typeof(char).FullName!;
         else if (majaType == TypeSymbol.Str)
-            return typeof(string).FullName;
+            return typeof(string).FullName!;
         else if (majaType == TypeSymbol.F16)
-            return typeof(Half).FullName;
+            return typeof(Half).FullName!;
         else if (majaType == TypeSymbol.F32)
-            return typeof(float).FullName;
+            return typeof(float).FullName!;
         else if (majaType == TypeSymbol.F64)
-            return typeof(double).FullName;
+            return typeof(double).FullName!;
         else if (majaType == TypeSymbol.F96)
-            return typeof(decimal).FullName;
+            return typeof(decimal).FullName!;
         else if (majaType == TypeSymbol.Void)
-            return typeof(void).FullName;
-        return null;
+            return typeof(void).FullName!;
+        
+        return majaType.Name.FullName;
     }
 }

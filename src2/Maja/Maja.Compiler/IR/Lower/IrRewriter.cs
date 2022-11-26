@@ -87,7 +87,7 @@ internal abstract class IrRewriter
     protected virtual IrFunctionDeclaration RewriteFunctionDeclaration(IrFunctionDeclaration function)
     {
         var parameters = RewriteParameters(function.Parameters);
-        var retType = RewriteType(function.ReturnType);
+        var retType = RewriteType(function.ReturnType) ?? IrType.Void;
         var body = RewriteCodeBlock(function.Body);
 
         if (parameters == function.Parameters &&
