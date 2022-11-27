@@ -40,7 +40,7 @@ internal static class CSharpFactory
         => new(name, typeName);
 
     public static Field CreateField(string name, string typeName)
-        => new Field(name, typeName)
+        => new(name, typeName)
         {
             AccessModifiers = AccessModifiers.Private,
             FieldModifiers = FieldModifiers.Static

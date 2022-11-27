@@ -46,6 +46,7 @@ public enum SyntaxKind
     StatementElse = 4002,
     StatementElseIf = 4003,
     StatementReturn = 4004,
+    StatementAssignment = 4005,
 
     NameIdentifier = 5000,
     QualifiedNameIdentifier = 5001,

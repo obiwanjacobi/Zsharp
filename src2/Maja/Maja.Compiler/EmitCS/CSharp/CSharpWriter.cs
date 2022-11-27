@@ -74,11 +74,28 @@ internal sealed class CSharpWriter
         OpenScope();
     }
 
+    public void StartField(Field field)
+    {
+        Tab().Append(field.AccessModifiers.ToCode())
+            .Append(SpaceChar)
+            .Append(field.FieldModifiers.ToCode())
+            .Append(SpaceChar)
+            .Append(field.TypeName)
+            .Append(SpaceChar)
+            .Append(field.Name);
+    }
+
     public void WriteVariable(string? netType, string name)
     {
         Tab().Append(netType is null ? "var" : netType)
             .Append(SpaceChar)
             .Append(name);
+    }
+
+    public void StartAssignment(string name)
+    {
+        Tab().Append(name)
+            .Append(" = ");
     }
 
     public void WriteReturn()

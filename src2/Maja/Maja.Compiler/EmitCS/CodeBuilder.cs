@@ -118,9 +118,13 @@ internal class CodeBuilder : IrWalker<object?>
         {
             var field = CSharpFactory.CreateField(variable.Symbol.Name.Value, netType);
             CurrentType.AddField(field);
+            _writer.StartField(field);
+        }
+        else
+        { 
+            _writer.WriteVariable(netType, variable.Symbol.Name.Value);
         }
 
-        _writer.WriteVariable(netType, variable.Symbol.Name.Value);
         var result = Default;
         var init = variable.Initializer;
         if (init != null)
@@ -130,6 +134,14 @@ internal class CodeBuilder : IrWalker<object?>
         }
         _writer.EndOfLine();
 
+        return result;
+    }
+
+    public override object? OnStatementAssignment(IrStatementAssignment statement)
+    {
+        _writer.StartAssignment(statement.Symbol.Name.FullName);
+        var result = OnExpression(statement.Expression);
+        _writer.EndOfLine();
         return result;
     }
 

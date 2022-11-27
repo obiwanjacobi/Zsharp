@@ -50,12 +50,9 @@ public class ExpressionTests
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(1);
-        var expr = program.Root.Declarations[0].As<IrFunctionDeclaration>()
-            .Body.Statements[0].As<IrStatementExpression>()
-            .Expression.As<IrExpressionBinary>();
-        var left = expr.Left.As<IrExpressionIdentifier>();
-        left.IsDiscard.Should().BeTrue();
-        var right = expr.Right.As<IrExpressionLiteral>();
-        right.ConstantValue!.Value.Should().Be(42);
+        var stat = program.Root.Declarations[0].As<IrFunctionDeclaration>()
+            .Body.Statements[0].As<IrStatementAssignment>();
+        stat.Symbol.Should().BeOfType<DiscardSymbol>();
+        stat.Expression.As<IrExpressionLiteral>().ConstantValue!.Value.Should().Be(42);
     }
 }

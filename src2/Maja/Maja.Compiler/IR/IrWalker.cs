@@ -138,6 +138,7 @@ internal abstract class IrWalker<R>
         {
             return statement switch
             {
+                IrStatementAssignment statAss => OnStatementAssignment(statAss),
                 IrStatementExpression statExpr => OnStatementExpression(statExpr),
                 IrStatementIf statIf => OnStatementIf(statIf),
                 IrStatementLoop statLoop => OnStatementLoop(statLoop),
@@ -146,6 +147,10 @@ internal abstract class IrWalker<R>
             };
         })
             .Aggregate(Default, AggregateResult);
+
+    public virtual R OnStatementAssignment(IrStatementAssignment statement)
+        => OnExpression(statement.Expression);
+
     public virtual R OnStatementIf(IrStatementIf statement)
     {
         var result = OnExpression(statement.Condition);

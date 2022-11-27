@@ -73,12 +73,9 @@ public class VariableTests
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Statements.Should().HaveCount(1);
-        var expr = program.Root.Statements[0].As<IrStatementExpression>()
-            .Expression.As<IrExpressionBinary>();
-        var left = expr.Left.As<IrExpressionIdentifier>();
-        left.Symbol.Name.Value.Should().Be("x");
-        var right = expr.Right.As<IrExpressionLiteral>();
-        right.ConstantValue!.Value.Should().Be(42);
+        var stat = program.Root.Statements[0].As<IrStatementAssignment>();
+        stat.Symbol.Name.Value.Should().Be("x");
+        stat.Expression.As<IrExpressionLiteral>().ConstantValue!.Value.Should().Be(42);
     }
 
     [Fact]

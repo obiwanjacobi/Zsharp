@@ -55,4 +55,25 @@ public class VariableSyntaxTests
         v.Name.Text.Should().Be("x");
         v.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
     }
+
+    [Fact]
+    public void VarAssignment()
+    {
+        const string code =
+            "x: U8" + Tokens.Eol +
+            "x = 42" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        
+        var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
+        v.Name.Text.Should().Be("x");
+        v.Type.Name.Text.Should().Be("U8");
+
+        result.Statements.Should().HaveCount(1);
+        var stat = result.Statements.First().As<StatementAssignmentSyntax>();
+        stat.Name.Text.Should().Be("x");
+        stat.Expression.As<ExpressionLiteralSyntax>().Text.Should().Be("42");
+    }
 }

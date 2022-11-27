@@ -313,6 +313,7 @@ internal sealed class IrBuilder
         {
             IrStatement irStat = stat switch
             {
+                StatementAssignmentSyntax sa => StatementAssignment(sa),
                 StatementIfSyntax ifs => StatementIf(ifs),
                 StatementReturnSyntax ret => StatementReturn(ret),
                 StatementExpressionSyntax ses => StatementExpression(ses),
@@ -323,6 +324,24 @@ internal sealed class IrBuilder
         }
 
         return irStats;
+    }
+
+    private IrStatementAssignment StatementAssignment(StatementAssignmentSyntax syntax)
+    {
+        var expr = Expression(syntax.Expression);
+
+        VariableSymbol symbol;
+        if (DiscardSymbol.IsDiscard(syntax.Name.Text))
+        {
+            symbol = new DiscardSymbol();
+        }
+        else
+        {
+            var name = new SymbolName(syntax.Name.Text);
+            symbol = new VariableSymbol(name, expr.TypeSymbol);
+        }
+
+        return new IrStatementAssignment(syntax, symbol, expr);
     }
 
     private IrStatementExpression StatementExpression(StatementExpressionSyntax syntax)
@@ -398,20 +417,12 @@ internal sealed class IrBuilder
 
     private IrExpressionIdentifier IdentifierExpression(ExpressionIdentifierSyntax syntax)
     {
-        VariableSymbol? symbol;
-        if (DiscardSymbol.IsDiscard(syntax.Name.Text))
+        var name = new SymbolName(syntax.Name.Text);
+        if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out var symbol))
         {
-            symbol = new DiscardSymbol();
-        }
-        else
-        {
-            var name = new SymbolName(syntax.Name.Text);
-            if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out symbol))
-            {
-                _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
+            _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
 
-                symbol = new VariableSymbol(name, TypeSymbol.Unknown);
-            }
+            symbol = new VariableSymbol(name, TypeSymbol.Unknown);
         }
 
         var type = symbol.Type ?? TypeSymbol.Unknown;

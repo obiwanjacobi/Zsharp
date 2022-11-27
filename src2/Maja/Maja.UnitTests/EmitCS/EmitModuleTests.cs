@@ -33,7 +33,7 @@ public class EmitModuleTests
     }
 
     [Fact]
-    public void ModuleInit()
+    public void ModuleField()
     {
         const string code =
             "mod qualified.name" + Tokens.Eol + 
@@ -49,6 +49,27 @@ public class EmitModuleTests
             .And.Contain("static")
             .And.Contain("name")
             .And.Contain("x")
+            ;
+    }
+
+    [Fact]
+    public void ModuleFieldInit()
+    {
+        const string code =
+            "mod qualified.name" + Tokens.Eol +
+            "x: U8" + Tokens.Eol +
+            "x = 42" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code, _output);
+        _output.WriteLine(emit);
+
+        emit.Should().StartWith("namespace")
+            .And.Contain("qualified")
+            .And.Contain("class")
+            .And.Contain("static")
+            .And.Contain("name")
+            .And.Contain("x = 42;")
             ;
     }
 

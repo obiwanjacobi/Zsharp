@@ -685,12 +685,6 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             ExpressionOperatorCardinality.Unary,
             base.VisitExpressionOperatorBitsUnaryPrefix, context);
 
-    public override SyntaxNodeOrToken[] VisitExpressionOperatorAssignment(ExpressionOperatorAssignmentContext context)
-        => CreateOperator(
-            ExpressionOperatorCategory.Assignment,
-            ExpressionOperatorCardinality.Unary,
-            base.VisitExpressionOperatorAssignment, context);
-
     public override SyntaxNodeOrToken[] VisitExpressionOperatorComparison(ExpressionOperatorComparisonContext context)
         => CreateOperator(
             ExpressionOperatorCategory.Comparison,
@@ -744,6 +738,20 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     //
     // Statements
     //
+
+    public override SyntaxNodeOrToken[] VisitStatementAssignment(StatementAssignmentContext context)
+    {
+        var children = Children(base.VisitStatementAssignment, context);
+
+        return new[] { new SyntaxNodeOrToken(
+            new StatementAssignmentSyntax(context.GetText())
+        {
+            Location = Location(context),
+            Children = children.All,
+            ChildNodes = children.Nodes,
+            TrailingTokens = children.Tokens
+        } )};
+    }
 
     public override SyntaxNodeOrToken[] VisitStatementIf(StatementIfContext context)
     {

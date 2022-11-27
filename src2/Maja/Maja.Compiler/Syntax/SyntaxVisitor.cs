@@ -34,6 +34,7 @@ public interface ISyntaxVisitor<R>
     R OnVariableDeclarationTyped(VariableDeclarationTypedSyntax node);
     R OnVariableDeclarationInferred(VariableDeclarationInferredSyntax node);
 
+    R OnStatementAssignment(StatementAssignmentSyntax node);
     R OnStatementIf(StatementIfSyntax node);
     R OnStatementElseIf(StatementElseIfSyntax node);
     R OnStatementElse(StatementElseSyntax node);
@@ -136,6 +137,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnVariableDeclarationTyped(VariableDeclarationTypedSyntax node)
         => VisitChildren(node);
     public virtual R OnVariableDeclarationInferred(VariableDeclarationInferredSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnStatementAssignment(StatementAssignmentSyntax node)
         => VisitChildren(node);
 
     public virtual R OnStatementIf(StatementIfSyntax node)

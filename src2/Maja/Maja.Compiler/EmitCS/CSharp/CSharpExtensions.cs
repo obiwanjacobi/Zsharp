@@ -26,6 +26,14 @@ internal static class CSharpExtensions
             _ => String.Empty
         };
 
+    public static string ToCode(this FieldModifiers modifier)
+        => modifier switch
+        {
+            FieldModifiers.Static => "static",
+            FieldModifiers.ReadOnly => "readonly",
+            _ => String.Empty
+        };
+
     public static string ToCode(this MethodModifiers modifier)
         => modifier switch
         {

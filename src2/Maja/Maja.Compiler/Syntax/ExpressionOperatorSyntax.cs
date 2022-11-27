@@ -53,12 +53,6 @@ internal static class ExpressionOperatorMap
                     MajaLexer.Root => ExpressionOperatorKind.Root,
                     _ => ExpressionOperatorKind.Unknown
                 },
-            ExpressionOperatorCategory.Assignment =>
-                tokenTypeId switch
-                {
-                    MajaLexer.Eq => ExpressionOperatorKind.Assignment,
-                    _ => ExpressionOperatorKind.Unknown
-                },
             ExpressionOperatorCategory.Bitwise =>
                 tokenTypeId switch
                 {

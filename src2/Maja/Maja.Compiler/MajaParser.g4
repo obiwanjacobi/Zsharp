@@ -10,12 +10,13 @@ directiveUse: Use freeSpace nameQualifiedList;
 codeBlock: (statement | declarationMembers | newline)+;
 declarationMembers: declarationFunction | declarationType | declarationVariable;
 
-statement: statementFlow | statementExpression;
+statement: statementFlow | statementAssignment | statementExpression;
 statementFlow: statementRet | statementIf;
 statementIf: If Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;
 statementElse: Else newline Indent codeBlock Dedent;
 statementElseIf: (Else freeSpace If | Elif) Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;
 statementRet: Ret (Sp expression)?;
+statementAssignment: nameIdentifier Sp Eq Sp expression;
 statementExpression: expression;
 
 declarationFunction: nameIdentifier Colon freeSpace typeParameterList? parameterList (Colon Sp type)? newline Indent codeBlock Dedent;
@@ -78,7 +79,6 @@ expressionOperatorLogicUnaryPrefix: <assoc=right> Not;
 expressionOperatorComparison: Eq | Neq | AngleClose | AngleOpen | GtEq | LtEq;
 expressionOperatorBits: BitAnd | BitOr | BitXor_Imm | BitShiftL | AngleClose? AngleClose AngleClose | BitRollL | BitRollR;
 expressionOperatorBitsUnaryPrefix: <assoc=right> BitNot;
-expressionOperatorAssignment: <assoc=right> Eq;
 
 expressionLiteralBool: True | False;
 expressionLiteral: number | string;

@@ -3,8 +3,6 @@
 public enum ExpressionOperatorKind
 {
     Unknown,
-    // assignment
-    Assignment,
     // arithmetic
     Plus,
     Minus,
@@ -46,8 +44,7 @@ public enum ExpressionOperatorCategory
     Arithmetic,
     Logic,
     Comparison,
-    Bitwise,
-    Assignment
+    Bitwise
 }
 
 public enum ExpressionOperatorCardinality

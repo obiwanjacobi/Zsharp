@@ -23,7 +23,7 @@ public class FunctionTests
         fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().BeEmpty();
-        fn.ReturnType.Should().BeNull();
+        fn.ReturnType.Symbol.Should().Be(TypeSymbol.Void);
         // scope
         fn.Scope.Symbols.Should().BeEmpty();
         // symbol
@@ -74,7 +74,7 @@ public class FunctionTests
         program.Diagnostics.Should().HaveCount(1);
         var err = program.Diagnostics[0];
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
-        err.Text.Should().Contain("Function 'default.fn' is already declared.");
+        err.Text.Should().Contain("Function 'root.fn' is already declared.");
     }
 
     [Fact]
