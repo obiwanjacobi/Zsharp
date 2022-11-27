@@ -16,7 +16,7 @@ public abstract class SyntaxToken
     public const string Separator = ".";
     public const string Discard = "_";
 
-    internal SyntaxToken(string text)
+    protected SyntaxToken(string text)
     {
         Text = text;
     }
@@ -31,7 +31,7 @@ public abstract class SyntaxToken
         internal set
         {
             Debug.Assert(value is not null, "Cannot clear a SyntaxToken.Parent with null.");
-            Debug.Assert(_parent is null, "SyntaxToken.Parent is already set.");
+            Debug.Assert(_parent is null || _parent == value, "SyntaxToken.Parent is already set.");
             _parent = value;
         }
     }

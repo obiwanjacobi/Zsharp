@@ -4,9 +4,7 @@
 
 [ ] SyntaxNode: DescendentNodes, AncestorsAndSelf, AncestorOrSelf etc.
 [ ] ErrorNode: Use context info to built better error message.
-[ ] 'if true' places the 'if' token at the ExpressionLiteralBoolSyntax node.
 [ ] VarDeclTyped+init: init expression type is not the same as var type.
-[ ] BinaryExpression precedence check not executed. Check in Syntax or Ir?
 
 ### Done
 [x] Parser: Error handling: MissingTokens, SkippedTokens
@@ -20,6 +18,8 @@ Made SyntaxNodeOrToken public and added SyntaxNodeOrTokenList.
 [x] Syntax: Else /ElseIf is not a statement. Should not derive from Statement base.
 [x] Syntax: Now records. Use class for ref-equality? /bc immutable state
 [x] TypeSymbol: add enums, fields and rules symbols
+[x] BinaryExpression precedence check not executed. Check in Syntax.
+[x] 'if true' places the 'if' token at the ExpressionLiteralBoolSyntax node.
 
 ## Descisions
 

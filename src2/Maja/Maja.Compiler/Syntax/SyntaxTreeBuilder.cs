@@ -63,6 +63,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         var children = visitChildren(context);
         var childNodes = new List<SyntaxNode>();
         var tokens = new List<SyntaxToken>();
+        var leadingTokens = new List<SyntaxToken>();
         SyntaxNode? lastNode = null;
         WhitespaceToken? lastWhitespace = null;
 
@@ -75,7 +76,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
                 {
                     if (lastWhitespace is not null)
                     {
-                        tokens.Remove(lastWhitespace);
+                        _ = tokens.Remove(lastWhitespace);
 
                         lastWhitespace = lastWhitespace.Append(whitespace);
                         token = lastWhitespace;
@@ -86,12 +87,12 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
 
                 tokens.Add(token);
             }
-            if (child.Node is SyntaxNode node)
+            else if (child.Node is SyntaxNode node)
             {
                 if (tokens.Count > 0)
                 {
                     if (lastNode is null)
-                        node.LeadingTokens = SyntaxTokenList.New(tokens);
+                        leadingTokens.AddRange(tokens);
                     else
                         lastNode.TrailingTokens = SyntaxTokenList.New(tokens);
                     tokens.Clear();
@@ -103,11 +104,15 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
 
         if (lastNode is not null && tokens.Count > 0)
         {
-            lastNode.TrailingTokens = SyntaxTokenList.New(tokens);
+            lastNode.TrailingTokens = lastNode.HasTrailingTokens
+                ? SyntaxTokenList.New(
+                    lastNode.TrailingTokens.Concat(tokens).ToList())
+                : SyntaxTokenList.New(tokens);
             tokens.Clear();
         }
 
-        return new ChildrenLists(children, childNodes, tokens);
+        return new ChildrenLists(children, childNodes, 
+            leadingTokens.Concat(tokens).ToList());
     }
 
     public override SyntaxNodeOrToken[] VisitTerminal(ITerminalNode node)
