@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Maja.Compiler.EmitCS.CSharp;
@@ -13,10 +14,12 @@ internal sealed class CSharpWriter
 
     private readonly StringBuilder _writer = new();
     private int _indent;
+    private string _tab;
 
     public CSharpWriter(int indent = 0)
     {
         _indent = indent;
+        _tab = new String(SpaceChar, _indent * SpacesPerTab);
     }
 
     public void StartNamespace(string namespaceName)
@@ -106,7 +109,7 @@ internal sealed class CSharpWriter
 
     public void CloseScope()
     {
-        _indent--;
+        Dedent();
         Tab().Append(CloseScopeChar).AppendLine();
     }
 
@@ -122,13 +125,24 @@ internal sealed class CSharpWriter
         => _writer.ToString();
 
     private StringBuilder Tab()
-        => _writer.Append(new String(SpaceChar, _indent * SpacesPerTab));
-    private StringBuilder Newline()
+        => _writer.Append(_tab);
+    private void Newline()
         => _writer.AppendLine();
 
     private void OpenScope()
     {
         Tab().Append(OpenScopeChar).AppendLine();
+        Indent();
+    }
+
+    private void Indent()
+    {
         _indent++;
+        _tab = new String(SpaceChar, _indent * SpacesPerTab);
+    }
+    private void Dedent()
+    {
+        _indent--;
+        _tab = new String(SpaceChar, _indent * SpacesPerTab);
     }
 }
