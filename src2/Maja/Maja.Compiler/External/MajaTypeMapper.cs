@@ -69,7 +69,7 @@ internal static class MajaTypeMapper
         else if (majaType == TypeSymbol.F96)
             return typeof(decimal).FullName!;
         else if (majaType == TypeSymbol.Void)
-            return typeof(void).FullName!;
+            return "void";
         
         return majaType.Name.FullName;
     }

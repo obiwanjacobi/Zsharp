@@ -1,17 +1,19 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
+using FluentAssertions;
 using Maja.Compiler.EmitCS;
 using Maja.Compiler.EmmitCS.CSharp.Project;
 using Maja.UnitTests.IR;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit.Abstractions;
 
 namespace Maja.UnitTests.EmitCS;
 
 internal static class Emit
 {
-    public static string FromCode(string code, ITestOutputHelper? output = null)
+    public static string FromCode(string code, ITestOutputHelper? output = null, [CallerMemberName] string callerName = "")
     {
-        var program = Ir.Build(code);
+        var program = Ir.Build(code, allowError: false, source: callerName);
         var builder = new CodeBuilder();
         var ns = builder.OnProgram(program);
         if (output is not null)
@@ -21,6 +23,18 @@ internal static class Emit
             output.WriteLine("");
         }
         return builder.ToString();
+    }
+
+    public static void AssertBuild(string emit, ITestOutputHelper? output = null, [CallerMemberName] string callerName = "")
+    {
+        var result = Build(emit, callerName);
+        
+        if (output is not null)
+            output.WriteLine(result);
+
+        result.Should().NotBeNullOrEmpty()
+            .And.NotContain("ERROR")
+            .And.NotContain("FAILED.");
     }
 
     public static string Build(string code, [CallerMemberName] string callerName = "")

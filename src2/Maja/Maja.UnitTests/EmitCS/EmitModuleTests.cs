@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Maja.UnitTests.EmitCS;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -30,6 +29,8 @@ public class EmitModuleTests
             .And.Contain("static")
             .And.Contain("name")
             ;
+
+        Emit.AssertBuild(emit);
     }
 
     [Fact]
@@ -40,7 +41,7 @@ public class EmitModuleTests
             "x := 42" + Tokens.Eol
             ;
 
-        var emit = Emit.FromCode(code, _output);
+        var emit = Emit.FromCode(code);
         _output.WriteLine(emit);
 
         emit.Should().StartWith("namespace")
@@ -50,6 +51,8 @@ public class EmitModuleTests
             .And.Contain("name")
             .And.Contain("x")
             ;
+
+        Emit.AssertBuild(emit);
     }
 
     [Fact]
@@ -61,7 +64,7 @@ public class EmitModuleTests
             "x = 42" + Tokens.Eol
             ;
 
-        var emit = Emit.FromCode(code, _output);
+        var emit = Emit.FromCode(code);
         _output.WriteLine(emit);
 
         emit.Should().StartWith("namespace")
@@ -71,20 +74,7 @@ public class EmitModuleTests
             .And.Contain("name")
             .And.Contain("x = 42;")
             ;
-    }
 
-    [Fact]
-    public void ModuleBuild()
-    {
-        const string code =
-            "mod qualified.name" + Tokens.Eol
-            ;
-
-        var emit = Emit.FromCode(code);
-        var output = Emit.Build(emit);
-        _output.WriteLine(output);
-
-        output.Should().NotBeNullOrEmpty()
-            .And.NotContain("ERROR");
+        Emit.AssertBuild(emit);
     }
 }

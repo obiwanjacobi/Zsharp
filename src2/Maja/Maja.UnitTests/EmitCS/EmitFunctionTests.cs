@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Maja.UnitTests.EmitCS;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +21,7 @@ public class EmitFunctionTests
             Tokens.Indent1 + "ret" + Tokens.Eol
             ;
 
-        var emit = Emit.FromCode(code, _output);
+        var emit = Emit.FromCode(code);
         _output.WriteLine(emit);
 
         emit.Should().StartWith("namespace")
@@ -30,8 +29,10 @@ public class EmitFunctionTests
             .And.Contain(" static ")
             .And.Contain(" root")
             .And.Contain(" fn()")
-            .And.Contain(" System.Void ")
+            .And.Contain(" void ")
             .And.Contain(" return ")
             ;
+
+        Emit.AssertBuild(emit);
     }
 }
