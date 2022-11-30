@@ -24,11 +24,8 @@ public class EmitFunctionTests
         var emit = Emit.FromCode(code);
         _output.WriteLine(emit);
 
-        emit.Should().StartWith("namespace")
-            .And.Contain(" class ")
-            .And.Contain(" static ")
-            .And.Contain(" root")
-            .And.Contain(" fn()")
+        emit.Should()
+            .Contain(" fn()")
             .And.Contain(" void ")
             .And.Contain(" return ")
             ;
@@ -41,20 +38,39 @@ public class EmitFunctionTests
     {
         const string code =
             "fn: (p1: U8, p2: Str)" + Tokens.Eol +
-            Tokens.Indent1 + "ret p2" + Tokens.Eol
+            Tokens.Indent1 + "ret" + Tokens.Eol
             ;
 
         var emit = Emit.FromCode(code);
         _output.WriteLine(emit);
 
-        emit.Should().StartWith("namespace")
-            .And.Contain(" class ")
-            .And.Contain(" fn(")
+        emit.Should()
+            .Contain(" fn(")
             .And.Contain("System.Byte p1")
             .And.Contain("System.String p2")
             .And.Contain(" System.String ")
             .And.Contain(" void ")
             .And.Contain(" return")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
+    public void FunctionReturnValue()
+    {
+        const string code =
+            "fn: (): Str" + Tokens.Eol +
+            Tokens.Indent1 + "ret \"42\"" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" fn(")
+            .And.Contain(" System.String ")
+            .And.Contain(" return \"42\"")
             ;
 
         Emit.AssertBuild(emit);

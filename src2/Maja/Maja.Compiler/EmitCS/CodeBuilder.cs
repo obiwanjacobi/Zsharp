@@ -190,7 +190,10 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnExpressionLiteral(IrExpressionLiteral expression)
     {
-        _writer.Write(expression.ConstantValue!.Value.ToString());
+        if (expression.ConstantValue!.Value is string str)
+            _writer.Write($"\"{str}\"");
+        else
+            _writer.Write(expression.ConstantValue!.Value.ToString());
         return null;
     }
 
