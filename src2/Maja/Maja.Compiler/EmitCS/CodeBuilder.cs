@@ -183,7 +183,8 @@ internal class CodeBuilder : IrWalker<object?>
             IrBinaryOperatorKind.Subtract => "-",
             _ => throw new NotSupportedException($"Binary Operator '{op.Kind}' is not supported.")
         };
-        _writer.Write(netOperator);
+
+        _writer.Write($" {netOperator} ");
         return null;
     }
 

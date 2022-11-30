@@ -104,9 +104,6 @@ internal sealed class CSharpWriter
     public void WriteReturn()
         => Tab().Append("return ");
 
-    public void WriteComma()
-        => _writer.Append(", ");
-
     public void Write(string? text)
         => _writer.Append(text);
 
@@ -119,6 +116,8 @@ internal sealed class CSharpWriter
     public void Using(string usingName)
         => Tab().Append("using ").Append(usingName).Append(SemiColonChar);
 
+    public void WriteComma()
+        => _writer.Append(", ");
     public void EndOfLine()
         => _writer.Append(SemiColonChar).AppendLine();
     public void Assignment()
