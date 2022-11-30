@@ -250,6 +250,10 @@ regex = Rx("$[a-z]*")
 // regex: RegEx
 ```
 
+Also look into the way Swift handles RegEx.
+They seem to be using some sort of object model that is declarative in the code.
+https://swiftregex.com/
+
 ---
 
 > TBD
