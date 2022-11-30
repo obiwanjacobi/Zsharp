@@ -89,7 +89,8 @@ internal class CodeBuilder : IrWalker<object?>
         var method = CSharpFactory.CreateMethod(
             function.Symbol.Name.Value,  netType);
         CurrentType.AddMethod(method);
-
+        _scopes.Push(new Scope(method));
+        
         // TODO: is export?
 
         _writer.StartMethod(method);
@@ -97,11 +98,16 @@ internal class CodeBuilder : IrWalker<object?>
         _writer.OpenMethodBody();
         result = AggregateResult(result, OnCodeBlock(function.Body));
         _writer.CloseScope();
+
+        _ = _scopes.Pop();
         return result;
     }
 
     public override object? OnParameter(IrParameter parameter)
     {
+        if (CurrentMethod.Parameters.Any())
+            _writer.WriteComma();
+
         var netType = MajaTypeMapper.MapToDotNetType(parameter.Type.Symbol);
         var p = CSharpFactory.CreateParameter(parameter.Symbol.Name.Value, netType);
         CurrentMethod.AddParameter(p);

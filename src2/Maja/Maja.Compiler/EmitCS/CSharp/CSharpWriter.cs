@@ -104,6 +104,9 @@ internal sealed class CSharpWriter
     public void WriteReturn()
         => Tab().Append("return ");
 
+    public void WriteComma()
+        => _writer.Append(", ");
+
     public void Write(string? text)
         => _writer.Append(text);
 
