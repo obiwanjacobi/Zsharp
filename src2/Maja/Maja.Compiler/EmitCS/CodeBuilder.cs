@@ -51,8 +51,8 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnCompilation(IrCompilation compilation)
     {
-        OnImports(compilation.Imports);
-        OnExports(compilation.Exports);
+        var result = OnImports(compilation.Imports);
+        result = AggregateResult(result, OnExports(compilation.Exports));
 
         var ns = _scopes.Peek().Namespace!;
         var mc = ns.GetModuleClass();
@@ -67,14 +67,14 @@ internal class CodeBuilder : IrWalker<object?>
         _writer.StartMethod(mi);
         _writer.OpenMethodBody();
         _scopes.Push(new Scope(mi));
-        OnStatements(compilation.Statements);
+        result = AggregateResult(result, OnStatements(compilation.Statements));
         _scopes.Pop();
         _writer.CloseScope();
 
-        OnDeclarations(compilation.Declarations);
+        result = AggregateResult(result, OnDeclarations(compilation.Declarations));
         _scopes.Pop();
         _writer.CloseScope();
-        return null;
+        return result;
     }
 
     public override object? OnImport(IrImport import)
