@@ -203,3 +203,12 @@ Combine enums with normal types and allow extra members per enum option. (SmartE
 Extend enum to be more like Rust enums?
 https://doc.rust-lang.org/rust-by-example/custom_types/enum.html
 They're more like union types.
+
+---
+
+Are enumerations nothing more than compile-time lists or dictionaries?
+
+```csharp
+// list-literal syntax with a compile-time token
+myEnum := #(option1, option2, option3)
+```

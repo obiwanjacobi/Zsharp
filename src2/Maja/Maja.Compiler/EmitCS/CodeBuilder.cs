@@ -87,7 +87,7 @@ internal class CodeBuilder : IrWalker<object?>
     {
         var netType = MajaTypeMapper.MapToDotNetType(function.ReturnType.Symbol);
         var method = CSharpFactory.CreateMethod(
-            function.Symbol.Name.Value,  netType);
+            function.Symbol.Name.Value, netType);
         CurrentType.AddMethod(method);
         _scopes.Push(new Scope(method));
         

@@ -636,7 +636,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         var children = Children(getChildren, context);
 
         var kind = DetermineOperatorKind(category, context);
-        var precedence = kind.ToOperatorPrecedence(cardinality);
+        var precedence = cardinality.ToOperatorPrecedence();
 
         return new[] { new SyntaxNodeOrToken(
             new ExpressionOperatorSyntax(context.GetText())

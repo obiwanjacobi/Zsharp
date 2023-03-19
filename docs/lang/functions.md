@@ -226,6 +226,19 @@ Make42: (p: Ptr<U8>)
 
 This is on usage of `Ptr<T>` that may actually be useful.
 
+Alternative for out parameters is to return it as a return value.
+If multiple out parameter and/or return values exist, the type becomes a tuple.
+
+```csharp
+// import
+// C# bool TryParse(string, out int)
+
+result = TryParse("42")
+b, i = result
+// b = true
+// i = 42
+```
+
 ---
 
 ### Illegal Parameter Types
@@ -1244,6 +1257,13 @@ c.add(4)>.sub(2)
 [c]
     .add(4)
     .sub(2)
+
+// use / with
+use c
+with c
+    .add(4)
+    .sub(2)
+
 ```
 
 > TBD: Auto-Fluent syntax? `Build(p: MyStruct).>Into(target: Stream)`
@@ -1262,8 +1282,6 @@ b = baseFn(s).>nestedFn(42)
 ```
 
 We do need a new operator `.>` because the standard `.` would indicate the (nested) function is called on the return value of the parent function.
-
-> Its a total mystery how this would work technically. :-)
 
 ---
 
@@ -1458,7 +1476,7 @@ fnAsync: (): Task<U8>
 fnAsync: (): Async<U8>
     t1: Task<U8> = work1Async()
     t2: Task<U8> = work2Async()
-    // C#: 'await t1 + await t2'
+    // C#: 'await t1 + await t2' (Task.WhenAll)
     return t1 + t2
 ```
 
@@ -1510,6 +1528,8 @@ f: Future<U8> = asyncFn(42)
 completed = f.HasCompleted  // Bool
 v = f.Value                 // awaited here by future
 ```
+
+The `Future<T>` here looks and behaves the same as a .NET `Task<T>`...
 
 > Is there a way to wrap sync code into an async-await compatible pattern and to wrap the async-await sequence into a sync-call?
 
@@ -1677,7 +1697,7 @@ https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builder
 Allow functions that have no literal implementation but a generator is called during compilation to supply the implementation. Works with decorators and weak functions references? (Same as Roslyn Source Generators)
 
 ```csharp
-{FnGenerator}
+[[MyFnGenerator]]
 Fn: <T>(): T _
 ```
 
@@ -1701,18 +1721,18 @@ Type Functions
 Functions that live inside the namespace of a type.
 Static methods in C#.
 
-To avoid a clash with alternate syntax for bound functions - where the typename indicates the type of the `self` parameter - we use a different 'dot' syntax: `::`.
+To avoid a clash with alternate syntax for bound functions - where the typename indicates the type of the `self` parameter. Not needed if the syntax can be parsed and the symbols resolved.
 
 ```csharp
 MyStruct
     ...
 
 // use 'namespace' syntax?
-MyStruct::Fn: (p: U8): Bool
+MyStruct.Fn: (p: U8): Bool
     ...
 
 // call
-b = MyStruct::Fn(42)
+b = MyStruct.Fn(42)
 ```
 
 ---
@@ -1724,14 +1744,14 @@ Scope overridden functions.
 The ability to relink the definition of a function within a specific scope.
 
 ```csharp
-// fn: (p: U8): Bool
-
+fn: (p: U8): Bool
+    ...
 myFn: (p: U8): Bool
     ...
 
 b = fn(42)      // calls fn
 
-fn <= myFn      // syntax? or is this just a local alias?
+fn <= myFn      // syntax?  a local alias that overrides existing symbol
 b = fn(42)      // calls myFn
 ```
 

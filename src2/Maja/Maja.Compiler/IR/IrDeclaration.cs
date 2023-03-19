@@ -7,7 +7,7 @@ namespace Maja.Compiler.IR;
 
 internal abstract class IrDeclaration : IrNode
 {
-    public IrDeclaration(SyntaxNode syntax)
+    protected IrDeclaration(SyntaxNode syntax)
         : base(syntax)
     { }
 }

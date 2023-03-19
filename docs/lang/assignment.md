@@ -80,6 +80,8 @@ a = b = c: U32 = 42
 // c: U32 = 42
 ```
 
+> How to determine its not an is-equals comparison?
+
 ---
 
 ### Structure Assignment

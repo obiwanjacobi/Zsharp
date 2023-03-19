@@ -10,7 +10,7 @@ The purpose of the syntax model is:
 ## Structure
 
 The syntax model contains an object model that represents the syntax tree as it is parsed from the source code.
-All classes are records and are (publically) immutable.
+All classes are (publically) immutable.
 
 ### SyntaxNode
 

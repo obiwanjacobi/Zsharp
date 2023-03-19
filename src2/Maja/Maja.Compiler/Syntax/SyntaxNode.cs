@@ -32,7 +32,7 @@ public abstract partial class SyntaxNode
     /// </summary>
     public SyntaxNode? Parent
     {
-        get { return _parent!; }
+        get => _parent!;
         internal set
         {
             Debug.Assert(value is not null, "Cannot clear a SyntaxNode.Parent with null.");

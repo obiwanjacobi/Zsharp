@@ -22,10 +22,10 @@ Made SyntaxNodeOrToken public and added SyntaxNodeOrTokenList.
 - [x] BinaryExpression precedence check not executed. Check in Syntax.
 - [x] 'if true' places the 'if' token at the ExpressionLiteralBoolSyntax node.
 
-## Descisions
+## Decisions
 
 - SyntaxTree: Not going to build a Green/Red tree yet.
-SyntaxTrees are constructuted from source text and after that cannot be changed for now.
+SyntaxTrees are constructed from source text and after that cannot be changed for now.
 No SyntaxFactory or WithXxxx methods.
 - SyntaxTree: No lazyness.
 Based on the Antlr parse tree the syntax tree is built in full.

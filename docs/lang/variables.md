@@ -70,6 +70,8 @@ See also [Pointers](./pointers.md).
 
 ## Immutable Variables
 
+Constant Values.
+
 When variables are immutable they cannot be changed during their lifetime - their value is constant.
 
 An immutable variable is initialized when declared (not assigned to later).
@@ -157,7 +159,7 @@ s = MyStruct
 v = 42
 
 with s, v
-with (s, v)     // use '()' for lists?
+with (s, v)     // use '()' for lists? Or is (s, v) a tuple now?
     // matches parameters on type (U8)
     if pred()
         // specified U8 -> overrule context

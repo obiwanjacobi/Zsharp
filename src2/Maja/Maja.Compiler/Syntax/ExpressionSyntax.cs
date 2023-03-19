@@ -5,7 +5,7 @@
 /// </summary>
 public abstract class ExpressionSyntax : SyntaxNode
 {
-    public ExpressionSyntax(string text)
+    protected ExpressionSyntax(string text)
         : base(text)
     { }
 

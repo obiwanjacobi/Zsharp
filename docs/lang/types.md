@@ -532,6 +532,9 @@ Type | Meaning
 `Atom<T>` | Atomic access
 `Async<T>` | Asynchronous function (return type)
 `Mem<T>` | Heap allocated (TBD)
+`In<T>` | In parameter (TBD)
+`Out<T>` | Out parameter (TBD)
+`Ref<T>` | Reference parameter (TBD)
 
 Note that the compiler may generate different code depending on where these types are applied.
 
@@ -576,6 +579,8 @@ Err<T>: T or Error _
 `Err` is discussed in more detail [here](errors.md).
 
 `Ptr` is discussed in more detail [here](pointers.md).
+
+`Ref` is discussed in more detail [here](reference.md).
 
 > Can we supply a hash code on Immutable types automatically?
 
@@ -683,6 +688,30 @@ If no custom constructor is defined for these immutable object manipulations, th
 
 ---
 
+## Type Comparison / Checking
+
+There are several ways to compare types.
+
+```csharp
+t1: Struct1
+t2: Struct2
+
+// exact match
+if t1#type = Struct2
+if t1.#type = t2.#type
+
+// match expression
+match t1
+    s1: Struct1 -> ...
+    s2: Struct2 -> ...
+
+// implements / castable
+if t1.#type is Struct2
+if t1.#type is t2.#type
+```
+
+---
+
 ## Type Alias
 
 Provides a new name for an existing type. Similar to declaring a new type but without any additions.
@@ -718,7 +747,12 @@ Should this go in 'functions'?
 
 A type constructor is a function with the same name as the type it creates and returns.
 
-> Does the constructor function name has to be the exact same as the original Type definition or do we allow the identifier naming rules to apply?
+> Does the constructor function name has to be the exact same as the original Type definition or do we allow the identifier naming rules to apply? Make the constructor function name the exact same as the return type used in the constructor function.
+
+```csharp
+MyType: (): MyType  // valid constructor function
+Mytype: (): MyType  // not a constructor function
+```
 
 The number and types of parameters a constructor function takes have no restrictions.
 
@@ -760,51 +794,22 @@ t = try MyType(42)
 
 > TBD: Find a different constructor function prototype that does not require copying the returned instance from the constructor function to the call site. For larger structs that is a performance hit.
 
-```csharp
-// a call-site created empty instance will be passed by ptr.
-// errors can still be returned
-MyType: (self: Ptr<MyType>, p: U8): Void!
+Struct will probably be .NET `record struct`s and cannot be returned by `ref`.
 
-// calling syntax remain the same?
-t = MyType(42)
-t.MyType(42)        // bounded type syntax? (not clear)
-
-// which results in this code
-t: MyType   // default init-ed struct
-[t]         // capture scope for isolation
-    x: MyType   // 'x': name guaranteed not to clash
-    // pass in the temp instance
-    try MyType(x.Ptr(), 42)     // try => error handling
-    t <= x      // transfer identity (no copying)
-
-// normal code resumes
-t.fld1 ...
-```
-
-Need to make sure no half initialized instances are the result of a constructor function erroring-out half way through its function. That is why we use a capture.
-
-This (using an explicit `self` parameter) would also solve the problem of calling base-constructor functions when types are derived.
-
-> Can the `self` parameter also be used to call more derived versions of 'overridden' functions (calling a virtual in ctor)?
+Passing parameters to the base type.
 
 ```csharp
-BaseType        // type definition
+BaseType
     ...
-BaseType: (self: BaseType)  // constructor function
+BaseType: (p: Str): BaseType
     ...
 
-MyType: BaseType    // derived type definition
-
-MyType: (self: MyType)  // derived type constructor fn
-    // call base constructor function explicitly
-    BaseType(self)      // syntax #1
-    self.BaseType()     // syntax #2
-
-// use: construct a new MyType instance
-t = MyType()
+MyType: BaseType
+    ...
+MyType: (p: Str): MyType
+    BaseType(p)     // return value?
+    ...
 ```
-
-The base class constructor function call must be first.
 
 ---
 
@@ -833,7 +838,7 @@ t = MyType(42, "42", 0x4242)
 
 ## Constrained Variant
 
-Also known as Discriminated Unions.
+Also known as Discriminated Unions (sort of).
 
 ```C#
 OneOrTheOther: Struct1 or Struct2
@@ -864,6 +869,7 @@ s: OneOfThese
 
 // a property that matches T
 if s.type = Struct1
+if s.#type = Struct1
     ...
 
 // can also use a match expression
@@ -881,7 +887,7 @@ OneOrTheOther :|    // <= special syntax is required
     s1: Struct1
     s2: Struct2
 
-s := OnOrTheOther
+s := OneOrTheOther
     s1 = Struct1
         ...
 
@@ -909,19 +915,22 @@ MyOptionalStruct: MyStruct?     // language supported
 
 // make type read-only
 MyReadOnlyStruct: Imm<MyStruct>
-MyReadOnlyStruct: ^MyStruct
-// fld1: ^U8
-// fld2: ^U16
+MyReadOnlyStruct: MyStruct^
+// fld1: U8^
+// fld2: U16^
 ```
 
 Using `Imm<T>` and `Opt<T>` on the base type applies to all fields.
 
 => Maybe use different types that indicate a full type transformation?
 `Immutable<T>` and `Optional<T>` (as well as `Required<T>`)?
+Or use a `#` to indicate the compiler trick? `MyOptType: #Opt<MyType>`
+
+How can this mechanism be extended by 3rd party code?
 
 Perhaps allow manipulation like in TypeScript 'for each key'...?
 
-> TBD Inverse of `Opt<T>` (required)? Inverse of `Imm<T>`?
+> TBD Inverse of `Opt<T>` (required)? Inverse of `Imm<T>` (Mutable)?
 
 ```csharp
 MyStruct
@@ -972,19 +981,23 @@ s = MyStruct
 o = MyStructOpt
     fld2 = "42"     // partial init
 
-x = s + o
+x = s + o       // what if these objects have a + operator defined?
+x = { s + o }   // to differentiate from (overloaded) plus operator.
 // x => MyStruct
 // x.fld1 = 42
 // x.fld2 = "42"
 
 p = MyStructOpt
-    fld1 = 101     // partial init
+    fld1 = 101  // partial init
 
 y = o + p
+y = { o + p }   // object logic
 // y => MyStructOpt
 // y.fld1 = 101
 // y.fld2 = "42"
 ```
+
+Or is the an object mapping and should we use the `<` operator to merge object instances?
 
 ---
 
@@ -1007,7 +1020,7 @@ What about marker interfaces?
 > How are shared fields (locations) initialized when two structs have different default values? Or simply init to zero-always.
 
 > What happens if -part of- a field is accessed through another -incompatible- type? For instance: `Str|U8` write `Str="42"` and read through `U8`. (also a problem in C).
-COM-interop (.NET) disallows this.
+COM-interop (.NET) disallows this. Ultimately we must comply with .NET.
 
 > Implement this as discriminated union? Difference with constrained variant?
 
@@ -1066,7 +1079,7 @@ Think of this as an inverse union.
 Difference: Struct1 ^ Struct2
 ```
 
-> Can the `|`, `&` and `^` be combined in one declaration? What is the precedence of these operators?
+> Can the `|`, `&` and `^` be combined in one declaration? What is the precedence of these operators? => No precedence, use brackets.
 
 ```csharp
 MyStruct: (Struct1 & Struct2) | (Struct3 ^ Struct4)
