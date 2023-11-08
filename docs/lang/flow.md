@@ -168,6 +168,8 @@ loop n in [0..10]
     foreach_n_0_to_9
 ```
 
+> Separate the number of times to loop from the variable value used in the code?
+
 > `loop` cannot be used with a range condition (as used in if). No way to tell the difference. Or do we need a different syntax for iteration?
 
 ```C#

@@ -146,7 +146,7 @@ MyFunc: (p1: MyEnum)
 
 // the parameter type dictates what enum to use
 MyFunc(opt2)    // MyEnum.opt2
-MyFunc(.opt2)   // MyEnum.opt2
+MyFunc(.opt2)   // MyEnum.opt2 (I like this best)
 ```
 
 If `opt2` is ambiguous the type needs to be specified to resolve it.
@@ -196,6 +196,25 @@ sealed class MyEnum : IEquatable<MyEnum>, IComparable<MyEnum>
 
 ---
 
+### Value Iteration
+
+How to iterate through the values of an enumeration:
+
+```csharp
+MyEnum
+    opt1, opt2, opt3
+
+// compiler attributes?
+loop o in MyEnum#values
+    ...
+
+// first and last option value?
+first := MyEnum#first
+last := MyEnum#last
+```
+
+---
+
 TBD
 
 Combine enums with normal types and allow extra members per enum option. (SmartEnums/Java-enums).
@@ -211,4 +230,20 @@ Are enumerations nothing more than compile-time lists or dictionaries?
 ```csharp
 // list-literal syntax with a compile-time token
 myEnum := #(option1, option2, option3)
+```
+
+^^ Declaring a Type as if it was a var looks weird.
+
+---
+
+Enum options and flags:
+
+```csharp
+// single
+myEnum
+    option1 | option2 | option3
+
+// flags (multiple)
+myEnum
+    flag1 & flag2 & flag3
 ```

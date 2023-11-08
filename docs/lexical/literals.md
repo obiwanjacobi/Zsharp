@@ -205,6 +205,11 @@ s = "This is a {ConstantAsValue}"
 // s = 'This is a ConstantAsValue'
 ```
 
+```csharp
+$ConstantAsValue    // readonly field (run time)
+#$ConstantAsValue   // const value (compile time)
+```
+
 Also possible with enums.
 
 ---

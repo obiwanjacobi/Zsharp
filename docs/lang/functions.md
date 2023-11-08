@@ -49,6 +49,12 @@ fn: InterfaceName
 fn: InterfaceName [c]
 // repeated function type decl with capture
 fn: InterfaceName [c.Ptr()]<T>(p: T): Bool
+
+// TBD
+// function type from object interface
+fn: InterfaceName.funcName
+// function name and type from object interface
+fn: InterfaceName&  // syntax?
 ```
 
 > How to differentiate `fn: InterfaceName` from struct definition? => Has no field names.
@@ -384,6 +390,13 @@ Related to context variables?
 ---
 
 ### Parameter Validation
+
+Some types could have default validations without the code having to explicitly asak for it. These validations are not implicit because they are suggested in the code, just not explicitly stated.
+
+- `null` (interop): automatically validate not-null based on ref-nullability.
+- `Opt<T>`: check for None/Nothing.
+- `Enum` (interop): validate standard .NET Enum values to lie inside the defined range.
+- more?
 
 > TBD
 
@@ -1037,6 +1050,21 @@ Lambda could be a nameless (function type) definition that can have parameters b
 Fn<(p): Str> -> Str(p)(42)      // ??
 ```
 
+Use short syntax when single parameter:
+
+```csharp
+Person
+    Name: Str
+    Age: U8
+
+list: Array<Person> = (...)
+
+// use '_' discard as replacement for parameter (name)?
+list.Select _.Name
+// return tuple
+list.Select { _.Name, _.Age }
+```
+
 ---
 
 > We cannot use lambda's to make an anonymous 'object' like in JavaScript at this point. Do we want that?
@@ -1571,6 +1599,24 @@ Using `Sync()` and `Async()` conversion functions mitigates the problem of funct
 > Compiler should warn for sync/async call-chains that switch multiple times (very inefficient).
 
 > `IAsyncEnumerable<T>` does not use a `Task<T>` as a return value: `public async IAsyncEnumerable<string> GetNamesAsync()`
+
+> TBD
+
+If we change the function definition syntax we could make async functions without using a special return type.
+
+```csharp
+// new function syntax
+syncFn: (p: U8) -> U8   // syncFn: (p: U8): U8
+    ...
+asyncFn: (p: U8) => U8  // asyncFn: (p: U8): Async<U8>
+    ...
+
+// we could even...
+syncParallelFn: (p: U8) ->> U8  // some sort of sync/parallel function?
+    ...
+asyncParallelFn: (p: U8) =>> U8  // some sort of async/parallel function?
+    ...
+```
 
 ---
 

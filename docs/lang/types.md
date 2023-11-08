@@ -153,9 +153,11 @@ The conversion is done using the .NET Text Encoding types from the BCL.
 
 #### Secure String
 
-> TBD
+```csharp
+ss: SecStr = "Secret String"
+```
 
-`System.Security.SecureString`
+Uses .NET `System.Security.SecureString`.
 
 #### Str-Of-T
 

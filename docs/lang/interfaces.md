@@ -6,7 +6,7 @@ Interfaces are the means to polymorphism without using objects (in an OOP sense)
 
 ## Function Interface
 
-Function interfaces are a prototype for a singe function. Usually used as a callback or delegate. 
+Function interfaces are a prototype for a singe function. Usually used as a callback or delegate.
 
 A named function type.
 
@@ -72,7 +72,7 @@ RestrictedInterface<#S: MyStruct>
 
 CompanionInterface<#S: TemplateInterface>
     fn: (self: S, p1: U8): Str _
-// The interface can only be implemented on types that also implement TemplateInterface (with any T).
+// The interface can only be implemented on types that also implement TemplateInterface.
 ```
 
 ---
@@ -241,6 +241,32 @@ if not s.hasParent()
 // access extra field
 s.Parent        // set to p
 ```
+
+---
+
+## Behavior
+
+> TBD
+
+Often the behavior of a function or interface is overlooked or ignored.
+An interface is a contract, not just of the programmatic structure but also of it's (expected) behavior.
+We would need something like (.NET) code-contracts to be able to tag (interface) functions with rules it will respect.
+
+Simple pre- and post-conditions would be a start:
+
+```csharp
+fnContract: (p: Str): I32
+    // syntax TBD
+    #p is not null or empty     // pre-condition
+    #fnContract > 0 and < 100   // post-condition
+    ...
+```
+
+The compiler could generate additional (test) code to enforce the rules.
+Pre-conditions would be parameter validation and post-conditions would be an unit test.
+See also [Parameter Validation in Functions](functions.md#parameter-validation).
+
+It is much harder to define the behavior of a function it has on state or the logical relation of it's return values.
 
 ---
 

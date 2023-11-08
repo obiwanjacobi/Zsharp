@@ -97,7 +97,7 @@ o = s.f1?.f1?.f2  // first non-value optional will stop navigation of path, resu
 > TBD: changes if an error is reported.
 
 ```csharp
-errIfNot42: (p: U8): Bool
+errIfNot42: (p: U8): Bool!
     return p = 42 ? true : Error('Not 42')
 
 b = errIfNot42(42)      // true

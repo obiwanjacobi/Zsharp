@@ -17,5 +17,6 @@
         "MULT",
         "ROLR",
         "SMEQ"
-    ]
+    ],
+    "dotnet.defaultSolution": "disable"
 }

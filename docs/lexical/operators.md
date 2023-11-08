@@ -17,7 +17,7 @@ Postfix arithmetic operator with:
 | Operator | Description
 |--|--
 | `!` | Overflow/Underflow will cause an exception. (`.NET checked`)
-| `|` | Overflow/underflow will wrap around. (`.NET unchecked`)
+| `\|` | Overflow/underflow will wrap around. (`.NET unchecked`)
 | `~` | Overflow/underflow will saturate.
 
 (Zig has explicit operators too)
@@ -29,9 +29,10 @@ b: U8 = 125
 c: U8 = a +! b  // overflow exception (370 > U8)
 c: U8 = a +| b  // wrap around (115)
 c: U8 = a +~ b  // saturate (255)
-```
 
-> Is checked `!` the default?
+// Is checked `!` the default? or use .NET default (unchecked?)
+c: U8 = a + b   // ??
+```
 
 ---
 
@@ -46,7 +47,7 @@ In order of precedence (top is highest):
 | Ternary | ternary operators are applied last.
 
 That means that an expression with multiple (binary) expressions **MUST** use `( )`
-to indicate the order of execution - unless the operators are all the same.
+to indicate the order of execution - unless all the operators are the same.
 
 ---
 
@@ -75,8 +76,11 @@ Arithmetic, bitwise and logical operators.
 | `? :` | - | Ternary Conditional (if-else) (don't like the `:` used for types everywhere else)
 | `? ;` | - | -alt- Ternary Conditional (if-else)
 | `and` | LogicAnd | Logical And
+| `nand` | LogicAnd | Logical Nand?
 | `or` | LogicOr | Logical Or
+| `nor` | LogicOr | Logical Nor?
 | `xor` | LogicXor | Logical Xor
+| `xnor` | LogicXor | Logical Xnor?
 | `not` | LogicNot | Logical Negation
 | `&` | - | Bitwise And*
 | `|` | - | Bitwise Or*
@@ -84,8 +88,8 @@ Arithmetic, bitwise and logical operators.
 | `~` | - | Bitwise Negation (complement/invert)*
 | `>>` | - | Bitwise Shift Right
 | `<<` | - | Bitwise Shift Left
-| `>|` | - | Bitwise Rotate Right
-| `|<` | - | Bitwise Rotate Left
+| `>\|` | - | Bitwise Rotate Right
+| `\|<` | - | Bitwise Rotate Left
 | `->>` | - | sign extend (arithmetic) bit shift right
 | `>>>` | - | -alt- sign extend (arithmetic) bit shift right
 | `=` | - | Value Assignment
@@ -96,7 +100,7 @@ That also means that the bitwise short-hand operators (`&=`, `|=` or `^=`) no lo
 
 > Ternary operators cannot contain other ternary operators. No nesting of `? :` for readability.
 
-Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `nxor`?
+Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `xnor` or use dedicated keywords?
 
 More mathematic concepts as operators?
 PI (and other constants), rad, deg, vectors, matrix, infinity, sin, cos, tan (inv), rounding (floor, ceiling), medium, mean, average, factorial/permutation/combination, sum...
@@ -107,7 +111,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | Operator | Fn Name | Description
 |--|--|--
 | `&&` | cascading l-value logical-and
-| `||` | cascading l-value logical-or
+| `\|\|` | cascading l-value logical-or
 
 ---
 
@@ -119,9 +123,9 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `.` | Members Access / bound access
 | `..` | Range operator
 | `...` | Spread operator
-| `,` | List Separator
+| `,` | List Separator (or use expression separator?)
 | `:` | (Sub)Type Specifier
-| `;` | reserved
+| `;` | Expression separator (like in F#)
 | `< >` | Type Parameter
 | `( )` | Function / Tuple / Array/List initialization
 | `" "` | String Literal
@@ -130,6 +134,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `@` | Disable String formatting features / keyword escape?
 | `{ }` | String formatting parameter / Code Decorator / Object construction
 | `[ ]` | Index / Slice / Range / Capture
+| `\| \|` | Alternate Capture
 | `!` | Possible Error (return type)
 | `?` | Optional variable or parameter/return value / boolean operator / fallback
 | `?=` | Optional variable conditional assignment
@@ -193,6 +198,7 @@ b = s is tryFn(42) or tryFn(101)    // weird
 | `*` | `Ptr<T>`  | Pointer to T
 | `^` | `Imm<T>`  | Immutable T
 | `%` | `Atom<T>`  | Atomic T
+| ?? | `Async<T>`  | Async T ??
 
 ---
 
@@ -211,12 +217,13 @@ To be determined:
 | `=>` | used in mapping / some sort of (forward) assignment? (implies?)
 | `<=` | map structure / assign struct properties
 | `()` | Function Object operator
-| `|>` | Parameter pipe?
-| `<|` | Reverse parameter pipe?
+| `\|>` | Parameter pipe?
+| `<\|` | Reverse parameter pipe? (don't like it)
 | `<=>` | Swap operator
 | `::` | traits? (type of type)
 | `:=` | equals type (bool/condition) (also assignment with type inference)
 | `:?` | type is (C# is keyword)
+| `?:` | alt - type is (C# is keyword)
 | `<:?` | type as (optional cast)
 | `<:` | down cast type
 | `:>` | up cast type? (is implicit)
@@ -224,6 +231,31 @@ To be determined:
 | `->>` | parallel execution (also sign extended shift)
 | `=>>` | parallel execution and collect results (in tuple or deconstruct)
 | `[[ ]]` | Alternate Decorators syntax (instead of `{}`)
+| `[< >]` | Type Decorators (Attributes) syntax (instead of `{}`)
+| `[( )]` | Function Decorators syntax (instead of `{}`)
+
+> Notes on safe navigation `?.`:
+
+In an expression that chains several safe navigations together in a path, the result may become a little hard to read.
+
+```csharp
+x := root?.obj1?.obj2?.prop1
+```
+
+Perhaps we could come up with something that turns on safe navigation for the entire expression?
+
+```csharp
+x := ?root.obj1.obj2.prop1
+```
+
+Is there use for safe navigation in collections?
+
+```csharp
+// safe indexing?
+x := root.collection[?0]
+```
+
+Use of safe navigation (in any form) always results in an Optional `Opt<T>` that is nothing if the path could not be navigated completely.
 
 ---
 
@@ -236,20 +268,22 @@ Operators for strings and characters.
 | `'' ''` | Delimiters for a symbol name with special characters.
 | `=~` | Case (and culture) insensitive equals.
 | `<>~` | Case (and culture) insensitive not-equals.
-| `>~` | Case (and culture) insensitive greater-than - sorting.
-| `<~` | Case (and culture) insensitive lesser-than  - sorting.
-| `>=~` | Case (and culture) insensitive greater-than-or-equal - sorting.
-| `=<~` | Case (and culture) insensitive lesser-than-or-equal - sorting.
+| `>~` | Case (and culture) insensitive greater-than - compare.
+| `<~` | Case (and culture) insensitive lesser-than  - compare.
+| `>=~` | Case (and culture) insensitive greater-than-or-equal - compare.
+| `=<~` | Case (and culture) insensitive lesser-than-or-equal - compare.
 | `s[2..6]` | sub-string using `Range`.
 | `<+` | Concat a string.
 | `+` | alt - Concat a string?
 | `/<+` | Concat a string with path separator.
-| `x<+` | Concat a string with any (x) separator?
+| `"x"<+` | Concat a string with any (x) separator?
+
+Array operators should also work on string character items.
 
 ## Comparison Operator with Margin Symbols
 
 Operators for comparing numbers with a margin.
-Typically useful for floating point numbers.
+Typically useful for floating point numbers but should also work for integers.
 
 | Operator | Description
 |---|---
@@ -277,34 +311,44 @@ if f = pi ~ 0.01
 
 Operators for working with `Array<T>` and `List<T>` types.
 
+Any arithmetic operator also works on arrays and lists.
+Operators starting with `<` indicates a structural operation, like adding or removing elements from an array/list.
+
+> TBD: Do we also support comparison and logical operators that result in an array of booleans?
+> What about set operators (union etc.)?
+
 | Operator | Description
 |---|---
-| `+=` | add item to array/list
-| `<+=` | alt - add item to array/list
-| `-=` | remove item from array/list
-| `<-=` | alt - remove item from array/list
-| `^=` | insert item into array/list (front)
-| `&=` | add item to array/list/tree as a child
-| `|=` | insert item to array/list/tree as a child (front)
-| `in` | test if item is in array/list (contains)
-| `not in` | test if item is not in array/list (not contains)
-| `/` | split in array with chunks/tuples of n
-| `|` | zip two arrays
-| `~` | unzip (split in 2)
-| `<+` | Concat an array to another.
-| `+` | alt - concat array?
-
-```csharp
-arr = (1, 2, 3, 4, 5)
-// add single item
-arr += 6
-// remove multiple items
-arr -= (1, 3, 5)    // arr = (2, 4, 6)
-b = 4 in arr        // true
-```
-
-Using arithmetic operators for array item manipulation hinders future support of array programming where the operators are applied to the items within the array, not the array itself.
-So perhaps it would be more clear to reserve the common arithmetic operators for array programming and special adorned operators for array content manipulation.
+| `+` | adds the values of each element of two array/lists together.
+| `-` | subtracts the values from each element of two array/lists.
+| `x` | x = any arithmetic operator that acts on each element of the two array/lists.
+| `+=` | mutable - add a value to all array/list elements
+| `-=` | mutable - subtract a value from all array/list elements
+| `*=` | mutable - multiply a value with all array/list elements
+| `x=` | mutable - x = any arithmetic operator acts on all elements of the array/list
+| `<+` | add item(s) to the end of an array/list (concat)
+| `<-` | remove item(s) from anywhere in array/list (first exact match)
+| `<^` | insert item(s) into array/list (front)
+| `<&` | add item(s) to array/list/tree as a child (?)
+| `<\|` | insert item(s) to the front of an array/list/tree as a child (?)
+| `<+=` | mutable - add item(s) to the end of an array/list (concat)
+| `<-=` | mutable - remove item(s) from anywhere in array/list (first exact match)
+| `<^=` | mutable - insert item(s) into array/list (front)
+| `<&=` | mutable - add item(s) to array/list/tree as a child (?)
+| `<\|=` | mutable - insert item(s) to the front of an array/list/tree as a child (?)
+| `in` | test if item(s) is in array/list (contains)
+| `not in` | test if item(s) is not in array/list (not contains)
+| `</` | split in array with chunks/tuples of n
+| `<\|` | zip two arrays
+| `<~` | unzip (split in 2)
+| `.>` | Collect a property values on all instances in the array
+| `[..]` | Range operator returns a sub array/list.
+| `[i]` | Index (i) operator returns a single item.
+| `[?i]` | Safe index (i) operator returns an optional single item.
+| `[*]` | returns the enumerator of an array/list.
+| `[**]` | returns the parallel enumerator of an array/list.
+| `[**/n]` | returns the parallel enumerator of an array/list for max `n`-threads.
+| `[**%n]` | returns the parallel enumerator of an array/list with `n`-elements in each thread.
 
 ```csharp
 arr1 = (1, 2, 3, 4, 5)
@@ -313,11 +357,57 @@ arr2 = (5, 4, 3, 2, 1)
 arr3 = arr1 + arr2
 // arr3 = (6, 6, 6, 6, 6)
 
-arr1 <+ 42      // arr1 = (1, 2, 3, 4, 5, 42)
-arr2 <^ 101     // arr2 = (101, 5, 4, 3, 2, 1)
+arr1 <+= 42      // arr1 = (1, 2, 3, 4, 5, 42)
+arr2 <^= 101     // arr2 = (101, 5, 4, 3, 2, 1)
 
 arr4 = arr1 + arr2
 // arr4 = (102, 7, 7, 7, 7, 43)
+```
+
+```csharp
+arr = (1, 2, 3, 4, 5)
+// add single item
+arr2 = arr <+ 6   // arr2 = (1, 2, 3, 4, 5, 6)
+// remove multiple items - whole array must match!
+arr3 = arr <- (1, 2, 3)    // arr3 = (4, 5, 6)
+// arr is unchanged
+
+// contains
+b = 4 in arr            // true
+c = (2, 4) not in arr   // true
+```
+
+Special collection operator for accessing the same property on an array of objects.
+
+```csharp
+Person
+    Name: Str
+    Age: U8
+
+arr: Array<Person> = (...)
+
+// returns the names of all persons in the array
+names = arr.>Name
+// names: Array<Str>
+```
+
+```csharp
+// Does it work the same with functions?
+
+fn: (self: Person): Str
+    return "$self.Name is $self.Age years old."
+
+// returns "'name' is 'age' years old." for all persons in the array
+names = arr.>fn
+
+// Do we allow more function parameters?
+
+fn: (self: Person, magic: U8): Str
+    return "$self.Name called with $magic."
+
+// calls fn with magic=42 for all persons in the array
+names = arr.>fn(42)
+// How to make it clear 42 is duplicated to all calls!?
 ```
 
 ---
@@ -339,17 +429,17 @@ These operators cannot be overloaded, they simply use the standard operators.
 | `**=` | read - power - write
 | `>>=` | read - shift right - write
 | `<<=` | read - shift left - write
-| `>|=` | read - roll right - write
-| `|<=` | read - roll left - write
+| `>\|=` | read - roll right - write
+| `\|<=` | read - roll left - write
 | `?=` | read - test - write (locking?)
 | `!=` | read - error?? - write
 | `&=` | read - bit and - write
-| `|=` | read - bit or - write
+| `\|=` | read - bit or - write
 | `^=` | read - bit xor - write
 | `$=` | read - ?? - write
 | `^=` | read - 'immutable' ?? - write
-| `|>=` | ?
-| `<|=` | ? (or `=<|`)
+| `\|>=` | ?
+| `<\|=` | ? (or `=<|`)
 
 Do we allow a list of right values? (yes)
 
@@ -456,7 +546,7 @@ This seems to be the best way to also interop with normal .NET / C#.
 
 ```csharp
 // must follow the infix function rules.
-[[Operator(">>|")]]
+[[BinaryOperator(">>|")]]
 MyWeirdOperator: <T>(self: T, other: T): T
     ...
 
@@ -464,9 +554,9 @@ a = 42
 x = a >>| 101   // calls MyWeirdOperator
 
 // How to do unary or ternary operators?
-[[Operator("-")]]
+[[UnaryOperator("-")]]
 MyUnaryOperator: <T>(other: T): T
 
-[[Operator(">>|", "|<<")]]
+[[TernaryOperator(">>|", "|<<")]]
 MyTernaryOperator: <T>(self: T, other: T, third: T): T
 ```

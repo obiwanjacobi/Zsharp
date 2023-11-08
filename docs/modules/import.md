@@ -136,10 +136,17 @@ Use some sort of (plugable) loader -or unpacker- during compile-time?
 #import https://user.github.com/master/package1
 ```
 
-> TBD: import/include based on source code?
+> TBD: import/include based on online source code?
 
 ```csharp
 #include https://user.github.com/master/src
+```
+
+> TBD: import/include source files from the file system?
+
+```csharp
+#include $/utils/fileHeader.txt // $ => project root
+#import subdir/folder/file      // no .z extension necessary
 ```
 
 ---
