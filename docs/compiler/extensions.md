@@ -12,6 +12,7 @@
 // Syntax??
 {Decorator}
 [[Decorator]]
+[{CodeAttribute()}]
 decoratedFn: ()
 ```
 

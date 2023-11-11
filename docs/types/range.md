@@ -47,7 +47,10 @@ A range results in a (virtual) list with numbers. So shouldn't the syntax reflex
 ```csharp
 rng = (0..10)       // range from 0 to 9 -incl.
 stp = (0..10: 2)    // 0, 2, 4, 6, 8
+stp = (0..10+ 2)    // alternate syntax? (bc ':' is for type)
 ```
+
+> TBD: use list syntax `()` when creating range objects. Use index syntax `[]` when extracting from Array or List objects.
 
 ### Step
 
@@ -65,7 +68,7 @@ A third optional parameter for a range is the step the value takes on each itera
 
 If no step is specified it is always 1. This means that non-normalized ranges with start > end, will not iterate - a behavior that is most useful/common/expected I think.
 
-> `.NET`: how does C# behave concerning non-normalized ranges and iteration? => Throws an `ArgumentOutOfRangeException` on `Range` ctor.    
+> `.NET`: how does C# behave concerning non-normalized ranges and iteration? => Throws an `ArgumentOutOfRangeException` on `Range` ctor.
 
 ### Dimensions
 
@@ -124,7 +127,7 @@ if x in [0..100]
 ```
 
 That would also mean this: `Range<T>` to allow for floats etc.
-Step would only be needed for integers but mandatory for floating point numbers.
+Step would only be optional for integers but mandatory for floating point numbers.
 
 ```csharp
 flt = [0.0..1.0: 0.2]  // 0.0, 0.2, 0.4, 0.6, 0.8

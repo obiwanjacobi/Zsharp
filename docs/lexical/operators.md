@@ -142,7 +142,9 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `#` | Pragma / Attribute access / Execute at compile-time
 | `#!` | Compile-time code definition (perhaps only `#`)
 | `#!` | Compile-time error (alt)
+| `#?` | Compile-time warning
 | `##` | Temporary comment (compiler warning)
+| `#xxx:` | Compile-time label 'xxx' used to identity code blocks / scopes
 | `#_` | Comment
 
 `#!` does make the distinction clear between compile-time functions and for instance inline exported functions: `#export fun: ()...` vs. `#! fun: () ...`.

@@ -57,7 +57,7 @@ To use this custom Error instead of the default one:
 ```C#
 couldErr: (p: U8): U8!
     err = MyError                   // just like any struct
-        err.f1 = p
+        f1 = p
     return Error("Failed.", err)    // overrides the Error type
 
 v = couldErr() catch(err)

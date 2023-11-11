@@ -5,7 +5,8 @@ Fibonacci
 ```csharp
 // recursive function
 fib: (f: U16): U16
-    if f = 0 or f = 1
+    //if f = 0 or f = 1
+    if f in (0, 1)
         return f
     return fib(f - 1) + fib(f - 2)
 

@@ -49,6 +49,11 @@ m: Map<Str, Any> <= s   // or explicitly typed
 
 // map back to structure
 x: Struct <= m
+
+// TBD: throw errors when missing members?
+// how to opt-in/out?
+x: Struct <=! m     // throw errors
+x: Struct <=? m     // don't throw errors
 ```
 
 Allow maps to be passed as parameters to any function.
@@ -62,6 +67,7 @@ fn: (p1: U8, p2: Str)
 m = {p1 = 42, p2 = "42"}
 // special syntax?
 m = {p1 <= 42, p2 <= "42"}
+m = {p1 .= 42, p2 .= "42"}     // for structs specifically?
 fn(m)
 
 fn2: (p1: U8, p2: Str, p3: U16?)
@@ -72,24 +78,26 @@ fn2(m)
 ```
 
 > Keys MUST match field (struct) or parameter (function) names! (cannot fully check at compile time)
+> Throw errors or not?
 
 ---
 
 Allow map syntax to be equal to object syntax - as a dynamic object.
 
 ```csharp
-// use list syntax to create maps?
+// use array/list syntax to create maps? (associative arrays)
 m = (a = 42, b = "42")
 // or object syntax?
 m = {p1 = 42, p2 = "42"}
 // or special object syntax?
-m = {p1 <= 42, p2 <= "42"}
+m = {p1 <= 42, p2 <= "42"}  // '<=' is reserved for mapping!
+m = {p1 = 42; p2 = "42"}    // different separator?
 
 // what is the syntax for accessing dynamic properties?
 x = m.a
 m.a = 101
 // creates a new entry in the map
-m.x = x
+m.x = x     // 'x'=<value of x>
 ```
 
 ---

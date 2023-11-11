@@ -70,5 +70,6 @@ Temporary comment that will give a compiler warning. Useful for when testing out
 > TBD
 
 A double discard `_` may be more logical as a start of a comment. `__ this is a comment`
+A compiler discard `#_` may be more logical as a start of a comment. `#_ this is a comment`
 
 That would also leave the `//` as a root operator (opposite of power) `9 // 2 = 3`

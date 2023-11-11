@@ -346,6 +346,7 @@ TODO
 > Parallel Loops
 
 Only loops with function bodies (.NET: TPL and PLINQ).
+The inline loop-body could be compiled into a function.
 
 ```csharp
 // what operator? (implies AsParallel)
@@ -408,7 +409,7 @@ For use in loops typically.
 l = (1, 2, 3, 4, 5)
 c = Cycle(l)
 
-loop i in [0..10] and n in c
+loop i in [0..10] or n in c
     // i = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
     // n = 1, 2, 3, 4, 5, 1, 2, 3, 4, 5
 ```
@@ -512,7 +513,7 @@ Downside is that this does not work with nested loops for instance.
 
 ```csharp
 loopFn: (p: U8)
-    lp1: loop n in [0..p]   // label the loop?
+    #lp1: loop n in [0..p]   // compile time label the loop?
         loop i in [0..9]
             if n + i = 42 -> exit(n)       // continue
             if n + i = 101 -> exit(lp1)    // break outer
