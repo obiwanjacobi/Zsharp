@@ -36,7 +36,7 @@ public sealed record SymbolName
                 ? Value
                 : $"{Namespace.Value}.{Value}";
 
-    public int MatcheWith(SymbolName fullName)
+    public int MatchesWith(SymbolName fullName)
     {
         // fullName: namespace.module.name
         // -match
@@ -66,7 +66,7 @@ public sealed record SymbolName
         => FullName;
 
     public override string ToString()
-        => DebuggerDisplay();
+        => FullName;
 
     public static SymbolName Empty
         => new(String.Empty);

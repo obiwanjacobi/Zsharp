@@ -1822,3 +1822,5 @@ protoFn: (p1: U8): Str _
 
 - simulate properties? thru type-bound functions?
 Get\<T> / Set\<T> / Notify\<T> / Watch\<T[]>
+
+- Look into F#'s computational expressions. Basically extensible grammar. <https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/computation-expressions

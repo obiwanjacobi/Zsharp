@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using Antlr4.Runtime;
+using FluentAssertions;
 using Maja.Compiler.Parser;
 using Xunit;
 
@@ -170,5 +173,100 @@ public class LexerTests
         };
 
         Tokens.Assert(tokens, expected);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetSingleTokenData))]
+    public void LexSingleToken(int kind, string text)
+    {
+        var tokens = LexTokens(text);
+        tokens.Single().Type.Should().Be(kind);
+    }
+
+    public static IEnumerable<object[]> GetSingleTokenData()
+    {
+        foreach (var t in GetSingleTokens())
+            yield return new object[] { t.kind, t.text };
+    }
+
+    private static IEnumerable<(int kind, string text)> GetSingleTokens()
+    {
+        return new (int kind, string text)[]
+        {
+            (MajaLexer.And, "and"),
+            (MajaLexer.AngleClose, ">"),
+            (MajaLexer.AngleOpen, "<"),
+            (MajaLexer.At, "@"),
+            (MajaLexer.BackTick, "`"),
+            (MajaLexer.BitAnd, "&"),
+            (MajaLexer.BitNot, "~"),
+            (MajaLexer.BitOr, "|"),
+            (MajaLexer.BitRollL, "|<"),
+            (MajaLexer.BitRollR, ">|"),
+            (MajaLexer.BitShiftL, "<<"),
+            (MajaLexer.BitXor_Imm, "^"),
+            (MajaLexer.BracketClose, "]"),
+            (MajaLexer.BracketOpen, "["),
+            (MajaLexer.Brk, "brk"),
+            //(MajaLexer.Character, "x"),
+            (MajaLexer.CharQuote, "'"),
+            (MajaLexer.Cnt, "cnt"),
+            (MajaLexer.Colon, ":"),
+            (MajaLexer.Comma, ","),
+            //(MajaLexer.Comment, "##"),
+            //(MajaLexer.Comment, "#_"),
+            (MajaLexer.CurlyClose, "}"),
+            (MajaLexer.CurlyOpen, "{"),
+            //(MajaLexer.Discard, "_"),
+            (MajaLexer.Divide, "/"),
+            (MajaLexer.Dollar, "$"),
+            (MajaLexer.Dot, "."),
+            (MajaLexer.Elif, "elif"),
+            (MajaLexer.Else, "else"),
+            (MajaLexer.Eol, "\n"),
+            (MajaLexer.Eol, "\r\n"),
+            (MajaLexer.Eq, "="),
+            (MajaLexer.Error, "!"),
+            (MajaLexer.False, "false"),
+            (MajaLexer.GtEq, ">="),
+            (MajaLexer.Hash, "#"),
+            (MajaLexer.Identifier, "a"),
+            (MajaLexer.Identifier, "abc"),
+            (MajaLexer.If, "if"),
+            (MajaLexer.In, "in"),
+            (MajaLexer.Loop, "loop"),
+            (MajaLexer.LtEq, "=<"),
+            (MajaLexer.Minus, "-"),
+            (MajaLexer.Mod, "mod"),
+            (MajaLexer.Modulo, "%"),
+            (MajaLexer.Multiply, "*"),
+            (MajaLexer.Neq, "<>"),
+            (MajaLexer.Not, "not"),
+            //(MajaLexer.NumberBin, "0b101010"),
+            (MajaLexer.NumberDec, "42"),
+            //(MajaLexer.NumberDecPrefix, "0d"),
+            //(MajaLexer.NumberHex, "0xDEAD"),
+            //(MajaLexer.NumberOct, "0c192"),
+            (MajaLexer.Or, "or"),
+            (MajaLexer.ParenClose, ")"),
+            (MajaLexer.ParenOpen, "("),
+            (MajaLexer.Plus, "+"),
+            (MajaLexer.Power, "**"),
+            (MajaLexer.Pub, "pub"),
+            (MajaLexer.Question, "?"),
+            (MajaLexer.Range, ".."),
+            (MajaLexer.Ret, "ret"),
+            (MajaLexer.Root, "//"),
+            (MajaLexer.Self, "self"),
+            (MajaLexer.SemiColon, ";"),
+            (MajaLexer.Sp, " "),
+            (MajaLexer.Spread, "..."),
+            //(MajaLexer.String, "a"),
+            //(MajaLexer.String, "abc"),
+            //(MajaLexer.String, "abc def"),
+            (MajaLexer.StrQuote, "\""),
+            (MajaLexer.True, "true"),
+            (MajaLexer.Use, "use")
+        };
     }
 }
