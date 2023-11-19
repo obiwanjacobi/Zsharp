@@ -5,6 +5,7 @@
 - [ ] SyntaxNode: DescendentNodes, AncestorsAndSelf, AncestorOrSelf etc.
 - [ ] ErrorNode: Use context info to built better error message.
 - [ ] VarDeclTyped+init: init expression type is not the same as var type.
+- [ ] Syntax parsing does not report invalid trailing tokens.
 
 ### Done
 

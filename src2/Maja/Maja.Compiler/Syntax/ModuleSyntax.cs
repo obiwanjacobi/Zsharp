@@ -2,9 +2,9 @@
 
 namespace Maja.Compiler.Syntax
 {
-    public sealed class ModuleSyntax : SyntaxNode
+    public sealed class ModuleSyntax : SyntaxNode, ICreateSyntaxNode<ModuleSyntax>
     {
-        public ModuleSyntax(string text)
+        private ModuleSyntax(string text)
             : base(text)
         { }
 
@@ -16,5 +16,14 @@ namespace Maja.Compiler.Syntax
 
         public override R Accept<R>(ISyntaxVisitor<R> visitor)
             => visitor.OnModule(this);
+
+        public static ModuleSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+            => new(text)
+            {
+                Location = location,
+                Children = children,
+                ChildNodes = childNodes,
+                TrailingTokens = trailingTokens
+            };
     }
 }

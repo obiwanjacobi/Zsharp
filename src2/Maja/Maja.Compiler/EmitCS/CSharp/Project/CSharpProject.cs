@@ -9,7 +9,7 @@ internal sealed class CSharpProject
 {
     internal CSharpProject()
     {
-        TargetFrameworkMoniker = "net6.0";
+        TargetFrameworkMoniker = "net7.0";
         TargetPath = String.Empty;
     }
 

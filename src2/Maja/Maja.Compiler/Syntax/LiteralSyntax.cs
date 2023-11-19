@@ -3,9 +3,9 @@
 /// <summary>
 /// Represents a literal numerical value.
 /// </summary>
-public sealed class LiteralNumberSyntax : ExpressionSyntax
+public sealed class LiteralNumberSyntax : ExpressionSyntax, ICreateSyntaxNode<LiteralNumberSyntax>
 {
-    public LiteralNumberSyntax(string text)
+    private LiteralNumberSyntax(string text)
         : base(text)
     { }
 
@@ -14,15 +14,24 @@ public sealed class LiteralNumberSyntax : ExpressionSyntax
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralNumber(this);
+    
+    public static LiteralNumberSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 
 /// <summary>
 /// Represents a literal string value.
 /// </summary>
-public sealed class LiteralStringSyntax : ExpressionSyntax
+public sealed class LiteralStringSyntax : ExpressionSyntax, ICreateSyntaxNode<LiteralStringSyntax>
 {
-    public LiteralStringSyntax(string text)
-        : base(text)
+    private LiteralStringSyntax(string text)
+        : base(text.Trim('"'))
     { }
 
     public override SyntaxKind SyntaxKind
@@ -30,4 +39,13 @@ public sealed class LiteralStringSyntax : ExpressionSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralString(this);
+    
+    public static LiteralStringSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

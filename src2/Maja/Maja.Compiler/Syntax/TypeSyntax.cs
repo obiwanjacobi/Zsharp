@@ -6,9 +6,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a reference to a type by name.
 /// </summary>
-public sealed class TypeSyntax : SyntaxNode
+public sealed class TypeSyntax : SyntaxNode, ICreateSyntaxNode<TypeSyntax>
 {
-    public TypeSyntax(string text)
+    internal TypeSyntax(string text)
         : base(text)
     { }
 
@@ -29,4 +29,13 @@ public sealed class TypeSyntax : SyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnType(this);
+    
+    public static TypeSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

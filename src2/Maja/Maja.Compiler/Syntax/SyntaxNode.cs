@@ -89,7 +89,7 @@ public abstract partial class SyntaxNode
     /// Indicates if the LeadingTokens can be called.
     /// </summary>
     public bool HasLeadingTokens
-        => _leadingTokens is not null;
+        => _leadingTokens is not null && _leadingTokens.Count > 0;
 
     private SyntaxTokenList? _leadingTokens;
     /// <summary>
@@ -114,7 +114,7 @@ public abstract partial class SyntaxNode
     /// Indicates if the TrailingTokens can be called.
     /// </summary>
     public bool HasTrailingTokens
-        => _trailingTokens is not null;
+        => _trailingTokens is not null && _trailingTokens.Count > 0;
 
     private SyntaxTokenList? _trailingTokens;
     /// <summary>
@@ -141,3 +141,13 @@ public abstract partial class SyntaxNode
     public abstract R Accept<R>(ISyntaxVisitor<R> visitor);
 }
 
+public interface ICreateSyntaxNode<out T> 
+    where T : SyntaxNode
+{
+    static abstract T Create(
+        string text, 
+        SyntaxLocation location, 
+        SyntaxNodeOrTokenList children, 
+        SyntaxNodeList childNodes,
+        SyntaxTokenList trailingTokens);
+}

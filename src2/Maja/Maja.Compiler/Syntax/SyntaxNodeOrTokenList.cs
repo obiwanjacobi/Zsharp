@@ -9,8 +9,6 @@ namespace Maja.Compiler.Syntax;
 /// </summary>
 public sealed class SyntaxNodeOrTokenList : ReadOnlyCollection<SyntaxNodeOrToken>
 {
-    private static readonly List<SyntaxNodeOrToken> Empty = new();
-
     private SyntaxNodeOrTokenList()
         : base(Empty)
     { }

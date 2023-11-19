@@ -6,9 +6,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a public export entry.
 /// </summary>
-public sealed class PublicExportSyntax : SyntaxNode
+public sealed class PublicExportSyntax : SyntaxNode, ICreateSyntaxNode<PublicExportSyntax>
 {
-    public PublicExportSyntax(string text)
+    private PublicExportSyntax(string text)
         : base(text)
     { }
 
@@ -23,4 +23,12 @@ public sealed class PublicExportSyntax : SyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnPublicExport(this);
+    public static PublicExportSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new PublicExportSyntax(text)
+        {
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
+            TrailingTokens = trailingTokens
+        };
 }

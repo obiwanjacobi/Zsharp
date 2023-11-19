@@ -5,9 +5,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents the 'if' statement.
 /// </summary>
-public class StatementIfSyntax : StatementSyntax
+public class StatementIfSyntax : StatementSyntax, ICreateSyntaxNode<StatementIfSyntax>
 {
-    public StatementIfSyntax(string text)
+    private StatementIfSyntax(string text)
         : base(text)
     { }
 
@@ -40,6 +40,15 @@ public class StatementIfSyntax : StatementSyntax
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementIf(this);
+    
+    public static StatementIfSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 
 public abstract class StatementElseClauseSyntax : SyntaxNode
@@ -58,9 +67,9 @@ public abstract class StatementElseClauseSyntax : SyntaxNode
 /// <summary>
 /// Represents an else-if branch for an if statement.
 /// </summary>
-public sealed class StatementElseIfSyntax : StatementElseClauseSyntax
+public sealed class StatementElseIfSyntax : StatementElseClauseSyntax, ICreateSyntaxNode<StatementElseIfSyntax>
 {
-    public StatementElseIfSyntax(string text)
+    private StatementElseIfSyntax(string text)
         : base(text)
     { }
 
@@ -87,14 +96,23 @@ public sealed class StatementElseIfSyntax : StatementElseClauseSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementElseIf(this);
+    
+    public static StatementElseIfSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 
 /// <summary>
 /// Represents an else branch for an if statement.
 /// </summary>
-public sealed class StatementElseSyntax : StatementElseClauseSyntax
+public sealed class StatementElseSyntax : StatementElseClauseSyntax, ICreateSyntaxNode<StatementElseSyntax>
 {
-    public StatementElseSyntax(string text)
+    private StatementElseSyntax(string text)
         : base(text)
     { }
 
@@ -103,4 +121,13 @@ public sealed class StatementElseSyntax : StatementElseClauseSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementElse(this);
+    
+    public static StatementElseSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

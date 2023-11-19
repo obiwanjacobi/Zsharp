@@ -6,9 +6,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Root Syntax Node.
 /// </summary>
-public sealed class CompilationUnitSyntax : SyntaxNode
+public sealed class CompilationUnitSyntax : SyntaxNode, ICreateSyntaxNode<CompilationUnitSyntax>
 {
-    public CompilationUnitSyntax(string text)
+    private CompilationUnitSyntax(string text)
         : base(text)
     { }
 
@@ -44,4 +44,13 @@ public sealed class CompilationUnitSyntax : SyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnCompilationUnit(this);
+    
+    public static CompilationUnitSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

@@ -4,7 +4,6 @@ using FluentAssertions;
 using Maja.Compiler.EmitCS;
 using Maja.Compiler.EmmitCS.CSharp.Project;
 using Maja.UnitTests.IR;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit.Abstractions;
 
 namespace Maja.UnitTests.EmitCS;
@@ -28,7 +27,7 @@ internal static class Emit
     public static void AssertBuild(string emit, ITestOutputHelper? output = null, [CallerMemberName] string callerName = "")
     {
         var result = Build(emit, callerName);
-        
+
         if (output is not null)
             output.WriteLine(result);
 

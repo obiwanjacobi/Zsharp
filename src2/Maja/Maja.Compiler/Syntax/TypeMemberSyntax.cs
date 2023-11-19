@@ -22,9 +22,9 @@ public abstract class TypeMemberSyntax : SyntaxNode
 /// <summary>
 /// Represents a type enum member.
 /// </summary>
-public sealed class MemberEnumSyntax : TypeMemberSyntax
+public sealed class MemberEnumSyntax : TypeMemberSyntax, ICreateSyntaxNode<MemberEnumSyntax>
 {
-    public MemberEnumSyntax(string text)
+    private MemberEnumSyntax(string text)
         : base(text)
     { }
 
@@ -39,14 +39,23 @@ public sealed class MemberEnumSyntax : TypeMemberSyntax
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberEnum(this);
+    
+    public static MemberEnumSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 
 /// <summary>
 /// Represent a type field member.
 /// </summary>
-public sealed class MemberFieldSyntax : TypeMemberSyntax
+public sealed class MemberFieldSyntax : TypeMemberSyntax, ICreateSyntaxNode<MemberFieldSyntax>
 {
-    public MemberFieldSyntax(string text)
+    private MemberFieldSyntax(string text)
         : base(text)
     { }
 
@@ -67,14 +76,22 @@ public sealed class MemberFieldSyntax : TypeMemberSyntax
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberField(this);
+    public static MemberFieldSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 
 /// <summary>
 /// Represents a validation rule of a type declaration.
 /// </summary>
-public sealed class MemberRuleSyntax : TypeMemberSyntax
+public sealed class MemberRuleSyntax : TypeMemberSyntax, ICreateSyntaxNode<MemberRuleSyntax>
 {
-    public MemberRuleSyntax(string text)
+    private MemberRuleSyntax(string text)
         : base(text)
     { }
 
@@ -86,16 +103,24 @@ public sealed class MemberRuleSyntax : TypeMemberSyntax
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberRule(this);
+    public static MemberRuleSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 
 /// <summary>
 /// A typed list of type members.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class TypeMemberListSyntax<T> : SyntaxNode
+public sealed class TypeMemberListSyntax<T> : SyntaxNode, ICreateSyntaxNode<TypeMemberListSyntax<T>>
     where T : TypeMemberSyntax
 {
-    public TypeMemberListSyntax(string text)
+    private TypeMemberListSyntax(string text)
         : base(text)
     { }
 
@@ -117,5 +142,14 @@ public sealed class TypeMemberListSyntax<T> : SyntaxNode
 
         return result;
     }
+
+    public static TypeMemberListSyntax<T> Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 

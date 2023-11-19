@@ -40,4 +40,63 @@ public record TypeSymbol : Symbol
         => SymbolKind.Type;
     public virtual bool IsExternal => false;
     public bool IsWellknown { get; }
+
+    public static bool IsVoid(TypeSymbol type)
+        => type == TypeSymbol.Void;
+
+    public static bool IsBoolean(TypeSymbol type)
+        => type == TypeSymbol.Bool;
+
+    public static bool IsI8(TypeSymbol type)
+        => type == TypeSymbol.I8;
+    public static bool IsU8(TypeSymbol type)
+        => type == TypeSymbol.U8;
+    public static bool IsI16(TypeSymbol type)
+        => type == TypeSymbol.I16;
+    public static bool IsU16(TypeSymbol type)
+        => type == TypeSymbol.U16;
+    public static bool IsI32(TypeSymbol type)
+        => type == TypeSymbol.I32;
+    public static bool IsU32(TypeSymbol type)
+        => type == TypeSymbol.U32;
+    public static bool IsI64(TypeSymbol type)
+        => type == TypeSymbol.I64;
+    public static bool IsU64(TypeSymbol type)
+        => type == TypeSymbol.U64;
+
+    public static bool IsInteger(TypeSymbol type)
+    {
+        return type == TypeSymbol.I8
+            || type == TypeSymbol.U8
+            || type == TypeSymbol.I16
+            || type == TypeSymbol.U16
+            || type == TypeSymbol.I32
+            || type == TypeSymbol.U32
+            || type == TypeSymbol.I64
+            || type == TypeSymbol.U64
+            ;
+    }
+
+    public static bool IsF16(TypeSymbol type)
+        => type == TypeSymbol.F16;
+    public static bool IsF32(TypeSymbol type)
+        => type == TypeSymbol.F32;
+    public static bool IsF64(TypeSymbol type)
+        => type == TypeSymbol.F64;
+    public static bool IsF96(TypeSymbol type)
+        => type == TypeSymbol.F96;
+
+    public static bool IsFloat(TypeSymbol type)
+    {
+        return type == TypeSymbol.F16
+            || type == TypeSymbol.F32
+            || type == TypeSymbol.F64
+            || type == TypeSymbol.F96
+            ;
+    }
+
+    public static bool IsC16(TypeSymbol type)
+        => type == TypeSymbol.C16;
+    public static bool IsStr(TypeSymbol type)
+        => type == TypeSymbol.Str;
 }

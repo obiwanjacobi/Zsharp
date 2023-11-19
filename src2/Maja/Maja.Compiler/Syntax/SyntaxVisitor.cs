@@ -54,6 +54,7 @@ public interface ISyntaxVisitor<R>
     R OnLiteralString(LiteralStringSyntax node);
 
     R OnName(NameSyntax node);
+    R OnQualifiedName(QualifiedNameSyntax node);
 }
 
 #nullable disable
@@ -182,6 +183,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => VisitChildren(node);
 
     public virtual R OnName(NameSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnQualifiedName(QualifiedNameSyntax node)
         => VisitChildren(node);
 }
 #nullable enable

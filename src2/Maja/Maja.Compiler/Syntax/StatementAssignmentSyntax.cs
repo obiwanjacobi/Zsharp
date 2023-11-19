@@ -2,9 +2,9 @@
 
 namespace Maja.Compiler.Syntax;
 
-public sealed class StatementAssignmentSyntax : StatementSyntax
+public sealed class StatementAssignmentSyntax : StatementSyntax, ICreateSyntaxNode<StatementAssignmentSyntax>
 {
-    public StatementAssignmentSyntax(string text)
+    private StatementAssignmentSyntax(string text)
         : base(text)
     { }
 
@@ -19,4 +19,13 @@ public sealed class StatementAssignmentSyntax : StatementSyntax
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementAssignment(this);
+    
+    public static StatementAssignmentSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

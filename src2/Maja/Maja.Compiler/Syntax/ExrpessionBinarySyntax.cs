@@ -5,9 +5,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// An expression with an infix operator.
 /// </summary>
-public sealed class ExpressionBinarySyntax : ExpressionSyntax
+public sealed class ExpressionBinarySyntax : ExpressionSyntax, ICreateSyntaxNode<ExpressionBinarySyntax>
 {
-    public ExpressionBinarySyntax(string text)
+    private ExpressionBinarySyntax(string text)
         : base(text)
     { }
 
@@ -73,4 +73,13 @@ public sealed class ExpressionBinarySyntax : ExpressionSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionBinary(this);
+    
+    public static ExpressionBinarySyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

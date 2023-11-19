@@ -6,9 +6,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a use import statement.
 /// </summary>
-public sealed class UseImportSyntax : SyntaxNode
+public sealed class UseImportSyntax : SyntaxNode, ICreateSyntaxNode<UseImportSyntax>
 {
-    public UseImportSyntax(string text)
+    private UseImportSyntax(string text)
         : base(text)
     { }
 
@@ -23,4 +23,12 @@ public sealed class UseImportSyntax : SyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnUseImport(this);
+    public static UseImportSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
+            TrailingTokens = trailingTokens
+        };
 }

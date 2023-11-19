@@ -17,8 +17,8 @@ internal static class IrNumber
             second = inferredSecond.GetPreferredType()
                 ?? throw new Exception("No preferred type could be found.");
 
-        if ((IsInteger(first) && IsInteger(second)) ||
-            (IsFloat(first) && IsFloat(second)))
+        if ((TypeSymbol.IsInteger(first) && TypeSymbol.IsInteger(second)) ||
+            (TypeSymbol.IsFloat(first) && TypeSymbol.IsFloat(second)))
         {
             type = first.SizeInBytes() < second.SizeInBytes()
                 ? second
@@ -27,7 +27,7 @@ internal static class IrNumber
             return true;
         }
 
-        if (IsBoolean(first) && IsBoolean(second))
+        if (TypeSymbol.IsBoolean(first) && TypeSymbol.IsBoolean(second))
         {
             type = first;
             return true;
@@ -35,31 +35,6 @@ internal static class IrNumber
 
         type = null;
         return false;
-    }
-
-    internal static bool IsBoolean(TypeSymbol type)
-        => type == TypeSymbol.Bool;
-
-    internal static bool IsInteger(TypeSymbol type)
-    {
-        return type == TypeSymbol.I8
-            || type == TypeSymbol.U8
-            || type == TypeSymbol.I16
-            || type == TypeSymbol.U16
-            || type == TypeSymbol.I32
-            || type == TypeSymbol.U32
-            || type == TypeSymbol.I64
-            || type == TypeSymbol.I64
-            ;
-    }
-
-    internal static bool IsFloat(TypeSymbol type)
-    {
-        return type == TypeSymbol.F16
-            || type == TypeSymbol.F32
-            || type == TypeSymbol.F64
-            || type == TypeSymbol.F96
-            ;
     }
 
     internal static IEnumerable<TypeSymbol> ParseNumber(string text, out object? value)
@@ -70,7 +45,7 @@ internal static class IrNumber
         // signed
         if (SByte.TryParse(text, out var i8))
         {
-            value ??= i8;
+            value = i8;
             types.Add(TypeSymbol.I8);
         }
         if (Int16.TryParse(text, out var i16))
@@ -107,19 +82,19 @@ internal static class IrNumber
         }
 
         // unsigned
-        if (Byte.TryParse(text, out var u8))
+        if (Byte.TryParse(text, out var _))
         {
             types.Add(TypeSymbol.U8);
         }
-        if (UInt16.TryParse(text, out var u16))
+        if (UInt16.TryParse(text, out var _))
         {
             types.Add(TypeSymbol.U16);
         }
-        if (UInt32.TryParse(text, out var u32))
+        if (UInt32.TryParse(text, out var _))
         {
             types.Add(TypeSymbol.U32);
         }
-        if (UInt64.TryParse(text, out var u64))
+        if (UInt64.TryParse(text, out var _))
         {
             types.Add(TypeSymbol.U64);
         }

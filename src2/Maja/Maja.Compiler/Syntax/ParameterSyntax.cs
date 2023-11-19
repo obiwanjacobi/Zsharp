@@ -5,9 +5,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a parameter in a function declaration.
 /// </summary>
-public sealed class ParameterSyntax : SyntaxNode
+public sealed class ParameterSyntax : SyntaxNode, ICreateSyntaxNode<ParameterSyntax>
 {
-    public ParameterSyntax(string text)
+    private ParameterSyntax(string text)
         : base(text)
     { }
 
@@ -28,4 +28,13 @@ public sealed class ParameterSyntax : SyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnParameter(this);
+    
+    public static ParameterSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

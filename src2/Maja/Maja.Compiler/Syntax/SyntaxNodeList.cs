@@ -11,8 +11,6 @@ namespace Maja.Compiler.Syntax;
 /// </summary>
 public sealed class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
 {
-    private static readonly List<SyntaxNode> Empty = new();
-
     private SyntaxNodeList()
         : base(Empty)
     { }

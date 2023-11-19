@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Maja.Compiler.EmitCS.CSharp;
@@ -79,7 +78,8 @@ internal sealed class CSharpWriter
 
     public void StartField(Field field)
     {
-        Tab().Append(field.AccessModifiers.ToCode())
+        Tab()
+            .Append(field.AccessModifiers.ToCode())
             .Append(SpaceChar)
             .Append(field.FieldModifiers.ToCode())
             .Append(SpaceChar)
@@ -90,14 +90,16 @@ internal sealed class CSharpWriter
 
     public void WriteVariable(string? netType, string name)
     {
-        Tab().Append(netType is null ? "var" : netType)
+        Tab()
+            .Append(netType is null ? "var" : netType)
             .Append(SpaceChar)
             .Append(name);
     }
 
     public void StartAssignment(string name)
     {
-        Tab().Append(name)
+        Tab()
+            .Append(name)
             .Append(" = ");
     }
 
@@ -110,7 +112,9 @@ internal sealed class CSharpWriter
     public void CloseScope()
     {
         Dedent();
-        Tab().Append(CloseScopeChar).AppendLine();
+        Tab()
+            .Append(CloseScopeChar)
+            .AppendLine();
     }
 
     public void Using(string usingName)

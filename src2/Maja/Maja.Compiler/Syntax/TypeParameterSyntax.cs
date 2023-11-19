@@ -27,9 +27,9 @@ public abstract class TypeParameterSyntax : SyntaxNode
 /// <summary>
 /// A generic type parameter (.NET).
 /// </summary>
-public sealed class TypeParameterGenericSyntax : TypeParameterSyntax
+public sealed class TypeParameterGenericSyntax : TypeParameterSyntax, ICreateSyntaxNode<TypeParameterGenericSyntax>
 {
-    public TypeParameterGenericSyntax(string text)
+    private TypeParameterGenericSyntax(string text)
         : base(text)
     { }
 
@@ -38,14 +38,23 @@ public sealed class TypeParameterGenericSyntax : TypeParameterSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterGeneric(this);
+    
+    public static TypeParameterGenericSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 
 /// <summary>
 /// A template type parameter (#)
 /// </summary>
-public sealed class TypeParameterTemplateSyntax : TypeParameterSyntax
+public sealed class TypeParameterTemplateSyntax : TypeParameterSyntax, ICreateSyntaxNode<TypeParameterTemplateSyntax>
 {
-    public TypeParameterTemplateSyntax(string text)
+    private TypeParameterTemplateSyntax(string text)
         : base(text)
     { }
 
@@ -54,14 +63,23 @@ public sealed class TypeParameterTemplateSyntax : TypeParameterSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterTemplate(this);
+
+    public static TypeParameterTemplateSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 
 /// <summary>
 /// A scalar value type parameter.
 /// </summary>
-public sealed class TypeParameterValueSyntax : TypeParameterSyntax
+public sealed class TypeParameterValueSyntax : TypeParameterSyntax, ICreateSyntaxNode<TypeParameterValueSyntax>
 {
-    public TypeParameterValueSyntax(string text)
+    private TypeParameterValueSyntax(string text)
         : base(text)
     { }
 
@@ -73,5 +91,14 @@ public sealed class TypeParameterValueSyntax : TypeParameterSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterValue(this);
+    
+    public static TypeParameterValueSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 

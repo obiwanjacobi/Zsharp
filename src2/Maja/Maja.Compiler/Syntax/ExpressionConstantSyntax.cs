@@ -15,9 +15,9 @@ public abstract class ExpressionConstantSyntax : ExpressionSyntax
 /// <summary>
 /// An expression that represents a literal value.
 /// </summary>
-public class ExpressionLiteralSyntax : ExpressionConstantSyntax
+public class ExpressionLiteralSyntax : ExpressionConstantSyntax, ICreateSyntaxNode<ExpressionLiteralSyntax>
 {
-    public ExpressionLiteralSyntax(string text)
+    private ExpressionLiteralSyntax(string text)
         : base(text)
     { }
 
@@ -38,14 +38,23 @@ public class ExpressionLiteralSyntax : ExpressionConstantSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteral(this);
+    
+    public static ExpressionLiteralSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }
 
 /// <summary>
 /// An expression that represents a literal boolean value.
 /// </summary>
-public class ExpressionLiteralBoolSyntax : ExpressionConstantSyntax
+public class ExpressionLiteralBoolSyntax : ExpressionConstantSyntax, ICreateSyntaxNode<ExpressionLiteralBoolSyntax>
 {
-    public ExpressionLiteralBoolSyntax(string text)
+    private ExpressionLiteralBoolSyntax(string text)
         : base(text)
     {
         Value = text == "true";
@@ -61,4 +70,13 @@ public class ExpressionLiteralBoolSyntax : ExpressionConstantSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteralBool(this);
+    
+    public static ExpressionLiteralBoolSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

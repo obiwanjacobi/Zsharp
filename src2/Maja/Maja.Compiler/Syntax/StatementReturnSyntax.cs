@@ -5,9 +5,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents the ret statement.
 /// </summary>
-public sealed class StatementReturnSyntax : StatementSyntax
+public sealed class StatementReturnSyntax : StatementSyntax, ICreateSyntaxNode<StatementReturnSyntax>
 {
-    public StatementReturnSyntax(string text)
+    private StatementReturnSyntax(string text)
         : base(text)
     { }
 
@@ -22,4 +22,13 @@ public sealed class StatementReturnSyntax : StatementSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementReturn(this);
+    
+    public static StatementReturnSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

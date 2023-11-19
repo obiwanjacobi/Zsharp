@@ -8,7 +8,7 @@ namespace Maja.Compiler.Syntax;
 /// </summary>
 public sealed class ExpressionOperatorSyntax : SyntaxNode
 {
-    public ExpressionOperatorSyntax(string text)
+    private ExpressionOperatorSyntax(string text)
         : base(text)
     { }
 
@@ -25,6 +25,21 @@ public sealed class ExpressionOperatorSyntax : SyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionOperator(this);
+    
+    public static ExpressionOperatorSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens,
+        int precedence, ExpressionOperatorKind kind, ExpressionOperatorCategory category,
+        ExpressionOperatorCardinality cardinality)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens,
+            Precedence = precedence,
+            OperatorKind = kind,
+            OperatorCategory = category, 
+            OperatorCardinality = cardinality
+        };
 }
 
 internal static class ExpressionOperatorMap

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -11,8 +10,6 @@ namespace Maja.Compiler.Syntax;
 /// </summary>
 public sealed class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
 {
-    private static readonly List<SyntaxToken> Empty = new();
-
     private SyntaxTokenList()
         : base(Empty)
     { }

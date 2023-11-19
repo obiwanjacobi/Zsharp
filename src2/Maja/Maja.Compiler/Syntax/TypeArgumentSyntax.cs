@@ -5,9 +5,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a type argument.
 /// </summary>
-public sealed class TypeArgumentSyntax : SyntaxNode
+public sealed class TypeArgumentSyntax : SyntaxNode, ICreateSyntaxNode<TypeArgumentSyntax>
 {
-    public TypeArgumentSyntax(string text)
+    private TypeArgumentSyntax(string text)
         : base(text)
     { }
 
@@ -28,4 +28,12 @@ public sealed class TypeArgumentSyntax : SyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeArgument(this);
+    public static TypeArgumentSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

@@ -6,9 +6,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// A block of code typically representing a scope.
 /// </summary>
-public sealed class CodeBlockSyntax : SyntaxNode
+public sealed class CodeBlockSyntax : SyntaxNode, ICreateSyntaxNode<CodeBlockSyntax>
 {
-    public CodeBlockSyntax(string text)
+    private CodeBlockSyntax(string text)
         : base(text)
     { }
 
@@ -29,4 +29,12 @@ public sealed class CodeBlockSyntax : SyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnCodeBlock(this);
+    public static CodeBlockSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
+            TrailingTokens = trailingTokens
+        };
 }

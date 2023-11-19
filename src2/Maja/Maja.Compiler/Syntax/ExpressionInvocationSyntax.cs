@@ -6,9 +6,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a function invocation.
 /// </summary>
-public sealed class ExpressionInvocationSyntax : ExpressionSyntax
+public sealed class ExpressionInvocationSyntax : ExpressionSyntax, ICreateSyntaxNode<ExpressionInvocationSyntax>
 {
-    public ExpressionInvocationSyntax(string text)
+    private ExpressionInvocationSyntax(string text)
         : base(text)
     { }
 
@@ -29,4 +29,13 @@ public sealed class ExpressionInvocationSyntax : ExpressionSyntax
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionInvocation(this);
+    
+    public static ExpressionInvocationSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
 }

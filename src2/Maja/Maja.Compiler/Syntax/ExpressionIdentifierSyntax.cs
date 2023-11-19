@@ -2,9 +2,9 @@
 
 namespace Maja.Compiler.Syntax
 {
-    public sealed class ExpressionIdentifierSyntax : ExpressionSyntax
+    public sealed class ExpressionIdentifierSyntax : ExpressionSyntax, ICreateSyntaxNode<ExpressionIdentifierSyntax>
     {
-        public ExpressionIdentifierSyntax(string text)
+        private ExpressionIdentifierSyntax(string text)
             : base(text)
         { }
 
@@ -16,5 +16,14 @@ namespace Maja.Compiler.Syntax
 
         public override R Accept<R>(ISyntaxVisitor<R> visitor)
             => visitor.OnExpressionIdentifier(this);
+        
+        public static ExpressionIdentifierSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+        => new(text)
+        {
+            Location = location, 
+            Children = children, 
+            ChildNodes = childNodes, 
+            TrailingTokens = trailingTokens
+        };
     }
 }

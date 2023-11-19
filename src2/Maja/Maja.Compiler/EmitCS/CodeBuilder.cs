@@ -30,7 +30,7 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnProgram(IrProgram program)
     {
-        base.OnProgram(program);
+        _ = base.OnProgram(program);
         _writer.CloseScope();
         var ns = _scopes.Pop().Namespace;
 

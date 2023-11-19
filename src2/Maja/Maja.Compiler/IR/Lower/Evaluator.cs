@@ -13,7 +13,7 @@ internal static class Evaluator
 
         object? val = null;
 
-        if (IrNumber.IsBoolean(type))
+        if (TypeSymbol.IsBoolean(type))
         {
             var leftBool = leftValue.ToBool();
             var rightBool = rightValue.ToBool();
@@ -29,7 +29,7 @@ internal static class Evaluator
             };
         }
 
-        if (IrNumber.IsInteger(type))
+        if (TypeSymbol.IsInteger(type))
         {
             var leftInt = leftValue.ToI64();
             var rightInt = rightValue.ToI64();
@@ -61,7 +61,7 @@ internal static class Evaluator
             };
         }
 
-        if (IrNumber.IsFloat(type))
+        if (TypeSymbol.IsFloat(type))
         {
             var leftFloat = leftValue.ToF64();
             var rightFloat = rightValue.ToF64();
