@@ -283,6 +283,8 @@ arr4 = arr2 -- arr1
 // is the rest of arr1 concatenated, or zero used for missing values in arr2 (producing negative results)?
 ```
 
+> TBD: For array arithmetic (arithmetic that is applied to each item in the array) we could generate simd/vector code that does multiple items in one instruction.
+
 ---
 
 > TBD
