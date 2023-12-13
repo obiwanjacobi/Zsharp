@@ -524,3 +524,34 @@ loopFn: (p: U8)
         if n = 101
             exit(Error("Too large")) // throw exception
 ```
+
+---
+
+> TBD: some sort of syntax (operators?) that would allow for 'conditional arithmetic' in order to reduce branches as an optimization.
+
+Does the .NET compiler (or runtime) already do branchless optimization?
+
+```csharp
+// instead of
+greater: (a: I8, b: I8): I8
+    if a > b
+        return a;
+    else
+        return b;
+
+// branchless (plain syntax)
+greater: (a: I8, b: I8): I8
+    return a * I8(a > b) + b * I8(b >= a)
+
+// what syntax?
+// or let our compiler do an auto tranform?
+greater: (a: I8, b: I8): I8
+    return (a > b) -> a, (b >= a) -> b
+
+// match?
+greater: (a: I8, b: I8): I8
+    return match (a, b)
+        (a > b) -> a
+        (b >= a) -> b
+        _ -> 0      // default case if needed
+```

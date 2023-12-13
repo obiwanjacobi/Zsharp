@@ -50,6 +50,8 @@ The `include` keyword includes the compiled source code module into the specifie
 
 > TBD: if local modules are included by file name, they could be specified using the `import` keyword and we would not need the `include` keyword. Then again, the `include` keyword could be a general way to include a file's content into another file. However that is not how it is used here. `include` in the assembly file could (be made to) mean to include a library as source code (point to -remote- root folder).
 
+> Or perhaps introduce a `load` that distinguishes between different `include` flavors?
+
 ```csharp
 # assembly Name.OfMy.Assembly
 

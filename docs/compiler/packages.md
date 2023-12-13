@@ -1,4 +1,4 @@
-# Zlang Packages
+# Packages
 
 Extra files can accompany the binary output, that provide extra meta data about the binary.
 

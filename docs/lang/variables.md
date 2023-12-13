@@ -88,6 +88,31 @@ c: Imm<U8> = v  // ok, immutable copy of v
 
 See also [Immutable Types](types.md#Immutable-Types).
 
+> TBD: Is there a difference between immutable variables and function parameter that are immutable?
+
+```csharp
+// this can never change
+i: Imm<I8> = 42
+// this can never become an immutable variable?
+m = 101
+
+// error cannot (re)assign imm var
+i = m
+
+// guarantees that param will never be changed (is that ever an issue with by-value?)
+fn: (constP: Imm<I8>)
+    ...
+
+// can pass imm var to imm param
+fn(i)
+// can pass mutable var to imm param
+fn(m)
+```
+
+This would mean that an imm var cannot be assigned (outside of initialization) but can be passed as an imm param.
+
+Do we need different syntax (or type) for that?
+
 ---
 
 ## Global Variables

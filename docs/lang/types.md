@@ -99,6 +99,10 @@ Unsigned integers can never overflow, they can only wrap around. Do you still wa
 
 Are sizes unsigned? Why is an index signed? Are there problems for signed integers?
 
+What is we introduced unsigned integers that are guarenteed to convert to their signed counterpart?
+For instance a U31 that can be (implicitly) converted to a I32.
+Pro: be explicit about what parameters (variables) accept negative values and which don't.
+
 ### Floating Point
 
 The floating point data types are:
@@ -108,6 +112,20 @@ F16, F32, F64, F96
 ```
 
 These map to respective .NET types: `Half`, `Single`, `Double` and `Decimal`.
+
+> TBD: Rational Numbers
+
+Now that dotnet supports number interfaces we could introduce a rational number type that stores decimals not as a floating point representation but as an integer (numerator) with a scaling factor (denominator).
+
+This would fix `0.1 + 0.2 - 0.3` problem: floating point math says it's `5.551115123125783E-17` and that's not zero.
+
+```csharp
+R16, R32, R64, R128
+```
+
+For an `R32` both the numerator and the denominator would be 32 bits.
+
+<https://github.com/tompazourek/Rationals/tree/master>
 
 ### Strings
 

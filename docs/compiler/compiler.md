@@ -21,7 +21,6 @@
 - Compiler as a specializer (taking source and static input and compiling an optimized version).
 - Compiler as profiler?
 - Compiler as build-system? Use REPL/VM to execute zs-script using build-task lib...?
-- Compiler as (language supported) build system.
 - Semantic compiler rules available as functions to code (traits?).
 
 ---
