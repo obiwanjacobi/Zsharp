@@ -16,20 +16,12 @@ internal class MajaController : ReplController
 
         if (line.EndsWith(CommandChar))
         {
-            if (line.Length == 1)
-            {
-                document.RemoveLineAt(view.CurrentLineIndex);
-                if (view.CurrentLineIndex > 0)
-                {
-                    view.CurrentLineIndex--;
-                }
-            }
-            else
-            {
-                document.RemoveCharsAt(view.CurrentLineIndex, view.CurrentCharIndex - 1, 1);
-                if (view.CurrentCharIndex > 0)
-                    view.CurrentCharIndex--;
-            }
+            document.RemoveCharsAt(view.CurrentLineIndex, view.CurrentCharIndex - 1, 1);
+            view.CurrentCharIndex--;
+
+            if (view.CurrentCharIndex > 0)
+                _ = base.HandleEnter(document, view);
+
             SubmitInput();
             return true;
         }

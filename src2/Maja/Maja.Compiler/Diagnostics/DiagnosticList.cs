@@ -17,7 +17,7 @@ public sealed class DiagnosticList : IEnumerable<DiagnosticMessage>
         return diagMsg;
     }
 
-    public bool HasDiagnaostics => _messages.Count > 0;
+    public bool HasDiagnostics => _messages.Count > 0;
 
     public IEnumerator<DiagnosticMessage> GetEnumerator()
         => _messages.GetEnumerator();

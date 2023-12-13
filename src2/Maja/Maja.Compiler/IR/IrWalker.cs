@@ -35,13 +35,13 @@ internal abstract class IrWalker<R>
         => Default;
 
     public virtual R OnExports(IEnumerable<IrExport> exports)
-        => exports.Select(export => OnExport(export))
+        => exports.Select(OnExport)
             .Aggregate(Default, AggregateResult);
     public virtual R OnExport(IrExport export)
         => Default;
 
     public virtual R OnImports(IEnumerable<IrImport> imports)
-    => imports.Select(import => OnImport(import))
+    => imports.Select(OnImport)
             .Aggregate(Default, AggregateResult);
     public virtual R OnImport(IrImport import)
         => Default;
@@ -67,7 +67,7 @@ internal abstract class IrWalker<R>
         return result;
     }
     public virtual R OnParameters(IEnumerable<IrParameter> parameters)
-        => parameters.Select(parameter => OnParameter(parameter))
+        => parameters.Select(OnParameter)
             .Aggregate(Default, AggregateResult);
     public virtual R OnParameter(IrParameter parameter)
         => OnType(parameter.Type);
@@ -80,12 +80,12 @@ internal abstract class IrWalker<R>
         return result;
     }
     public virtual R OnTypeMemberEnums(IEnumerable<IrTypeMemberEnum> memberEnums)
-        => memberEnums.Select(memberEnum => OnTypeMemberEnum(memberEnum))
+        => memberEnums.Select(OnTypeMemberEnum)
             .Aggregate(Default, AggregateResult);
     public virtual R OnTypeMemberEnum(IrTypeMemberEnum memberEnum)
         => OnOptionalExpression(Default, memberEnum.ValueExpression);
     public virtual R OnTypeMemberFields(IEnumerable<IrTypeMemberField> memberFields)
-        => memberFields.Select(memberField => OnTypeMemberField(memberField))
+        => memberFields.Select(OnTypeMemberField)
             .Aggregate(Default, AggregateResult);
     public virtual R OnTypeMemberField(IrTypeMemberField memberField)
     {
@@ -94,7 +94,7 @@ internal abstract class IrWalker<R>
         return result;
     }
     public virtual R OnTypeMemberRules(IEnumerable<IrTypeMemberRule> memberRules)
-        => memberRules.Select(memberRule => OnTypeMemberRule(memberRule))
+        => memberRules.Select(OnTypeMemberRule)
             .Aggregate(Default, AggregateResult);
     public virtual R OnTypeMemberRule(IrTypeMemberRule memberRule)
         => Default;
@@ -127,7 +127,7 @@ internal abstract class IrWalker<R>
     public virtual R OnExpressionInvocation(IrExpressionInvocation invocation)
         => OnInvocationArguments(invocation.Arguments);
     public virtual R OnInvocationArguments(IEnumerable<IrArgument> arguments)
-        => arguments.Select(arg => OnInvocationArgument(arg))
+        => arguments.Select(OnInvocationArgument)
             .Aggregate(Default, AggregateResult);
     public virtual R OnInvocationArgument(IrArgument argument)
         => OnExpression(argument.Expression);

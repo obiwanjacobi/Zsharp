@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.IR.Lower;
 using Maja.Compiler.Symbol;
@@ -18,10 +18,10 @@ internal sealed class EvalWalker : IrWalker<object?>
         var right = (IrConstant)OnExpression(expression.Right)!;
 
         var result = IR.Lower.Evaluator.Evaluate(
-            expression.Left.TypeSymbol, left, 
-            expression.Operator, 
+            expression.Left.TypeSymbol, left,
+            expression.Operator,
             expression.Right.TypeSymbol, right);
-        
+
         return result;
     }
 
@@ -30,12 +30,12 @@ internal sealed class EvalWalker : IrWalker<object?>
         if (identifier.ConstantValue is not null)
             return identifier.ConstantValue;
 
-        if (_state.TryLookupValue(identifier.Symbol.Name.FullName, out var value))
+        if (_state.TryLookupVariable(identifier.Symbol.Name.FullName, out var value))
             return new IrConstant(value);
 
         return null;
     }
-    
+
     public override object? OnExpressionLiteral(IrExpressionLiteral expression)
     {
         return expression.ConstantValue;
@@ -47,44 +47,54 @@ internal sealed class EvalWalker : IrWalker<object?>
         var type = variable.TypeSymbol;
         var name = symbol.Name.FullName;
 
+        var value = variable.Initializer is null
+            ? IrConstant.Zero
+            : (IrConstant?)OnExpression(variable.Initializer!) ?? IrConstant.Zero;
+
         if (TypeSymbol.IsBoolean(type))
-            return _state.TryAdd(name, false) ? false : null;
+            SetVariable(name, value.ToBool());
 
-        if (TypeSymbol.IsI8(type))
-            return AddVariable(name, (sbyte)0);
-        if (TypeSymbol.IsU8(type))
-            return AddVariable(name, (byte)0);
-        if (TypeSymbol.IsI16(type))
-            return AddVariable(name, (short)0);
-        if (TypeSymbol.IsU16(type))
-            return AddVariable(name, (ushort)0);
-        if (TypeSymbol.IsI32(type))
-            return AddVariable(name, 0);    // by default an int
-        if (TypeSymbol.IsU32(type))
-            return AddVariable(name, (uint)0);
-        if (TypeSymbol.IsI64(type))
-            return AddVariable(name, (long)0);
-        if (TypeSymbol.IsU64(type))
-            return AddVariable(name, (ulong)0);
+        else if (TypeSymbol.IsI8(type))
+            SetVariable(name, value.ToI8());
+        else if (TypeSymbol.IsU8(type))
+            SetVariable(name, value.ToU8());
+        else if (TypeSymbol.IsI16(type))
+            SetVariable(name, value.ToI16());
+        else if (TypeSymbol.IsU16(type))
+            SetVariable(name, value.ToU16());
+        else if (TypeSymbol.IsI32(type))
+            SetVariable(name, value.ToI32());
+        else if (TypeSymbol.IsU32(type))
+            SetVariable(name, value.ToU32());
+        else if (TypeSymbol.IsI64(type))
+            SetVariable(name, value.ToI64());
+        else if (TypeSymbol.IsU64(type))
+            SetVariable(name, value.ToU64());
 
-        if (TypeSymbol.IsF16(type))
-            return AddVariable(name, 0.0f);
-        if (TypeSymbol.IsF32(type))
-            return AddVariable(name, 0.0f);
-        if (TypeSymbol.IsF64(type))
-            return AddVariable(name, 0.0d);
-        if (TypeSymbol.IsF96(type))
-            return AddVariable(name, 0.0m);
+        else if (TypeSymbol.IsF16(type))
+            SetVariable(name, value.ToF16());
+        else if (TypeSymbol.IsF32(type))
+            SetVariable(name, value.ToF32());
+        else if (TypeSymbol.IsF64(type))
+            SetVariable(name, value.ToF64());
+        else if (TypeSymbol.IsF96(type))
+            SetVariable(name, value.ToF96());
 
-        if (TypeSymbol.IsC16(type))
-            return AddVariable(name, '\0');
-        if (TypeSymbol.IsStr(type))
-            return AddVariable(name, String.Empty);
+        else if (TypeSymbol.IsC16(type))
+            SetVariable(name, value.ToC16());
+        else if (TypeSymbol.IsStr(type))
+            SetVariable(name, value.ToStr());
 
         return null;
 
-        object? AddVariable<T>(string name, T value)
-            => _state.TryAdd(name, value!) ? value : null;
+        void SetVariable<T>(string name, T value)
+        {
+            if (!_state.TrySetVariable(name, value!))
+            {
+                _state.Diagnostics.Add(DiagnosticMessageKind.Error, variable.Syntax.Location,
+                    $"Setting variable '{name}' to '{value}' failed.");
+            }
+        }
     }
 
     public override object? OnStatementAssignment(IrStatementAssignment statement)
@@ -92,20 +102,46 @@ internal sealed class EvalWalker : IrWalker<object?>
         var value = (IrConstant)OnExpression(statement.Expression)!;
         var name = statement.Symbol.Name.FullName;
 
-        if (!_state.TrySetValue(name, value.Value))
+        if (!_state.TrySetVariable(name, value.Value))
         {
-            // Diagnostics
+            _state.Diagnostics.VariableNotFound(statement.Syntax.Location, name);
         }
         return value;
     }
 
     public override object? OnStatementIf(IrStatementIf statement)
     {
+        var condition = (IrConstant)OnExpression(statement.Condition)!;
+        if (condition.ToBool())
+        {
+            return OnCodeBlock(statement.CodeBlock);
+        }
+        else if (statement.ElseIfClause is not null)
+        {
+            return OnElseIfClause(statement.ElseIfClause);
+        }
+        else if (statement.ElseClause is not null)
+        {
+            return OnCodeBlock(statement.ElseClause.CodeBlock);
+        }
         return null;
     }
 
-    public override object? OnStatementLoop(IrStatementLoop statement)
+    private object? OnElseIfClause(IrElseIfClause elseIfClause)
     {
+        var condition = (IrConstant)OnExpression(elseIfClause.Condition)!;
+        if (condition.ToBool())
+        {
+            return OnCodeBlock(elseIfClause.CodeBlock);
+        }
+        if (elseIfClause.ElseIfClause is not null)
+        {
+            return OnElseIfClause(elseIfClause.ElseIfClause);
+        }
+        if (elseIfClause.ElseClause is not null)
+        {
+            return OnCodeBlock(elseIfClause.ElseClause.CodeBlock);
+        }
         return null;
     }
 }

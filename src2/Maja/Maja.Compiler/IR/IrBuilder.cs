@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.External;
 using Maja.Compiler.Symbol;
@@ -19,25 +20,25 @@ internal sealed class IrBuilder
     private readonly Stack<IrScope> _scopes = new();
     private readonly IExternalModuleLoader _moduleLoader;
 
-    public IEnumerable<DiagnosticMessage> Diagnostics
-        => _diagnostics;
-
-    private IrBuilder(IExternalModuleLoader moduleLoader)
+    private IrBuilder(IExternalModuleLoader moduleLoader, IrScope? parentScope)
     {
-        _scopes.Push(new IrGlobalScope());
+        _scopes.Push(parentScope ?? new IrGlobalScope());
         _moduleLoader = moduleLoader;
     }
+
+    public IEnumerable<DiagnosticMessage> Diagnostics
+        => _diagnostics;
 
     private void PushScope(IrScope scope) => _scopes.Push(scope);
     private IrScope PopScope() => _scopes.Pop();
     private IrScope CurrentScope => _scopes.Peek();
 
-    public static IrProgram Program(SyntaxTree syntaxTree, IExternalModuleLoader moduleLoader)
+    public static IrProgram Program(SyntaxTree syntaxTree, IExternalModuleLoader moduleLoader, IrScope? parentScope = null)
     {
         if (syntaxTree.Diagnostics.Any())
             throw new InvalidOperationException("Cannot Compile when there are syntax errors.");
 
-        var builder = new IrBuilder(moduleLoader);
+        var builder = new IrBuilder(moduleLoader, parentScope);
         var module = builder.Module(syntaxTree.Root);
         builder.PushScope(new IrModuleScope(module.Symbol.Name.FullName, builder.CurrentScope));
 
@@ -63,9 +64,13 @@ internal sealed class IrBuilder
         }
 
         var symbol = new ModuleSymbol(name);
-        if (!((IrGlobalScope)CurrentScope).TryDeclareModule(symbol) &&
-            CurrentScope.TryLookupSymbol<ModuleSymbol>(name, out var existingSymbol))
+
+        if (CurrentScope is IrGlobalScope globalScope &&
+            !globalScope.TryDeclareModule(symbol) &&
+            globalScope.TryLookupSymbol<ModuleSymbol>(name, out var existingSymbol))
+        {
             symbol = existingSymbol;
+        }
 
         // TODO: would like to return the existing IrModule as well...
 
@@ -102,7 +107,7 @@ internal sealed class IrBuilder
         }
     }
 
-    private IEnumerable<IrDeclaration> Declarations(IEnumerable<MemberDeclarationSyntax> syntax)
+    private List<IrDeclaration> Declarations(IEnumerable<MemberDeclarationSyntax> syntax)
     {
         var declarations = new List<IrDeclaration>();
 
@@ -305,7 +310,7 @@ internal sealed class IrBuilder
         return new IrCodeBlock(syntax, statements, declarations);
     }
 
-    private IEnumerable<IrStatement> Statements(IEnumerable<StatementSyntax> statements)
+    private List<IrStatement> Statements(IEnumerable<StatementSyntax> statements)
     {
         var irStats = new List<IrStatement>();
 
@@ -330,7 +335,7 @@ internal sealed class IrBuilder
     {
         var expr = Expression(syntax.Expression);
 
-        VariableSymbol symbol;
+        VariableSymbol? symbol;
         if (DiscardSymbol.IsDiscard(syntax.Name.Text))
         {
             symbol = new DiscardSymbol();
@@ -338,7 +343,11 @@ internal sealed class IrBuilder
         else
         {
             var name = new SymbolName(syntax.Name.Text);
-            symbol = new VariableSymbol(name, expr.TypeSymbol);
+            if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out symbol))
+            {
+                _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
+                symbol = new VariableSymbol(name, expr.TypeSymbol);
+            }
         }
 
         return new IrStatementAssignment(syntax, symbol, expr);
@@ -448,7 +457,7 @@ internal sealed class IrBuilder
         return new IrExpressionInvocation(syntax, symbol, args, type);
     }
 
-    private IEnumerable<IrArgument> Arguments(IEnumerable<ArgumentSyntax> arguments)
+    private List<IrArgument> Arguments(IEnumerable<ArgumentSyntax> arguments)
     {
         var args = new List<IrArgument>();
         foreach (var synArg in arguments)
@@ -507,7 +516,7 @@ internal sealed class IrBuilder
         return new IrExpressionBinary(syntax, left, op, right);
     }
 
-    private IEnumerable<IrParameter> Parameters(IEnumerable<ParameterSyntax> syntax)
+    private List<IrParameter> Parameters(IEnumerable<ParameterSyntax> syntax)
     {
         var prms = new List<IrParameter>();
 
@@ -543,7 +552,7 @@ internal sealed class IrBuilder
         return new IrType(syntax, symbol);
     }
 
-    private static IEnumerable<IrImport> UseImports(IEnumerable<UseImportSyntax> syntax)
+    private static List<IrImport> UseImports(IEnumerable<UseImportSyntax> syntax)
     {
         var imports = new List<IrImport>();
 
@@ -556,7 +565,7 @@ internal sealed class IrBuilder
         return imports;
     }
 
-    private static IEnumerable<IrImport> UseImport(UseImportSyntax syntax)
+    private static List<IrImport> UseImport(UseImportSyntax syntax)
     {
         var imports = new List<IrImport>();
         foreach (var qn in syntax.QualifiedNames)
@@ -565,7 +574,7 @@ internal sealed class IrBuilder
         return imports;
     }
 
-    private static IEnumerable<IrExport> PublicExports(IEnumerable<PublicExportSyntax> syntax)
+    private static List<IrExport> PublicExports(IEnumerable<PublicExportSyntax> syntax)
     {
         var exports = new List<IrExport>();
 
@@ -578,7 +587,7 @@ internal sealed class IrBuilder
         return exports;
     }
 
-    private static IEnumerable<IrExport> PublicExport(PublicExportSyntax syntax)
+    private static List<IrExport> PublicExport(PublicExportSyntax syntax)
     {
         var exports = new List<IrExport>();
         foreach (var qn in syntax.QualifiedNames)

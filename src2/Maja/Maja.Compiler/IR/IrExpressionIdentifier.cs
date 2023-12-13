@@ -5,7 +5,6 @@ namespace Maja.Compiler.IR;
 
 internal class IrExpressionIdentifier : IrExpression
 {
-
     public IrExpressionIdentifier(ExpressionIdentifierSyntax syntax, VariableSymbol symbol, TypeSymbol type)
         : base(syntax, type)
     {

@@ -7,15 +7,13 @@ internal class Scope
     public Scope(Namespace ns)
         => Namespace = ns;
 
-    public Namespace? Namespace { get; }
-
     public Scope(Type type)
         => Type = type;
-
-    public Type? Type { get; }
 
     public Scope(Method method)
         => Method = method;
 
+    public Namespace? Namespace { get; }
+    public Type? Type { get; }
     public Method? Method { get; }
 }

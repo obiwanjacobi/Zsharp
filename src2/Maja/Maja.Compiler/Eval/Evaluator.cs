@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Maja.Compiler.External;
 using Maja.Compiler.IR;
 using Maja.Compiler.Syntax;
 
@@ -7,7 +8,8 @@ namespace Maja.Compiler.Eval;
 
 public sealed class Evaluator
 {
-    private readonly EvaluatorState _state;
+    private readonly IExternalModuleLoader _moduleLoader;
+    private EvaluatorState _state;
 
     public Evaluator()
         : this(new())
@@ -16,6 +18,14 @@ public sealed class Evaluator
     public Evaluator(EvaluatorState state)
     {
         _state = state;
+        _moduleLoader = new AssemblyManagerBuilder()
+            .AddSystemAll()
+            .ToModuleLoader();
+    }
+
+    private void PushScope(IrScope scope)
+    {
+        _state = new EvaluatorState(_state, scope);
     }
 
     public EvaluatorResult Eval(string inputText)
@@ -24,18 +34,25 @@ public sealed class Evaluator
         var diagnostics = new List<string>();
 
         var syntaxTree = SyntaxTree.Parse(inputText, nameof(Evaluator));
-        if (syntaxTree.Diagnostics.HasDiagnaostics)
+        if (syntaxTree.Diagnostics.HasDiagnostics)
         {
             diagnostics.AddRange(syntaxTree.Diagnostics.Select(d => d.ToString()));
         }
         else
         {
-            var compilation = Compilation.Compilation.Create(syntaxTree);
-            var model = compilation.GetModel(syntaxTree);
-            if (model.Program.Diagnostics.Length > 0)
-                diagnostics.AddRange(syntaxTree.Diagnostics.Select(d => d.ToString()));
+            var program = IrBuilder.Program(syntaxTree, _moduleLoader, _state.Scope);
+            if (program.Diagnostics.Length > 0)
+            {
+                diagnostics.AddRange(program.Diagnostics.Select(d => d.ToString()));
+            }
             else
-                result = Eval(model.Program);
+            {
+                PushScope(program.Scope);
+                result = Eval(program);
+
+                if (_state.Diagnostics.HasDiagnostics)
+                    diagnostics.AddRange(_state.Diagnostics.Select(d => d.ToString()));
+            }
         }
 
         return new EvaluatorResult(syntaxTree, diagnostics, result);

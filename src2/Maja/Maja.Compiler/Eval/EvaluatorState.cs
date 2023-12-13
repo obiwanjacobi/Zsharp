@@ -1,35 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Maja.Compiler.Diagnostics;
+using Maja.Compiler.IR;
 
 namespace Maja.Compiler.Eval;
 
 public sealed class EvaluatorState
 {
+    private readonly DiagnosticList _diagnostics = new();
     private readonly Dictionary<string, object> _variables = new();
     private readonly EvaluatorState? _parent;
+    private readonly IrScope? _scope;
 
-    public EvaluatorState()
+    internal EvaluatorState()
     { }
 
-    public EvaluatorState(EvaluatorState parent)
+    internal EvaluatorState(EvaluatorState parent, IrScope scope)
     {
         _parent = parent;
+        _scope = scope;
     }
 
-    public bool TryLookupValue(string fullName, [NotNullWhen(true)] out object? value)
+    internal IrScope? Scope => _scope;
+
+    internal DiagnosticList Diagnostics
+        => _diagnostics;
+
+    public bool TryLookupVariable(string fullName, [NotNullWhen(true)] out object? value)
     {
         if (_variables.TryGetValue(fullName, out value))
             return true;
 
         if (_parent is not null)
-            return _parent.TryLookupValue(fullName, out value);
+            return _parent.TryLookupVariable(fullName, out value);
 
         value = null;
         return false;
     }
 
-    public bool TrySetValue(string name, object value)
+    public bool TrySetVariable(string name, object value)
     {
         if (_variables.ContainsKey(name))
         {
@@ -37,16 +46,11 @@ public sealed class EvaluatorState
             return true;
         }
 
-        if (_parent?.TrySetValue(name, value) == true)
+        if (_parent?.TrySetVariable(name, value) == true)
             return true;
 
         _variables[name] = value;
         return true;
-    }
-
-    public bool TryAdd(string name, object value)
-    {
-        return _variables.TryAdd(name, value);
     }
 
     public void Reset()

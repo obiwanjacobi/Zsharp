@@ -2,7 +2,7 @@
 
 > Under development!
 
-Z# is the first programming language I designed. 
+Z# is the first programming language I designed.
 The language is not an Object Oriented language and was first intended for small (8-bit) processors.
 The initial compiler `Zlang` was written in C++ but after struggling with LLVM for a good while, I gave up and decided to target .NET instead.
 I ported my C++ code to C# and renamed the project to Zsharp.

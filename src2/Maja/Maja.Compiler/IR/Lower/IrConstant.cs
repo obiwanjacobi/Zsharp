@@ -38,6 +38,13 @@ internal class IrConstant
         => Convert.ToSingle(Value);
     public double ToF64()
         => Convert.ToDouble(Value);
+    public decimal ToF96()
+        => Convert.ToDecimal(Value);
+
+    public char ToC16()
+        => Convert.ToChar(Value);
+    public string ToStr()
+        => Convert.ToString(Value) ?? String.Empty;
 
     internal string DebuggerDisplay()
         => ToString();

@@ -142,14 +142,26 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     {
         var children = Children(visitFn, context);
 
-        return [new SyntaxNodeOrToken(
+        var location = Location(context);
+        var node = new SyntaxNodeOrToken(
             S.Create(context.GetText(),
-                Location(context),
+                location,
                 children.All,
                 children.Nodes,
                 children.Tokens)
-            )
-        ];
+            );
+
+        if (context.exception is not null)
+        {
+            var err = new SyntaxNodeOrToken(
+                new ErrorToken(context.exception.Message)
+                {
+                    Location = location
+                });
+            return [err, node];
+        }
+
+        return [node];
     }
 
     //
