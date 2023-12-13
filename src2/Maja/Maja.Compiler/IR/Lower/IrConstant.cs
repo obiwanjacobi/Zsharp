@@ -15,7 +15,7 @@ internal class IrConstant
     public object Value { get; }
 
     public bool ToBool()
-        => (bool)Value;
+        => Convert.ToBoolean(Value);
     public sbyte ToI8()
         => Convert.ToSByte(Value);
     public byte ToU8()

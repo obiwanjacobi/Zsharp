@@ -12,10 +12,10 @@ internal static class IrNumber
     {
         if (first is TypeInferredSymbol inferredFirst)
             first = inferredFirst.GetPreferredType()
-                ?? throw new Exception("No preferred type could be found.");
+                ?? throw new MajaException("No preferred type could be found.");
         if (second is TypeInferredSymbol inferredSecond)
             second = inferredSecond.GetPreferredType()
-                ?? throw new Exception("No preferred type could be found.");
+                ?? throw new MajaException("No preferred type could be found.");
 
         if ((TypeSymbol.IsInteger(first) && TypeSymbol.IsInteger(second)) ||
             (TypeSymbol.IsFloat(first) && TypeSymbol.IsFloat(second)))
@@ -37,7 +37,7 @@ internal static class IrNumber
         return false;
     }
 
-    internal static IEnumerable<TypeSymbol> ParseNumber(string text, out object? value)
+    internal static List<TypeSymbol> ParseNumber(string text, out object? value)
     {
         value = null;
         var types = new List<TypeSymbol>();
@@ -65,6 +65,11 @@ internal static class IrNumber
         }
 
         // floating point
+        if (Half.TryParse(text, out var f16))
+        {
+            value ??= f16;
+            types.Add(TypeSymbol.F16);
+        }
         if (Single.TryParse(text, out var f32))
         {
             value ??= f32;

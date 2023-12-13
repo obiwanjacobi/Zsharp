@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using System.Xml.Linq;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.External;
 using Maja.Compiler.Symbol;
@@ -291,9 +290,8 @@ internal sealed class IrBuilder
         var index = scope.TryDeclareVariables(paramSymbols);
         if (index >= 0)
         {
-            var arrParams = parameters.ToArray();
             _diagnostics.ParameterNameAlreadyDeclared(
-                arrParams[index].Syntax.Location, arrParams[index].Symbol.Name.FullName);
+                parameters[index].Syntax.Location, parameters[index].Symbol.Name.FullName);
         }
 
         var block = CodeBlock(syntax.CodeBlock);
@@ -430,7 +428,6 @@ internal sealed class IrBuilder
         if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out var symbol))
         {
             _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
-
             symbol = new VariableSymbol(name, TypeSymbol.Unknown);
         }
 
@@ -448,7 +445,6 @@ internal sealed class IrBuilder
         if (!CurrentScope.TryLookupFunctionSymbol(name, argTypes, out var symbol))
         {
             _diagnostics.FunctionNotFound(syntax.Location, syntax.Identifier.Text);
-
             symbol = new FunctionSymbol(name, Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown);
         }
 

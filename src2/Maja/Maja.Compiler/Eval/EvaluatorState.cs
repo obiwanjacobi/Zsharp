@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
@@ -9,6 +10,7 @@ public sealed class EvaluatorState
 {
     private readonly DiagnosticList _diagnostics = new();
     private readonly Dictionary<string, object> _variables = new();
+    private readonly Dictionary<string, IrFunctionDeclaration> _functionDecls = new();
     private readonly EvaluatorState? _parent;
     private readonly IrScope? _scope;
 
@@ -26,6 +28,15 @@ public sealed class EvaluatorState
     internal DiagnosticList Diagnostics
         => _diagnostics;
 
+    public EvaluatorState? Parent
+        => _parent;
+
+    public void Reset()
+    {
+        _variables.Clear();
+        _parent?.Reset();
+    }
+
     public bool TryLookupVariable(string fullName, [NotNullWhen(true)] out object? value)
     {
         if (_variables.TryGetValue(fullName, out value))
@@ -38,7 +49,7 @@ public sealed class EvaluatorState
         return false;
     }
 
-    public bool TrySetVariable(string name, object value)
+    internal bool TrySetVariable(string name, object value)
     {
         if (_variables.ContainsKey(name))
         {
@@ -46,16 +57,33 @@ public sealed class EvaluatorState
             return true;
         }
 
-        if (_parent?.TrySetVariable(name, value) == true)
-            return true;
-
-        _variables[name] = value;
-        return true;
+        return _parent?.TrySetVariable(name, value) ?? false;
     }
 
-    public void Reset()
+    internal void SetVariable(string name, object value)
     {
-        _variables.Clear();
-        _parent?.Reset();
+        if (_variables.ContainsKey(name) ||
+            _parent?.TrySetVariable(name, value) != true)
+        {
+            _variables[name] = value;
+        }
+    }
+
+    internal void DeclareFunction(IrFunctionDeclaration function)
+    {
+        var name = function.Symbol.Name.FullName;
+        _functionDecls[name] = function;
+    }
+
+    internal bool TryLookupFunction(string name, [NotNullWhen(true)] out IrFunctionDeclaration? function)
+    {
+        if (_functionDecls.TryGetValue(name, out function))
+            return true;
+
+        if (_parent?.TryLookupFunction(name, out function) == true)
+            return true;
+
+        function = null;
+        return false;
     }
 }

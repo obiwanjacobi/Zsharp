@@ -1,4 +1,6 @@
-﻿using Maja.Compiler.Diagnostics;
+﻿using System;
+using System.Linq;
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.IR.Lower;
 using Maja.Compiler.Symbol;
@@ -7,10 +9,16 @@ namespace Maja.Compiler.Eval;
 
 internal sealed class EvalWalker : IrWalker<object?>
 {
-    private readonly EvaluatorState _state;
+    private EvaluatorState _state;
 
     public EvalWalker(EvaluatorState state)
         => _state = state;
+
+    private IDisposable NewScope(IrFunctionScope scope)
+    {
+        _state = new EvaluatorState(_state, scope);
+        return new EvaluationStatePopper(this);
+    }
 
     public override object? OnExpressionBinary(IrExpressionBinary expression)
     {
@@ -52,49 +60,71 @@ internal sealed class EvalWalker : IrWalker<object?>
             : (IrConstant?)OnExpression(variable.Initializer!) ?? IrConstant.Zero;
 
         if (TypeSymbol.IsBoolean(type))
-            SetVariable(name, value.ToBool());
+            _state.SetVariable(name, value.ToBool());
 
         else if (TypeSymbol.IsI8(type))
-            SetVariable(name, value.ToI8());
+            _state.SetVariable(name, value.ToI8());
         else if (TypeSymbol.IsU8(type))
-            SetVariable(name, value.ToU8());
+            _state.SetVariable(name, value.ToU8());
         else if (TypeSymbol.IsI16(type))
-            SetVariable(name, value.ToI16());
+            _state.SetVariable(name, value.ToI16());
         else if (TypeSymbol.IsU16(type))
-            SetVariable(name, value.ToU16());
+            _state.SetVariable(name, value.ToU16());
         else if (TypeSymbol.IsI32(type))
-            SetVariable(name, value.ToI32());
+            _state.SetVariable(name, value.ToI32());
         else if (TypeSymbol.IsU32(type))
-            SetVariable(name, value.ToU32());
+            _state.SetVariable(name, value.ToU32());
         else if (TypeSymbol.IsI64(type))
-            SetVariable(name, value.ToI64());
+            _state.SetVariable(name, value.ToI64());
         else if (TypeSymbol.IsU64(type))
-            SetVariable(name, value.ToU64());
+            _state.SetVariable(name, value.ToU64());
 
         else if (TypeSymbol.IsF16(type))
-            SetVariable(name, value.ToF16());
+            _state.SetVariable(name, value.ToF16());
         else if (TypeSymbol.IsF32(type))
-            SetVariable(name, value.ToF32());
+            _state.SetVariable(name, value.ToF32());
         else if (TypeSymbol.IsF64(type))
-            SetVariable(name, value.ToF64());
+            _state.SetVariable(name, value.ToF64());
         else if (TypeSymbol.IsF96(type))
-            SetVariable(name, value.ToF96());
+            _state.SetVariable(name, value.ToF96());
 
         else if (TypeSymbol.IsC16(type))
-            SetVariable(name, value.ToC16());
+            _state.SetVariable(name, value.ToC16());
         else if (TypeSymbol.IsStr(type))
-            SetVariable(name, value.ToStr());
+            _state.SetVariable(name, value.ToStr());
 
         return null;
+    }
 
-        void SetVariable<T>(string name, T value)
+    public override object? OnFunctionDeclaration(IrFunctionDeclaration function)
+    {
+        // functions are evaluated when called
+        _state.DeclareFunction(function);
+        return null;
+    }
+
+    public override object? OnExpressionInvocation(IrExpressionInvocation invocation)
+    {
+        if (_state.TryLookupFunction(invocation.Symbol.Name.FullName, out var function))
         {
-            if (!_state.TrySetVariable(name, value!))
+            using var scope = NewScope(function.Scope);
+
+            var args = invocation.Arguments
+                .Select(a => (IrConstant?)OnExpression(a.Expression))
+                .ToArray();
+
+            // register parameter values as local vars
+            for (var i = 0; i < Math.Min(args.Length, function.Parameters.Length); i++)
             {
-                _state.Diagnostics.Add(DiagnosticMessageKind.Error, variable.Syntax.Location,
-                    $"Setting variable '{name}' to '{value}' failed.");
+                _state.SetVariable(function.Parameters[i].Symbol.Name.Value, args[i].Value);
             }
+
+            var result = OnCodeBlock(function.Body);
+            // function.ReturnType?
+            return result;
         }
+
+        return null;
     }
 
     public override object? OnStatementAssignment(IrStatementAssignment statement)
@@ -143,5 +173,18 @@ internal sealed class EvalWalker : IrWalker<object?>
             return OnCodeBlock(elseIfClause.ElseClause.CodeBlock);
         }
         return null;
+    }
+
+    private sealed class EvaluationStatePopper(EvalWalker walker) : IDisposable
+    {
+
+        public void Dispose()
+        {
+            var state = walker._state;
+            if (state.Parent is null)
+                throw new MajaException("Evaluation Stack inbalance.");
+
+            walker._state = state.Parent;
+        }
     }
 }
