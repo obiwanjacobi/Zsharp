@@ -6,7 +6,7 @@ The assembly file is a type of language supported project file that defines what
 
 The `assembly` keyword works similar to how the `module` keyword works, it names the assembly. It must be the first instruction in the file - only comments or whitespace can precede it.
 
-An `assembly` file cannot contain any runtime code other than (assembly-level) code attributes or use of compiler directives and compile time code. Everything else is a compiler error.
+An `assembly` file cannot contain any runtime code other than (assembly-level) code attributes or use of compiler directives and compile time code. Everything else is a compiler error. It is possible to code the build logic in the assembly file.
 
 > TBD: `.NET` now supports a module-initializer that runs once at assembly level.
 We could introduce an `#initialize` (similar to `#execute`) to allow to specify one.

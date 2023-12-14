@@ -33,12 +33,12 @@ public class ErrorSyntaxTests
     {
         const string code =
             "fn (): U8" + Tokens.Eol +
-            Tokens.Indent1 + "ret" + Tokens.Eol
+            Tokens.Indent1 + "ret 42" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code, throwOnError: false);
         result.HasError.Should().BeTrue();
-        result.GetErrors().Should().HaveCount(12);
+        result.GetErrors().Should().HaveCount(14);
         // Parser cannot make anything of this: all error tokens
         result.Children.Should().AllSatisfy(c => c.HasError.Should().BeTrue());
     }

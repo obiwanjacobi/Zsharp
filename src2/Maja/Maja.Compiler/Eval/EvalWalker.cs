@@ -113,6 +113,7 @@ internal sealed class EvalWalker : IrWalker<object?>
                 .Select(a => (IrConstant?)OnExpression(a.Expression))
                 .ToArray();
 
+            // TODO: use default parameter values.
             // register parameter values as local vars
             for (var i = 0; i < Math.Min(args.Length, function.Parameters.Length); i++)
             {
@@ -124,6 +125,8 @@ internal sealed class EvalWalker : IrWalker<object?>
             return result;
         }
 
+        _state.Diagnostics.Add(DiagnosticMessageKind.Error, invocation.Syntax.Location,
+            $"The function {invocation.Symbol.Name.FullName} is not declared. Function not found.");
         return null;
     }
 

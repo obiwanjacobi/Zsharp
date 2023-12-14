@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Antlr4.Runtime;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.Parser;
@@ -33,14 +34,17 @@ public class SyntaxTree
         var nodes = builder.VisitCompilationUnit(context);
 
         _diagnostics = builder.Diagnostics;
-        return (CompilationUnitSyntax)nodes[0].Node!;
+        return (CompilationUnitSyntax)nodes
+            .Single(n => n.Node is CompilationUnitSyntax)
+            .Node!;
     }
 
     public static SyntaxTree Parse(string code, string sourceName = "")
     {
         var tree = new SyntaxTree();
         tree._root = tree.ParseInternal(code, sourceName);
-        tree.Diagnostics.AddAll(tree._root.GetErrors());
+        if (tree._root is not null)
+            tree.Diagnostics.AddAll(tree._root.GetErrors());
 
         return tree;
     }

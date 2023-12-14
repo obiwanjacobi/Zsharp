@@ -61,6 +61,9 @@ internal static class IrDiagnostics
     public static void FunctionNotFound(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Function reference '{functionName}' cannot be resolved. Function not found.");
 
+    public static void VoidFunctionCannotReturnValue(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"The Void function '{functionName}' cannot return a value.");
+
     public static void CannotAssignVariableWithVoid(this DiagnosticList diagnostics, SyntaxLocation location, string variableName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Cannot assign Void to variable '{variableName}'.");
 

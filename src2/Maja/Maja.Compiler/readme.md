@@ -22,6 +22,7 @@ Made SyntaxNodeOrToken public and added SyntaxNodeOrTokenList.
 - [x] TypeSymbol: add enums, fields and rules symbols
 - [x] BinaryExpression precedence check not executed. Check in Syntax.
 - [x] 'if true' places the 'if' token at the ExpressionLiteralBoolSyntax node.
+- [x] `void` function can `ret` a value. Should generate compile error.
 
 ## Decisions
 

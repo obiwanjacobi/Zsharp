@@ -297,6 +297,16 @@ internal sealed class IrBuilder
         var block = CodeBlock(syntax.CodeBlock);
         _ = PopScope();
 
+        if (returnType == IrType.Void)
+        {
+            var invalidReturns = block.Statements
+                .OfType<IrStatementReturn>()
+                .Where(r => r.Expression != null);
+            foreach (var ret in invalidReturns)
+            {
+                _diagnostics.VoidFunctionCannotReturnValue(ret.Expression!.Syntax.Location, name.FullName);
+            }
+        }
         return new IrFunctionDeclaration(syntax, symbol, parameters, returnType, scope, block);
     }
 

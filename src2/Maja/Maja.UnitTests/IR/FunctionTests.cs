@@ -1,3 +1,4 @@
+using System.Linq;
 using FluentAssertions;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
@@ -30,6 +31,20 @@ public class FunctionTests
         fn.Symbol.Name.Value.Should().Be("fn");
         fn.Symbol.Parameters.Should().BeEmpty();
         fn.Symbol.ReturnType.Should().Be(TypeSymbol.Void);
+    }
+
+    [Fact]
+    public void FuncDeclVoid_Err_RetValue()
+    {
+        const string code =
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "ret 42" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+
+        program.Diagnostics.Should().NotBeEmpty();
+        program.Diagnostics.First().Text.Should().Contain("Void function");
     }
 
     [Fact]
