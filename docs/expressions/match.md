@@ -171,3 +171,16 @@ x = match s
     `[a-z]` -> ...
     _ -> error
 ```
+
+---
+
+> TBD
+
+Match on Exceptions?
+
+```csharp
+x = match someOperation()
+    // how to differentiate from normal result type checking?
+    ExceptionType -> ...
+    _ -> happy_flow
+```
