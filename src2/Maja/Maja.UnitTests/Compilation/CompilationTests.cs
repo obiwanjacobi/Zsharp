@@ -18,5 +18,7 @@ public class CompilationTests
         var model = comp.GetModel(tree);
 
         model.Should().NotBeNull();
+        model.Program.Should().NotBeNull();
+        model.SyntaxTree.Should().NotBeNull();
     }
 }

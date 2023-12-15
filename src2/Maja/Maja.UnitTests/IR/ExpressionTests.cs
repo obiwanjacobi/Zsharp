@@ -10,10 +10,17 @@ public class ExpressionTests
 {
     [Theory]
     [InlineData("42", 42, "I8")]
+    [InlineData("42", 42, "U8")]
+    [InlineData("255", 255, "U8")]
     [InlineData("256", 256, "I16")]
+    [InlineData("256", 256, "U16")]
+    [InlineData("65535", 65535, "U16")]
     [InlineData("65535", 65535, "I32")]
     [InlineData("4294967295", 4294967295, "I64")]
-    //[InlineData("42.42", 42.42, "F16")]
+    [InlineData("42.42", 42.42, "F16")]
+    [InlineData("42.42", 42.42, "F32")]
+    [InlineData("42.42", 42.42, "F64")]
+    [InlineData("42.42", 42.42, "F96")]
     public void ParseNumber(string text, object value, string type)
     {
         var types = IrNumber.ParseNumber(text, out var actualValue);
@@ -36,6 +43,24 @@ public class ExpressionTests
         v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
+        v.TypeSymbol.Should().Be(TypeSymbol.I64);
+    }
+
+    [Fact]
+    public void ArithmeticLiterals2()
+    {
+        const string code =
+            "x := (12 + 30) * 2" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(1);
+        var v = program.Root.Declarations[0].As<IrVariableDeclaration>();
+        v.Symbol.Name.Value.Should().Be("x");
+        v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
+        v.Initializer!.ConstantValue.Should().NotBeNull();
+        v.Initializer!.ConstantValue!.Value.Should().Be(84);
         v.TypeSymbol.Should().Be(TypeSymbol.I64);
     }
 
