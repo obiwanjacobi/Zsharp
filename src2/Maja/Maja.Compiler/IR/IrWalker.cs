@@ -51,15 +51,15 @@ internal abstract class IrWalker<R>
         {
             return declaration switch
             {
-                IrFunctionDeclaration fd => OnFunctionDeclaration(fd),
-                IrTypeDeclaration td => OnTypeDeclaration(td),
-                IrVariableDeclaration vd => OnVariableDeclaration(vd),
+                IrDeclarationFunction fd => OnDeclarationFunction(fd),
+                IrDeclarationType td => OnDeclarationType(td),
+                IrDeclarationVariable vd => OnDeclarationVariable(vd),
                 _ => Default
             };
         })
             .Aggregate(Default, AggregateResult);
 
-    public virtual R OnFunctionDeclaration(IrFunctionDeclaration function)
+    public virtual R OnDeclarationFunction(IrDeclarationFunction function)
     {
         var result = OnParameters(function.Parameters);
         result = AggregateResult(result, OnOptionalType(result, function.ReturnType));
@@ -72,7 +72,7 @@ internal abstract class IrWalker<R>
     public virtual R OnParameter(IrParameter parameter)
         => OnType(parameter.Type);
 
-    public virtual R OnTypeDeclaration(IrTypeDeclaration type)
+    public virtual R OnDeclarationType(IrDeclarationType type)
     {
         var result = OnTypeMemberEnums(type.Enums);
         result = AggregateResult(result, OnTypeMemberFields(type.Fields));
@@ -99,7 +99,7 @@ internal abstract class IrWalker<R>
     public virtual R OnTypeMemberRule(IrTypeMemberRule memberRule)
         => Default;
 
-    public virtual R OnVariableDeclaration(IrVariableDeclaration variable)
+    public virtual R OnDeclarationVariable(IrDeclarationVariable variable)
         => OnOptionalExpression(Default, variable.Initializer);
 
     public virtual R OnType(IrType type)

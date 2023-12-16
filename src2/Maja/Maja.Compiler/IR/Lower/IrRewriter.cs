@@ -77,14 +77,14 @@ internal abstract class IrRewriter
     {
         return declaration switch
         {
-            IrFunctionDeclaration funDecl => RewriteFunctionDeclaration(funDecl),
-            IrTypeDeclaration typeDecl => RewriteTypeDeclaration(typeDecl),
-            IrVariableDeclaration varDecl => RewriteVariableDeclaration(varDecl),
+            IrDeclarationFunction funDecl => RewriteDeclarationFunction(funDecl),
+            IrDeclarationType typeDecl => RewriteDeclarationType(typeDecl),
+            IrDeclarationVariable varDecl => RewriteDeclarationVariable(varDecl),
             _ => declaration
         };
     }
 
-    protected virtual IrFunctionDeclaration RewriteFunctionDeclaration(IrFunctionDeclaration function)
+    protected virtual IrDeclarationFunction RewriteDeclarationFunction(IrDeclarationFunction function)
     {
         var parameters = RewriteParameters(function.Parameters);
         var retType = RewriteType(function.ReturnType) ?? IrType.Void;
@@ -95,7 +95,7 @@ internal abstract class IrRewriter
             body == function.Body)
             return function;
 
-        return new IrFunctionDeclaration(function.Syntax, function.Symbol, parameters, retType, function.Scope, body);
+        return new IrDeclarationFunction(function.Syntax, function.Symbol, parameters, retType, function.Scope, body);
     }
 
     protected virtual ImmutableArray<IrParameter> RewriteParameters(ImmutableArray<IrParameter> parameters)
@@ -113,7 +113,7 @@ internal abstract class IrRewriter
         return new IrParameter(parameter.Syntax, parameter.Symbol, type!);
     }
 
-    protected virtual IrTypeDeclaration RewriteTypeDeclaration(IrTypeDeclaration type)
+    protected virtual IrDeclarationType RewriteDeclarationType(IrDeclarationType type)
     {
         var enums = RewriteEnums(type.Enums);
         var fields = RewriteFields(type.Fields);
@@ -124,7 +124,7 @@ internal abstract class IrRewriter
             rules == type.Rules)
             return type;
 
-        return new IrTypeDeclaration(type.Syntax, type.Symbol, enums, fields, rules);
+        return new IrDeclarationType(type.Syntax, type.Symbol, enums, fields, rules);
     }
 
     protected virtual ImmutableArray<IrTypeMemberEnum> RewriteEnums(ImmutableArray<IrTypeMemberEnum> memberEnums)
@@ -157,14 +157,14 @@ internal abstract class IrRewriter
         return memberRule;
     }
 
-    protected virtual IrVariableDeclaration RewriteVariableDeclaration(IrVariableDeclaration variable)
+    protected virtual IrDeclarationVariable RewriteDeclarationVariable(IrDeclarationVariable variable)
     {
         var initializer = RewriteExpression(variable.Initializer);
 
         if (initializer == variable.Initializer)
             return variable;
 
-        return new IrVariableDeclaration(variable.Syntax, variable.Symbol, variable.TypeSymbol, initializer);
+        return new IrDeclarationVariable(variable.Syntax, variable.Symbol, variable.TypeSymbol, initializer);
     }
 
     protected virtual IrType? RewriteType(IrType? type)

@@ -12,9 +12,9 @@ internal abstract class IrDeclaration : IrNode
     { }
 }
 
-internal sealed class IrFunctionDeclaration : IrDeclaration
+internal sealed class IrDeclarationFunction : IrDeclaration
 {
-    public IrFunctionDeclaration(FunctionDeclarationSyntax syntax, FunctionSymbol symbol,
+    public IrDeclarationFunction(FunctionDeclarationSyntax syntax, FunctionSymbol symbol,
         IEnumerable<IrParameter> parameters, IrType returnType, IrFunctionScope scope, IrCodeBlock codeBlock)
         : base(syntax)
     {
@@ -35,9 +35,9 @@ internal sealed class IrFunctionDeclaration : IrDeclaration
         => (FunctionDeclarationSyntax)base.Syntax;
 }
 
-internal sealed class IrVariableDeclaration : IrDeclaration
+internal sealed class IrDeclarationVariable : IrDeclaration
 {
-    public IrVariableDeclaration(VariableDeclarationSyntax syntax, VariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
+    public IrDeclarationVariable(VariableDeclarationSyntax syntax, VariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
         : base(syntax)
     {
         Symbol = symbol;
@@ -53,9 +53,9 @@ internal sealed class IrVariableDeclaration : IrDeclaration
         => (VariableDeclarationSyntax)base.Syntax;
 }
 
-internal sealed class IrTypeDeclaration : IrDeclaration
+internal sealed class IrDeclarationType : IrDeclaration
 {
-    public IrTypeDeclaration(TypeDeclarationSyntax syntax, TypeSymbol symbol,
+    public IrDeclarationType(TypeDeclarationSyntax syntax, TypeSymbol symbol,
         IEnumerable<IrTypeMemberEnum> enums, IEnumerable<IrTypeMemberField> fields, IEnumerable<IrTypeMemberRule> rules)
         : base(syntax)
     {

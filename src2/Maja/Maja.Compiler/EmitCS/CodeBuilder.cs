@@ -83,7 +83,7 @@ internal class CodeBuilder : IrWalker<object?>
         return null;
     }
 
-    public override object? OnFunctionDeclaration(IrFunctionDeclaration function)
+    public override object? OnDeclarationFunction(IrDeclarationFunction function)
     {
         var netType = MajaTypeMapper.MapToDotNetType(function.ReturnType.Symbol);
         var method = CSharpFactory.CreateMethod(
@@ -116,7 +116,7 @@ internal class CodeBuilder : IrWalker<object?>
         return null;
     }
 
-    public override object? OnVariableDeclaration(IrVariableDeclaration variable)
+    public override object? OnDeclarationVariable(IrDeclarationVariable variable)
     {
         var netType = MajaTypeMapper.MapToDotNetType(variable.TypeSymbol);
         

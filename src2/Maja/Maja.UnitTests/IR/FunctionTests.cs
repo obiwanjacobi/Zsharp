@@ -20,7 +20,7 @@ public class FunctionTests
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(1);
-        var fn = program.Root.Declarations[0].As<IrFunctionDeclaration>();
+        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
         fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().BeEmpty();
@@ -58,7 +58,7 @@ public class FunctionTests
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(1);
-        var fn = program.Root.Declarations[0].As<IrFunctionDeclaration>();
+        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
         fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().HaveCount(2);
@@ -124,7 +124,7 @@ public class FunctionTests
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(2);
-        var v = program.Root.Declarations[1].As<IrVariableDeclaration>();
+        var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);

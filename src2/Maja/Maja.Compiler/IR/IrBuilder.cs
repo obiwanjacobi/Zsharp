@@ -114,10 +114,10 @@ internal sealed class IrBuilder
         {
             IrDeclaration decl = mbr switch
             {
-                FunctionDeclarationSyntax fds => FunctionDeclaration(fds),
-                VariableDeclarationTypedSyntax vdt => VariableTypedDeclaration(vdt),
-                VariableDeclarationInferredSyntax vdi => VariableInferredDeclaration(vdi),
-                TypeDeclarationSyntax tds => TypeDeclaration(tds),
+                FunctionDeclarationSyntax fds => DeclarationFunction(fds),
+                VariableDeclarationTypedSyntax vdt => DeclarationVariableTyped(vdt),
+                VariableDeclarationInferredSyntax vdi => DeclarationVariableInferred(vdi),
+                TypeDeclarationSyntax tds => DeclarationType(tds),
                 _ => throw new NotSupportedException($"IR: No support for Declaration '{mbr.SyntaxKind}'")
             };
 
@@ -127,7 +127,7 @@ internal sealed class IrBuilder
         return declarations;
     }
 
-    private IrTypeDeclaration TypeDeclaration(TypeDeclarationSyntax syntax)
+    private IrDeclarationType DeclarationType(TypeDeclarationSyntax syntax)
     {
         var enums = TypeMemberEnums(syntax.Enums);
         var fields = TypeMemberFields(syntax.Fields);
@@ -144,7 +144,7 @@ internal sealed class IrBuilder
             _diagnostics.TypeAlreadyDelcared(syntax.Location, syntax.Name.Text);
         }
 
-        return new IrTypeDeclaration(syntax, symbol, enums, fields, rules);
+        return new IrDeclarationType(syntax, symbol, enums, fields, rules);
     }
 
     private IEnumerable<IrTypeMemberEnum> TypeMemberEnums(TypeMemberListSyntax<MemberEnumSyntax>? syntax)
@@ -221,7 +221,7 @@ internal sealed class IrBuilder
         return rules;
     }
 
-    private IrVariableDeclaration VariableInferredDeclaration(VariableDeclarationInferredSyntax syntax)
+    private IrDeclarationVariable DeclarationVariableInferred(VariableDeclarationInferredSyntax syntax)
     {
         var initializer = Expression(syntax.Expression!);
 
@@ -242,10 +242,10 @@ internal sealed class IrBuilder
             _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
-        return new IrVariableDeclaration(syntax, symbol, type, initializer);
+        return new IrDeclarationVariable(syntax, symbol, type, initializer);
     }
 
-    private IrVariableDeclaration VariableTypedDeclaration(VariableDeclarationTypedSyntax syntax)
+    private IrDeclarationVariable DeclarationVariableTyped(VariableDeclarationTypedSyntax syntax)
     {
         IrExpression? initializer = null;
         if (syntax.Expression is ExpressionSyntax synExpr)
@@ -266,10 +266,10 @@ internal sealed class IrBuilder
             _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
-        return new IrVariableDeclaration(syntax, symbol, typeSymbol, initializer);
+        return new IrDeclarationVariable(syntax, symbol, typeSymbol, initializer);
     }
 
-    private IrFunctionDeclaration FunctionDeclaration(FunctionDeclarationSyntax syntax)
+    private IrDeclarationFunction DeclarationFunction(FunctionDeclarationSyntax syntax)
     {
         var parameters = Parameters(syntax.Parameters);
         var returnType = Type(syntax.ReturnType) ?? IrType.Void;
@@ -307,7 +307,7 @@ internal sealed class IrBuilder
                 _diagnostics.VoidFunctionCannotReturnValue(ret.Expression!.Syntax.Location, name.FullName);
             }
         }
-        return new IrFunctionDeclaration(syntax, symbol, parameters, returnType, scope, block);
+        return new IrDeclarationFunction(syntax, symbol, parameters, returnType, scope, block);
     }
 
     private IrCodeBlock CodeBlock(CodeBlockSyntax syntax)

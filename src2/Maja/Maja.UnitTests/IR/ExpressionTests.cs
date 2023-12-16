@@ -38,7 +38,7 @@ public class ExpressionTests
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(1);
-        var v = program.Root.Declarations[0].As<IrVariableDeclaration>();
+        var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
@@ -56,7 +56,7 @@ public class ExpressionTests
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(1);
-        var v = program.Root.Declarations[0].As<IrVariableDeclaration>();
+        var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
@@ -75,7 +75,7 @@ public class ExpressionTests
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(1);
-        var stat = program.Root.Declarations[0].As<IrFunctionDeclaration>()
+        var stat = program.Root.Declarations[0].As<IrDeclarationFunction>()
             .Body.Statements[0].As<IrStatementAssignment>();
         stat.Symbol.Should().BeOfType<DiscardSymbol>();
         stat.Expression.As<IrExpressionLiteral>().ConstantValue!.Value.Should().Be(42);

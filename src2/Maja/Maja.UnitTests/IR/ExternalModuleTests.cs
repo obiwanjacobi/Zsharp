@@ -48,7 +48,7 @@ public class ExternalModuleTests
         program.Root.Should().NotBeNull();
         program.Root.Imports.Should().HaveCount(1);
         program.Root.Declarations.Should().HaveCount(1);
-        var v = program.Root.Declarations[0].As<IrVariableDeclaration>();
+        var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.TypeSymbol.IsExternal.Should().BeTrue();
         var colors = v.TypeSymbol.As<DeclaredTypeSymbol>();
         colors.Enums.Should().HaveCount(16);

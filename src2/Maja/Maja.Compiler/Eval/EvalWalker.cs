@@ -49,7 +49,7 @@ internal sealed class EvalWalker : IrWalker<object?>
         return expression.ConstantValue;
     }
 
-    public override object? OnVariableDeclaration(IrVariableDeclaration variable)
+    public override object? OnDeclarationVariable(IrDeclarationVariable variable)
     {
         var symbol = variable.Symbol;
         var type = variable.TypeSymbol;
@@ -96,7 +96,7 @@ internal sealed class EvalWalker : IrWalker<object?>
         return null;
     }
 
-    public override object? OnFunctionDeclaration(IrFunctionDeclaration function)
+    public override object? OnDeclarationFunction(IrDeclarationFunction function)
     {
         // functions are evaluated when called
         _state.DeclareFunction(function);

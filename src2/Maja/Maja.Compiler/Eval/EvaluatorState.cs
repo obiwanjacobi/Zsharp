@@ -10,7 +10,7 @@ public sealed class EvaluatorState
 {
     private readonly DiagnosticList _diagnostics = new();
     private readonly Dictionary<string, object> _variables = new();
-    private readonly Dictionary<string, IrFunctionDeclaration> _functionDecls = new();
+    private readonly Dictionary<string, IrDeclarationFunction> _functionDecls = new();
     private readonly EvaluatorState? _parent;
     private readonly IrScope? _scope;
 
@@ -69,13 +69,13 @@ public sealed class EvaluatorState
         }
     }
 
-    internal void DeclareFunction(IrFunctionDeclaration function)
+    internal void DeclareFunction(IrDeclarationFunction function)
     {
         var name = function.Symbol.Name.FullName;
         _functionDecls[name] = function;
     }
 
-    internal bool TryLookupFunction(string name, [NotNullWhen(true)] out IrFunctionDeclaration? function)
+    internal bool TryLookupFunction(string name, [NotNullWhen(true)] out IrDeclarationFunction? function)
     {
         if (_functionDecls.TryGetValue(name, out function))
             return true;
