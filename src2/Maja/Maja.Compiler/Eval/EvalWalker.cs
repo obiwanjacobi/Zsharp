@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
@@ -117,7 +118,8 @@ internal sealed class EvalWalker : IrWalker<object?>
             // register parameter values as local vars
             for (var i = 0; i < Math.Min(args.Length, function.Parameters.Length); i++)
             {
-                _state.SetVariable(function.Parameters[i].Symbol.Name.Value, args[i].Value);
+                Debug.Assert(args[i] is not null, $"Argument index {i} is null.");
+                _state.SetVariable(function.Parameters[i].Symbol.Name.Value, args[i]!.Value);
             }
 
             var result = OnCodeBlock(function.Body);

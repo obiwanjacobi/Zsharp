@@ -8,7 +8,7 @@ internal static class Evaluator
     public static IrConstant? Evaluate(TypeSymbol leftType, IrConstant leftValue,
         IrBinaryOperator op, TypeSymbol rightType, IrConstant rightValue)
     {
-        if (!IrNumber.TryDecideType(leftType, rightType, out var type))
+        if (!IrTypeConversion.TryDecideType(leftType, rightType, out var type))
             return null;
 
         object? val = null;

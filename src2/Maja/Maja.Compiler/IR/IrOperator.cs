@@ -67,59 +67,34 @@ internal sealed class IrBinaryOperator : IrNode
 
     private static IrBinaryOperatorKind DetermineKind(ExpressionOperatorSyntax syntax)
     {
-        switch (syntax.OperatorKind)
+        return syntax.OperatorKind switch
         {
-            case ExpressionOperatorKind.And:
-                return IrBinaryOperatorKind.And;
-            case ExpressionOperatorKind.BitAnd:
-                return IrBinaryOperatorKind.BitwiseAnd;
-            case ExpressionOperatorKind.BitOr:
-                return IrBinaryOperatorKind.BitwiseOr;
-            case ExpressionOperatorKind.BitRollLeft:
-                return IrBinaryOperatorKind.BitwiseRollLeft;
-            case ExpressionOperatorKind.BitRollRight:
-                return IrBinaryOperatorKind.BitwiseRollRight;
-            case ExpressionOperatorKind.BitShiftLeft:
-                return IrBinaryOperatorKind.BitwiseShiftLeft;
-            case ExpressionOperatorKind.BitShiftRight:
-                return IrBinaryOperatorKind.BitwiseShiftRight;
-            case ExpressionOperatorKind.BitShiftRightSign:
-                return IrBinaryOperatorKind.BitwiseShiftRightSign;
-            case ExpressionOperatorKind.BitXor:
-                return IrBinaryOperatorKind.BitwiseXor;
-            case ExpressionOperatorKind.Divide:
-                return IrBinaryOperatorKind.Divide;
-            case ExpressionOperatorKind.Equals:
-                return IrBinaryOperatorKind.Equals;
-            case ExpressionOperatorKind.Greater:
-                return IrBinaryOperatorKind.Greater;
-            case ExpressionOperatorKind.GreaterOrEquals:
-                return IrBinaryOperatorKind.GreaterOrEquals;
-            case ExpressionOperatorKind.Lesser:
-                return IrBinaryOperatorKind.Lesser;
-            case ExpressionOperatorKind.LesserOrEquals:
-                return IrBinaryOperatorKind.LesserOrEquals;
-            case ExpressionOperatorKind.Minus:
-                return IrBinaryOperatorKind.Subtract;
-            case ExpressionOperatorKind.Modulo:
-                return IrBinaryOperatorKind.Modulo;
-            case ExpressionOperatorKind.Multiply:
-                return IrBinaryOperatorKind.Multiply;
-            case ExpressionOperatorKind.NotEquals:
-                return IrBinaryOperatorKind.NotEquals;
-            case ExpressionOperatorKind.Or:
-                return IrBinaryOperatorKind.Or;
-            case ExpressionOperatorKind.Plus:
-                return IrBinaryOperatorKind.Add;
-            case ExpressionOperatorKind.Power:
-                return IrBinaryOperatorKind.Power;
-            case ExpressionOperatorKind.Root:
-                return IrBinaryOperatorKind.Root;
-            case ExpressionOperatorKind.Xor:
-                return IrBinaryOperatorKind.Xor;
-        }
-
-        throw new NotSupportedException($"IR: No support for Binary operator {syntax.OperatorKind}.");
+            ExpressionOperatorKind.And => IrBinaryOperatorKind.And,
+            ExpressionOperatorKind.BitAnd => IrBinaryOperatorKind.BitwiseAnd,
+            ExpressionOperatorKind.BitOr => IrBinaryOperatorKind.BitwiseOr,
+            ExpressionOperatorKind.BitRollLeft => IrBinaryOperatorKind.BitwiseRollLeft,
+            ExpressionOperatorKind.BitRollRight => IrBinaryOperatorKind.BitwiseRollRight,
+            ExpressionOperatorKind.BitShiftLeft => IrBinaryOperatorKind.BitwiseShiftLeft,
+            ExpressionOperatorKind.BitShiftRight => IrBinaryOperatorKind.BitwiseShiftRight,
+            ExpressionOperatorKind.BitShiftRightSign => IrBinaryOperatorKind.BitwiseShiftRightSign,
+            ExpressionOperatorKind.BitXor => IrBinaryOperatorKind.BitwiseXor,
+            ExpressionOperatorKind.Divide => IrBinaryOperatorKind.Divide,
+            ExpressionOperatorKind.Equals => IrBinaryOperatorKind.Equals,
+            ExpressionOperatorKind.Greater => IrBinaryOperatorKind.Greater,
+            ExpressionOperatorKind.GreaterOrEquals => IrBinaryOperatorKind.GreaterOrEquals,
+            ExpressionOperatorKind.Lesser => IrBinaryOperatorKind.Lesser,
+            ExpressionOperatorKind.LesserOrEquals => IrBinaryOperatorKind.LesserOrEquals,
+            ExpressionOperatorKind.Minus => IrBinaryOperatorKind.Subtract,
+            ExpressionOperatorKind.Modulo => IrBinaryOperatorKind.Modulo,
+            ExpressionOperatorKind.Multiply => IrBinaryOperatorKind.Multiply,
+            ExpressionOperatorKind.NotEquals => IrBinaryOperatorKind.NotEquals,
+            ExpressionOperatorKind.Or => IrBinaryOperatorKind.Or,
+            ExpressionOperatorKind.Plus => IrBinaryOperatorKind.Add,
+            ExpressionOperatorKind.Power => IrBinaryOperatorKind.Power,
+            ExpressionOperatorKind.Root => IrBinaryOperatorKind.Root,
+            ExpressionOperatorKind.Xor => IrBinaryOperatorKind.Xor,
+            _ => throw new NotSupportedException($"IR: No support for Binary operator {syntax.OperatorKind}."),
+        };
     }
 
     public IrBinaryOperatorKind Kind { get; }
@@ -149,19 +124,14 @@ internal sealed class IrUnaryOperator : IrNode
 
     private static IrUnaryOperatorKind DetermineKind(ExpressionOperatorSyntax syntax)
     {
-        switch (syntax.OperatorKind)
+        return syntax.OperatorKind switch
         {
-            case ExpressionOperatorKind.Plus:
-                return IrUnaryOperatorKind.Identity;
-            case ExpressionOperatorKind.Minus:
-                return IrUnaryOperatorKind.Negate;
-            case ExpressionOperatorKind.BitNot:
-                return IrUnaryOperatorKind.Invert;
-            case ExpressionOperatorKind.Not:
-                return IrUnaryOperatorKind.Not;
-        }
-
-        throw new NotSupportedException($"IR: No support for Unary operator {syntax.OperatorKind}.");
+            ExpressionOperatorKind.Plus => IrUnaryOperatorKind.Identity,
+            ExpressionOperatorKind.Minus => IrUnaryOperatorKind.Negate,
+            ExpressionOperatorKind.BitNot => IrUnaryOperatorKind.Invert,
+            ExpressionOperatorKind.Not => IrUnaryOperatorKind.Not,
+            _ => throw new NotSupportedException($"IR: No support for Unary operator {syntax.OperatorKind}."),
+        };
     }
 
     public IrUnaryOperatorKind Kind { get; }

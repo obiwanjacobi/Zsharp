@@ -230,9 +230,8 @@ internal sealed class IrBuilder
             _diagnostics.CannotAssignVariableWithVoid(syntax.Expression!.Location, syntax.Name.Text);
         }
 
-        var type =
-            initializer.TypeInferredSymbol?.GetPreferredType()
-            ?? initializer.TypeSymbol;
+        if (initializer.TypeInferredSymbol?.TryGetPreferredType(out var type) != true)
+            type = initializer.TypeSymbol;
 
         var name = new SymbolName(syntax.Name.Text);
         var symbol = new VariableSymbol(name, type);
@@ -242,7 +241,7 @@ internal sealed class IrBuilder
             _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
-        return new IrDeclarationVariable(syntax, symbol, type, initializer);
+        return new IrDeclarationVariable(syntax, symbol, type!, initializer);
     }
 
     private IrDeclarationVariable DeclarationVariableTyped(VariableDeclarationTypedSyntax syntax)

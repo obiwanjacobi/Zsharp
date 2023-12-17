@@ -8,36 +8,6 @@ namespace Maja.Compiler.IR;
 
 internal static class IrNumber
 {
-    internal static bool TryDecideType(TypeSymbol first, TypeSymbol second,
-        [NotNullWhen(true)] out TypeSymbol? type)
-    {
-        if (first is TypeInferredSymbol inferredFirst)
-            first = inferredFirst.GetPreferredType()
-                ?? throw new MajaException("No preferred type could be found.");
-        if (second is TypeInferredSymbol inferredSecond)
-            second = inferredSecond.GetPreferredType()
-                ?? throw new MajaException("No preferred type could be found.");
-
-        if ((TypeSymbol.IsInteger(first) && TypeSymbol.IsInteger(second)) ||
-            (TypeSymbol.IsFloat(first) && TypeSymbol.IsFloat(second)))
-        {
-            type = first.SizeInBytes() < second.SizeInBytes()
-                ? second
-                : first
-                ;
-            return true;
-        }
-
-        if (TypeSymbol.IsBoolean(first) && TypeSymbol.IsBoolean(second))
-        {
-            type = first;
-            return true;
-        }
-
-        type = null;
-        return false;
-    }
-
     internal static List<TypeSymbol> ParseNumber(string text, out object? value)
     {
         value = null;
