@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Maja.Compiler;
 
-namespace Maja.Runtime;
+namespace Maja;
 
 public static class OptOfTExtensions
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Maja.Runtime;
+namespace Maja;
 
 public abstract class Opt
 {

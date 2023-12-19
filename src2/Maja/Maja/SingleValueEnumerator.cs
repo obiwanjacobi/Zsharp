@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Maja.Runtime;
+namespace Maja;
 
 internal sealed class SingleValueEnumerator<T> : IEnumerator<T>
 {

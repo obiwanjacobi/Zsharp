@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace Maja.Runtime;
+namespace Maja;
 
 public static class Conversion
 {
