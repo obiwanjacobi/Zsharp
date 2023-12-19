@@ -26,9 +26,9 @@ internal sealed class AssemblyManagerBuilder
         return this;
     }
 
-    public AssemblyManagerBuilder AddMajaRuntime()
+    public AssemblyManagerBuilder AddMaja()
     {
-        _assemblyManager.LoadAssembly("Maja.Runtime.dll");
+        _assemblyManager.LoadAssembly("Maja.dll");
         return this;
     }
 
