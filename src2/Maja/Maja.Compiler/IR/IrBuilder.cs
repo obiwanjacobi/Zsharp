@@ -516,7 +516,11 @@ internal sealed class IrBuilder
     {
         var left = Expression(syntax.Left);
         var right = Expression(syntax.Right);
-        var op = new IrBinaryOperator(syntax.Operator, left.TypeSymbol);
+        
+        if (!IrTypeConversion.TryDecideType(left.TypeSymbol, right.TypeSymbol, out var opType))
+            opType = left.TypeSymbol;
+
+        var op = new IrBinaryOperator(syntax.Operator, opType);
 
         return new IrExpressionBinary(syntax, left, op, right);
     }

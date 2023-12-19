@@ -72,7 +72,7 @@ internal sealed class AssemblyManager
         }
     }
 
-    private class ProbeAssemblyResolver : MetadataAssemblyResolver
+    private sealed class ProbeAssemblyResolver : MetadataAssemblyResolver
     {
         private readonly IEnumerable<string> _probePaths;
         public ProbeAssemblyResolver(IEnumerable<string> probePaths)

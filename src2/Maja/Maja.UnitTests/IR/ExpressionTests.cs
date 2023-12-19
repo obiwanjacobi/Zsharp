@@ -40,7 +40,7 @@ public class ExpressionTests
         program.Root.Declarations.Should().HaveCount(1);
         var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
-        v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
+        v.Initializer!.TypeSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
         v.TypeSymbol.Should().Be(TypeSymbol.I64);
@@ -58,7 +58,7 @@ public class ExpressionTests
         program.Root.Declarations.Should().HaveCount(1);
         var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
-        v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
+        v.Initializer!.TypeSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(84);
         v.TypeSymbol.Should().Be(TypeSymbol.I64);
