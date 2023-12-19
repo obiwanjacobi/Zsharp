@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		GenerateParser.cmd = GenerateParser.cmd
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maja.Repl", "Maja.Repl\Maja.Repl.csproj", "{5C1D0842-C628-45B9-AA1C-7D5C855DBBBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maja.Repl", "Maja.Repl\Maja.Repl.csproj", "{5C1D0842-C628-45B9-AA1C-7D5C855DBBBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maja", "Maja\Maja.csproj", "{2B077170-2B68-4AD0-BD25-613E00B567F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5C1D0842-C628-45B9-AA1C-7D5C855DBBBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C1D0842-C628-45B9-AA1C-7D5C855DBBBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C1D0842-C628-45B9-AA1C-7D5C855DBBBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B077170-2B68-4AD0-BD25-613E00B567F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B077170-2B68-4AD0-BD25-613E00B567F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B077170-2B68-4AD0-BD25-613E00B567F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B077170-2B68-4AD0-BD25-613E00B567F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
