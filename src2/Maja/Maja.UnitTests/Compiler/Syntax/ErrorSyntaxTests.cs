@@ -2,7 +2,6 @@ using System.Linq;
 using FluentAssertions;
 using Maja.Compiler.Parser;
 using Maja.Compiler.Syntax;
-using Maja.UnitTests.Compiler;
 using Xunit;
 
 namespace Maja.UnitTests.Compiler.Syntax;
