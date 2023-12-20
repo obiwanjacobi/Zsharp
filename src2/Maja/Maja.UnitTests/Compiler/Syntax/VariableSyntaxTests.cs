@@ -23,6 +23,22 @@ public class VariableSyntaxTests
     }
 
     [Fact]
+    public void VarType_Init()
+    {
+        const string code =
+            "x: U8 = 42" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
+        v.Name.Text.Should().Be("x");
+        v.Type!.Name.Text.Should().Be("U8");
+        v.Expression.Should().NotBeNull();
+        v.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
+    }
+
+    [Fact]
     public void VarTypeArgs()
     {
         const string code =

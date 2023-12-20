@@ -41,4 +41,4 @@ Only necessary when tree is allowed to change.
 
 ## Notes
 
-- CodeBlock is a statement?
+- CodeBlock is a statement or an expression?

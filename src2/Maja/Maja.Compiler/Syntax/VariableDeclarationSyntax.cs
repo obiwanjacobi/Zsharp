@@ -42,7 +42,7 @@ public sealed class VariableDeclarationTypedSyntax : VariableDeclarationSyntax, 
     public TypeSyntax Type
         => ChildNodes.OfType<TypeSyntax>().Single();
 
-    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnVariableDeclarationTyped(this);
     
     public static VariableDeclarationTypedSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
