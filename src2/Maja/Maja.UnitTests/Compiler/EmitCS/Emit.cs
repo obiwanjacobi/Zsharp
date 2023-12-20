@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
-using FluentAssertions;
 using Maja.Compiler.EmitCS;
 using Maja.Compiler.EmmitCS.CSharp.Project;
 using Maja.UnitTests.Compiler.IR;
-using Xunit.Abstractions;
 
 namespace Maja.UnitTests.Compiler.EmitCS;
 

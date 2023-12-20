@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using FluentAssertions;
 using Maja.Compiler.External;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;

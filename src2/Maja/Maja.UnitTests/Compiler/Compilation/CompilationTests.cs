@@ -1,7 +1,4 @@
-using FluentAssertions;
 using Maja.Compiler.Syntax;
-using Maja.UnitTests.Compiler;
-using Xunit;
 
 namespace Maja.UnitTests.Compiler.Compilation;
 

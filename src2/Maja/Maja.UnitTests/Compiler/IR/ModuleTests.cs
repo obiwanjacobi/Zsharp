@@ -1,7 +1,3 @@
-using FluentAssertions;
-using Maja.UnitTests.Compiler;
-using Xunit;
-
 namespace Maja.UnitTests.Compiler.IR;
 
 public class ModuleTests

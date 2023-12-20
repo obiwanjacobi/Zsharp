@@ -1,8 +1,5 @@
-using FluentAssertions;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
-using Maja.UnitTests.Compiler;
-using Xunit;
 
 namespace Maja.UnitTests.Compiler.IR;
 

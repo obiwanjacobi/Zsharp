@@ -1,8 +1,3 @@
-using FluentAssertions;
-using Maja.UnitTests.Compiler;
-using Xunit;
-using Xunit.Abstractions;
-
 namespace Maja.UnitTests.Compiler.EmitCS;
 
 public class EmitModuleTests

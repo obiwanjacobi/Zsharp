@@ -1,11 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Antlr4.Runtime;
-using FluentAssertions;
 using Maja.Compiler.Parser;
-using Maja.UnitTests.Compiler;
-using Xunit;
 
 namespace Maja.UnitTests.Compiler.Parser;
 

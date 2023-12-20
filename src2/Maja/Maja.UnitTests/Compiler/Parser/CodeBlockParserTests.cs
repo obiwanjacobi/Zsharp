@@ -1,6 +1,3 @@
-using FluentAssertions;
-using Maja.UnitTests.Compiler;
-using Xunit;
 using static Maja.Compiler.Parser.MajaParser;
 
 namespace Maja.UnitTests.Compiler.Parser;

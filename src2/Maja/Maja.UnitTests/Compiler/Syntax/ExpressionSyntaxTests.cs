@@ -1,7 +1,5 @@
 using System.Linq;
-using FluentAssertions;
 using Maja.Compiler.Syntax;
-using Xunit;
 
 namespace Maja.UnitTests.Compiler.Syntax;
 

@@ -1,6 +1,5 @@
-﻿using Antlr4.Runtime;
-using FluentAssertions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Antlr4.Runtime;
 
 namespace Maja.UnitTests.Compiler;
 
