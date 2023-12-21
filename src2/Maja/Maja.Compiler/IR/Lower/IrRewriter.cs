@@ -291,12 +291,13 @@ internal abstract class IrRewriter
 
     protected virtual IrExpression RewriteExpressionInvocation(IrExpressionInvocation expression)
     {
+        var typeArgs = RewriteTypeArguments(expression.TypeArguments);
         var args = RewriteArguments(expression.Arguments);
 
-        if (args == expression.Arguments)
+        if (args == expression.Arguments && typeArgs == expression.TypeArguments)
             return expression;
 
-        return new IrExpressionInvocation(expression.Syntax, expression.Symbol, args, expression.TypeSymbol);
+        return new IrExpressionInvocation(expression.Syntax, expression.Symbol, typeArgs, args, expression.TypeSymbol);
     }
 
     protected virtual ImmutableArray<IrArgument> RewriteArguments(ImmutableArray<IrArgument> arguments)
@@ -312,6 +313,21 @@ internal abstract class IrRewriter
             return argument;
 
         return new IrArgument(argument.Syntax, expr!, argument.Symbol);
+    }
+
+    protected virtual ImmutableArray<IrTypeArgument> RewriteTypeArguments(ImmutableArray<IrTypeArgument> typeArguments)
+    {
+        return RewriteArray(typeArguments, RewriteTypeArgument);
+    }
+
+    protected virtual IrTypeArgument RewriteTypeArgument(IrTypeArgument typeArgument)
+    {
+        var type = RewriteType(typeArgument.Type);
+
+        if (type == typeArgument.Type)
+            return typeArgument;
+
+        return new IrTypeArgument(typeArgument.Syntax, type!);
     }
 
     protected virtual IrExpression RewriteExpressionLiteral(IrExpressionLiteral expression)

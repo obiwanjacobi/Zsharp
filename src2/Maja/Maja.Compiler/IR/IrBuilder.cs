@@ -221,6 +221,32 @@ internal sealed class IrBuilder
         return rules;
     }
 
+    private List<IrTypeParameter> TypeParameters(IEnumerable<TypeParameterSyntax> syntax)
+    {
+        var typeParams = new List<IrTypeParameter>();
+
+        foreach (var typeParamSyntax in syntax)
+        {
+            IrTypeParameter typeParam = typeParamSyntax switch
+            {
+                TypeParameterGenericSyntax tpg => TypeParameterGeneric(tpg),
+                _ => throw new NotSupportedException($"IR: No support for TypeParameter '{typeParamSyntax.SyntaxKind}'")
+            };
+
+            typeParams.Add(typeParam);
+        }
+
+        return typeParams;
+    }
+
+    private IrTypeParameterGeneric TypeParameterGeneric(TypeParameterGenericSyntax syntax)
+    {
+        var irType = Type(syntax.Type)
+            ?? throw new MajaException("IR: TypeParameterGenericSyntax does not specify a Type.");
+
+        return new(syntax, irType);
+    }
+
     private IrDeclarationVariable DeclarationVariableInferred(VariableDeclarationInferredSyntax syntax)
     {
         var initializer = Expression(syntax.Expression!);
@@ -273,7 +299,7 @@ internal sealed class IrBuilder
         var parameters = Parameters(syntax.Parameters);
         var returnType = Type(syntax.ReturnType) ?? IrType.Void;
 
-        //syntax.TypeParameters;
+        //var typeParameters = TypeParameters(syntax.TypeParameters);
 
         var paramSymbols = parameters.Select(p => p.Symbol).ToArray();
         var ns = CurrentScope.FullName;
@@ -448,6 +474,7 @@ internal sealed class IrBuilder
     private IrExpressionInvocation InvocationExpression(ExpressionInvocationSyntax syntax)
     {
         var args = Arguments(syntax.Arguments);
+        var typeArgs = TypeArguments(syntax.TypeArguments);
 
         var argTypes = args.Select(a => a.Expression.TypeSymbol);
         var name = new SymbolName(syntax.Identifier.Text);
@@ -459,7 +486,7 @@ internal sealed class IrBuilder
 
         var type = symbol!.ReturnType ?? TypeSymbol.Unknown;
 
-        return new IrExpressionInvocation(syntax, symbol, args, type);
+        return new IrExpressionInvocation(syntax, symbol, typeArgs, args, type);
     }
 
     private List<IrArgument> Arguments(IEnumerable<ArgumentSyntax> arguments)
@@ -484,6 +511,25 @@ internal sealed class IrBuilder
         }
 
         return new IrArgument(syntax, expr, argSymbol);
+    }
+
+    private List<IrTypeArgument> TypeArguments(IEnumerable<TypeArgumentSyntax> arguments)
+    {
+        var args = new List<IrTypeArgument>();
+        foreach (var synArg in arguments)
+        {
+            var arg = TypeArgument(synArg);
+            args.Add(arg);
+        }
+        return args;
+    }
+
+    private IrTypeArgument TypeArgument(TypeArgumentSyntax syntax)
+    {
+        var type = Type(syntax.Type)
+            ?? throw new MajaException("IR: TypeArgumentSyntax does not specify a Type.");
+
+        return new IrTypeArgument(syntax, type);
     }
 
     private static IrExpressionLiteral LiteralBoolExpression(ExpressionLiteralBoolSyntax syntax)
@@ -516,7 +562,7 @@ internal sealed class IrBuilder
     {
         var left = Expression(syntax.Left);
         var right = Expression(syntax.Right);
-        
+
         if (!IrTypeConversion.TryDecideType(left.TypeSymbol, right.TypeSymbol, out var opType))
             opType = left.TypeSymbol;
 

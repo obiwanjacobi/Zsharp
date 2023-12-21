@@ -1,12 +1,10 @@
 {
     "antlr4.atn.maxLabelCount": 4,
     "antlr4.generation": {
-        "mode": "external",
-        "outputDir": "Parser",
-        "language": "CSharp",
-        "package": "Maja.Compiler.Parser",
-        "listeners": false,
-        "visitors": true
+        "mode": "internal"
+    },
+    "antlr4.format": {
+        "disabled": true
     },
     "antlr4.rrd.saveDir": "../docs/diagrams/railroad",
     "cSpell.ignoreWords": [

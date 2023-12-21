@@ -27,6 +27,12 @@ public sealed class ExpressionInvocationSyntax : ExpressionSyntax, ICreateSyntax
     public IEnumerable<ArgumentSyntax> Arguments
         => ChildNodes.OfType<ArgumentSyntax>();
 
+    /// <summary>
+    /// The list of function type arguments, if any.
+    /// </summary>
+    public IEnumerable<TypeArgumentSyntax> TypeArguments
+        => ChildNodes.OfType<TypeArgumentSyntax>();
+
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionInvocation(this);
     

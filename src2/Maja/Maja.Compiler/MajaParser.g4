@@ -62,7 +62,7 @@ expression:
       expressionConstant                                    #expressionConst
     | expression Sp expressionOperatorBinary Sp expression  #expressionBinary
     | expressionOperatorUnaryPrefix expression              #expressionUnaryPrefix
-    | expression argumentList                               #expressionInvocation
+    | expression typeArgumentList? argumentList             #expressionInvocation
     | ParenOpen expression ParenClose                       #expressionPrecedence
     | nameIdentifier                                        #expressionIdentifier
     ;
@@ -83,7 +83,7 @@ expressionOperatorBitsUnaryPrefix: <assoc=right> BitNot;
 expressionLiteralBool: True | False;
 expressionLiteral: number | string;
 
-nameQualified: nameIdentifier (Dot nameIdentifier)+;
+nameQualified: nameIdentifier (Dot nameIdentifier)*;
 nameQualifiedList: nameQualifiedListComma | nameQualifiedListIndent;
 nameQualifiedListComma: nameQualified Sp? (Comma Sp+ nameQualified)*;
 nameQualifiedListIndent: Indent (nameQualified newline)+ Dedent;

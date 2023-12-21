@@ -152,4 +152,20 @@ public class ExpressionSyntaxTests
         expr.Arguments.First().ChildNodes[0]
             .As<ExpressionLiteralSyntax>().Text.Should().Be("42");
     }
+
+    [Fact]
+    public void InvocationAssignTypeParam()
+    {
+        const string code =
+            "x := fn<U8>()" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var expr = v.Expression!.As<ExpressionInvocationSyntax>();
+        expr.Identifier.Text.Should().Be("fn");
+        expr.TypeArguments.First().ChildNodes[0]
+            .As<TypeSyntax>().Text.Should().Be("U8");
+    }
 }
