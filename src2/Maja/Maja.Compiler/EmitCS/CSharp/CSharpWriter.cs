@@ -56,8 +56,12 @@ internal sealed class CSharpWriter
             .Append(SpaceChar)
             .Append(method.TypeName)
             .Append(SpaceChar)
-            .Append(method.Name)
-            .Append('(');
+            .Append(method.Name);
+    }
+
+    public void WriteTypeParameter(TypeParameter parameter)
+    {
+        _writer.Append(parameter.TypeName);
     }
 
     public void WriteParameter(Parameter parameter, string? defaultValue = null)
@@ -72,7 +76,7 @@ internal sealed class CSharpWriter
 
     public void OpenMethodBody()
     {
-        _writer.AppendLine(")");
+        _writer.AppendLine();
         OpenScope();
     }
 

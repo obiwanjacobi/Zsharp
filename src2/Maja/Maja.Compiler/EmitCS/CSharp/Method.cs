@@ -18,11 +18,27 @@ internal sealed class Method
 
     public string TypeName { get; }
 
+    private readonly List<TypeParameter> _typeParameters = new();
+    public IEnumerable<TypeParameter> TypeParameters => _typeParameters;
+
+    public void AddTypeParameter(TypeParameter parameter)
+        => _typeParameters.Add(parameter);
+
     private readonly List<Parameter> _parameters = new();
     public IEnumerable<Parameter> Parameters => _parameters;
 
     public void AddParameter(Parameter parameter)
         => _parameters.Add(parameter);
+}
+
+internal sealed class TypeParameter
+{
+    public TypeParameter(string typeName)
+    {
+        TypeName = typeName;
+    }
+
+    public string TypeName { get; }
 }
 
 internal sealed class Parameter

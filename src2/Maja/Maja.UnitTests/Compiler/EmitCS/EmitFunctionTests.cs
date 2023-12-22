@@ -53,6 +53,28 @@ public class EmitFunctionTests
     }
 
     [Fact]
+    public void FunctionTypeParameters()
+    {
+        const string code =
+            "fn: <T>(p1: T)" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" fn")
+            .And.Contain("<T>")
+            .And.Contain("T p1")
+            .And.Contain(" void ")
+            .And.Contain(" return")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
     public void FunctionReturnValue()
     {
         const string code =

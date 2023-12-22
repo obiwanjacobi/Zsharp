@@ -98,7 +98,27 @@ Arithmetic, bitwise and logical operators.
 > TBD: *) we could reuse the logical operators for use as bitwise operators as well.
 That also means that the bitwise short-hand operators (`&=`, `|=` or `^=`) no longer work.
 
-> Ternary operators cannot contain other ternary operators. No nesting of `? :` for readability.
+Ternary operators can contain other ternary operators. Nested ternaries each have their own indent level.
+
+```csharp
+x = a > b 
+    ? a 
+    : b > c
+        ? b
+        : c
+```
+
+No other formatting is supported for nested ternaries.
+
+> TBD: Can ternary be an l-value - that can be assigned to?
+
+```csharp
+x := 0
+y := 1
+
+// result is (a ref to) the var not the value of the var.
+(x > y) ? x : y = 42
+```
 
 Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `xnor` or use dedicated keywords?
 

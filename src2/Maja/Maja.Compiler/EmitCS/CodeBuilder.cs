@@ -22,7 +22,7 @@ internal class CodeBuilder : IrWalker<object?>
         => _scopes.Peek().Type is not null;
     private bool IsFunctionScope
         => _scopes.Peek().Method is not null;
-    
+
     private CSharp.Type CurrentType
         => _scopes.Peek().Type ?? throw new InvalidOperationException("Not a Type.");
     private CSharp.Method CurrentMethod
@@ -63,8 +63,9 @@ internal class CodeBuilder : IrWalker<object?>
         _scopes.Push(new Scope(mc));
         var mi = CSharpFactory.CreateModuleInitializer(mc.Name);
         mc.AddMethod(mi);
-        
+
         _writer.StartMethod(mi);
+        OnParameters(Enumerable.Empty<IrParameter>());
         _writer.OpenMethodBody();
         _scopes.Push(new Scope(mi));
         result = AggregateResult(result, OnStatements(compilation.Statements));
@@ -90,17 +91,51 @@ internal class CodeBuilder : IrWalker<object?>
             function.Symbol.Name.Value, netType);
         CurrentType.AddMethod(method);
         _scopes.Push(new Scope(method));
-        
+
         // TODO: is export?
 
         _writer.StartMethod(method);
-        var result = OnParameters(function.Parameters);
+
+        var result = OnTypeParameters(function.TypeParameters.OfType<IrTypeParameterGeneric>());
+        result = AggregateResult(result, OnParameters(function.Parameters));
         _writer.OpenMethodBody();
         result = AggregateResult(result, OnCodeBlock(function.Body));
         _writer.CloseScope();
 
         _ = _scopes.Pop();
         return result;
+    }
+
+    public override object? OnTypeParameters(IEnumerable<IrTypeParameterGeneric> parameters)
+    {
+        object? res = null;
+        if (parameters.Any())
+        {
+            _writer.Write("<");
+            res = base.OnTypeParameters(parameters);
+            _writer.Write(">");
+        }
+        return res;
+    }
+
+    public override object? OnTypeParameter(IrTypeParameterGeneric parameter)
+    {
+        if (CurrentMethod.TypeParameters.Any())
+            _writer.WriteComma();
+
+        var p = CSharpFactory.CreateTypeParameter(parameter.Symbol.Name.Value);
+        CurrentMethod.AddTypeParameter(p);
+
+        _writer.WriteTypeParameter(p);
+        return null;
+    }
+
+    public override object? OnParameters(IEnumerable<IrParameter> parameters)
+    {
+        _writer.Write("(");
+        var res = base.OnParameters(parameters);
+        _writer.Write(")");
+        return res;
     }
 
     public override object? OnParameter(IrParameter parameter)
@@ -119,7 +154,7 @@ internal class CodeBuilder : IrWalker<object?>
     public override object? OnDeclarationVariable(IrDeclarationVariable variable)
     {
         var netType = MajaTypeMapper.MapToDotNetType(variable.TypeSymbol);
-        
+
         if (IsModuleClassScope)
         {
             var field = CSharpFactory.CreateField(variable.Symbol.Name.Value, netType);
@@ -127,13 +162,13 @@ internal class CodeBuilder : IrWalker<object?>
             _writer.StartField(field);
         }
         else
-        { 
+        {
             _writer.WriteVariable(netType, variable.Symbol.Name.Value);
         }
 
         var result = Default;
         var init = variable.Initializer;
-        if (init != null)
+        if (init is not null)
         {
             _writer.Assignment();
             result = OnExpression(init);

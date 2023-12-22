@@ -34,6 +34,9 @@ internal static class CSharpFactory
             MethodModifiers = MethodModifiers.Static
         };
 
+    public static TypeParameter CreateTypeParameter(string typeName)
+        => new(typeName);
+
     public static Parameter CreateParameter(string name, string typeName)
         => new(name, typeName);
 

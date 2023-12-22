@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Maja.Compiler.IR;
@@ -61,7 +62,8 @@ internal abstract class IrWalker<R>
 
     public virtual R OnDeclarationFunction(IrDeclarationFunction function)
     {
-        var result = OnParameters(function.Parameters);
+        var result = OnTypeParameters(function.TypeParameters.OfType<IrTypeParameterGeneric>());
+        result = AggregateResult(result, OnParameters(function.Parameters));
         result = AggregateResult(result, OnOptionalType(result, function.ReturnType));
         result = AggregateResult(result, OnCodeBlock(function.Body));
         return result;
@@ -71,6 +73,16 @@ internal abstract class IrWalker<R>
             .Aggregate(Default, AggregateResult);
     public virtual R OnParameter(IrParameter parameter)
         => OnType(parameter.Type);
+    public virtual R OnTypeParameters(IEnumerable<IrTypeParameterGeneric> parameters)
+        => parameters.Select(OnTypeParameter)
+            .Aggregate(Default, AggregateResult);
+    public virtual R OnTypeParameter(IrTypeParameterGeneric parameter)
+    {
+        if (parameter.Type is not null)
+            return OnType(parameter.Type);
+
+        return Default;
+    }
 
     public virtual R OnDeclarationType(IrDeclarationType type)
     {

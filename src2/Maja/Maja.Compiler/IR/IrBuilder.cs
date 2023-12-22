@@ -342,7 +342,7 @@ internal sealed class IrBuilder
             // TODO: this does not catch return statements inside if's and loops etc.
             var invalidReturns = block.Statements
                 .OfType<IrStatementReturn>()
-                .Where(r => r.Expression != null);
+                .Where(r => r.Expression is not null);
             foreach (var ret in invalidReturns)
             {
                 _diagnostics.VoidFunctionCannotReturnValue(ret.Expression!.Syntax.Location, name.FullName);

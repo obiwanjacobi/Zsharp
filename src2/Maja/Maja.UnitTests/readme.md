@@ -46,6 +46,7 @@ Keeping track of the progress of Maja features.
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
 | decl       |       | x | x | x |   |   | x |   | `fn: ()`  |
 |            | param | x | x | x |   |   | x |   | `fn: (p: U8)`  |
+|            | type  | x | x | x |   |   | x |   | `fn: <T>(p: T)`  |
 |            | ret   | x | x | x |   |   | x |   | `fn: (): U8`  |
 | generics   |       |   |   |   |   |   |   |   | `fn: <T>()`  |
 | template   |       |   |   |   |   |   |   |   | `fn: <#T>()`  |
