@@ -1201,6 +1201,19 @@ event.Raise(any, args)
 event.Remove(ptrToHandler)
 ```
 
+> TBD:
+
+Perhaps a Reactive approach would be a nice solution for handling events in general?
+
+Use RX.NET?
+
+```csharp
+// eventSource is an object that produces new data
+eventSource.Subscribe(eventHandler)
+    .where(...)
+
+```
+
 ---
 
 ## Weak Functions
