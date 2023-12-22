@@ -106,6 +106,22 @@ internal abstract class IrScope
         return false;
     }
 
+    public int TryDeclareTypes(IEnumerable<TypeParameterSymbol> typeParameters)
+    {
+        var index = 0;
+        foreach (var param in typeParameters)
+        {
+            var name = new SymbolName(param.Name.FullName);
+            var symbol = new TypeSymbol(name);
+            if (!TryDeclareType(symbol))
+                return index;
+
+            index++;
+        }
+
+        return -1;
+    }
+
     public int TryDeclareVariables(IEnumerable<ParameterSymbol> parameters)
     {
         var index = 0;

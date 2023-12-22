@@ -22,6 +22,12 @@ public sealed class FunctionDeclarationSyntax : MemberDeclarationSyntax, ICreate
         => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
+    /// A collection of type parameters, if any.
+    /// </summary>
+    public IEnumerable<TypeParameterSyntax> TypeParameters
+        => ChildNodes.OfType<TypeParameterSyntax>();
+
+    /// <summary>
     /// A collection of parameters, if any.
     /// </summary>
     public IEnumerable<ParameterSyntax> Parameters

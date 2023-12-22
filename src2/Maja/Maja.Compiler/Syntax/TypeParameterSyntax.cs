@@ -36,7 +36,7 @@ public sealed class TypeParameterGenericSyntax : TypeParameterSyntax, ICreateSyn
     public override SyntaxKind SyntaxKind
         => SyntaxKind.GenericTypeParameter;
 
-    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterGeneric(this);
     
     public static TypeParameterGenericSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
@@ -61,7 +61,7 @@ public sealed class TypeParameterTemplateSyntax : TypeParameterSyntax, ICreateSy
     public override SyntaxKind SyntaxKind
         => SyntaxKind.TemplateTypeParameter;
 
-    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterTemplate(this);
 
     public static TypeParameterTemplateSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
@@ -89,7 +89,7 @@ public sealed class TypeParameterValueSyntax : TypeParameterSyntax, ICreateSynta
     public ExpressionSyntax? Expression
         => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
-    public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
+    public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterValue(this);
     
     public static TypeParameterValueSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)

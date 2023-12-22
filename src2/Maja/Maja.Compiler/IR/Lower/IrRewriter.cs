@@ -86,16 +86,18 @@ internal abstract class IrRewriter
 
     protected virtual IrDeclarationFunction RewriteDeclarationFunction(IrDeclarationFunction function)
     {
+        var typeParameters = RewriteTypeParameters(function.TypeParameters);
         var parameters = RewriteParameters(function.Parameters);
         var retType = RewriteType(function.ReturnType) ?? IrType.Void;
         var body = RewriteCodeBlock(function.Body);
 
-        if (parameters == function.Parameters &&
+        if (typeParameters == function.TypeParameters &&
+            parameters == function.Parameters &&
             retType == function.ReturnType &&
             body == function.Body)
             return function;
 
-        return new IrDeclarationFunction(function.Syntax, function.Symbol, parameters, retType, function.Scope, body);
+        return new IrDeclarationFunction(function.Syntax, function.Symbol, typeParameters, parameters, retType, function.Scope, body);
     }
 
     protected virtual ImmutableArray<IrParameter> RewriteParameters(ImmutableArray<IrParameter> parameters)
@@ -111,6 +113,30 @@ internal abstract class IrRewriter
             return parameter;
 
         return new IrParameter(parameter.Syntax, parameter.Symbol, type!);
+    }
+
+    protected virtual ImmutableArray<IrTypeParameter> RewriteTypeParameters(ImmutableArray<IrTypeParameter> parameters)
+    {
+        return RewriteArray(parameters, RewriteTypeParameter);
+    }
+
+    protected virtual IrTypeParameter RewriteTypeParameter(IrTypeParameter parameter)
+    {
+        return parameter switch
+        {
+            IrTypeParameterGeneric tpg => RewriteTypeParameterGeneric((IrTypeParameterGeneric)parameter),
+            _ => throw new NotSupportedException($"Ir: TypeParameter {parameter} is not supported.")
+        };
+    }
+
+    protected virtual IrTypeParameterGeneric RewriteTypeParameterGeneric(IrTypeParameterGeneric parameter)
+    {
+        var type = RewriteType(parameter.Type);
+
+        if (type == parameter.Type)
+            return parameter;
+
+        return new IrTypeParameterGeneric(parameter.Syntax, type!, parameter.Symbol);
     }
 
     protected virtual IrDeclarationType RewriteDeclarationType(IrDeclarationType type)

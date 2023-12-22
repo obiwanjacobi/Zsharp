@@ -1,21 +1,32 @@
-﻿using Maja.Compiler.Syntax;
+﻿using Maja.Compiler.Symbol;
+using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
 
 internal abstract class IrTypeParameter : IrNode
 {
-    protected IrTypeParameter(TypeParameterSyntax syntax)
+    protected IrTypeParameter(TypeParameterSyntax syntax, TypeParameterSymbol symbol)
         : base(syntax)
-    { }
+    {
+        Symbol = symbol;
+    }
+
+    public TypeParameterSymbol Symbol { get; }
+
+    public new TypeParameterSyntax Syntax 
+        => (TypeParameterSyntax)base.Syntax;
 }
 
 internal sealed class IrTypeParameterGeneric : IrTypeParameter
 {
-    public IrTypeParameterGeneric(TypeParameterGenericSyntax syntax, IrType type)
-        : base(syntax)
+    public IrTypeParameterGeneric(TypeParameterGenericSyntax syntax, IrType? type, TypeParameterSymbol symbol)
+        : base(syntax, symbol)
     {
         Type = type;
     }
 
-    public IrType Type { get; }
+    public IrType? Type { get; }
+
+    public new TypeParameterGenericSyntax Syntax
+        => (TypeParameterGenericSyntax)base.Syntax;
 }

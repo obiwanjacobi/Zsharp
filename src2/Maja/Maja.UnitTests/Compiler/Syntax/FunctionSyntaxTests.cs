@@ -81,4 +81,21 @@ public class FunctionSyntaxTests
         ret.Expression.Should().NotBeNull();
         ret.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
     }
+
+    [Fact]
+    public void FnTypeParams()
+    {
+        const string code =
+            "fn: <T>(p: T)" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var fn = result.Members.First().As<FunctionDeclarationSyntax>();
+        fn.Identifier.Text.Should().Be("fn");
+        fn.TypeParameters.Should().HaveCount(1);
+        var param = fn.TypeParameters.First().As<TypeParameterSyntax>();
+        param.Name.Text.Should().Be("T");
+    }
 }

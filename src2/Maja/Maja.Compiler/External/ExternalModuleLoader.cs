@@ -47,9 +47,12 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
                     _factory.Create(p.ParameterType)))
                 );
 
+            var typeParameters = new List<TypeParameterSymbol>();
+            // TODO: type parameters
+
             var rt = _factory.Create(method.ReturnType);
             var name = new SymbolName(typeMetadata.FullName, method.Name);
-            var fn = new FunctionSymbol(name, parameters, rt);
+            var fn = new FunctionSymbol(name, typeParameters, parameters, rt);
             functions.Add(fn);
         }
 

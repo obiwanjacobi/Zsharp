@@ -28,7 +28,12 @@ internal sealed class IrBuilder
     public IEnumerable<DiagnosticMessage> Diagnostics
         => _diagnostics;
 
-    private void PushScope(IrScope scope) => _scopes.Push(scope);
+    private IrScope PushScope(IrScope scope)
+    {
+        var parentScope = _scopes.Peek();
+        _scopes.Push(scope);
+        return parentScope;
+    }
     private IrScope PopScope() => _scopes.Pop();
     private IrScope CurrentScope => _scopes.Peek();
 
@@ -141,7 +146,7 @@ internal sealed class IrBuilder
 
         if (!CurrentScope.TryDeclareType(symbol))
         {
-            _diagnostics.TypeAlreadyDelcared(syntax.Location, syntax.Name.Text);
+            _diagnostics.TypeAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
         return new IrDeclarationType(syntax, symbol, enums, fields, rules);
@@ -241,10 +246,10 @@ internal sealed class IrBuilder
 
     private IrTypeParameterGeneric TypeParameterGeneric(TypeParameterGenericSyntax syntax)
     {
-        var irType = Type(syntax.Type)
-            ?? throw new MajaException("IR: TypeParameterGenericSyntax does not specify a Type.");
+        var symbol = new TypeParameterSymbol(syntax.Name.Text);
+        var type = Type(syntax.Type);
 
-        return new(syntax, irType);
+        return new(syntax, type, symbol);
     }
 
     private IrDeclarationVariable DeclarationVariableInferred(VariableDeclarationInferredSyntax syntax)
@@ -296,23 +301,33 @@ internal sealed class IrBuilder
 
     private IrDeclarationFunction DeclarationFunction(FunctionDeclarationSyntax syntax)
     {
+        var functionScope = new IrFunctionScope(syntax.Identifier.Text, CurrentScope);
+        var parentScope = PushScope(functionScope);
+
+        var typeParameters = TypeParameters(syntax.TypeParameters);
+        var typeParamSymbols = typeParameters.Select(p => p.Symbol).ToArray();
+        var index = functionScope.TryDeclareTypes(typeParamSymbols);
+        if (index >= 0)
+        {
+            _diagnostics.TypeAlreadyDeclared(
+                typeParameters[index].Syntax.Location, typeParameters[index].Symbol.Name.FullName);
+        }
+
         var parameters = Parameters(syntax.Parameters);
-        var returnType = Type(syntax.ReturnType) ?? IrType.Void;
-
-        //var typeParameters = TypeParameters(syntax.TypeParameters);
-
         var paramSymbols = parameters.Select(p => p.Symbol).ToArray();
-        var ns = CurrentScope.FullName;
+
+        var returnType = Type(syntax.ReturnType) ?? IrType.Void;
+        
+        var ns = parentScope.FullName;
         var name = new SymbolName(ns, syntax.Identifier.Text);
-        var symbol = new FunctionSymbol(name, paramSymbols, returnType.Symbol);
-        if (!CurrentScope.TryDeclareFunction(symbol))
+        var symbol = new FunctionSymbol(name, typeParamSymbols, paramSymbols, returnType.Symbol);
+
+        if (!parentScope.TryDeclareFunction(symbol))
         {
             _diagnostics.FunctionAlreadyDelcared(syntax.Location, symbol.Name.FullName);
         }
 
-        var scope = new IrFunctionScope(syntax.Identifier.Text, CurrentScope);
-        PushScope(scope);
-        var index = scope.TryDeclareVariables(paramSymbols);
+        index = functionScope.TryDeclareVariables(paramSymbols);
         if (index >= 0)
         {
             _diagnostics.ParameterNameAlreadyDeclared(
@@ -324,6 +339,7 @@ internal sealed class IrBuilder
 
         if (returnType == IrType.Void)
         {
+            // TODO: this does not catch return statements inside if's and loops etc.
             var invalidReturns = block.Statements
                 .OfType<IrStatementReturn>()
                 .Where(r => r.Expression != null);
@@ -332,7 +348,7 @@ internal sealed class IrBuilder
                 _diagnostics.VoidFunctionCannotReturnValue(ret.Expression!.Syntax.Location, name.FullName);
             }
         }
-        return new IrDeclarationFunction(syntax, symbol, parameters, returnType, scope, block);
+        return new IrDeclarationFunction(syntax, symbol, typeParameters, parameters, returnType, functionScope, block);
     }
 
     private IrCodeBlock CodeBlock(CodeBlockSyntax syntax)
@@ -476,12 +492,13 @@ internal sealed class IrBuilder
         var args = Arguments(syntax.Arguments);
         var typeArgs = TypeArguments(syntax.TypeArguments);
 
-        var argTypes = args.Select(a => a.Expression.TypeSymbol);
+        var argSymbols = args.Select(a => a.Expression.TypeSymbol);
         var name = new SymbolName(syntax.Identifier.Text);
-        if (!CurrentScope.TryLookupFunctionSymbol(name, argTypes, out var symbol))
+        if (!CurrentScope.TryLookupFunctionSymbol(name, argSymbols, out var symbol))
         {
             _diagnostics.FunctionNotFound(syntax.Location, syntax.Identifier.Text);
-            symbol = new FunctionSymbol(name, Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown);
+            symbol = new FunctionSymbol(name, Enumerable.Empty<TypeParameterSymbol>(), 
+                Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown);
         }
 
         var type = symbol!.ReturnType ?? TypeSymbol.Unknown;

@@ -74,6 +74,34 @@ public class FunctionTests
     }
 
     [Fact]
+    public void FuncDecl_TypeParams()
+    {
+        const string code =
+            "fn: <T>(p1: T): Bool" + Tokens.Eol +
+            Tokens.Indent1 + "ret false" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(1);
+        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        fn.Body.Statements.Should().HaveCount(1);
+        fn.Body.Declarations.Should().BeEmpty();
+        fn.TypeParameters.Should().HaveCount(1);
+        fn.Parameters.Should().HaveCount(1);
+        fn.ReturnType!.Symbol.Should().Be(TypeSymbol.Bool);
+        // scope
+        fn.Scope.Symbols.Should().HaveCount(2);
+        fn.Scope.TryLookupSymbol("p1", out var p1).Should().BeTrue();
+        p1!.Kind.Should().Be(SymbolKind.Variable);
+        // symbol
+        fn.Symbol.Name.Value.Should().Be("fn");
+        fn.Symbol.TypeParameters.Should().HaveCount(1);
+        fn.Symbol.Parameters.Should().HaveCount(1);
+        fn.Symbol.ReturnType.Should().Be(TypeSymbol.Bool);
+    }
+
+    [Fact]
     public void FuncDuplicate_Error()
     {
         const string code =

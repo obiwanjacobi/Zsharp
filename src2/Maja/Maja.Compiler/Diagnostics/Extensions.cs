@@ -52,7 +52,7 @@ internal static class IrDiagnostics
     public static void ParameterNameAlreadyDeclared(this DiagnosticList diagnostics, SyntaxLocation location, string parameterName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Parameter name '{parameterName}' is already declared.");
 
-    public static void TypeAlreadyDelcared(this DiagnosticList diagnostics, SyntaxLocation location, string typeName)
+    public static void TypeAlreadyDeclared(this DiagnosticList diagnostics, SyntaxLocation location, string typeName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Type '{typeName}' is already declared.");
 
     public static void EnumValueNotConstant(this DiagnosticList diagnostics, SyntaxLocation location, string expr)
