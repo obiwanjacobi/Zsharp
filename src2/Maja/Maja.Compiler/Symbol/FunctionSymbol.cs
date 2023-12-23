@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Maja.Compiler.Symbol;
 
@@ -8,7 +9,7 @@ public sealed record FunctionSymbol : Symbol
         IEnumerable<TypeParameterSymbol> typeParameters, IEnumerable<ParameterSymbol> parameters, TypeSymbol? returnType)
         : base(name)
     {
-        TypeParameters = typeParameters;
+        _typeParameters = new List<TypeParameterSymbol>(typeParameters);
         Parameters = parameters;
         ReturnType = returnType ?? TypeSymbol.Void;
     }
@@ -16,7 +17,8 @@ public sealed record FunctionSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Function;
 
-    public IEnumerable<TypeParameterSymbol> TypeParameters { get; }
+    private readonly List<TypeParameterSymbol> _typeParameters;
+    public IEnumerable<TypeParameterSymbol> TypeParameters => _typeParameters;
     public IEnumerable<ParameterSymbol> Parameters { get; }
     public TypeSymbol ReturnType { get; }
 }

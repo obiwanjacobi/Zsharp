@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
@@ -156,6 +157,26 @@ public class FunctionTests
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
         v.Initializer!.ConstantValue.Should().BeNull();
         v.TypeSymbol.Should().Be(TypeSymbol.U8);
+    }
+
+    [Fact]
+    public void InvocationTypeParam()
+    {
+        const string code =
+            "fn: <T>(p: T): T" + Tokens.Eol +
+            Tokens.Indent1 + "ret p" + Tokens.Eol +
+            "x := fn<U8>(42)" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(2);
+        var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
+        v.Symbol.Name.Value.Should().Be("x");
+        v.TypeSymbol.Name.Value.Should().Be("U8");
+        var invok = v.Initializer.As<IrExpressionInvocation>();
+        invok.Arguments.Should().HaveCount(1);
+        invok.TypeArguments.Should().HaveCount(1);
     }
 
     [Fact]

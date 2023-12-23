@@ -61,6 +61,18 @@ internal static class IrDiagnostics
     public static void FunctionNotFound(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Function reference '{functionName}' cannot be resolved. Function not found.");
 
+    public static void NoParameterForNamedArgument(this DiagnosticList diagnostics, SyntaxLocation location, string argumentName)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"The named argument'{argumentName}' does not match to a function parameter. Function parameter not found.");
+
+    public static void CannotDetermineArgumentType(this DiagnosticList diagnostics, SyntaxLocation location, string argument)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Cannot determine the Type for argument '{argument}'.");
+
+    public static void MismatchTypeArgumentCount(this DiagnosticList diagnostics, SyntaxLocation location, string functionName, int count)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"The number of Type-Arguments {count} is mismatched for function '{functionName}'.");
+
+    public static void MismatchArgumentCount(this DiagnosticList diagnostics, SyntaxLocation location, string functionName, int count)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"The number of Arguments {count} is mismatched for function '{functionName}'.");
+
     public static void VoidFunctionCannotReturnValue(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"The Void function '{functionName}' cannot return a value.");
 

@@ -51,7 +51,7 @@ Keeping track of the progress of Maja features.
 | generics   |       |   |   |   |   |   |   |   | `fn: <T>()`  |
 | template   |       |   |   |   |   |   |   |   | `fn: <#T>()`  |
 | invocation |       | x | x | x |   |   |   |   | `fn()`  |
-|            | generics | x | x | x |   |   |   |   | `fn<T>()`  |
+|            | generics | x | x | x |   |   | x |   | `fn<T>()`  |
 
 ## Variable
 

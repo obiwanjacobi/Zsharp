@@ -79,12 +79,12 @@ internal abstract class IrScope
 
     public virtual bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out FunctionSymbol? symbol)
     {
-        if (SymbolTable.TryLookupSymbol<FunctionSymbol>(_symbols, name.FullName, out symbol))
+        if (SymbolTable.TryLookupSymbol(_symbols, name.FullName, out symbol))
         {
             return true;
         }
 
-        if (SymbolTable.TryLookupSymbol<FunctionSymbol>(_symbols, name.Value, out symbol) &&
+        if (SymbolTable.TryLookupSymbol(_symbols, name.Value, out symbol) &&
             symbol.Name.Namespace.Value == FullName)
         {
             return true;
@@ -99,7 +99,7 @@ internal abstract class IrScope
 
         if (Parent is not null)
         {
-            return Parent.TryLookupSymbol<FunctionSymbol>(name, out symbol);
+            return Parent.TryLookupFunctionSymbol(name, argumentTypes, out symbol);
         }
 
         symbol = null;

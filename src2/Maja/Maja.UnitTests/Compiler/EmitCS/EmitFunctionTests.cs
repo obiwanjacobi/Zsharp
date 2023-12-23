@@ -93,4 +93,70 @@ public class EmitFunctionTests
 
         Emit.AssertBuild(emit);
     }
+
+    [Fact]
+    public void FunctionInvocation()
+    {
+        const string code =
+            "fn: (): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret 42" + Tokens.Eol +
+            "x := fn()" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" fn()")
+            .And.Contain(" System.Byte ")
+            .And.Contain(" return 42;")
+            .And.Contain(" x = fn();")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
+    public void FunctionInvocationParams()
+    {
+        const string code =
+            "fn: (p: U8): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret p" + Tokens.Eol +
+            "x := fn(42)" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain("System.Byte fn(")
+            .And.Contain(" System.Byte ")
+            .And.Contain(" return p;")
+            .And.Contain(" x = fn((System.Byte)42);")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
+    public void FunctionInvocationTypeParams()
+    {
+        const string code =
+            "fn: <T>(p: T): T" + Tokens.Eol +
+            Tokens.Indent1 + "ret p" + Tokens.Eol +
+            "x := fn<U8>(42)" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain("T fn<T>(T p)")
+            .And.Contain(" return p;")
+            .And.Contain(" x = fn<System.Byte>(")
+            .And.Contain("42);")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
 }

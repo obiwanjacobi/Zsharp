@@ -1,9 +1,9 @@
 ﻿namespace Maja.Compiler.Symbol;
 
-public sealed record TypeParameterSymbol : Symbol
+public sealed record TypeParameterSymbol : TypeSymbol
 {
     public TypeParameterSymbol(string name)
-        : base(name)
+        : base(new SymbolName(name))
     { }
 
     public override SymbolKind Kind

@@ -317,7 +317,7 @@ internal sealed class IrBuilder
         var paramSymbols = parameters.Select(p => p.Symbol).ToArray();
 
         var returnType = Type(syntax.ReturnType) ?? IrType.Void;
-        
+
         var ns = parentScope.FullName;
         var name = new SymbolName(ns, syntax.Identifier.Text);
         var symbol = new FunctionSymbol(name, typeParamSymbols, paramSymbols, returnType.Symbol);
@@ -489,21 +489,41 @@ internal sealed class IrBuilder
 
     private IrExpressionInvocation InvocationExpression(ExpressionInvocationSyntax syntax)
     {
-        var args = Arguments(syntax.Arguments);
         var typeArgs = TypeArguments(syntax.TypeArguments);
-
+        var args = Arguments(syntax.Arguments);
         var argSymbols = args.Select(a => a.Expression.TypeSymbol);
+
         var name = new SymbolName(syntax.Identifier.Text);
-        if (!CurrentScope.TryLookupFunctionSymbol(name, argSymbols, out var symbol))
+        if (!CurrentScope.TryLookupFunctionSymbol(name, argSymbols, out var functionSymbol))
         {
             _diagnostics.FunctionNotFound(syntax.Location, syntax.Identifier.Text);
-            symbol = new FunctionSymbol(name, Enumerable.Empty<TypeParameterSymbol>(), 
+            // TODO: should have as many (type) params as the invocation uses.
+            functionSymbol = new FunctionSymbol(name, Enumerable.Empty<TypeParameterSymbol>(),
                 Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown);
         }
 
-        var type = symbol!.ReturnType ?? TypeSymbol.Unknown;
+        if (functionSymbol.TypeParameters.Count() != typeArgs.Count)
+        {
+            _diagnostics.MismatchTypeArgumentCount(syntax.Location, functionSymbol.Name.Value, typeArgs.Count);
+        }
+        if (functionSymbol.Parameters.Count() != args.Count)
+        {
+            _diagnostics.MismatchArgumentCount(syntax.Location, functionSymbol.Name.Value, args.Count);
+        }
 
-        return new IrExpressionInvocation(syntax, symbol, typeArgs, args, type);
+        var matcher = new IrArgumentMatcher(
+            functionSymbol.TypeParameters, typeArgs,
+            functionSymbol.Parameters, args);
+
+        if (!matcher.TryMapSymbol(functionSymbol.ReturnType, out var retType))
+            retType = functionSymbol.ReturnType ?? TypeSymbol.Unknown;
+
+        var newArgs = matcher.RewriteArgumentTypes();
+
+        if (matcher.Diagnostics.HasDiagnostics)
+            _diagnostics.AddRange(matcher.Diagnostics);
+
+        return new IrExpressionInvocation(syntax, functionSymbol, typeArgs, newArgs, retType);
     }
 
     private List<IrArgument> Arguments(IEnumerable<ArgumentSyntax> arguments)

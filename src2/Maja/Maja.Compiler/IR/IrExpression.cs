@@ -49,6 +49,10 @@ internal sealed class IrExpressionLiteral : IrExpression
     public IrExpressionLiteral(ExpressionSyntax syntax, TypeSymbol type, object value)
         : base(syntax, type, new IrConstant(value))
     { }
+
+    public IrExpressionLiteral(ExpressionSyntax syntax, TypeSymbol type, IrConstant value)
+        : base(syntax, type, value)
+    { }
 }
 
 internal sealed class IrExpressionBinary : IrExpression

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.EmitCS.CSharp;
 
@@ -98,6 +99,11 @@ internal sealed class CSharpWriter
             .Append(netType is null ? "var" : netType)
             .Append(SpaceChar)
             .Append(name);
+    }
+
+    public void WriteSymbol(Symbol.Symbol symbol)
+    {
+        _writer.Append(symbol.Name.Value);
     }
 
     public void StartAssignment(string name)

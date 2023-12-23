@@ -298,24 +298,31 @@ internal abstract class IrRewriter
         };
     }
 
-    protected virtual IrExpression RewriteExpressionBinary(IrExpressionBinary expression)
+    protected virtual IrExpressionBinary RewriteExpressionBinary(IrExpressionBinary expression)
     {
         var left = RewriteExpression(expression.Left);
         var right = RewriteExpression(expression.Right);
+        var op = RewriteBinaryOperator(expression.Operator);
 
         if (left == expression.Left &&
-            right == expression.Right)
+            right == expression.Right &&
+            op == expression.Operator)
             return expression;
 
         return new IrExpressionBinary(expression.Syntax, left!, expression.Operator, right!);
     }
 
-    protected virtual IrExpression RewriteExpressionIdentifier(IrExpressionIdentifier expression)
+    protected virtual IrBinaryOperator RewriteBinaryOperator(IrBinaryOperator @operator)
+    {
+        return @operator;
+    }
+
+    protected virtual IrExpressionIdentifier RewriteExpressionIdentifier(IrExpressionIdentifier expression)
     {
         return expression;
     }
 
-    protected virtual IrExpression RewriteExpressionInvocation(IrExpressionInvocation expression)
+    protected virtual IrExpressionInvocation RewriteExpressionInvocation(IrExpressionInvocation expression)
     {
         var typeArgs = RewriteTypeArguments(expression.TypeArguments);
         var args = RewriteArguments(expression.Arguments);
@@ -356,7 +363,7 @@ internal abstract class IrRewriter
         return new IrTypeArgument(typeArgument.Syntax, type!);
     }
 
-    protected virtual IrExpression RewriteExpressionLiteral(IrExpressionLiteral expression)
+    protected virtual IrExpressionLiteral RewriteExpressionLiteral(IrExpressionLiteral expression)
     {
         return expression;
     }

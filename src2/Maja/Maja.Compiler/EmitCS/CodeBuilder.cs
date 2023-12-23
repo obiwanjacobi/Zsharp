@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using Maja.Compiler.EmitCS.CSharp;
 using Maja.Compiler.External;
 using Maja.Compiler.IR;
+using Maja.Compiler.Symbol;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Maja.Compiler.EmitCS;
 
@@ -61,16 +64,20 @@ internal class CodeBuilder : IrWalker<object?>
 
         _writer.StartType(mc);
         _scopes.Push(new Scope(mc));
-        var mi = CSharpFactory.CreateModuleInitializer(mc.Name);
-        mc.AddMethod(mi);
 
-        _writer.StartMethod(mi);
-        OnParameters(Enumerable.Empty<IrParameter>());
-        _writer.OpenMethodBody();
-        _scopes.Push(new Scope(mi));
-        result = AggregateResult(result, OnStatements(compilation.Statements));
-        _scopes.Pop();
-        _writer.CloseScope();
+        if (compilation.Statements.Any())
+        {
+            var mi = CSharpFactory.CreateModuleInitializer(mc.Name);
+            mc.AddMethod(mi);
+
+            _writer.StartMethod(mi);
+            OnParameters(Enumerable.Empty<IrParameter>());
+            _writer.OpenMethodBody();
+            _scopes.Push(new Scope(mi));
+            result = AggregateResult(result, OnStatements(compilation.Statements));
+            _scopes.Pop();
+            _writer.CloseScope();
+        }
 
         result = AggregateResult(result, OnDeclarations(compilation.Declarations));
         _scopes.Pop();
@@ -228,13 +235,59 @@ internal class CodeBuilder : IrWalker<object?>
         if (expression.ConstantValue!.Value is string str)
             _writer.Write($"\"{str}\"");
         else
+        {
+            // cast
+            if (expression.TypeSymbol.Name != TypeSymbol.Unknown.Name)
+            {
+                _writer.Write("(");
+                OnType(expression.TypeSymbol);
+                _writer.Write(")");
+            }
             _writer.Write(expression.ConstantValue!.Value.ToString());
+        }
         return null;
     }
 
     public override object? OnExpressionIdentifier(IrExpressionIdentifier identifier)
     {
         _writer.Write(identifier.Symbol.Name.FullName);
+        return null;
+    }
+
+    public override object? OnExpressionInvocation(IrExpressionInvocation invocation)
+    {
+        _writer.WriteSymbol(invocation.Symbol);
+        return base.OnExpressionInvocation(invocation);
+    }
+
+    public override object? OnInvocationTypeArguments(IEnumerable<IrTypeArgument> arguments)
+    {
+        object? res = null;
+
+        if (arguments.Any())
+        {
+            _writer.Write("<");
+            res = base.OnInvocationTypeArguments(arguments);
+            _writer.Write(">");
+        }
+
+        return res;
+    }
+    public override object? OnInvocationArguments(IEnumerable<IrArgument> arguments)
+    {
+        _writer.Write("(");
+        var res = base.OnInvocationArguments(arguments);
+        _writer.Write(")");
+        return res;
+    }
+
+    public override object? OnType(IrType type)
+        => OnType(type.Symbol);
+
+    public object? OnType(TypeSymbol type)
+    {
+        var netType = MajaTypeMapper.MapToDotNetType(type);
+        _writer.Write(netType);
         return null;
     }
 

@@ -17,6 +17,14 @@ public sealed class DiagnosticList : IEnumerable<DiagnosticMessage>
         return diagMsg;
     }
 
+    internal void AddRange(IEnumerable<DiagnosticMessage> messages)
+    {
+        foreach (var msg in messages)
+        {
+            _messages.Add(msg);
+        }
+    }
+
     public bool HasDiagnostics => _messages.Count > 0;
 
     public IEnumerator<DiagnosticMessage> GetEnumerator()

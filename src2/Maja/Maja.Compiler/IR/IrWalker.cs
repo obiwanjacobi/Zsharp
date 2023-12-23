@@ -137,7 +137,16 @@ internal abstract class IrWalker<R>
     public virtual R OnExpressionLiteral(IrExpressionLiteral expression)
         => Default;
     public virtual R OnExpressionInvocation(IrExpressionInvocation invocation)
-        => OnInvocationArguments(invocation.Arguments);
+    {
+        var result = OnInvocationTypeArguments(invocation.TypeArguments);
+        result = AggregateResult(result, OnInvocationArguments(invocation.Arguments));
+        return result;
+    }
+    public virtual R OnInvocationTypeArguments(IEnumerable<IrTypeArgument> arguments)
+        => arguments.Select(OnInvocationTypeArgument)
+            .Aggregate(Default, AggregateResult);
+    public virtual R OnInvocationTypeArgument(IrTypeArgument argument)
+        => OnType(argument.Type);
     public virtual R OnInvocationArguments(IEnumerable<IrArgument> arguments)
         => arguments.Select(OnInvocationArgument)
             .Aggregate(Default, AggregateResult);
