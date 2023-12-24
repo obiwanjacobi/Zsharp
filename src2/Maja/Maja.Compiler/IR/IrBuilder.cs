@@ -64,7 +64,7 @@ internal sealed class IrBuilder
         else
         {
             syn = syntax;
-            name = new SymbolName("root");
+            name = new SymbolName("DefMod");
         }
 
         var symbol = new ModuleSymbol(name);
