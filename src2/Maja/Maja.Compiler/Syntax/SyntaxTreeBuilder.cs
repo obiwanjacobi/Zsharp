@@ -36,12 +36,10 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
             : aggregate.Append(nextResult);
 
     private SyntaxLocation Location(ParserRuleContext context)
-        => new(SourceName, context.Start.Line, context.Start.Column,
-            new SyntaxSpan(context.SourceInterval.a, context.SourceInterval.b));
+        => SyntaxLocation.From(context, SourceName);
 
     private SyntaxLocation Location(ITerminalNode node)
-        => new(SourceName, node.Symbol.Line, node.Symbol.Column,
-            new SyntaxSpan(node.SourceInterval.a, node.SourceInterval.b));
+        => SyntaxLocation.From(node, SourceName);
 
     private readonly struct ChildrenLists
     {
