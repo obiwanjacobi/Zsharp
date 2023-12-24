@@ -28,8 +28,45 @@ internal class IrExpressionTypeRewriter
 
     private IrExpressionBinary RewriteExpressionBinary(IrExpressionBinary expression)
     {
-        // TODO: implement type propegation through binary operators.
-        return expression;
+        var leftType = expression.Left.TypeSymbol;
+        var rightType = expression.Right.TypeSymbol;
+
+        if (leftType.Name != TypeSymbol.Unknown.Name &&
+            rightType.Name == TypeSymbol.Unknown.Name)
+            rightType = leftType;
+        if (leftType.Name == TypeSymbol.Unknown.Name &&
+            rightType.Name != TypeSymbol.Unknown.Name)
+            leftType = rightType;
+
+        // TODO: what if both are unknown?
+        if (leftType == expression.Left.TypeSymbol &&
+            rightType == expression.Right.TypeSymbol)
+            return expression;
+
+        var left = expression.Left;
+        var right = expression.Right;
+        var op = expression.Operator;
+
+        if (leftType != expression.Left.TypeSymbol)
+        {
+            _typeStack.Push(leftType);
+            left = RewriteExpression(left);
+            _typeStack.Pop();
+        }
+        if (rightType != expression.Right.TypeSymbol)
+        {
+            _typeStack.Push(rightType);
+            right = RewriteExpression(right);
+            _typeStack.Pop();
+        }
+
+        if (!IrTypeConversion.TryDecideType(left.TypeSymbol, right.TypeSymbol, out var opType))
+            opType = expression.Operator.OperandType;
+
+        if (opType != expression.Operator.OperandType)
+            op = new IrBinaryOperator(op.Syntax, opType);
+
+        return new IrExpressionBinary(expression.Syntax, left, op, right);
     }
 
     private IrExpressionInvocation RewriteExpressionInvocation(IrExpressionInvocation expression)

@@ -1,2 +1,2 @@
-use Maja
-x := Array<U8>(42)
+y: U8 = 42
+x := fn(y + 42)

@@ -43,18 +43,28 @@ internal sealed class IrArgumentMatcher
                 if (info.TypeArgument is not null)
                     type = info.TypeArgument.Type.Symbol;
 
-                // rewrite argument expression with type
-                var rewriter = new IrExpressionTypeRewriter(type);
-                var expr = rewriter.RewriteExpression(info.Argument.Expression);
-
-                var arg = new IrArgument(info.Argument.Syntax, expr, info.Argument.Symbol);
-                args.Add(arg);
+                // rewrite argument expression with type-argument type
+                args.Add(ReWriterArgumentExpression(type, info));
+            }
+            else if (info.Argument.Expression.TypeSymbol.Name != info.Parameter.Type.Name)
+            {
+                // rewrite argument expression with parameter type
+                args.Add(ReWriterArgumentExpression(info.Parameter.Type, info));
             }
             else
                 args.Add(info.Argument);
         }
 
         return args;
+
+        static IrArgument ReWriterArgumentExpression(TypeSymbol type, IrArgumentMatchInfo info)
+        {
+            var rewriter = new IrExpressionTypeRewriter(type);
+            var expr = rewriter.RewriteExpression(info.Argument.Expression);
+
+            var arg = new IrArgument(info.Argument.Syntax, expr, info.Argument.Symbol);
+            return arg;
+        }
     }
 
     public bool TryMapSymbol(TypeSymbol keySymbol, [NotNullWhen(true)] out TypeSymbol? valueSymbol)

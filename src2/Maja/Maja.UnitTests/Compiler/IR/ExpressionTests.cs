@@ -78,4 +78,28 @@ public class ExpressionTests
         stat.Symbol.Should().BeOfType<DiscardSymbol>();
         stat.Expression.As<IrExpressionLiteral>().ConstantValue!.Value.Should().Be(42);
     }
+
+    [Fact]
+    public void ExpressionInvocationTypeBinaryOperator()
+    {
+        const string code =
+            "fn: (p: U8): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret p" + Tokens.Eol +
+            "y: U8 = 42" + Tokens.Eol +
+            "x := fn(y + 42)" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(3);
+        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        v.Symbol.Name.Value.Should().Be("x");
+        v.TypeSymbol.Should().Be(TypeSymbol.U8);
+        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
+        
+        var invok = v.Initializer!.As<IrExpressionInvocation>();
+        var exprBin = invok.Arguments.First().Expression.As<IrExpressionBinary>();
+        exprBin.Left.TypeSymbol.Should().Be(TypeSymbol.U8);
+        exprBin.Right.TypeSymbol.Should().Be(TypeSymbol.U8);
+    }
 }
