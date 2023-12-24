@@ -201,6 +201,16 @@ internal class CodeBuilder : IrWalker<object?>
         return result;
     }
 
+    public override object? OnExpressionBinary(IrExpressionBinary expression)
+    {
+        _writer.Write("(");
+        OnType(expression.TypeSymbol);
+        _writer.Write(")(");
+        var res = base.OnExpressionBinary(expression);
+        _writer.Write(")");
+        return res;
+    }
+
     public override object? OnOperatorBinary(IrBinaryOperator op)
     {
         var netOperator = op.Kind switch

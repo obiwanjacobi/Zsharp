@@ -73,6 +73,7 @@ internal sealed class IrArgumentMatcher
         IEnumerable<TypeParameterSymbol> typeParameters, IEnumerable<IrTypeArgument> typeArguments,
         IEnumerable<ParameterSymbol> parameters, IEnumerable<IrArgument> arguments)
     {
+        // We do not support named (out-of-order) type arguments yet.
         var typeParamArgs = typeParameters.Zip(typeArguments);
         var lookupTypeParameters = typeParamArgs.ToDictionary(pa => pa.First.Name, p => p);
         var lookupParams = parameters.ToDictionary(p => p.Name, p => p);

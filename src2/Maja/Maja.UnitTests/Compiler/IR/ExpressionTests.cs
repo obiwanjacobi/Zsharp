@@ -102,4 +102,28 @@ public class ExpressionTests
         exprBin.Left.TypeSymbol.Should().Be(TypeSymbol.U8);
         exprBin.Right.TypeSymbol.Should().Be(TypeSymbol.U8);
     }
+
+    [Fact]
+    public void ExpressionInvocationNestedTypeBinaryOperator()
+    {
+        const string code =
+            "fn: (p: U8): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret p" + Tokens.Eol +
+            "y: U8 = 42" + Tokens.Eol +
+            "x := fn(fn(y) + 42)" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(3);
+        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        v.Symbol.Name.Value.Should().Be("x");
+        v.TypeSymbol.Should().Be(TypeSymbol.U8);
+        v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
+
+        var invok = v.Initializer!.As<IrExpressionInvocation>();
+        var exprBin = invok.Arguments.First().Expression.As<IrExpressionBinary>();
+        exprBin.Left.TypeSymbol.Should().Be(TypeSymbol.U8);
+        exprBin.Right.TypeSymbol.Should().Be(TypeSymbol.U8);
+    }
 }
