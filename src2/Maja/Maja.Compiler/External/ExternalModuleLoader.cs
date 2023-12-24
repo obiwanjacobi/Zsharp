@@ -48,7 +48,8 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
                 );
 
             var typeParameters = new List<TypeParameterSymbol>();
-            // TODO: type parameters
+            typeParameters.AddRange(method.GenericParameters
+                .Select(p => new TypeParameterSymbol(p.Name)));
 
             var rt = _factory.Create(method.ReturnType);
             var name = new SymbolName(typeMetadata.FullName, method.Name);
