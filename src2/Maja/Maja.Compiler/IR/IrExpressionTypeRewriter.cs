@@ -72,9 +72,9 @@ internal class IrExpressionTypeRewriter
     private IrExpressionInvocation RewriteExpressionInvocation(IrExpressionInvocation expression)
     {
         var newArgs = expression.Arguments.Select(a => RewriteArgument(a));
-        
+
         _typeStack.Push(expression.TypeSymbol);
-        
+
         return new IrExpressionInvocation(expression.Syntax, expression.Symbol,
             expression.TypeArguments, newArgs, expression.TypeSymbol);
     }

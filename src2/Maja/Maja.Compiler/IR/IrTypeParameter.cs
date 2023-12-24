@@ -13,7 +13,7 @@ internal abstract class IrTypeParameter : IrNode
 
     public TypeParameterSymbol Symbol { get; }
 
-    public new TypeParameterSyntax Syntax 
+    public new TypeParameterSyntax Syntax
         => (TypeParameterSyntax)base.Syntax;
 }
 

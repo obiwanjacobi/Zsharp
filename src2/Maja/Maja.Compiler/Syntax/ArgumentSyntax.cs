@@ -28,13 +28,13 @@ public sealed class ArgumentSyntax : SyntaxNode, ICreateSyntaxNode<ArgumentSynta
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnArgument(this);
-    
+
     public static ArgumentSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.EmitCS.CSharp;
 

@@ -38,13 +38,13 @@ public class ExpressionLiteralSyntax : ExpressionConstantSyntax, ICreateSyntaxNo
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteral(this);
-    
+
     public static ExpressionLiteralSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -70,13 +70,13 @@ public class ExpressionLiteralBoolSyntax : ExpressionConstantSyntax, ICreateSynt
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteralBool(this);
-    
+
     public static ExpressionLiteralBoolSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

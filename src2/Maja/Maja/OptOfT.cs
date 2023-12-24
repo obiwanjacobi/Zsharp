@@ -21,12 +21,12 @@ public sealed class Opt<T> : Opt,
 {
     public Opt() { }
     public Opt(T value)
-    { 
+    {
         _value = value ?? throw new ArgumentNullException(nameof(value));
         HasValue = true;
     }
     public Opt(IEnumerable<T> valueOrEmpty)
-    { 
+    {
         _value = valueOrEmpty.SingleOrDefault();
         HasValue = valueOrEmpty.Any();
     }
@@ -145,10 +145,10 @@ public sealed class Opt<T> : Opt,
     public bool Equals(Opt<T>? other)
     {
         if (other is not null)
-        { 
-            if(HasValue && other.HasValue)
+        {
+            if (HasValue && other.HasValue)
                 return _value!.Equals(other.Value);
-            
+
             // both nothing is equal
             return HasValue == other.HasValue;
         }

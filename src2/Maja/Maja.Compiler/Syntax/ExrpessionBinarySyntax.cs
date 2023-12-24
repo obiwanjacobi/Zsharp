@@ -73,13 +73,13 @@ public sealed class ExpressionBinarySyntax : ExpressionSyntax, ICreateSyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionBinary(this);
-    
+
     public static ExpressionBinarySyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

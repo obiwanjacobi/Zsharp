@@ -96,7 +96,7 @@ public class ExpressionTests
         v.Symbol.Name.Value.Should().Be("x");
         v.TypeSymbol.Should().Be(TypeSymbol.U8);
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
-        
+
         var invok = v.Initializer!.As<IrExpressionInvocation>();
         var exprBin = invok.Arguments.First().Expression.As<IrExpressionBinary>();
         exprBin.Left.TypeSymbol.Should().Be(TypeSymbol.U8);

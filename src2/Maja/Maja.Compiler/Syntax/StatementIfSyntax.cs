@@ -40,13 +40,13 @@ public class StatementIfSyntax : StatementSyntax, ICreateSyntaxNode<StatementIfS
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementIf(this);
-    
+
     public static StatementIfSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -96,13 +96,13 @@ public sealed class StatementElseIfSyntax : StatementElseClauseSyntax, ICreateSy
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementElseIf(this);
-    
+
     public static StatementElseIfSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -121,13 +121,13 @@ public sealed class StatementElseSyntax : StatementElseClauseSyntax, ICreateSynt
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementElse(this);
-    
+
     public static StatementElseSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

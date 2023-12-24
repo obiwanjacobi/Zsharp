@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using Maja.Compiler.EmitCS.CSharp;
 using Maja.Compiler.External;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Maja.Compiler.EmitCS;
 

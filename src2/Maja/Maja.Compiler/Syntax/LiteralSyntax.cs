@@ -14,13 +14,13 @@ public sealed class LiteralNumberSyntax : ExpressionSyntax, ICreateSyntaxNode<Li
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralNumber(this);
-    
+
     public static LiteralNumberSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -39,13 +39,13 @@ public sealed class LiteralStringSyntax : ExpressionSyntax, ICreateSyntaxNode<Li
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralString(this);
-    
+
     public static LiteralStringSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

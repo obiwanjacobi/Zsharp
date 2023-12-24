@@ -1,8 +1,3 @@
-using System.Linq;
-using Maja.Compiler.IR;
-using Maja.Compiler.Symbol;
-using Maja.UnitTests.Compiler.IR;
-
 namespace Maja.UnitTests.Compiler.EmitCS;
 
 public class EmitExpressionTests

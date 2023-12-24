@@ -25,19 +25,19 @@ public sealed class ExpressionOperatorSyntax : SyntaxNode
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionOperator(this);
-    
+
     public static ExpressionOperatorSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens,
         int precedence, ExpressionOperatorKind kind, ExpressionOperatorCategory category,
         ExpressionOperatorCardinality cardinality)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens,
             Precedence = precedence,
             OperatorKind = kind,
-            OperatorCategory = category, 
+            OperatorCategory = category,
             OperatorCardinality = cardinality
         };
 }

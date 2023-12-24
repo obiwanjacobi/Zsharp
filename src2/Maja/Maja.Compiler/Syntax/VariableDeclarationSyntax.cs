@@ -44,13 +44,13 @@ public sealed class VariableDeclarationTypedSyntax : VariableDeclarationSyntax, 
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnVariableDeclarationTyped(this);
-    
+
     public static VariableDeclarationTypedSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -70,13 +70,13 @@ public sealed class VariableDeclarationInferredSyntax : VariableDeclarationSynta
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnVariableDeclarationInferred(this);
-    
+
     public static VariableDeclarationInferredSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

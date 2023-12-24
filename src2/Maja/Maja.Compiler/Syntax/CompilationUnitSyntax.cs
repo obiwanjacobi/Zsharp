@@ -44,13 +44,13 @@ public sealed class CompilationUnitSyntax : SyntaxNode, ICreateSyntaxNode<Compil
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnCompilationUnit(this);
-    
+
     public static CompilationUnitSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

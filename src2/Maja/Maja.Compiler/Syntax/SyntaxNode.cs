@@ -141,13 +141,13 @@ public abstract partial class SyntaxNode
     public abstract R Accept<R>(ISyntaxVisitor<R> visitor);
 }
 
-public interface ICreateSyntaxNode<out T> 
+public interface ICreateSyntaxNode<out T>
     where T : SyntaxNode
 {
     static abstract T Create(
-        string text, 
-        SyntaxLocation location, 
-        SyntaxNodeOrTokenList children, 
+        string text,
+        SyntaxLocation location,
+        SyntaxNodeOrTokenList children,
         SyntaxNodeList childNodes,
         SyntaxTokenList trailingTokens);
 }

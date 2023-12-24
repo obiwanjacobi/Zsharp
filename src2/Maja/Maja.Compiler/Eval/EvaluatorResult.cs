@@ -13,8 +13,8 @@ public class EvaluatorResult
     }
 
     public SyntaxTree SyntaxTree { get; }
-    
+
     public IEnumerable<string> Diagnostics { get; }
-    
+
     public object? Value { get; }
 }

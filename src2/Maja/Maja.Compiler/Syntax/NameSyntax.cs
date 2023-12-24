@@ -14,13 +14,13 @@ public class NameSyntax : SyntaxNode, ICreateSyntaxNode<NameSyntax>
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnName(this);
-    
+
     public static NameSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -43,9 +43,9 @@ public sealed class QualifiedNameSyntax : SyntaxNode, ICreateSyntaxNode<Qualifie
     public static QualifiedNameSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

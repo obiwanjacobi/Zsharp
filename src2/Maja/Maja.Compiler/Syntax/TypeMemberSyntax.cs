@@ -39,13 +39,13 @@ public sealed class MemberEnumSyntax : TypeMemberSyntax, ICreateSyntaxNode<Membe
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnMemberEnum(this);
-    
+
     public static MemberEnumSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -79,9 +79,9 @@ public sealed class MemberFieldSyntax : TypeMemberSyntax, ICreateSyntaxNode<Memb
     public static MemberFieldSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -106,9 +106,9 @@ public sealed class MemberRuleSyntax : TypeMemberSyntax, ICreateSyntaxNode<Membe
     public static MemberRuleSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -146,9 +146,9 @@ public sealed class TypeMemberListSyntax<T> : SyntaxNode, ICreateSyntaxNode<Type
     public static TypeMemberListSyntax<T> Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

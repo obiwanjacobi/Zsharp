@@ -28,13 +28,13 @@ public sealed class ParameterSyntax : SyntaxNode, ICreateSyntaxNode<ParameterSyn
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnParameter(this);
-    
+
     public static ParameterSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

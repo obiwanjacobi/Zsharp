@@ -68,7 +68,7 @@ internal sealed class ReplView
             }
 
             Console.SetCursorPosition(0, _cursorTop + lineCount);
-            
+
             if (lineCount == 0)
                 Console.Write("» ");
             else
@@ -83,7 +83,7 @@ internal sealed class ReplView
 
         EraseExcessLines(lineCount);
         SetCursorPos();
-        
+
         Console.ResetColor();
         Console.CursorVisible = true;
     }

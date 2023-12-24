@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("Maja.UnitTests")]
+[assembly: InternalsVisibleTo("Maja.UnitTests")]

@@ -19,13 +19,13 @@ public sealed class StatementAssignmentSyntax : StatementSyntax, ICreateSyntaxNo
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnStatementAssignment(this);
-    
+
     public static StatementAssignmentSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }

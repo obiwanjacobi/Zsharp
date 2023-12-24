@@ -38,13 +38,13 @@ public sealed class TypeParameterGenericSyntax : TypeParameterSyntax, ICreateSyn
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterGeneric(this);
-    
+
     public static TypeParameterGenericSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -67,9 +67,9 @@ public sealed class TypeParameterTemplateSyntax : TypeParameterSyntax, ICreateSy
     public static TypeParameterTemplateSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
@@ -91,13 +91,13 @@ public sealed class TypeParameterValueSyntax : TypeParameterSyntax, ICreateSynta
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeParameterValue(this);
-    
+
     public static TypeParameterValueSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
-            Location = location, 
-            Children = children, 
-            ChildNodes = childNodes, 
+            Location = location,
+            Children = children,
+            ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
 }
