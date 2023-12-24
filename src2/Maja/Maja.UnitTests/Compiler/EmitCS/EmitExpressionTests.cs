@@ -22,7 +22,7 @@ public class EmitExpressionTests
         emit.Should()
             .Contain(" x ")
             .And.Contain(" = ")
-            .And.Contain(" 42 ")
+            .And.Contain("42 ")
             .And.Contain(" + ")
             .And.Contain(" 101")
             ;
@@ -46,7 +46,7 @@ public class EmitExpressionTests
             .And.Contain(" y ")
             .And.Contain(" = ")
             .And.Contain(" 42")
-            .And.Contain(" x + 101")
+            .And.Contain("(x + 101)")
             ;
 
         Emit.AssertBuild(emit);
