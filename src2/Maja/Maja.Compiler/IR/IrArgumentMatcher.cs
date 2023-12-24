@@ -27,8 +27,7 @@ internal sealed class IrArgumentMatcher
             .ToDictionary(a => new TypeSymbol(a.TypeParameter!.Name), a => a.TypeArgument!.Type.Symbol);
     }
 
-    public DiagnosticList Diagnostics
-        => _diagnostics;
+    public DiagnosticList Diagnostics => _diagnostics;
 
     public List<IrArgument> RewriteArgumentTypes()
     {
@@ -38,32 +37,32 @@ internal sealed class IrArgumentMatcher
         {
             if (info.Argument.Expression.TypeInferredSymbol is not null)
             {
-                TypeSymbol? type = info.Parameter.Type;
-                
+                var type = info.Parameter.Type;
+
                 if (info.TypeArgument is not null)
                     type = info.TypeArgument.Type.Symbol;
 
                 // rewrite argument expression with type-argument type
-                args.Add(ReWriterArgumentExpression(type, info));
+                args.Add(ReWriterArgumentExpression(type, info.Argument));
             }
             else if (info.Argument.Expression.TypeSymbol.Name != info.Parameter.Type.Name)
             {
                 // rewrite argument expression with parameter type
-                args.Add(ReWriterArgumentExpression(info.Parameter.Type, info));
+                args.Add(ReWriterArgumentExpression(info.Parameter.Type, info.Argument));
             }
             else
+            {
                 args.Add(info.Argument);
+            }
         }
 
         return args;
 
-        static IrArgument ReWriterArgumentExpression(TypeSymbol type, IrArgumentMatchInfo info)
+        static IrArgument ReWriterArgumentExpression(TypeSymbol type, IrArgument argument)
         {
             var rewriter = new IrExpressionTypeRewriter(type);
-            var expr = rewriter.RewriteExpression(info.Argument.Expression);
-
-            var arg = new IrArgument(info.Argument.Syntax, expr, info.Argument.Symbol);
-            return arg;
+            var expr = rewriter.RewriteExpression(argument.Expression);
+            return new IrArgument(argument.Syntax, expr, argument.Symbol);
         }
     }
 
