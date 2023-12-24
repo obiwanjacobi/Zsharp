@@ -2,13 +2,20 @@
 
 ## TODO
 
-- [ ] SyntaxNode: DescendentNodes, AncestorsAndSelf, AncestorOrSelf etc.
+- [ ] Rewrite Expression Types for
+    - [x] Invocation
+    - [x] Literals
+    - [ ] Binary Operators
+    - [x] Variable initializers
 - [ ] ErrorNode: Use context info to built better error message.
-- [ ] VarDeclTyped+init: init expression type is not the same as var type.
 - [ ] Syntax parsing does not report invalid trailing tokens.
+- [ ] Discard assignment only for invocation results.
+- [ ] StatementExpression only for invocation (other?).
+- [ ] Syntax: Location Span is incorrect (x, x).
 
 ### Done
 
+- [x] VarDeclTyped+init: init expression type is not the same as var type.
 - [x] Parser: Error handling: MissingTokens, SkippedTokens
 Started. Have ErrorToken with description.
 - [x] SyntaxNode: Children to include tokens. ChildNodes current Children?

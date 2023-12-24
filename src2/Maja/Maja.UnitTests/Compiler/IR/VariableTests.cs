@@ -38,11 +38,10 @@ public class VariableTests
         var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
-        // TODO: expression type != var type
-        v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
         v.TypeSymbol.Should().Be(TypeSymbol.U8);
+        v.TypeSymbol.Should().Be(v.Initializer.TypeSymbol);
     }
 
     [Fact]

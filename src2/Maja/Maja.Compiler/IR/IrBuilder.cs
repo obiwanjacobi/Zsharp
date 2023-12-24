@@ -289,14 +289,20 @@ internal sealed class IrBuilder
         }
 
         var name = new SymbolName(syntax.Name.Text);
-        var symbol = new VariableSymbol(name, typeSymbol);
+        var variableSymbol = new VariableSymbol(name, typeSymbol);
 
-        if (!CurrentScope.TryDeclareVariable(symbol))
+        if (!CurrentScope.TryDeclareVariable(variableSymbol))
         {
             _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
-        return new IrDeclarationVariable(syntax, symbol, typeSymbol, initializer);
+        if (initializer is not null)
+        {
+            var rewriter = new IrExpressionTypeRewriter(typeSymbol);
+            initializer = rewriter.RewriteExpression(initializer);
+        }
+
+        return new IrDeclarationVariable(syntax, variableSymbol, typeSymbol, initializer);
     }
 
     private IrDeclarationFunction DeclarationFunction(FunctionDeclarationSyntax syntax)
@@ -384,22 +390,23 @@ internal sealed class IrBuilder
     {
         var expr = Expression(syntax.Expression);
 
-        VariableSymbol? symbol;
+        VariableSymbol? variableSymbol;
         if (DiscardSymbol.IsDiscard(syntax.Name.Text))
         {
-            symbol = new DiscardSymbol();
+            variableSymbol = new DiscardSymbol();
         }
         else
         {
             var name = new SymbolName(syntax.Name.Text);
-            if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out symbol))
+            if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out variableSymbol))
             {
                 _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
-                symbol = new VariableSymbol(name, expr.TypeSymbol);
+                variableSymbol = new VariableSymbol(name, expr.TypeSymbol);
             }
         }
 
-        return new IrStatementAssignment(syntax, symbol, expr);
+        // TODO: check expr.TypeSymbol against variableSymbol.Type
+        return new IrStatementAssignment(syntax, variableSymbol, expr);
     }
 
     private IrStatementExpression StatementExpression(StatementExpressionSyntax syntax)
