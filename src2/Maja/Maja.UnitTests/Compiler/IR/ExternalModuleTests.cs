@@ -38,7 +38,7 @@ public class ExternalModuleTests
         builder.AddSystemConsole();
 
         const string code =
-            "use System.ConsoleColor" + Tokens.Eol +
+            "use System" + Tokens.Eol +
             "c: ConsoleColor" + Tokens.Eol
             ;
 

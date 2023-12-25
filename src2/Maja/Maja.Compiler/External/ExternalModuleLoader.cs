@@ -29,6 +29,27 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
         return false;
     }
 
+    public List<ExternalModule> LookupNamespace(SymbolNamespace @namespace)
+    {
+        var modules = new List<ExternalModule>();
+        var assemblies = AssembliesForNamespace(@namespace);
+
+        foreach (var assembly in assemblies)
+        {
+            foreach (var typeMetadata in assembly.GetPublicTypes())
+            {
+                if (typeMetadata.Namespace == @namespace.OriginalName)
+                {
+                    var symbolName = new SymbolName(typeMetadata.Namespace, typeMetadata.Name);
+                    var module = CreateExternalModule(symbolName, typeMetadata);
+                    modules.Add(module);
+                }
+            }
+        }
+
+        return modules;
+    }
+
     private ExternalModule CreateExternalModule(SymbolName symbolName, TypeMetadata typeMetadata)
     {
         var functions = new List<FunctionSymbol>();
@@ -51,15 +72,19 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
             typeParameters.AddRange(method.GenericParameters
                 .Select(p => new TypeParameterSymbol(p.Name)));
 
+            var functionName = method.Name == ".ctor"
+                ? method.GetDeclaringType().Name
+                : method.Name;
+
             var rt = _factory.Create(method.ReturnType);
-            var name = new SymbolName(typeMetadata.FullName, method.Name);
+            var name = new SymbolName(typeMetadata.FullName, functionName);
             var fn = new FunctionSymbol(name, typeParameters, parameters, rt);
             functions.Add(fn);
         }
 
         var types = new List<TypeSymbol>() { type };
         types.AddRange(typeMetadata.GetNestedTypes()
-            .Select(t => _factory.Create(t))
+            .Select(_factory.Create)
             );
 
         return new ExternalModule(symbolName, functions, types);
@@ -69,7 +94,9 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
         [NotNullWhen(true)] out TypeMetadata? typeMetadata,
         [NotNullWhen(true)] out SymbolName? symbolName)
     {
-        foreach (var assembly in _assemblyManager.Assemblies)
+        var assembliesWithNamespace = AssembliesForNamespace(name.Namespace);
+
+        foreach (var assembly in assembliesWithNamespace)
         {
             foreach (var type in assembly.GetPublicTypes())
             {
@@ -86,4 +113,7 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
         typeMetadata = null;
         return false;
     }
+
+    private IEnumerable<AssemblyMetadata> AssembliesForNamespace(SymbolNamespace @namespace)
+        => _assemblyManager.Assemblies.Where(a => a.GetNamespaces().Contains(@namespace));
 }

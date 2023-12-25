@@ -115,7 +115,7 @@ public class FunctionTests
         program.Diagnostics.Should().HaveCount(1);
         var err = program.Diagnostics[0];
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
-        err.Text.Should().Contain("Function 'root.fn' is already declared.");
+        err.Text.Should().Contain("Function 'Defmod.fn' is already declared.");
     }
 
     [Fact]

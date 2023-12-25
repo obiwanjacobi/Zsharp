@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Maja.Compiler.External;
@@ -37,4 +38,6 @@ internal class NullModuleLoader : IExternalModuleLoader
         module = new ExternalModule(name, Enumerable.Empty<FunctionSymbol>(), Enumerable.Empty<TypeSymbol>());
         return true;
     }
+
+    public List<ExternalModule> LookupNamespace(SymbolNamespace @namespace) => new List<ExternalModule>();
 }

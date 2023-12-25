@@ -13,7 +13,7 @@ public class ConstructorTests
         builder.AddMaja();
 
         const string code =
-            "use Maja.Types" + Tokens.Eol +
+            "use Maja" + Tokens.Eol +
             "arr := Array<U8>(42)" + Tokens.Eol
             ;
 

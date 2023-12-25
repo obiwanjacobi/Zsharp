@@ -15,19 +15,19 @@ public sealed record SymbolName
 
     public SymbolName(string ns, string name)
     {
-        Namespace = new NamespaceSymbol(ns);
+        Namespace = new SymbolNamespace(ns);
         Value = ToCanonical(name);
         OriginalName = name;
     }
 
     public SymbolName(IEnumerable<string> nsParts, string name)
     {
-        Namespace = new NamespaceSymbol(nsParts);
+        Namespace = new SymbolNamespace(nsParts);
         Value = ToCanonical(name);
         OriginalName = name;
     }
 
-    public NamespaceSymbol Namespace { get; }
+    public SymbolNamespace Namespace { get; }
     public string Value { get; }
     public string OriginalName { get; }
 
@@ -70,6 +70,9 @@ public sealed record SymbolName
 
     public static SymbolName Empty
         => new(String.Empty);
+
+    public SymbolNamespace ToNamespace() =>
+        Namespace.NameParts.Count > 0 ? new($"{Namespace.OriginalName}{SyntaxToken.Separator}{OriginalName}") : new(OriginalName);
 
     internal static string ToCanonical(string text)
     {

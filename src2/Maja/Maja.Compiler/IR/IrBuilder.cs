@@ -106,7 +106,19 @@ internal sealed class IrBuilder
             }
             else
             {
-                _diagnostics.ImportNotFound(import.Syntax.Location, import.SymbolName.FullName);
+                var modules = _moduleLoader.LookupNamespace(import.SymbolName.ToNamespace());
+
+                if (modules.Count > 0)
+                {
+                    foreach (var module in modules)
+                    {
+                        ((IrModuleScope)CurrentScope).TryDeclareModule(module);
+                    }
+                }
+                else
+                {
+                    _diagnostics.ImportNotFound(import.Syntax.Location, import.SymbolName.FullName);
+                }
             }
         }
     }

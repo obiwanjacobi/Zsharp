@@ -6,9 +6,9 @@ using Maja.Compiler.Syntax;
 namespace Maja.Compiler.Symbol;
 
 [DebuggerDisplay("{DebuggerDisplay()}")]
-public sealed record NamespaceSymbol //: Symbol
+public sealed record SymbolNamespace
 {
-    public NamespaceSymbol(IEnumerable<string> nameParts)
+    public SymbolNamespace(IEnumerable<string> nameParts)
     {
         var canonicalParts = SymbolName.ToCanonical(nameParts);
         Value = SymbolName.Join(canonicalParts);
@@ -16,7 +16,7 @@ public sealed record NamespaceSymbol //: Symbol
         OriginalName = SymbolName.Join(nameParts);
     }
 
-    public NamespaceSymbol(string ns)
+    public SymbolNamespace(string ns)
         : this(ns.Split(SyntaxToken.Separator))
     { }
 
