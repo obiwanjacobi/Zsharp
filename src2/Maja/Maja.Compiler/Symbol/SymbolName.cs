@@ -15,14 +15,14 @@ public sealed record SymbolName
 
     public SymbolName(string ns, string name)
     {
-        Namespace = new SymbolNamespace(ns);
+        Namespace = String.IsNullOrEmpty(ns) ? SymbolNamespace.Empty : new SymbolNamespace(ns);
         Value = ToCanonical(name);
         OriginalName = name;
     }
 
     public SymbolName(IEnumerable<string> nsParts, string name)
     {
-        Namespace = new SymbolNamespace(nsParts);
+        Namespace = nsParts.Any() ? new SymbolNamespace(nsParts) : SymbolNamespace.Empty;
         Value = ToCanonical(name);
         OriginalName = name;
     }
@@ -35,6 +35,11 @@ public sealed record SymbolName
         => String.IsNullOrEmpty(Namespace.Value)
                 ? Value
                 : $"{Namespace.Value}.{Value}";
+
+    public string FullOriginalName
+        => String.IsNullOrEmpty(Namespace.OriginalName)
+                ? OriginalName
+                : $"{Namespace.OriginalName}.{OriginalName}";
 
     public int MatchesWith(SymbolName fullName)
     {
@@ -71,8 +76,8 @@ public sealed record SymbolName
     public static SymbolName Empty
         => new(String.Empty);
 
-    public SymbolNamespace ToNamespace() =>
-        Namespace.NameParts.Count > 0 ? new($"{Namespace.OriginalName}{SyntaxToken.Separator}{OriginalName}") : new(OriginalName);
+    public SymbolNamespace ToNamespace()
+        => new(FullOriginalName);
 
     internal static string ToCanonical(string text)
     {

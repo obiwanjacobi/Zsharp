@@ -12,15 +12,17 @@ internal abstract class IrScope
 {
     private Dictionary<string, Symbol.Symbol>? _symbols;
 
-    protected IrScope(string name, IrScope? parent)
+    protected IrScope(string originalName, IrScope? parent)
     {
-        Name = name;
+        Name = originalName;
         Parent = parent;
     }
 
     public string Name { get; }
     public virtual string FullName
-        => Parent!.FullName + "." + Name;
+        => Parent is null
+            ? Name
+            : Parent.FullName + "." + Name;
 
     public IrScope? Parent { get; }
 
@@ -150,12 +152,11 @@ internal sealed class IrModuleScope : IrScope
 {
     private readonly Dictionary<string, ExternalModule> _modules = new();
 
-    public IrModuleScope(string name, IrScope parent)
-        : base(name, parent)
+    public IrModuleScope(string originalName, IrScope parent)
+        : base(originalName, parent)
     { }
 
-    public override string FullName
-        => Name;
+    public override string FullName => Name;
 
     public override bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
         where T : class //Symbol.Symbol

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using Maja.Compiler.Syntax;
@@ -8,6 +9,13 @@ namespace Maja.Compiler.Symbol;
 [DebuggerDisplay("{DebuggerDisplay()}")]
 public sealed record SymbolNamespace
 {
+    private SymbolNamespace()
+    {
+        Value = String.Empty;
+        NameParts = Array.Empty<string>().ToImmutableList();
+        OriginalName = String.Empty;
+    }
+
     public SymbolNamespace(IEnumerable<string> nameParts)
     {
         var canonicalParts = SymbolName.ToCanonical(nameParts);
@@ -31,4 +39,7 @@ public sealed record SymbolNamespace
         => ToString();
     public override string ToString()
         => $"{Value} ({OriginalName})";
+
+    public static SymbolNamespace Empty
+        => new();
 }

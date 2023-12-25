@@ -24,6 +24,7 @@ public class ExternalModuleTests
         program.Root.Statements.Should().HaveCount(1);
         var stat = program.Root.Statements[0].As<IrStatementExpression>();
         var invoke = stat.Expression.As<IrExpressionInvocation>();
+        invoke.Symbol.Name.Namespace.OriginalName.Should().Be("System.Console");
         invoke.Arguments.Should().HaveCount(1);
         invoke.Arguments[0].Expression.TypeSymbol.Should().Be(TypeSymbol.Str);
         invoke.Arguments[0].Expression.ConstantValue!.Value.Should().Be("Hello World!");

@@ -19,6 +19,8 @@ internal sealed class IrBuilder
     private readonly Stack<IrScope> _scopes = new();
     private readonly IExternalModuleLoader _moduleLoader;
 
+    public const string DefaultModuleName = "DefMod";
+
     private IrBuilder(IExternalModuleLoader moduleLoader, IrScope? parentScope)
     {
         _scopes.Push(parentScope ?? new IrGlobalScope());
@@ -44,7 +46,7 @@ internal sealed class IrBuilder
 
         var builder = new IrBuilder(moduleLoader, parentScope);
         var module = builder.Module(syntaxTree.Root);
-        builder.PushScope(new IrModuleScope(module.Symbol.Name.FullName, builder.CurrentScope));
+        _ = builder.PushScope(new IrModuleScope(module.Symbol.Name.FullOriginalName, builder.CurrentScope));
 
         var compilation = builder.Compilation(syntaxTree.Root);
         var scope = (IrModuleScope)builder.PopScope();
@@ -64,7 +66,7 @@ internal sealed class IrBuilder
         else
         {
             syn = syntax;
-            name = new SymbolName("DefMod");
+            name = new SymbolName(DefaultModuleName);
         }
 
         var symbol = new ModuleSymbol(name);
@@ -276,7 +278,7 @@ internal sealed class IrBuilder
         if (initializer.TypeInferredSymbol?.TryGetPreferredType(out var type) != true)
             type = initializer.TypeSymbol;
 
-        var name = new SymbolName(syntax.Name.Text);
+        var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
         var symbol = new VariableSymbol(name, type);
 
         if (!CurrentScope.TryDeclareVariable(symbol))
@@ -300,7 +302,7 @@ internal sealed class IrBuilder
             typeSymbol = new TypeSymbol(typeName);
         }
 
-        var name = new SymbolName(syntax.Name.Text);
+        var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
         var variableSymbol = new VariableSymbol(name, typeSymbol);
 
         if (!CurrentScope.TryDeclareVariable(variableSymbol))
@@ -336,8 +338,7 @@ internal sealed class IrBuilder
 
         var returnType = Type(syntax.ReturnType) ?? IrType.Void;
 
-        var ns = parentScope.FullName;
-        var name = new SymbolName(ns, syntax.Identifier.Text);
+        var name = new SymbolName(parentScope.FullName, syntax.Identifier.Text);
         var symbol = new FunctionSymbol(name, typeParamSymbols, paramSymbols, returnType.Symbol);
 
         if (!parentScope.TryDeclareFunction(symbol))

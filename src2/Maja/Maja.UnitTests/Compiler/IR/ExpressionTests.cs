@@ -1,4 +1,5 @@
 using System.Linq;
+using FluentAssertions.Equivalency;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
 
@@ -38,6 +39,7 @@ public class ExpressionTests
         program.Root.Declarations.Should().HaveCount(1);
         var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
+        v.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
         v.Initializer!.TypeSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
@@ -56,6 +58,7 @@ public class ExpressionTests
         program.Root.Declarations.Should().HaveCount(1);
         var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
+        v.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
         v.Initializer!.TypeSymbol.Should().NotBeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(84);
@@ -94,6 +97,7 @@ public class ExpressionTests
         program.Root.Declarations.Should().HaveCount(3);
         var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
+        v.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
         v.TypeSymbol.Should().Be(TypeSymbol.U8);
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
 

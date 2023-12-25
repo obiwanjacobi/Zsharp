@@ -20,6 +20,7 @@ public class ConstructorTests
         var program = Ir.Build(code, builder.ToModuleLoader());
         var varDecl = program.Root.Declarations[0].As<IrDeclarationVariable>();
         varDecl.Should().NotBeNull();
+        varDecl.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
         var invok = varDecl.Initializer.As<IrExpressionInvocation>();
         invok.Arguments.Count().Should().Be(1);
         invok.TypeArguments.Count().Should().Be(1);

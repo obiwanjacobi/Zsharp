@@ -258,7 +258,7 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnExpressionIdentifier(IrExpressionIdentifier identifier)
     {
-        _writer.Write(identifier.Symbol.Name.FullName);
+        _writer.Write(identifier.Symbol.Name.Value);
         return null;
     }
 
