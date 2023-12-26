@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
@@ -10,6 +11,7 @@ public sealed class EvaluatorState
     private readonly DiagnosticList _diagnostics = new();
     private readonly Dictionary<string, object> _variables = new();
     private readonly Dictionary<string, IrDeclarationFunction> _functionDecls = new();
+    private readonly Dictionary<string, IrDeclarationType> _typeDecls = new();
     private readonly EvaluatorState? _parent;
     private readonly IrScope? _scope;
 
@@ -83,6 +85,24 @@ public sealed class EvaluatorState
             return true;
 
         function = null;
+        return false;
+    }
+
+    internal void DeclareType(IrDeclarationType type)
+    {
+        var name = type.Symbol.Name.FullName;
+        _typeDecls[name] = type;
+    }
+
+    internal bool TryLookupType(string name, [NotNullWhen(true)] out IrDeclarationType? type)
+    {
+        if (_typeDecls.TryGetValue(name, out type))
+            return true;
+
+        if (_parent?.TryLookupType(name, out type) == true)
+            return true;
+
+        type = null;
         return false;
     }
 }

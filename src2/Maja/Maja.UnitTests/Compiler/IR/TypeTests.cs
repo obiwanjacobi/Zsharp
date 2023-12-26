@@ -1,3 +1,4 @@
+using System.Linq;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
@@ -7,7 +8,7 @@ namespace Maja.UnitTests.Compiler.IR;
 public class TypeTests
 {
     [Fact]
-    public void TypeEnums()
+    public void TypeDeclareEnums()
     {
         const string code =
             "MyType" + Tokens.Eol +
@@ -31,7 +32,7 @@ public class TypeTests
     }
 
     [Fact]
-    public void TypeFields()
+    public void TypeDeclareFields()
     {
         const string code =
             "MyType" + Tokens.Eol +
@@ -56,7 +57,7 @@ public class TypeTests
     }
 
     [Fact]
-    public void TypeDuplicate_Error()
+    public void TypeDeclareDuplicate_Error()
     {
         const string code =
             "MyType" + Tokens.Eol +
@@ -84,5 +85,31 @@ public class TypeTests
         var err = program.Diagnostics[0];
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
         err.Text.Should().Contain("Type reference 'MyType' cannot be resolved. Type not found.");
+    }
+
+    [Fact]
+    public void TypeInstantiateFields()
+    {
+        const string code =
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
+            "x := MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            Tokens.Indent1 + "fld2 = \"42\"" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(2);
+        var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
+        var t = v.Initializer.As<IrExpressionTypeInitializer>();
+        t.TypeSymbol.Name.Value.Should().Be("Mytype");
+        t.Fields.Should().HaveCount(2);
+        var f = t.Fields.ToList();
+        f[0].Field.Name.Value.Should().Be("fld1");
+        f[0].Expression.As<IrExpressionLiteral>().ConstantValue!.ToI32().Should().Be(42);
+        f[1].Field.Name.Value.Should().Be("fld2");
+        f[1].Expression.As<IrExpressionLiteral>().ConstantValue!.ToStr().Should().Be("42");
     }
 }

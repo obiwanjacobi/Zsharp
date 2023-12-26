@@ -26,6 +26,7 @@ public interface ISyntaxVisitor<R>
     R OnTypeParameterTemplate(TypeParameterTemplateSyntax node);
     R OnTypeParameterValue(TypeParameterValueSyntax node);
     R OnTypeArgument(TypeArgumentSyntax node);
+    R OnTypeInitializerField(TypeInitializerFieldSyntax node);
 
     R OnMemberEnum(MemberEnumSyntax node);
     R OnMemberField(MemberFieldSyntax node);
@@ -44,6 +45,7 @@ public interface ISyntaxVisitor<R>
     R OnExpressionUnary(ExpressionUnarySyntax node);
     R OnExpressionBinary(ExpressionBinarySyntax node);
     R OnExpressionInvocation(ExpressionInvocationSyntax node);
+    R OnExpressionTypeInitializer(ExpressionTypeInitializerSyntax node);
     R OnExpressionIdentifier(ExpressionIdentifierSyntax node);
     R OnExpressionLiteral(ExpressionLiteralSyntax node);
     R OnExpressionLiteralBool(ExpressionLiteralBoolSyntax node);
@@ -111,6 +113,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnType(TypeSyntax node)
         => VisitChildren(node);
 
+    public virtual R OnTypeInitializerField(TypeInitializerFieldSyntax node)
+        => VisitChildren(node);
+
     public virtual R OnTypeDeclaration(TypeDeclarationSyntax node)
         => VisitChildren(node);
 
@@ -164,6 +169,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => VisitChildren(node);
 
     public virtual R OnExpressionInvocation(ExpressionInvocationSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnExpressionTypeInitializer(ExpressionTypeInitializerSyntax node)
         => VisitChildren(node);
 
     public virtual R OnExpressionIdentifier(ExpressionIdentifierSyntax node)

@@ -47,6 +47,10 @@ typeArgumentList: AngleOpen (typeArgumentListComma | typeArgumentListIndent) Ang
 typeArgumentListComma: typeArgument (Comma Sp typeArgument)*;
 typeArgumentListIndent: Indent (typeArgument newline)+ Dedent;
 typeArgument: type | expression;
+typeInitializer: typeInitializerComma | newline typeInitializerIndent;
+typeInitializerComma: CurlyOpen typeInitializerField (Comma Sp typeInitializerField)* CurlyClose;
+typeInitializerIndent: Indent (typeInitializerField newline)+ Dedent;
+typeInitializerField: nameIdentifier Sp Eq Sp expression;
 
 memberEnumValue: nameIdentifier (Sp Eq Sp expressionConstant)?;
 memberEnum: nameIdentifier;
@@ -58,11 +62,12 @@ declarationVariableTyped: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
 declarationVariableInferred: nameIdentifier Sp Colon Eq Sp expression;
 variableAssignment: nameIdentifier Sp Eq Sp expression;
 
-expression: 
+expression:
       expressionConstant                                    #expressionConst
     | expression Sp expressionOperatorBinary Sp expression  #expressionBinary
     | expressionOperatorUnaryPrefix expression              #expressionUnaryPrefix
     | expression typeArgumentList? argumentList             #expressionInvocation
+	| expression typeInitializer             				#expressionTypeInitializer
     | ParenOpen expression ParenClose                       #expressionPrecedence
     | nameIdentifier                                        #expressionIdentifier
     ;

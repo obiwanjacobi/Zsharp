@@ -36,6 +36,20 @@ s = MyStruct
 // s.field2 = 101
 ```
 
+```csharp
+MyStruct
+    field1: U8
+    field2: Str
+
+fn: (p: MyStruct): U8
+    ...
+
+fn(MyStruct {field1 = 42, field2 = "42"})
+fn(MyStruct 
+    field1 = 42
+    field2 = "42")
+```
+
 ---
 
 ## Composition

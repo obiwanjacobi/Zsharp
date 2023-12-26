@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.Parser;
@@ -259,6 +260,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     public override SyntaxNodeOrToken[] VisitType(TypeContext context)
         => CreateSyntaxNode<TypeContext, TypeSyntax>(context, base.VisitType);
 
+    public override SyntaxNodeOrToken[] VisitTypeInitializerField([NotNull] TypeInitializerFieldContext context)
+        => CreateSyntaxNode<TypeInitializerFieldContext, TypeInitializerFieldSyntax>(context, base.VisitTypeInitializerField);
+
     //
     // Variables
     //
@@ -337,6 +341,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
 
     public override SyntaxNodeOrToken[] VisitExpressionInvocation(ExpressionInvocationContext context)
         => CreateSyntaxNode<ExpressionInvocationContext, ExpressionInvocationSyntax>(context, base.VisitExpressionInvocation);
+
+    public override SyntaxNodeOrToken[] VisitExpressionTypeInitializer([NotNull] ExpressionTypeInitializerContext context)
+        => CreateSyntaxNode<ExpressionTypeInitializerContext, ExpressionTypeInitializerSyntax>(context, base.VisitExpressionTypeInitializer);
 
     public override SyntaxNodeOrToken[] VisitArgument(ArgumentContext context)
     {

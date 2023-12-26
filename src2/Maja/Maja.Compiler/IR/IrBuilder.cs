@@ -7,6 +7,7 @@ using Maja.Compiler.Diagnostics;
 using Maja.Compiler.External;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
+using Microsoft.VisualBasic;
 
 namespace Maja.Compiler.IR;
 
@@ -488,6 +489,7 @@ internal sealed class IrBuilder
             ExpressionLiteralSyntax le => LiteralExpression(le),
             ExpressionLiteralBoolSyntax lbe => LiteralBoolExpression(lbe),
             ExpressionInvocationSyntax ie => InvocationExpression(ie),
+            ExpressionTypeInitializerSyntax eti => TypeInitializerExpression(eti),
             ExpressionIdentifierSyntax ide => IdentifierExpression(ide),
             _ => throw new NotSupportedException($"IR: No support for Expression '{syntax.SyntaxKind}'.")
         };
@@ -587,6 +589,28 @@ internal sealed class IrBuilder
             ?? throw new MajaException("IR: TypeArgumentSyntax does not specify a Type.");
 
         return new IrTypeArgument(syntax, type);
+    }
+
+    private IrExpressionTypeInitializer TypeInitializerExpression(ExpressionTypeInitializerSyntax syntax)
+    {
+        var name = new SymbolName(syntax.Identifier.Name.Text);
+        if (!CurrentScope.TryLookupSymbol<TypeSymbol>(name, out var type))
+        {
+            _diagnostics.TypeNotFound(syntax.Location, syntax.Identifier.Name.Text);
+            type = new TypeSymbol(name);
+        }
+
+        var initializers = new List<IrTypeInitializerField>();
+        foreach (var fldInitSyntax in syntax.FieldInitializers)
+        {
+            var fldName = new SymbolName(fldInitSyntax.Name.Text);
+            var field = new FieldSymbol(fldName, type);
+            var expression = Expression(fldInitSyntax.Expression);
+            var init = new IrTypeInitializerField(fldInitSyntax, field, expression);
+            initializers.Add(init);
+        }
+
+        return new(syntax, type, initializers);
     }
 
     private static IrExpressionLiteral LiteralBoolExpression(ExpressionLiteralBoolSyntax syntax)

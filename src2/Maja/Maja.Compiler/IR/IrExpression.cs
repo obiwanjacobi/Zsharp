@@ -44,6 +44,17 @@ internal sealed class IrExpressionInvocation : IrExpression
     public ImmutableArray<IrArgument> Arguments { get; }
 }
 
+internal sealed class IrExpressionTypeInitializer : IrExpression
+{
+    public IrExpressionTypeInitializer(ExpressionTypeInitializerSyntax syntax, TypeSymbol symbol, IEnumerable<IrTypeInitializerField> fields)
+        : base(syntax, symbol)
+    {
+        Fields = fields.ToImmutableArray();
+    }
+
+    public ImmutableArray<IrTypeInitializerField> Fields { get; }
+}
+
 internal sealed class IrExpressionLiteral : IrExpression
 {
     public IrExpressionLiteral(ExpressionSyntax syntax, TypeSymbol type, object value)

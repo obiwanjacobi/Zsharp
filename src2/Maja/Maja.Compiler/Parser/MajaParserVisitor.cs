@@ -279,6 +279,30 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeArgument([NotNull] MajaParser.TypeArgumentContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeInitializer"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeInitializer([NotNull] MajaParser.TypeInitializerContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeInitializerComma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeInitializerComma([NotNull] MajaParser.TypeInitializerCommaContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeInitializerIndent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeInitializerIndent([NotNull] MajaParser.TypeInitializerIndentContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.typeInitializerField"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTypeInitializerField([NotNull] MajaParser.TypeInitializerFieldContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.memberEnumValue"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -354,6 +378,13 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExpressionBinary([NotNull] MajaParser.ExpressionBinaryContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionTypeInitializer</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionTypeInitializer([NotNull] MajaParser.ExpressionTypeInitializerContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionConst</c>
 	/// labeled alternative in <see cref="MajaParser.expression"/>.

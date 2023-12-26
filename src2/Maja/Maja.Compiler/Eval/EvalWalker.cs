@@ -97,6 +97,12 @@ internal sealed class EvalWalker : IrWalker<object?>
         return null;
     }
 
+    public override object? OnDeclarationType(IrDeclarationType type)
+    {
+        _state.DeclareType(type);
+        return null;
+    }
+
     public override object? OnDeclarationFunction(IrDeclarationFunction function)
     {
         // functions are evaluated when called
