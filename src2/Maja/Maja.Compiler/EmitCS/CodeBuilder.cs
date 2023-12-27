@@ -192,6 +192,7 @@ internal class CodeBuilder : IrWalker<object?>
         {
             var netType = MajaTypeMapper.MapToDotNetType(field.Type.Symbol);
             var fld = CSharpFactory.CreateField(field.Symbol.Name.Value, netType);
+            fld.AccessModifiers = AccessModifiers.Public;
             fld.FieldModifiers = FieldModifiers.None;
             fld.InitialValue = field.DefaultValue?.ConstantValue?.AsString();
 
@@ -201,13 +202,13 @@ internal class CodeBuilder : IrWalker<object?>
         _writer.StartType(typeInfo);
         foreach (var fld in typeInfo.Fields)
         {
-            _writer.StartField(fld);
-            _writer.Write(" { get; set; }");
+            _writer.StartField(fld)
+                .Write(" { get; set; }");
             if (!String.IsNullOrEmpty(fld.InitialValue))
             {
-                _writer.Write(" = ");
-                _writer.Write(fld.InitialValue);
-                _writer.Write(";");
+                _writer.Write(" = ")
+                    .Write(fld.InitialValue)
+                    .Write(";");
             }
             _writer.Newline();
         }
@@ -320,6 +321,22 @@ internal class CodeBuilder : IrWalker<object?>
         var res = base.OnInvocationArguments(arguments);
         _writer.Write(")");
         return res;
+    }
+
+    public override object? OnExpressionTypeInitializer(IrExpressionTypeInitializer expression)
+    {
+        _writer.Write("new ");
+        OnType(expression.TypeSymbol);
+        _writer.Write("()")
+            .Newline();
+
+        if (expression.Fields.Any())
+        {
+            _writer.WriteInitializer(expression.Fields, f => f.Field.Name.Value, 
+                f => { OnExpression(f.Expression); return String.Empty; });
+        }
+
+        return null;
     }
 
     public override object? OnType(IrType type)

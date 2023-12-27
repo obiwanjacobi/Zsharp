@@ -72,7 +72,7 @@ Keeping track of the progress of Maja features.
 | enum        |      | x | x | x |   |   |   |   | `MyType -> opt1, opt2`  |
 | custom      |      |   |   |   |   |   |   |   | `MyType: U8`  |
 | rule        |      |   |   |   |   |   |   |   | `MyType -> #fld1 > 0`  |
-| struct      | init | x | x | x |   |   |   |   | `MyType -> fld = 42`  |
+| struct      | init | x | x | x |   |   | x |   | `MyType -> fld = 42`  |
 
 ## Expressions
 

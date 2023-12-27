@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Maja.Compiler.EmitCS.CSharp;
@@ -21,14 +23,15 @@ internal sealed class CSharpWriter
         _tab = new String(SpaceChar, _indent * SpacesPerTab);
     }
 
-    public void StartNamespace(string namespaceName)
+    public CSharpWriter StartNamespace(string namespaceName)
     {
         _indent = 0;
         _writer.Append("namespace ").AppendLine(namespaceName);
         OpenScope();
+        return this;
     }
 
-    public void StartType(Type type)
+    public CSharpWriter StartType(Type type)
     {
         Tab()
             .Append(type.AccessModifiers.ToCode())
@@ -45,9 +48,10 @@ internal sealed class CSharpWriter
                 .Append(type.BaseTypeName);
         Newline();
         OpenScope();
+        return this;
     }
 
-    public void StartMethod(Method method)
+    public CSharpWriter StartMethod(Method method)
     {
         Tab()
             .Append(method.AccessModifiers.ToCode())
@@ -57,14 +61,17 @@ internal sealed class CSharpWriter
             .Append(method.TypeName)
             .Append(SpaceChar)
             .Append(method.Name);
+
+        return this;
     }
 
-    public void WriteTypeParameter(TypeParameter parameter)
+    public CSharpWriter WriteTypeParameter(TypeParameter parameter)
     {
         _writer.Append(parameter.TypeName);
+        return this;
     }
 
-    public void WriteParameter(Parameter parameter, string? defaultValue = null)
+    public CSharpWriter WriteParameter(Parameter parameter, string? defaultValue = null)
     {
         _writer.Append(parameter.TypeName)
             .Append(SpaceChar)
@@ -72,15 +79,18 @@ internal sealed class CSharpWriter
 
         if (!String.IsNullOrEmpty(defaultValue))
             _writer.Append("=").Append(defaultValue);
+
+        return this;
     }
 
-    public void OpenMethodBody()
+    public CSharpWriter OpenMethodBody()
     {
         _writer.AppendLine();
         OpenScope();
+        return this;
     }
 
-    public void StartField(Field field)
+    public CSharpWriter StartField(Field field)
     {
         Tab()
             .Append(field.AccessModifiers.ToCode())
@@ -90,53 +100,115 @@ internal sealed class CSharpWriter
             .Append(field.TypeName)
             .Append(SpaceChar)
             .Append(field.Name);
+
+        return this;
     }
 
-    public void WriteVariable(string? netType, string name)
+    public CSharpWriter WriteVariable(string? netType, string name)
     {
         Tab()
             .Append(netType is null ? "var" : netType)
             .Append(SpaceChar)
             .Append(name);
+
+        return this;
     }
 
-    public void WriteSymbol(Symbol.Symbol symbol)
+    public CSharpWriter WriteInitializer<T>(IEnumerable<T> initializers, Func<T, string> nameFn, Func<T, string> valueFn)
+    {
+        if (initializers.Any())
+        {
+            OpenScope();
+            foreach (var init in initializers)
+            {
+                Tab()
+                    .Append(nameFn(init))
+                    .Append(" = ")
+                    .Append(valueFn(init))
+                    .Append(",")
+                    .AppendLine();
+            }
+            CloseScope();
+        }
+
+        return this;
+    }
+
+    public CSharpWriter WriteSymbol(Symbol.Symbol symbol)
     {
         _writer.Append(symbol.Name.Value);
+        return this;
     }
 
-    public void StartAssignment(string name)
+    public CSharpWriter StartAssignment(string name)
     {
         Tab()
             .Append(name)
             .Append(" = ");
+
+        return this;
     }
 
-    public void WriteReturn()
-        => Tab().Append("return ");
+    public CSharpWriter WriteReturn()
+    {
+        Tab()
+            .Append("return ");
 
-    public void Write(string? text)
-        => _writer.Append(text);
+        return this;
+    }
 
-    public void CloseScope()
+    public CSharpWriter Write(string? text)
+    {
+        _writer.Append(text);
+        return this;
+    }
+
+    public CSharpWriter CloseScope()
     {
         Dedent();
         Tab()
             .Append(CloseScopeChar)
             .AppendLine();
+
+        return this;
     }
 
-    public void Using(string usingName)
-        => Tab().Append("using ").Append(usingName).Append(SemiColonChar);
+    public CSharpWriter Using(string usingName)
+    {
+        Tab()
+            .Append("using ")
+            .Append(usingName)
+            .Append(SemiColonChar);
 
-    public void WriteComma()
-        => _writer.Append(", ");
-    public void EndOfLine()
-        => _writer.Append(SemiColonChar).AppendLine();
-    public void Newline()
-        => _writer.AppendLine();
-    public void Assignment()
-        => _writer.Append(" = ");
+        return this;
+    }
+
+    public CSharpWriter WriteComma()
+    {
+        _writer.Append(", ");
+        return this;
+    }
+
+    public CSharpWriter EndOfLine()
+    {
+        _writer
+            .Append(SemiColonChar)
+            .AppendLine();
+
+        return this;
+    }
+
+    public CSharpWriter Newline()
+    {
+        _writer.AppendLine();
+        return this;
+    }
+
+    public CSharpWriter Assignment()
+    {
+        _writer.Append(" = ");
+        return this;
+    }
 
     public override string ToString()
         => _writer.ToString();
@@ -146,7 +218,9 @@ internal sealed class CSharpWriter
 
     private void OpenScope()
     {
-        Tab().Append(OpenScopeChar).AppendLine();
+        Tab()
+            .Append(OpenScopeChar)
+            .AppendLine();
         Indent();
     }
 

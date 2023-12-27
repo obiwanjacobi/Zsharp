@@ -121,6 +121,7 @@ internal abstract class IrWalker<R>
             IrExpressionBinary be => OnExpressionBinary(be),
             IrExpressionIdentifier ie => OnExpressionIdentifier(ie),
             IrExpressionInvocation ei => OnExpressionInvocation(ei),
+            IrExpressionTypeInitializer eti => OnExpressionTypeInitializer(eti),
             IrExpressionLiteral le => OnExpressionLiteral(le),
             _ => Default
         };
@@ -151,6 +152,10 @@ internal abstract class IrWalker<R>
             .Aggregate(Default, AggregateResult);
     public virtual R OnInvocationArgument(IrArgument argument)
         => OnExpression(argument.Expression);
+    public virtual R OnExpressionTypeInitializer(IrExpressionTypeInitializer expression)
+        => expression.Fields.Select(f => OnTypeInitializerField(f)).Aggregate(Default, AggregateResult);
+    public virtual R OnTypeInitializerField(IrTypeInitializerField initializer)
+        => OnExpression(initializer.Expression);
     public virtual R OnExpressionIdentifier(IrExpressionIdentifier identifier)
         => Default;
     public virtual R OnStatements(IEnumerable<IrStatement> statements)

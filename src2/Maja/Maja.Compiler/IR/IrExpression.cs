@@ -53,6 +53,9 @@ internal sealed class IrExpressionTypeInitializer : IrExpression
     }
 
     public ImmutableArray<IrTypeInitializerField> Fields { get; }
+
+    public new ExpressionTypeInitializerSyntax Syntax
+        => (ExpressionTypeInitializerSyntax)base.Syntax;
 }
 
 internal sealed class IrExpressionLiteral : IrExpression

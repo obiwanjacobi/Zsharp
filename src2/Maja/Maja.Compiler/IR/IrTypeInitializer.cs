@@ -21,4 +21,7 @@ internal sealed class IrTypeInitializerField : IrTypeInitializer
 
     public FieldSymbol Field { get; }
     public IrExpression Expression { get; }
+
+    public new TypeInitializerFieldSyntax Syntax
+        => (TypeInitializerFieldSyntax)base.Syntax;
 }

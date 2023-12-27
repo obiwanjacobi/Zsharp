@@ -293,6 +293,7 @@ internal abstract class IrRewriter
             IrExpressionBinary exprBin => RewriteExpressionBinary(exprBin),
             IrExpressionIdentifier exprId => RewriteExpressionIdentifier(exprId),
             IrExpressionInvocation exprInv => RewriteExpressionInvocation(exprInv),
+            IrExpressionTypeInitializer exprTi => RewriteTypeInitializer(exprTi),
             IrExpressionLiteral exprLit => RewriteExpressionLiteral(exprLit),
             _ => expression
         };
@@ -361,6 +362,25 @@ internal abstract class IrRewriter
             return typeArgument;
 
         return new IrTypeArgument(typeArgument.Syntax, type!);
+    }
+
+    protected virtual IrExpressionTypeInitializer RewriteTypeInitializer(IrExpressionTypeInitializer initializer)
+    {
+        var fields = RewriteArray(initializer.Fields, RewriteTypeInitializerField);
+        
+        if (fields == initializer.Fields)
+            return initializer;
+
+        return new IrExpressionTypeInitializer(initializer.Syntax, initializer.TypeSymbol, fields);
+    }
+    protected virtual IrTypeInitializerField RewriteTypeInitializerField(IrTypeInitializerField initializer)
+    {
+        var expr = RewriteExpression(initializer.Expression);
+        
+        if (expr == initializer.Expression)
+            return initializer;
+        
+        return new IrTypeInitializerField(initializer.Syntax, initializer.Field, expr!);
     }
 
     protected virtual IrExpressionLiteral RewriteExpressionLiteral(IrExpressionLiteral expression)
