@@ -54,6 +54,14 @@ MyType
     #fld1 > 42
 ```
 
+How to apply an enum as data type for a field in the same type?
+
+```csharp
+MyType
+    Option1, Option2
+    fld1: ??
+```
+
 ---
 
 ## Built-in Types

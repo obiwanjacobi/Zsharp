@@ -65,13 +65,14 @@ Keeping track of the progress of Maja features.
 
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
-| struct      |      | x | x | x |   |   |   |   | `MyType -> fld: U8`  |
+| struct      |      | x | x | x |   |   | x |   | `MyType -> fld: U8`  |
 |             | enum | x | x |   |   |   |   |   | `MyType -> fld: U8 -> Opt1, Opt2`  |
 | generics    |      | x |   |   |   |   |   |   | `MyType<T> -> fld: T`  |
 | template    |      | x | x |   |   |   |   |   | `MyType<#T> -> fld: T`  |
 | enum        |      | x | x | x |   |   |   |   | `MyType -> opt1, opt2`  |
 | custom      |      |   |   |   |   |   |   |   | `MyType: U8`  |
 | rule        |      |   |   |   |   |   |   |   | `MyType -> #fld1 > 0`  |
+| struct      | init | x | x | x |   |   |   |   | `MyType -> fld = 42`  |
 
 ## Expressions
 

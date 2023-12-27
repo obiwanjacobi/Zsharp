@@ -183,6 +183,39 @@ internal class CodeBuilder : IrWalker<object?>
         return result;
     }
 
+    public override object? OnDeclarationType(IrDeclarationType type)
+    {
+        var typeInfo = CSharpFactory.CreateType(type.Symbol.Name.Value);
+        CurrentType.AddType(typeInfo);
+
+        foreach (var field in type.Fields)
+        {
+            var netType = MajaTypeMapper.MapToDotNetType(field.Type.Symbol);
+            var fld = CSharpFactory.CreateField(field.Symbol.Name.Value, netType);
+            fld.FieldModifiers = FieldModifiers.None;
+            fld.InitialValue = field.DefaultValue?.ConstantValue?.AsString();
+
+            typeInfo.AddField(fld);
+        }
+
+        _writer.StartType(typeInfo);
+        foreach (var fld in typeInfo.Fields)
+        {
+            _writer.StartField(fld);
+            _writer.Write(" { get; set; }");
+            if (!String.IsNullOrEmpty(fld.InitialValue))
+            {
+                _writer.Write(" = ");
+                _writer.Write(fld.InitialValue);
+                _writer.Write(";");
+            }
+            _writer.Newline();
+        }
+
+        _writer.CloseScope();
+        return typeInfo;
+    }
+
     public override object? OnStatementAssignment(IrStatementAssignment statement)
     {
         _writer.StartAssignment(statement.Symbol.Name.FullName);

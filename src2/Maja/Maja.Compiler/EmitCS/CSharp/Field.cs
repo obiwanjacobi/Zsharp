@@ -15,4 +15,6 @@ internal sealed class Field
     public string Name { get; }
 
     public string TypeName { get; }
+
+    public string? InitialValue { get; set; }
 }

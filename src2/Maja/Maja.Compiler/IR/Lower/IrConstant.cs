@@ -50,6 +50,8 @@ internal class IrConstant
         => ToString();
     public override string ToString()
         => Value?.ToString() ?? "<null>";
+    public string AsString()
+        => Value is String ? $"\"{Value}\"" : Value.ToString() ?? String.Empty;
 
     public static IrConstant Zero => new(0);
 

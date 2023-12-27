@@ -133,6 +133,8 @@ internal sealed class CSharpWriter
         => _writer.Append(", ");
     public void EndOfLine()
         => _writer.Append(SemiColonChar).AppendLine();
+    public void Newline()
+        => _writer.AppendLine();
     public void Assignment()
         => _writer.Append(" = ");
 
@@ -141,8 +143,6 @@ internal sealed class CSharpWriter
 
     private StringBuilder Tab()
         => _writer.Append(_tab);
-    private void Newline()
-        => _writer.AppendLine();
 
     private void OpenScope()
     {
