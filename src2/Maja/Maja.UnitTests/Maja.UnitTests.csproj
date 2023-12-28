@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -34,6 +34,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Maja.Compiler\Maja.Compiler.csproj" />
     <ProjectReference Include="..\Maja\Maja.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repl\" />
   </ItemGroup>
 
 </Project>

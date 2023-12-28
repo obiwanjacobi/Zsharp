@@ -14,6 +14,19 @@ internal abstract class ReplController
     private bool _inputSubmitted;
     private int _tabWidth = 4;
 
+    public void Load(string file)
+    {
+        var lines = file.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        foreach (var line in lines)
+        {
+            Console.Write(line);
+
+            if (!ProcessInput(line + Environment.NewLine))
+                break;
+        }
+    }
+
     public void Run()
     {
         while (true)

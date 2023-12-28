@@ -1,0 +1,16 @@
+MyType
+  fld1: U8
+  fld2: Str
+;
+
+fn: (p: U8): Bool
+  ret p = 42
+;
+
+x := MyType
+  fld1 = 42
+  fld2 = "Maja"
+;
+
+b := fn(x.fld1)
+;

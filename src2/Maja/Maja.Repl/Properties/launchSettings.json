@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Maja.Repl": {
+      "commandName": "Project",
+      "commandLineArgs": "../../../../Maja.UnitTests/Repl/SampleCode.maja"
+    }
+  }
+}
