@@ -103,6 +103,7 @@ public class TypeTests
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(2);
         var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
+        v.TypeSymbol.Name.Value.Should().Be("Mytype");
         var t = v.Initializer.As<IrExpressionTypeInitializer>();
         t.TypeSymbol.Name.Value.Should().Be("Mytype");
         t.Fields.Should().HaveCount(2);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Maja.Compiler.Diagnostics;
@@ -56,43 +57,54 @@ internal sealed class EvalWalker : IrWalker<object?>
         var type = variable.TypeSymbol;
         var name = symbol.Name.FullName;
 
-        var value = variable.Initializer is null
-            ? IrConstant.Zero
-            : (IrConstant?)OnExpression(variable.Initializer!) ?? IrConstant.Zero;
+        //var value = variable.Initializer is null
+        //    ? IrConstant.Zero
+        //    : (IrConstant?)OnExpression(variable.Initializer!) ?? IrConstant.Zero;
 
-        if (TypeSymbol.IsBoolean(type))
-            _state.SetVariable(name, value.ToBool());
+        if (variable.Initializer is not null)
+        {
+            var exprResult = OnExpression(variable.Initializer);
+            if (exprResult is IrConstant value)
+            {
+                if (TypeSymbol.IsBoolean(type))
+                    _state.SetVariable(name, value.ToBool());
 
-        else if (TypeSymbol.IsI8(type))
-            _state.SetVariable(name, value.ToI8());
-        else if (TypeSymbol.IsU8(type))
-            _state.SetVariable(name, value.ToU8());
-        else if (TypeSymbol.IsI16(type))
-            _state.SetVariable(name, value.ToI16());
-        else if (TypeSymbol.IsU16(type))
-            _state.SetVariable(name, value.ToU16());
-        else if (TypeSymbol.IsI32(type))
-            _state.SetVariable(name, value.ToI32());
-        else if (TypeSymbol.IsU32(type))
-            _state.SetVariable(name, value.ToU32());
-        else if (TypeSymbol.IsI64(type))
-            _state.SetVariable(name, value.ToI64());
-        else if (TypeSymbol.IsU64(type))
-            _state.SetVariable(name, value.ToU64());
+                else if (TypeSymbol.IsI8(type))
+                    _state.SetVariable(name, value.ToI8());
+                else if (TypeSymbol.IsU8(type))
+                    _state.SetVariable(name, value.ToU8());
+                else if (TypeSymbol.IsI16(type))
+                    _state.SetVariable(name, value.ToI16());
+                else if (TypeSymbol.IsU16(type))
+                    _state.SetVariable(name, value.ToU16());
+                else if (TypeSymbol.IsI32(type))
+                    _state.SetVariable(name, value.ToI32());
+                else if (TypeSymbol.IsU32(type))
+                    _state.SetVariable(name, value.ToU32());
+                else if (TypeSymbol.IsI64(type))
+                    _state.SetVariable(name, value.ToI64());
+                else if (TypeSymbol.IsU64(type))
+                    _state.SetVariable(name, value.ToU64());
 
-        else if (TypeSymbol.IsF16(type))
-            _state.SetVariable(name, value.ToF16());
-        else if (TypeSymbol.IsF32(type))
-            _state.SetVariable(name, value.ToF32());
-        else if (TypeSymbol.IsF64(type))
-            _state.SetVariable(name, value.ToF64());
-        else if (TypeSymbol.IsF96(type))
-            _state.SetVariable(name, value.ToF96());
+                else if (TypeSymbol.IsF16(type))
+                    _state.SetVariable(name, value.ToF16());
+                else if (TypeSymbol.IsF32(type))
+                    _state.SetVariable(name, value.ToF32());
+                else if (TypeSymbol.IsF64(type))
+                    _state.SetVariable(name, value.ToF64());
+                else if (TypeSymbol.IsF96(type))
+                    _state.SetVariable(name, value.ToF96());
 
-        else if (TypeSymbol.IsC16(type))
-            _state.SetVariable(name, value.ToC16());
-        else if (TypeSymbol.IsStr(type))
-            _state.SetVariable(name, value.ToStr());
+                else if (TypeSymbol.IsC16(type))
+                    _state.SetVariable(name, value.ToC16());
+                else if (TypeSymbol.IsStr(type))
+                    _state.SetVariable(name, value.ToStr());
+            }
+            else if (exprResult is not null)
+            {
+                _state.SetVariable(name, exprResult);
+            }
+        }
 
         return null;
     }
@@ -133,9 +145,31 @@ internal sealed class EvalWalker : IrWalker<object?>
             return result;
         }
 
-        _state.Diagnostics.Add(DiagnosticMessageKind.Error, invocation.Syntax.Location,
-            $"The function {invocation.Symbol.Name.FullName} is not declared. Function not found.");
+        _state.Diagnostics.FunctionNotFound(invocation.Syntax.Location, invocation.Symbol.Name.FullName);
         return null;
+    }
+
+    public override object? OnExpressionTypeInitializer(IrExpressionTypeInitializer expression)
+    {
+        if (!_state.TryLookupType(expression.TypeSymbol.Name.Value, out var typeDecl))
+        {
+            _state.Diagnostics.TypeNotFound(expression.Syntax.Location, expression.TypeSymbol.Name.Value);
+            return null;
+        }
+
+        var fields = new Dictionary<string, object>();
+        foreach (var fld in expression.Fields)
+        {
+            var val = OnTypeInitializerField(fld);
+            fields[fld.Field.Name.Value] = val!;
+        }
+
+        var instance = new EvalTypeInstance(typeDecl)
+        {
+            Fields = fields
+        };
+
+        return instance;
     }
 
     public override object? OnStatementAssignment(IrStatementAssignment statement)

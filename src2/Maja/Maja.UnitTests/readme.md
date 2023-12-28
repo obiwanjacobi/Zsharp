@@ -30,63 +30,63 @@ Keeping track of the progress of Maja features.
 
 ## Module
 
-|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Emit|Runtime|Description|
+|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
-| mod    |          | x | x | x |   |   | x |   | `mod myModule`  |
-| pub    |          | x | x | x |   |   |   |   | `pub mySymbol`  |
-|        | inline   |   |   |   |   |   |   |   | `pub myFn(): U8`  |
-|        | type     |   |   |   |   |   |   |   | `pub myType`  |
-|        | variable |   |   |   |   |   |   |   | `pub myImmVar`  |
-| use    | assembly | x | x | x |   |   |   |   | `use assembly.class`  |
-|        | module   | x | x |   |   |   |   |   | `use module`  |
+| mod    |          | x | x | x |   |   |   | x |   | `mod myModule`  |
+| pub    |          | x | x | x |   |   |   |   |   | `pub mySymbol`  |
+|        | inline   |   |   |   |   |   |   |   |   | `pub myFn(): U8`  |
+|        | type     |   |   |   |   |   |   |   |   | `pub myType`  |
+|        | variable |   |   |   |   |   |   |   |   | `pub myImmVar`  |
+| use    | assembly | x | x | x |   |   |   |   |   | `use assembly.class`  |
+|        | module   | x | x |   |   |   |   |   |   | `use module`  |
 
 ## Function
 
-|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Emit|Runtime|Description|
+|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
-| decl       |       | x | x | x |   |   | x |   | `fn: ()`  |
-|            | param | x | x | x |   |   | x |   | `fn: (p: U8)`  |
-|            | type  | x | x | x |   |   | x |   | `fn: <T>(p: T)`  |
-|            | ret   | x | x | x |   |   | x |   | `fn: (): U8`  |
-| generics   |       |   |   |   |   |   |   |   | `fn: <T>()`  |
-| template   |       |   |   |   |   |   |   |   | `fn: <#T>()`  |
-| invocation |       | x | x | x |   |   |   |   | `fn()`  |
-|            | generics | x | x | x |   |   | x |   | `fn<T>()`  |
+| decl       |       | x | x | x |   |   | x | x |   | `fn: ()`  |
+|            | param | x | x | x |   |   | x | x |   | `fn: (p: U8)`  |
+|            | type  | x | x | x |   |   |   | x |   | `fn: <T>(p: T)`  |
+|            | ret   | x | x | x |   |   | x | x |   | `fn: (): U8`  |
+| generics   |       |   |   |   |   |   |   |   |   | `fn: <T>()`  |
+| template   |       |   |   |   |   |   |   |   |   | `fn: <#T>()`  |
+| invocation |       | x | x | x |   |   | x |   |   | `fn()`  |
+|         | generics | x | x | x |   |   |   | x |   | `fn<T>()`  |
 
 ## Variable
 
-|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Emit|Runtime|Description|
+|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
-| decl       |   | x | x | x |   |   | x |   | `var: U8`  |
-| init       |   | x | x | x |   |   | x |   | `var: U8 = 42`  |
-| infer      |   | x | x | x |   |   | x |   | `var := 42`  |
+| decl       |   | x | x | x |   |   | x | x |   | `var: U8`  |
+| init       |   | x | x | x |   |   | x | x |   | `var: U8 = 42`  |
+| infer      |   | x | x | x |   |   | x | x |   | `var := 42`  |
 
 ## Type
 
-|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Emit|Runtime|Description|
+|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
-| struct      |      | x | x | x |   |   | x |   | `MyType -> fld: U8`  |
-|             | enum | x | x |   |   |   |   |   | `MyType -> fld: U8 -> Opt1, Opt2`  |
-| generics    |      | x |   |   |   |   |   |   | `MyType<T> -> fld: T`  |
-| template    |      | x | x |   |   |   |   |   | `MyType<#T> -> fld: T`  |
-| enum        |      | x | x | x |   |   |   |   | `MyType -> opt1, opt2`  |
-| custom      |      |   |   |   |   |   |   |   | `MyType: U8`  |
-| rule        |      |   |   |   |   |   |   |   | `MyType -> #fld1 > 0`  |
-| struct      | init | x | x | x |   |   | x |   | `MyType -> fld = 42`  |
+| struct      |      | x | x | x |   |   | x | x |   | `MyType -> fld: U8`  |
+|             | enum | x | x |   |   |   |   |   |   | `MyType -> fld: U8 -> Opt1, Opt2`  |
+| generics    |      | x |   |   |   |   |   |   |   | `MyType<T> -> fld: T`  |
+| template    |      | x | x |   |   |   |   |   |   | `MyType<#T> -> fld: T`  |
+| enum        |      | x | x | x |   |   |   |   |   | `MyType -> opt1, opt2`  |
+| custom      |      |   |   |   |   |   |   |   |   | `MyType: U8`  |
+| rule        |      |   |   |   |   |   |   |   |   | `MyType -> #fld1 > 0`  |
+| struct      | init | x | x | x |   |   | x | x |   | `MyType -> fld = 42`  |
 
 ## Expressions
 
-|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Emit|Runtime|Description|
+|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
-| literal     |   | x | x | x |   |   | x |   | `42`, `'hello'`  |
-| const fold  |   | - | - | x |   |   |   |   | `42 + 101` |
-| precedence  |   | x | x | x |   |   |   |   | `(42 + 101) / 2`  |
+| literal     |   | x | x | x |   |   | x | x |   | `42`, `'hello'`  |
+| const fold  |   | - | - | x |   |   | x |   |   | `42 + 101` |
+| precedence  |   | x | x | x |   |   | x |   |   | `(42 + 101) / 2`  |
 
 ## Statements
 
-|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Emit|Runtime|Description|
+|Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
-| assignment |      | x | x |   |   |   |   |   | `x = 42`  |
-| if      |      | x | x | x |   |   |   |   | `if <condition>`  |
-|         | else | x | x | x |   |   |   |   | `if <condition> else`  |
-|         | elif | x | x | x |   |   |   |   | `if <condition> elif <condition>`  |
+| assignment |      | x | x |   |   |   | x |   |   | `x = 42`  |
+| if      |      | x | x | x |   |   | x |   |   | `if <condition>`  |
+|         | else | x | x | x |   |   | x |   |   | `if <condition> else`  |
+|         | elif | x | x | x |   |   | x |   |   | `if <condition> elif <condition>`  |

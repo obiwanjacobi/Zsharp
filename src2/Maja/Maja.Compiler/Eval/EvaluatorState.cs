@@ -72,7 +72,7 @@ public sealed class EvaluatorState
 
     internal void DeclareFunction(IrDeclarationFunction function)
     {
-        var name = function.Symbol.Name.FullName;
+        var name = function.Symbol.Name.Value;
         _functionDecls[name] = function;
     }
 
@@ -90,7 +90,7 @@ public sealed class EvaluatorState
 
     internal void DeclareType(IrDeclarationType type)
     {
-        var name = type.Symbol.Name.FullName;
+        var name = type.Symbol.Name.Value;
         _typeDecls[name] = type;
     }
 
