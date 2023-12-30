@@ -168,4 +168,42 @@ public class ExpressionSyntaxTests
         expr.TypeArguments.First().ChildNodes[0]
             .As<TypeSyntax>().Text.Should().Be("U8");
     }
+
+    [Fact]
+    public void VariableMemberAccess()
+    {
+        const string code =
+            "y := x.fld1" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.ElementAt(0).As<VariableDeclarationSyntax>();
+        v.Name.Text.Should().Be("y");
+        var expr = v.Expression.As<ExpressionMemberAccessSyntax>();
+        expr.Name.Text.Should().Be("fld1");
+        expr.LeftAs<ExpressionIdentifierSyntax>()
+            .Name.Text.Should().Be("x");
+        
+    }
+
+    [Fact]
+    public void VariableMemberAccess2()
+    {
+        const string code =
+            "y := x.fld1.fld2" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.ElementAt(0).As<VariableDeclarationSyntax>();
+        v.Name.Text.Should().Be("y");
+        var expr = v.Expression.As<ExpressionMemberAccessSyntax>();
+        
+        expr.Name.Text.Should().Be("fld2");
+        expr = expr.LeftAs<ExpressionMemberAccessSyntax>();
+        expr.Name.Text.Should().Be("fld1");
+        expr.LeftAs<ExpressionIdentifierSyntax>()
+            .Name.Text.Should().Be("x");
+    }
 }

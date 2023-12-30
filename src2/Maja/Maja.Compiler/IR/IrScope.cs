@@ -108,6 +108,20 @@ internal abstract class IrScope
         return false;
     }
 
+    // find type and locate member on type, then return the type of the member
+    public virtual bool TryLookupMemberType(SymbolName type, SymbolName member, [NotNullWhen(true)] out TypeSymbol? memberType)
+    {
+        if (TryLookupSymbol<DeclaredTypeSymbol>(type, out var typeDecl))
+        {
+            var field = typeDecl.Fields.SingleOrDefault(f => f.Name == member);
+            memberType = field?.Type;
+            return memberType is not null;
+        }
+
+        memberType = null;
+        return false;
+    }
+
     public int TryDeclareTypes(IEnumerable<TypeParameterSymbol> typeParameters)
     {
         var index = 0;
@@ -194,6 +208,7 @@ internal sealed class IrModuleScope : IrScope
         symbol = matches.FirstOrDefault();
         return symbol is not null;
     }
+
 
     public bool TryDeclareModule(ExternalModule module)
     {

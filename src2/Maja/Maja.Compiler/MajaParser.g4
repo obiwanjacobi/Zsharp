@@ -70,6 +70,7 @@ expression:
 	| expression typeInitializer             				#expressionTypeInitializer
     | ParenOpen expression ParenClose                       #expressionPrecedence
     | nameIdentifier                                        #expressionIdentifier
+	| expression Dot nameIdentifier                         #expressionMemberAccess
     ;
 expressionConstant: expressionLiteral | expressionLiteralBool;
 expressionRule: Hash Identifier expression;

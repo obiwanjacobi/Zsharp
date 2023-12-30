@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
+using System.Xml.Linq;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.External;
 using Maja.Compiler.Symbol;
@@ -280,7 +283,7 @@ internal sealed class IrBuilder
             type = initializer.TypeSymbol;
 
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
-        var symbol = new VariableSymbol(name, type);
+        var symbol = new VariableSymbol(name, type!);
 
         if (!CurrentScope.TryDeclareVariable(symbol))
         {
@@ -490,6 +493,7 @@ internal sealed class IrBuilder
             ExpressionLiteralBoolSyntax lbe => LiteralBoolExpression(lbe),
             ExpressionInvocationSyntax ie => InvocationExpression(ie),
             ExpressionTypeInitializerSyntax eti => TypeInitializerExpression(eti),
+            ExpressionMemberAccessSyntax ema => MemberAccessExpression(ema),
             ExpressionIdentifierSyntax ide => IdentifierExpression(ide),
             _ => throw new NotSupportedException($"IR: No support for Expression '{syntax.SyntaxKind}'.")
         };
@@ -505,8 +509,41 @@ internal sealed class IrBuilder
         }
 
         var type = symbol.Type ?? TypeSymbol.Unknown;
-
         return new IrExpressionIdentifier(syntax, symbol, type);
+    }
+
+    private IrExpressionMemberAccess MemberAccessExpression(ExpressionMemberAccessSyntax syntax)
+    {
+        var left = Expression(syntax.Left);
+        var name = new SymbolName(syntax.Name.Text);
+
+        // variable (root)
+        if (left is IrExpressionIdentifier identifier)
+        {
+            if (!CurrentScope.TryLookupMemberType(identifier.TypeSymbol.Name, name, out var memberType))
+            {
+                _diagnostics.FieldNotFoundOnType(syntax.Location, identifier.TypeSymbol.Name.Value, name.Value);
+                memberType = TypeSymbol.Unknown;
+            }
+            var symbol = new FieldSymbol(name, memberType);
+            return new IrExpressionMemberAccess(syntax, memberType, identifier, [symbol]);
+        }
+
+        // aggregate
+        if (left is IrExpressionMemberAccess memberAccess)
+        {
+            var typeName = memberAccess.Members.Last().Type.Name;
+            if (!CurrentScope.TryLookupMemberType(typeName, name, out var memberType))
+            {
+                _diagnostics.FieldNotFoundOnType(syntax.Location, typeName.Value, name.Value);
+                memberType = TypeSymbol.Unknown;
+            }
+            var symbol = new FieldSymbol(name, memberType);
+            // TODO: syntax should span all the member access and identifier syntax
+            return new IrExpressionMemberAccess(syntax, memberType, memberAccess.Identifier, [.. memberAccess.Members, symbol]);
+        }
+
+        throw new MajaException($"Unexpected member access left expression type: {left.GetType().FullName}.");
     }
 
     private IrExpressionInvocation InvocationExpression(ExpressionInvocationSyntax syntax)
@@ -566,7 +603,7 @@ internal sealed class IrBuilder
         if (syntax.Name is NameSyntax paramName)
         {
             var name = new SymbolName(paramName.Text);
-            argSymbol = new VariableSymbol(name, null);
+            argSymbol = new VariableSymbol(name, TypeSymbol.Unknown);
         }
 
         return new IrArgument(syntax, expr, argSymbol);

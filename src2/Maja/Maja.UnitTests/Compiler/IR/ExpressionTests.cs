@@ -130,4 +130,28 @@ public class ExpressionTests
         exprBin.Left.TypeSymbol.Should().Be(TypeSymbol.U8);
         exprBin.Right.TypeSymbol.Should().Be(TypeSymbol.U8);
     }
+
+    [Fact]
+    public void ExpressionMemberAccess()
+    {
+        const string code =
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
+            "x := MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            Tokens.Indent1 + "fld2 = \"42\"" + Tokens.Eol +
+            "y := x.fld1" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(3);
+        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        v.Initializer!.TypeSymbol.Name.Value.Should().Be("U8");
+        v.TypeSymbol.Name.Value.Should().Be("U8");
+        var xs = v.Initializer.As<IrExpressionMemberAccess>();
+        xs.Identifier.Symbol.Name.Value.Should().Be("x");
+        xs.Members.Last().Name.Value.Should().Be("fld1");
+    }
 }

@@ -164,10 +164,7 @@ internal sealed class EvalWalker : IrWalker<object?>
             fields[fld.Field.Name.Value] = val!;
         }
 
-        var instance = new EvalTypeInstance(typeDecl)
-        {
-            Fields = fields
-        };
+        var instance = new EvalTypeInstance(typeDecl, fields);
 
         return instance;
     }

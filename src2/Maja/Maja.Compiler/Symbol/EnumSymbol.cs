@@ -1,17 +1,15 @@
 ﻿namespace Maja.Compiler.Symbol;
 
-public sealed record EnumSymbol : Symbol
+public sealed record EnumSymbol : SymbolWithType
 {
     public EnumSymbol(SymbolName name, TypeSymbol type, object value)
-        : base(name)
+        : base(name, type)
     {
-        Type = type;
         Value = value;
     }
 
     public override SymbolKind Kind
         => SymbolKind.Enum;
 
-    public TypeSymbol Type { get; }
     public object Value { get; }
 }

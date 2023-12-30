@@ -458,6 +458,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     public override SyntaxNodeOrToken[] VisitNameQualified(NameQualifiedContext context)
         => CreateSyntaxNode<NameQualifiedContext, QualifiedNameSyntax>(context, base.VisitNameQualified);
 
+    public override SyntaxNodeOrToken[] VisitExpressionMemberAccess(ExpressionMemberAccessContext context)
+        => CreateSyntaxNode<ExpressionMemberAccessContext, ExpressionMemberAccessSyntax>(context, base.VisitExpressionMemberAccess);
+
     //
     // Statements
     //

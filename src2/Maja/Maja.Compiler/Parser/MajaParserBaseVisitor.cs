@@ -577,6 +577,17 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExpressionIdentifier([NotNull] MajaParser.ExpressionIdentifierContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionMemberAccess</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitExpressionMemberAccess([NotNull] MajaParser.ExpressionMemberAccessContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionInvocation</c>
 	/// labeled alternative in <see cref="MajaParser.expression"/>.
 	/// <para>

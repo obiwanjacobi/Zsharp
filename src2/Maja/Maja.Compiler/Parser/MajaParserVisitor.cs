@@ -358,6 +358,13 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpressionIdentifier([NotNull] MajaParser.ExpressionIdentifierContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionMemberAccess</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionMemberAccess([NotNull] MajaParser.ExpressionMemberAccessContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionInvocation</c>
 	/// labeled alternative in <see cref="MajaParser.expression"/>.
 	/// </summary>

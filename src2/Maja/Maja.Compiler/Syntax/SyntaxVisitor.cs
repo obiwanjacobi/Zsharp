@@ -32,6 +32,8 @@ public interface ISyntaxVisitor<R>
     R OnMemberField(MemberFieldSyntax node);
     R OnMemberRule(MemberRuleSyntax node);
 
+    R OnTypeMemberAccess(ExpressionMemberAccessSyntax node);
+
     R OnVariableDeclarationTyped(VariableDeclarationTypedSyntax node);
     R OnVariableDeclarationInferred(VariableDeclarationInferredSyntax node);
 
@@ -138,6 +140,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => VisitChildren(node);
 
     public virtual R OnMemberRule(MemberRuleSyntax node)
+        => VisitChildren(node);
+
+    public virtual R OnTypeMemberAccess(ExpressionMemberAccessSyntax node)
         => VisitChildren(node);
 
     public virtual R OnVariableDeclarationTyped(VariableDeclarationTypedSyntax node)

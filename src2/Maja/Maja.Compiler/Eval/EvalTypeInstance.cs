@@ -6,14 +6,15 @@ namespace Maja.Compiler.Eval;
 
 internal sealed class EvalTypeInstance
 {
-    public EvalTypeInstance(IrDeclarationType typeDeclaration)
+    public EvalTypeInstance(IrDeclarationType typeDeclaration, Dictionary<string, object> fields)
     {
         TypeDeclaration = typeDeclaration;
+        Fields = fields;
     }
 
     public IrDeclarationType TypeDeclaration { get; }
 
-    public Dictionary<string, object> Fields { get; set; }
+    public Dictionary<string, object> Fields { get; }
 
     public override string ToString()
     {

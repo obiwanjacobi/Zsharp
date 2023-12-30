@@ -2,11 +2,6 @@
 
 public abstract record Symbol
 {
-    protected Symbol()
-    {
-        Name = SymbolName.Empty;
-    }
-
     protected Symbol(string name)
     {
         Name = new SymbolName(name);
@@ -20,4 +15,15 @@ public abstract record Symbol
     public SymbolName Name { get; }
 
     public abstract SymbolKind Kind { get; }
+}
+
+public abstract record SymbolWithType : Symbol
+{
+    protected SymbolWithType(SymbolName name, TypeSymbol type)
+        : base(name)
+    {
+        Type = type;
+    }
+
+    public TypeSymbol Type { get; }
 }

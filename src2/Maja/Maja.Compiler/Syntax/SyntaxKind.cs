@@ -30,6 +30,7 @@ public enum SyntaxKind
     MemberField = 2501,
     MemberEnum = 2502,
     MemberRule = 2503,
+    MemberAccess = 2504,
 
     ExpressionOperator = 3000,
     UnaryExpression = 3001,

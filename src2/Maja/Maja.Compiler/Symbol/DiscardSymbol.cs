@@ -5,7 +5,7 @@ namespace Maja.Compiler.Symbol;
 public sealed record DiscardSymbol : VariableSymbol
 {
     public DiscardSymbol()
-        : base(new SymbolName(SyntaxToken.Discard), null)
+        : base(new SymbolName(SyntaxToken.Discard), TypeSymbol.Unknown)
     { }
 
     public static bool IsDiscard(string variableName)

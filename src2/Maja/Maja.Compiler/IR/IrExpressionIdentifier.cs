@@ -3,7 +3,7 @@ using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
 
-internal class IrExpressionIdentifier : IrExpression
+internal sealed class IrExpressionIdentifier : IrExpression
 {
     public IrExpressionIdentifier(ExpressionIdentifierSyntax syntax, VariableSymbol symbol, TypeSymbol type)
         : base(syntax, type)
@@ -13,6 +13,6 @@ internal class IrExpressionIdentifier : IrExpression
 
     public VariableSymbol Symbol { get; }
 
-    public bool IsDiscard
-        => Symbol.Kind == SymbolKind.Discard;
+    public new ExpressionIdentifierSyntax Syntax
+        => (ExpressionIdentifierSyntax)base.Syntax;
 }
