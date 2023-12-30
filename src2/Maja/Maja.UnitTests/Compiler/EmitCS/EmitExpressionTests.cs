@@ -93,4 +93,51 @@ public class EmitExpressionTests
 
         Emit.AssertBuild(emit);
     }
+
+    [Fact]
+    public void ExpressionMemberAccessField()
+    {
+        const string code =
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
+            "x := MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            Tokens.Indent1 + "fld2 = \"42\"" + Tokens.Eol +
+            "y := x.fld1" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain("y = x.fld1;")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
+    public void ExpressionMemberAccessFunction()
+    {
+        const string code =
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
+            "fn: (): MyType" + Tokens.Eol +
+            Tokens.Indent1 + "ret MyType" + Tokens.Eol +
+            Tokens.Indent2 + "fld1 = 42" + Tokens.Eol +
+            Tokens.Indent2 + "fld2 = \"42\"" + Tokens.Eol +
+            "y := fn().fld1" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain("y = fn().fld1;")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
 }

@@ -296,6 +296,19 @@ internal class CodeBuilder : IrWalker<object?>
         return null;
     }
 
+    public override object? OnExpressionMemberAccess(IrExpressionMemberAccess memberAccess)
+    {
+        var res = OnExpression(memberAccess.Expression);
+
+        foreach (var field in memberAccess.Members)
+        {
+            _writer.Write(".")
+                .Write(field.Name.Value);
+        }
+
+        return res;
+    }
+
     public override object? OnExpressionInvocation(IrExpressionInvocation invocation)
     {
         _writer.WriteSymbol(invocation.Symbol);

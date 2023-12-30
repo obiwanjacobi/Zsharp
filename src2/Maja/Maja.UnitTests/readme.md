@@ -31,7 +31,7 @@ Keeping track of the progress of Maja features.
 ## Module
 
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
-|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
+|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
 | mod    |          | x | x | x |   |   |   | x |   | `mod myModule`  |
 | pub    |          | x | x | x |   |   |   |   |   | `pub mySymbol`  |
 |        | inline   |   |   |   |   |   |   |   |   | `pub myFn(): U8`  |
@@ -43,7 +43,7 @@ Keeping track of the progress of Maja features.
 ## Function
 
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
-|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
+|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
 | decl       |       | x | x | x |   |   | x | x |   | `fn: ()`  |
 |            | param | x | x | x |   |   | x | x |   | `fn: (p: U8)`  |
 |            | type  | x | x | x |   |   |   | x |   | `fn: <T>(p: T)`  |
@@ -56,7 +56,7 @@ Keeping track of the progress of Maja features.
 ## Variable
 
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
-|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
+|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
 | decl       |   | x | x | x |   |   | x | x |   | `var: U8`  |
 | init       |   | x | x | x |   |   | x | x |   | `var: U8 = 42`  |
 | infer      |   | x | x | x |   |   | x | x |   | `var := 42`  |
@@ -64,7 +64,7 @@ Keeping track of the progress of Maja features.
 ## Type
 
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
-|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
+|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
 | struct      |      | x | x | x |   |   | x | x |   | `MyType -> fld: U8`  |
 |             | enum | x | x |   |   |   |   |   |   | `MyType -> fld: U8 -> Opt1, Opt2`  |
 | generics    |      | x |   |   |   |   |   |   |   | `MyType<T> -> fld: T`  |
@@ -77,17 +77,17 @@ Keeping track of the progress of Maja features.
 ## Expressions
 
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
-|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
+|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
 | literal     |   | x | x | x |   |   | x | x |   | `42`, `'hello'` |
 | const fold  |   | - | - | x |   |   | x |   |   | `42 + 101` |
 | precedence  |   | x | x | x |   |   | x |   |   | `(42 + 101) / 2` |
-| member access | variable | x | x | x |   |   |   |   |   | `y.fld` |
-|             | invocation | x | x | x |   |   |   |   |   | `fn().fld` |
+| member access | variable | x | x | x |   |   |   | x |   | `y.fld` |
+|             | invocation | x | x | x |   |   |   | x |   | `fn().fld` |
 
 ## Statements
 
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
-|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
+|-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
 | assignment |      | x | x |   |   |   | x |   |   | `x = 42`  |
 | if      |      | x | x | x |   |   | x |   |   | `if <condition>`  |
 |         | else | x | x | x |   |   | x |   |   | `if <condition> else`  |

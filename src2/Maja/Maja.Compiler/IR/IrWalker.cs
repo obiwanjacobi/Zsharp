@@ -122,6 +122,7 @@ internal abstract class IrWalker<R>
             IrExpressionIdentifier ie => OnExpressionIdentifier(ie),
             IrExpressionInvocation ei => OnExpressionInvocation(ei),
             IrExpressionTypeInitializer eti => OnExpressionTypeInitializer(eti),
+            IrExpressionMemberAccess ema => OnExpressionMemberAccess(ema),
             IrExpressionLiteral le => OnExpressionLiteral(le),
             _ => Default
         };
@@ -158,6 +159,8 @@ internal abstract class IrWalker<R>
         => OnExpression(initializer.Expression);
     public virtual R OnExpressionIdentifier(IrExpressionIdentifier identifier)
         => Default;
+    public virtual R OnExpressionMemberAccess(IrExpressionMemberAccess memberAccess)
+        => OnExpression(memberAccess.Expression);
     public virtual R OnStatements(IEnumerable<IrStatement> statements)
         => statements.Select(statement =>
         {
