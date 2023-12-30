@@ -529,6 +529,18 @@ internal sealed class IrBuilder
             return new IrExpressionMemberAccess(syntax, memberType, identifier, [symbol]);
         }
 
+        // function (root)
+        if (left is IrExpressionInvocation invocation)
+        {
+            if (!CurrentScope.TryLookupMemberType(invocation.TypeSymbol.Name, name, out var memberType))
+            {
+                _diagnostics.FieldNotFoundOnType(syntax.Location, invocation.TypeSymbol.Name.Value, name.Value);
+                memberType = TypeSymbol.Unknown;
+            }
+            var symbol = new FieldSymbol(name, memberType);
+            return new IrExpressionMemberAccess(syntax, memberType, invocation, [symbol]);
+        }
+
         // aggregate
         if (left is IrExpressionMemberAccess memberAccess)
         {
@@ -539,8 +551,7 @@ internal sealed class IrBuilder
                 memberType = TypeSymbol.Unknown;
             }
             var symbol = new FieldSymbol(name, memberType);
-            // TODO: syntax should span all the member access and identifier syntax
-            return new IrExpressionMemberAccess(syntax, memberType, memberAccess.Identifier, [.. memberAccess.Members, symbol]);
+            return new IrExpressionMemberAccess(syntax, memberType, memberAccess.Expression, [.. memberAccess.Members, symbol]);
         }
 
         throw new MajaException($"Unexpected member access left expression type: {left.GetType().FullName}.");

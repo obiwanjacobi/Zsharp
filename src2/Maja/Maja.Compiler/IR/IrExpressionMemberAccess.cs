@@ -7,14 +7,14 @@ namespace Maja.Compiler.IR;
 
 internal sealed class IrExpressionMemberAccess : IrExpression
 {
-    public IrExpressionMemberAccess(ExpressionSyntax syntax, TypeSymbol type, IrExpressionIdentifier identifier, IEnumerable<FieldSymbol> members)
+    public IrExpressionMemberAccess(ExpressionSyntax syntax, TypeSymbol type, IrExpression expression, IEnumerable<FieldSymbol> members)
         : base(syntax, type)
     {
-        Identifier = identifier;
+        Expression = expression;
         Members = members.ToImmutableArray();
     }
 
-    public IrExpressionIdentifier Identifier { get; }
+    public IrExpression Expression { get; }
 
     public ImmutableArray<FieldSymbol> Members { get; }
 }

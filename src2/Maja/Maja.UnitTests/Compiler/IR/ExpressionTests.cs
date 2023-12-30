@@ -2,6 +2,7 @@ using System.Linq;
 using FluentAssertions.Equivalency;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
+using Maja.Compiler.Syntax;
 
 namespace Maja.UnitTests.Compiler.IR;
 
@@ -132,7 +133,7 @@ public class ExpressionTests
     }
 
     [Fact]
-    public void ExpressionMemberAccess()
+    public void ExpressionMemberAccessField()
     {
         const string code =
             "MyType" + Tokens.Eol +
@@ -151,7 +152,32 @@ public class ExpressionTests
         v.Initializer!.TypeSymbol.Name.Value.Should().Be("U8");
         v.TypeSymbol.Name.Value.Should().Be("U8");
         var xs = v.Initializer.As<IrExpressionMemberAccess>();
-        xs.Identifier.Symbol.Name.Value.Should().Be("x");
+        xs.Expression.As<IrExpressionIdentifier>().Symbol.Name.Value.Should().Be("x");
+        xs.Members.Last().Name.Value.Should().Be("fld1");
+    }
+
+    [Fact]
+    public void ExpressionMemberAccessFunction()
+    {
+        const string code =
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
+            "fn: (): MyType" + Tokens.Eol +
+            Tokens.Indent1 + "ret MyType" + Tokens.Eol +
+            Tokens.Indent2 + "fld1 = 42" + Tokens.Eol +
+            Tokens.Indent2 + "fld2 = \"42\"" + Tokens.Eol +
+            "y := fn().fld1" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(3);
+        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        v.Initializer!.TypeSymbol.Name.Value.Should().Be("U8");
+        v.TypeSymbol.Name.Value.Should().Be("U8");
+        var xs = v.Initializer.As<IrExpressionMemberAccess>();
+        xs.Expression.As<IrExpressionInvocation>().Symbol.Name.Value.Should().Be("fn");
         xs.Members.Last().Name.Value.Should().Be("fld1");
     }
 }
