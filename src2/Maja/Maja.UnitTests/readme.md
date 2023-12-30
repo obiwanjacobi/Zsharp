@@ -78,9 +78,11 @@ Keeping track of the progress of Maja features.
 
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
-| literal     |   | x | x | x |   |   | x | x |   | `42`, `'hello'`  |
+| literal     |   | x | x | x |   |   | x | x |   | `42`, `'hello'` |
 | const fold  |   | - | - | x |   |   | x |   |   | `42 + 101` |
-| precedence  |   | x | x | x |   |   | x |   |   | `(42 + 101) / 2`  |
+| precedence  |   | x | x | x |   |   | x |   |   | `(42 + 101) / 2` |
+| member access | variable | x | x | x |   |   |   |   |   | `y.fld` |
+|             | invocation | x | x | x |   |   |   |   |   | `fn().fld` |
 
 ## Statements
 
