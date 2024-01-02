@@ -21,10 +21,7 @@ public class SyntaxTree
         {
             name = sourceName
         };
-        _lexer = new MajaLexer(_inputStream)
-        {
-            WhitespaceMode = Dentlr.WhitespaceMode.Skip
-        };
+        _lexer = new MajaLexer(_inputStream);
         _lexer.InitializeTokens(MajaLexer.Indent, MajaLexer.Dedent, MajaLexer.Eol);
         _tokens = new CommonTokenStream(_lexer);
         _parser = new MajaParser(_tokens);

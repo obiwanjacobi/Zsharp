@@ -22,8 +22,6 @@ public class ErrorSyntaxTests
         var err = fn.ReturnType!.Name.TrailingTokens.Single().As<ErrorToken>();
         err.Text.Should().Contain("missing Identifier");
         err.TokenTypeId.Should().Be(MajaLexer.Identifier);
-
-
     }
 
     [Fact]

@@ -30,10 +30,7 @@ internal static class Compiler
         {
             name = sourceName
         };
-        var lexer = new MajaLexer(stream)
-        {
-            WhitespaceMode = Dentlr.WhitespaceMode.Skip
-        };
+        var lexer = new MajaLexer(stream);
         lexer.InitializeTokens(MajaLexer.Indent, MajaLexer.Dedent, MajaLexer.Eol);
 
         if (throwOnError)

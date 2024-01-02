@@ -107,5 +107,5 @@ number: NumberBin
     | Character;
 
 comment: Sp* Comment Eol;
-newline: Sp* Comment? Eol;
+newline: Sp* Comment? Eol+;
 freeSpace: Sp+ | newline;

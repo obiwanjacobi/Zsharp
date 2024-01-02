@@ -28,6 +28,7 @@ public class FunctionSyntaxTests
         const string code =
             "fn: (p: U8)" + Tokens.Eol +
             Tokens.Indent1 + "ret" + Tokens.Eol
+            + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
