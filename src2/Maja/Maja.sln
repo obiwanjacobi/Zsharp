@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maja.Repl", "Maja.Repl\Maja
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maja", "Maja\Maja.csproj", "{2B077170-2B68-4AD0-BD25-613E00B567F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dentlr", "..\..\..\public\Jacobi\Public\GitHub\Dentlr\Dentlr\Dentlr.csproj", "{FA638EA0-D1BC-4C23-86BA-568BCADFC26B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +39,6 @@ Global
 		{2B077170-2B68-4AD0-BD25-613E00B567F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B077170-2B68-4AD0-BD25-613E00B567F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B077170-2B68-4AD0-BD25-613E00B567F7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA638EA0-D1BC-4C23-86BA-568BCADFC26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA638EA0-D1BC-4C23-86BA-568BCADFC26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA638EA0-D1BC-4C23-86BA-568BCADFC26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA638EA0-D1BC-4C23-86BA-568BCADFC26B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

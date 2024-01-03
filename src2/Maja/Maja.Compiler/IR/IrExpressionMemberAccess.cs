@@ -16,5 +16,17 @@ internal sealed class IrExpressionMemberAccess : IrExpression
 
     public IrExpression Expression { get; }
 
+    /// <summary>
+    /// Expression as identifier.
+    /// </summary>
+    public IrExpressionIdentifier? Identifier
+        => Expression as IrExpressionIdentifier;
+
+    /// <summary>
+    /// Expression as invocation.
+    /// </summary>
+    public IrExpressionInvocation? Invocation
+        => Expression as IrExpressionInvocation;
+
     public ImmutableArray<FieldSymbol> Members { get; }
 }

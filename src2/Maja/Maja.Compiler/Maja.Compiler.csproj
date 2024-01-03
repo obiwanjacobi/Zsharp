@@ -16,11 +16,8 @@
 
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+    <PackageReference Include="Dentlr" Version="2.0.0" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\public\Jacobi\Public\GitHub\Dentlr\Dentlr\Dentlr.csproj" />
   </ItemGroup>
 
 </Project>

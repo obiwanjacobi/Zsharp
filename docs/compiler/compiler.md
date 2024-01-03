@@ -34,3 +34,7 @@
 ---
 
 > Rethink these wild ideas in light of supporting .NET.
+
+> How to parallelize compilation?
+> CodeBlock could be processed asynchronously?
+> Have Linq on AST to ask questions about the structure of the code.

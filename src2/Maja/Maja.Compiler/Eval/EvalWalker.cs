@@ -22,35 +22,6 @@ internal sealed class EvalWalker : IrWalker<object?>
         return new EvaluationStatePopper(this);
     }
 
-    public override object? OnExpressionBinary(IrExpressionBinary expression)
-    {
-        var left = (IrConstant)OnExpression(expression.Left)!;
-        var right = (IrConstant)OnExpression(expression.Right)!;
-
-        var result = IR.Lower.Evaluator.Evaluate(
-            expression.Left.TypeSymbol, left,
-            expression.Operator,
-            expression.Right.TypeSymbol, right);
-
-        return result;
-    }
-
-    public override object? OnExpressionIdentifier(IrExpressionIdentifier identifier)
-    {
-        if (identifier.ConstantValue is not null)
-            return identifier.ConstantValue;
-
-        if (_state.TryLookupVariable(identifier.Symbol.Name.FullName, out var value))
-            return new IrConstant(value);
-
-        return null;
-    }
-
-    public override object? OnExpressionLiteral(IrExpressionLiteral expression)
-    {
-        return expression.ConstantValue;
-    }
-
     public override object? OnDeclarationVariable(IrDeclarationVariable variable)
     {
         var symbol = variable.Symbol;
@@ -122,9 +93,38 @@ internal sealed class EvalWalker : IrWalker<object?>
         return null;
     }
 
+    public override object? OnExpressionBinary(IrExpressionBinary expression)
+    {
+        var left = (IrConstant)OnExpression(expression.Left)!;
+        var right = (IrConstant)OnExpression(expression.Right)!;
+
+        var result = IR.Lower.Evaluator.Evaluate(
+            expression.Left.TypeSymbol, left,
+            expression.Operator,
+            expression.Right.TypeSymbol, right);
+
+        return result;
+    }
+
+    public override object? OnExpressionIdentifier(IrExpressionIdentifier identifier)
+    {
+        if (identifier.ConstantValue is not null)
+            return identifier.ConstantValue;
+
+        if (_state.TryLookupVariable(identifier.Symbol.Name.FullName, out var value))
+            return new IrConstant(value);
+
+        return null;
+    }
+
+    public override object? OnExpressionLiteral(IrExpressionLiteral expression)
+    {
+        return expression.ConstantValue;
+    }
+
     public override object? OnExpressionInvocation(IrExpressionInvocation invocation)
     {
-        if (_state.TryLookupFunction(invocation.Symbol.Name.FullName, out var function))
+        if (_state.TryLookupFunction(invocation.Symbol.Name.Value, out var function))
         {
             using var scope = NewScope(function.Scope);
 
@@ -167,6 +167,47 @@ internal sealed class EvalWalker : IrWalker<object?>
         var instance = new EvalTypeInstance(typeDecl, fields);
 
         return instance;
+    }
+
+    public override object? OnExpressionMemberAccess(IrExpressionMemberAccess memberAccess)
+    {
+        IrConstant? value;
+        if (memberAccess.Identifier is not null)
+        {
+            value = (IrConstant?)OnExpressionIdentifier(memberAccess.Identifier);
+        }
+        else if (memberAccess.Invocation is not null)
+        {
+            value = (IrConstant?)OnExpressionInvocation(memberAccess.Invocation);
+        }
+        else
+        {
+            return IrConstant.Zero;
+        }
+
+        if (value is null) return IrConstant.Zero;
+
+        var type = (EvalTypeInstance)value.Value;
+        foreach (var fld in memberAccess.Members.Select(fld => fld.Name.Value))
+        {
+            if (!type.Fields.TryGetValue(fld, out var val))
+            {
+                _state.Diagnostics.FieldNotFoundOnType(memberAccess.Syntax.Location,
+                    type.TypeDeclaration.Symbol.Name.Value, fld);
+                return IrConstant.Zero;
+            }
+
+            if (val is EvalTypeInstance instance)
+            {
+                type = instance;
+            }
+            else
+            {
+                return (IrConstant)val;
+            }
+        }
+
+        return new IrConstant(type);
     }
 
     public override object? OnStatementAssignment(IrStatementAssignment statement)
@@ -219,7 +260,6 @@ internal sealed class EvalWalker : IrWalker<object?>
 
     private sealed class EvaluationStatePopper(EvalWalker walker) : IDisposable
     {
-
         public void Dispose()
         {
             var state = walker._state;
