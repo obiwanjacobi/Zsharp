@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Maja.Compiler.EmitCS.CSharp;
 using Maja.Compiler.External;
 using Maja.Compiler.IR;
@@ -184,6 +185,46 @@ internal class CodeBuilder : IrWalker<object?>
     }
 
     public override object? OnDeclarationType(IrDeclarationType type)
+    {
+        if (type.Enums.Any())
+        {
+            return CreateEnum(type);
+        }
+        
+        return CreateStruct(type);
+    }
+
+    private object? CreateEnum(IrDeclarationType type)
+    {
+        var enumInfo = CSharpFactory.CreateEnum(type.Symbol.Name.Value);
+        CurrentType.AddEnum(enumInfo);
+
+        foreach (var opt in type.Enums)
+        {
+            var enumOpt = CSharpFactory.CreateEnumOption(opt.Symbol.Name.Value, opt.ValueExpression?.ConstantValue?.ToString());
+            enumInfo.AddOption(enumOpt);
+        }
+
+        _writer.StartEnum(enumInfo)
+            .Tab();
+        foreach (var option in enumInfo.Options)
+        {
+            _writer.Write(option.Name);
+            if (option.Value is not null)
+            {
+                _writer
+                    .Assignment()
+                    .Write(option.Value);
+            }
+            _writer.WriteComma();
+        }
+
+        _writer.Newline()
+            .CloseScope();
+        return enumInfo;
+    }
+
+    private object? CreateStruct(IrDeclarationType type)
     {
         var typeInfo = CSharpFactory.CreateType(type.Symbol.Name.Value);
         CurrentType.AddType(typeInfo);

@@ -69,7 +69,7 @@ Keeping track of the progress of Maja features.
 |             | enum | x | x |   |   |   |   |   |   | `MyType -> fld: U8 -> Opt1, Opt2`  |
 | generics    |      | x |   |   |   |   |   |   |   | `MyType<T> -> fld: T`  |
 | template    |      | x | x |   |   |   |   |   |   | `MyType<#T> -> fld: T`  |
-| enum        |      | x | x | x |   |   |   |   |   | `MyType -> opt1, opt2`  |
+| enum        |      | x | x | x |   |   |   | x |   | `MyType -> opt1, opt2`  |
 | custom      |      |   |   |   |   |   |   |   |   | `MyType: U8`  |
 | rule        |      |   |   |   |   |   |   |   |   | `MyType -> #fld1 > 0`  |
 | struct      | init | x | x | x |   |   | x | x |   | `MyType -> fld = 42`  |
@@ -81,8 +81,8 @@ Keeping track of the progress of Maja features.
 | literal     |   | x | x | x |   |   | x | x |   | `42`, `'hello'` |
 | const fold  |   | - | - | x |   |   | x |   |   | `42 + 101` |
 | precedence  |   | x | x | x |   |   | x |   |   | `(42 + 101) / 2` |
-| member access | variable | x | x | x |   |   |   | x |   | `y.fld` |
-|             | invocation | x | x | x |   |   |   | x |   | `fn().fld` |
+| member access | variable | x | x | x |   |   | x | x |   | `y.fld` |
+|             | invocation | x | x | x |   |   | x | x |   | `fn().fld` |
 
 ## Statements
 

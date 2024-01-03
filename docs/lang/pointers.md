@@ -30,6 +30,7 @@ v = ptr()           // v: U8
 // alternate syntax
 c = ptr.*           // zig
 c = ptr.deref()
+c = << ptr          // operator?
 ```
 
 Assigning a new value to the pointed-to-storage:

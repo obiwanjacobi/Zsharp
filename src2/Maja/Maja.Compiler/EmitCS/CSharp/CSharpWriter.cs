@@ -104,6 +104,26 @@ internal sealed class CSharpWriter
         return this;
     }
 
+    public CSharpWriter StartEnum(Enum @enum)
+    {
+        Tab()
+            .Append(@enum.AccessModifiers.ToCode())
+            .Append(SpaceChar)
+            .Append("enum")
+            .Append(SpaceChar)
+            .Append(@enum.Name);
+        
+        if (@enum.BaseTypeName is not null)
+        {
+            _writer.Append(" : ")
+                .Append(@enum.BaseTypeName);
+        }
+        _writer.AppendLine();
+        OpenScope();
+
+        return this;
+    }
+
     public CSharpWriter WriteVariable(string? netType, string name)
     {
         Tab()
@@ -163,6 +183,9 @@ internal sealed class CSharpWriter
         return this;
     }
 
+    /// <summary>
+    /// <'}\n'
+    /// </summary>
     public CSharpWriter CloseScope()
     {
         Dedent();
@@ -173,6 +196,9 @@ internal sealed class CSharpWriter
         return this;
     }
 
+    /// <summary>
+    /// 'using <name>;'
+    /// </summary>
     public CSharpWriter Using(string usingName)
     {
         Tab()
@@ -183,12 +209,18 @@ internal sealed class CSharpWriter
         return this;
     }
 
+    /// <summary>
+    /// ', '
+    /// </summary>
     public CSharpWriter WriteComma()
     {
         _writer.Append(", ");
         return this;
     }
 
+    /// <summary>
+    /// ';\n'
+    /// </summary>
     public CSharpWriter EndOfLine()
     {
         _writer
@@ -198,12 +230,18 @@ internal sealed class CSharpWriter
         return this;
     }
 
+    /// <summary>
+    /// '\n'
+    /// </summary>
     public CSharpWriter Newline()
     {
         _writer.AppendLine();
         return this;
     }
 
+    /// <summary>
+    /// ' = '
+    /// </summary>
     public CSharpWriter Assignment()
     {
         _writer.Append(" = ");
@@ -213,7 +251,7 @@ internal sealed class CSharpWriter
     public override string ToString()
         => _writer.ToString();
 
-    private StringBuilder Tab()
+    public StringBuilder Tab()
         => _writer.Append(_tab);
 
     private void OpenScope()

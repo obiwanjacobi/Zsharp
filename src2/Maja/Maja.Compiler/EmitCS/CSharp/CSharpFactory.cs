@@ -34,6 +34,16 @@ internal static class CSharpFactory
             MethodModifiers = MethodModifiers.Static
         };
 
+    public static Enum CreateEnum(string name, string? baseTypeName = null)
+        => new(name)
+        {
+            AccessModifiers = AccessModifiers.Private,
+            BaseTypeName = baseTypeName
+        };
+
+    public static EnumOption CreateEnumOption(string name, string? value = null)
+        => new(name, value);
+
     public static Type CreateType(string name, string? baseTypeName = null)
         => new(name, TypeKeyword.Record)
         {

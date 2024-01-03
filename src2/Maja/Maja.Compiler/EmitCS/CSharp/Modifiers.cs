@@ -11,6 +11,7 @@ internal enum AccessModifiers
 
 internal enum TypeKeyword
 {
+    None,
     Class,
     Record,
     Struct,

@@ -10,6 +10,27 @@ public class EmitTypeTests
     }
 
     [Fact]
+    public void EnumDeclaration()
+    {
+        const string code =
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "Option1" + Tokens.Eol +
+            Tokens.Indent1 + "Option2" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" Mytype")
+            .And.Contain("Option1")
+            .And.Contain("Option2")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
     public void TypeDeclaration()
     {
         const string code =
