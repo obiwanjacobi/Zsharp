@@ -28,10 +28,6 @@ internal sealed class EvalWalker : IrWalker<object?>
         var type = variable.TypeSymbol;
         var name = symbol.Name.FullName;
 
-        //var value = variable.Initializer is null
-        //    ? IrConstant.Zero
-        //    : (IrConstant?)OnExpression(variable.Initializer!) ?? IrConstant.Zero;
-
         if (variable.Initializer is not null)
         {
             var exprResult = OnExpression(variable.Initializer);
