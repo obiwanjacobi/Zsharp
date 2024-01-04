@@ -1,3 +1,4 @@
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
 
@@ -88,5 +89,32 @@ public class StatementTests
         statIf.CodeBlock.Statements.Should().HaveCount(1);
         var statElseIf = statIf.ElseIfClause!;
         statElseIf.ElseClause!.CodeBlock.Statements.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void AssignmentDiscardInvocation()
+    {
+        const string code =
+            "fn: (): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret 42" + Tokens.Eol +
+            "_ = fn()" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void AssignmentDiscard_Error()
+    {
+        const string code =
+            "_ = 42" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Diagnostics.Should().HaveCount(1);
+        var err = program.Diagnostics[0];
+        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
+        err.Text.Should().Contain("Invalid Assignment. Only the result of an invocation can be assigned to the discard '_'.");
     }
 }

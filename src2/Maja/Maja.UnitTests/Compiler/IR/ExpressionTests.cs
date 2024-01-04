@@ -1,5 +1,6 @@
 using System.Linq;
 using FluentAssertions.Equivalency;
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;

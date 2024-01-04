@@ -411,6 +411,9 @@ internal sealed class IrBuilder
         if (DiscardSymbol.IsDiscard(syntax.Name.Text))
         {
             variableSymbol = new DiscardSymbol();
+
+            if (expr is not IrExpressionInvocation)
+                _diagnostics.DiscardOnlyInvocation(expr.Syntax.Location);
         }
         else
         {
