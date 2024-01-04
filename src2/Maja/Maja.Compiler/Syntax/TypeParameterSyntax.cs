@@ -101,4 +101,3 @@ public sealed class TypeParameterValueSyntax : TypeParameterSyntax, ICreateSynta
             TrailingTokens = trailingTokens
         };
 }
-

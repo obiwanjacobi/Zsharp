@@ -3,6 +3,19 @@ namespace Maja.UnitTests.Compiler.Syntax;
 public class BasicSyntaxTests
 {
     [Fact]
+    public void FunctionDeclaration_Comments()
+    {
+        const string code =
+            "fn1: ()    #_ Comment1" + Tokens.Eol +
+            Tokens.Indent1 + "## Warning" + Tokens.Eol +
+            Tokens.Indent1 + "ret       #_ nothing" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
     public void FunctionDeclaration_ExtraNewLines()
     {
         const string code =
@@ -19,11 +32,41 @@ public class BasicSyntaxTests
     }
 
     [Fact]
+    public void FunctionDeclaration_ParamsIndent_Comments()
+    {
+        const string code =
+            "fn1: (   #_ comment1" + Tokens.Eol +
+            Tokens.Indent1 + "p: U8 #_ comment2" + Tokens.Eol +
+            ")    #_ Comment3" + Tokens.Eol +
+            Tokens.Indent1 + "## Warning" + Tokens.Eol +
+            Tokens.Indent1 + "ret       #_ nothing" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void TypeDeclaration_Comments()
+    {
+        const string code =
+            "MyType  #_ Comment1" + Tokens.Eol +
+            Tokens.Indent1 + "## Warning" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8  #_ 1st" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
     public void TypeDeclaration_ExtraNewLines()
     {
         const string code =
             "MyType" + Tokens.Eol +
             Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            Tokens.Eol +
             Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
             Tokens.Eol +
             Tokens.Eol +
@@ -33,9 +76,20 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
-
     }
-    
+
+    [Fact]
+    public void VariableDeclaration_Comments()
+    {
+        const string code =
+            "#_ comment1" + Tokens.Eol +
+            "x := 42        ## warning" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Should().NotBeNull();
+    }
+
     [Fact]
     public void VariableDeclaration_ExtraNewLines()
     {

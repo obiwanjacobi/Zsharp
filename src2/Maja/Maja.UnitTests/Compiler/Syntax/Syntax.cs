@@ -13,9 +13,9 @@ internal static class Syntax
         if (throwOnError &&
             (tree.Root.HasError || tree.Diagnostics.Any()))
         {
-            var errTxt = string.Join(Environment.NewLine,
+            var errTxt = String.Join(Environment.NewLine,
                 tree.Root.GetErrors().Select(err => err.Text)
-                    .Concat(tree.Diagnostics.Select(diag => diag.Text))
+                    .Concat(tree.Diagnostics.Select(diag => $" - {diag.Text}"))
             );
             throw new Exception(errTxt);
         }

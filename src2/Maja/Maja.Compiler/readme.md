@@ -16,7 +16,8 @@
 - [ ] local (nested) functions
 - [ ] Function Type (TypeFunction)
 - [ ] Syntax: fix required eol at the end of code.
-- [ ] Emit: output System.CodeDom.Compiler.GeneratedCode and Maja.AliasAttribute
+- [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
+- [ ] Generate compiler warning for `##` comments
 
 ### Done
 

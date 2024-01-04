@@ -31,7 +31,7 @@ argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Sp Eq Sp)? expression;
 
 declarationType: nameIdentifier typeParameterList? (Sp? Colon Sp type)? newline Indent declarationTypeMemberList Dedent;
-declarationTypeMemberList: (declarationTypeMemberListEnum | declarationTypeMemberListField | declarationTypeMemberListRule)+;
+declarationTypeMemberList: (declarationTypeMemberListEnum | declarationTypeMemberListField | declarationTypeMemberListRule | newline)+;
 declarationTypeMemberListEnum: (memberEnumValue newline)+ | ((memberEnum (Comma freeSpace memberEnum)*)+ newline);
 declarationTypeMemberListField: (memberField newline)+;
 declarationTypeMemberListRule: (memberRule newline)+;
