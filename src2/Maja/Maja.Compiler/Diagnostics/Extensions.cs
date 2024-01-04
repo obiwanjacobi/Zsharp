@@ -88,6 +88,9 @@ internal static class IrDiagnostics
     public static void TypeNotFound(this DiagnosticList diagnostics, SyntaxLocation location, string typeName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Type reference '{typeName}' cannot be resolved. Type not found.");
 
+    public static void TypeMismatch(this DiagnosticList diagnostics, SyntaxLocation location, string sourceType, string targetType)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Cannot implicitly use Type '{sourceType}' as Type '{targetType}'.");
+
     public static void FieldNotFoundOnType(this DiagnosticList diagnostics, SyntaxLocation location, string typeName, string fieldName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Field reference '{fieldName}' cannot be resolved. Type {typeName} does not define it.");
 

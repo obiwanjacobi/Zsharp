@@ -47,8 +47,11 @@ internal sealed class IrArgumentMatcher
             }
             else if (info.Argument.Expression.TypeSymbol.Name != info.Parameter.Type.Name)
             {
-                // rewrite argument expression with parameter type
-                args.Add(ReWriterArgumentExpression(info.Parameter.Type, info.Argument));
+                _diagnostics.TypeMismatch(info.Argument.Syntax.Location,
+                    info.Argument.Expression.TypeSymbol.Name.FullName,
+                    info.Parameter.Type.Name.FullName);
+
+                args.Add(info.Argument);
             }
             else
             {
@@ -62,6 +65,10 @@ internal sealed class IrArgumentMatcher
         {
             var rewriter = new IrExpressionTypeRewriter(type);
             var expr = rewriter.RewriteExpression(argument.Expression);
+
+            if (expr == argument.Expression)
+                return argument;
+
             return new IrArgument(argument.Syntax, expr, argument.Symbol);
         }
     }

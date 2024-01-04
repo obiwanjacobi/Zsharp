@@ -18,6 +18,8 @@
 - [ ] Syntax: fix required eol at the end of code.
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 - [ ] Generate compiler warning for `##` comments
+- [ ] ExpressionInvocation: Check argument types against function parameter types
+- [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 
 ### Done
 

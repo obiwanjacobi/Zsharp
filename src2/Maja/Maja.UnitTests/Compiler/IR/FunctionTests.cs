@@ -229,4 +229,20 @@ public class FunctionTests
         arg.Expression.ConstantValue.Should().NotBeNull();
         arg.Expression.ConstantValue!.Value.Should().Be(42);
     }
+
+    [Fact]
+    public void MatchArgumentType_Error()
+    {
+        const string code =
+            "fn: (p: U8)" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol +
+            "fn(\"42\")" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Diagnostics.Should().HaveCount(1);
+        var err = program.Diagnostics[0];
+        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
+        err.Text.Should().Contain("Cannot implicitly use Type 'Str' as Type 'U8'.");
+    }
 }
