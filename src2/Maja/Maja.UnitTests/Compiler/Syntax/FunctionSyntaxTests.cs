@@ -97,6 +97,6 @@ public class FunctionSyntaxTests
         fn.Identifier.Text.Should().Be("fn");
         fn.TypeParameters.Should().HaveCount(1);
         var param = fn.TypeParameters.First().As<TypeParameterSyntax>();
-        param.Name.Text.Should().Be("T");
+        param.Type.Text.Should().Be("T");
     }
 }

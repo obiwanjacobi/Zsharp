@@ -264,8 +264,8 @@ internal sealed class IrBuilder
 
     private IrTypeParameterGeneric TypeParameterGeneric(TypeParameterGenericSyntax syntax)
     {
-        var symbol = new TypeParameterSymbol(syntax.Name.Text);
-        var type = Type(syntax.Type);
+        var symbol = new TypeParameterSymbol(syntax.Type.Text);
+        var type = Type(syntax.DefaultType);
 
         return new(syntax, type, symbol);
     }

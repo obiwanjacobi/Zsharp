@@ -1,14 +1,14 @@
 parser grammar MajaParser;
 options { tokenVocab=MajaLexer; }
 
-compilationUnit: directiveMod? (directiveUse | directivePub | newline)* (declarationMembers | statement | newline)*;
+compilationUnit: directiveMod? (directiveUse | directivePub | newline)* (declaration | statement | newline)*;
 
 directiveMod: Mod freeSpace nameQualified;
 directivePub: Pub freeSpace nameQualifiedList;
 directiveUse: Use freeSpace nameQualifiedList;
 
-codeBlock: (statement | declarationMembers | newline)+;
-declarationMembers: declarationFunction | declarationType | declarationVariable;
+codeBlock: (statement | declaration | newline)+;
+declaration: declarationFunction | declarationType | declarationVariable;
 
 statement: statementFlow | statementAssignment | statementExpression;
 statementFlow: statementRet | statementIf;
@@ -19,18 +19,18 @@ statementRet: Ret (Sp expression)?;
 statementAssignment: nameIdentifier Sp Eq Sp expression;
 statementExpression: expression;
 
-declarationFunction: nameIdentifier Colon freeSpace typeParameterList? parameterList (Colon Sp type)? newline Indent codeBlock Dedent;
+declarationFunction: nameIdentifier Sp? Colon freeSpace typeParameterList? parameterList (Sp? Colon Sp type)? newline Indent codeBlock Dedent;
 declarationFunctionLocal: Indent declarationFunction Dedent;
 parameterList: ParenOpen (parameterListComma | newline parameterListIndent)? ParenClose;
 parameterListComma: parameter (Comma Sp parameter)*;
 parameterListIndent: Indent (comment* parameter newline)+ Dedent;
-parameter: nameIdentifier Colon Sp type (Eq expression)?;
+parameter: nameIdentifier Sp? Colon Sp type (Sp Eq Sp expression)?;
 argumentList: ParenOpen newline? (argumentListComma | argumentListIndent)? ParenClose;
 argumentListComma: argument (Comma Sp argument)*;
 argumentListIndent: Indent (argument newline)+ Dedent;
-argument: (nameIdentifier Eq)? expression;
+argument: (nameIdentifier Sp Eq Sp)? expression;
 
-declarationType: nameIdentifier typeParameterList? (Colon Sp type)? newline Indent declarationTypeMemberList Dedent;
+declarationType: nameIdentifier typeParameterList? (Sp? Colon Sp type)? newline Indent declarationTypeMemberList Dedent;
 declarationTypeMemberList: (declarationTypeMemberListEnum | declarationTypeMemberListField | declarationTypeMemberListRule)+;
 declarationTypeMemberListEnum: (memberEnumValue newline)+ | ((memberEnum (Comma freeSpace memberEnum)*)+ newline);
 declarationTypeMemberListField: (memberField newline)+;
@@ -40,10 +40,10 @@ typeParameterList: AngleOpen (typeParameterListComma | newline typeParameterList
 typeParameterListComma: typeParameter (Comma Sp typeParameter)*;
 typeParameterListIndent: Indent (comment* typeParameter newline)+ Dedent;
 typeParameter: typeParameterGeneric | typeParameterTemplate | typeParameterValue;
-typeParameterGeneric: nameIdentifier (Colon Sp? type)?;
-typeParameterTemplate: Hash nameIdentifier (Colon Sp? type)?;
-typeParameterValue: nameIdentifier Colon Sp type (Eq expression)?;
-typeArgumentList: AngleOpen (typeArgumentListComma | typeArgumentListIndent) AngleClose;
+typeParameterGeneric: type (Sp Eq Sp type)?;
+typeParameterTemplate: Hash type (Sp Eq Sp type)?;
+typeParameterValue: nameIdentifier Sp? Colon Sp type (Sp Eq Sp expression)?;
+typeArgumentList: AngleOpen (typeArgumentListComma | newline typeArgumentListIndent) AngleClose;
 typeArgumentListComma: typeArgument (Comma Sp typeArgument)*;
 typeArgumentListIndent: Indent (typeArgument newline)+ Dedent;
 typeArgument: type | expression;
@@ -54,12 +54,12 @@ typeInitializerField: nameIdentifier Sp Eq Sp expression;
 
 memberEnumValue: nameIdentifier (Sp Eq Sp expressionConstant)?;
 memberEnum: nameIdentifier;
-memberField: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
-memberRule: Hash nameIdentifier Sp expressionRule;
+memberField: nameIdentifier Sp? Colon Sp type (Sp Eq Sp expression)?;
+memberRule: Hash expressionRule;
 
 declarationVariable: declarationVariableTyped | declarationVariableInferred;
-declarationVariableTyped: nameIdentifier Colon Sp type (Sp Eq Sp expression)?;
-declarationVariableInferred: nameIdentifier Sp Colon Eq Sp expression;
+declarationVariableTyped: nameIdentifier Sp? Colon Sp type (Sp? Eq Sp expression)?;
+declarationVariableInferred: nameIdentifier Sp? Colon Eq Sp expression;
 variableAssignment: nameIdentifier Sp Eq Sp expression;
 
 expression:
@@ -73,7 +73,7 @@ expression:
 	| expression Dot nameIdentifier                         #expressionMemberAccess
     ;
 expressionConstant: expressionLiteral | expressionLiteralBool;
-expressionRule: Hash Identifier expression;
+expressionRule: expression;
 
 expressionOperatorBinary: expressionOperatorArithmetic | expressionOperatorLogic | expressionOperatorComparison | expressionOperatorBits;
 expressionOperatorUnaryPrefix: expressionOperatorArithmeticUnaryPrefix | expressionOperatorLogicUnaryPrefix | expressionOperatorBitsUnaryPrefix;

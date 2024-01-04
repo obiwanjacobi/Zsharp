@@ -6,6 +6,17 @@
 - [ ] Discard assignment only for invocation results.
 - [ ] StatementExpression only for invocation (other?).
 - [ ] Syntax parsing does not report invalid trailing tokens.
+- [ ] Export from module.
+- [ ] Type base type (enum/struct/value)
+- [ ] Value (custom) Types (/w rules)
+- [ ] Resolve operators to functions
+- [ ] Loop statement
+- [ ] Test whitespace and comments in various syntax
+- [ ] Assignment to member access expression (l-value) (now nameIdentifier)
+- [ ] local (nested) functions
+- [ ] Function Type (TypeFunction)
+- [ ] Syntax: fix required eol at the end of code.
+- [ ] Emit: output System.CodeDom.Compiler.GeneratedCode and Maja.AliasAttribute
 
 ### Done
 

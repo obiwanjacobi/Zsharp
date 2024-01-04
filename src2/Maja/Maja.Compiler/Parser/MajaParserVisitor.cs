@@ -63,11 +63,11 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitCodeBlock([NotNull] MajaParser.CodeBlockContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.declarationMembers"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitDeclarationMembers([NotNull] MajaParser.DeclarationMembersContext context);
+	Result VisitDeclaration([NotNull] MajaParser.DeclarationContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.statement"/>.
 	/// </summary>

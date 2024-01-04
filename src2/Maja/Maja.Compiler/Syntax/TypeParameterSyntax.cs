@@ -14,14 +14,14 @@ public abstract class TypeParameterSyntax : SyntaxNode
     /// <summary>
     /// The name of the type parameter.
     /// </summary>
-    public NameSyntax Name
-        => ChildNodes.OfType<NameSyntax>().Single();
+    public TypeSyntax Type
+        => ChildNodes.OfType<TypeSyntax>().First();
 
     /// <summary>
-    /// The type of the parameter, if specified.
+    /// The default type of the parameter, if specified.
     /// </summary>
-    public TypeSyntax? Type
-        => ChildNodes.OfType<TypeSyntax>().SingleOrDefault();
+    public TypeSyntax? DefaultType
+        => ChildNodes.OfType<TypeSyntax>().Skip(1).SingleOrDefault();
 }
 
 /// <summary>
