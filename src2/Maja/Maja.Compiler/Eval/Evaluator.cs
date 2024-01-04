@@ -55,7 +55,7 @@ public sealed class Evaluator
             }
         }
 
-        return new EvaluatorResult(syntaxTree, diagnostics, result);
+        return new EvaluatorResult(_state, syntaxTree, diagnostics, result);
     }
 
     public void Reset()
