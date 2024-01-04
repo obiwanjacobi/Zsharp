@@ -102,6 +102,11 @@ public class StatementTests
 
         var program = Ir.Build(code);
         program.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(1);
+        program.Root.Statements.Should().HaveCount(1);
+        var stat = program.Root.Statements[0].As<IrStatementAssignment>();
+        stat.Symbol.Should().BeOfType<DiscardSymbol>();
+        stat.Expression.As<IrExpressionInvocation>().Symbol.Name.Value.Should().Be("fn");
     }
 
     [Fact]

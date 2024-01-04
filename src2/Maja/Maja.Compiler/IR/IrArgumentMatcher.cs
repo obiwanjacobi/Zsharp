@@ -43,15 +43,16 @@ internal sealed class IrArgumentMatcher
                     type = info.TypeArgument.Type.Symbol;
 
                 // rewrite argument expression with type-argument type
-                args.Add(ReWriterArgumentExpression(type, info.Argument));
+                args.Add(ReWriteArgumentExpression(type, info.Argument));
             }
             else if (info.Argument.Expression.TypeSymbol.Name != info.Parameter.Type.Name)
             {
-                _diagnostics.TypeMismatch(info.Argument.Syntax.Location,
-                    info.Argument.Expression.TypeSymbol.Name.FullName,
-                    info.Parameter.Type.Name.FullName);
+                if (!TryReWriteArgumentExpression(info.Parameter.Type, info.Argument, out var newArg))
+                    _diagnostics.TypeMismatch(info.Argument.Syntax.Location,
+                        info.Argument.Expression.TypeSymbol.Name.FullName,
+                        info.Parameter.Type.Name.FullName);
 
-                args.Add(info.Argument);
+                args.Add(newArg);
             }
             else
             {
@@ -61,7 +62,7 @@ internal sealed class IrArgumentMatcher
 
         return args;
 
-        static IrArgument ReWriterArgumentExpression(TypeSymbol type, IrArgument argument)
+        static IrArgument ReWriteArgumentExpression(TypeSymbol type, IrArgument argument)
         {
             var rewriter = new IrExpressionTypeRewriter(type);
             var expr = rewriter.RewriteExpression(argument.Expression);
@@ -70,6 +71,12 @@ internal sealed class IrArgumentMatcher
                 return argument;
 
             return new IrArgument(argument.Syntax, expr, argument.Symbol);
+        }
+
+        static bool TryReWriteArgumentExpression(TypeSymbol type, IrArgument argument, out IrArgument rewrittenArgument)
+        {
+            rewrittenArgument = ReWriteArgumentExpression(type, argument);
+            return rewrittenArgument != argument;
         }
     }
 

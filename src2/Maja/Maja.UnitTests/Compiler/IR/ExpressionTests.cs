@@ -68,23 +68,6 @@ public class ExpressionTests
     }
 
     [Fact]
-    public void DiscardAssignment()
-    {
-        const string code =
-            "fn: ()" + Tokens.Eol +
-            Tokens.Indent1 + "_ = 42" + Tokens.Eol
-            ;
-
-        var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        var stat = program.Root.Declarations[0].As<IrDeclarationFunction>()
-            .Body.Statements[0].As<IrStatementAssignment>();
-        stat.Symbol.Should().BeOfType<DiscardSymbol>();
-        stat.Expression.As<IrExpressionLiteral>().ConstantValue!.Value.Should().Be(42);
-    }
-
-    [Fact]
     public void ExpressionInvocationTypeBinaryOperator()
     {
         const string code =
