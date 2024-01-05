@@ -8,7 +8,7 @@ internal class MajaController : ReplController
     private const char CommandChar = ';';
     private readonly Evaluator _evaluator = new();
 
-    // overrides Repl virtuals to implement specifics
+    // overrides ReplController virtuals to implement specifics
 
     protected override bool HandleEnter(ReplDocument document, ReplView view)
     {
@@ -29,23 +29,30 @@ internal class MajaController : ReplController
         {
             switch (line[1..])
             {
-                case "cls":
+                case "help":
+                    PrintHelpMessage();
+                    view.SkipLines(8);
                     document.Clear();
-                    view.Reset();
+                    break;
+                case "cls":
                     Console.Clear();
+                    view.Reset();
+                    document.Clear();
                     break;
                 case "rst":
                     _evaluator.Reset();
+                    Console.Clear();
+                    view.Reset();
+                    document.Clear();
                     break;
                 default:
                     break;
             }
+            
             return true;
         }
-        else
-        {
-            return base.HandleEnter(document, view);
-        }
+
+        return base.HandleEnter(document, view);
     }
 
     protected override bool ProcessInput(string inputText)
@@ -75,5 +82,21 @@ internal class MajaController : ReplController
     protected override void DisplayTextLine(ReplDocument document, ReplView view, string line)
     {
         Console.Write(line);
+    }
+
+    public static void PrintHelpMessage()
+    {
+        Console.ForegroundColor = ConsoleColor.DarkGreen;
+        
+        Console.WriteLine();
+        Console.WriteLine("Maja Read-Evaluate-Print Loop (REPL) version 1.0-alpha");
+        Console.WriteLine("Write code and end with a ';' to execute.");
+        Console.WriteLine("Repl commands:");
+        Console.WriteLine("    ;help - prints this message.");
+        Console.WriteLine("    ;cls  - clears the input and the screen.");
+        Console.WriteLine("    ;rst  - resets the Repl state.");
+        Console.WriteLine();
+
+        Console.ResetColor();
     }
 }

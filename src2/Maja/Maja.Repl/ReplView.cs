@@ -118,4 +118,12 @@ internal sealed class ReplView
         _currentCharIndex = 0;
         SetCursorPos();
     }
+
+    public void SkipLines(int lines)
+    {
+        _cursorTop += lines;
+        _currentCharIndex = 0;
+        _currentLineIndex = 0;
+        SetCursorPos();
+    }
 }
