@@ -26,4 +26,20 @@ public sealed class SyntaxNodeOrTokenList : ReadOnlyCollection<SyntaxNodeOrToken
         => nodeOrTokenList is not null && nodeOrTokenList.Count > 0
             ? new SyntaxNodeOrTokenList(nodeOrTokenList)
             : new SyntaxNodeOrTokenList();
+
+    /// <summary>
+    /// Returns SyntaxNodes of the type T.
+    /// </summary>
+    /// <typeparam name="T">A SyntaxNode derived type.</typeparam>
+    /// <returns>Never returns null.</returns>
+    public IEnumerable<T> NodesOfType<T>() where T : SyntaxNode
+        => this.Where(ton => ton.Node is T).Select(ton => (T)ton.Node!);
+
+    /// <summary>
+    /// Returns SyntaxTokens of the type T.
+    /// </summary>
+    /// <typeparam name="T">A SyntaxToken derived type.</typeparam>
+    /// <returns>Never returns null.</returns>
+    public IEnumerable<T> TokensOfType<T>() where T : SyntaxToken
+        => this.Where(ton => ton.Token is T).Select(ton => (T)ton.Token!);
 }

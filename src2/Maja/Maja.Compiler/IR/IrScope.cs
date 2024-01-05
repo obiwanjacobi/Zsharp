@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -40,6 +41,14 @@ internal abstract class IrScope
 
     public bool TryDeclareFunction(FunctionSymbol symbol)
         => SymbolTable.TryDeclareSymbol(ref _symbols, symbol);
+
+    public virtual bool IsExport(SymbolName name)
+    {
+        if (Parent is not null)
+            return Parent.IsExport(name);
+
+        return false;
+    }
 
     public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
         => TryLookupSymbol<Symbol.Symbol>(new SymbolName(name), out symbol);
@@ -171,6 +180,15 @@ internal sealed class IrModuleScope : IrScope
     { }
 
     public override string FullName => Name;
+
+    private List<SymbolName>? _exports;
+    internal void SetExports(IEnumerable<IrExport> exports)
+    {
+        _exports = exports.Select(exp => exp.Name).ToList();
+    }
+
+    public override bool IsExport(SymbolName name)
+        => _exports?.Exists(exp => exp.MatchesWith(name) == 0) == true;
 
     public override bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
         where T : class //Symbol.Symbol

@@ -58,7 +58,7 @@ internal class CodeBuilder : IrWalker<object?>
 
         var ns = _scopes.Peek().Namespace!;
         var mc = ns.GetModuleClass();
-        if (compilation.Exports.Any())
+        if (compilation.Declarations.Any(decl => decl.Locality == IrLocality.Public))
             mc.AccessModifiers = AccessModifiers.Public;
 
         _writer.StartType(mc);
@@ -93,8 +93,11 @@ internal class CodeBuilder : IrWalker<object?>
     public override object? OnDeclarationFunction(IrDeclarationFunction function)
     {
         var netType = MajaTypeMapper.MapToDotNetType(function.ReturnType.Symbol);
-        var method = CSharpFactory.CreateMethod(
-            function.Symbol.Name.Value, netType);
+        var method = CSharpFactory.CreateMethod(function.Symbol.Name.Value, netType);
+
+        if (function.Locality == IrLocality.Public)
+            method.AccessModifiers = AccessModifiers.Public;
+
         CurrentType.AddMethod(method);
         _scopes.Push(new Scope(method));
 

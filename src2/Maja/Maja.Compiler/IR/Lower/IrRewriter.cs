@@ -97,7 +97,7 @@ internal abstract class IrRewriter
             body == function.Body)
             return function;
 
-        return new IrDeclarationFunction(function.Syntax, function.Symbol, typeParameters, parameters, retType, function.Scope, body);
+        return new IrDeclarationFunction(function.Syntax, function.Symbol, typeParameters, parameters, retType, function.Scope, body, function.Locality);
     }
 
     protected virtual ImmutableArray<IrParameter> RewriteParameters(ImmutableArray<IrParameter> parameters)
@@ -150,7 +150,7 @@ internal abstract class IrRewriter
             rules == type.Rules)
             return type;
 
-        return new IrDeclarationType(type.Syntax, type.Symbol, enums, fields, rules);
+        return new IrDeclarationType(type.Syntax, type.Symbol, enums, fields, rules, type.Locality);
     }
 
     protected virtual ImmutableArray<IrTypeMemberEnum> RewriteEnums(ImmutableArray<IrTypeMemberEnum> memberEnums)

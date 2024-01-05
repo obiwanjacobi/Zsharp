@@ -159,4 +159,23 @@ public class EmitFunctionTests
 
         Emit.AssertBuild(emit);
     }
+
+    [Fact]
+    public void FunctionPublicExport()
+    {
+        const string code =
+            "pub fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain("public static class Defmod")
+            .And.Contain("public static void fn()")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
 }

@@ -7,17 +7,21 @@ namespace Maja.Compiler.IR;
 
 internal abstract class IrDeclaration : IrNode
 {
-    protected IrDeclaration(SyntaxNode syntax)
+    protected IrDeclaration(SyntaxNode syntax, IrLocality locality)
         : base(syntax)
-    { }
+    {
+        Locality = locality;
+    }
+
+    public IrLocality Locality { get; }
 }
 
 internal sealed class IrDeclarationFunction : IrDeclaration
 {
     public IrDeclarationFunction(FunctionDeclarationSyntax syntax, FunctionSymbol symbol,
         IEnumerable<IrTypeParameter> typeParameters, IEnumerable<IrParameter> parameters, IrType returnType,
-        IrFunctionScope scope, IrCodeBlock codeBlock)
-        : base(syntax)
+        IrFunctionScope scope, IrCodeBlock codeBlock, IrLocality locality)
+        : base(syntax, locality)
     {
         TypeParameters = typeParameters.ToImmutableArray();
         Parameters = parameters.ToImmutableArray();
@@ -41,7 +45,7 @@ internal sealed class IrDeclarationFunction : IrDeclaration
 internal sealed class IrDeclarationVariable : IrDeclaration
 {
     public IrDeclarationVariable(VariableDeclarationSyntax syntax, VariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
-        : base(syntax)
+        : base(syntax, IrLocality.None)
     {
         Symbol = symbol;
         TypeSymbol = type;
@@ -59,8 +63,8 @@ internal sealed class IrDeclarationVariable : IrDeclaration
 internal sealed class IrDeclarationType : IrDeclaration
 {
     public IrDeclarationType(TypeDeclarationSyntax syntax, TypeSymbol symbol,
-        IEnumerable<IrTypeMemberEnum> enums, IEnumerable<IrTypeMemberField> fields, IEnumerable<IrTypeMemberRule> rules)
-        : base(syntax)
+        IEnumerable<IrTypeMemberEnum> enums, IEnumerable<IrTypeMemberField> fields, IEnumerable<IrTypeMemberRule> rules, IrLocality locality)
+        : base(syntax, locality)
     {
         Symbol = symbol;
         Enums = enums.ToImmutableArray();

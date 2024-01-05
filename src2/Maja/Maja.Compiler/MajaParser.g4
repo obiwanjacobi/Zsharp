@@ -8,7 +8,8 @@ directivePub: Pub freeSpace nameQualifiedList;
 directiveUse: Use freeSpace nameQualifiedList;
 
 codeBlock: (statement | declaration | newline)+;
-declaration: declarationFunction | declarationType | declarationVariable;
+declaration: declarationPub | declarationVariable;
+declarationPub: (Pub Sp)? (declarationFunction | declarationType);
 
 statement: statementFlow | statementAssignment | statementExpression;
 statementFlow: statementRet | statementIf;

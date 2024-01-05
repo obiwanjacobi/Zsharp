@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
-using System.Xml.Linq;
+using Maja.Compiler.Compilation;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.External;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
-using Microsoft.VisualBasic;
 
 namespace Maja.Compiler.IR;
 
 /// <summary>
 /// Builds the intermediate representation tree from the syntax tree(s).
 /// </summary>
+/// <remarks>Single threaded. Do not call the same instance from multiple threads.</remarks>
 internal sealed class IrBuilder
 {
     private readonly DiagnosticList _diagnostics = new();
@@ -43,6 +41,9 @@ internal sealed class IrBuilder
     private IrScope PopScope() => _scopes.Pop();
     private IrScope CurrentScope => _scopes.Peek();
 
+    private T GetScopeOf<T>() where T : IrScope
+        => _scopes.OfType<T>().Single();
+
     public static IrProgram Program(SyntaxTree syntaxTree, IExternalModuleLoader moduleLoader, IrScope? parentScope = null)
     {
         if (syntaxTree.Diagnostics.Any())
@@ -54,6 +55,7 @@ internal sealed class IrBuilder
 
         var compilation = builder.Compilation(syntaxTree.Root);
         var scope = (IrModuleScope)builder.PopScope();
+
         return new IrProgram(syntaxTree.Root, scope, module, compilation, builder.Diagnostics);
     }
 
@@ -91,6 +93,8 @@ internal sealed class IrBuilder
     {
         var exports = PublicExports(root.PublicExports);
         var imports = UseImports(root.UseImports);
+
+        GetScopeOf<IrModuleScope>().SetExports(exports);
         ProcessImports(imports);
 
         var members = Declarations(root.Members);
@@ -167,7 +171,12 @@ internal sealed class IrBuilder
             _diagnostics.TypeAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
-        return new IrDeclarationType(syntax, symbol, enums, fields, rules);
+        // TODO: inline declared types
+        var locality = CurrentScope.IsExport(name) || syntax.IsPublic
+            ? IrLocality.Public
+            : IrLocality.None;
+         
+        return new IrDeclarationType(syntax, symbol, enums, fields, rules, locality);
     }
 
     private IEnumerable<IrTypeMemberEnum> TypeMemberEnums(TypeMemberListSyntax<MemberEnumSyntax>? syntax)
@@ -371,7 +380,13 @@ internal sealed class IrBuilder
                 _diagnostics.VoidFunctionCannotReturnValue(ret.Expression!.Syntax.Location, name.FullName);
             }
         }
-        return new IrDeclarationFunction(syntax, symbol, typeParameters, parameters, returnType, functionScope, block);
+
+        // TODO: Local function
+        var locality = CurrentScope.IsExport(name) || syntax.IsPublic
+            ? IrLocality.Public
+            : IrLocality.None;
+
+        return new IrDeclarationFunction(syntax, symbol, typeParameters, parameters, returnType, functionScope, block, locality);
     }
 
     private IrCodeBlock CodeBlock(CodeBlockSyntax syntax)
@@ -778,8 +793,10 @@ internal sealed class IrBuilder
     {
         var exports = new List<IrExport>();
         foreach (var qn in syntax.QualifiedNames)
-            exports.Add(new IrExport(qn));
-
+        {
+            var name = new SymbolName(qn.Text);
+            exports.Add(new IrExport(qn, name));
+        }
         return exports;
     }
 }

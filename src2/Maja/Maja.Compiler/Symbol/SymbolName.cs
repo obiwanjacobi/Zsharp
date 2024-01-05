@@ -9,9 +9,17 @@ namespace Maja.Compiler.Symbol;
 [DebuggerDisplay("{DebuggerDisplay()}")]
 public sealed record SymbolName
 {
-    public SymbolName(string name)
-        : this(Enumerable.Empty<string>(), name)
-    { }
+    public SymbolName(string fullName)
+    {
+        var parts = fullName.Split(SyntaxToken.Separator);
+        
+        var name = parts[parts.Length - 1];
+        var nsParts = parts[..^1];
+
+        Namespace = nsParts.Any() ? new SymbolNamespace(nsParts) : SymbolNamespace.Empty;
+        Value = ToCanonical(name);
+        OriginalName = name;
+    }
 
     public SymbolName(string ns, string name)
     {

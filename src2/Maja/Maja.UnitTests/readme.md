@@ -33,10 +33,9 @@ Keeping track of the progress of Maja features.
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
 | mod    |          | x | x | x |   |   |   | x |   | `mod myModule`  |
-| pub    |          | x | x | x |   |   |   |   |   | `pub mySymbol`  |
-|        | inline   |   |   |   |   |   |   |   |   | `pub myFn(): U8`  |
-|        | type     |   |   |   |   |   |   |   |   | `pub myType`  |
-|        | variable |   |   |   |   |   |   |   |   | `pub myImmVar`  |
+| pub    |          | x | x | x |   |   |   | x |   | `pub mySymbol`  |
+|        | inline   |   |   |   |   |   |   | x |   | `pub myFn(): U8`  |
+|        | type     |   |   |   |   |   |   | x |   | `pub myType`  |
 | use    | assembly | x | x | x |   |   |   |   |   | `use assembly.class`  |
 |        | module   | x | x |   |   |   |   |   |   | `use module`  |
 

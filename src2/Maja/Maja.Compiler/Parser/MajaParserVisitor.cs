@@ -69,6 +69,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitDeclaration([NotNull] MajaParser.DeclarationContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.declarationPub"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDeclarationPub([NotNull] MajaParser.DeclarationPubContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
