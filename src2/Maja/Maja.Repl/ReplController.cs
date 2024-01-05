@@ -22,7 +22,7 @@ internal abstract class ReplController
         {
             Console.Write(line);
 
-            if (!ProcessInput(line + Environment.NewLine))
+            if (!ProcessInput(line))
                 break;
         }
     }

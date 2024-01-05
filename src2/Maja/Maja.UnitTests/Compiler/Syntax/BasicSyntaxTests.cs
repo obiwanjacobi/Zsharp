@@ -3,6 +3,18 @@ namespace Maja.UnitTests.Compiler.Syntax;
 public class BasicSyntaxTests
 {
     [Fact]
+    public void EndOfFile()
+    {
+        const string code =
+            "fn1: ()" + Tokens.Eol +
+            Tokens.Indent1 + "ret"
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
     public void FunctionDeclaration_Comments()
     {
         const string code =

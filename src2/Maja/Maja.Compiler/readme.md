@@ -6,7 +6,6 @@
 - [ ] Syntax/Parser: Error handling: MissingTokens, SkippedTokens (Antlr ErrorStrategy/ErrorListener?)
 Started. Have ErrorToken with description.
 - [ ] Syntax parsing does not report invalid trailing tokens.
-- [ ] Syntax: fix required eol at the end of code.
 - [ ] StatementExpression only for invocation (other?).
 - [ ] Export from module.
 - [ ] Type base type (enum/struct/value)
@@ -20,9 +19,11 @@ Started. Have ErrorToken with description.
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 - [ ] Generate compiler warning for `##` comments
 - [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
+- [ ] UnitTests for Eval
 
 ### Done
 
+- [x] Syntax: fix required eol at the end of code.
 - [x] Discard assignment only for invocation results.
 - [x] ExpressionInvocation: Check argument types against function parameter types
 - [x] Syntax: Location Span is incorrect (x, x).
