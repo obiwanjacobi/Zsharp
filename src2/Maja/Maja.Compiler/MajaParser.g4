@@ -11,8 +11,8 @@ codeBlock: (statement | declaration | newline)+;
 declaration: declarationPub | declarationVariable;
 declarationPub: (Pub Sp)? (declarationFunction | declarationType);
 
-statement: statementFlow | statementAssignment | statementExpression | statementLoop;
-statementFlow: statementRet | statementIf;
+statement: statementFlow | statementAssignment | statementExpression;
+statementFlow: statementRet | statementIf | statementLoop;
 statementIf: If Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;
 statementElse: Else newline Indent codeBlock Dedent;
 statementElseIf: (Else freeSpace If | Elif) Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;

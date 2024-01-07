@@ -82,4 +82,68 @@ public class StatementSyntaxTests
         statIf.ElseIf!.Expression.Text.Should().Be("false");
         statIf.ElseIf!.CodeBlock.Statements.Should().HaveCount(1);
     }
+
+    [Fact]
+    public void Loop()
+    {
+        const string code =
+            "loop" + Tokens.Eol +
+            Tokens.Indent1 + "x = x + 1" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Statements.Should().HaveCount(1);
+        var loop = result.Statements.First().As<StatementLoopSyntax>();
+
+        loop.Expression.Should().BeNull();
+    }
+
+    [Fact]
+    public void Loop_Count()
+    {
+        const string code =
+            "loop 100" + Tokens.Eol +
+            Tokens.Indent1 + "x = x + 1" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Statements.Should().HaveCount(1);
+        var loop = result.Statements.First().As<StatementLoopSyntax>();
+
+        loop.Expression.Should().NotBeNull();
+        loop.Expression.As<ExpressionLiteralSyntax>().Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Loop_Range()
+    {
+        const string code =
+            "loop [0..100]" + Tokens.Eol +
+            Tokens.Indent1 + "x = x + 1" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Statements.Should().HaveCount(1);
+        var loop = result.Statements.First().As<StatementLoopSyntax>();
+
+        loop.Expression.Should().NotBeNull();
+        loop.Expression.As<ExpressionRangeSyntax>().Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Loop_When()
+    {
+        const string code =
+            "loop x < 100" + Tokens.Eol +
+            Tokens.Indent1 + "x = x + 1" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Statements.Should().HaveCount(1);
+        var loop = result.Statements.First().As<StatementLoopSyntax>();
+
+        loop.Expression.Should().NotBeNull();
+        loop.Expression.As<ExpressionBinarySyntax>()
+            .Operator.OperatorCategory.Should().Be(ExpressionOperatorCategory.Comparison);
+    }
 }

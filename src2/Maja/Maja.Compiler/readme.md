@@ -11,14 +11,18 @@ Started. Have ErrorToken with description.
 - [ ] Value (custom) Types (/w rules)
 - [ ] Resolve operators to functions
 - [ ] Loop statement
-- [ ] Assignment to member access expression (l-value) (now nameIdentifier)
-- [ ] local (nested) functions
-- [ ] Function Type (IrTypeFunction)
+- [ ] IR: Validate loop expression to be a valid loop expression
+- [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
+- [ ] local (nested) functions and types
+- [ ] IR: Function Type (IrTypeFunction/FunctionTypeSymbol)
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 - [ ] Generate compiler warning for `##` comments
 - [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Allow named type-parameters (`IrArgumentMatcher`)
 - [ ] UnitTests for Eval
+- [ ] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
+- [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
+- [ ] IR: Validate file-global statements (only StatementExpression?)
 
 ### Done
 

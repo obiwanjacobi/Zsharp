@@ -3,7 +3,7 @@
 The purpose of the syntax model is:
 
 - Abstract Antlr away from the rest of the compiler code.
-- Provide a way to (re)format source code.
+- Provide a way to (re)format source code (future).
 - Capture all tokens (incl whitespace and comments)
 
 

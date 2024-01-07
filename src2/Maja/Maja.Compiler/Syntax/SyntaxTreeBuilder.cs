@@ -500,4 +500,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
 
         return [new SyntaxNodeOrToken(node)];
     }
+
+    public override SyntaxNodeOrToken[] VisitStatementLoop(StatementLoopContext context)
+        => CreateSyntaxNode<StatementLoopContext, StatementLoopSyntax>(context, base.VisitStatementLoop);
 }
