@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace Maja.Compiler.Symbol;
 
@@ -12,4 +13,7 @@ public record TypeInferredSymbol : TypeSymbol
     }
 
     public IImmutableList<TypeSymbol> Candidates { get; }
+
+    public override bool MatchesWith(TypeSymbol other)
+        => Candidates.Contains(other);
 }

@@ -41,6 +41,34 @@ public record TypeSymbol : Symbol
     public virtual bool IsExternal => false;
     public bool IsWellknown { get; }
 
+    public virtual bool MatchesWith(TypeSymbol other)
+    {
+        if (other == this) return true;
+
+        if (other == TypeSymbol.I16)
+            return this == TypeSymbol.I8;
+        if (other == TypeSymbol.I32)
+            return this == TypeSymbol.I8 || this == TypeSymbol.I16;
+        if (other == TypeSymbol.I64)
+            return this == TypeSymbol.I8 || this == TypeSymbol.I16 || this == TypeSymbol.I32;
+
+        if (other == TypeSymbol.U16)
+            return this == TypeSymbol.U8;
+        if (other == TypeSymbol.U32)
+            return this == TypeSymbol.U8 || this == TypeSymbol.U16;
+        if (other == TypeSymbol.U64)
+            return this == TypeSymbol.U8 || this == TypeSymbol.U16 || this == TypeSymbol.U32;
+
+        if (other == TypeSymbol.F32)
+            return this == TypeSymbol.F16;
+        if (other == TypeSymbol.F64)
+            return this == TypeSymbol.F16 || this == TypeSymbol.F32;
+        if (other == TypeSymbol.F96)
+            return this == TypeSymbol.F16 || this == TypeSymbol.F32|| this == TypeSymbol.F64;
+
+        return false;
+    }
+
     public static bool IsVoid(TypeSymbol type)
         => type == TypeSymbol.Void;
 

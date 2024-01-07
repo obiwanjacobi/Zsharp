@@ -430,8 +430,8 @@ internal sealed class IrBuilder
         {
             expr = Expression(syntax.Expression);
 
-            var isValid = expr.TypeSymbol == TypeSymbol.I32 ||
-                expr.TypeSymbol == TypeSymbol.Bool;
+            var isValid = expr.TypeSymbol.MatchesWith(TypeSymbol.I32) ||
+                expr.TypeSymbol.MatchesWith(TypeSymbol.Bool);
             if (!isValid)
                 _diagnostics.InvalidLoopExpression(syntax.Location);
         }
