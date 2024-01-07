@@ -8,6 +8,8 @@ Captures are snapshots (copies) or references to contextual state -like local va
 
 Function can use captures to be able to reference global variables in their body.
 
+> TBD: have the function capture syntax look exactly the same as the block-capture. `fn: (p: U8): U8 = [c] ...`
+
 ```csharp
 x = 42
 fn: [x](p: U8): Bool
@@ -129,3 +131,9 @@ use, with, [a]  // commas?
 use; with; [a]  // line breaks?
     ...
 ```
+
+---
+
+> TBD: debug-only captures?
+
+> TBD: have a capture syntax that forwards the dependency towards any subsequent calls inside the capture block. This would help in identifying pure functions?

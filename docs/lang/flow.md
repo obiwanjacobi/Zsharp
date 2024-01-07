@@ -161,11 +161,18 @@ loop
     if a =< 0 -> break
 ```
 
+Loop a certain number of times:
+
+```C#
+loop [0..10]
+    loop_10_times
+```
+
 A 'for' or 'for-each' loop is constructed using a `Range`.
 
 ```C#
 loop n in [0..10]
-    foreach_n_0_to_9
+    for_n_is_0_to_9
 ```
 
 > Separate the number of times to loop from the variable value used in the code?

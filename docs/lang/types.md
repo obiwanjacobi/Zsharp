@@ -257,7 +257,7 @@ f()         // call returned function
 
 Note that the type of a function has a specific syntax:
 
-`(parameter-types): return-type`
+`<generic-types>(parameter-types): return-type`
 
 > Templates?
 

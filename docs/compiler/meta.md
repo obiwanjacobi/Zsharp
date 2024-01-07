@@ -287,3 +287,5 @@ Problem here is that some pragma's start a new scope and others don't. How to fi
 > TBD: Transparently pass custom meta programs to roslyn source generators?
 
 > TBD: Allow compile time code to build code using (perhaps) a builder pattern. TypeBuilder, FunctionBuilder and CodeBuilder.
+
+> TBD: How could we expose the type information on the to-be-compiled code to meta/compile time code?

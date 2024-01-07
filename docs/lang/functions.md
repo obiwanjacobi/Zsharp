@@ -26,6 +26,8 @@ functionName: InterfaceName [captures]<template>(parameters): returnType
 
 > TBD: we may be able to drop the '`:`' before the return type.
 
+> TBD: change the syntax to reflect how we use variables? `fn: (p: U8): U8 = ...`. That would mean only adding the `=`. If we have a constant/immutable assignment... Perhaps also change the location of the capture? capture is part of the code block?
+
 ```csharp
 // not showing implementation
 fn: ()
@@ -991,6 +993,8 @@ Local Functions can be declared at the end of the containing function. It is not
 
 Local Types are types (Enums, Structs etc.) declared in the local scope of the function and are invisible outside of that function scope.
 
+> The syntax for all local declarations is exactly the same as for other declarations.
+
 ```csharp
 fn: ()
     MyLocalType
@@ -1040,6 +1044,8 @@ Call([sum.Ptr()](p)
     ...
 )
 ```
+
+> Lambda's should use the same syntax (for Funtion Type) as used for normal functions.
 
 Lambda could be a nameless (function type) definition that can have parameters being applied to it...
 

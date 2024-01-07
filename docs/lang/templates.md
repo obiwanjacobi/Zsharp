@@ -477,3 +477,17 @@ Instead of the actual source code, we could also store the serialized AST for pe
 Perhaps also generate a class with loader methods for each symbol name that can have custom code attributes for the Z# compiler to discover.
 
 ---
+
+Have syntax for instantiating templates separate from using the template. After which the new concrete function can be passed around.
+
+```csharp
+fnT: <#T>(p: T): T
+    ...
+
+// some sort of compiler directive
+fn := #fnT<I32>
+
+// as I32
+v := fn(42)
+s := fn("42")   // error, type needs to be I32
+```
