@@ -43,6 +43,7 @@ public enum SyntaxKind
     LiteralBoolExpression = 3052,
     LiteralNumber = 3053,
     LiteralString = 3054,
+    RangeExpression = 3055,
 
     StatementExpression = 4000,
     StatementIf = 4001,

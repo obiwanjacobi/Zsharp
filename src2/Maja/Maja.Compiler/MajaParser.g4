@@ -11,7 +11,7 @@ codeBlock: (statement | declaration | newline)+;
 declaration: declarationPub | declarationVariable;
 declarationPub: (Pub Sp)? (declarationFunction | declarationType);
 
-statement: statementFlow | statementAssignment | statementExpression;
+statement: statementFlow | statementAssignment | statementExpression | statementLoop;
 statementFlow: statementRet | statementIf;
 statementIf: If Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;
 statementElse: Else newline Indent codeBlock Dedent;
@@ -19,6 +19,7 @@ statementElseIf: (Else freeSpace If | Elif) Sp expression newline Indent codeBlo
 statementRet: Ret (Sp expression)?;
 statementAssignment: nameIdentifier Sp Eq Sp expression;
 statementExpression: expression;
+statementLoop: Loop (Sp expressionLoop)? newline Indent codeBlock Dedent;
 
 declarationFunction: nameIdentifier Sp? Colon freeSpace typeParameterList? parameterList (Sp? Colon Sp type)? newline Indent codeBlock Dedent;
 declarationFunctionLocal: Indent declarationFunction Dedent;
@@ -69,12 +70,14 @@ expression:
     | expressionOperatorUnaryPrefix expression              #expressionUnaryPrefix
     | expression typeArgumentList? argumentList             #expressionInvocation
 	| expression typeInitializer             				#expressionTypeInitializer
+    | BracketOpen expression? Range expression? BracketClose #expressionRange
     | ParenOpen expression ParenClose                       #expressionPrecedence
     | nameIdentifier                                        #expressionIdentifier
 	| expression Dot nameIdentifier                         #expressionMemberAccess
     ;
 expressionConstant: expressionLiteral | expressionLiteralBool;
 expressionRule: expression;
+expressionLoop: expression;
 
 expressionOperatorBinary: expressionOperatorArithmetic | expressionOperatorLogic | expressionOperatorComparison | expressionOperatorBits;
 expressionOperatorUnaryPrefix: expressionOperatorArithmeticUnaryPrefix | expressionOperatorLogicUnaryPrefix | expressionOperatorBitsUnaryPrefix;

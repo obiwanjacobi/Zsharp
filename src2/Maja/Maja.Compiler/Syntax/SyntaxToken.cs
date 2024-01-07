@@ -205,7 +205,8 @@ public sealed class PunctuationToken : SyntaxToken
 
     public static bool IsValid(int tokenTypeId)
         => tokenTypeId is MajaLexer.Dot or MajaLexer.Comma
-            or MajaLexer.Colon or MajaLexer.SemiColon;
+            or MajaLexer.Colon or MajaLexer.SemiColon
+            or MajaLexer.Range;
 }
 
 /// <summary>

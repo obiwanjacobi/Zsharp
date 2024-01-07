@@ -123,6 +123,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitStatementExpression([NotNull] MajaParser.StatementExpressionContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.statementLoop"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStatementLoop([NotNull] MajaParser.StatementLoopContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.declarationFunction"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -378,6 +384,13 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpressionInvocation([NotNull] MajaParser.ExpressionInvocationContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionRange</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionRange([NotNull] MajaParser.ExpressionRangeContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionUnaryPrefix</c>
 	/// labeled alternative in <see cref="MajaParser.expression"/>.
 	/// </summary>
@@ -424,6 +437,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExpressionRule([NotNull] MajaParser.ExpressionRuleContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.expressionLoop"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionLoop([NotNull] MajaParser.ExpressionLoopContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.expressionOperatorBinary"/>.
 	/// </summary>

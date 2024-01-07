@@ -206,4 +206,42 @@ public class ExpressionSyntaxTests
         expr.LeftAs<ExpressionIdentifierSyntax>()
             .Name.Text.Should().Be("x");
     }
+
+    [Fact]
+    public void RangeExpression()
+    {
+        const string code =
+            "x := [0..10]" + Tokens.Eol +
+            "y := [..10]" + Tokens.Eol +
+            "z := [0..]" + Tokens.Eol +
+            "a := [..]" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(4);
+
+        var v = result.Members.ElementAt(0).As<VariableDeclarationSyntax>();
+        v.Name.Text.Should().Be("x");
+        var rng = v.Expression.As<ExpressionRangeSyntax>();
+        rng.Start.Should().NotBeNull();
+        rng.End.Should().NotBeNull();
+
+        v = result.Members.ElementAt(1).As<VariableDeclarationSyntax>();
+        v.Name.Text.Should().Be("y");
+        rng = v.Expression.As<ExpressionRangeSyntax>();
+        rng.Start.Should().BeNull();
+        rng.End.Should().NotBeNull();
+
+        v = result.Members.ElementAt(2).As<VariableDeclarationSyntax>();
+        v.Name.Text.Should().Be("z");
+        rng = v.Expression.As<ExpressionRangeSyntax>();
+        rng.Start.Should().NotBeNull();
+        rng.End.Should().BeNull();
+
+        v = result.Members.ElementAt(3).As<VariableDeclarationSyntax>();
+        v.Name.Text.Should().Be("a");
+        rng = v.Expression.As<ExpressionRangeSyntax>();
+        rng.Start.Should().BeNull();
+        rng.End.Should().BeNull();
+    }
 }

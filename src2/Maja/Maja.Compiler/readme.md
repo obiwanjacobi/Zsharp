@@ -7,22 +7,23 @@
 Started. Have ErrorToken with description.
 - [ ] Syntax parsing does not report invalid trailing tokens.
 - [ ] StatementExpression only for invocation (other?).
-- [ ] Export from module.
 - [ ] Type base type (enum/struct/value)
 - [ ] Value (custom) Types (/w rules)
 - [ ] Resolve operators to functions
 - [ ] Loop statement
-- [ ] Test whitespace and comments in various syntax
 - [ ] Assignment to member access expression (l-value) (now nameIdentifier)
 - [ ] local (nested) functions
-- [ ] Function Type (TypeFunction)
+- [ ] Function Type (IrTypeFunction)
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 - [ ] Generate compiler warning for `##` comments
 - [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
+- [ ] Allow named type-parameters (`IrArgumentMatcher`)
 - [ ] UnitTests for Eval
 
 ### Done
 
+- [x] Test whitespace and comments in various syntax
+- [x] Export from module.
 - [x] Syntax: fix required eol at the end of code.
 - [x] Discard assignment only for invocation results.
 - [x] ExpressionInvocation: Check argument types against function parameter types

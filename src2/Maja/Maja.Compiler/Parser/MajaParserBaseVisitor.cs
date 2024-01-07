@@ -186,6 +186,16 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitStatementExpression([NotNull] MajaParser.StatementExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.statementLoop"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitStatementLoop([NotNull] MajaParser.StatementLoopContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.declarationFunction"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -609,6 +619,17 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExpressionInvocation([NotNull] MajaParser.ExpressionInvocationContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionRange</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitExpressionRange([NotNull] MajaParser.ExpressionRangeContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionUnaryPrefix</c>
 	/// labeled alternative in <see cref="MajaParser.expression"/>.
 	/// <para>
@@ -683,6 +704,16 @@ public partial class MajaParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExpressionRule([NotNull] MajaParser.ExpressionRuleContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.expressionLoop"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitExpressionLoop([NotNull] MajaParser.ExpressionLoopContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.expressionOperatorBinary"/>.
 	/// <para>

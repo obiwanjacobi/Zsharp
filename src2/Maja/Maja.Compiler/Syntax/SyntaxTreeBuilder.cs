@@ -342,8 +342,11 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     public override SyntaxNodeOrToken[] VisitExpressionInvocation(ExpressionInvocationContext context)
         => CreateSyntaxNode<ExpressionInvocationContext, ExpressionInvocationSyntax>(context, base.VisitExpressionInvocation);
 
-    public override SyntaxNodeOrToken[] VisitExpressionTypeInitializer([NotNull] ExpressionTypeInitializerContext context)
+    public override SyntaxNodeOrToken[] VisitExpressionTypeInitializer(ExpressionTypeInitializerContext context)
         => CreateSyntaxNode<ExpressionTypeInitializerContext, ExpressionTypeInitializerSyntax>(context, base.VisitExpressionTypeInitializer);
+
+    public override SyntaxNodeOrToken[] VisitExpressionRange(ExpressionRangeContext context)
+        => CreateSyntaxNode<ExpressionRangeContext, ExpressionRangeSyntax>(context, base.VisitExpressionRange);
 
     public override SyntaxNodeOrToken[] VisitArgument(ArgumentContext context)
     {
