@@ -131,7 +131,7 @@ public class StatementSyntaxTests
     }
 
     [Fact]
-    public void Loop_When()
+    public void Loop_While()
     {
         const string code =
             "loop x < 100" + Tokens.Eol +

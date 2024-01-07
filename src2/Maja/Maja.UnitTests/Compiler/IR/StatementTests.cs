@@ -1,3 +1,4 @@
+using System.Linq;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
@@ -121,5 +122,76 @@ public class StatementTests
         var err = program.Diagnostics[0];
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
         err.Text.Should().Contain("Invalid Assignment. Only the result of an invocation can be assigned to the discard '_'.");
+    }
+
+    [Fact]
+    public void Loop()
+    {
+        const string code =
+            "x: I32" + Tokens.Eol +
+            "loop" + Tokens.Eol +
+            Tokens.Indent1 + "x = x + 1" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(1);
+        program.Root.Statements.Should().HaveCount(1);
+        var stat = program.Root.Statements[0].As<IrStatementLoop>();
+        stat.CodeBlock.Should().NotBeNull();
+        stat.Expression.Should().BeNull();
+    }
+
+    [Fact]
+    public void Loop_Count()
+    {
+        const string code =
+            "x: I32" + Tokens.Eol +
+            "loop 10" + Tokens.Eol +
+            Tokens.Indent1 + "x = x + 1" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(1);
+        program.Root.Statements.Should().HaveCount(1);
+        var stat = program.Root.Statements[0].As<IrStatementLoop>();
+        stat.CodeBlock.Should().NotBeNull();
+        stat.Expression.Should().NotBeNull();
+        stat.Expression.As<IrExpressionLiteral>().Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Loop_While()
+    {
+        const string code =
+            "x: I32" + Tokens.Eol +
+            "loop x < 100" + Tokens.Eol +
+            Tokens.Indent1 + "x = x + 1" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(1);
+        program.Root.Statements.Should().HaveCount(1);
+        var stat = program.Root.Statements[0].As<IrStatementLoop>();
+        stat.CodeBlock.Should().NotBeNull();
+        stat.Expression.Should().NotBeNull();
+        stat.Expression.As<IrExpressionBinary>().Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Loop_ExpressionError()
+    {
+        const string code =
+            "x: I32" + Tokens.Eol +
+            "loop x + 100" + Tokens.Eol +
+            Tokens.Indent1 + "x = x + 1" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Should().NotBeNull();
+        program.Diagnostics.Should().HaveCount(1);
+        program.Diagnostics.First().Text.Should().Contain("Invalid Loop Expression");
     }
 }

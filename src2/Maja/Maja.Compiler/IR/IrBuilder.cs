@@ -409,6 +409,7 @@ internal sealed class IrBuilder
                 StatementIfSyntax ifs => StatementIf(ifs),
                 StatementReturnSyntax ret => StatementReturn(ret),
                 StatementExpressionSyntax ses => StatementExpression(ses),
+                StatementLoopSyntax sls => StatementLoop(sls),
                 _ => throw new NotSupportedException($"IR: No support for Statement '{stat.SyntaxKind}'.")
             };
 
@@ -416,6 +417,28 @@ internal sealed class IrBuilder
         }
 
         return irStats;
+    }
+
+    private IrStatementLoop StatementLoop(StatementLoopSyntax syntax)
+    {
+        IrExpression? expr = null;
+
+        // TODO:
+        // - register any indentifiers as variables in codeblock scope
+
+        if (syntax.Expression is not null)
+        {
+            expr = Expression(syntax.Expression);
+
+            var isValid = expr.TypeSymbol == TypeSymbol.I32 ||
+                expr.TypeSymbol == TypeSymbol.Bool;
+            if (!isValid)
+                _diagnostics.InvalidLoopExpression(syntax.Location);
+        }
+
+        var codeBlock = CodeBlock(syntax.CodeBlock);
+
+        return new IrStatementLoop(syntax, expr, codeBlock);
     }
 
     private IrStatementAssignment StatementAssignment(StatementAssignmentSyntax syntax)

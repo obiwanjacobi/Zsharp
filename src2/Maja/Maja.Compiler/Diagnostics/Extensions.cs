@@ -97,6 +97,9 @@ internal static class IrDiagnostics
     public static void DiscardOnlyInvocation(this DiagnosticList diagnostics, SyntaxLocation location)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Invalid Assignment. Only the result of an invocation can be assigned to the discard '_'.");
 
+    public static void InvalidLoopExpression(this DiagnosticList diagnostics, SyntaxLocation location)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Invalid Loop Expression. A loop expression must evaluate to a count (I32), a Boolean or a Range.");
+
     public static void ImportNotFound(this DiagnosticList diagnostics, SyntaxLocation location, string importName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Import reference '{importName}' cannot be resolved. Module not found.");
 }

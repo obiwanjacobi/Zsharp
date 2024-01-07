@@ -14,7 +14,16 @@ internal abstract class IrStatement : IrNode
 
 internal sealed class IrStatementLoop : IrStatement
 {
-    public IrStatementLoop(StatementSyntax syntax)
+    public IrStatementLoop(StatementLoopSyntax syntax, IrExpression? expression, IrCodeBlock codeBlock)
         : base(syntax)
-    { }
+    {
+        Expression = expression;
+        CodeBlock = codeBlock;
+    }
+
+    public new StatementLoopSyntax Syntax
+        => (StatementLoopSyntax)base.Syntax;
+
+    public IrExpression? Expression { get; }
+    public IrCodeBlock CodeBlock { get; }
 }

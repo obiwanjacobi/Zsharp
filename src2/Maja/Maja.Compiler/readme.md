@@ -10,8 +10,6 @@ Started. Have ErrorToken with description.
 - [ ] Type base type (enum/struct/value)
 - [ ] Value (custom) Types (/w rules)
 - [ ] Resolve operators to functions
-- [ ] Loop statement
-- [ ] IR: Validate loop expression to be a valid loop expression
 - [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
 - [ ] local (nested) functions and types
 - [ ] IR: Function Type (IrTypeFunction/FunctionTypeSymbol)
@@ -26,6 +24,8 @@ Started. Have ErrorToken with description.
 
 ### Done
 
+- [x] Loop statement
+- [x] IR: Validate loop expression to be a valid loop expression
 - [x] Test whitespace and comments in various syntax
 - [x] Export from module.
 - [x] Syntax: fix required eol at the end of code.

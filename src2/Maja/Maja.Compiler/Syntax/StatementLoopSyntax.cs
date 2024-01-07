@@ -11,6 +11,9 @@ public sealed class StatementLoopSyntax : StatementSyntax, ICreateSyntaxNode<Sta
     public ExpressionSyntax? Expression
         => ChildNodes.OfType<ExpressionSyntax>().SingleOrDefault();
 
+    public CodeBlockSyntax CodeBlock
+        => ChildNodes.OfType<CodeBlockSyntax>().Single();
+
     public override SyntaxKind SyntaxKind
         => SyntaxKind.StatementLoop;
 

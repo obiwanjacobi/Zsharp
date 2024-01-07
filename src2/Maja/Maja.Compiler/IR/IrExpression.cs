@@ -25,6 +25,22 @@ internal abstract class IrExpression : IrNode
         => (ExpressionSyntax)base.Syntax;
 }
 
+internal sealed class IrExpressionRange : IrExpression
+{
+    public IrExpressionRange(ExpressionRangeSyntax syntax, IrExpression? start, IrExpression? end)
+        : base(syntax, TypeSymbol.I32)  // I32 => dotnet compatible
+    {
+        Start = start;
+        End = end;
+    }
+
+    public IrExpression? Start { get; }
+    public IrExpression? End { get; }
+
+    public new ExpressionRangeSyntax Syntax
+        => (ExpressionRangeSyntax)base.Syntax;
+}
+
 internal sealed class IrExpressionInvocation : IrExpression
 {
     public IrExpressionInvocation(ExpressionInvocationSyntax syntax,
