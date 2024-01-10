@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Maja.Compiler.EmitCS.CSharp;
 using Maja.Compiler.External;
 using Maja.Compiler.IR;
@@ -71,7 +70,7 @@ internal class CodeBuilder : IrWalker<object?>
 
             _writer.StartMethod(mi);
             OnParameters(Enumerable.Empty<IrParameter>());
-            _writer.OpenMethodBody();
+            _writer.OpenNewScope();
             _scopes.Push(new Scope(mi));
             result = AggregateResult(result, OnStatements(compilation.Statements));
             _scopes.Pop();
@@ -107,7 +106,7 @@ internal class CodeBuilder : IrWalker<object?>
 
         var result = OnTypeParameters(function.TypeParameters.OfType<IrTypeParameterGeneric>());
         result = AggregateResult(result, OnParameters(function.Parameters));
-        _writer.OpenMethodBody();
+        _writer.OpenNewScope();
         result = AggregateResult(result, OnCodeBlock(function.Body));
         _writer.CloseScope();
 
@@ -193,7 +192,7 @@ internal class CodeBuilder : IrWalker<object?>
         {
             return CreateEnum(type);
         }
-        
+
         return CreateStruct(type);
     }
 
@@ -259,6 +258,55 @@ internal class CodeBuilder : IrWalker<object?>
 
         _writer.CloseScope();
         return typeInfo;
+    }
+
+    public override object? OnStatementIf(IrStatementIf statement)
+    {
+        _writer.Tab();
+        StartStatementIf(statement.Condition);
+        _ = OnCodeBlock(statement.CodeBlock);
+        _writer.CloseScope();
+
+        if (statement.ElseClause is IrElseClause elseClause)
+        {
+            _ = OnStatementIf_ElseClause(elseClause);
+        }
+        else if (statement.ElseIfClause is IrElseIfClause elseIfClause)
+        {
+            _ = OnStatementIf_ElseIfClause(elseIfClause);
+        }
+        return null;
+    }
+    public override object? OnStatementIf_ElseIfClause(IrElseIfClause elseIfClause)
+    {
+        _writer.Tab().Append("else ");
+        StartStatementIf(elseIfClause.Condition);
+        _ = OnCodeBlock(elseIfClause.CodeBlock);
+        _writer.CloseScope();
+
+        if (elseIfClause.ElseClause is IrElseClause nestedElse)
+        {
+            _ = OnStatementIf_ElseClause(nestedElse);
+        }
+        else if (elseIfClause.ElseIfClause is IrElseIfClause nestedElseIf)
+        {
+            _ = OnStatementIf_ElseIfClause(nestedElseIf);
+        }
+        return null;
+    }
+    public override object? OnStatementIf_ElseClause(IrElseClause elseClause)
+    {
+        _writer.Tab().Append("else");
+        _writer.OpenNewScope();
+        _ = OnCodeBlock(elseClause.CodeBlock);
+        _writer.CloseScope();
+        return null;
+    }
+    private void StartStatementIf(IrExpression condition)
+    {
+        _writer.Write("if (");
+        _ = OnExpression(condition);
+        _writer.Write(")").OpenNewScope();
     }
 
     public override object? OnStatementAssignment(IrStatementAssignment statement)
@@ -389,7 +437,7 @@ internal class CodeBuilder : IrWalker<object?>
 
         if (expression.Fields.Any())
         {
-            _writer.WriteInitializer(expression.Fields, f => f.Field.Name.Value, 
+            _writer.WriteInitializer(expression.Fields, f => f.Field.Name.Value,
                 f => { OnExpression(f.Expression); return String.Empty; });
         }
 

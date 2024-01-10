@@ -83,7 +83,7 @@ internal sealed class CSharpWriter
         return this;
     }
 
-    public CSharpWriter OpenMethodBody()
+    public CSharpWriter OpenNewScope()
     {
         _writer.AppendLine();
         OpenScope();

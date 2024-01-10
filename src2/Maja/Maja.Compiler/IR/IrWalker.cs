@@ -185,15 +185,32 @@ internal abstract class IrWalker<R>
         result = AggregateResult(result, OnCodeBlock(statement.CodeBlock));
         if (statement.ElseClause is IrElseClause elseClause)
         {
-            result = AggregateResult(result, OnCodeBlock(elseClause.CodeBlock));
+            result = AggregateResult(result, OnStatementIf_ElseClause(elseClause));
         }
-        if (statement.ElseIfClause is IrElseIfClause elseIfClause)
+        else if (statement.ElseIfClause is IrElseIfClause elseIfClause)
         {
-            result = AggregateResult(result, OnExpression(elseIfClause.Condition));
-            result = AggregateResult(result, OnCodeBlock(elseIfClause.CodeBlock));
+            result = AggregateResult(result, OnStatementIf_ElseIfClause(elseIfClause));
         }
         return result;
     }
+    public virtual R OnStatementIf_ElseIfClause(IrElseIfClause elseIfClause)
+    {
+        var result = OnExpression(elseIfClause.Condition);
+        result = AggregateResult(result, OnCodeBlock(elseIfClause.CodeBlock));
+
+        if (elseIfClause.ElseClause is IrElseClause nestedElse)
+        {
+            result = AggregateResult(result, OnStatementIf_ElseClause(nestedElse));
+        }
+        else if (elseIfClause.ElseIfClause is IrElseIfClause nestedElseIf)
+        {
+            result = AggregateResult(result, OnStatementIf_ElseIfClause(nestedElseIf));
+        }
+        return result;
+    }
+    public virtual R OnStatementIf_ElseClause(IrElseClause elseClause)
+        => OnCodeBlock(elseClause.CodeBlock);
+
     public virtual R OnStatementExpression(IrStatementExpression statement)
         => OnExpression(statement.Expression);
     public virtual R OnStatementReturn(IrStatementReturn statement)

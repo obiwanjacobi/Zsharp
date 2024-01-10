@@ -2,7 +2,7 @@
 
 ## TODO
 
-- [ ] ErrorNode: Use context info to built better error message.
+- [ ] ErrorNode: Use context info to built better error message. Include referenced symbol location.
 - [ ] Syntax/Parser: Error handling: MissingTokens, SkippedTokens (Antlr ErrorStrategy/ErrorListener?)
 Started. Have ErrorToken with description.
 - [ ] Syntax parsing does not report invalid trailing tokens.
