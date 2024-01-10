@@ -115,6 +115,30 @@ Only needed when function call may include namespace/module parts...
 
 ---
 
+### Labels
+
+A general kind of identifiers are code labels.
+
+This syntax is basically consistent of all named code elements.
+
+```csharp
+label: <some other code>
+```
+
+This allows some language features where an identifier/label/symbol refers to some specific code.
+
+Label | Code | Type | Description |
+| -- | -- | -- | -- |
+| var | `x : U8` | Type | Variable declaration |
+| fn | `fn: (p: U8): U8` | FunctionType | Function declaration |
+| struct | `MyStruct` | Type | Structure declaration |
+| field | `fld: U8` | Type | Field declaration |
+| loop | `#outer: loop 42` | LocationType | Loop identifier* |
+
+*) The label is prefixed with a `#` to indicate it is a compile-time label and not a symbol that will be in the binary.
+
+---
+
 ### Navigation
 
 Any identifier that has a `.` (dot) in it will be split up in parts. Those parts will be used to navigate to the correct 'location' where that symbol is defined.

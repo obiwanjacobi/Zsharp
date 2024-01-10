@@ -250,6 +250,8 @@ inlineFn: (p: U8): Bool -> p = 42
 
 Use standard .NET code attributes for align? (I think those only work on .NET structs and not on classes)
 
+> TBD: allow call-site inlineing? `b := #inline inlineFn(42)`
+
 ---
 
 > TBD
@@ -289,3 +291,6 @@ Problem here is that some pragma's start a new scope and others don't. How to fi
 > TBD: Allow compile time code to build code using (perhaps) a builder pattern. TypeBuilder, FunctionBuilder and CodeBuilder.
 
 > TBD: How could we expose the type information on the to-be-compiled code to meta/compile time code?
+
+> TBD: Give compile time code access to the type info of source code and possibly extend the source code. The original code cannot be altered but it can be enhanced or extended. Pre and post processing of functions, wrapping of structs, implementing interfaces etc. See also [Extensions](extensions.md).
+Also influencing type inferrence desicions the compiler makes for generic or template types.

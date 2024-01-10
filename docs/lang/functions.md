@@ -18,7 +18,7 @@ functionName: InterfaceName [captures]<template>(parameters): returnType
 
 `[captures]`: (optional) This captures variables external to the function for its execution. For 'normal' function these would be global variables. For lambda's these could be function-local variables that are used inside the lambda. Captures are only specified on function declarations (implementation), not on function (type) interfaces or at the call site. The name of the capture refers to a variable (or parameter) and that name is also used in the function's implementation. Comma separated.
 
-`<template>`: (optional) Template or Generic Parameters that the function uses in its implementation. Type parameters must start with a upper case first letter. Comma separated.
+`<template>`: (optional) Template or Generic Parameters that the function uses in its implementation. Type parameters must start with a upper case first letter. Template parameters are prefixed with a `#`. Comma separated.
 
 `(parameters)`: (optional) By-value parameters the function acts on. Comma separated.
 
@@ -67,6 +67,8 @@ fn: InterfaceName&  // syntax?
 
 There is no other way of passing parameters to functions than by value. That means, that the parameter value is _copied_ from the caller site into the context of the function.
 
+> TBD: What about dotnet _out_ and _ref_ parameters?
+
 That also means that if a parameter is to be passed by reference, an explicit pointer to that value has to be constructed and passed to the function.
 
 > The compiler can still use an immutable reference for optimizations. The by-value model is how you should think about it.
@@ -79,12 +81,6 @@ v = 42
 byref(v.Ptr())            // call with ptr to value
 ```
 
-> TBD: it would be nice to be able to see if a variable or parameter was an literal value. Then specific logic could be applied in these cases. For instance, when a parameter is a literal, the result of the function could be made immutable?
-
-- Require specifying the parameter name when a literal is used?
-
-Allow function overloads with some sort of special syntax for literal values?
-
 Function Pointer as function argument syntax:
 
 ```csharp
@@ -95,6 +91,12 @@ filter: (predicate: Fn<(p: U8): Bool>)
 filter: (predicate: Fn<U8, Bool>)
     ...
 ```
+
+> TBD: it would be nice to be able to see if a variable or parameter was an literal value. Then specific logic could be applied in these cases. For instance, when a parameter is a literal, the result of the function could be made immutable?
+
+- Require specifying the parameter name when a literal is used?
+
+Allow function overloads with some sort of special syntax for literal values?
 
 ---
 
@@ -232,7 +234,7 @@ Make42: (p: Ptr<U8>)
     p() = 42
 ```
 
-This is on usage of `Ptr<T>` that may actually be useful.
+This is one usage of `Ptr<T>` that may actually be useful.
 
 Alternative for out parameters is to return it as a return value.
 If multiple out parameter and/or return values exist, the type becomes a tuple.
@@ -286,7 +288,7 @@ The goal is to separate parameter references from local variables (or captures).
 ```csharp
 fn: (p: U8): Str
     return Str(Args.p)      // local Args namespace?
-    return Str(fn.p)           // nested inside function name(space)
+    return Str(fn.p)        // nested inside function name(space)
 ```
 
 ---
@@ -312,6 +314,18 @@ c = fn::Parameters
     p = 42
     s = "42"
 fn(...c)
+
+// does that also work with any struct?
+MyStruct
+    p: U8
+    s: Str
+    i: I64
+
+s = MyStruct
+    ...
+
+fn(...s)    // error! cannot place i in params
+// should work if struct has correct named fields and nothing more.
 ```
 
 A template trick to allow any struct with the correct properties to be passed as function arguments.
@@ -388,6 +402,7 @@ Perhaps a 'service' function type uses this principle but calls it a 'message' (
 - Implicit parameters at declaration
 
 Related to context variables?
+What syntax to use?
 
 ---
 
@@ -396,7 +411,6 @@ Related to context variables?
 Some types could have default validations without the code having to explicitly asak for it. These validations are not implicit because they are suggested in the code, just not explicitly stated.
 
 - `null` (interop): automatically validate not-null based on ref-nullability.
-- `Opt<T>`: check for None/Nothing.
 - `Enum` (interop): validate standard .NET Enum values to lie inside the defined range.
 - more?
 
@@ -511,7 +525,7 @@ RetType: Void or U8
 MyFn: (p: U8): RetType    // return Void or U8
     ...
 
-v = MyFn(42)    // v => Unit or U8
+v = MyFn(42)    // v => Void or U8
 x = match v
     Void => 0
     n: U8 => n
@@ -521,6 +535,8 @@ x = match v
 The example above should be handled the same as if the return type would be an `Opt<U8>`.
 
 The true purpose is to not have to distinct between function with or without a return value, especially when taking pointers and/or lambda's (see below).
+
+How to interop with actual dotnet void methods?
 
 ---
 

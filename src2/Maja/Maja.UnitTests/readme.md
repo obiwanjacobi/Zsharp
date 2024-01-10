@@ -87,8 +87,8 @@ Keeping track of the progress of Maja features.
 
 |Feature      |   |Grammar|Syntax|Ir|Checks|Lower|Repl|Emit|Runtime|Description|
 |-------------|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|---------------|
-| assignment |      | x | x |   |   |   | x |   |   | `x = 42`  |
-| if      |      | x | x | x |   |   | x |   |   | `if <condition>`  |
-|         | else | x | x | x |   |   | x |   |   | `if <condition> else`  |
-|         | elif | x | x | x |   |   | x |   |   | `if <condition> elif <condition>`  |
+| assignment |      | x | x |   |   |   | x | x |   | `x = 42`  |
+| if      |      | x | x | x |   |   | x | x |   | `if <condition>`  |
+|         | else | x | x | x |   |   | x | x |   | `if <condition> else`  |
+|         | elif | x | x | x |   |   | x | x |   | `if <condition> elif <condition>`  |
 | loop    |      | x | x | x |   |   |   |   |   | `loop <condition>`  |

@@ -4,7 +4,7 @@
 
 > TBD: compiler extensions. plugins that supply code. Don't allow language extension, but do allow compile-time function extensions. (see also Roslyn source generators)
 
-> A meta extension: implement a custom # tag. Register code with the compiler to be called when the `#` tag is encountered. The extension either manipulates the Abstract Syntax Tree or emits code as text.
+> A meta extension: implement a custom # tag. Register code with the compiler to be called when the `#` tag is encountered. The extension either manipulates the (an) Abstract Syntax Tree or emits code as text.
 
 > A 'code attribute' or 'decorator' extension. Annotated code that gets in the loop for generating the code for that scope. This, for instance, allows implementation of detailed entry and exit tracing and function interception etc.
 
@@ -113,12 +113,14 @@ SomeDecoratedFn: ()
 
 ## AST Manipulation
 
-Allow programmatic inline manipulation of Abstract Syntax Tree nodes.
+Allow programmatic inline manipulation of Abstract Syntax Tree nodes (or some syntax model).
 
 ```csharp
 // some syntax to denote ast code: <[...]>
 // generates and Ast node for the code
 ast = <[loop n in [0..42]]>
+// alternate 'astof'
+ast = astof(loop n in [0..42])
 // add another ast node (as child?)
 ast += <[    WriteLine(n)]>
 
@@ -140,6 +142,7 @@ To solve the issue of having to add dependencies of decorators needed for a fram
 A way to add decorators to a function or struct without needing to change that source code.
 
 ```csharp
+// from a 3rd party lib
 someFunction: (p: U8): U8
 
 [[someFunction:FnDecorator]]

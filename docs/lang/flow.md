@@ -513,6 +513,7 @@ fn: (p: U8): U8
 Downside is that this does not work with nested loops for instance.
 
 > use `leave` instead of `exit`?
+> break => escape? continue => skip?
 
 ---
 
