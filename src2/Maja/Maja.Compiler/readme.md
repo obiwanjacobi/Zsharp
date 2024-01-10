@@ -14,6 +14,7 @@ Started. Have ErrorToken with description.
 - [ ] local (nested) functions and types
 - [ ] IR: Function Type (IrTypeFunction/FunctionTypeSymbol)
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
+- [ ] Emit: Transform loop expression to C# compatible for-expression.
 - [ ] Generate compiler warning for `##` comments
 - [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Allow named type-parameters (`IrArgumentMatcher`)

@@ -37,8 +37,7 @@ public sealed class Opt<T> : Opt,
     {
         get
         {
-            if (HasValue)
-                return _value!;
+            if (HasValue) return _value!;
             throw new InvalidOperationException($"The Opt<{typeof(T).Name}> has no Value.");
         }
     }
@@ -66,36 +65,30 @@ public sealed class Opt<T> : Opt,
     // linq support
     public Opt<R> Select<R>(Func<T, R> selector)
     {
-        if (selector is null)
-            throw new ArgumentNullException(nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
-        if (HasValue)
-            return new Opt<R>(selector(_value!));
-
-        return Opt<R>.Nothing;
+        return HasValue
+            ? new Opt<R>(selector(_value!))
+            : Opt<R>.Nothing;
     }
 
     public IEnumerable<R> SelectMany<R>(Func<T, IEnumerable<R>> selector)
     {
-        if (selector is null)
-            throw new ArgumentNullException(nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
-        if (HasValue)
-            return selector(_value!);
-
-        // Opt<T> implements IEnumerable<T>
-        return Opt<R>.Nothing;
+        return HasValue
+            ? selector(_value!)
+            // Opt<T> implements IEnumerable<T>
+            : Opt<R>.Nothing;
     }
 
     public Opt<T> Where(Func<T, bool> predicate)
     {
-        if (predicate is null)
-            throw new ArgumentNullException(nameof(predicate));
+        ArgumentNullException.ThrowIfNull(predicate);
 
-        if (HasValue && predicate(_value!))
-            return this;
-
-        return Nothing;
+        return HasValue && predicate(_value!)
+            ? this
+            : Nothing;
     }
 
     // Map == Select
@@ -104,13 +97,11 @@ public sealed class Opt<T> : Opt,
 
     public Opt<R> Bind<R>(Func<T, Opt<R>> selector)
     {
-        if (selector is null)
-            throw new ArgumentNullException(nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
-        if (HasValue)
-            return selector(_value!);
-
-        return Opt<R>.Nothing;
+        return HasValue
+            ? selector(_value!)
+            : Opt<R>.Nothing;
     }
 
     // (ternary) conditional operator works same as Match

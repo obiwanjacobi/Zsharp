@@ -83,4 +83,69 @@ public class EmitStatementTests
 
         Emit.AssertBuild(emit);
     }
+
+    [Fact]
+    public void StatementLoop()
+    {
+        const string code =
+            "a := 0" + Tokens.Eol +
+            "loop" + Tokens.Eol +
+            Tokens.Indent1 + "a = a + 1" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" a ")
+            .And.Contain("while (true)")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    //[Fact]
+    // fails until loop expression tranform is implemented
+    public void StatementLoop_For()
+    {
+        const string code =
+            "a := 0" + Tokens.Eol +
+            "x: I32 = 42" + Tokens.Eol +
+            "loop x" + Tokens.Eol +
+            Tokens.Indent1 + "a = a + 1" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" x ")
+            .And.Contain(" a ")
+            .And.Contain("for (")
+            .And.Contain("x--;")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
+    public void StatementLoop_While()
+    {
+        const string code =
+            "a := 0" + Tokens.Eol +
+            "loop a < 42" + Tokens.Eol +
+            Tokens.Indent1 + "a = a + 1" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" a ")
+            .And.Contain("while (")
+            .And.Contain("(a < 42)")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
 }

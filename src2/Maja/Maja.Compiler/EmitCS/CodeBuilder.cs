@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using Maja.Compiler.EmitCS.CSharp;
 using Maja.Compiler.External;
 using Maja.Compiler.IR;
@@ -307,6 +308,25 @@ internal class CodeBuilder : IrWalker<object?>
         _writer.Write("if (");
         _ = OnExpression(condition);
         _writer.Write(")").OpenNewScope();
+    }
+
+    public override object? OnStatementLoop(IrStatementLoop statement)
+    {
+        if (statement.Expression is null)
+        {
+            _writer.Tab().Append("while (true)");
+        }
+        else
+        {
+            _writer.Tab().Append("while (");
+            _ = OnExpression(statement.Expression);
+            _writer.Write(")");
+        }
+
+        _writer.OpenNewScope();
+        _ = OnCodeBlock(statement.CodeBlock);
+        _writer.CloseScope();
+        return null;
     }
 
     public override object? OnStatementAssignment(IrStatementAssignment statement)
