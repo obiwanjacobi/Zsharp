@@ -10,6 +10,7 @@ Keeping track of the progress of Maja features.
 - Ir: is there an Ir node to represent it
 - Checks: are type (and other) checks in place
 - Lower: is the Ir lowered
+- Repl: does it work in the Repl
 - Emit: is code emitted to represent the feature
 - Runtime: does the feature work at runtime
 - Description: example, description, notes
@@ -91,4 +92,4 @@ Keeping track of the progress of Maja features.
 | if      |      | x | x | x |   |   | x | x |   | `if <condition>`  |
 |         | else | x | x | x |   |   | x | x |   | `if <condition> else`  |
 |         | elif | x | x | x |   |   | x | x |   | `if <condition> elif <condition>`  |
-| loop    |      | x | x | x |   |   |   |   |   | `loop <condition>`  |
+| loop    |      | x | x | x |   |   |   | x |   | `loop <condition>`  |

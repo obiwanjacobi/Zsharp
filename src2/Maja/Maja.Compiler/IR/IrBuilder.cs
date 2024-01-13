@@ -42,7 +42,7 @@ internal sealed class IrBuilder
     private IrScope CurrentScope => _scopes.Peek();
 
     private T GetScopeOf<T>() where T : IrScope
-        => _scopes.OfType<T>().Single();
+        => _scopes.OfType<T>().Last();
 
     public static IrProgram Program(SyntaxTree syntaxTree, IExternalModuleLoader moduleLoader, IrScope? parentScope = null)
     {

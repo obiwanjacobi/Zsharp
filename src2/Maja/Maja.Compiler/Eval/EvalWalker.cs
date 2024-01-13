@@ -254,6 +254,29 @@ internal sealed class EvalWalker : IrWalker<object?>
         return null;
     }
 
+    public override object? OnStatementLoop(IrStatementLoop statement)
+    {
+        if (statement.Expression is not null)
+        {
+            IrConstant value;
+
+            while (true)
+            {
+                // re-evaluate expression on each iteration
+                value = (IrConstant)OnExpression(statement.Expression)!;
+                if (value.ToBool())
+                    _ = OnCodeBlock(statement.CodeBlock);
+                else
+                    return value;
+            }
+        }
+        else
+            _state.Diagnostics.Add(DiagnosticMessageKind.Error, 
+                statement.Syntax.Location, "Repl does not do endless loops.");
+
+        return null;
+    }
+
     private sealed class EvaluationStatePopper(EvalWalker walker) : IDisposable
     {
         public void Dispose()
