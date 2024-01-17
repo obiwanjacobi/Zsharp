@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
-using Maja.Compiler.IR.Lower;
 using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.Eval;
@@ -94,7 +93,7 @@ internal sealed class EvalWalker : IrWalker<object?>
         var left = (IrConstant)OnExpression(expression.Left)!;
         var right = (IrConstant)OnExpression(expression.Right)!;
 
-        var result = IR.Lower.Evaluator.Evaluate(
+        var result = EvaluateConstant.Evaluate(
             expression.Left.TypeSymbol, left,
             expression.Operator,
             expression.Right.TypeSymbol, right);

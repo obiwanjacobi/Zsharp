@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using Maja.Compiler.Eval;
 
-namespace Maja.Compiler.IR.Lower;
+namespace Maja.Compiler.IR;
 
 // compile time constant
 [DebuggerDisplay("{DebuggerDisplay()}")]
@@ -44,14 +45,14 @@ internal class IrConstant
     public char ToC16()
         => Convert.ToChar(Value);
     public string ToStr()
-        => Convert.ToString(Value) ?? String.Empty;
+        => Convert.ToString(Value) ?? string.Empty;
 
     internal string DebuggerDisplay()
         => ToString();
     public override string ToString()
         => Value?.ToString() ?? "<null>";
     public string AsString()
-        => Value is String ? $"\"{Value}\"" : Value.ToString() ?? String.Empty;
+        => Value is string ? $"\"{Value}\"" : Value.ToString() ?? string.Empty;
 
     public static IrConstant Zero => new(0);
 
@@ -60,7 +61,7 @@ internal class IrConstant
         if (left.ConstantValue is null || right.ConstantValue is null)
             return null;
 
-        return Evaluator.Evaluate(left.TypeSymbol,
+        return EvaluateConstant.Evaluate(left.TypeSymbol,
             left.ConstantValue, op, right.TypeSymbol, right.ConstantValue);
     }
 }

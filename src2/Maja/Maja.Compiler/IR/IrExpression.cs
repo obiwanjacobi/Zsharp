@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using Maja.Compiler.IR.Lower;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 

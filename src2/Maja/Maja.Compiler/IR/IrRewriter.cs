@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 
-namespace Maja.Compiler.IR.Lower;
+namespace Maja.Compiler.IR;
 
 internal abstract class IrRewriter
 {
@@ -367,7 +367,7 @@ internal abstract class IrRewriter
     protected virtual IrExpressionTypeInitializer RewriteTypeInitializer(IrExpressionTypeInitializer initializer)
     {
         var fields = RewriteArray(initializer.Fields, RewriteTypeInitializerField);
-        
+
         if (fields == initializer.Fields)
             return initializer;
 
@@ -376,10 +376,10 @@ internal abstract class IrRewriter
     protected virtual IrTypeInitializerField RewriteTypeInitializerField(IrTypeInitializerField initializer)
     {
         var expr = RewriteExpression(initializer.Expression);
-        
+
         if (expr == initializer.Expression)
             return initializer;
-        
+
         return new IrTypeInitializerField(initializer.Syntax, initializer.Field, expr!);
     }
 

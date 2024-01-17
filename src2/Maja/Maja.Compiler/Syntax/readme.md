@@ -17,6 +17,10 @@ All classes are (publically) immutable.
 The root (base) class of all nodes in the syntax tree.
 It implements a `Location` property that represents where in the source code the node was created for and a `Children` list that contains nested `SyntaxNode` instances.
 
+### SyntaxTree
+
+A container for a parsed source file.
+
 ### CompilationUnitSyntax
 
 The `CompilationUnitSyntax` is the root of the syntax tree.

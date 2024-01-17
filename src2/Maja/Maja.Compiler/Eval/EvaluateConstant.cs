@@ -1,9 +1,10 @@
 ﻿using System;
+using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
 
-namespace Maja.Compiler.IR.Lower;
+namespace Maja.Compiler.Eval;
 
-internal static class Evaluator
+internal static class EvaluateConstant
 {
     public static IrConstant? Evaluate(TypeSymbol leftType, IrConstant leftValue,
         IrBinaryOperator op, TypeSymbol rightType, IrConstant rightValue)
