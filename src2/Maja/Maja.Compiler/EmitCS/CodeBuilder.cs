@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.NetworkInformation;
 using Maja.Compiler.EmitCS.CSharp;
 using Maja.Compiler.External;
 using Maja.Compiler.IR;
