@@ -49,11 +49,21 @@ In order of precedence (top is highest):
 That means that an expression with multiple (binary) expressions **MUST** use `( )`
 to indicate the order of execution - unless all the operators are the same.
 
+> We may need to define precedence between the different types of operators as well.
+So arithmetic operators should run before comparison operators for instance.
+It would probably look a bit silly if you had to put parenthises around `a < x + y`.
+
+| Operator | Description
+|--|--
+| Arithmetic, Bitwise | Use parenthises to determine order.
+| Comparison | Compare with 'values' complete (previous).
+| Logical | Combine mulitple boolean (comparison) expressions last.
+
 ---
 
 ## Operator Symbols
 
-Arithmetic, bitwise and logical operators.
+Arithmetic, comparison, bitwise and logical operators.
 
 | Operator | Fn Name | Description
 |--|--|--
