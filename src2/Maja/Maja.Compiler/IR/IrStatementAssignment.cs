@@ -5,8 +5,8 @@ namespace Maja.Compiler.IR;
 
 internal class IrStatementAssignment : IrStatement
 {
-    public IrStatementAssignment(StatementAssignmentSyntax syntax, VariableSymbol symbol, IrExpression expression)
-        : base(syntax)
+    public IrStatementAssignment(StatementAssignmentSyntax syntax, VariableSymbol symbol, IrExpression expression, IrLocality locality)
+        : base(syntax, locality)
     {
         Symbol = symbol;
         Expression = expression;

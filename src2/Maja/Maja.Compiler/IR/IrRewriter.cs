@@ -222,7 +222,7 @@ internal abstract class IrRewriter
         if (expr == statement.Expression)
             return statement;
 
-        return new IrStatementExpression(statement.Syntax, expr!);
+        return new IrStatementExpression(statement.Syntax, expr!, statement.Locality);
     }
 
     protected virtual IrStatement RewriteStatementIf(IrStatementIf statement)

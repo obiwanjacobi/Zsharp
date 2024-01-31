@@ -5,7 +5,7 @@ namespace Maja.Compiler.IR;
 internal sealed class IrStatementIf : IrStatement
 {
     public IrStatementIf(StatementIfSyntax syntax, IrExpression condition, IrCodeBlock codeBlock, IrElseClause? elseClause, IrElseIfClause? elifClause)
-        : base(syntax)
+        : base(syntax, IrLocality.None)
     {
         Condition = condition;
         CodeBlock = codeBlock;

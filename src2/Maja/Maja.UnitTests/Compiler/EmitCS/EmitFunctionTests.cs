@@ -172,7 +172,7 @@ public class EmitFunctionTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain("public static class Defmod")
+            .Contain("public static class Module")
             .And.Contain("public static void fn()")
             ;
 

@@ -9,8 +9,12 @@ internal sealed class Property
     }
 
     public AccessModifiers AccessModifiers { get; set; }
+    
+    public FieldModifiers FieldModifiers { get; set; }
 
     public string Name { get; }
 
     public string TypeName { get; }
+    
+    public string? InitialValue { get; set; }
 }

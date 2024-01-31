@@ -8,6 +8,7 @@ internal sealed class Method
     {
         Name = name;
         TypeName = typeName;
+        Body = new CSharpWriter();
     }
 
     public AccessModifiers AccessModifiers { get; set; }
@@ -29,6 +30,8 @@ internal sealed class Method
 
     public void AddParameter(Parameter parameter)
         => _parameters.Add(parameter);
+
+    public CSharpWriter Body { get; }
 }
 
 internal sealed class TypeParameter

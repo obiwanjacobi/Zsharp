@@ -9,12 +9,10 @@ namespace Maja.Compiler.EmitCS.CSharp;
 internal static class CSharpFactory
 {
     public static Namespace CreateNamespace(IrModule module)
-        => new(!String.IsNullOrEmpty(module.Symbol.Name.Namespace.Value)
-            ? module.Symbol.Name.Namespace.Value
-            : module.Symbol.Name.Value);
+        => new(module.Symbol.Name.FullName);
 
     public static Type CreateModuleClass(IrModule module)
-        => new(module.Symbol.Name.Value, TypeKeyword.Class)
+        => new("Module", TypeKeyword.Class)
         {
             AccessModifiers = AccessModifiers.Internal,
             TypeModifiers = TypeModifiers.Static
@@ -37,7 +35,7 @@ internal static class CSharpFactory
     public static Enum CreateEnum(string name, string? baseTypeName = null)
         => new(name)
         {
-            AccessModifiers = AccessModifiers.Private,
+            AccessModifiers = AccessModifiers.Internal,
             BaseTypeName = baseTypeName
         };
 
@@ -47,15 +45,16 @@ internal static class CSharpFactory
     public static Type CreateType(string name, string? baseTypeName = null)
         => new(name, TypeKeyword.Record)
         {
-            AccessModifiers = AccessModifiers.Private,
+            AccessModifiers = AccessModifiers.Internal,
             BaseTypeName = baseTypeName
         };
 
-    public static TypeParameter CreateTypeParameter(string typeName)
-        => new(typeName);
-
-    public static Parameter CreateParameter(string name, string typeName)
-        => new(name, typeName);
+    public static Property CreateProperty(string name, string typeName)
+        => new(name, typeName)
+        {
+            AccessModifiers = AccessModifiers.Private,
+            FieldModifiers = FieldModifiers.Static
+        };
 
     public static Field CreateField(string name, string typeName)
         => new(name, typeName)

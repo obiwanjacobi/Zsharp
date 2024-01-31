@@ -24,18 +24,42 @@ internal class CodeBuilder : IrWalker<object?>
     private bool IsFunctionScope
         => _scopes.Peek().Method is not null;
 
+    private CSharp.Namespace CurrentNamespace
+        => _scopes.Single(s => s.Namespace is not null).Namespace!;
     private CSharp.Type CurrentType
         => _scopes.Peek().Type ?? throw new InvalidOperationException("Not a Type.");
     private CSharp.Method CurrentMethod
         => _scopes.Peek().Method ?? throw new InvalidOperationException("Not a Method.");
 
+    private CSharpWriter? _tempWriter;
+    private CSharpWriter Writer
+    {
+        get
+        {
+            if (_tempWriter is not null)
+                return _tempWriter;
+
+            if (IsFunctionScope)
+                return _scopes.Peek().Method!.Body;
+
+            return _writer;
+        }
+    }
+
+    private IDisposable SetWriter(CSharpWriter writer)
+    {
+        _tempWriter = writer;
+        return new EndOfScope(() => _tempWriter = null);
+    }
+
     public override object? OnProgram(IrProgram program)
     {
         _ = base.OnProgram(program);
-        _writer.CloseScope();
-        var ns = _scopes.Pop().Namespace;
-
+        var ns = _scopes.Pop().Namespace!;
         Debug.Assert(_scopes.Count == 0);
+
+        var serializer = new CSharpSerializer(_writer);
+        serializer.Write(ns);
         return ns;
     }
 
@@ -45,47 +69,40 @@ internal class CodeBuilder : IrWalker<object?>
         var mc = CSharpFactory.CreateModuleClass(module);
         ns.AddType(mc);
 
-        _writer.StartNamespace(ns.Name);
         _scopes.Push(new Scope(ns));
         return null;
     }
 
     public override object? OnCompilation(IrCompilation compilation)
     {
-        var result = OnImports(compilation.Imports);
-        result = AggregateResult(result, OnExports(compilation.Exports));
-
-        var ns = _scopes.Peek().Namespace!;
+        _ = OnImports(compilation.Imports);
+        _ = OnExports(compilation.Exports);
+        
+        var ns = CurrentNamespace;
         var mc = ns.GetModuleClass();
-        if (compilation.Declarations.Any(decl => decl.Locality == IrLocality.Public))
-            mc.AccessModifiers = AccessModifiers.Public;
 
-        _writer.StartType(mc);
         _scopes.Push(new Scope(mc));
-
+        
         if (compilation.Statements.Any())
         {
             var mi = CSharpFactory.CreateModuleInitializer(mc.Name);
             mc.AddMethod(mi);
-
-            _writer.StartMethod(mi);
-            OnParameters(Enumerable.Empty<IrParameter>());
-            _writer.OpenNewScope();
             _scopes.Push(new Scope(mi));
-            result = AggregateResult(result, OnStatements(compilation.Statements));
+            _ = OnParameters(Enumerable.Empty<IrParameter>());
+            _ = OnStatements(compilation.Statements);
             _scopes.Pop();
-            _writer.CloseScope();
         }
 
-        result = AggregateResult(result, OnDeclarations(compilation.Declarations));
+        _ = OnDeclarations(compilation.Declarations);
+
         _scopes.Pop();
-        _writer.CloseScope();
-        return result;
+        return null;
     }
 
     public override object? OnImport(IrImport import)
     {
-        _writer.Using(import.SymbolName.FullName);
+        var ns = CurrentNamespace;
+        ns.AddUsing(import.SymbolName.FullName);
         return null;
     }
 
@@ -100,62 +117,26 @@ internal class CodeBuilder : IrWalker<object?>
         CurrentType.AddMethod(method);
         _scopes.Push(new Scope(method));
 
-        // TODO: is export?
-
-        _writer.StartMethod(method);
-
-        var result = OnTypeParameters(function.TypeParameters.OfType<IrTypeParameterGeneric>());
-        result = AggregateResult(result, OnParameters(function.Parameters));
-        _writer.OpenNewScope();
-        result = AggregateResult(result, OnCodeBlock(function.Body));
-        _writer.CloseScope();
+        _ = OnTypeParameters(function.TypeParameters.OfType<IrTypeParameterGeneric>());
+        _ = OnParameters(function.Parameters);
+        _ = OnCodeBlock(function.Body);
 
         _ = _scopes.Pop();
-        return result;
-    }
-
-    public override object? OnTypeParameters(IEnumerable<IrTypeParameterGeneric> parameters)
-    {
-        object? res = null;
-        if (parameters.Any())
-        {
-            _writer.Write("<");
-            res = base.OnTypeParameters(parameters);
-            _writer.Write(">");
-        }
-        return res;
+        return null;
     }
 
     public override object? OnTypeParameter(IrTypeParameterGeneric parameter)
     {
-        if (CurrentMethod.TypeParameters.Any())
-            _writer.WriteComma();
-
-        var p = CSharpFactory.CreateTypeParameter(parameter.Symbol.Name.Value);
+        var p = new TypeParameter(parameter.Symbol.Name.Value);
         CurrentMethod.AddTypeParameter(p);
-
-        _writer.WriteTypeParameter(p);
         return null;
-    }
-
-    public override object? OnParameters(IEnumerable<IrParameter> parameters)
-    {
-        _writer.Write("(");
-        var res = base.OnParameters(parameters);
-        _writer.Write(")");
-        return res;
     }
 
     public override object? OnParameter(IrParameter parameter)
     {
-        if (CurrentMethod.Parameters.Any())
-            _writer.WriteComma();
-
         var netType = MajaTypeMapper.MapToDotNetType(parameter.Type.Symbol);
-        var p = CSharpFactory.CreateParameter(parameter.Symbol.Name.Value, netType);
+        var p = new Parameter(parameter.Symbol.Name.Value, netType);
         CurrentMethod.AddParameter(p);
-
-        _writer.WriteParameter(p);
         return null;
     }
 
@@ -167,23 +148,22 @@ internal class CodeBuilder : IrWalker<object?>
         {
             var field = CSharpFactory.CreateField(variable.Symbol.Name.Value, netType);
             CurrentType.AddField(field);
-            _writer.StartField(field);
+            using var eos = SetWriter(new CSharpWriter());
+            if (variable.Initializer is not null)
+                _ = OnExpression(variable.Initializer);
+            field.InitialValue = Writer.ToString();
         }
         else
         {
-            _writer.WriteVariable(netType, variable.Symbol.Name.Value);
+            Writer.StartVariable(netType, variable.Symbol.Name.Value);
+            if (variable.Initializer is not null)
+            {
+                Writer.Assignment();
+                _ = OnExpression(variable.Initializer);
+            }
+            Writer.EndOfLine();
         }
-
-        var result = Default;
-        var init = variable.Initializer;
-        if (init is not null)
-        {
-            _writer.Assignment();
-            result = OnExpression(init);
-        }
-        _writer.EndOfLine();
-
-        return result;
+        return null;
     }
 
     public override object? OnDeclarationType(IrDeclarationType type)
@@ -199,7 +179,7 @@ internal class CodeBuilder : IrWalker<object?>
     private object? CreateEnum(IrDeclarationType type)
     {
         var enumInfo = CSharpFactory.CreateEnum(type.Symbol.Name.Value);
-        CurrentType.AddEnum(enumInfo);
+        CurrentNamespace.AddEnum(enumInfo);
 
         foreach (var opt in type.Enums)
         {
@@ -207,65 +187,33 @@ internal class CodeBuilder : IrWalker<object?>
             enumInfo.AddOption(enumOpt);
         }
 
-        _writer.StartEnum(enumInfo)
-            .Tab();
-        foreach (var option in enumInfo.Options)
-        {
-            _writer.Write(option.Name);
-            if (option.Value is not null)
-            {
-                _writer
-                    .Assignment()
-                    .Write(option.Value);
-            }
-            _writer.WriteComma();
-        }
-
-        _writer.Newline()
-            .CloseScope();
-        return enumInfo;
+        return null;
     }
 
     private object? CreateStruct(IrDeclarationType type)
     {
         var typeInfo = CSharpFactory.CreateType(type.Symbol.Name.Value);
-        CurrentType.AddType(typeInfo);
+        CurrentNamespace.AddType(typeInfo);
 
         foreach (var field in type.Fields)
         {
             var netType = MajaTypeMapper.MapToDotNetType(field.Type.Symbol);
-            var fld = CSharpFactory.CreateField(field.Symbol.Name.Value, netType);
-            fld.AccessModifiers = AccessModifiers.Public;
-            fld.FieldModifiers = FieldModifiers.None;
-            fld.InitialValue = field.DefaultValue?.ConstantValue?.AsString();
+            var prop = CSharpFactory.CreateProperty(field.Symbol.Name.Value, netType);
+            prop.AccessModifiers = AccessModifiers.Public;
+            prop.FieldModifiers = FieldModifiers.None;
+            prop.InitialValue = field.DefaultValue?.ConstantValue?.AsString();
 
-            typeInfo.AddField(fld);
+            typeInfo.AddProperty(prop);
         }
-
-        _writer.StartType(typeInfo);
-        foreach (var fld in typeInfo.Fields)
-        {
-            _writer.StartField(fld)
-                .Write(" { get; set; }");
-            if (!String.IsNullOrEmpty(fld.InitialValue))
-            {
-                _writer.Write(" = ")
-                    .Write(fld.InitialValue)
-                    .Write(";");
-            }
-            _writer.Newline();
-        }
-
-        _writer.CloseScope();
-        return typeInfo;
+        return null;
     }
 
     public override object? OnStatementIf(IrStatementIf statement)
     {
-        _writer.Tab();
+        Writer.Tab();
         StartStatementIf(statement.Condition);
         _ = OnCodeBlock(statement.CodeBlock);
-        _writer.CloseScope();
+        Writer.CloseScope();
 
         if (statement.ElseClause is IrElseClause elseClause)
         {
@@ -279,10 +227,10 @@ internal class CodeBuilder : IrWalker<object?>
     }
     public override object? OnStatementIf_ElseIfClause(IrElseIfClause elseIfClause)
     {
-        _writer.Tab().Append("else ");
+        Writer.Tab().Append("else ");
         StartStatementIf(elseIfClause.Condition);
         _ = OnCodeBlock(elseIfClause.CodeBlock);
-        _writer.CloseScope();
+        Writer.CloseScope();
 
         if (elseIfClause.ElseClause is IrElseClause nestedElse)
         {
@@ -296,61 +244,62 @@ internal class CodeBuilder : IrWalker<object?>
     }
     public override object? OnStatementIf_ElseClause(IrElseClause elseClause)
     {
-        _writer.Tab().Append("else");
-        _writer.OpenNewScope();
+        Writer.Tab().Append("else");
+        Writer.Newline().OpenScope();
         _ = OnCodeBlock(elseClause.CodeBlock);
-        _writer.CloseScope();
+        Writer.CloseScope();
         return null;
     }
     private void StartStatementIf(IrExpression condition)
     {
-        _writer.Write("if (");
+        Writer.Write("if (");
         _ = OnExpression(condition);
-        _writer.Write(")").OpenNewScope();
+        Writer.Write(")").Newline().OpenScope();
     }
 
     public override object? OnStatementLoop(IrStatementLoop statement)
     {
         if (statement.Expression is null)
         {
-            _writer.Tab().Append("while (true)");
+            Writer.Tab().Append("while (true)");
         }
         else
         {
-            _writer.Tab().Append("while (");
+            Writer.Tab().Append("while (");
             _ = OnExpression(statement.Expression);
-            _writer.Write(")");
+            Writer.Write(")");
         }
 
-        _writer.OpenNewScope();
+        Writer.Newline().OpenScope();
         _ = OnCodeBlock(statement.CodeBlock);
-        _writer.CloseScope();
+        Writer.CloseScope();
         return null;
     }
 
     public override object? OnStatementAssignment(IrStatementAssignment statement)
     {
-        _writer.StartAssignment(statement.Symbol.Name.FullName);
-        var result = OnExpression(statement.Expression);
-        _writer.EndOfLine();
-        return result;
+        var name = GetCSharpName(statement.Symbol.Name, statement.Locality);
+        Writer.StartAssignment(name);
+        _ = OnExpression(statement.Expression);
+        Writer.EndOfLine();
+        return null;
     }
 
     public override object? OnStatementReturn(IrStatementReturn statement)
     {
-        _writer.WriteReturn();
-        var result = OnOptionalExpression(Default, statement.Expression);
-        _writer.EndOfLine();
-        return result;
+        Writer.WriteReturn();
+        _ = OnOptionalExpression(Default, statement.Expression);
+        Writer.EndOfLine();
+        return null;
     }
 
     public override object? OnExpressionBinary(IrExpressionBinary expression)
     {
-        _writer.Write("(");
+        Writer.Write("(");
         OnType(expression.TypeSymbol);
-        _writer.Write(")(");
+        Writer.Write(")(");
         var res = base.OnExpressionBinary(expression);
-        _writer.Write(")");
+        Writer.Write(")");
         return res;
     }
 
@@ -379,31 +328,31 @@ internal class CodeBuilder : IrWalker<object?>
             _ => throw new NotSupportedException($"Binary Operator '{op.Kind}' is not supported.")
         };
 
-        _writer.Write($" {netOperator} ");
+        Writer.Write($" {netOperator} ");
         return null;
     }
 
     public override object? OnExpressionLiteral(IrExpressionLiteral expression)
     {
         if (expression.ConstantValue!.Value is string str)
-            _writer.Write($"\"{str}\"");
+            Writer.Write($"\"{str}\"");
         else
         {
             // cast
             if (expression.TypeSymbol.Name != TypeSymbol.Unknown.Name)
             {
-                _writer.Write("(");
+                Writer.Write("(");
                 OnType(expression.TypeSymbol);
-                _writer.Write(")");
+                Writer.Write(")");
             }
-            _writer.Write(expression.ConstantValue!.Value.ToString());
+            Writer.Write(expression.ConstantValue!.Value.ToString());
         }
         return null;
     }
 
     public override object? OnExpressionIdentifier(IrExpressionIdentifier identifier)
     {
-        _writer.Write(identifier.Symbol.Name.Value);
+        Writer.Write(identifier.Symbol.Name.Value);
         return null;
     }
 
@@ -413,7 +362,7 @@ internal class CodeBuilder : IrWalker<object?>
 
         foreach (var field in memberAccess.Members)
         {
-            _writer.Write(".")
+            Writer.Write(".")
                 .Write(field.Name.Value);
         }
 
@@ -422,41 +371,39 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnExpressionInvocation(IrExpressionInvocation invocation)
     {
-        _writer.WriteSymbol(invocation.Symbol);
+        Writer.WriteSymbol(invocation.Symbol);
         return base.OnExpressionInvocation(invocation);
     }
 
     public override object? OnInvocationTypeArguments(IEnumerable<IrTypeArgument> arguments)
     {
-        object? res = null;
-
         if (arguments.Any())
         {
-            _writer.Write("<");
-            res = base.OnInvocationTypeArguments(arguments);
-            _writer.Write(">");
+            Writer.Write("<");
+            _ = base.OnInvocationTypeArguments(arguments);
+            Writer.Write(">");
         }
 
-        return res;
+        return null;
     }
     public override object? OnInvocationArguments(IEnumerable<IrArgument> arguments)
     {
-        _writer.Write("(");
-        var res = base.OnInvocationArguments(arguments);
-        _writer.Write(")");
-        return res;
+        Writer.Write("(");
+        _ = base.OnInvocationArguments(arguments);
+        Writer.Write(")");
+        return null;
     }
 
     public override object? OnExpressionTypeInitializer(IrExpressionTypeInitializer expression)
     {
-        _writer.Write("new ");
+        Writer.Write("new ");
         OnType(expression.TypeSymbol);
-        _writer.Write("()")
+        Writer.Write("()")
             .Newline();
 
         if (expression.Fields.Any())
         {
-            _writer.WriteInitializer(expression.Fields, f => f.Field.Name.Value,
+            Writer.WriteInitializer(expression.Fields, f => f.Field.Name.Value,
                 f => { OnExpression(f.Expression); return String.Empty; });
         }
 
@@ -469,8 +416,17 @@ internal class CodeBuilder : IrWalker<object?>
     public object? OnType(TypeSymbol type)
     {
         var netType = MajaTypeMapper.MapToDotNetType(type);
-        _writer.Write(netType);
+        Writer.Write(netType);
         return null;
+    }
+
+    private static string GetCSharpName(SymbolName name, IrLocality locality)
+    {
+        return locality switch
+        {
+            IrLocality.Module => $"{name.Namespace.Value}.Module.{name.Value}",
+            _ => name.FullName
+        };
     }
 
     public override string ToString()

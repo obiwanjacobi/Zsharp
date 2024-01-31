@@ -8,10 +8,10 @@ namespace Maja.Compiler.EmitCS.CSharp;
 internal sealed class CSharpWriter
 {
     private const int SpacesPerTab = 4;
-    private const char OpenScopeChar = '{';
-    private const char CloseScopeChar = '}';
-    private const char SpaceChar = ' ';
-    private const char SemiColonChar = ';';
+    internal const char OpenScopeChar = '{';
+    internal const char CloseScopeChar = '}';
+    internal const char SpaceChar = ' ';
+    internal const char SemiColonChar = ';';
 
     private readonly StringBuilder _writer = new();
     private int _indent;
@@ -23,108 +23,29 @@ internal sealed class CSharpWriter
         _tab = new String(SpaceChar, _indent * SpacesPerTab);
     }
 
-    public CSharpWriter StartNamespace(string namespaceName)
-    {
-        _indent = 0;
-        _writer.Append("namespace ").AppendLine(namespaceName);
-        OpenScope();
-        return this;
-    }
-
-    public CSharpWriter StartType(Type type)
+    public CSharpWriter OpenScope()
     {
         Tab()
-            .Append(type.AccessModifiers.ToCode())
-            .Append(SpaceChar)
-            .Append(type.TypeModifiers.ToCode())
-            .Append(SpaceChar)
-            .Append(type.Keyword.ToCode())
-            .Append(SpaceChar)
-            .Append(type.Name)
-            ;
-
-        if (!String.IsNullOrEmpty(type.BaseTypeName))
-            _writer.Append(" : ")
-                .Append(type.BaseTypeName);
-        Newline();
-        OpenScope();
+            .Append(OpenScopeChar)
+            .AppendLine();
+        Indent();
         return this;
     }
 
-    public CSharpWriter StartMethod(Method method)
+    /// <summary>
+    /// <'}\n'
+    /// </summary>
+    public CSharpWriter CloseScope()
     {
+        Dedent();
         Tab()
-            .Append(method.AccessModifiers.ToCode())
-            .Append(SpaceChar)
-            .Append(method.MethodModifiers.ToCode())
-            .Append(SpaceChar)
-            .Append(method.TypeName)
-            .Append(SpaceChar)
-            .Append(method.Name);
+            .Append(CloseScopeChar)
+            .AppendLine();
 
         return this;
     }
 
-    public CSharpWriter WriteTypeParameter(TypeParameter parameter)
-    {
-        _writer.Append(parameter.TypeName);
-        return this;
-    }
-
-    public CSharpWriter WriteParameter(Parameter parameter, string? defaultValue = null)
-    {
-        _writer.Append(parameter.TypeName)
-            .Append(SpaceChar)
-            .Append(parameter.Name);
-
-        if (!String.IsNullOrEmpty(defaultValue))
-            _writer.Append("=").Append(defaultValue);
-
-        return this;
-    }
-
-    public CSharpWriter OpenNewScope()
-    {
-        _writer.AppendLine();
-        OpenScope();
-        return this;
-    }
-
-    public CSharpWriter StartField(Field field)
-    {
-        Tab()
-            .Append(field.AccessModifiers.ToCode())
-            .Append(SpaceChar)
-            .Append(field.FieldModifiers.ToCode())
-            .Append(SpaceChar)
-            .Append(field.TypeName)
-            .Append(SpaceChar)
-            .Append(field.Name);
-
-        return this;
-    }
-
-    public CSharpWriter StartEnum(Enum @enum)
-    {
-        Tab()
-            .Append(@enum.AccessModifiers.ToCode())
-            .Append(SpaceChar)
-            .Append("enum")
-            .Append(SpaceChar)
-            .Append(@enum.Name);
-        
-        if (@enum.BaseTypeName is not null)
-        {
-            _writer.Append(" : ")
-                .Append(@enum.BaseTypeName);
-        }
-        _writer.AppendLine();
-        OpenScope();
-
-        return this;
-    }
-
-    public CSharpWriter WriteVariable(string? netType, string name)
+    public CSharpWriter StartVariable(string? netType, string name)
     {
         Tab()
             .Append(netType is null ? "var" : netType)
@@ -182,30 +103,9 @@ internal sealed class CSharpWriter
         _writer.Append(text);
         return this;
     }
-
-    /// <summary>
-    /// <'}\n'
-    /// </summary>
-    public CSharpWriter CloseScope()
+    public CSharpWriter Write(char c)
     {
-        Dedent();
-        Tab()
-            .Append(CloseScopeChar)
-            .AppendLine();
-
-        return this;
-    }
-
-    /// <summary>
-    /// 'using <name>;'
-    /// </summary>
-    public CSharpWriter Using(string usingName)
-    {
-        Tab()
-            .Append("using ")
-            .Append(usingName)
-            .Append(SemiColonChar);
-
+        _writer.Append(c);
         return this;
     }
 
@@ -251,16 +151,17 @@ internal sealed class CSharpWriter
     public override string ToString()
         => _writer.ToString();
 
+    internal void Render(CSharpWriter target)
+    {
+        var lines = _writer.ToString().Split(Environment.NewLine);
+        foreach (var line in lines)
+        {
+            target.Tab().Append(line);
+        }
+    }
+
     public StringBuilder Tab()
         => _writer.Append(_tab);
-
-    private void OpenScope()
-    {
-        Tab()
-            .Append(OpenScopeChar)
-            .AppendLine();
-        Indent();
-    }
 
     private void Indent()
     {

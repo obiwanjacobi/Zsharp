@@ -5,7 +5,7 @@ namespace Maja.Compiler.IR;
 internal sealed class IrStatementReturn : IrStatement
 {
     public IrStatementReturn(StatementReturnSyntax syntax, IrExpression? expression)
-        : base(syntax)
+        : base(syntax, IrLocality.None)
     {
         Expression = expression;
     }

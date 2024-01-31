@@ -32,6 +32,12 @@ internal sealed class Namespace
     public void AddType(Type type)
         => _types.Add(type);
 
+    private readonly List<Enum> _enums = new();
+    public IEnumerable<Enum> Enums => _enums;
+
+    public void AddEnum(Enum @enum)
+        => _enums.Add(@enum);   
+
     public Type GetModuleClass()
         => _types[0];
 }

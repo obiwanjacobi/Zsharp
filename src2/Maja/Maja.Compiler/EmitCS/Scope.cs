@@ -1,19 +1,25 @@
-﻿using Maja.Compiler.EmitCS.CSharp;
+﻿using System;
+using Maja.Compiler.EmitCS.CSharp;
 
 namespace Maja.Compiler.EmitCS;
 
-internal class Scope
+internal sealed class Scope
 {
-    public Scope(Namespace ns)
+    public Scope(CSharp.Namespace ns)
         => Namespace = ns;
 
-    public Scope(Type type)
+    public Scope(CSharp.Type type)
         => Type = type;
 
-    public Scope(Method method)
+    public Scope(CSharp.Method method)
         => Method = method;
 
-    public Namespace? Namespace { get; }
-    public Type? Type { get; }
-    public Method? Method { get; }
+    public CSharp.Namespace? Namespace { get; }
+    public CSharp.Type? Type { get; }
+    public CSharp.Method? Method { get; }
+}
+
+internal sealed class EndOfScope(Action endAction) : IDisposable
+{
+    public void Dispose() => endAction();
 }

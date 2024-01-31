@@ -5,5 +5,6 @@ internal enum IrLocality
     None,
     Inline,
     Local,
+    Module,
     Public,
 }

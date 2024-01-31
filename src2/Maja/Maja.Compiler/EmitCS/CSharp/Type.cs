@@ -24,29 +24,32 @@ internal sealed class Type
     public IEnumerable<Field> Fields => _fields;
 
     public void AddField(Field field)
-        => _fields.Add(field);
+    {
+        _fields.Add(field);
+        AdjustAccessModifier(field.AccessModifiers);
+    }
 
     private readonly List<Property> _properties = new();
     public IEnumerable<Property> Properties => _properties;
 
     public void AddProperty(Property property)
-        => _properties.Add(property);
+    {
+        _properties.Add(property);
+        AdjustAccessModifier(property.AccessModifiers);
+    }
 
     private readonly List<Method> _methods = new();
     public IEnumerable<Method> Methods => _methods;
 
     public void AddMethod(Method method)
-        => _methods.Add(method);
+    {
+        _methods.Add(method);
+        AdjustAccessModifier(method.AccessModifiers);
+    }
 
-    private readonly List<Enum> _enums = new();
-    public IEnumerable<Enum> Enums => _enums;
-
-    public void AddEnum(Enum @enum)
-        => _enums.Add(@enum);
-
-    private readonly List<Type> _classes = new();
-    public IEnumerable<Type> Classes => _classes;
-
-    public void AddType(Type type)
-        => _classes.Add(type);
+    private void AdjustAccessModifier(AccessModifiers childAccess)
+    {
+        if (childAccess == AccessModifiers.Public)
+            AccessModifiers = AccessModifiers.Public;
+    }
 }

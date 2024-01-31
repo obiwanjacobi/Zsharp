@@ -20,6 +20,7 @@ internal sealed class IrBuilder
     private readonly DiagnosticList _diagnostics = new();
     private readonly Stack<IrScope> _scopes = new();
     private readonly IExternalModuleLoader _moduleLoader;
+    private IrLocality _locallity = IrLocality.None;
 
     public const string DefaultModuleName = "DefMod";
 
@@ -98,7 +99,10 @@ internal sealed class IrBuilder
         ProcessImports(imports);
 
         var members = Declarations(root.Members);
+        
+        _locallity = IrLocality.Module;
         var statements = Statements(root.Statements);
+        _locallity = IrLocality.None;
 
         return new IrCompilation(root, imports, exports, statements, members);
     }
@@ -464,13 +468,13 @@ internal sealed class IrBuilder
         }
 
         // TODO: check expr.TypeSymbol against variableSymbol.Type
-        return new IrStatementAssignment(syntax, variableSymbol, expr);
+        return new IrStatementAssignment(syntax, variableSymbol, expr, _locallity);
     }
 
     private IrStatementExpression StatementExpression(StatementExpressionSyntax syntax)
     {
         var expr = Expression(syntax.Expression);
-        return new IrStatementExpression(syntax, expr);
+        return new IrStatementExpression(syntax, expr, _locallity);
     }
 
     private IrStatementReturn StatementReturn(StatementReturnSyntax syntax)
