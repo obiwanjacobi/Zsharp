@@ -60,6 +60,37 @@ public class VariableTests
     }
 
     [Fact]
+    public void VarDeclShadowedTop()
+    {
+        const string code =
+            "x: U8" + Tokens.Eol +
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "x: U8" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public void VarDeclShadowedFunction_Error()
+    {
+        const string code =
+            "fn: (switch: Bool)" + Tokens.Eol +
+            Tokens.Indent1 + "x: U8" + Tokens.Eol +
+            Tokens.Indent1 + "if switch" + Tokens.Eol +
+            Tokens.Indent2 + "x: U8" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Diagnostics.Should().HaveCount(1);
+        var err = program.Diagnostics[0];
+        err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
+        err.Text.Should().Contain("Variable name 'x' is already declared.");
+    }
+
+    [Fact]
     public void VarAssignment()
     {
         const string code =

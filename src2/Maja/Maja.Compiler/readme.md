@@ -20,7 +20,7 @@ Started. Have ErrorToken with description.
 - [ ] Allow named type-parameters (`IrArgumentMatcher`)
 - [ ] UnitTests for Eval
 - [ ] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
-- [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code. Use CSharp Lambda Expressions.
+- [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
 - [ ] IR: Validate file-global statements (only StatementExpression?)
 
 ### Done
