@@ -474,6 +474,11 @@ internal sealed class IrBuilder
     private IrStatementExpression StatementExpression(StatementExpressionSyntax syntax)
     {
         var expr = Expression(syntax.Expression);
+
+        if (expr is not IrExpressionInvocation)
+        {
+            _diagnostics.InvalidStatementExpression(syntax.Location);
+        }
         return new IrStatementExpression(syntax, expr, _locallity);
     }
 

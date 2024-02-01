@@ -6,7 +6,6 @@
 - [ ] Syntax/Parser: Error handling: MissingTokens, SkippedTokens (Antlr ErrorStrategy/ErrorListener?)
 Started. Have ErrorToken with description.
 - [ ] Syntax parsing does not report invalid trailing tokens.
-- [ ] StatementExpression only for invocation (other?).
 - [ ] Type base type (enum/struct/value)
 - [ ] Value (custom) Types (/w rules)
 - [ ] Resolve operators to functions
@@ -25,6 +24,7 @@ Started. Have ErrorToken with description.
 
 ### Done
 
+- [x] StatementExpression only for invocation (other?).
 - [x] Loop statement
 - [x] IR: Validate loop expression to be a valid loop expression
 - [x] Test whitespace and comments in various syntax

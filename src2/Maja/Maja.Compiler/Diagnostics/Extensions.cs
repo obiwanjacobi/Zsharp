@@ -100,6 +100,9 @@ internal static class IrDiagnostics
     public static void InvalidLoopExpression(this DiagnosticList diagnostics, SyntaxLocation location)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Invalid Loop Expression. A loop expression must evaluate to a count (I32), a Boolean or a Range.");
 
+    public static void InvalidStatementExpression(this DiagnosticList diagnostics, SyntaxLocation location)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Invalid Expression Statement: Can only be an Invocation Expression.");
+
     public static void ImportNotFound(this DiagnosticList diagnostics, SyntaxLocation location, string importName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Import reference '{importName}' cannot be resolved. Module not found.");
 }

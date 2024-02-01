@@ -194,4 +194,18 @@ public class StatementTests
         program.Diagnostics.Should().HaveCount(1);
         program.Diagnostics.First().Text.Should().Contain("Invalid Loop Expression");
     }
+
+    [Fact]
+    public void Statement_ExpressionError()
+    {
+        const string code =
+            "x: U8 = 42" + Tokens.Eol +
+            "x + 100" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+        program.Should().NotBeNull();
+        program.Diagnostics.Should().HaveCount(1);
+        program.Diagnostics.First().Text.Should().Contain("Invalid Expression Statement");
+    }
 }
