@@ -265,6 +265,17 @@ fn: <#T, #ptr: Ptr<T>>()
     ...
 ```
 
+> TBD: Specify a compile-time parameter as a normal parameter prefixed with `#`.
+
+```csharp
+// use '#' before name to indicate a compile-time parameter
+repeatX: (#count: U16)
+    loop count      // don't use '#' in code
+        ...
+```
+
+This is more consistent with other syntax and the meaning of `<>` as being used for types (only).
+
 ---
 
 ### Code Template Parameters (inlining)

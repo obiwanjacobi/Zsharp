@@ -6,24 +6,24 @@
 - [ ] Syntax/Parser: Error handling: MissingTokens, SkippedTokens (Antlr ErrorStrategy/ErrorListener?)
 Started. Have ErrorToken with description.
 - [ ] Syntax parsing does not report invalid trailing tokens.
-- [ ] Type base type (enum/struct/value)
+- [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
+- [ ] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
+- [ ] Type: base type (enum/struct/value)
 - [ ] Value (custom) Types (/w rules)
 - [ ] Resolve operators to functions
-- [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
 - [ ] local (nested) functions and types
-- [ ] IR: Function Type (IrTypeFunction/FunctionTypeSymbol)
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 - [ ] Emit: Transform loop expression to C# compatible for-expression.
-- [ ] Generate compiler warning for `##` comments
+- [ ] Diagnostics: Generate compiler warning for `##` comments
 - [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Allow named type-parameters (`IrArgumentMatcher`)
 - [ ] UnitTests for Eval
-- [ ] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
 - [ ] IR: Validate file-global statements (only StatementExpression?)
 
 ### Done
 
+- [x] IR: Function Type (IrTypeFunction/FunctionTypeSymbol)
 - [x] StatementExpression only for invocation (other?).
 - [x] Loop statement
 - [x] IR: Validate loop expression to be a valid loop expression

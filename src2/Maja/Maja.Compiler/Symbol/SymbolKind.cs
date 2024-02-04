@@ -10,6 +10,7 @@ public enum SymbolKind
     Variable,
     Function,
     Parameter,
+    TypeFunction,
     TypeParameter,
     Field,
     Enum,

@@ -104,6 +104,7 @@ Arithmetic, comparison, bitwise and logical operators.
 | `>>>` | - | -alt- sign extend (arithmetic) bit shift right
 | `=` | - | Value Assignment
 | `:=` | - | Value Assignment with inferred Type
+| `<-` | - | Value Assignment of mutable Type? (TBD)
 
 > TBD: *) we could reuse the logical operators for use as bitwise operators as well.
 That also means that the bitwise short-hand operators (`&=`, `|=` or `^=`) no longer work.
@@ -259,7 +260,7 @@ To be determined:
 | `<:?` | type as (optional cast)
 | `<:` | down cast type
 | `:>` | up cast type? (is implicit)
-| `<-` | reserved
+| `<-` | reserved (assign mutable variable?)
 | `->>` | parallel execution (also sign extended shift)
 | `=>>` | parallel execution and collect results (in tuple or deconstruct)
 | `[[ ]]` | Alternate Decorators syntax (instead of `{}`)
@@ -284,7 +285,7 @@ Is there use for safe navigation in collections?
 
 ```csharp
 // safe indexing?
-x := root.collection[?0]
+x := root.collection[?0]    // x: Opt<T>
 ```
 
 Use of safe navigation (in any form) always results in an Optional `Opt<T>` that is nothing if the path could not be navigated completely.
@@ -306,9 +307,8 @@ Operators for strings and characters.
 | `=<~` | Case (and culture) insensitive lesser-than-or-equal - compare.
 | `s[2..6]` | sub-string using `Range`.
 | `<+` | Concat a string.
-| `+` | alt - Concat a string?
-| `/<+` | Concat a string with path separator.
-| `"x"<+` | Concat a string with any (x) separator?
+| `/<+` | Concat (join) a string with path separator.
+| `"x"<+` | Concat (join) a string with any (x) separator?
 
 Array operators should also work on string character items.
 
@@ -348,6 +348,7 @@ Operators starting with `<` indicates a structural operation, like adding or rem
 
 > TBD: Do we also support comparison and logical operators that result in an array of booleans?
 > What about set operators (union etc.)?
+> What happens (arithmetic) if arrays are not of the same size?
 
 | Operator | Description
 |---|---
@@ -372,8 +373,8 @@ Operators starting with `<` indicates a structural operation, like adding or rem
 | `not in` | test if item(s) is not in array/list (not contains)
 | `</` | split in array with chunks/tuples of n
 | `<\|` | zip two arrays
-| `<~` | unzip (split in 2)
-| `.>` | Collect a property values on all instances in the array
+| `<~` | unzip (split)
+| `.>` | Collect the property values on all instances in the array
 | `[..]` | Range operator returns a sub array/list.
 | `[i]` | Index (i) operator returns a single item.
 | `[?i]` | Safe index (i) operator returns an optional single item.
@@ -421,6 +422,11 @@ arr: Array<Person> = (...)
 // returns the names of all persons in the array
 names = arr.>Name
 // names: Array<Str>
+
+// Collect multiple properties?
+people = arr.>Name, arr.>Age
+people = { Name = arr.>Name, Age = arr.>Age }
+// people: Array<{Str, U8}>
 ```
 
 ```csharp
@@ -439,8 +445,10 @@ fn: (self: Person, magic: U8): Str
 
 // calls fn with magic=42 for all persons in the array
 names = arr.>fn(42)
-// How to make it clear 42 is duplicated to all calls!?
+// How to make it clear 42 is duplicated to all calls!? Use of '.>'?
 ```
+
+> TBD: Allow 'array programming' operator (overloads) that target simd instructions?
 
 ---
 
@@ -471,7 +479,7 @@ These operators cannot be overloaded, they simply use the standard operators.
 | `$=` | read - ?? - write
 | `^=` | read - 'immutable' ?? - write
 | `\|>=` | ?
-| `<\|=` | ? (or `=<|`)
+| `<\|=` | ? (or `=<\|`)
 
 Do we allow a list of right values? (yes)
 
@@ -489,6 +497,8 @@ a += (x, y, z)
 
 Goal is to have a quick and easy way to convert from a normal data type `T` to one of the wrapper types (of T).
 Note the type-operator is on the right side of the equals sign.
+
+> TBD: Should we add a `:` to the syntax to indicate it is about types? `opt =:? x`
 
 | Operator | Description
 |---|---
@@ -564,10 +574,6 @@ We could spell out each character to make a unique name that is still callable f
 > TBD: Is operator overloading useful for operators other than arithmetic, comparable and possibly logical?
 
 Which operators will definitely not be overloadable?
-
----
-
-> TBD: Allow 'array programming' operator (overloads) that target simd instructions?
 
 ---
 

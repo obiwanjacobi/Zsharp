@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 
@@ -29,6 +30,9 @@ internal sealed class IrDeclarationFunction : IrDeclaration
         Scope = scope;
         Symbol = symbol;
         Body = codeBlock;
+
+        Type = new IrTypeFunction(syntax, symbol.Type,
+            typeParameters, parameters.Select(p => p.Type), returnType);
     }
 
     public FunctionSymbol Symbol { get; }
@@ -37,6 +41,8 @@ internal sealed class IrDeclarationFunction : IrDeclaration
     public IrType ReturnType { get; }
     public IrCodeBlock Body { get; }
     public IrFunctionScope Scope { get; }
+
+    public IrTypeFunction Type { get; }
 
     public new FunctionDeclarationSyntax Syntax
         => (FunctionDeclarationSyntax)base.Syntax;

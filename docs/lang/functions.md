@@ -26,8 +26,6 @@ functionName: InterfaceName [captures]<template>(parameters): returnType
 
 > TBD: we may be able to drop the '`:`' before the return type.
 
-> TBD: change the syntax to reflect how we use variables? `fn: (p: U8): U8 = ...`. That would mean only adding the `=`. If we have a constant/immutable assignment... Perhaps also change the location of the capture? capture is part of the code block?
-
 ```csharp
 // not showing implementation
 fn: ()
@@ -61,6 +59,18 @@ fn: InterfaceName&  // syntax?
 
 > How to differentiate `fn: InterfaceName` from struct definition? => Has no field names.
 
+> TBD: change the syntax to reflect how we use variables? `fn: (p: U8): U8 = ...`. That would mean only adding the `=`. If we have a constant/immutable assignment... Perhaps also change the location of the capture? capture is part of the code block?
+
+```csharp
+fn: () =    // like variable syntax?
+    ...
+
+x: U8 = 42
+fn () =
+    [x]         // capture just like normal code?
+        ...     // extra indent...
+```
+
 ---
 
 ## Parameters
@@ -72,6 +82,8 @@ There is no other way of passing parameters to functions than by value. That mea
 That also means that if a parameter is to be passed by reference, an explicit pointer to that value has to be constructed and passed to the function.
 
 > The compiler can still use an immutable reference for optimizations. The by-value model is how you should think about it.
+
+> `Ptr<T>` will probably be targeted toward representing an unsafe C# memory pointer. `Ref<T>` will be used to represent a managed reference (not the reference type).
 
 ```C#
 byref: (ptr: Ptr<U8>)     // pointer as by-ref parameter
@@ -93,10 +105,33 @@ filter: (predicate: Fn<U8, Bool>)
 ```
 
 > TBD: it would be nice to be able to see if a variable or parameter was an literal value. Then specific logic could be applied in these cases. For instance, when a parameter is a literal, the result of the function could be made immutable?
+But that should probably be an overload of the function. And then we could use a specific type something like `Lit<T>` for the parameter type.
+
+```csharp
+// normal function
+fn: (p: U8): U8
+    ...
+
+// overload for immutable argument
+fn: (p: Imm<U8>): Imm<U8>
+    ...
+
+// overload for constant/literal argument
+fn: (p: Lit<U8>): Imm<U8>
+    ...
+
+u: U8 = 42
+v = fn(u)   // calls normal function
+
+w: Imm<U8> = 42
+x = fn(w)   // calls immutable overload
+
+z = fn(42)  // calls the constant overload
+```
+
+Not sure how useful the `Imm<T>` vs `Lit<T>` is...
 
 - Require specifying the parameter name when a literal is used?
-
-Allow function overloads with some sort of special syntax for literal values?
 
 ---
 
@@ -237,7 +272,7 @@ Make42: (p: Ptr<U8>)
 This is one usage of `Ptr<T>` that may actually be useful.
 
 Alternative for out parameters is to return it as a return value.
-If multiple out parameter and/or return values exist, the type becomes a tuple.
+If multiple out parameter and/or return values exist, the return type becomes a tuple.
 
 ```csharp
 // import
@@ -248,6 +283,23 @@ b, i = result
 // b = true
 // i = 42
 ```
+
+> TBD: If we assume immutable types by default and have a `Mut<T>` for mutable data, then a `Mut<T>` would represent an out parameter, `Ref<T>` a ref parameter and a normal type as a constant parameter.
+
+```csharp
+// immutable / constant parameter
+fn: (p: U8)
+    ...
+// out parameter
+fn: (p: Mut<U8>)
+    ...
+// ref (in/out) parameter
+fn: (p: Ref<U8>)
+    ...
+```
+
+That would make `Ref<T>` be also a `Mut<T>`?
+How does `ref` differ between Value and Reference types?
 
 ---
 
@@ -448,6 +500,7 @@ MyFunc(p: U8, p2: U16): MyStruct
 ```csharp
 // use a tuple/anonymous struct for retval
 MyFunc(p: U8, p2: U16): (field1: U8, field2: U16)
+MyFunc(p: U8, p2: U16): { field1: U8, field2: U16 }     // object notation
     return {
         field1 = p
         field2 = p2
@@ -670,6 +723,8 @@ Alternate syntax?
 MyStruct.boundFn: (p: U8)
     // still use the 'self' keyword
     self.fld1 = p
+    // or a shortened version?
+    .fld1 = p
 ```
 
 ---
@@ -700,7 +755,7 @@ When calling a bound function, the 'self' parameter can be used as an 'object' u
 
 > TBD
 
-|Var Type | Self Type | Note
+| Var Type | Self Type | Note
 |---|---|---
 | T | T |
 | T | Ptr\<T> | Function can write to var!
