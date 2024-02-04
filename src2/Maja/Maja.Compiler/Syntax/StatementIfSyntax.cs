@@ -5,7 +5,7 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents the 'if' statement.
 /// </summary>
-public class StatementIfSyntax : StatementSyntax, ICreateSyntaxNode<StatementIfSyntax>
+public sealed class StatementIfSyntax : StatementSyntax, ICreateSyntaxNode<StatementIfSyntax>
 {
     private StatementIfSyntax(string text)
         : base(text)

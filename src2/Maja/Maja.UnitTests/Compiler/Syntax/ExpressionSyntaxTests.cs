@@ -5,6 +5,13 @@ namespace Maja.UnitTests.Compiler.Syntax;
 
 public class ExpressionSyntaxTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public ExpressionSyntaxTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     [Fact]
     public void ArithmeticLiteralsSingle()
     {
@@ -22,6 +29,8 @@ public class ExpressionSyntaxTests
         expr.Operator.OperatorCategory.Should().Be(ExpressionOperatorCategory.Arithmetic);
         expr.Operator.OperatorCardinality.Should().Be(ExpressionOperatorCardinality.Binary);
         expr.Right.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("101");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -53,6 +62,8 @@ public class ExpressionSyntaxTests
         //     +   2
         //    / \
         //  42   101
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -85,6 +96,8 @@ public class ExpressionSyntaxTests
         //     42  '/' *precedence
         //         / \
         //      101   2
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -104,6 +117,8 @@ public class ExpressionSyntaxTests
         expr.Operator.OperatorKind.Should().Be(ExpressionOperatorKind.Equals);
         expr.Operator.OperatorCategory.Should().Be(ExpressionOperatorCategory.Comparison);
         expr.Operator.OperatorCardinality.Should().Be(ExpressionOperatorCardinality.Binary);
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -120,6 +135,8 @@ public class ExpressionSyntaxTests
         expr.Identifier.Text.Should().Be("fn");
         expr.Arguments.First().ChildNodes[0]
             .As<ExpressionLiteralSyntax>().Text.Should().Be("42");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -135,6 +152,8 @@ public class ExpressionSyntaxTests
         var expr = v.Expression!.As<ExpressionInvocationSyntax>();
         expr.Identifier.Text.Should().Be("fn");
         expr.Arguments.Should().BeEmpty();
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -151,6 +170,8 @@ public class ExpressionSyntaxTests
         expr.Identifier.Text.Should().Be("fn");
         expr.Arguments.First().ChildNodes[0]
             .As<ExpressionLiteralSyntax>().Text.Should().Be("42");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -167,6 +188,8 @@ public class ExpressionSyntaxTests
         expr.Identifier.Text.Should().Be("fn");
         expr.TypeArguments.First().ChildNodes[0]
             .As<TypeSyntax>().Text.Should().Be("U8");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -184,7 +207,8 @@ public class ExpressionSyntaxTests
         expr.Name.Text.Should().Be("fld1");
         expr.LeftAs<ExpressionIdentifierSyntax>()
             .Name.Text.Should().Be("x");
-        
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -205,6 +229,8 @@ public class ExpressionSyntaxTests
         expr.Name.Text.Should().Be("fld1");
         expr.LeftAs<ExpressionIdentifierSyntax>()
             .Name.Text.Should().Be("x");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -243,5 +269,7 @@ public class ExpressionSyntaxTests
         rng = v.Expression.As<ExpressionRangeSyntax>();
         rng.Start.Should().BeNull();
         rng.End.Should().BeNull();
+
+        Syntax.RoundTrip(code, _output);
     }
 }

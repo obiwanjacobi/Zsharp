@@ -67,6 +67,13 @@ public abstract class SyntaxToken
                 Location = location
             };
 
+        if (IndentToken.IsValid(tokenTypeId))
+            return new IndentToken(text)
+            {
+                TokenTypeId = tokenTypeId,
+                Location = location
+            };
+
         if (WhitespaceToken.IsValid(tokenTypeId))
             return new WhitespaceToken(text)
             {
@@ -76,6 +83,13 @@ public abstract class SyntaxToken
 
         if (PunctuationToken.IsValid(tokenTypeId))
             return new PunctuationToken(text)
+            {
+                TokenTypeId = tokenTypeId,
+                Location = location
+            };
+        
+        if (OperatorToken.IsValid(tokenTypeId))
+            return new OperatorToken(text)
             {
                 TokenTypeId = tokenTypeId,
                 Location = location
@@ -195,6 +209,19 @@ public sealed class NewlineToken : SyntaxToken
 }
 
 /// <summary>
+/// Represents an indent or dedent token.
+/// </summary>
+public sealed class IndentToken : SyntaxToken
+{
+    public IndentToken(string Text)
+        : base(Text)
+    { }
+
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId is MajaLexer.Indent or MajaLexer.Dedent;
+}
+
+/// <summary>
 /// Represents a punctuation token: .,;:
 /// </summary>
 public sealed class PunctuationToken : SyntaxToken
@@ -207,6 +234,29 @@ public sealed class PunctuationToken : SyntaxToken
         => tokenTypeId is MajaLexer.Dot or MajaLexer.Comma
             or MajaLexer.Colon or MajaLexer.SemiColon
             or MajaLexer.Range;
+}
+
+/// <summary>
+/// Represents an operator token
+/// </summary>
+public sealed class OperatorToken : SyntaxToken
+{
+    public OperatorToken(string Text)
+        : base(Text)
+    { }
+
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId is MajaLexer.BitAnd
+            or MajaLexer.BitNot or MajaLexer.BitOr
+            or MajaLexer.BitRollL or MajaLexer.BitRollR
+            or MajaLexer.BitShiftL or MajaLexer.BitXor_Imm
+            or MajaLexer.Divide
+            or MajaLexer.Eq or MajaLexer.GtEq
+            or MajaLexer.LtEq or MajaLexer.Minus
+            or MajaLexer.Modulo or MajaLexer.Multiply
+            or MajaLexer.Neq or MajaLexer.Plus
+            or MajaLexer.Power or MajaLexer.Root
+        ;
 }
 
 /// <summary>

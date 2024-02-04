@@ -8,6 +8,7 @@ Started. Have ErrorToken with description.
 - [ ] Syntax parsing does not report invalid trailing tokens.
 - [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
 - [ ] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
+    - [ ] Indents are not working correct (`SyntaxWriter`).
 - [ ] Type: base type (enum/struct/value)
 - [ ] Value (custom) Types (/w rules)
 - [ ] Resolve operators to functions

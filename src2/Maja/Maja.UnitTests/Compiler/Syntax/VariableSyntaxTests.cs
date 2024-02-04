@@ -5,6 +5,13 @@ namespace Maja.UnitTests.Compiler.Syntax;
 
 public class VariableSyntaxTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public VariableSyntaxTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     [Fact]
     public void VarType()
     {
@@ -17,6 +24,8 @@ public class VariableSyntaxTests
         var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
         v.Name.Text.Should().Be("x");
         v.Type!.Name.Text.Should().Be("U8");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -33,6 +42,8 @@ public class VariableSyntaxTests
         v.Type!.Name.Text.Should().Be("U8");
         v.Expression.Should().NotBeNull();
         v.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -54,6 +65,8 @@ public class VariableSyntaxTests
         arg = v.Type!.TypeArguments.Skip(1).First().As<TypeArgumentSyntax>();
         arg.Expression.Should().NotBeNull();
         arg.Expression!.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("4");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -68,6 +81,8 @@ public class VariableSyntaxTests
         var v = result.Members.First().As<VariableDeclarationInferredSyntax>();
         v.Name.Text.Should().Be("x");
         v.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -89,5 +104,7 @@ public class VariableSyntaxTests
         var stat = result.Statements.First().As<StatementAssignmentSyntax>();
         stat.Name.Text.Should().Be("x");
         stat.Expression.As<ExpressionLiteralSyntax>().Text.Should().Be("42");
+
+        Syntax.RoundTrip(code, _output);
     }
 }

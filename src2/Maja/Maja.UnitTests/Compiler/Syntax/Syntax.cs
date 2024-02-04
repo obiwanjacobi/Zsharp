@@ -22,4 +22,19 @@ internal static class Syntax
 
         return tree.Root;
     }
+
+    public static string Write(CompilationUnitSyntax root)
+    {
+        var writer = new SyntaxWriter();
+        return writer.Serialize(root);
+    }
+
+    public static void RoundTrip(string code, ITestOutputHelper? output = null)
+    {
+        var tree = Syntax.Parse(code, throwOnError: false);
+        var result = Syntax.Write(tree);
+
+        output?.WriteLine(result);
+        result.Should().Be(code);
+    }
 }

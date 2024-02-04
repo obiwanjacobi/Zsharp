@@ -2,6 +2,13 @@ namespace Maja.UnitTests.Compiler.Syntax;
 
 public class BasicSyntaxTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public BasicSyntaxTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     [Fact]
     public void EndOfFile()
     {
@@ -12,6 +19,8 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -25,6 +34,8 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
+
+        //Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -41,6 +52,8 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
+
+        //Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -56,6 +69,8 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
+
+        //Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -70,6 +85,8 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
+
+        //Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -88,6 +105,8 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
+
+        //Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -100,6 +119,8 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -114,6 +135,8 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -136,5 +159,7 @@ public class BasicSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
+
+        //Syntax.RoundTrip(code, _output);
     }
 }

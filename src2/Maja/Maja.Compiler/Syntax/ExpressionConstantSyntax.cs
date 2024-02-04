@@ -15,7 +15,7 @@ public abstract class ExpressionConstantSyntax : ExpressionSyntax
 /// <summary>
 /// An expression that represents a literal value.
 /// </summary>
-public class ExpressionLiteralSyntax : ExpressionConstantSyntax, ICreateSyntaxNode<ExpressionLiteralSyntax>
+public sealed class ExpressionLiteralSyntax : ExpressionConstantSyntax, ICreateSyntaxNode<ExpressionLiteralSyntax>
 {
     private ExpressionLiteralSyntax(string text)
         : base(text)
@@ -52,7 +52,7 @@ public class ExpressionLiteralSyntax : ExpressionConstantSyntax, ICreateSyntaxNo
 /// <summary>
 /// An expression that represents a literal boolean value.
 /// </summary>
-public class ExpressionLiteralBoolSyntax : ExpressionConstantSyntax, ICreateSyntaxNode<ExpressionLiteralBoolSyntax>
+public sealed class ExpressionLiteralBoolSyntax : ExpressionConstantSyntax, ICreateSyntaxNode<ExpressionLiteralBoolSyntax>
 {
     private ExpressionLiteralBoolSyntax(string text)
         : base(text)
