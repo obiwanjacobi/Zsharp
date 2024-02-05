@@ -212,30 +212,27 @@ Template parameters that are not type parameters can be specified in a similar f
 
 ```csharp
 // use '#' before name to indicate a compile-time template param
-repeatX: <#count: U16>()
+repeatX: (#count: U16)
     loop count      // don't use '#' in code
         ...
 ```
 
 ```csharp
-// not using '#' before name is an error
-repeatX: <count: U16>()     // Error!
+// not using '#' before name makes it a normal parameter
+repeatX: (count: U16)     // present at runtime
     ...
 ```
 
 ```csharp
 // Error: cannot use the same name for template and function parameters
-repeatX: <#count: U16>(count: U16)
+repeatX: (#count: U16, count: U16)
     ...
 ```
 
 Example
 
 ```csharp
-fn<#T, #ret: T>(): T
-    return ret
-// -or- ?
-fn<#ret: T, #T>(): T
+fn<#T>(#ret: T): T
     return ret
 
 // Can we infer T?
@@ -243,10 +240,16 @@ n = fn<42>()        // n: U8 = 42
 s = fn<"Hello">()   // s: Str = 'Hello'
 ```
 
-Dimensioning data structures.
+Dimensioning data structures. Structure parameters.
 
 ```csharp
-DataStruct<count: U16>:
+DataStruct(#count: U16):
+    Names: Str[count]           // <= TDB
+    Names: Array<Str>(count)    // or this?
+
+// can structures also have normal parameters?
+// interpret this as a primary constructor?
+DataStruct(count: U16):
     Names: Str[count]           // <= TDB
     Names: Array<Str>(count)    // or this?
 ```
@@ -261,20 +264,9 @@ In both cases the `T` can be inferred from usage.
 fn: <#T>(ptr: Ptr<T>)
     ...
 
-fn: <#T, #ptr: Ptr<T>>()
+fn: <#T>(#ptr: Ptr<T>)
     ...
 ```
-
-> TBD: Specify a compile-time parameter as a normal parameter prefixed with `#`.
-
-```csharp
-// use '#' before name to indicate a compile-time parameter
-repeatX: (#count: U16)
-    loop count      // don't use '#' in code
-        ...
-```
-
-This is more consistent with other syntax and the meaning of `<>` as being used for types (only).
 
 ---
 

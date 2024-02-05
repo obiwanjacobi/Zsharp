@@ -24,7 +24,7 @@ functionName: InterfaceName [captures]<template>(parameters): returnType
 
 `returnType`: (optional) The Type of the function result. `Void` if not specified.
 
-> TBD: we may be able to drop the '`:`' before the return type.
+> TBD: we may be able to drop the '`:`' before the return type - or use `->`?.
 
 ```csharp
 // not showing implementation
@@ -66,9 +66,14 @@ fn: () =    // like variable syntax?
     ...
 
 x: U8 = 42
-fn () =
+fn: () =
     [x]         // capture just like normal code?
         ...     // extra indent...
+
+// infer function type?
+// TBD: lambda like syntax (arrow function)
+fn := (p) //: Bool -> inferred from return statement
+    return (p = 42) // p: U8 -> inferred from '42'
 ```
 
 ---

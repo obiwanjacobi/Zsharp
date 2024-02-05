@@ -246,7 +246,7 @@ a, b = ...
 sum = add(a, b)
 ```
 
-> TBD: auto deconstruction?
+> TBD: auto deconstruction? => no
 
 ```csharp
 add: (a: U8, b: U8): U16
@@ -254,7 +254,7 @@ add: (a: U8, b: U8): U16
 
 // deconstruct either by name or in order (types must match exactly)
 sum = add(x)    // a, b = x
-// use spread operator to make deconstruction clear?
+// use spread operator to make deconstruction clear? => yes
 sum = add(...x) // a, b = x
 ```
 
@@ -276,14 +276,19 @@ arr = [1, 2, 3, 4, 5]
 
 func: (p: U8)
     ...
-func(...arr)    // called 5 times?
+func(...arr)    // called 5 times? (unclear!)
 
 func5: (p1: U8, p2: U8, p3: U8, p4: U8, p5: U8)
     ...
 func5(...arr)   // or with 5 params?
-func5(arr)      // without spread operator?
+func5(arr)      // without spread operator? => no
 
 // what if the param count does not match array item count?
+// must at least be the number of parameters without default values.
+
+// should also work with a tuple (anonymous type)
+params = { p1=1, p2=2, p3=3 p4=4 p5=5 }
+func5(...params)
 ```
 
 ### Deconstructing a Structure
@@ -318,6 +323,17 @@ _, _, a = s
 
 > Is there a need to override how deconstruction is done on a (custom) type? => yes
 
+> TBD: Do we need to distinguish between array, tuple and object deconstruction?
+
+```csharp
+// array (old)
+a, b = [1, 2]
+// (new) list/array
+a, b = (1, 2)
+// object/tuple
+a, b = {a=1, b=2}
+```
+
 ---
 
 ### Swap Scalar Variables
@@ -334,7 +350,7 @@ x, y = { y, x }
 // x = 101
 // y = 42
 
-// swap operator
+// swap operator (needed?)
 x <=> y
 ```
 

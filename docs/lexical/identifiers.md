@@ -129,7 +129,7 @@ This allows some language features where an identifier/label/symbol refers to so
 
 Label | Code | Type | Description |
 | -- | -- | -- | -- |
-| var | `x : U8` | Type | Variable declaration |
+| var | `x: U8` | Type | Variable declaration |
 | fn | `fn: (p: U8): U8` | FunctionType | Function declaration |
 | struct | `MyStruct` | Type | Structure declaration |
 | field | `fld: U8` | Type | Field declaration |
