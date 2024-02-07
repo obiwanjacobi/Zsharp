@@ -5,7 +5,7 @@ Variables store values of a specific type by name. The name is the [Identifier](
 Here is an example of a literal value being used to initialize the variable `a`:
 
 ```C#
-a = 42
+a := 42
 ```
 
 A variable is never uninitialized, even if no explicit value is assigned:
@@ -14,11 +14,11 @@ A variable is never uninitialized, even if no explicit value is assigned:
 a               // error! a variable must have type
 a: U8           // a is of type U8 and has value 0 (default)
 a: U8 = 42      // a is of type U8 and has value 42
-a = 42          // a is of type U8 (inferred) and has value 42
-a = 0x4242      // a is of type U16 (inferred) and has value 0x4242 (hex)
-a = -12345      // a is of type I16 (inferred) and has value -12345 (dec)
-s = "zlang"     // s is of type Str and has value 'zlang'
-b = true        // b is of type Bool and has value true
+a := 42         // a is of type U8 (inferred) and has value 42
+a := 0x4242     // a is of type U16 (inferred) and has value 0x4242 (hex)
+a := -12345     // a is of type I16 (inferred) and has value -12345 (dec)
+s := "zlang"    // s is of type Str and has value 'zlang'
+b := true       // b is of type Bool and has value true
 ```
 
 If no explicit type is given the initialization value is used to infer the smallest type from it. The `Bit<T>` type is never considered.
@@ -50,16 +50,16 @@ A pointer variable contains a memory location of the thing it points to.
 A specific parameterized type is used to express pointers: `Ptr<T>`:
 
 ```C#
-a = 42          // U8
-p = a.Ptr()     // p of type Ptr<U8> points to a
+a := 42          // U8
+p := a.Ptr()     // p of type Ptr<U8> points to a
 ```
 
 A pointer of any variable can be obtained by using the `Ptr()` conversion function.
 
 ```C#
-a = 42          // U8
-p = a.Ptr()     // p of type Ptr<U8> points to a
-b = p()         // b = 42
+a := 42          // U8
+p := a.Ptr()     // p of type Ptr<U8> points to a
+b := p()         // b = 42
 
 p() = 101       // a = 101, b = 42
 ```
@@ -77,13 +77,12 @@ When variables are immutable they cannot be changed during their lifetime - thei
 An immutable variable is initialized when declared (not assigned to later).
 
 ```C#
-c: Imm<U8> = 10  // c has value 10 and cannot be changed
+c: U8 = 10      // c has value 10 and cannot be changed
 
-c = 42          // error! cannot change value
-a = c           // now a is immutable as well (??)
+c = 42              // error! cannot change value
+b : Mut<U8> = c     // now a is mutable
 
-v = 42          // mutable U8
-c: Imm<U8> = v  // ok, immutable copy of v
+a: U8 = b       // ok, immutable copy of b
 ```
 
 See also [Immutable Types](types.md#Immutable-Types).
@@ -92,15 +91,15 @@ See also [Immutable Types](types.md#Immutable-Types).
 
 ```csharp
 // this can never change
-i: Imm<I8> = 42
-// this can never become an immutable variable?
-m = 101
+i := 42
+// this can never become an immutable variable
+m : Mut<U8> = 101
 
 // error cannot (re)assign imm var
 i = m
 
-// guarantees that param will never be changed (is that ever an issue with by-value?)
-fn: (constP: Imm<I8>)
+// guarantees that param will never be changed
+fn: (constP: I8)
     ...
 
 // can pass imm var to imm param
@@ -179,9 +178,9 @@ fn: (self: MyStruct, p: U8)
 pred: (p: U8): Bool
     return p = 42
 
-s = MyStruct
+s := MyStruct
     ...
-v = 42
+v := 42
 
 with s, v
 with (s, v)     // use '()' for lists? Or is (s, v) a tuple now?
@@ -204,7 +203,7 @@ MyType: (p: U8): MyType
 MyFn: (self: MyType, str: Str)
     ...
 
-t = MyType(42)
+t := MyType(42)
 with t
     .MyFn("blabla")
 
@@ -225,7 +224,7 @@ Can contain loggers, temp preallocated memory buffers and any application specif
 // some syntax for static bound functions (namespace or struct)
 Context.LogInfo("Context demo.")
 
-ctx = Context::Replace(Context
+ctx := Context::Replace(Context
     Logger = MyLogger
 )
 // schedule pop context

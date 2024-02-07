@@ -42,7 +42,7 @@ Alternate way of handling more complex error conditions using a `match` expressi
 FnErr: (): U8!
     ...
 
-a = match FnErr()
+a := match FnErr()
     err: Error -> 0
     custom: MyError -> return custom.fld    // return exits the function
     n: U8 -> n
@@ -53,7 +53,7 @@ A (predicted) common pattern is that a function will call many functions itself 
 ```C#
 MyFunc: (): Bool!
     // propagate error from function
-    b = try couldWork() // try -> catch(err) return err
+    b := try couldWork() // try -> catch(err) return err
     // b is the plain type - without the Err<> component.
     use(b)
 ```
@@ -70,7 +70,7 @@ The `catch` and `try` keywords can only be used on functions that actually retur
 myFunc: (): Bool
     ...
 
-b = myFunc() catch(err)  // error! myFunc does not return errors
+b := myFunc() catch(err)  // error! myFunc does not return errors
     ...
 ```
 
@@ -104,7 +104,7 @@ For .NET Interop, we need a way to use the `try` and `catch` keywords for a bloc
 
 ```csharp
 fn: (): U8!     // can return Error
-    a = 42
+    a := 42
     try [a]     // any Error out of this block is forwarded
         // code here inside capture
     
@@ -125,7 +125,7 @@ The `Err<T>` type is not used at all*. `try` is not used on a per function basis
 // starts scope (optionally a capture)
 try
     // catch-lambda (with exception type) for local handling
-    handle = File.Open("file.txt") catch -> (err: FileNotFoundException)
+    handle := File.Open("file.txt") catch -> (err: FileNotFoundException)
         // handle FileNotFound
     ...
 catch -> (err)      // err: Exception
@@ -227,7 +227,7 @@ errorHandler: (err: Error): Bool!
 errorFn: (): U8!
     return Error("Failed")
 
-v = errorFn() catch(errorHandler)
+v := errorFn() catch(errorHandler)
 ```
 
 > Test for error type
@@ -244,18 +244,18 @@ errorFn: (p: U8) U8!
     else
         return Error("Standard Error")
 
-v = errorFn(42) catch(err)
+v := errorFn(42) catch(err)
     // control flow: using typeid
     if err#typeId = MyError#typeId
         ...
 
-v = errorFn(42) catch(err)
+v := errorFn(42) catch(err)
     // value: match
-    a = match err
+    a := match err
         myErr: MyError -> ...
         _ -> ...
 
-v = match errorFn(42)
+v := match errorFn(42)
     n: U8 -> // use normal return value
     myErr: MyError -> ...
     _ -> ...

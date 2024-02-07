@@ -7,7 +7,7 @@ This pattern is useful for instance when cleaning up resources.
 ```csharp
 useResourceFn: (): Bool!
     // allocate a resource
-    r = try AcquireResource(42)
+    r := try AcquireResource(42)
     // schedule closing the resource
     defer r.Close()
 
@@ -22,8 +22,8 @@ A defer statement is evaluated at runtime. This means runtime conditions can dec
 ```csharp
 useResourceFn: (): Bool
     // allocate a resource
-    a = AcquireResource(42)
-    r = match a
+    a := AcquireResource(42)
+    r := match a
         Error => return false // exit function
         // schedule closing the resource
         _ -> defer r.Close()
@@ -55,7 +55,7 @@ In more complex scenarios it is sometimes necessary to only cleanup if an error 
 ```csharp
 createResourceFn: (): Resource!
     // allocate a resource
-    a = try AcquireResource(42)
+    a := try AcquireResource(42)
     errdefer a.Close()
 
     // we only want to return a if b succeeds
@@ -108,5 +108,5 @@ resource := AcquireResource()
 use resource
     // use resource here
 
-
+// dispose
 ```

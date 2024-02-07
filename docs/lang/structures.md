@@ -18,7 +18,7 @@ Here is how to create an instance of a structure and assign its fields with valu
 MyStruct
     field1: U8
 
-s = MyStruct            // instantiate an instance
+s := MyStruct           // instantiate an instance
     field1 = 42         // assigning values
 ```
 
@@ -29,7 +29,7 @@ MyStruct
     field1: U8 = 42
     field2: U8 = 42
 
-s = MyStruct
+s := MyStruct
     field2 = 101        // overwrites any value
 
 // s.field1 = 42
@@ -107,7 +107,7 @@ MyContainer
 The `MyContainer` structure still has the `field1` from `MyStruct` but it has to be reached by the `cnt` field. Here is how the structure would be initialized:
 
 ```C#
-s = MyContainer
+s := MyContainer
     cnt.field1 = 42
     field2 = "OK"
 ```
@@ -201,17 +201,17 @@ MyStruct
     fld1: U8
     fld2: Str
 
-s: MyStruct
+s := Mut<MyStruct>      // mutable
     fld1 = 42
     fld2 = "42"
 
-f1 = s.fld1             // dot notation
-f2 = s[MyStruct#fld2]   // indexed by name at compile time (metadata)
+f1 := s.fld1             // dot notation
+f2 := s[MyStruct#fld2]   // indexed by name at compile time (metadata)
 
-f1 = s["fld1"]          // indexed by name at run time
+f1 := s["fld1"]          // indexed by name at run time
 // Error or Opt, if field with 'name' does not exist? What if the field type is incompatible with the variable type? Any?
 name = ...
-f2 = s[name]          // indexed by name at runtime time/reflection (variable)
+f2 := s[name]          // indexed by name at runtime time/reflection (variable)
 s[name] = 42
 // Error if field with 'name' does not exist? What if the field type is incompatible with the value type? Auto-Convert?
 ```
@@ -253,8 +253,10 @@ MyStruct2
     first: MyStruct1
     second: MyStruct1
 
+// TODO: a different syntax is used here!
+
 // in order
-v: MyStruct2 =
+v : MyStruct2 =
     { 42, "42" }
     { 101, "101" }
 
@@ -286,21 +288,21 @@ Also known as Tuples.
 > Use `{}` for object creation syntax.
 
 ```csharp
-a = { Fld1 = 42, Fld2 = "42" }
+a := { Fld1 = 42, Fld2 = "42" }
 
 // a is a tuple with two fields
-x = a.Fld1  // U8
-y = a.Fld2  // Str
+x := a.Fld1  // U8
+y := a.Fld2  // Str
 
 // deconstruct - creates new vars
-(fld1, fld2) = a        // -or-
-fld1, fld2 = a
-fld1, fld2 = ...a       // spread operator?
+(fld1, fld2) := a        // -or-
+fld1, fld2 := a
+fld1, fld2 := ...a       // spread operator?
 
 // build new tuple from vars
-b = { fld1, fld2 }
+b := { fld1, fld2 }
 
-same = (a = b)
+same := (a = b)
 // true: compared on value semantics
 ```
 
@@ -308,13 +310,13 @@ Preferred is to use field names for tuples, but even those can be omitted but th
 
 ```csharp
 // no structure type name, no field names
-x = { 42, "42" }
+x := { 42, "42" }
 // C# does this (not for ValueTuple though):
 x.Item1 // Error: Item1 does not exist
 
 // to use, must deconstruct in order
-(n, s) = x      // -or-
-n, s = x
+(n, s) := x      // -or-
+n, s := x
 // n = 42 (U8)
 // s = "42" (Str)
 ```
@@ -341,9 +343,9 @@ Allow fields of one structure to be mapped easily to fill fields of another stru
 > What operator to use? `<=`?
 
 ```csharp
-s1: Struct1
+s1 := Struct1
 // manual
-s2: Struct2
+s2 := Struct2
     fld1 = s1.x
     fld2 = s1.y
 
@@ -373,9 +375,9 @@ MapS1ToS2: Transform<Struct1, Struct2>
     #Struct2.fld2 = #Struct1.y
 
 // transform: <T: Transform<S, D>, S, D>(self: T, source: S): D
-s2 = MapS1ToS2.transform(s1)
+s2 := MapS1ToS2.transform(s1)
 // reverseTransform: <T: Transform<S, D>, S, D>(self: T, source: D): S
-s1 = MapS1ToS2.reverseTransform(s2)
+s1 := MapS1ToS2.reverseTransform(s2)
 
 // additive api: allows parameters to be passed to multiple transformations
 

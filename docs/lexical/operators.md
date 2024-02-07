@@ -112,7 +112,7 @@ That also means that the bitwise short-hand operators (`&=`, `|=` or `^=`) no lo
 Ternary operators can contain other ternary operators. Nested ternaries each have their own indent level.
 
 ```csharp
-x = a > b 
+x := a > b 
     ? a 
     : b > c
         ? b
@@ -194,9 +194,9 @@ a: U8 = 42
 o: U8? = _
 
 // on which side is the optional?
-x = a ?+ o
+x := a ?+ o
 // does it matter?
-x = o ?+ a
+x := o ?+ a
 ```
 
 > TBD: chaining bools with `?` => No, use `or`.
@@ -211,13 +211,13 @@ b = tryFn(42) or tryFn(101)
 tryFn(self: Str, p: U8): Bool
     ...
 
-s = "42"
+s := "42"
 // use auto-fluent syntax?
-b = s.tryFn(42) or/and 
+b := s.tryFn(42) or/and 
     .tryFn(101)
 
 // pattern matching ??
-b = s is tryFn(42) or tryFn(101)    // weird
+b := s is tryFn(42) or tryFn(101)    // weird
 ```
 
 ---
@@ -229,7 +229,7 @@ b = s is tryFn(42) or tryFn(101)    // weird
 | `!` | `Err<T>`  | Error return value or T
 | `?` | `Opt<T>`  | Optional; T or Nothing
 | `*` | `Ptr<T>`  | Pointer to T
-| `^` | `Imm<T>`  | Immutable T
+| `^` | `Mut<T>`  | Mutable T
 | `%` | `Atom<T>`  | Atomic T
 | ?? | `Async<T>`  | Async T ??
 
@@ -384,30 +384,30 @@ Operators starting with `<` indicates a structural operation, like adding or rem
 | `[**%n]` | returns the parallel enumerator of an array/list with `n`-elements in each thread.
 
 ```csharp
-arr1 = (1, 2, 3, 4, 5)
-arr2 = (5, 4, 3, 2, 1)
+arr1 := (1, 2, 3, 4, 5)
+arr2 := (5, 4, 3, 2, 1)
 
-arr3 = arr1 + arr2
+arr3 := arr1 + arr2
 // arr3 = (6, 6, 6, 6, 6)
 
 arr1 <+= 42      // arr1 = (1, 2, 3, 4, 5, 42)
 arr2 <^= 101     // arr2 = (101, 5, 4, 3, 2, 1)
 
-arr4 = arr1 + arr2
+arr4 := arr1 + arr2
 // arr4 = (102, 7, 7, 7, 7, 43)
 ```
 
 ```csharp
-arr = (1, 2, 3, 4, 5)
+arr := (1, 2, 3, 4, 5)
 // add single item
-arr2 = arr <+ 6   // arr2 = (1, 2, 3, 4, 5, 6)
+arr2 := arr <+ 6   // arr2 = (1, 2, 3, 4, 5, 6)
 // remove multiple items - whole array must match!
-arr3 = arr <- (1, 2, 3)    // arr3 = (4, 5, 6)
+arr3 := arr <- (1, 2, 3)    // arr3 = (4, 5, 6)
 // arr is unchanged
 
 // contains
-b = 4 in arr            // true
-c = (2, 4) not in arr   // true
+b := 4 in arr            // true
+c := (2, 4) not in arr   // true
 ```
 
 Special collection operator for accessing the same property on an array of objects.
@@ -420,12 +420,12 @@ Person
 arr: Array<Person> = (...)
 
 // returns the names of all persons in the array
-names = arr.>Name
+names := arr.>Name
 // names: Array<Str>
 
 // Collect multiple properties?
-people = arr.>Name, arr.>Age
-people = { Name = arr.>Name, Age = arr.>Age }
+people := arr.>Name, arr.>Age
+people := { Name = arr.>Name, Age = arr.>Age }
 // people: Array<{Str, U8}>
 ```
 
@@ -436,7 +436,7 @@ fn: (self: Person): Str
     return "$self.Name is $self.Age years old."
 
 // returns "'name' is 'age' years old." for all persons in the array
-names = arr.>fn
+names := arr.>fn
 
 // Do we allow more function parameters?
 
@@ -444,7 +444,7 @@ fn: (self: Person, magic: U8): Str
     return "$self.Name called with $magic."
 
 // calls fn with magic=42 for all persons in the array
-names = arr.>fn(42)
+names := arr.>fn(42)
 // How to make it clear 42 is duplicated to all calls!? Use of '.>'?
 ```
 
@@ -484,7 +484,7 @@ These operators cannot be overloaded, they simply use the standard operators.
 Do we allow a list of right values? (yes)
 
 ```csharp
-a = 42
+a :=^ 42    // mutable
 a += (12, 23, 34)
 // a = a + 12 + 23 + 34
 
@@ -505,7 +505,7 @@ Note the type-operator is on the right side of the equals sign.
 | `=!` | `Err<T>` = `T`
 | `=?` | `Opt<T>` = `T`
 | `=*` | `Ptr<T>` = `T` (`Ptr()` conversion)
-| `=^` | `Imm<T>` = `T`
+| `=^` | `Mut<T>` = `T`
 | `=%` | `Atom<T>` = `T`
 
 ```csharp
@@ -513,7 +513,7 @@ a: U8 = 42
 err =! a    // err: Err<U8>
 opt =? a    // opt: Opt<U8>
 ptr =* a    // ptr: Ptr<U8>
-imm =^ a    // imm: Imm<U8>
+mut =^ a    // mut: Mut<U8>
 atom =% a    // atom: Atom<U8>
 
 // as parameters inline
@@ -542,7 +542,7 @@ fnAtom(imm =% a)
 See `TBD` note at the top about checked, wrap around and saturate operators.
 
 ```csharp
-a = 42
+a := 42
 // checked on U16 target by default
 x: U16 = a ** a
 
@@ -588,8 +588,8 @@ This seems to be the best way to also interop with normal .NET / C#.
 MyWeirdOperator: <T>(self: T, other: T): T
     ...
 
-a = 42
-x = a >>| 101   // calls MyWeirdOperator
+a := 42
+x := a >>| 101   // calls MyWeirdOperator
 
 // How to do unary or ternary operators?
 [[UnaryOperator("-")]]

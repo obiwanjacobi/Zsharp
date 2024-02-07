@@ -27,7 +27,7 @@ None-Type template parameters are always processed at compile-time and are also 
 MyStruct<#T>
     f: T
 
-s = MyStruct<U8>
+s := MyStruct<U8>
     f = 42
 ```
 
@@ -37,7 +37,7 @@ This will also work:
 MyStruct<#T>: T
     ...
 
-s = MyStruct<OtherStruct>
+s := MyStruct<OtherStruct>
 ```
 
 As well as
@@ -71,9 +71,9 @@ typedFn<U8>(42)
 typedRet: <#T>(): T
     ...
 
-x = typedRet<U8>()
+x := typedRet<U8>()
 y: U8 = typedRet()  // type forwarding?
-z = typedRet()      // Error! cannot determine type
+z := typedRet()      // Error! cannot determine type
 ```
 
 ---
@@ -112,8 +112,8 @@ Choice: U8 or U16 or U32
 tfn: <#T: Choice>(p: T): U8
     ...
 
-a = tfn(42)     // ok, U8
-a = tfn("42")   // error, Str not in Choice
+a := tfn(42)     // ok, U8
+a := tfn("42")   // error, Str not in Choice
 ```
 
 Restrict the template parameter based on metadata (traits?).
@@ -149,9 +149,9 @@ create<#T: MyStruct()>()
     return T()
 
 // function U8() must exist
-f = factory<U8>()       // f: U8 (0 = default)
+f := factory<U8>()       // f: U8 (0 = default)
 // function MyStruct() must exist
-c = create<MyStruct>()  // c: MyStruct (all fields default)
+c := create<MyStruct>()  // c: MyStruct (all fields default)
 ```
 
 ---
@@ -165,19 +165,19 @@ templateFn: <#S, #T, #R>(s: S, p: T): R
     ...
 
 // try partial ? => Error
-r = templateFn<U16, U8>(42, 101)    // unclear what types are specified
+r := templateFn<U16, U8>(42, 101)    // unclear what types are specified
 
 // Error, parameters inferred, but what type is specified?
-r = templateFn<U16>(42, 101)
+r := templateFn<U16>(42, 101)
 
 // ok, specified explicitly
-r = templateFn<U8, U8, U16>(42, 101)
+r := templateFn<U8, U8, U16>(42, 101)
 
 // ok, parameters and return type inferred
 r: U16 = templateFn(42, 101)
 
 // ok, explicitly name the template param
-r = templateFn<R=U8>(42, 101)
+r := templateFn<R=U8>(42, 101)
 ```
 
 A (self) bound function can use type inference to discover the template/generic parameters used in its `self` parameter.
@@ -200,8 +200,8 @@ transform: <T: Transform<S, D>, S, D>(self: T, source: S): D
 // from the specified 'T' the 'S' and 'D' types are inferred.
 
 t: Transform<Struct1, Struct2> = ...
-s1 = ...
-s2 = transform(t, s1)
+s1 := ...
+s2 := transform(t, s1)
 ```
 
 ---
@@ -236,8 +236,8 @@ fn<#T>(#ret: T): T
     return ret
 
 // Can we infer T?
-n = fn<42>()        // n: U8 = 42
-s = fn<"Hello">()   // s: Str = 'Hello'
+n := fn<42>()        // n: U8 = 42
+s := fn<"Hello">()   // s: Str = 'Hello'
 ```
 
 Dimensioning data structures. Structure parameters.
@@ -305,11 +305,11 @@ TemplateType<#T=U8>
     field1: T
 
 // use default
-t = TemplateType
+t := TemplateType
     field1 = 42         // U8
 
 // override default
-t = TemplateType<Str>
+t := TemplateType<Str>
     field1 = "42"       // Str
 ```
 
@@ -414,16 +414,16 @@ GetNameFrom: <#S>(self: S): Str
 MyStruct
     Name: Str
 
-s = MyStruct
+s := MyStruct
     Name = "Name"
-n = GetNameFrom(s)  // ok, name field
+n := GetNameFrom(s)  // ok, name field
 
 // anonymous struct
-a = { Name = "MyName" }
-n = GetNameFrom(a)  // ok, name field
+a := { Name = "MyName" }
+n := GetNameFrom(a)  // ok, name field
 
-x = 42
-n = GetNameFrom(x)  // Error - no Name field
+x := 42
+n := GetNameFrom(x)  // Error - no Name field
 ```
 
 This allows a sort of duck-typing. As long as the `self` parameter has a `Name` field the code can be compiled.

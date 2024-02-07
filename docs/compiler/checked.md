@@ -46,7 +46,7 @@ At some point the compiler will encounter a function call where it's function is
 In the next example `conditionalFn` has been removed and all dependent code will therefor also be removed.
 
 ```C#
-t = conditionalFn(true, "example")
+t := conditionalFn(true, "example")
 if t = 42
     code_that_uses_t
 other_code              // only this code will remain
@@ -55,7 +55,7 @@ other_code              // only this code will remain
 Specifying the check flags in code:
 
 ```C#
-arr = [1, 2, 3, 4, 5]
+arr := [1, 2, 3, 4, 5]
 
 # enable(Checks.Bounds)
     arr[42]         // will always be checked

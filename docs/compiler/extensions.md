@@ -118,9 +118,9 @@ Allow programmatic inline manipulation of Abstract Syntax Tree nodes (or some sy
 ```csharp
 // some syntax to denote ast code: <[...]>
 // generates and Ast node for the code
-ast = <[loop n in [0..42]]>
+ast := <[loop n in [0..42]]>
 // alternate 'astof'
-ast = astof(loop n in [0..42])
+ast := astof(loop n in [0..42])
 // add another ast node (as child?)
 ast += <[    WriteLine(n)]>
 
@@ -130,7 +130,7 @@ AstAddAt(ast, <ast-node-ref>)
 
 // how to determine the location of the insertion point?
 // get ast node for function 'fn1'
-astFn1 = Ast.Get(fn1)
+astFn1 := Ast.Get(fn1)
 astFn1 += ast   // add ast node to function
 ```
 

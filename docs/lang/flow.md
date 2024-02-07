@@ -37,8 +37,8 @@ true ? ...          // ternary without 'else'
 Allow `in` keyword in `if` statement?
 
 ```csharp
-arr = (1, 2, 3, 4, 5)
-x = 2
+arr := (1, 2, 3, 4, 5)
+x := 2
 if x in arr // can x be found in arr?
     ...     // true
 ```
@@ -63,13 +63,13 @@ Note that `if` is a reserved keyword and no named language element can have the 
 ### Range Conditions
 
 ```csharp
-a = 42
+a := 42
 if a in [0..100]        // true
     ...
 ```
 
 ```csharp
-a = 42
+a := 42
 if a not in [0..100]    // false
 if not a in [0..100]    // ?
     ...
@@ -84,13 +84,13 @@ if not a in [0..100]    // ?
 Use the `if` keyword inside an expression.
 
 ```csharp
-a = 42
+a := 42
 // newline/indent syntax does not work for expressions
-v = if a > 42 -> 101 else a
-v = a > 42 ? 101 : a            // same
+v := if a > 42 -> 101 else a
+v := a > 42 ? 101 : a            // same
 
 // more complex expressions?
-v = if a > 42 -> 101 else if a < 10 -> 0 else a * a
+v := if a > 42 -> 101 else if a < 10 -> 0 else a * a
 ```
 
 ---
@@ -153,7 +153,7 @@ loop true
 A do-until loop is not supported but can be easily constructed. A do-while loop has to be converted to a do-until loop (invert the condition).
 
 ```csharp
-a = 42
+a :=^ 42    // mutable
 loop
     // a = 42, 41, 40, 39 ... 3, 2, 1
     a -= 1
@@ -171,6 +171,7 @@ loop [0..10]
 A 'for' or 'for-each' loop is constructed using a `Range`.
 
 ```C#
+// n is mutable - but it's not explicit!
 loop n in [0..10]
     for_n_is_0_to_9
 ```
@@ -195,7 +196,7 @@ Loop a number of times
 loop 42
     do_this_42_times
 
-c = 42
+c := 42
 loop c
     do_this_42_times    // c is available (value=42)
 ```
@@ -207,7 +208,7 @@ Loop or else
 > TBD: Most cases can probably be refactored into simpler code..?
 
 ```csharp
-x = 0
+x := 0
 loop n in [0..x]
     ...     // empty loop
 else
@@ -339,12 +340,15 @@ The `and` keyword requires both sides to finish. How to control if the shorter/f
 
 ```csharp
 loop n in [0..3] and s in [2..9]
+    ...
 ```
 
 The 'or' keyword allows the fastest side to end the loop.
 
 ```csharp
+x := 101
 loop n in [0..x] or 42 // 42 is the max loop count here
+    ...
 ```
 
 ---
@@ -396,25 +400,25 @@ An array of values that are cycled through each time it is read.
 `Cycle<T>` is a self-restarting iterator (enumerator).
 
 ```csharp
-l = (1, 2, 3, 4, 5)
-c = Cycle(l)
-c = Cycle(l, 3)     // max 3 cycles (?)
+l := (1, 2, 3, 4, 5)
+c := Cycle(l)
+c := Cycle(l, 3)     // max 3 cycles (?)
 
-m = c   // 1
-n = c   // 2
-o = c   // 3
-p = c   // 4
-q = c   // 5
-r = c   // 1
-s = c   // 2
-t = c   // 3
+m := c   // 1
+n := c   // 2
+o := c   // 3
+p := c   // 4
+q := c   // 5
+r := c   // 1
+s := c   // 2
+t := c   // 3
 ```
 
 For use in loops typically.
 
 ```csharp
-l = (1, 2, 3, 4, 5)
-c = Cycle(l)
+l := (1, 2, 3, 4, 5)
+c := Cycle(l)
 
 loop i in [0..10] or n in c
     // i = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
@@ -454,9 +458,9 @@ loop                  // loop #1
 > Let `break` break out of a scope in general - not a loop specifically. This would require `if` statement scopes to be ignored?
 
 ```csharp
-c = 0
+c :=^ 0
 [c]     // capture scope
-    x = c * 42
+    x := c * 42
     if x = 0
         break
     // not executed when x = 0

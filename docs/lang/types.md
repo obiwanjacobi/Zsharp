@@ -140,11 +140,11 @@ For an `R32` both the numerator and the denominator would be 32 bits.
 A 'string' of characters of text (UTF-16).
 
 ```C#
-Str         // mutable string: StringBuilder
-Imm<Str>    // immutable string: String
+Mut<Str>    // mutable string: StringBuilder
+Str         // immutable string: String
 ```
 
-This type maps to the .NET `string` or `StringBuilder` depending on if `Imm<Str>` is used.
+This type maps to the .NET `string` or `StringBuilder` depending on if `Mut<Str>` is used.
 
 ---
 
@@ -165,8 +165,8 @@ For these specialized string, no character type is available (other than U8/byte
 The encoding and decoding can be viewed as a conversion between different string types.
 
 ```csharp
-s = "Hello World"   // Str (UTF16)
-s8 = s.StrUtf8()    // convert
+s := "Hello World"   // Str (UTF16)
+s8 := s.StrUtf8()    // convert
 
 loop c in s
     // use c: C16
@@ -300,8 +300,8 @@ Introducing the `Void` type removes the necessity to distinguish between functio
 Literal values are commonly use in programs and by default the compiler will assign the smallest data type to fit the literal numerical value. There are times when you want to override that, however.
 
 ```csharp
-a = 42          // a: U8
-b = U16(42)     // b: U16
+a := 42          // a: U8
+b := U16(42)     // b: U16
 c: U32 = 42     // c: U32
 ```
 
@@ -311,7 +311,7 @@ We are simply calling a dedicated constructor function with the literal value.
 
 ```csharp
 // some sort of postfix?
-a = 42L // U64?
+a := 42L // U64?
 ```
 
 ---
@@ -354,7 +354,7 @@ ImperialLength: U16 _
 ml: MetricLength = 200      // 200 meter
 il: ImperialLength = 200    // 200 yards
 
-loa = ml + il       // error: cannot add different data types
+loa := ml + il       // error: cannot add different data types
 
 // overloading the + operator would fix this error
 Add: (left: MetricLength, right: ImperialLength): MetricLength
@@ -366,7 +366,7 @@ Add: (left: MetricLength, right: ImperialLength): MetricLength
 MetricLength: (l: ImperialLength): MetricLength
     ...
 // allows this code
-loa = ml + il.MetricLength()
+loa := ml + il.MetricLength()
 ```
 
 Operators of the underlying type can **NOT** be used. _**Data Types are always more specific and restrictive than the underlying type**_. New operator implementations have to be created using the dedicated function names mapped to each operator. It is a compile error if such a function is not found for the operator in use.
@@ -381,7 +381,7 @@ Operators of the underlying type can **NOT** be used. _**Data Types are always m
 Age: U8 _
 a: Age = 42
 // use conversion to get to underlying types
-u = a.U8()      // u: U8
+u := a.U8()      // u: U8
 ```
 
 > What result type promotion will there be for arithmetic operators on custom data types? Will simply the return type of the operator-function determine the result type?
@@ -462,21 +462,21 @@ Make a literal value have a custom data type.
 ```csharp
 MyType: U16 _
 
-a = MyType(42)  // passes all rules
+a := MyType(42)  // passes all rules
 ```
 
 ```csharp
 SmallType: U8
     #value = [0..4]     // 0,1,2,3
 
-a = SmallType(42)       // Error: does not pass rules
+a := SmallType(42)       // Error: does not pass rules
 ```
 
 ```csharp
 MidType: U8 _
 
 // does not fit into base type
-a = MidType(275)        // Error: does not pass rules
+a := MidType(275)        // Error: does not pass rules
 ```
 
 Again, we're simply calling dedicated construct functions.
@@ -540,9 +540,9 @@ Seconds: (self: Minute): Second => self * 60
 Seconds: (self: Hour): Second => self * 3600
 
 h: Hour = 2
-m = h.Minutes()     // m = 120
-s = m.Seconds()     // s = 7200
-s = h.Seconds()     // s = 7200
+m := h.Minutes()     // m = 120
+s := m.Seconds()     // s = 7200
+s := h.Seconds()     // s = 7200
 ```
 
 ---
@@ -556,13 +556,13 @@ Type | Meaning
 `Err<T>` | T or Error
 `Opt<T>` | T or Nothing
 `Ptr<T>` | Pointer to T
-`Imm<T>` | T is immutable
+`Mut<T>` | T is Mutable
 `Atom<T>` | Atomic access
 `Async<T>` | Asynchronous function (return type)
 `Mem<T>` | Heap allocated (TBD)
 `In<T>` | In parameter (TBD)
-`Out<T>` | Out parameter (TBD)
-`Ref<T>` | Reference parameter (TBD)
+`Out<T>` | Out parameter (TBD) Use `Mut<T>` as out parameter?
+`Ref<T>` | Reference (in/out) parameter (TBD)
 
 Note that the compiler may generate different code depending on where these types are applied.
 
@@ -577,7 +577,8 @@ Type | Operator
 `Err<T>` | !
 `Opt<T>` | ?
 `Ptr<T>` | *
-`Imm<T>` | ^
+`Ref<T>` | &
+`Mut<T>` | ^
 
 These operators are always used directly _after_ the type (post-fix)
 
@@ -589,7 +590,7 @@ fn: (p: U8?): U8!?
 The precedence can be set according to the order (left to right) the operators appear in the code. Closest to the type is inner: `U8?*` => `Ptr<Opt<U8>>`.
 
 ```csharp
-o: U8?^     // Imm<Opt<U8>>
+o: U8?^     // Mut<Opt<U8>>
 p: U8!*     // Ptr<Err<U8>>
 ```
 
@@ -631,14 +632,14 @@ Any type can be made immutable wrapping it in a `Imm<T>` type.
 ```csharp
 // any old struct
 MyStruct
-    fld1: U8
-    fld2: Str
+    fld1: Mut<U8>
+    fld2: Mut<Str>
 
 // an immutable version of MyStruct
 ImmStruct: Imm<MyStruct>
 // ImmStruct
-//   fld1: Imm<U8>
-//   fld2: Imm<Str>
+//   fld1: U8
+//   fld2: Str
 ```
 
 The compiler will generate a new Type (struct) based on `MyStruct` making all fields immutable. All references to immutable types are tracked as immutable.
@@ -647,25 +648,25 @@ The compiler will generate a new Type (struct) based on `MyStruct` making all fi
 
 ### Immutable References
 
-`Imm<T>` Can also be used inline for variable definitions.
+Variables are of immutable types by default.
 
 ```csharp
-a: U8   // mutable
-a = 42  // ok, a = 42
+a: Mut<U8>  // mutable
+a = 42      // ok, a = 42
 
 // immutable has to be initialized on declaration
-b: Imm<U8> = 42     // init with 42
-b = 101             // error! type is immutable
+b: U8 = 42     // init with 42
+b = 101        // error! type is immutable
 ```
 
 Immutable reference to mutable object.
 
 ```csharp
-a = 42  // mutable U8
+a := 42  // immutable U8
 
-// implicit conversion to immutable
-b: Imm<U8> = a
-b = 101             // error! type is immutable
+// explicit conversion to mutable
+b: Mut<U8> = a
+b = 101             // ok, type is mutable
 ```
 
 Immutability in these cases it tracked by the references.
@@ -673,19 +674,20 @@ Immutability in these cases it tracked by the references.
 > TBD: 'with' in some other languages. Mutations on an immutable type results in a new instance.
 
 ```csharp
-s: Imm<Struct>
+s: Struct
     ...         //   init struct
 
 // s2 is copy of s with changed field
 // what syntax?
-s2 = s => { fld1 = 42 }     // object construction
-s2 = s.Mut({ fld1 = 42 })   // explicit function call1
-s2 = s.Clone({ fld1 = 42 }) // explicit function call2
-s2 = s + { fld1 = 42 }      // special operator1
-s2 = s & { fld1 = 42 }      // special operator2
-s2 = s <= { fld1 = 42 }     // special operator3 (mapping)
-s2 = s <- { fld1 = 42 }     // special operator4
-s2 = s <+ { fld1 = 42 }     // special operator5
+s2 := s => { fld1 = 42 }     // object construction
+s2 := s.Mut({ fld1 = 42 })   // explicit function call1
+s2 := s.Clone({ fld1 = 42 }) // explicit function call2
+s2 := s.With({ fld1 = 42 })  // explicit function call3
+s2 := s + { fld1 = 42 }      // special operator1
+s2 := s & { fld1 = 42 }      // special operator2
+s2 := s <= { fld1 = 42 }     // special operator3 (mapping)
+s2 := s <- { fld1 = 42 }     // special operator4
+s2 := s <+ { fld1 = 42 }     // special operator5
 ```
 
 > TBD: type validation after construction? This is a general issue...
@@ -708,7 +710,7 @@ MyStruct: (p1: U8, p2: Str): MyStruct
 // all fields optional
 MyStructOpt : Opt<MyStruct>
 
-MyStruct: (Imm<MyStruct> self, Imm<MyStructOpt> change): Imm<MyStruct>
+MyStruct: (MyStruct self, MyStructOpt change): MyStruct
     ...
 ```
 
@@ -791,7 +793,7 @@ MyType
 MyType: (p: U8): MyType
     ...
 
-t = MyType(42)
+t := MyType(42)
 // t is an instance of MyType initialized with 42
 ```
 
@@ -804,7 +806,7 @@ MyType<T>
 MyType: <T>(p: T): MyType<T>
     ...
 
-t = MyType(42)
+t := MyType(42)
 // t is an instance of MyType initialized with 42 (T=U8)
 ```
 
@@ -817,7 +819,7 @@ MyType
     ...
 MyType: (p: U8): MyType!
 
-t = try MyType(42)
+t := try MyType(42)
 ```
 
 > TBD: Find a different constructor function prototype that does not require copying the returned instance from the constructor function to the call site. For larger structs that is a performance hit.
@@ -859,7 +861,7 @@ MyType: (p1: U8, p2: Str, p3: U16): MyType
     ...
 
 // uses overload with 3 parameters
-t = MyType(42, "42", 0x4242)
+t := MyType(42, "42", 0x4242)
 ```
 
 ---
@@ -875,7 +877,7 @@ OneOfThese: Struct1 or Struct2 or Struct3 or Struct4
 s: OneOfThese
     ...
 
-v = match s
+v := match s
     s1: Struct1 -> s1.fld1
     s2: Struct2 -> s2.val2
     s3: Struct3 -> s3.bla
@@ -919,7 +921,7 @@ s := OneOrTheOther
     s1 = Struct1
         ...
 
-v = match s
+v := match s
     .s1 -> s1.fld1
     .s2 -> s2.val1
 ```
@@ -931,6 +933,7 @@ v = match s
 Related variations can be created easily from existing types.
 
 ```C#
+// type is immutable by default
 MyStruct
     fld1: U8
     fld2: U16
@@ -941,14 +944,14 @@ MyOptionalStruct: MyStruct?     // language supported
 // fld1: U8?
 // fld2: U16?
 
-// make type read-only
-MyReadOnlyStruct: Imm<MyStruct>
+// make type writable
+MyReadOnlyStruct: Mut<MyStruct>
 MyReadOnlyStruct: MyStruct^
 // fld1: U8^
 // fld2: U16^
 ```
 
-Using `Imm<T>` and `Opt<T>` on the base type applies to all fields.
+Using `Mut<T>` and `Opt<T>` on the base type applies to all fields.
 
 => Maybe use different types that indicate a full type transformation?
 `Immutable<T>` and `Optional<T>` (as well as `Required<T>`)?
@@ -958,7 +961,7 @@ How can this mechanism be extended by 3rd party code?
 
 Perhaps allow manipulation like in TypeScript 'for each key'...?
 
-> TBD Inverse of `Opt<T>` (required)? Inverse of `Imm<T>` (Mutable)?
+> TBD Inverse of `Opt<T>` (required)? Inverse of `Mut<T>` (Immutable `Imm<T>`)?
 
 ```csharp
 MyStruct
@@ -974,7 +977,7 @@ Make an instance read-only:
 ```csharp
 s: MyStruct
 // using a conversion to make immutable
-r = s.Imm()
+r := s.Imm()
 r.fld1 = 101        // error! field is read-only
 
 //-or-  cast will convert
@@ -986,7 +989,7 @@ Make an instance optional:
 ```csharp
 s: MyStruct
 // using a conversion to make optional
-o = s.Opt()
+o := s.Opt()
 o.fld1 = _        // field is 'nulled'
 
 //-or-  cast will convert
@@ -1002,24 +1005,24 @@ MyStruct
 
 MyStructOpt : Opt<MyStruct>
 
-s = MyStruct
+s := MyStruct
     fld1 = 42
     fld2 = "101"
 
-o = MyStructOpt
+o := MyStructOpt
     fld2 = "42"     // partial init
 
-x = s + o       // what if these objects have a + operator defined?
-x = { s + o }   // to differentiate from (overloaded) plus operator.
+x := s + o       // what if these objects have a + operator defined?
+x := { s + o }   // to differentiate from (overloaded) plus operator.
 // x => MyStruct
 // x.fld1 = 42
 // x.fld2 = "42"
 
-p = MyStructOpt
+p := MyStructOpt
     fld1 = 101  // partial init
 
-y = o + p
-y = { o + p }   // object logic
+y := o + p
+y := { o + p }   // object logic
 // y => MyStructOpt
 // y.fld1 = 101
 // y.fld2 = "42"
@@ -1255,8 +1258,8 @@ Represents the .NET `System.Object` type for reference cases.
 funcAny(): Any
     ...
 
-a = funcAny()   // a => Any
-v = match a
+a := funcAny()   // a => Any
+v := match a
     n: U8 => n
     _ => Error("Unsupported")
 

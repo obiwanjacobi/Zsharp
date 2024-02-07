@@ -12,8 +12,8 @@ However these fields are not accessible directly, but have accessor functions:
 
 ```C#
 errorFn() catch(err)
-    txt = err.message()             // access error message text
-    nestedErr = err.nested()        // nested/inner error object
+    txt := err.message()             // access error message text
+    nestedErr := err.nested()        // nested/inner error object
 ```
 
 Its use is identified by the `!` symbol.
@@ -56,11 +56,11 @@ To use this custom Error instead of the default one:
 
 ```C#
 couldErr: (p: U8): U8!
-    err = MyError                   // just like any struct
+    err := MyError                   // just like any struct
         f1 = p
     return Error("Failed.", err)    // overrides the Error type
 
-v = couldErr() catch(err)
+v := couldErr() catch(err)
     match err                       // use pattern matching
         myErr: MyError => myErr.f1  // access custom field
 ```
@@ -69,7 +69,7 @@ Wrap this construction code into a function for ease of use:
 
 ```C#
 MyError: (msg: Str, p: U8): MyError
-    err = MyError
+    err := MyError
         err.f1 = p
     return Error(msg, err)
 

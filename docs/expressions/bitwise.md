@@ -20,10 +20,10 @@ An arithmetic shift sign-extends the result, which means that positive numbers r
 A rotate shift takes the bit that is shifted out and puts that into the bit position now freed up by the shift operation.
 
 ```C#
-a = 0b10101010 & 0b10010011    // 0b10000010
-b = ~0b11110000                // 0b00001111
-c = 0b11100011 >> 1            // 0b01110001
-d = 0b00110011 >| 1            // 0b10011001
+a := 0b10101010 & 0b10010011    // 0b10000010
+b := ~0b11110000                // 0b00001111
+c := 0b11100011 >> 1            // 0b01110001
+d := 0b00110011 >| 1            // 0b10011001
 ```
 
 Note that the negate `~` operator is a unary operator and takes only one operand - the value it acts upon.

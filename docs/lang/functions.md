@@ -94,7 +94,7 @@ That also means that if a parameter is to be passed by reference, an explicit po
 byref: (ptr: Ptr<U8>)     // pointer as by-ref parameter
     ...
 
-v = 42
+v := 42
 byref(v.Ptr())            // call with ptr to value
 ```
 
@@ -117,24 +117,22 @@ But that should probably be an overload of the function. And then we could use a
 fn: (p: U8): U8
     ...
 
-// overload for immutable argument
-fn: (p: Imm<U8>): Imm<U8>
+// overload for mutable (out) argument
+fn: (p: Mut<U8>): U8
     ...
 
 // overload for constant/literal argument
-fn: (p: Lit<U8>): Imm<U8>
+fn: (p: Lit<U8>): U8
     ...
 
 u: U8 = 42
-v = fn(u)   // calls normal function
+v := fn(u)   // calls normal function
 
-w: Imm<U8> = 42
-x = fn(w)   // calls immutable overload
+w: Mut<U8> = 42
+x := fn(w)   // calls mutable overload
 
-z = fn(42)  // calls the constant overload
+z := fn(42)  // calls the constant overload
 ```
-
-Not sure how useful the `Imm<T>` vs `Lit<T>` is...
 
 - Require specifying the parameter name when a literal is used?
 
@@ -251,27 +249,32 @@ varFunc(42, 1, 3.14, "42")
 
 ---
 
-### Immutable Parameters
+### Mutable Parameters
 
-Gives the caller the guarantee that the parameter will not be changed.
-Only useful for `Ptr<T>` types. All function parameters are passed by value.
+Gives the caller an indication that the (out) parameter will be changed.
 
 ```csharp
-immFn: (p: Ptr<Imm<U8>>)
+immFn: (p: Mut<U8>)
 // shorter using type operators
-immFn: (p: *^U8)
+immFn: (p: ^U8)
 ```
 
 ---
 
 ### Out and ByRef Parameters
 
-Use a mutable Pointer.
+There are several wrapper types that can be used for this.
 
 ```C#
-// simulated out-parameter
-Make42: (p: Ptr<U8>)
-    p() = 42
+// mutable parameter
+fn: (p: Mut<U8>)
+    ...
+// out parameter
+fn: (p: Out<U8>)
+    ...
+// in/out parameter
+fn: (p: Ref<U8>)
+    ...
 ```
 
 This is one usage of `Ptr<T>` that may actually be useful.
@@ -284,7 +287,7 @@ If multiple out parameter and/or return values exist, the return type becomes a 
 // C# bool TryParse(string, out int)
 
 result = TryParse("42")
-b, i = result
+b, i := result
 // b = true
 // i = 42
 ```
@@ -359,15 +362,15 @@ fn: (p: U8, s: Str)
     ...
 
 // anonymous type
-a = { s = "42", p = 42 }
+a := { s = "42", p = 42 }
 fn(...a)
 
 // map (syntax undetermined)
-m = { p = 42, s = "42" }
+m := { p = 42, s = "42" }
 fn(...m)
 
 // auto compiler generated struct (:: syntax?)
-c = fn::Parameters
+c := fn::Parameters
     p = 42
     s = "42"
 fn(...c)
@@ -389,8 +392,8 @@ A template trick to allow any struct with the correct properties to be passed as
 
 ```csharp
 fn: <#A>(A args)
-    x = args.param1
-    y = args.param2
+    x := args.param1
+    y := args.param2
 
 MyStruct
     param1: U8
@@ -410,7 +413,7 @@ fn(s)
 
 Interpret the function parameters `(param: U8)` as a tuple. That means that all functions have only one actual param, which is a single tuple and is passed by reference (as an optimization), but by value conceptually.
 
-All the parameters need to be read-only (which is a bit odd because they may not use the `Imm<T>` type). This does not mean you cannot pass a pointer and change the content that it points too - that still works.
+All the parameters need to be read-only. This does not mean you cannot pass a pointer and change the content that it points too - that still works.
 
 We could auto-generate a struct for each function's parameters and allow that struct to be created, initialized and used as the function's only parameter. Although that would encourage functions with a large number of parameters - something we don't want...
 
@@ -422,13 +425,13 @@ fn: (p: u8, s: Str)
     ...
 
 // compiler based
-p = fn#parameters
+p := fn#parameters
     p = 42
     s = "42"
 
 // as real struct
 // 'fn' is namespace?
-p = fn.Parameters
+p := fn.Parameters
     p = 42
     s = "42"
 
@@ -526,7 +529,7 @@ The caller has to handle the return value (just like with Error). There is synta
 retFunc: (): Bool
     ...
 
-b = retFunc()       // ok, retval caught
+b := retFunc()       // ok, retval caught
 retFunc()           // error! uncaught retval
 
 _ = retFunc()       // ok, explicitly not interested in retval
@@ -543,6 +546,10 @@ For fluent interfaces where the return value is the same as the `self` type, not
 ```csharp
 fn: (p: U8): (retval: U8)
     retval = p          // this would set the return value
+
+fn: (p: U8): (retval1: U8, retval2: Str)
+    retval1 = p
+    retval2 = Str(p)
 ```
 
 ---
@@ -571,7 +578,7 @@ We call this Unit type `Void`.
 MyFn: (p: U8) // return Void
     ...
 
-v = MyFn(42)    // legal?: v => Void
+v := MyFn(42)    // legal?: v => Void   => nah
 // can't do anything with 'v'
 ```
 
@@ -583,8 +590,8 @@ RetType: Void or U8
 MyFn: (p: U8): RetType    // return Void or U8
     ...
 
-v = MyFn(42)    // v => Void or U8
-x = match v
+v := MyFn(42)    // v => Void or U8
+x := match v
     Void => 0
     n: U8 => n
 // x = 0 when return was Void
@@ -631,8 +638,8 @@ boolToString: (b: Bool): Str
 // a list of overloads (syntax?)
 toString := (intToString, boolToString)
 
-s = toString(42)        // intToString
-s = toString(true)      // boolToString
+s := toString(42)        // intToString
+s := toString(true)      // boolToString
 ```
 
 ---
@@ -690,7 +697,7 @@ Syntax is similar to the alias-syntax but not quite.
 // return type is inferred
 add: (x: U8, y: U8) = x + y
 
-a = add(42, 101)
+a := add(42, 101)
 ```
 
 > Allow more complex expressions?
@@ -768,9 +775,9 @@ When calling a bound function, the 'self' parameter can be used as an 'object' u
 | T? | Ptr\<T?> | Function can write to var!
 | Ptr\<T> | T |
 | Ptr\<T> | Ptr\<T> |
-| Imm\<T> | Imm\<T> |
-| Imm\<T> | Ptr<Imm\<T>> |
-| Ptr<Imm\<T>> | Ptr<Imm\<T>> |
+| Mut\<T> | <Mut>\<T> |
+| Mut\<T> | Ptr<Mut\<T>> |
+| Ptr<Mut\<T>> | Ptr<M ut\<T>> |
 
 > This means implicit conversions => something we don't want?
 We may want this conversion in order to reduce noise of transforming self parameter types.
@@ -783,26 +790,35 @@ Any type can be used, for instance Enum types:
 isMagicValue: (self: MyEnum): Bool
     return self = MyEnum.MagicValue
 
-e = MyEnum.MagicValue
+e := MyEnum.MagicValue
 
-b = e.isMagicValue()        // true
+b := e.isMagicValue()        // true
 ```
 
 ---
 
 ### Immutable Self
 
+> TBD: switch from `Imm<T>` to `Mut<T>` takes away a good way to express self-const-ness.
+Is there another way to indication (non)const-ness?
+
 A function can publish its 'const-ness' by using an immutable self type.
 
 ```csharp
-// this function will not change self
-constFn: (self: Imm<MyStruct>>, p: U8): Str
+// this function will not change (the content of) self
+constFn: (self: Imm<MyStruct>, p: U8): Str
+    ...
+
+// this function will change (the content of) self
+nonConstFn: (self: MyStruct>, p: U8): Str
     ...
 ```
 
 A function that does not change self - or any other param for that matter - cannot call any other function on that parameter that DOES change its value. const-functions can only call other const-functions.
 
 ---
+
+### Bound Property
 
 > TBD: Allow leaving of `()` when bound function has only one or no other parameters?
 
@@ -815,7 +831,7 @@ setX: (self: Struct, p: U8)
     ...
 
 s: Struct
-v = s.getX      // calls getX(s)
+v := s.getX      // calls getX(s)
 s.setX v        // calls setX(s, v)
 ```
 
@@ -830,6 +846,7 @@ fn: (): U8
 // no param => no parens
 a = fn
 ```
+
 > How does this differ from taking a reference to a function (function pointer)?
 
 ```csharp
@@ -837,7 +854,7 @@ fn: (p: U8): U8
     ...
 
 // one param => no parens
-a = fn 42
+a := fn 42
 ```
 
 Functions and variables can have the same name. If there are no `()` for a function call, how to distinguish between the two?
@@ -846,19 +863,19 @@ Functions and variables can have the same name. If there are no `()` for a funct
 x: (): U8
     return 42
 
-x = 42
+x := 42
 
 // x is function or variable?
-q = x       // Error! x is ambiguous
+q := x       // Error! x is ambiguous
 // fix for function
-q = x()
+q := x()
 // fix for variable
-q = x   // can't!
+q := x   // can't!
 ```
 
 ---
 
-Auto fluent-functions on self type with void return type.
+> TBD: Auto fluent-functions on self type with void return type.
 
 ```csharp
 Struct
@@ -883,6 +900,8 @@ If return type is not `Void`, the actual return type is used to determine if the
 
 ---
 
+### Bound Function Extensions
+
 Attaching existing functions to a struct.
 
 ```csharp
@@ -898,7 +917,7 @@ s: Struct1
     ...
 
 // calls fn(s.fld1)
-x = s.fnStruct()
+x := s.fnStruct()
 ```
 
 > `.NET`: When the type of the `self` parameter is being compiled, the function is generated as a class method. If the `self` type is external the function is generated as an extension method.
@@ -994,8 +1013,8 @@ MyType: (p: U8): MyType
 // ctor enable deriving a type
 MyType: (self: MyType)
 // 'with' syntax support
-MyType: (self: Imm<MyType>, merge: Opt<MyType>): Imm<MyType>
-MyType: (self: Imm<MyType>, merge: Imm<Opt<MyType>>): Imm<MyType>
+MyType: (self: MyType, merge: Opt<MyType>): MyType
+MyType: (self: MyType, merge: Mut<Opt<MyType>>): MyType
 // conversion
 ThatType: (self: MyType): ThatType
 ThatType: (self: MyType, p: U8): ThatType
@@ -1017,13 +1036,13 @@ An infix function:
 plus: (self: U8, p: U8): U16
     return self + p
 
-a = 42
-x = a plus 101      // infix
-x = a.plus(101)     // bound
-x = plus(a, 101)    // flat
+a := 42
+x := a plus 101      // infix
+x := a.plus(101)     // bound
+x := plus(a, 101)    // flat
 
 // chain
-x = a plus 101 plus 12 plus 97 plus 4
+x := a plus 101 plus 12 plus 97 plus 4
 ```
 
 Also valid
@@ -1032,8 +1051,8 @@ Also valid
 plus: (self: U8, arr: Array<U8>): U16
     ...
 
-a = 42
-x = a plus (101, 12, 97, 4)     // array param
+a := 42
+x := a plus (101, 12, 97, 4)     // array param
 ```
 
 Note that this is different from the poor-mans property syntax where a getter has only a `self` parameter and a return type and a setter has a `self` and one parameter but no return type.
@@ -1212,20 +1231,20 @@ The Coroutine state is kept in hidden a parameter at the call site. It is needed
 ```csharp
 coroutine: (state: Ptr, p: U8) // hidden state param
 
-i = 42
-callings1 = 0           // (hidden) coroutine call state at root-scope
+i :=^ 42            // mutable
+s1 := 0             // (hidden) coroutine call state at call site
 loop [0..3]
-    coroutine(i, s1.Ptr())     // ref, yield/return updates state
+    coroutine(s1.Ptr(), i)     // ref, yield/return updates state
     i = i + 2
 ```
 
 ```csharp
 // multiple coroutines
-s1 = 0
-s2 = 0
+s1 := 0
+s2 := 0
 loop [0..3]
-    coroutine(42, s1.Ptr())
-    otherCoroutine(42, s2.Ptr())
+    coroutine(s1.Ptr(), 42)
+    otherCoroutine(s2.Ptr(), 42)
 ```
 
 > Do we implement co-routines with capture (as an object) that captures the parameters -so the can't change between calls- and maintains its execution state...?
@@ -1346,7 +1365,7 @@ build: (self: FnState2): Array<U8>
 s = FnState1        // instantiate root struct
     ...
 
-arr = s.Add(42)     // chained calls can be spread over multiple lines
+arr := s.Add(42)     // chained calls can be spread over multiple lines
 // split before . and use 2 indents (next indent + 1)
         .Build()
 ```
@@ -1366,6 +1385,8 @@ add: (self: Calc, v: U8)
 sub: (self: Calc, v: U8)
 
 c = Calc
+    ...
+
 // only works with self-dot syntax
 c.add(4).sub(2)
 // with scope
@@ -1399,9 +1420,9 @@ baseFn: (p: Str)
     pub nestedFn: (p: U8): Bool
         ...
 
-s = "42"
+s := "42"
 // have to 'instantiate' the parent function...
-b = baseFn(s).>nestedFn(42)
+b := baseFn(s).>nestedFn(42)
 ```
 
 We do need a new operator `.>` because the standard `.` would indicate the (nested) function is called on the return value of the parent function.
@@ -1489,7 +1510,7 @@ Code in the top-level (scope) will be executed in order of appearance (top to bo
 ```csharp
 #module MyMod
 
-x = 42
+x := 42
 // will be called at first access
 initFn(x)
 
@@ -1509,7 +1530,7 @@ Allows the function call and execution to take place only at compile time. The f
     return 42
 
 // use
-a = compileTimeFn()
+a := compileTimeFn()
 // results in (in binary)
 // a = 42
 ```
@@ -1526,8 +1547,8 @@ Not sure how this will work technically.
 #! compileTimeFn: (): Fn<U8>
     return () -> 42
 
-fn = compileTimeFn()
-a = fn()    // 42
+fn := compileTimeFn()
+a := fn()    // 42
 ```
 
 ---
@@ -1552,7 +1573,7 @@ A function that can be called to generate simple string based code at compile ti
     // implicit return value?
 
 // function returns generated text?
-txt = #genFn<MyStruct>(2)
+txt := #genFn<MyStruct>(2)
 // StubMyStruct : MyStruct
 //     fld1: Str
 //     fld2: Str
@@ -1580,7 +1601,7 @@ Use a `Task<T>` or normal `T` return type to indicate a non-`async` (sync) conte
 // C#: async Task<Byte> fnAsync()
 fnAsync: (): Async<U8>
     // don't need await (implicit)
-    x = workAsync()
+    x := workAsync()
     return x + 42
 
 // await is implicit by using Async
@@ -1609,14 +1630,14 @@ A capture on a task is implicit await on first use:
 ```csharp
 t1: Task<U8> = workAsync()
 [t1]
-    x = 42 + t1     // await here
+    x := 42 + t1     // await here
 ```
 
 ```csharp
 t1: Task<U8> = work1Async()
 t2: Task<U8> = work2Async()
 [t1, t2]                // Task.WhenAll
-    x = t1 + t2         // await twice
+    x := t1 + t2         // await twice
 ```
 
 > I don't like the use of a(n awaited) Task as if it were a value...
@@ -1631,10 +1652,10 @@ asyncFn3: (s: Str): Task<Bool>
     ...
 
 result = InvokeAsync(() -> asyncFn1(42), asyncFn2, () -> asyncFn3("42"))
-r1, _, r3 = ...result // deconstruct result
+r1, _, r3 := ...result // deconstruct result
 
 // parallel operator?
-r1, _, r3 =>> (asyncFn1(42), asyncFn2(), asyncFn3("42"))
+r1, _, r3 :=>> (asyncFn1(42), asyncFn2(), asyncFn3("42"))
 
 // the results are of type Error<T> where T is the return type of the called function.
 // Error<T>: Exception or T
@@ -1648,7 +1669,7 @@ asyncFn: (p: U8): Async<U8>
 // called async and attached to Future<T>
 f: Future<U8> = asyncFn(42)
 // do other stuff
-completed = f.HasCompleted  // Bool
+completed := f.HasCompleted  // Bool
 v = f.Value                 // awaited here by future
 ```
 
@@ -1729,7 +1750,7 @@ task: (p: U8, s: Str, c: CancellationToken): Async
         // c passed as CancellationToken
         task(p, s)
 
-cts = CancellationSource
+cts := CancellationSource
 
 with cts.Token
     // c passed as CancellationToken
@@ -1873,7 +1894,7 @@ MyStruct.Fn: (p: U8): Bool
     ...
 
 // call
-b = MyStruct.Fn(42)
+b := MyStruct.Fn(42)
 ```
 
 ---
@@ -1890,10 +1911,10 @@ fn: (p: U8): Bool
 myFn: (p: U8): Bool
     ...
 
-b = fn(42)      // calls fn
+b := fn(42)      // calls fn
 
 fn <= myFn      // syntax?  a local alias that overrides existing symbol
-b = fn(42)      // calls myFn
+b := fn(42)      // calls myFn
 ```
 
 ---

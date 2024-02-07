@@ -40,9 +40,9 @@ fn: (p: Ref<U8>)
     p = 42          // changes value on call site
 
 
-a = 42
+a := 42
 r: Ref<U8> = a.Ref()    // convert 'a' to a Ref (explicit var)
-r = a.Ref()             // convert 'a' to a Ref (implicit var)
+r := a.Ref()            // convert 'a' to a Ref (implicit var)
 r: Ref<U8> = 42         // Error! cannot take ref from a literal
 ```
 
@@ -54,9 +54,11 @@ Copy-on-write
 
 - Find a way to limit a reference's reach. When passing the same thing to multiple places, control (let it be controlled by the receiver?) who sees these changes? Make a copy at some point - with all the problems that come with making copies...
 
+> In certain situation dotent makes defensive copies of structs...
+
 ```csharp
-a = 42
-r = a.CopyOnWriteRef()
+a :=^ 42    // mutable
+r := a.CopyOnWriteRef()
 a = 101
 // a = 101
 // r = 42

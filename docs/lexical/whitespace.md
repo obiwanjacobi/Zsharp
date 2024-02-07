@@ -75,7 +75,7 @@ As a general rule: broken up lines continue on the next line one indent further 
 No extra quotes are required. The new-line (EOL) character(s) and the indent white-space(s) will **NOT** become part of the string.
 
 ```C#
-s = "this is a very long string to demonstrate
+s := "this is a very long string to demonstrate
         how to break up long literal strings"
 ```
 
@@ -111,7 +111,7 @@ function_with_params_but_no_commas: (
 > The `()` are becoming the list delimiters. Does not using commas also apply to general lists?
 
 ```csharp
-lst = (
+lst := (
         1
         2
         3
@@ -121,7 +121,7 @@ lst = (
 )
 
 // would be the same as
-lst = (1, 2, 3, 4, 5, 6)
+lst := (1, 2, 3, 4, 5, 6)
 ```
 
 ---
@@ -137,15 +137,15 @@ fn: ()
     // use this instead
     true ? doStuff() : doNothing()
 
-    a = 42
+    a := 42
     // useful for match case continuation
-    x = match a
+    x := match a
         Error -> "This is an error"
         U8 -> "This is an unsigned 8-bit.
         _ -> "I don't know what this is"
 
     // also used for lambda's
-    spaces = x.Where((c) -> c = ' ')
+    spaces := x.Where((c) -> c = ' ')
 ```
 
 ---
@@ -159,10 +159,10 @@ Example of hard to read code:
 ```csharp
 // indentation block
 fn: ()
-    a = 42
-    x = 101
+    a := 42
+    x := 101
 // comment
-    y = 2112    // unclear if this belongs to the block above the comment
+    y := 2112    // unclear if this belongs to the block above the comment
 ```
 
 Corrected example:
@@ -170,10 +170,10 @@ Corrected example:
 ```csharp
 // indentation block
 fn: ()
-    a = 42
-    x = 101
+    a := 42
+    x := 101
     // comment
-    y = 2112
+    y := 2112
 ```
 
 ---

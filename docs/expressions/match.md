@@ -5,10 +5,10 @@ The `match` expression tries to select the first pattern that matches the specif
 Here are some examples of patterns that can be used:
 
 ```C#
-v = 42
-x = 24
+v := 42
+x := 24
 
-a = match v
+a := match v
     0 ->        // by literal numerical value
     "" ->       // by literal string value
     x ->        // by variable value
@@ -25,8 +25,8 @@ a = match v
 The syntax continues after the `->` which contains the result of the expression when that specific pattern matched.
 
 ```csharp
-s = "42"
-a = match s
+s := "42"
+a := match s
     "" -> "Empty"
     "0"             // use indent-solves multiple lines
         "Zero"
@@ -37,9 +37,9 @@ a = match s
 This example results in `"The Answer"` based on the string `"42"`:
 
 ```C#
-s = "42"
+s := "42"
 
-a = match s
+a := match s
     "" -> "Empty"
     "0" -> "Zero"
     "42" -> "The Answer"    // this pattern will be chosen
@@ -53,7 +53,7 @@ a = match s
 ```csharp
 o: Opt<U8>  // nothing
 
-a = match o
+a := match o
     ?? -> "Nothing"
     _ -> o.Str()
 ```
@@ -68,7 +68,7 @@ Here an example on matching a type pattern with multiple patterns for the same t
 s = MyStruct
     field1 = 12
 
-a = match s
+a := match s
     n: U8 -> make42(n)
     x: MyStruct ? x.field1 = 12 -> 42
     x: MyStruct -> 0
@@ -79,8 +79,8 @@ a = match s
 > Implicit is the use of the 'equals' operator on native value data types. What if we make that explicit and therefor also allow other operators too.
 
 ```csharp
-a = 42
-s = match a
+a := 42
+s := match a
     < 10 -> "Smaller than 10"                   // `<` operator
     >= 10 and =< 100 -> "between 10 and 100"    // logical and
     > 100 -> "bigger than 100"                     // `>` operator
@@ -100,7 +100,7 @@ Patterns for values and patterns for types can be used at the same time. Type ma
 > TBD: Match expressions on lists? Match on the content of the list, for instance the number of items in the list:
 
 ```csharp
-r = match list
+r := match list
     [] -> 0     // match empty list (array syntax)
     () -> 0     // match empty list (tuple syntax)
     (x) -> x    // match list with one item.
@@ -110,8 +110,8 @@ r = match list
 > TBD: match on an anonymous type / tuple.
 
 ```csharp
-t = (42, "101")
-r = match t
+t := (42, "101")
+r := match t
     (42, _) -> 0    // ignore one tuple property
     (I32, Str)      // match on types
     (,)             // any tuple with two properties
@@ -127,7 +127,7 @@ The match expression always yields a result. It would be nice to be able to use 
 log: (txt: Str)
     ...
 
-a = 42
+a := 42
 match a
     = 42 -> log("This is the answer!")
     > 100 -> log("bigger than 100")
@@ -141,22 +141,22 @@ match a
 Replace the `match` keyword with `is` to align other pattern matching constructions like: `c is >= 'a' and <= 'z' or >= 'A' and <= 'Z'`
 
 ```C#
-a = s is
+a := s is
     n: U8 -> make42(n)
     x: MyStruct ? x.field1 = 12 -> 42
     x: MyStruct -> 0
 
-a = 42
-s = a is
+a := 42
+s := a is
     < 10 -> "Smaller than 10"                   // `<` operator
     >= 10 and =< 100 -> "between 10 and 100"    // logical and
     > 100 -> "bigger than 100"                  // `>` operator
 
 // boolean result
-b = c is (>= 'a' and =< 'z') or (>= 'A' and =< 'Z')
+b := c is (>= 'a' and =< 'z') or (>= 'A' and =< 'Z')
 ```
 
-? How to distinguish (parsing: both start with `var = var is ...` - only diff is the newline) between pattern matching conditional expressions (bool) and selecting a matching case (switch)?
+? How to distinguish (parsing: both start with `var := var is ...` - only diff is the newline) between pattern matching conditional expressions (bool) and selecting a matching case (switch)?
 
 ---
 
@@ -165,8 +165,8 @@ b = c is (>= 'a' and =< 'z') or (>= 'A' and =< 'Z')
 Match on regex?
 
 ```csharp
-s = "person@domain.com"
-x = match s
+s := "person@domain.com"
+x := match s
     `@` -> ...
     `[a-z]` -> ...
     _ -> error
@@ -179,7 +179,7 @@ x = match s
 Match on Exceptions?
 
 ```csharp
-x = match someOperation()
+x := match someOperation()
     // how to differentiate from normal result type checking?
     ExceptionType -> ...
     _ -> happy_flow

@@ -17,12 +17,12 @@
 Some examples:
 
 ```C#
-a = 12 * 3   // 36
-b = a / -3   // -12
-c = 3 ** 3   // 27
-d = 16 % 3   // 1
+a := 12 * 3   // 36
+b := a / -3   // -12
+c := 3 ** 3   // 27
+d := 16 % 3   // 1
 
-x = (2 + a) * (b / 3) + d
+x := (2 + a) * (b / 3) + d
 ```
 
 > TBD: Do operands need to be (made) of the same type?
@@ -44,10 +44,10 @@ Checked functions can be used to implement the operators that check for overflow
 The arithmetic operation result may be too large to fit into the same data type as its operands.
 
 ```csharp
-a = 42      // U8
-b = 101     // U8
+a := 42      // U8
+b := 101     // U8
 // what is the data type of c?
-c = a * b
+c := a * b
 ```
 
 Each arithmetic operator has its own result type promotion.
@@ -70,8 +70,8 @@ Note that numerical literals could also be thought of restricted custom data typ
 Have templated overloads for the operator-functions that allow the code to select the result type.
 
 ```csharp
-a = 42
-b = 101
+a := 42
+b := 101
 
-r = a.Add<U32>(b)   // r => U32
+r := a.Add<U32>(b)   // r => U32
 ```

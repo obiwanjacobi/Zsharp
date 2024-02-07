@@ -133,7 +133,7 @@ When using an enum, the type name has to be specified too:
 MyEnum
     opt1, opt2, opt3
 
-e = MyEnum.opt1
+e := MyEnum.opt1
 ```
 
 The data type of an enum option is the enum type itself. So `e` in the example above is of type `MyEnum` with a value of `0` (zero).
@@ -163,10 +163,10 @@ Names: Str
 
 map = (Field1 = "Field1", Field2 = "Field2")
 
-v = map[Names.Field1]   // 'Field1'
+v := map[Names.Field1]   // 'Field1'
 // alternate map syntax?
-v = map.Field1          // 'Field1'
-v = map.$Field1         // 'Field1'
+v := map.Field1          // 'Field1'
+v := map.$Field1         // 'Field1'
 ```
 
 ---

@@ -24,7 +24,7 @@ fnImpl: (p1: U16): U8
     return p1.U8([4..12])
 
 // matches on fn signature
-r = callFn(fnImpl)      // r = 0x24
+r := callFn(fnImpl)      // r = 0x24
 ```
 
 The function interface is simply a function declaration. It ends with a `_` to indicate it is not a function definition and contains no implementation.
@@ -136,7 +136,7 @@ o: MyInterface? = s
 
 // test before use
 if o
-    a = o.fn1(42)
+    a := o.fn1(42)
 ```
 
 The compiler has to check if the specified `self` type has implementation for all the functions of the interface.
@@ -156,11 +156,11 @@ i: MyInterface = s
 o: MyInterface? = s
 
 // use builtin functions for runtime checking
-b = s.Is<MyInterface<Struct>>()     // retval: Bool
-i = s.As<MyInterface<Struct>>()     // cast/convert (Opt<T>)
+b := s.Is<MyInterface<Struct>>()     // retval: Bool
+i := s.As<MyInterface<Struct>>()     // cast/convert (Opt<T>)
 
 // use intrinsic/pragma for compile time checking
-b = s?#MyInterface<Struct>  // similar to check if field exists
+b := s?#MyInterface<Struct>  // similar to check if field exists
 ```
 
 ---

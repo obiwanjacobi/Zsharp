@@ -25,7 +25,7 @@ There are also cases where impure functions may be viewed as pure when the side-
 
 ```csharp
 // has imm param but potentially writes to globalVar
-sideEffectFn: [globalVar.Ptr()](p: Ptr<Imm<U8>>)
+sideEffectFn: [globalVar.Ptr()](p: Ptr<U8>)
 // takes two params and produces result - no side effects
 pureFn: (x: U8, y: U8): U16
 
@@ -59,7 +59,7 @@ A higher order function is a function that takes or returns another function (or
 highFn: (arr: Arr<U8>): Fn<(U8): U8>
     ...
 // call highFn and call the function it returns
-v = highFn([1,2])(42)
+v := highFn([1,2])(42)
 ```
 
 > TBD: Syntax for function partial application, composition and currying?
@@ -84,7 +84,7 @@ fn: (p: U8, s: Str): Bool
 fnPartial (s: Str) = fn(42, s)
 
 // calls fn(42, "42")
-b = fnPartial("42")
+b := fnPartial("42")
 ```
 
 ---
@@ -145,10 +145,10 @@ To make nested function calls more readable. More 'functional'.
 Would make line-breaks in long statements (chains) a lot more readable?
 
 ```csharp
-a = fn1(fn2(fn3(42)))
-b = fn3(42) |> fn2() |> fn1()
+a := fn1(fn2(fn3(42)))
+b := fn3(42) |> fn2() |> fn1()
 // functional syntax
-b = 42 |> fn3 |> fn2 |> fn1
+b := 42 |> fn3 |> fn2 |> fn1
 ```
 
 Subsequent function calls (after `|>`) will have their 1st param missing. That looks a bit strange (but no different than bound functions?). `()` can be omitted when a function has zero or one parameter?
@@ -158,6 +158,7 @@ Subsequent function calls (after `|>`) will have their 1st param missing. That l
 ```
 
 Could also have a 'backward' piping operator? `<|` going the other way...
+No - don't like it
 
 ```csharp
 fn1() <| fn2() <| fn3() <| 42

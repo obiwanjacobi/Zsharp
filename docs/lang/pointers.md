@@ -17,20 +17,20 @@ ptr: Ptr<U8>        // pointer to an U8
 Create a pointer:
 
 ```C#
-v = 42
-ptr = v.Ptr()       // explicit call to make ptr
+v := 42
+ptr := v.Ptr()       // explicit call to make ptr
 ```
 
 Dereferencing a pointer is done by using de function `()`'s.
 
 ```C#
 ptr: Ptr<U8>
-v = ptr()           // v: U8
+v := ptr()           // v: U8
 
 // alternate syntax
-c = ptr.*           // zig
-c = ptr.deref()
-c = << ptr          // operator?
+c := ptr.*           // zig
+c := ptr.deref()
+c := << ptr          // operator?
 ```
 
 Assigning a new value to the pointed-to-storage:
@@ -39,14 +39,14 @@ Assigning a new value to the pointed-to-storage:
 changeByRef: (Ptr<U8> ptr)
     ptr() = 42          // write new value
 
-    v = ptr()           // read into a local copy
-    v = 42              // does NOT change ptr value!
+    v := ptr()           // read into a local copy
+    v := 42              // does NOT change ptr value!
 ```
 
 Alternative: Ptr with a `Value` field that represents the dereferenced value - for reading and writing.
 
 ```csharp
-a = 42
+a := 42
 p: Ptr<U8> = a.Ptr()
 if p = 42           // false. 'p' is the address of 'a'
     ...
@@ -68,7 +68,7 @@ Pointer variables need to be initialized when declared or they must be made opti
 p: Ptr<U8>      // error! must have value or be optional
 p: Ptr<U8>?     // ok, no value - so optional
 
-a = 42
+a := 42
 p: Ptr<U8> = a.Ptr()    // ok, ptr has value
 ```
 
@@ -90,7 +90,7 @@ opp: Ptr<Ptr<U8>>?      // optional ptr to a ptr to U8
 pop: Ptr<Ptr<U8>?>      // ptr to optional ptr to U8
 
 p: Ptr<U8>              // Ptr<U8>
-pp = p.Ptr()            // Ptr<Ptr<u8>>
+pp := p.Ptr()            // Ptr<Ptr<u8>>
 ```
 
 > Only two levels allowed? => yes
@@ -100,8 +100,8 @@ pp = p.Ptr()            // Ptr<Ptr<u8>>
 Works the same as any other ptr.
 
 ```csharp
-arr = [1, 2, 3, 4]
-p = arr.Ptr()       // Ptr<Array<U8>>
+arr := [1, 2, 3, 4]
+p := arr.Ptr()       // Ptr<Array<U8>>
 ```
 
 The pointer _into_ an Array is not expressed with the `Ptr<T>` type. Instead the `Slice<T>` type is used for this.
@@ -111,10 +111,9 @@ The pointer _into_ an Array is not expressed with the `Ptr<T>` type. Instead the
 ### Pointer to Immutable
 
 ```C#
-// literals are immutable by default
-x: Imm<U8> = 42
-p = x.Ptr()     // Ptr<Imm<U8>>
-p() = 101       // error! immutable
+x: U8 = 42
+p := x.Ptr()     // Ptr<U8>
+p() := 101       // error! immutable
 ```
 
 ### Pointer Arithmetic
@@ -126,16 +125,16 @@ For typed pointers the pointer value can only be manipulated with a value from i
 ```csharp
 Struct
     length: U8
-p: Ptr<Struct>
-p = p + p.length    // ok, used struct field as value
-p = p + Struct#size // ok
-p = p + 42          // error, can't add random value to ptr.
+p: Must<Ptr<Struct>>    // mutable
+p = p + p.length        // ok, used struct field as value
+p = p + Struct#size     // ok
+p = p + 42              // error, can't add random value to ptr.
 ```
 
 For untyped pointers (opaque type references) does not have this restriction:
 
 ```csharp
-p: Ptr                  // untyped
+p: Mut<Ptr>             // untyped
 p = p + 42              // ok
 p = p + Struct#size     // ok
 ```
@@ -155,10 +154,10 @@ MyStruct
     field1: U8
     field2: U16
 
-s = MyStruct
+s := MyStruct
     ...
-p = s.Ptr()
-pFld2 = p#offset(MyStruct.field2)
+p := s.Ptr()
+pFld2 := p#offset(MyStruct.field2)
 ```
 
 > What about pointing to bit-field members?
@@ -175,7 +174,7 @@ Type compatibility.
 MyStruct : OtherStruct
     ...
 
-ptr = Ptr<MyStruct>
+ptr := Ptr<MyStruct>
 cast: OtherStruct = ptr     // ok, cast to base type
 p: MyStruct = cast          // ok, is original type
 ```
@@ -185,9 +184,9 @@ MyStruct : OtherStruct
     ...
 MyStruct2: OtherStruct
     ...
-ptr = Ptr<MyStruct>
-cast = ptr.value<OtherStruct>()
-p2 = cast.value<MyStruct2>()        // error, is not original type
+ptr := Ptr<MyStruct>
+cast := ptr.value<OtherStruct>()
+p2 := cast.value<MyStruct2>()        // error, is not original type
 ```
 
 If the original type is lost or cannot be determined at compile time, casting up the inheritance hierarchy will always fail.
@@ -207,8 +206,8 @@ MyFunction: (magic: U8) _   // function interface
 myFnImpl: MyFunction        // implementation
     ...
 
-p = myFnImpl            // p: Ptr<MyFunction>
-p = myFnImpl.Ptr()      // explicit
+p := myFnImpl            // p: Ptr<MyFunction>
+p := myFnImpl.Ptr()      // explicit
 takePtr(p, 42)          // call function with ptr to function
 
 takePtr: (ptr: Ptr<MyFunction>, p: U8)
@@ -252,7 +251,7 @@ f: File
     close = MyClose
 
 // call functions through pointers
-p = f.open("path/to/file.txt")
+p := f.open("path/to/file.txt")
 f.close(p)
 ```
 
@@ -268,7 +267,7 @@ Use a type-less `Ptr`.
 
 ```csharp
 export outFn: (p: U8): Ptr
-    s: MyStruct
+    s := MyStruct
         ...
 
     return s.Ptr()  // cast/convert
@@ -282,10 +281,10 @@ export inFn: (p: Ptr): U8
 import outFn    // pseudo
 import inFn     // pseudo
 
-o = outFn(42)   // o: Ptr
+o := outFn(42)  // o: Ptr
 o.x             // error! Ptr does not allow member access
 
-a = inFn(o)     // Ptr as parameter
+a := inFn(o)    // Ptr as parameter
 ```
 
 It is also possible to make a 'typed' typeless pointer:
@@ -303,10 +302,10 @@ openFn: (h: Handle): Stream
 ### Static Ptr Helper
 
 ```C#
-a = 42
-ptr = Ptr.to(a)
+a := 42
+ptr := Ptr.to(a)
 
-ptr = Ptr.to(42)    // ptr to literal is immutable
+ptr := Ptr.to(42)    // ptr to literal is immutable (or error?)
 ```
 
 > How would a function know its a literal value?

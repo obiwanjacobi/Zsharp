@@ -176,12 +176,12 @@ MyStruct
     fld1: U8
     fld2: Str
 
-s = MyStruct
+s := MyStruct
     fld1 = 42
     fld2 = "42"
 
 // struct field navigation
-x = s.fld1
+x := s.fld1
 ```
 
 ```csharp
@@ -190,7 +190,7 @@ MyEnum
     Opt2
 
 // enum field navigation
-e = MyEnum.Opt1
+e := MyEnum.Opt1
 ```
 
 ---
@@ -213,7 +213,7 @@ get_MyProp: (self: MyStruct): U8
     return self.field1
 
 // call static property
-p = MyProp      // no () required?
+p := MyProp      // no () required?
 ```
 
 Prefix | .NET | Description

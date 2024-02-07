@@ -8,22 +8,22 @@ An immutable array is initialized once and its contents cannot be changed after 
 
 ```C#
 // immutable
-arr = [1, 2, 3, 4, 5]#imm               // 5 x U8
-arr: Imm<Array<U16>> = [1, 2, 3, 4, 5]  // 5 x U16
+arr := [1, 2, 3, 4, 5]                   // 5 x U8
+arr: Array<U16> = [1, 2, 3, 4, 5]       // 5 x U16
+arr: U16[] = [1, 2, 3, 4, 5]            // alternate syntax? 5 x U16
 
-arr[0] = 42                     // error!
-arr: Array<U16> = [1, 2, 3, 4, 5]#imm  // error! arr is not Imm<T>
+arr[0] = 42                             // error!
 ```
 
 A mutable array has its size specified up front, but the contents of its elements can be changed dynamically in code.
 
 ```C#
 // mutable
-arr = [1, 2, 3, 4, 5]               // 5 x U8
-arr: Array<U16> = [1, 2, 3, 4, 5]   // 5 x U16
-// using a creator function
-arr = Array<U8>([1, 2, 3, 4])   // 4 x U8
-arr = Array<U8>(10)             // 10 x U8 (all 0)
+arr :=^ [1, 2, 3, 4, 5]                  // 5 x U8
+arr: Mut<Array<U16>> = [1, 2, 3, 4, 5]  // 5 x U16
+// using a creator function (mutable arrays)
+arr :=^ Array<U8>([1, 2, 3, 4])   // 4 x U8
+arr :=^ Array<U8>(10)             // 10 x U8 (all 0)
 
 arr[0] = 42                     // first element now has value 42
 ```
@@ -53,7 +53,7 @@ A slice does not take up storage (other than a pointer and a length) and therefo
 Here's an example writing values to a mutable array:
 
 ```C#
-arr = Array<U8>(10)         // 10 x U8
+arr :=^ Array<U8>(10)       // 10 x U8 (mutable)
 arr[3] = 42                 // set 4th element
 arr[0..3] = 42              // slice: 1st, 2nd and 3rd
 arr[..] = 0                 // slice: all set to zero
@@ -62,11 +62,11 @@ arr[..] = 0                 // slice: all set to zero
 Reading values from an array is similar:
 
 ```C#
-arr = [1, 2, 3, 4, 5]       // 5 x U8
-x = arr[3]                  // x = 4
-l = arr[-1]                 // l = 5
-s = arr[0..3]               // s = [1, 2, 3]
-arr2 = arr[..]              // arr2 = all elements (slice, not a copy!)
+arr := [1, 2, 3, 4, 5]      // 5 x U8
+x := arr[3]                 // x = 4
+l := arr[-1]                // l = 5
+s := arr[0..3]              // s = [1, 2, 3]
+arr2 := arr[..]             // arr2 = all elements (slice, not a copy!)
 ```
 
 > Do we repeat (or truncate) range assignments of unequal length?
@@ -90,12 +90,12 @@ Array<T> : T[]     // variable length at compile time
 
 ```csharp
 // immutable
-arr = (1, 2, 3, 4, 5)       // list initializer
-arr = [1..6]                // range initializer
-arr = ..?                   // other?
+arr := (1, 2, 3, 4, 5)       // list initializer
+arr := [1..6]                // range initializer
+arr := ..?                   // other?
 
 // mutable
-arr = Array<U8>(10)
+arr :=^ Array<U8>(10)
 arr += (1, 2, 3, 4, 5)
 ```
 
@@ -111,7 +111,7 @@ What will the syntax be when accessing (dereferencing) an array pointer?
 arrayFn: (Ptr<Array<U8>> arr)
     first = arr()[0]
 
-arr = [12, 23, 34, 45, 56, 67]
+arr := (12, 23, 34, 45, 56, 67)
 arrayFn(arr.Ptr())
 ```
 
@@ -124,12 +124,14 @@ Difference between `readonly` and `immutable`:
 - ReadOnly: An Immutable object that does not have any way to change it.
 - Immutable: A fixed/frozen object that performs changes by creating new representations, leaving the original immutable object intact.
 
-```csharp
-arr = [1, 2, 3, 4, 5]   // readonly
-arr[0] = 42             // error: array is readonly
+> There is no syntax for read-only!
 
-arr: Imm<Array<U8>> = [1, 2, 3, 4, 5]   // immutable
-arr2 = arr.SetAt(i, 42) // returns a new array with changed value at index 'i'
+```csharp
+arr := (1, 2, 3, 4, 5)  // immutable
+arr[0] = 42             // error: array is immutable
+
+arr: Array<U8> = (1, 2, 3, 4, 5)   // immutable
+arr2 := arr.SetAt(i, 42)    // returns a new array with changed value at index 'i'
 ```
 
 ---
@@ -139,22 +141,22 @@ arr2 = arr.SetAt(i, 42) // returns a new array with changed value at index 'i'
 Based on value?
 
 ```csharp
-arr = (1, 2, 3, 4, 5)
+arr :=^ (1, 2, 3, 4, 5)
 // var of array index type
 i: arr#Index = 0    // also default
-n = arr[i]          // 1
+n := arr[i]          // 1
 
-i = 5               // Error! out of range
+i := 5               // Error! out of range
 
 arr += 6    // add an item
-i = 5       // now its okay?
+i := 5       // now its okay?
 ```
 
 Based on type?
 
 ```csharp
-arr8 = (1, 2, 3, 4, 5)
-arr16 = (501, 502, 503, 504, 505)
+arr8 := (1, 2, 3, 4, 5)
+arr16 := (501, 502, 503, 504, 505)
 
 i8: arr8#Index
 i16: arr16#Index
@@ -177,18 +179,18 @@ Would `[]` be an operator - with a backing function? Would it be overloadable. W
 What would the syntax look like if there were no special operators to work with an array?
 
 ```csharp
-arr = ( 1, 2, 3 )   // list construction syntax
+arr :=^ ( 1, 2, 3 )  // list construction syntax
 
-i = 1               // index
-x = arr.At(i)       // lookup value (U8)
-p = arr.PtrTo(i)    // lookup pointer (Ptr<U8>)
-s = arr.PtrTo(i, 2) // sub-array (Slice<U8, 2>)
+i := 1               // index
+x := arr.At(i)       // lookup value (U8)
+p := arr.PtrTo(i)    // lookup pointer (Ptr<U8>)
+s := arr.PtrTo(i, 2) // sub-array (Slice<U8, 2>)
 
 arr: Array<U8> = ( 1, 2, 3 )     // mutable
 arr.At(i) = 42      // At() used as getter and setter?
 
 // or separate?
-x = arr.GetAt(i)
+x := arr.GetAt(i)
 arr.SetAt(i, 42)
 ```
 
@@ -208,21 +210,21 @@ Tensor => arbitrary number of dimensions...
 
 ```csharp
 // 2x3
-arr2D = (1, 2, 3), (4, 5, 6)
+arr2D := (1, 2, 3), (4, 5, 6)
 // 2x 3x3
-arr3D = ((1, 2, 3), (4, 5, 6), (7, 8, 9)),
+arr3D := ((1, 2, 3), (4, 5, 6), (7, 8, 9)),
         ((11, 12, 13), (14, 15, 16), (17, 18, 19))
 // 2x 2x 2x2
-arr4D = (((1, 2), (3, 4)), ((5, 6), (7, 8))),
+arr4D := (((1, 2), (3, 4)), ((5, 6), (7, 8))),
         (((11, 12), (13, 14)), ((15, 16), (17, 18)))
 ```
 
 ```csharp
-arr2D = Array<U8>(4, 3)
+arr2D := Array<U8>(4, 3)
 arr2D.At(0, 0) = 42
 arr2D.At(3, 2) = 42     // last position
 
-arr3D = Array<U8>(4, 3, 2)
+arr3D := Array<U8>(4, 3, 2)
 
 ```
 
@@ -233,25 +235,25 @@ arr3D = Array<U8>(4, 3, 2)
 Array programming: Math with numerical arrays?
 
 ```csharp
-arr1 = (1, 2, 3, 4, 5)
-arr2 = (6, 7, 8, 9, 0)
+arr1 := (1, 2, 3, 4, 5)
+arr2 := (6, 7, 8, 9, 0)
 
-arr3 = arr1 + arr2  // (7, 9, 11, 13, 5)
+arr3 := arr1 + arr2  // (7, 9, 11, 13, 5)
 
 // require type of fixed size?
 Vector: I32[3]  // syntax?
-v1 = (1, 2, 3)
-v2 = (4, 5, 6)
+v1 := (1, 2, 3)
+v2 := (4, 5, 6)
 
-v3 = v1 + v2    // (5, 7, 9)
-v3 = v1 * v2    // (4, 10, 18)
+v3 := v1 + v2    // (5, 7, 9)
+v3 := v1 * v2    // (4, 10, 18)
 ```
 
 Or use different operators to distinguish them from normal arithmetic operators:
 
 ```csharp
-arr1 = ()
-arr2 = ()
+arr1 := ()
+arr2 := ()
 
 // fits nicely because we don't have these as inc/dec operators.
 arr3 = arr1 ++ arr2
@@ -272,13 +274,13 @@ arr4 = arr2 -- arr1
 If arrays are not of equal length:
 
 ```csharp
-arr1 = (1, 2, 3, 4, 5)
-arr2 = (6, 7, 8)
+arr1 := (1, 2, 3, 4, 5)
+arr2 := (6, 7, 8)
 
-arr3 = arr1 ++ arr2
+arr3 := arr1 ++ arr2
 // arr3 = (7, 9, 11, 4, 5)
 
-arr4 = arr2 -- arr1
+arr4 := arr2 -- arr1
 // arr4 = (5, 5, 5)
 // is the rest of arr1 concatenated, or zero used for missing values in arr2 (producing negative results)?
 ```
@@ -292,11 +294,11 @@ arr4 = arr2 -- arr1
 Explicit dynamic array size?
 
 ```csharp
-arr = I32[42]   // fixed: 42 I32's
+arr := I32[42]   // fixed: 42 I32's
 
 // syntax
-arr = I32[]
-arr = I32[?]
+arr := I32[]
+arr := I32[?]
 
 ```
 

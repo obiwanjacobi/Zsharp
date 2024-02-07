@@ -19,5 +19,5 @@ Type Conversion functions are implemented in checked and unchecked versions.
 
 > TODO
 
-- Wrapper types: Opt<T>, Err<T>, Imm<T>, Atom<T>, (Mem<T>? Ptr<T>?)
+- Wrapper types: Opt<T>, Err<T>, Mut<T>, Atom<T>, (Mem<T>? Ptr<T>?)
 - Operator functions (checked/unchecked?)

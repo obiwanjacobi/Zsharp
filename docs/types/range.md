@@ -29,13 +29,13 @@ Reverse|-8|-7|-6|-5|-4|-3|-2|-1
 > Note negative values in ranges used for indexing arrays and lists, mean 'count backward from the end of the array'. Negative numbers in range expressions to generate number sequences mean literal negative numbers.
 
 ```csharp
-rng = Range(1, 6)     // allow??
+rng := Range(1, 6)     // allow??
 ```
 
 ```csharp
-arr = (1, 2, 3, 4, 5, 6)
+arr := (1, 2, 3, 4, 5, 6)
 // index-based array composition?
-x = arr[0, 3, 1, 4]
+x := arr[0, 3, 1, 4]
 // x: Array<U8> = (1, 4, 2, 5)
 // x cannot be a Slice
 ```
@@ -45,9 +45,9 @@ x = arr[0, 3, 1, 4]
 A range results in a (virtual) list with numbers. So shouldn't the syntax reflex a list?
 
 ```csharp
-rng = (0..10)       // range from 0 to 9 -incl.
-stp = (0..10: 2)    // 0, 2, 4, 6, 8
-stp = (0..10+ 2)    // alternate syntax? (bc ':' is for type)
+rng := (0..10)       // range from 0 to 9 -incl.
+stp := (0..10: 2)    // 0, 2, 4, 6, 8
+stp := (0..10+ 2)    // alternate syntax? (bc ':' is for type)
 ```
 
 > TBD: use list syntax `()` when creating range objects. Use index syntax `[]` when extracting from Array or List objects.
@@ -93,7 +93,7 @@ Multi-dimensional ranges.
 ### Dynamic
 
 ```C#
-i = 42
+i := 42
 [0..i]
 ```
 
@@ -112,15 +112,15 @@ Ranges convert to Slices when paired with an array or list.
 
 ```csharp
 a: Array<U8> = (1, 2, 3, 4, 5)
-r = [0..]       // Range object
-s = Slice(a, r) // Slice<T> object
-i = GetIter(s)  // Iter<T> object
+r := [0..]       // Range object
+s := Slice(a, r) // Slice<T> object
+i := GetIter(s)  // Iter<T> object
 ```
 
 > Use ranges for value range checking (range-condition).
 
 ```csharp
-x = 42
+x := 42
 // 'in' is interpreted differently than in a loop!
 if x in [0..100]
     // true
@@ -130,7 +130,7 @@ That would also mean this: `Range<T>` to allow for floats etc.
 Step would only be optional for integers but mandatory for floating point numbers.
 
 ```csharp
-flt = [0.0..1.0: 0.2]  // 0.0, 0.2, 0.4, 0.6, 0.8
+flt := [0.0..1.0: 0.2]  // 0.0, 0.2, 0.4, 0.6, 0.8
 ```
 
 ## Iterators
@@ -187,7 +187,7 @@ Slice<T>
 Examples
 
 ```csharp
-arr = (1, 2, 3, 4, 5)
+arr := (1, 2, 3, 4, 5)
 
 loop v in arr[1..-2]    // 2, 3
     ...
@@ -214,9 +214,9 @@ Have syntax for standard 'sub-array' behavior of `.NET` `Range` usage?
 I think .NET copies over the array elements when indexing with a range.
 
 ```csharp
-arr = (0, 1, 2, 3, 4, 5, 6, 7, 8)
-sub = arr.[0..5]        // dot operator
-sub = arr.copy([0..5])  // explicit function
+arr := (0, 1, 2, 3, 4, 5, 6, 7, 8)
+sub := arr.[0..5]        // dot operator
+sub := arr.copy([0..5])  // explicit function
 ```
 
 ---
@@ -226,10 +226,10 @@ sub = arr.copy([0..5])  // explicit function
 Use a specific range syntax to indicate if the indices are inclusive or exclusive.
 
 ```csharp
-incl = [1..6]       // 1 and 6 are both part of the range
-excl = (1..6)       // 1 and 6 are not part of the range
-half = [1..6)       // 1 is incl, 6 is excl
-other = (1..6]      // 1 is excl, 6 is incl
+incl := [1..6]       // 1 and 6 are both part of the range
+excl := (1..6)       // 1 and 6 are not part of the range
+half := [1..6)       // 1 is incl, 6 is excl
+other := (1..6]      // 1 is excl, 6 is incl
 ```
 
 https://www.cuemath.com/algebra/interval-notation

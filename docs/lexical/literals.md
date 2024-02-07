@@ -173,7 +173,7 @@ There is a syntax for specifying literal arrays of basic types:
 
 ```C#
 // default to an array
-arr = (1, 2, 3, 4, 5)           // array of 5 elements of U8
+arr := (1, 2, 3, 4, 5)           // array of 5 elements of U8
 
 // unless variable is typed
 list: List<U8> = (1, 2, 3, 4, 5)
@@ -181,14 +181,14 @@ list: List<U8> = (1, 2, 3, 4, 5)
 
 ---
 
-## Immutable (Constant) Literal
+## Mutable (Constant) Literal
 
-Syntax for inferring literals to an `Imm<T>` type. There is an operator for that: `^`.
+Syntax for inferring literals to an `Mut<T>` type. There is an operator for that: `^`.
 
 ```csharp
-a = 42              // U8
-a =^ 42             // Imm<U8>
-s =^ "Constant"     // Imm<Str>
+a := 42              // U8
+a :=^ 42             // Mut<U8>
+s :=^ "Constant"     // Mut<Str>
 ```
 
 ---
@@ -201,7 +201,7 @@ Where the name of the constant is the same as the value of the constant.
 $ConstantAsValue
 // ConstantAsValue: Str = "ConstantAsValue"
 
-s = "This is a {ConstantAsValue}"
+s := "This is a {ConstantAsValue}"
 // s = 'This is a ConstantAsValue'
 ```
 
@@ -228,7 +228,7 @@ RegEx: (r: Str): RegEx
     ...
 
 // 'Rx' literal => RegEx
-regex = "$[a-z]*"Rx
+regex := "$[a-z]*"Rx
 // regex: RegEx
 ```
 
@@ -240,7 +240,7 @@ RegEx: (r: Str): RegEx
     ...
 
 // "!...!" => RegEx
-regex = "!$[a-z]*!"
+regex := "!$[a-z]*!"
 // regex: RegEx
 ```
 
@@ -251,7 +251,7 @@ RegEx: (r: Str): RegEx
     ...
 Rx = RegEx
 
-regex = Rx("$[a-z]*")
+regex := Rx("$[a-z]*")
 // regex: RegEx
 ```
 

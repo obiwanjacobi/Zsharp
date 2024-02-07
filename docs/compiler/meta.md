@@ -58,7 +58,7 @@ Bit<3>#name // 'Bit3'
 > Perhaps have a very short version of `#$name` (no space) for it will be used most often. (`#` = compile-time, `$` = string)
 
 ```csharp
-a = 42
+a := 42
 #$a              // 'a'
 #$U8             // 'U8'
 #$MyFunction     // 'MyFunction'
@@ -182,13 +182,13 @@ The compiler supplies a set of functions that allows interaction with- and modif
 | location() | Fully formatted file/name/line/col text.
 
 ```csharp
-msg = "Error in '{#file()}' at line {#line()}: {#name()} is invalid."
+msg := "Error in '{#file()}' at line {#line()}: {#name()} is invalid."
 ```
 
 > What syntax/operator to use? `#` is a pragma and not a compiler function. Is there a difference between pragma's and compile time functions? `!#` is compile-time execution (declaration) but the name could collide with custom functions. Using `@` could be good alternative?
 
 ```csharp
-msg = "Error in '{@file()}' at line {@line()}: {@name()} is invalid."
+msg := "Error in '{@file()}' at line {@line()}: {@name()} is invalid."
 ```
 
 ---
@@ -262,7 +262,7 @@ Test for field exists
 MyStruct
     field1: U8
 
-s = MyStruct
+s := MyStruct
     ...
 
 // does 'field1' exist at compile time?

@@ -20,8 +20,8 @@ Bubble Sort
 
 ```csharp
 // bubble sort on an array
-sort: <T>(arr: Array<T>)
-    l = arr.Length
+sort: <T>(arr: Mut<Array<T>>)
+    l := arr.Length
     loop i in [0..l - 1]
         loop j in [0..l - i - 1]
             if arr[j] > arr[j + 1]
@@ -29,7 +29,7 @@ sort: <T>(arr: Array<T>)
                 arr[j] <=> arr[j + 1]
 
 // call sort on this array
-unsorted = [12, 42, 101, 45, 76, 82, 37]
+unsorted :=^ [12, 42, 101, 45, 76, 82, 37]
 sort(unsorted)
 ```
 
@@ -39,13 +39,13 @@ Reverse String
 
 ```csharp
 reverse: (input: Str): Str
-    output = ""
+    output := ""
     // minus-sign loops in reverse
     loop i in -[0..input.Length]
         output += input[i]
     return output
 
-s = "Hello World"
-r = reverse(s)
+s := "Hello World"
+r := reverse(s)
 // r = "dlroW olleH"
 ```

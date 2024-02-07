@@ -3,13 +3,23 @@
 | Operator | Function
 |--|--
 | = | Assign value (right to left)
+| := | Assign value (right to left) with inferred type
 
 > The left operand of an assignment expression can not be a literal value.
 
-Here 42 is assigned to the variable `a`.
+Variable declaration and assignment.
+
+```csharp
+a: U8       // declare typed var (default init)
+a: U8 = 1   // declare typed and init
+a:= 1       // declare inferred-type and init
+a = 1       // assign - 'a' must already be declared and be mutable
+```
+
+Here 42 is assigned to the variable `a` (inferred type).
 
 ```C#
-a = 42
+a := 42
 ```
 
 The receiving (left) operand can also be a path to a field.
@@ -30,7 +40,8 @@ z: MyStruct
 > Because both the `Equals` and the `Assignment` operators use the '`=`' symbol, it is not possible to assign values inside a comparison expression.
 
 ```C#
-if a = myFunc()      // error!
+if a := myFunc()      // error! cannot assign inside a condition
+if a = myFunc()      // error! variable a is not declared
     ...
 ```
 
@@ -47,16 +58,16 @@ Use parenthesis around comparison.
 `[var] = (<bool expression>)?`
 
 ```csharp
-x = 42
-// unclear syntax
-a = x = 42
+x := 42
+// unclear syntax?
+a: Bool = x = 42
 
 // use () for comparison expression
-a = (x = 42)
+a := (x = 42)
 // a: Bool = true
 
 // make it a rule for all bool expressions?
-a = (x > 101)
+a := (x > 101)
 // a: Bool = false
 ```
 
@@ -64,17 +75,20 @@ a = (x > 101)
 
 ## Assignment Chaining
 
+> TBD: It would be easiest to make assignment a statement (therefor cannot be used inside conditions)
+and that would also mean that assignment cannot be chained.
+
 The assignment can be chained across multiple variables (left operand) that all get assigned the same value (right operand). Type inference works as expected and the inferred type is applied to all untyped vars.
 
 ```csharp
 // all var types are inferred
-a = b = c = 42
+a := b := c := 42
 // a: U8 = 42
 // b: U8 = 42
 // c: U8 = 42
 
-b: U16
-a = b = c: U32 = 42
+b: Mut<U16>     // must be mutable to be assigned later
+a := b = c: U32 = 42
 // a: U8 = 42
 // b: U16 = 42
 // c: U32 = 42
@@ -94,14 +108,14 @@ s: MyStruct
     fld2 = "42"
 
 // reference passing
-x = s
+x := s
 // this will make a new copy of Struct
-x <= s
+x <=^ s     // mutable assignment
 
 // only changes x, not s
 x.fld1 = 101
 
-b = (s.fld1 = 42)
+b := (s.fld1 = 42)
 // b = true
 ```
 
@@ -131,14 +145,14 @@ Instead of an `if` statement, use the `?=` operator for use with optional values
 The `?=` operator only assigns the value to the left operand if it does not already have a value.
 
 ```csharp
-a: U8?
+a: Mut<U8>?
 a ?= 42
 // a = 42
 
-a: U8?
-a = 42
-a ?= 101
-// a = 42
+b: Mut<U8>?
+b = 42
+b ?= 101
+// b = 42
 ```
 
 ---
@@ -149,7 +163,7 @@ Protect from interrupts / thread context switches.
 
 A way to ensure an assignment operation is uninterrupted.
 
-- unconditional
+- unconditional (lock)
 - conditional (exchange-if)
 
 ---
@@ -157,6 +171,8 @@ A way to ensure an assignment operation is uninterrupted.
 ### Atomic Type
 
 A wrapper type that indicates the instance is accessed atomically.
+
+> `Atom<T>` is implicitly mutable `Mut<T>`.
 
 ```csharp
 // assignment is easy because Atom
@@ -241,7 +257,7 @@ a: &U8 = 42
 Deconstruction is _copying_ the value into a variable.
 
 ```csharp
-a, b = ...
+a, b := ...
 // a and b can be used as separate vars
 sum = add(a, b)
 ```
@@ -253,16 +269,16 @@ add: (a: U8, b: U8): U16
     ...
 
 // deconstruct either by name or in order (types must match exactly)
-sum = add(x)    // a, b = x
+sum := add(x)    // a, b = x
 // use spread operator to make deconstruction clear? => yes
-sum = add(...x) // a, b = x
+sum := add(...x) // a, b = x
 ```
 
 ### Deconstructing an Array
 
 ```C#
 // spread operator ...
-a, b, ...rest = [1, 2, 3, 4, 5]
+a, b, ...rest := [1, 2, 3, 4, 5]
 
 // a: U8 = 1
 // b: U8 = 2
@@ -272,7 +288,7 @@ a, b, ...rest = [1, 2, 3, 4, 5]
 ### Deconstructing Function Parameters
 
 ```C#
-arr = [1, 2, 3, 4, 5]
+arr := [1, 2, 3, 4, 5]
 
 func: (p: U8)
     ...
@@ -287,7 +303,7 @@ func5(arr)      // without spread operator? => no
 // must at least be the number of parameters without default values.
 
 // should also work with a tuple (anonymous type)
-params = { p1=1, p2=2, p3=3 p4=4 p5=5 }
+params := { p1=1, p2=2, p3=3 p4=4 p5=5 }
 func5(...params)
 ```
 
@@ -308,14 +324,14 @@ field1, field3 = s
 // field3: U8 = <value of s.Field3>
 // <value of s.Field2> is not used
 
-a, b = s      // error! field names must match (case insensitive)
+a, b := s      // error! field names must match (case insensitive)
 // or when in-order - all fields must be specified (or ignored)
 
-a, _, _ = s
+a, _, _ := s
 // a: U8 = <value of s.Field1>
 // <value of s.Field2 and s.Field3> are ignored
 
-_, _, a = s
+_, _, a := s
 // a: U8 = <value of s.Field3>
 // <value of s.Field1 and s.Field2> are ignored
 
@@ -327,11 +343,11 @@ _, _, a = s
 
 ```csharp
 // array (old)
-a, b = [1, 2]
+a, b := [1, 2]
 // (new) list/array
-a, b = (1, 2)
+a, b := (1, 2)
 // object/tuple
-a, b = {a=1, b=2}
+a, b := {a=1, b=2}
 ```
 
 ---
@@ -341,8 +357,8 @@ a, b = {a=1, b=2}
 (unlike structs)
 
 ```C#
-x = 42
-y = 101
+x := 42
+y := 101
 
 // left = deconstruct
 // right = anonymous struct '{}'
@@ -355,16 +371,3 @@ x <=> y
 ```
 
 ---
-
-> TBD
-
-Make type decl and assignment distinct.
-
-```csharp
-a: U8       // declare typed var (default init)
-a: U8 = 1   // declare typed and init
-a:= 1       // declare inferred-type and init
-a = 1       // assign - 'a' must already be declared
-```
-
-Could this help improving variable assignments?

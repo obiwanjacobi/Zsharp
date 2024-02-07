@@ -8,10 +8,10 @@ valueMaybe: (): U8?
     return 42           // to return a value
 
 // fallback when there is no value
-v = valueMaybe() ?? 42
+v := valueMaybe() ?? 42
 
 // cascade ?? operators
-x = v ?? valueMaybe() ?? 101
+x := v ?? valueMaybe() ?? 101
 
 // optional can be used in a logical expression: '?'
 if v?
@@ -20,7 +20,7 @@ else
     // no var value
 
 // using a match expression
-v = match valueMaybe()
+v := match valueMaybe()
     n: U8 => n
     _ => 0
 ```
@@ -31,7 +31,7 @@ The type of an optional:
 valueMaybe: (): U8?
     ...
 
-v: U8?        // initialize an optional (default = _)
+v: Mut<U8>?        // initialize an optional (default = _)
 v = valueMaybe()  // assign fn result
 ```
 
@@ -55,7 +55,7 @@ Syntax to test if an optional value is set.
 boundFn: (self: MyStruct): Opt<MyStruct>
     ...
 
-s = MyStruct
+s := MyStruct
     ...
 
 // syntax TBD
@@ -72,7 +72,7 @@ MyStruct
     f1: U8
     f2: Str?
 
-s = MyStruct
+s := MyStruct
     f1 = 42,    // not optional, must have a value
     f2 = _      // no value
 ```
@@ -82,10 +82,10 @@ MyStruct
     f1: MyStruct?   // data recursion only allowed when optional
     f2: U8          // actual payload
 
-s = MyStruct
+s := MyStruct
     f1 = ...
 
-o = s.f1?.f1?.f2  // first non-value optional will stop navigation of path, result in _
+o := s.f1?.f1?.f2  // first non-value optional will stop navigation of path, result in _
 ```
 
 > It is not recommended to use optional in general data structures because it does not clarify WHEN that data will or will not be available.
@@ -100,8 +100,8 @@ o = s.f1?.f1?.f2  // first non-value optional will stop navigation of path, resu
 errIfNot42: (p: U8): Bool!
     return p = 42 ? true : Error('Not 42')
 
-b = errIfNot42(42)      // true
-b = errIfNot42(101)     // Error!
+b := errIfNot42(42)      // true
+b := errIfNot42(101)     // Error!
 
 b: Opt<Bool> = errIfNot42(42)   // true
 b: Opt<Bool> = errIfNot42(101)  // Nothing
@@ -122,7 +122,7 @@ o: Opt<U8>
 
 // maps Nothing => Nothing
 // calls lambda with value, return result
-x = o.map(v -> v + v)
+x := o.map(v -> v + v)
 // x: Opt<U16>
 ```
 
