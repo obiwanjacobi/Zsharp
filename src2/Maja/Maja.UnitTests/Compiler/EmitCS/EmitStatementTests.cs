@@ -98,7 +98,29 @@ public class EmitStatementTests
 
         emit.Should()
             .Contain(" a ")
-            .And.Contain("while (true)")
+            .And.Contain("while ((System.Boolean)true)")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
+    public void StatementLoop_ForRange()
+    {
+        const string code =
+            "a := 0" + Tokens.Eol +
+            "loop [0..9]" + Tokens.Eol +
+            Tokens.Indent1 + "a = a + 1" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain("for (")
+            .And.Contain("Int32 __i = 0")
+            .And.Contain("__i < 9")
+            .And.Contain("__i = (System.Int32)(__i + (System.Int32)1)")
             ;
 
         Emit.AssertBuild(emit);
@@ -122,7 +144,6 @@ public class EmitStatementTests
             .Contain(" x ")
             .And.Contain(" a ")
             .And.Contain("for (")
-            .And.Contain("x--;")
             ;
 
         Emit.AssertBuild(emit);

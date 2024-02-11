@@ -4,6 +4,10 @@ namespace Maja.Compiler.IR;
 
 internal abstract class IrStatement : IrNode
 {
+    protected IrStatement(IrLocality locality)
+    {
+        Locality = locality;
+    }
     protected IrStatement(StatementSyntax syntax, IrLocality locality)
         : base(syntax)
     {
@@ -16,7 +20,7 @@ internal abstract class IrStatement : IrNode
         => (StatementSyntax)base.Syntax;
 }
 
-internal sealed class IrStatementLoop : IrStatement
+internal class IrStatementLoop : IrStatement
 {
     public IrStatementLoop(StatementLoopSyntax syntax, IrExpression? expression, IrCodeBlock codeBlock)
         : base(syntax, IrLocality.None)

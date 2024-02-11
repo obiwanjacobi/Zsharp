@@ -7,6 +7,11 @@ namespace Maja.Compiler.IR;
 
 internal abstract class IrExpression : IrNode
 {
+    protected IrExpression(TypeSymbol typeSymbol, IrConstant? constantValue = null)
+    {
+        TypeSymbol = typeSymbol;
+        ConstantValue = constantValue;
+    }
     protected IrExpression(ExpressionSyntax syntax, TypeSymbol typeSymbol, IrConstant? constantValue = null)
         : base(syntax)
     {
@@ -75,17 +80,31 @@ internal sealed class IrExpressionTypeInitializer : IrExpression
 
 internal sealed class IrExpressionLiteral : IrExpression
 {
-    public IrExpressionLiteral(ExpressionSyntax syntax, TypeSymbol type, object value)
+    public IrExpressionLiteral(TypeSymbol type, object value)
+        : base(type, new IrConstant(value))
+    { }
+    public IrExpressionLiteral(ExpressionConstantSyntax syntax, TypeSymbol type, object value)
         : base(syntax, type, new IrConstant(value))
     { }
 
-    public IrExpressionLiteral(ExpressionSyntax syntax, TypeSymbol type, IrConstant value)
+    public IrExpressionLiteral(ExpressionConstantSyntax syntax, TypeSymbol type, IrConstant value)
         : base(syntax, type, value)
     { }
+
+    public new ExpressionConstantSyntax Syntax
+        => (ExpressionConstantSyntax)base.Syntax;
 }
 
 internal sealed class IrExpressionBinary : IrExpression
 {
+    internal IrExpressionBinary(
+        IrExpression left, IrBinaryOperator op, IrExpression right)
+        : base(op.TargetType, IrConstant.Fold(left, op, right))
+    {
+        Left = left;
+        Operator = op;
+        Right = right;
+    }
     public IrExpressionBinary(ExpressionBinarySyntax syntax,
         IrExpression left, IrBinaryOperator op, IrExpression right)
         : base(syntax, op.TargetType, IrConstant.Fold(left, op, right))

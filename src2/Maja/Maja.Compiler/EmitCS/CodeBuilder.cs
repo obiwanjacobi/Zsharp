@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Maja.Compiler.EmitCS.CSharp;
+using Maja.Compiler.EmitCS.IR;
 using Maja.Compiler.External;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
@@ -161,7 +162,9 @@ internal class CodeBuilder : IrWalker<object?>
                 Writer.Assignment();
                 _ = OnExpression(variable.Initializer);
             }
-            Writer.EndOfLine();
+
+            if (variable.HasSyntax)
+                Writer.EndOfLine();
         }
         return null;
     }
@@ -263,10 +266,20 @@ internal class CodeBuilder : IrWalker<object?>
         {
             Writer.Tab().Append("while (true)");
         }
-        else
+        else if (statement is IrCodeStatementWhileLoop whileLoop)
         {
             Writer.Tab().Append("while (");
-            _ = OnExpression(statement.Expression);
+            _ = OnExpression(whileLoop.Expression!);
+            Writer.Write(")");
+        }
+        else if (statement is IrCodeStatementForLoop forLoop)
+        {
+            Writer.Tab().Append("for (");
+            _ = OnDeclarationVariable(forLoop.Initializer);
+            Writer.Write(";");
+            _ = OnExpression(forLoop.Condition);
+            Writer.Write(";");
+            _ = OnStatementAssignment(forLoop.Step);
             Writer.Write(")");
         }
 
@@ -281,7 +294,9 @@ internal class CodeBuilder : IrWalker<object?>
         var name = GetCSharpName(statement.Symbol.Name, statement.Locality);
         Writer.StartAssignment(name);
         _ = OnExpression(statement.Expression);
-        Writer.EndOfLine();
+
+        if (statement.HasSyntax)
+            Writer.EndOfLine();
         return null;
     }
 
@@ -345,7 +360,7 @@ internal class CodeBuilder : IrWalker<object?>
                 OnType(expression.TypeSymbol);
                 Writer.Write(")");
             }
-            Writer.Write(expression.ConstantValue!.Value.ToString());
+            Writer.Write(expression.ConstantValue.AsString());
         }
         return null;
     }

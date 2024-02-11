@@ -7,7 +7,7 @@ namespace Maja.Compiler.Syntax;
 /// </summary>
 public abstract class VariableDeclarationSyntax : MemberDeclarationSyntax
 {
-    public VariableDeclarationSyntax(string text)
+    protected VariableDeclarationSyntax(string text)
         : base(text)
     { }
 

@@ -8,6 +8,10 @@ namespace Maja.Compiler.IR;
 
 internal abstract class IrDeclaration : IrNode
 {
+    protected IrDeclaration(IrLocality locality)
+    {
+        Locality = locality;
+    }
     protected IrDeclaration(SyntaxNode syntax, IrLocality locality)
         : base(syntax)
     {
@@ -50,6 +54,13 @@ internal sealed class IrDeclarationFunction : IrDeclaration
 
 internal sealed class IrDeclarationVariable : IrDeclaration
 {
+    internal IrDeclarationVariable(VariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
+        : base(IrLocality.None)
+    {
+        Symbol = symbol;
+        TypeSymbol = type;
+        Initializer = initializer;
+    }
     public IrDeclarationVariable(VariableDeclarationSyntax syntax, VariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
         : base(syntax, IrLocality.None)
     {

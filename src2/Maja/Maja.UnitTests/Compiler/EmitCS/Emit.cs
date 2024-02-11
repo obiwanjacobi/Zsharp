@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
 using Maja.Compiler.EmitCS;
+using Maja.Compiler.EmitCS.IR;
 using Maja.Compiler.EmmitCS.CSharp.Project;
 using Maja.UnitTests.Compiler.IR;
 
@@ -11,8 +12,13 @@ internal static class Emit
     public static string FromCode(string code, ITestOutputHelper? output = null, [CallerMemberName] string callerName = "")
     {
         var program = Ir.Build(code, allowError: false, source: callerName);
+        
+        var lowering = new IrCodeRewriter();
+        program = lowering.CodeRewrite(program);
+        
         var builder = new CodeBuilder();
         var ns = builder.OnProgram(program);
+        
         if (output is not null)
         {
             var dump = ObjectDumper.Dump(ns);

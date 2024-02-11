@@ -156,7 +156,7 @@ internal sealed class CSharpWriter
         var lines = _writer.ToString().Split(Environment.NewLine);
         foreach (var line in lines)
         {
-            target.Tab().Append(line);
+            target.Tab().AppendLine(line);
         }
     }
 

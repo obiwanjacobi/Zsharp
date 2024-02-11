@@ -9,6 +9,13 @@ namespace Maja.Compiler.Symbol;
 [DebuggerDisplay("{DebuggerDisplay()}")]
 public sealed record SymbolName
 {
+    private SymbolName(SymbolNamespace ns, string name, string originalName)
+    {
+        Namespace = ns;
+        Value = name;
+        OriginalName = originalName;
+    }
+    
     public SymbolName(string fullName)
     {
         var parts = fullName.Split(SyntaxToken.Separator);
@@ -34,6 +41,9 @@ public sealed record SymbolName
         Value = ToCanonical(name);
         OriginalName = name;
     }
+
+    internal static SymbolName InternalName(string name)
+        => new(SymbolNamespace.Empty, name, name);
 
     public SymbolNamespace Namespace { get; }
     public string Value { get; }

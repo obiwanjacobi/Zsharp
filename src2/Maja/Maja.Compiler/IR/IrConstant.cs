@@ -45,14 +45,21 @@ internal class IrConstant
     public char ToC16()
         => Convert.ToChar(Value);
     public string ToStr()
-        => Convert.ToString(Value) ?? string.Empty;
+        => Convert.ToString(Value) ?? String.Empty;
 
     internal string DebuggerDisplay()
         => ToString();
     public override string ToString()
         => Value?.ToString() ?? "<null>";
     public string AsString()
-        => Value is string ? $"\"{Value}\"" : Value.ToString() ?? string.Empty;
+    {
+        if (Value is string) 
+            return $"\"{Value}\"";
+        else if (Value is bool)
+            return ToBool() ? "true" : "false";
+        else
+            return Value.ToString() ?? String.Empty;
+    }
 
     public static IrConstant Zero => new(0);
 

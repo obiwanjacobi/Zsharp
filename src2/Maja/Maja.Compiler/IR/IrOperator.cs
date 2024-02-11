@@ -41,24 +41,30 @@ internal enum IrBinaryOperatorKind
 
 internal sealed class IrBinaryOperator : IrNode
 {
+    public IrBinaryOperator(IrBinaryOperatorKind operatorKind, TypeSymbol operandType)
+    {
+        Kind = operatorKind;
+        OperandType = operandType;
+        TargetType = DetermineTargetType(operandType);
+    }
     public IrBinaryOperator(ExpressionOperatorSyntax syntax, TypeSymbol operandType)
         : base(syntax)
     {
         Kind = DetermineKind(syntax);
         OperandType = operandType;
-        TargetType = DetermineTargeType(syntax, operandType);
+        TargetType = DetermineTargetType(operandType);
     }
 
-    private static TypeSymbol DetermineTargeType(ExpressionOperatorSyntax syntax, TypeSymbol operandType)
+    private TypeSymbol DetermineTargetType(TypeSymbol operandType)
     {
-        switch (syntax.OperatorKind)
+        switch (Kind)
         {
-            case ExpressionOperatorKind.Equals:
-            case ExpressionOperatorKind.NotEquals:
-            case ExpressionOperatorKind.Greater:
-            case ExpressionOperatorKind.GreaterOrEquals:
-            case ExpressionOperatorKind.Lesser:
-            case ExpressionOperatorKind.LesserOrEquals:
+            case IrBinaryOperatorKind.Equals:
+            case IrBinaryOperatorKind.NotEquals:
+            case IrBinaryOperatorKind.Greater:
+            case IrBinaryOperatorKind.GreaterOrEquals:
+            case IrBinaryOperatorKind.Lesser:
+            case IrBinaryOperatorKind.LesserOrEquals:
                 return TypeSymbol.Bool;
             default:
                 return operandType;

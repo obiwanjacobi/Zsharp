@@ -54,10 +54,13 @@ public sealed class ExpressionLiteralSyntax : ExpressionConstantSyntax, ICreateS
 /// </summary>
 public sealed class ExpressionLiteralBoolSyntax : ExpressionConstantSyntax, ICreateSyntaxNode<ExpressionLiteralBoolSyntax>
 {
-    private ExpressionLiteralBoolSyntax(string text)
+    public const string TrueString = "true";
+    public const string FalseString = "false";
+
+    internal ExpressionLiteralBoolSyntax(string text)
         : base(text)
     {
-        Value = text == "true";
+        Value = text == TrueString;
     }
 
     public override SyntaxKind SyntaxKind

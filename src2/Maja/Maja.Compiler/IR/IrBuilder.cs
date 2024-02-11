@@ -545,8 +545,22 @@ internal sealed class IrBuilder
             ExpressionTypeInitializerSyntax eti => TypeInitializerExpression(eti),
             ExpressionMemberAccessSyntax ema => MemberAccessExpression(ema),
             ExpressionIdentifierSyntax ide => IdentifierExpression(ide),
+            ExpressionRangeSyntax ers => RangeExpression(ers),
             _ => throw new NotSupportedException($"IR: No support for Expression '{syntax.SyntaxKind}'.")
         };
+    }
+
+    private IrExpressionRange RangeExpression(ExpressionRangeSyntax syntax)
+    {
+        var start = syntax.Start is null
+            ? null
+            : Expression(syntax.Start);
+        
+        var end = syntax.End is null
+            ? null
+            : Expression(syntax.End);
+
+        return new IrExpressionRange(syntax, start, end);
     }
 
     private IrExpressionIdentifier IdentifierExpression(ExpressionIdentifierSyntax syntax)

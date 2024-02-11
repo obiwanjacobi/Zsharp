@@ -69,11 +69,11 @@ expression:
     | expression Sp expressionOperatorBinary Sp expression  #expressionBinary
     | expressionOperatorUnaryPrefix expression              #expressionUnaryPrefix
     | expression typeArgumentList? argumentList             #expressionInvocation
-	| expression typeInitializer             				#expressionTypeInitializer
+    | expression typeInitializer             				#expressionTypeInitializer
     | BracketOpen expression? Range expression? BracketClose #expressionRange
     | ParenOpen expression ParenClose                       #expressionPrecedence
     | nameIdentifier                                        #expressionIdentifier
-	| expression Dot nameIdentifier                         #expressionMemberAccess
+    | expression Dot nameIdentifier                         #expressionMemberAccess
     ;
 expressionConstant: expressionLiteral | expressionLiteralBool;
 expressionRule: expression;
