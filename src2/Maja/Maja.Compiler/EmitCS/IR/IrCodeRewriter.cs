@@ -1,5 +1,6 @@
 ﻿using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
+using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.EmitCS.IR;
 
@@ -12,30 +13,41 @@ internal sealed class IrCodeRewriter : IrRewriter
     {
         if (statement.Expression is IrExpressionRange rangeExpr)
         {
-            var type = rangeExpr.TypeSymbol;
-            var symbol = new VariableSymbol(SymbolName.InternalName("__i"), type);
-            var initExpr = rangeExpr.Start;
-            var initializer = new IrDeclarationVariable(symbol, type, initExpr);
-
-            var condition = new IrExpressionBinary(
-                new IrExpressionIdentifier(symbol, type),
-                new IrBinaryOperator(IrBinaryOperatorKind.Lesser, type),
-                rangeExpr.End!
-                );
-            
-            var addOne = new IrExpressionBinary(
-                new IrExpressionIdentifier(symbol, type),
-                new IrBinaryOperator(IrBinaryOperatorKind.Add, type),
-                new IrExpressionLiteral(type, 1)
-                );
-            var step = new IrStatementAssignment(symbol, addOne, IrLocality.None);
-            
-            return new IrCodeStatementForLoop(statement.Syntax, initializer, condition, step, statement.CodeBlock);
+            return CreateForLoop("i", rangeExpr.Start!, rangeExpr.End!, statement.CodeBlock, statement.Syntax);
+        }
+        else if (statement.Expression is IrExpressionIdentifier identExpr)
+        {
+            var initExpr = new IrExpressionLiteral(identExpr.TypeSymbol, 0);
+            return CreateForLoop(identExpr.Symbol.Name.Value,
+                initExpr, identExpr, statement.CodeBlock, statement.Syntax);
         }
 
         var expression = statement.Expression
             ?? new IrExpressionLiteral(TypeSymbol.Bool, true);
 
         return new IrCodeStatementWhileLoop(statement.Syntax, expression, statement.CodeBlock);
+    }
+
+    private IrCodeStatementForLoop CreateForLoop(string varName, IrExpression initExpr, IrExpression endValExpr,
+        IrCodeBlock codeBlock, StatementLoopSyntax syntax)
+    {
+        var type = initExpr.TypeSymbol;
+        var symbol = new VariableSymbol(SymbolName.InternalName($"__{varName}"), type);
+        var initializer = new IrDeclarationVariable(symbol, type, initExpr);
+
+        var condition = new IrExpressionBinary(
+            new IrExpressionIdentifier(symbol, type),
+            new IrBinaryOperator(IrBinaryOperatorKind.Lesser, type),
+            endValExpr
+            );
+
+        var addOne = new IrExpressionBinary(
+            new IrExpressionIdentifier(symbol, type),
+            new IrBinaryOperator(IrBinaryOperatorKind.Add, type),
+            new IrExpressionLiteral(type, 1)
+            );
+        var step = new IrStatementAssignment(symbol, addOne, IrLocality.None);
+
+        return new IrCodeStatementForLoop(syntax, initializer, condition, step, codeBlock);
     }
 }

@@ -126,8 +126,7 @@ public class EmitStatementTests
         Emit.AssertBuild(emit);
     }
 
-    //[Fact]
-    // fails until loop expression tranform is implemented
+    [Fact]
     public void StatementLoop_For()
     {
         const string code =
@@ -141,9 +140,9 @@ public class EmitStatementTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain(" x ")
-            .And.Contain(" a ")
-            .And.Contain("for (")
+            .Contain("for (")
+            .And.Contain("__x = ")
+            .And.Contain("__x < x")
             ;
 
         Emit.AssertBuild(emit);
