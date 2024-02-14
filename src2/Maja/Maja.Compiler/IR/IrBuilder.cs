@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using Maja.Compiler.Compilation;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.External;
 using Maja.Compiler.Symbol;
@@ -99,7 +98,7 @@ internal sealed class IrBuilder
         ProcessImports(imports);
 
         var members = Declarations(root.Members);
-        
+
         _locallity = IrLocality.Module;
         var statements = Statements(root.Statements);
         _locallity = IrLocality.None;
@@ -179,7 +178,7 @@ internal sealed class IrBuilder
         var locality = CurrentScope.IsExport(name) || syntax.IsPublic
             ? IrLocality.Public
             : IrLocality.None;
-         
+
         return new IrDeclarationType(syntax, symbol, enums, fields, rules, locality);
     }
 
@@ -555,7 +554,7 @@ internal sealed class IrBuilder
         var start = syntax.Start is null
             ? null
             : Expression(syntax.Start);
-        
+
         var end = syntax.End is null
             ? null
             : Expression(syntax.End);

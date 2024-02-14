@@ -24,6 +24,7 @@ public class EmitFunctionTests
             .Contain(" fn()")
             .And.Contain(" void ")
             .And.Contain(" return ")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -47,6 +48,7 @@ public class EmitFunctionTests
             .And.Contain(" System.String ")
             .And.Contain(" void ")
             .And.Contain(" return")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -69,6 +71,7 @@ public class EmitFunctionTests
             .And.Contain("T p1")
             .And.Contain(" void ")
             .And.Contain(" return")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -89,6 +92,7 @@ public class EmitFunctionTests
             .Contain(" fn(")
             .And.Contain(" System.String ")
             .And.Contain(" return \"42\"")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -111,6 +115,7 @@ public class EmitFunctionTests
             .And.Contain(" System.Byte ")
             .And.Contain(" return 42;")
             .And.Contain(" x = fn();")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -133,6 +138,7 @@ public class EmitFunctionTests
             .And.Contain(" System.Byte ")
             .And.Contain(" return p;")
             .And.Contain(" x = fn((System.Byte)42);")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -155,6 +161,7 @@ public class EmitFunctionTests
             .And.Contain(" return p;")
             .And.Contain(" x = fn<System.Byte>(")
             .And.Contain("42);")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -174,6 +181,7 @@ public class EmitFunctionTests
         emit.Should()
             .Contain("public static class Module")
             .And.Contain("public static void fn()")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);

@@ -13,13 +13,25 @@ internal sealed class IrCodeRewriter : IrRewriter
     {
         if (statement.Expression is IrExpressionRange rangeExpr)
         {
-            return CreateForLoop("i", rangeExpr.Start!, rangeExpr.End!, statement.CodeBlock, statement.Syntax);
+            return CreateForLoop("i", rangeExpr.TypeSymbol,  rangeExpr.Start!, rangeExpr.End!, statement.CodeBlock, statement.Syntax);
         }
         else if (statement.Expression is IrExpressionIdentifier identExpr)
         {
             var initExpr = new IrExpressionLiteral(identExpr.TypeSymbol, 0);
-            return CreateForLoop(identExpr.Symbol.Name.Value,
+            return CreateForLoop(identExpr.Symbol.Name.Value, identExpr.TypeSymbol,
                 initExpr, identExpr, statement.CodeBlock, statement.Syntax);
+        }
+        else if (statement.Expression is IrExpressionLiteral litExpr)
+        {
+            var type = litExpr.TypeSymbol;
+
+            if (litExpr.TypeInferredSymbol is not null &&
+                !litExpr.TypeInferredSymbol.TrySelectInferredType(TypeSymbol.I32, out type))
+                throw new MajaException("No Type For Literal Expression");
+
+            var initExpr = new IrExpressionLiteral(type!, 0);
+            return CreateForLoop("i", type!,
+                initExpr, litExpr, statement.CodeBlock, statement.Syntax);
         }
 
         var expression = statement.Expression
@@ -28,10 +40,9 @@ internal sealed class IrCodeRewriter : IrRewriter
         return new IrCodeStatementWhileLoop(statement.Syntax, expression, statement.CodeBlock);
     }
 
-    private IrCodeStatementForLoop CreateForLoop(string varName, IrExpression initExpr, IrExpression endValExpr,
+    private IrCodeStatementForLoop CreateForLoop(string varName, TypeSymbol type, IrExpression initExpr, IrExpression endValExpr,
         IrCodeBlock codeBlock, StatementLoopSyntax syntax)
     {
-        var type = initExpr.TypeSymbol;
         var symbol = new VariableSymbol(SymbolName.InternalName($"__{varName}"), type);
         var initializer = new IrDeclarationVariable(symbol, type, initExpr);
 

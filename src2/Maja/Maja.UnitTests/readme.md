@@ -92,4 +92,6 @@ Keeping track of the progress of Maja features.
 | if      |      | x | x | x |   |   | x | x |   | `if <condition>`  |
 |         | else | x | x | x |   |   | x | x |   | `if <condition> else`  |
 |         | elif | x | x | x |   |   | x | x |   | `if <condition> elif <condition>`  |
-| loop    |      | x | x | x |   |   |   | x |   | `loop <condition>`  |
+| loop   | count | x | x | x |   | x | x | x |   | `loop 42` |
+|        | range | x | x | x |   | x | x | x |   | `loop [0..42]` |
+|    | condition | x | x | x |   |   | x | x |   | `loop x < 42` |

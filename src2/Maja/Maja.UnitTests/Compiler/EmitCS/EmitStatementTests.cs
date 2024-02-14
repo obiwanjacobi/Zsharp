@@ -26,6 +26,7 @@ public class EmitStatementTests
             .Contain(" x ")
             .And.Contain(" a ")
             .And.Contain("if (")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -51,6 +52,7 @@ public class EmitStatementTests
             .And.Contain(" a ")
             .And.Contain("if (")
             .And.Contain("else")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -79,6 +81,7 @@ public class EmitStatementTests
             .And.Contain("if (")
             .And.Contain("else if (")
             .And.Contain("else")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -99,6 +102,7 @@ public class EmitStatementTests
         emit.Should()
             .Contain(" a ")
             .And.Contain("while ((System.Boolean)true)")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -121,6 +125,29 @@ public class EmitStatementTests
             .And.Contain("Int32 __i = 0")
             .And.Contain("__i < 9")
             .And.Contain("__i = (System.Int32)(__i + (System.Int32)1)")
+            .And.NotContain("<unknown>")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
+    public void StatementLoop_Literal()
+    {
+        const string code =
+            "a := 0" + Tokens.Eol +
+            "loop 42" + Tokens.Eol +
+            Tokens.Indent1 + "a = a + 1" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain("for (")
+            .And.Contain("__i = ")
+            .And.Contain("__i < 42")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -143,6 +170,7 @@ public class EmitStatementTests
             .Contain("for (")
             .And.Contain("__x = ")
             .And.Contain("__x < x")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -164,6 +192,7 @@ public class EmitStatementTests
             .Contain(" a ")
             .And.Contain("while (")
             .And.Contain("(a < 42)")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);

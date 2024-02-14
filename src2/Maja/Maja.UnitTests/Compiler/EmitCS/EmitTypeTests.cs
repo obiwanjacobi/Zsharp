@@ -25,6 +25,7 @@ public class EmitTypeTests
             .Contain(" Mytype")
             .And.Contain("Option1")
             .And.Contain("Option2")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -46,6 +47,7 @@ public class EmitTypeTests
             .Contain(" Mytype")
             .And.Contain(" System.Byte Field { get; set; }")
             .And.Contain(" System.String Name { get; set; }")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -67,6 +69,7 @@ public class EmitTypeTests
             .Contain(" Mytype")
             .And.Contain(" System.Byte Field { get; set; } = 42")
             .And.Contain(" System.String Name { get; set; } = \"Test\"")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -91,6 +94,7 @@ public class EmitTypeTests
             .Contain(" Mytype")
             .And.Contain(" System.Byte Field { get; set; }")
             .And.Contain(" System.String Name { get; set; }")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);

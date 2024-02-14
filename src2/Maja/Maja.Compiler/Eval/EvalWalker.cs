@@ -257,20 +257,46 @@ internal sealed class EvalWalker : IrWalker<object?>
     {
         if (statement.Expression is not null)
         {
-            IrConstant value;
-
-            while (true)
+            if (statement.Expression is IrExpressionRange rangeExpr)
             {
-                // re-evaluate expression on each iteration
-                value = (IrConstant)OnExpression(statement.Expression)!;
-                if (value.ToBool())
+                var start = (IrConstant)OnExpression(rangeExpr.Start!)!;
+                var end = (IrConstant)OnExpression(rangeExpr.End!)!;
+                for (var i = start.ToI32(); i < end.ToI32(); i++)
+                {
                     _ = OnCodeBlock(statement.CodeBlock);
-                else
-                    return value;
+                }
+            }
+            else if (statement.Expression is IrExpressionIdentifier identExpr)
+            {
+                var value = (IrConstant)OnExpression(identExpr)!;
+                for (var i = 0; i < value.ToI32(); i++)
+                {
+                    _ = OnCodeBlock(statement.CodeBlock);
+                }
+            }
+            else if (statement.Expression is IrExpressionLiteral litExpr)
+            {
+                var value = (IrConstant)OnExpression(litExpr)!;
+                for (var i = 0; i < value.ToI32(); i++)
+                {
+                    _ = OnCodeBlock(statement.CodeBlock);
+                }
+            }
+            else
+            {
+                while (true)
+                {
+                    // re-evaluate expression on each iteration
+                    var value = (IrConstant)OnExpression(statement.Expression)!;
+                    if (value.ToBool())
+                        _ = OnCodeBlock(statement.CodeBlock);
+                    else
+                        break;
+                }
             }
         }
         else
-            _state.Diagnostics.Add(DiagnosticMessageKind.Error, 
+            _state.Diagnostics.Add(DiagnosticMessageKind.Error,
                 statement.Syntax.Location, "Repl does not do endless loops.");
 
         return null;

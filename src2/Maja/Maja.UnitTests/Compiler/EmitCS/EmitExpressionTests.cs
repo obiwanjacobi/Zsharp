@@ -25,6 +25,7 @@ public class EmitExpressionTests
             .And.Contain("42 ")
             .And.Contain(" + ")
             .And.Contain(" 101")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -47,6 +48,7 @@ public class EmitExpressionTests
             .And.Contain(" = ")
             .And.Contain(" 42")
             .And.Contain("(x + 101)")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -68,6 +70,7 @@ public class EmitExpressionTests
         emit.Should()
             .Contain("System.Byte y = (System.Byte)42;")
             .And.Contain("System.Byte x = fn((System.Byte)(y + (System.Byte)42));")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -89,6 +92,7 @@ public class EmitExpressionTests
         emit.Should()
             .Contain("System.Byte y = (System.Byte)42;")
             .And.Contain("System.Byte x = fn((System.Byte)(fn(y) + (System.Byte)42));")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -112,6 +116,7 @@ public class EmitExpressionTests
 
         emit.Should()
             .Contain("y = x.fld1;")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
@@ -136,6 +141,7 @@ public class EmitExpressionTests
 
         emit.Should()
             .Contain("y = fn().fld1;")
+            .And.NotContain("<unknown>")
             ;
 
         Emit.AssertBuild(emit);
