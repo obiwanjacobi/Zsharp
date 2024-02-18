@@ -110,7 +110,7 @@ s: MyStruct
 // reference passing
 x := s
 // this will make a new copy of Struct
-x <=^ s     // mutable assignment
+x :<=^ s     // mutable assignment
 
 // only changes x, not s
 x.fld1 = 101
@@ -126,7 +126,8 @@ s: MyStruct
     ...
 
 // copy same type
-x <= s  // x: MyStruct
+x :<= s             // x: MyStruct
+x : MyStruct <= s   // or this
 
 YourStruct
     fld1: U8
@@ -135,6 +136,8 @@ YourStruct
 // map / transform (default by field names)
 y: YourStruct <= s  // y: YourStruct -mapped
 ```
+
+See also [Structure Transformation](./structures.md#transformation-mapping).
 
 ---
 
@@ -154,6 +157,8 @@ b = 42
 b ?= 101
 // b = 42
 ```
+
+Only works with `Opt<T>` values or dotnet `null` reference types.
 
 ---
 
@@ -229,32 +234,21 @@ s = {fld1: 42, fld2: "42"}  // Atom overrides = operator
 
 Volatile is used when the contents of a variable (memory location) can be changed from outside the program (memory mapped IO/hardware registers) or outside the compiler's field of view (interrupt service routines).
 
-If we are able to tag ISR's in the language, we can automatically tag all used variables as volatile.
-Memory mapped IO is harder to auto detect.
-
-> What 3-letter abbreviation means volatile?
-
 ```csharp
-// we may want to save IO for language supported Input/Output instructions.
-a: IO<U8> = 42          // used in functional (impure)
-a: Volatile<U8> = 42    // too long?
-a: Vol<U8> = 42         // unclear?
-a: Weak<U8> = 42        // save for ptrs?
-a: Alt<U8> = 42         // alternate
-a: Soft<U8> = 42
-
-// like optional - but different
-// will get weird with optional/error
-a: &U8 = 42
+// 'Volatile<T>' too long?
+a: Volatile<U8> = 42    // write
+x := a                  // read
 ```
 
 > TBD: Memory Fences! => default .NET
+
+See also the `Volatile` dotnet class.
 
 ---
 
 ## Deconstruction
 
-Deconstruction is _copying_ the value into a variable.
+Deconstruction is _copying_ the value into a variable or parameter.
 
 ```csharp
 a, b := ...

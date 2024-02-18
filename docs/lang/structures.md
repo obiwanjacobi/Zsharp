@@ -17,9 +17,20 @@ Here is how to create an instance of a structure and assign its fields with valu
 ```C#
 MyStruct
     field1: U8
+    field2: Str
 
+// this?
 s := MyStruct           // instantiate an instance
     field1 = 42         // assigning values
+    field2 = "42"
+
+// or this?
+s : MyStruct =
+    field1 = 42
+    field2 = "42"
+
+// alternative?
+s : MyStruct = { field1 = 42, field2 = "42" }
 ```
 
 A structure can have default values. If no value is explicitly specified each type is initialized with its `#default` value:
@@ -44,7 +55,7 @@ MyStruct
 fn: (p: MyStruct): U8
     ...
 
-fn(MyStruct {field1 = 42, field2 = "42"})
+fn({field1 = 42, field2 = "42"})
 fn(MyStruct 
     field1 = 42
     field2 = "42")

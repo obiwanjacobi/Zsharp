@@ -12,24 +12,32 @@ Literal numeric values can be specified in the code using prefixes as follows.
 Examples of this would be:
 
 ```C#
-b = 0b01110011      // binary
-o = 0c154           // octal
-d = 42              // decimal is default
-d = 0d42            // decimal (explicit)
-h = 0x8F            // hexadecimal
+b := 0b01110011      // binary
+o := 0c154           // octal
+d := 42              // decimal is default
+d := 0d42            // decimal (explicit)
+h := 0x8F            // hexadecimal
 ```
 
 The `_` character may be used to separate parts for readability. They have no meaning for the value. It can be used for any of the prefixes, so if used on a decimal, the prefix `0d` has to be present.
 
 ```C#
-b = 0b1010_01010    // still a 8-bit binary number
-d = 0d7_654_321     // 7,654,321
-h = 0xFF_FF
+b := 0b1010_01010    // still a 8-bit binary number
+d := 0d7_654_321     // 7,654,321
+h := 0xFF_FF
 ```
 
 > TBD I am thinking of defaulting to Int64 for all literal numbers.
 
-> Add postfixes to indicate type? `a = 42u` (unsigned)
+> Add postfixes to indicate type? `a := 42u` (unsigned)
+
+Use the actual type name?
+
+```csharp
+a := 42#U8
+b := 1024#I16
+c := 3.1415#F32
+```
 
 ---
 
@@ -50,16 +58,16 @@ Floating point literals can be specified in different ways. Mainly the use of th
 A string literal is enclosed with double quotes. Here are some examples:
 
 ```C#
-s = ""                          // empty string
-s = "Hello World!"
-s = "I say 'Hello'"             // use of single quotes is ok
-s = "C:\Windows\Path\File.Ext"  // no need to escape '\'
+s := ""                          // empty string
+s := "Hello World!"
+s := "I say 'Hello'"             // use of single quotes is ok
+s := "C:\Windows\Path\File.Ext"  // no need to escape '\'
 ```
 
 To use special characters in a literal string, you have to use the escape sequence: ` (backtick).
 
 ```C#
-s = "Some text `n with newlines `n and `"quotes`"."
+s := "Some text `n with newlines `n and `"quotes`"."
 ```
 
 Escaped Characters
@@ -83,7 +91,7 @@ For longer string you may want to spread them out over multiple lines. Using ind
 There are two indents for the extra lines of the spread out string:
 
 ```C#
-s = "Some text
+s := "Some text
         spread over
         multiple lines"
 ```
@@ -97,7 +105,7 @@ Adjacent literal string will be concatenated. Explicit how whitespace is handled
 What indentation to use? At least 1 max 2 from root?
 
 ```C#
-s = "Some text"
+s := "Some text"
     "spread over"
         "multiple lines"    // mix indentations?
 ```
@@ -107,21 +115,21 @@ s = "Some text"
 Basic formatting of dynamic values into a string is done in the following way:
 
 ```C#
-v = 42
-s = "Answer to everything is '{v}'"
+v := 42
+s := "Answer to everything is '{v}'"
 // Answer to everything is '42'
 
 // hex (lower case) formatting
-s = "Answer to everything is '{v:x}'"
+s := "Answer to everything is '{v:x}'"
 // Answer to everything is '2a'
 ```
 
 Alternate syntax?
 
 ```C#
-v = 42
-s = "Answer to everything is '$v'"
-s = "Answer to everything is '$v:x'"
+v := 42
+s := "Answer to everything is '$v'"
+s := "Answer to everything is '$v:x'"
 ```
 
 > More on formatting floats, dates, etc.
@@ -132,10 +140,10 @@ Using the `{}` characters as is in a string literal, requires the escape sequenc
 
 ```C#
 // escape braces
-s = @"This will print {braces}"
+s := @"This will print {braces}"
 // This will print {braces}
 
-s = "This will print `{braces`} too"
+s := "This will print `{braces`} too"
 // This will print {braces} too
 ```
 
@@ -156,7 +164,7 @@ format: (self: MyStruct, ctx: FormatContext): Str
 Related to strings are character literals. A single character can be specified using single quotes:
 
 ```C#
-c = 'X'                 // C16
+c := 'X'                 // C16
 ```
 
 Multi-byte character literals (max 4 chars)
