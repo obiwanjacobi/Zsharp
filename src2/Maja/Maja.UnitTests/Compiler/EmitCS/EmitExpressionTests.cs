@@ -24,7 +24,7 @@ public class EmitExpressionTests
             .And.Contain(" = ")
             .And.Contain("42 ")
             .And.Contain(" + ")
-            .And.Contain(" 101")
+            .And.Contain("101")
             .And.NotContain("<unknown>")
             ;
 
@@ -46,8 +46,8 @@ public class EmitExpressionTests
             .Contain(" x ")
             .And.Contain(" y ")
             .And.Contain(" = ")
-            .And.Contain(" 42")
-            .And.Contain("(x + 101)")
+            .And.Contain("42")
+            .And.Contain("(x + (System.Int64)101)")
             .And.NotContain("<unknown>")
             ;
 

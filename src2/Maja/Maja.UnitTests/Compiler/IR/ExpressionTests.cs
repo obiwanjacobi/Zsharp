@@ -36,16 +36,25 @@ public class ExpressionTests
             "x := 12 + 30" + Tokens.Eol
             ;
 
+        var expectedTypeSymbol = TypeSymbol.I64;
+
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(1);
+        
         var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
-        v.Initializer!.TypeSymbol.Should().NotBeNull();
+        v.TypeSymbol.Should().Be(expectedTypeSymbol);
+
+        v.Initializer!.TypeSymbol.Should().Be(expectedTypeSymbol);
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
-        v.TypeSymbol.Should().Be(TypeSymbol.I64);
+        
+        var sub = v.Initializer.As<IrExpressionBinary>();
+        sub.TypeSymbol.Should().Be(expectedTypeSymbol);
+        sub.Left.TypeSymbol.Should().Be(expectedTypeSymbol);
+        sub.Right.TypeSymbol.Should().Be(expectedTypeSymbol);
     }
 
     [Fact]
@@ -55,16 +64,30 @@ public class ExpressionTests
             "x := (12 + 30) * 2" + Tokens.Eol
             ;
 
+        var expectedTypeSymbol = TypeSymbol.I64;
+
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(1);
+        
         var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
-        v.Initializer!.TypeSymbol.Should().NotBeNull();
+        v.TypeSymbol.Should().Be(expectedTypeSymbol);
+
+        v.Initializer!.TypeSymbol.Should().Be(expectedTypeSymbol);
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(84);
-        v.TypeSymbol.Should().Be(TypeSymbol.I64);
+        
+        var sub = v.Initializer.As<IrExpressionBinary>();
+        sub.TypeSymbol.Should().Be(expectedTypeSymbol);
+        sub.Left.TypeSymbol.Should().Be(expectedTypeSymbol);
+        sub.Right.TypeSymbol.Should().Be(expectedTypeSymbol);
+        
+        var sub2 = sub.Left.As<IrExpressionBinary>();
+        sub2.TypeSymbol.Should().Be(expectedTypeSymbol);
+        sub2.Left.TypeSymbol.Should().Be(expectedTypeSymbol);
+        sub2.Right.TypeSymbol.Should().Be(expectedTypeSymbol);
     }
 
     [Fact]

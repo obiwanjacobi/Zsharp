@@ -14,16 +14,18 @@ Started. Have ErrorToken with description.
 - [ ] Resolve operators to functions
 - [ ] local (nested) functions and types
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
-- [ ] Emit: Transform loop expression to C# compatible for-expression.
 - [ ] Diagnostics: Generate compiler warning for `##` comments
 - [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Allow named type-parameters (`IrArgumentMatcher`)
-- [ ] UnitTests for Eval
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
 - [ ] IR: Validate file-global statements (only StatementExpression?)
+- [ ] IR: Not all expression nodes have a TypeSymbol set (for instance Range)
+- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets
 
 ### Done
 
+- [x] UnitTests for Eval
+- [x] Emit: Transform loop expression to C# compatible for-expression.
 - [x] IR: Function Type (IrTypeFunction/FunctionTypeSymbol)
 - [x] StatementExpression only for invocation (other?).
 - [x] Loop statement

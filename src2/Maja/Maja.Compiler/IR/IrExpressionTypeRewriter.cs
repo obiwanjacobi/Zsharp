@@ -17,7 +17,6 @@ internal class IrExpressionTypeRewriter
         var expr = expression switch
         {
             IrExpressionBinary exprBin => RewriteExpressionBinary(exprBin),
-            //IrExpressionIdentifier exprId => RewriteExpressionIdentifier(exprId),
             IrExpressionInvocation exprInv => RewriteExpressionInvocation(exprInv),
             IrExpressionLiteral exprLit => RewriteExpressionLiteral(exprLit),
             _ => expression
@@ -38,27 +37,30 @@ internal class IrExpressionTypeRewriter
             rightType.Name != TypeSymbol.Unknown.Name)
             leftType = rightType;
 
-        // TODO: what if both are unknown?
         if (leftType == expression.Left.TypeSymbol &&
-            rightType == expression.Right.TypeSymbol)
+            rightType == expression.Right.TypeSymbol &&
+            leftType.Name != TypeSymbol.Unknown.Name)
             return expression;
+
+        if (leftType.Name == TypeSymbol.Unknown.Name &&
+            rightType.Name == TypeSymbol.Unknown.Name)
+        {
+            rightType = _typeStack.Peek();
+            leftType = _typeStack.Peek();
+        }
+        
 
         var left = expression.Left;
         var right = expression.Right;
         var op = expression.Operator;
 
-        if (leftType != expression.Left.TypeSymbol)
-        {
-            _typeStack.Push(leftType);
-            left = RewriteExpression(left);
-            _typeStack.Pop();
-        }
-        if (rightType != expression.Right.TypeSymbol)
-        {
-            _typeStack.Push(rightType);
-            right = RewriteExpression(right);
-            _typeStack.Pop();
-        }
+        _typeStack.Push(leftType);
+        left = RewriteExpression(left);
+        _typeStack.Pop();
+
+        _typeStack.Push(rightType);
+        right = RewriteExpression(right);
+        _typeStack.Pop();
 
         if (!IrTypeConversion.TryDecideType(left.TypeSymbol, right.TypeSymbol, out var opType))
             opType = expression.Operator.OperandType;

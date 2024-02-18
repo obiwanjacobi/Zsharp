@@ -294,6 +294,9 @@ internal sealed class IrBuilder
         if (initializer.TypeInferredSymbol?.TryGetPreferredType(out var type) != true)
             type = initializer.TypeSymbol;
 
+        var rewriter = new IrExpressionTypeRewriter(type);
+        initializer = rewriter.RewriteExpression(initializer);
+
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
         var symbol = new VariableSymbol(name, type!);
 

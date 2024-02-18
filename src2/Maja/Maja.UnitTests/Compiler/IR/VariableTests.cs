@@ -18,7 +18,7 @@ public class VariableTests
         program.Root.Declarations.Should().HaveCount(1);
         var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
-        v.Initializer!.TypeInferredSymbol.Should().NotBeNull();
+        v.Initializer!.TypeInferredSymbol.Should().BeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
         v.TypeSymbol.Should().Be(TypeSymbol.I64);
