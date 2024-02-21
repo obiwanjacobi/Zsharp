@@ -13,7 +13,7 @@ Rules for Type inferrence in expressions.
 - Operand overloads (on operators) exist to work with different type (add I32 + F32).
 - Operator's result-types are bigger than the operand types up until 64 bits.
 
-Desicion: `IrExpressionLiteral` are not rewritten and will always keep their `TypeInferredSymbol`.
+Type promotion is typically done downward from the parent to children.
 
 #### Literals
 
@@ -56,5 +56,5 @@ IrDeclarationVariable
   .TypeSymbol = TypeSymbol.I64
   .Initializer = IrExpressionBinary
     .TypeSymbol.I64
-    .Left = IrExpressionLiteral.TypeInferredSymbol (candidates)
-    .Right = IrExpressionLiteral.TypeInferredSymbol (candidates)
+    .Left = IrExpressionLiteral.TypeInferredSymbol (candidates)   <- will be replaced
+    .Right = IrExpressionLiteral.TypeInferredSymbol (candidates)  <- will be replaced
