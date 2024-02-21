@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using Maja.Compiler.Diagnostics;
 using Maja.Compiler.Syntax;
 
 namespace Maja.UnitTests.Compiler.Syntax;
 
 internal static class Syntax
 {
-    public static CompilationUnitSyntax Parse(string code, bool throwOnError = true)
+    public static CompilationUnitSyntax Parse(string code, bool throwOnError = true, [CallerMemberName] string sourceName = "")
     {
-        var tree = SyntaxTree.Parse(code, "SyntaxTests");
+        var tree = SyntaxTree.Parse(code, sourceName);
 
         if (throwOnError &&
-            (tree.Root.HasError || tree.Diagnostics.Any()))
+            (tree.Root.HasError || 
+            tree.Diagnostics.Has(DiagnosticMessageKind.Error) || tree.Diagnostics.Has(DiagnosticMessageKind.Critical)))
         {
             var errTxt = String.Join(Environment.NewLine,
                 tree.Root.GetErrors().Select(err => err.Text)
@@ -21,6 +24,12 @@ internal static class Syntax
         }
 
         return tree.Root;
+    }
+
+    public static SyntaxTree ParseCore(string code, [CallerMemberName] string sourceName = "")
+    {
+        var tree = SyntaxTree.Parse(code, sourceName);
+        return tree;
     }
 
     public static string Write(CompilationUnitSyntax root)

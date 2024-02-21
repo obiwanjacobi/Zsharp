@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.Diagnostics;
@@ -26,6 +27,9 @@ public sealed class DiagnosticList : IEnumerable<DiagnosticMessage>
     }
 
     public bool HasDiagnostics => _messages.Count > 0;
+
+    public bool Has(DiagnosticMessageKind kind)
+        => _messages.Any(m => m.MessageKind == kind);
 
     public IEnumerator<DiagnosticMessage> GetEnumerator()
         => _messages.GetEnumerator();

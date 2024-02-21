@@ -1,3 +1,6 @@
+using System.Linq;
+using Maja.Compiler.Diagnostics;
+
 namespace Maja.UnitTests.Compiler.Syntax;
 
 public class BasicSyntaxTests
@@ -32,9 +35,13 @@ public class BasicSyntaxTests
             Tokens.Indent1 + "ret       #_ nothing" + Tokens.Eol
             ;
 
-        var result = Syntax.Parse(code);
-        result.Should().NotBeNull();
-
+        var result = Syntax.ParseCore(code);
+        result.Root.Should().NotBeNull();
+        result.Diagnostics.Should().HaveCount(1);
+        var msg = result.Diagnostics.First();
+        msg.MessageKind.Should().Be(DiagnosticMessageKind.Warning);
+        msg.Text.Should().Contain("Warning");
+        
         Syntax.RoundTrip(code, _output);
     }
 

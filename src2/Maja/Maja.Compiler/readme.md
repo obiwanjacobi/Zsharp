@@ -14,7 +14,6 @@ Started. Have ErrorToken with description.
 - [ ] Resolve operators to functions (later)
 - [ ] local (nested) functions and types
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
-- [ ] Diagnostics: Generate compiler warning for `##` comments
 - [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Allow named type-parameters (`IrArgumentMatcher`)
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
@@ -24,6 +23,7 @@ Started. Have ErrorToken with description.
 
 ### Done
 
+- [x] Diagnostics: Generate compiler warning for `##` comments
 - [x] UnitTests for Eval
 - [x] Emit: Transform loop expression to C# compatible for-expression.
 - [x] IR: Function Type (IrTypeFunction/FunctionTypeSymbol)

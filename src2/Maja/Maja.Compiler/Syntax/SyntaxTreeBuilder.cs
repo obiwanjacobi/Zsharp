@@ -119,6 +119,12 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         SyntaxToken? token = SyntaxToken.TryNew(node.Symbol.Type, node.GetText(), location);
         if (token is SyntaxToken knownToken)
         {
+            if (token is CommentToken commentToken &&
+                commentToken.Text.StartsWith("##"))
+            {
+                Diagnostics.Add(DiagnosticMessageKind.Warning, token.Location, $"Warning Comment: {token.Text}");
+            }
+
             return new[] { new SyntaxNodeOrToken(knownToken) };
         }
         return Empty;
