@@ -223,7 +223,7 @@ public class ExpressionSyntaxTests
         var v = result.Members.ElementAt(0).As<VariableDeclarationSyntax>();
         v.Name.Text.Should().Be("y");
         var expr = v.Expression.As<ExpressionMemberAccessSyntax>();
-        
+
         expr.Name.Text.Should().Be("fld2");
         expr = expr.LeftAs<ExpressionMemberAccessSyntax>();
         expr.Name.Text.Should().Be("fld1");

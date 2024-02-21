@@ -5,6 +5,13 @@ namespace Maja.UnitTests.Compiler.Syntax;
 
 public class TypeSyntaxTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public TypeSyntaxTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     [Fact]
     public void TypeDeclareStruct()
     {
@@ -23,6 +30,8 @@ public class TypeSyntaxTests
         t.Fields!.Items.First().Type.Name.Text.Should().Be("U8");
         t.Fields!.Items.Skip(1).First().Name.Text.Should().Be("fld2");
         t.Fields!.Items.Skip(1).First().Type.Name.Text.Should().Be("Str");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -40,6 +49,8 @@ public class TypeSyntaxTests
         t.Enums!.Items.Should().HaveCount(2);
         t.Enums!.Items.First().Name.Text.Should().Be("Option1");
         t.Enums!.Items.Skip(1).First().Name.Text.Should().Be("Option2");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -60,6 +71,8 @@ public class TypeSyntaxTests
         t.Enums!.Items.First().Expression!.Text.Should().Be("0");
         t.Enums!.Items.Skip(1).First().Name.Text.Should().Be("Option2");
         t.Enums!.Items.Skip(1).First().Expression!.Text.Should().Be("1");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -86,6 +99,8 @@ public class TypeSyntaxTests
         t.Fields!.Items.First().Type.Name.Text.Should().Be("U8");
         t.Fields!.Items.Skip(1).First().Name.Text.Should().Be("fld2");
         t.Fields!.Items.Skip(1).First().Type.Name.Text.Should().Be("Str");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -112,5 +127,7 @@ public class TypeSyntaxTests
         f[0].Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
         f[1].Name.Text.Should().Be("fld2");
         f[1].Expression.As<ExpressionLiteralSyntax>().LiteralString!.Text.Should().Be("42");
+
+        //Syntax.RoundTrip(code, _output);
     }
 }

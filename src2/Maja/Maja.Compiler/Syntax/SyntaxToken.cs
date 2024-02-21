@@ -10,7 +10,6 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// A common type for all syntax tokens.
 /// </summary>
-/// <param name="Text">The textual representation of the token.</param>
 public abstract class SyntaxToken
 {
     public const string Separator = ".";

@@ -1,5 +1,4 @@
 using System.Linq;
-using Xunit.Abstractions;
 
 namespace Maja.UnitTests.Compiler.Syntax;
 
@@ -72,7 +71,7 @@ public class ModuleSyntaxTests
         pubs.Should().HaveCount(1);
         pubs[0].QualifiedNames.Should().HaveCount(1);
 
-        //Syntax.RoundTrip(code, _output);
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]

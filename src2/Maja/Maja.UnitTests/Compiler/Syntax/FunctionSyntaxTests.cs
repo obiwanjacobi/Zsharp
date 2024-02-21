@@ -5,6 +5,13 @@ namespace Maja.UnitTests.Compiler.Syntax;
 
 public class FunctionSyntaxTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public FunctionSyntaxTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     [Fact]
     public void Fn()
     {
@@ -20,6 +27,8 @@ public class FunctionSyntaxTests
         fn.CodeBlock.Statements.Should().HaveCount(1);
         var ret = fn.CodeBlock.Statements.First().As<StatementReturnSyntax>();
         ret.Should().NotBeNull();
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -39,6 +48,8 @@ public class FunctionSyntaxTests
         var param = fn.Parameters.First().As<ParameterSyntax>();
         param.Name.Text.Should().Be("p");
         param.Type.Name.Text.Should().Be("U8");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -63,6 +74,8 @@ public class FunctionSyntaxTests
         param = fn.Parameters.Skip(1).First().As<ParameterSyntax>();
         param.Name.Text.Should().Be("p2");
         param.Type.Name.Text.Should().Be("Str");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -81,6 +94,8 @@ public class FunctionSyntaxTests
         var ret = fn.CodeBlock.Statements.First().As<StatementReturnSyntax>();
         ret.Expression.Should().NotBeNull();
         ret.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -98,5 +113,7 @@ public class FunctionSyntaxTests
         fn.TypeParameters.Should().HaveCount(1);
         var param = fn.TypeParameters.First().As<TypeParameterSyntax>();
         param.Type.Text.Should().Be("T");
+
+        Syntax.RoundTrip(code, _output);
     }
 }

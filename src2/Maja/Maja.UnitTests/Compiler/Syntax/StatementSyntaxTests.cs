@@ -5,6 +5,13 @@ namespace Maja.UnitTests.Compiler.Syntax;
 
 public class StatementSyntaxTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public StatementSyntaxTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     [Fact]
     public void If()
     {
@@ -21,6 +28,8 @@ public class StatementSyntaxTests
         var statIf = fn.CodeBlock.Statements.First().As<StatementIfSyntax>();
         statIf.Expression.Text.Should().Be("true");
         statIf.CodeBlock.Statements.Should().HaveCount(1);
+
+        //Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -36,6 +45,8 @@ public class StatementSyntaxTests
         var statIf = result.Statements.First().As<StatementIfSyntax>();
         statIf.Expression.Text.Should().Be("true");
         statIf.CodeBlock.Statements.Should().HaveCount(1);
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -58,6 +69,8 @@ public class StatementSyntaxTests
         statIf.CodeBlock.Statements.Should().HaveCount(1);
 
         statIf.Else!.CodeBlock.Statements.Should().HaveCount(1);
+
+        //Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -81,6 +94,8 @@ public class StatementSyntaxTests
 
         statIf.ElseIf!.Expression.Text.Should().Be("false");
         statIf.ElseIf!.CodeBlock.Statements.Should().HaveCount(1);
+
+        //Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -96,6 +111,8 @@ public class StatementSyntaxTests
         var loop = result.Statements.First().As<StatementLoopSyntax>();
 
         loop.Expression.Should().BeNull();
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -112,6 +129,8 @@ public class StatementSyntaxTests
 
         loop.Expression.Should().NotBeNull();
         loop.Expression.As<ExpressionLiteralSyntax>().Should().NotBeNull();
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -128,6 +147,8 @@ public class StatementSyntaxTests
 
         loop.Expression.Should().NotBeNull();
         loop.Expression.As<ExpressionRangeSyntax>().Should().NotBeNull();
+
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -145,5 +166,7 @@ public class StatementSyntaxTests
         loop.Expression.Should().NotBeNull();
         loop.Expression.As<ExpressionBinarySyntax>()
             .Operator.OperatorCategory.Should().Be(ExpressionOperatorCategory.Comparison);
+
+        Syntax.RoundTrip(code, _output);
     }
 }

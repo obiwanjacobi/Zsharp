@@ -35,7 +35,7 @@ public class BasicSyntaxTests
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
 
-        //Syntax.RoundTrip(code, _output);
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class BasicSyntaxTests
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
 
-        //Syntax.RoundTrip(code, _output);
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public class BasicSyntaxTests
         var result = Syntax.Parse(code);
         result.Should().NotBeNull();
 
-        //Syntax.RoundTrip(code, _output);
+        Syntax.RoundTrip(code, _output);
     }
 
     [Fact]
