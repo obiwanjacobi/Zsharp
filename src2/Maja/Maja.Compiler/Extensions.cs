@@ -1,4 +1,6 @@
-﻿namespace Maja.Compiler;
+﻿using System.Collections;
+
+namespace Maja.Compiler;
 
 internal static class Extensions
 {

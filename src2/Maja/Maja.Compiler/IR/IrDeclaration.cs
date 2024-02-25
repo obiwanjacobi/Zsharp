@@ -79,17 +79,21 @@ internal sealed class IrDeclarationVariable : IrDeclaration
 
 internal sealed class IrDeclarationType : IrDeclaration
 {
-    public IrDeclarationType(TypeDeclarationSyntax syntax, TypeSymbol symbol,
-        IEnumerable<IrTypeMemberEnum> enums, IEnumerable<IrTypeMemberField> fields, IEnumerable<IrTypeMemberRule> rules, IrLocality locality)
+    public IrDeclarationType(TypeDeclarationSyntax syntax, TypeSymbol symbol, IEnumerable<IrTypeParameter> typeParameters,
+        IEnumerable<IrTypeMemberEnum> enums, IEnumerable<IrTypeMemberField> fields, IEnumerable<IrTypeMemberRule> rules, IrTypeScope scope, IrLocality locality)
         : base(syntax, locality)
     {
         Symbol = symbol;
+        Scope = scope;
+        TypeParameters = typeParameters.ToImmutableArray();
         Enums = enums.ToImmutableArray();
         Fields = fields.ToImmutableArray();
         Rules = rules.ToImmutableArray();
     }
 
     public TypeSymbol Symbol { get; }
+    public IrTypeScope Scope { get; }
+    public ImmutableArray<IrTypeParameter> TypeParameters { get; }
     public ImmutableArray<IrTypeMemberEnum> Enums { get; }
     public ImmutableArray<IrTypeMemberField> Fields { get; }
     public ImmutableArray<IrTypeMemberRule> Rules { get; }

@@ -141,16 +141,18 @@ internal abstract class IrRewriter
 
     protected virtual IrDeclarationType RewriteDeclarationType(IrDeclarationType type)
     {
+        var typeParams = RewriteTypeParameters(type.TypeParameters);
         var enums = RewriteEnums(type.Enums);
         var fields = RewriteFields(type.Fields);
         var rules = RewriteRules(type.Rules);
 
-        if (enums == type.Enums &&
+        if (typeParams == type.TypeParameters &&
+            enums == type.Enums &&
             fields == type.Fields &&
             rules == type.Rules)
             return type;
 
-        return new IrDeclarationType(type.Syntax, type.Symbol, enums, fields, rules, type.Locality);
+        return new IrDeclarationType(type.Syntax, type.Symbol, typeParams, enums, fields, rules, type.Scope, type.Locality);
     }
 
     protected virtual ImmutableArray<IrTypeMemberEnum> RewriteEnums(ImmutableArray<IrTypeMemberEnum> memberEnums)
@@ -366,12 +368,14 @@ internal abstract class IrRewriter
 
     protected virtual IrExpressionTypeInitializer RewriteTypeInitializer(IrExpressionTypeInitializer initializer)
     {
+        var typeArgs = RewriteTypeArguments(initializer.TypeArguments);
         var fields = RewriteArray(initializer.Fields, RewriteTypeInitializerField);
 
-        if (fields == initializer.Fields)
+        if (typeArgs == initializer.TypeArguments &&
+            fields == initializer.Fields)
             return initializer;
 
-        return new IrExpressionTypeInitializer(initializer.Syntax, initializer.TypeSymbol, fields);
+        return new IrExpressionTypeInitializer(initializer.Syntax, initializer.TypeSymbol, initializer.TypeArguments, fields);
     }
     protected virtual IrTypeInitializerField RewriteTypeInitializerField(IrTypeInitializerField initializer)
     {

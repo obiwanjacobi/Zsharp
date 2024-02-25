@@ -10,7 +10,14 @@ Started. Have ErrorToken with description.
 - [ ] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
     - [ ] Indents (dedent) are not working correct with multiple indents (`SyntaxWriter`).
 - [ ] Type: base type (enum/struct/value)
+- [ ] Type: Generics
+- [ ] Type: Template
+- [ ] Type: Comp-parameter
+- [ ] Function: Generics
+- [ ] Function: Template
+- [ ] Function: Comp-parameter
 - [ ] Value (custom) Types (/w rules)
+- [ ] Infer Type of type parameter from usage (invocation parameter or instantiation type)
 - [ ] Resolve operators to functions (later)
 - [ ] local (nested) functions and types
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
@@ -18,13 +25,14 @@ Started. Have ErrorToken with description.
 - [ ] Allow named type-parameters (`IrArgumentMatcher`)
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
 - [ ] IR: Validate file-global statements (only StatementExpression?)
-- [ ] IR: Not all expression nodes have a TypeSymbol set (for instance Range)
-- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets
+- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: ??
+- [ ] Research compiler feature flags with backwards compatibility with future versions.
 
 ### Done
 
 - [x] Diagnostics: Generate compiler warning for `##` comments
 - [x] UnitTests for Eval
+- [x] IR: Not all expression nodes have a TypeSymbol set (for instance Range)
 - [x] Emit: Transform loop expression to C# compatible for-expression.
 - [x] IR: Function Type (IrTypeFunction/FunctionTypeSymbol)
 - [x] StatementExpression only for invocation (other?).

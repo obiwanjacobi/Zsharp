@@ -13,7 +13,7 @@ internal static class Syntax
         var tree = SyntaxTree.Parse(code, sourceName);
 
         if (throwOnError &&
-            (tree.Root.HasError || 
+            (tree.Root.HasError ||
             tree.Diagnostics.Has(DiagnosticMessageKind.Error) || tree.Diagnostics.Has(DiagnosticMessageKind.Critical)))
         {
             var errTxt = String.Join(Environment.NewLine,

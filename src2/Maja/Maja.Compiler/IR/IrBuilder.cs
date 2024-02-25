@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using Maja.Compiler.Diagnostics;
+using Maja.Compiler.EmitCS.CSharp;
 using Maja.Compiler.External;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
@@ -159,12 +160,25 @@ internal sealed class IrBuilder
 
     private IrDeclarationType DeclarationType(TypeDeclarationSyntax syntax)
     {
+        var typeScope = new IrTypeScope(syntax.Name.Text, CurrentScope);
+        var typeParameters = TypeParameters(syntax.TypeParameters);
+        var typeParamSymbols = typeParameters.Select(p => p.Symbol).ToArray();
+        var index = typeScope.TryDeclareTypes(typeParamSymbols);
+        if (index >= 0)
+        {
+            _diagnostics.TypeAlreadyDeclared(
+                typeParameters[index].Syntax.Location, typeParameters[index].Symbol.Name.FullName);
+        }
+
+        _ = PushScope(typeScope);
         var enums = TypeMemberEnums(syntax.Enums);
         var fields = TypeMemberFields(syntax.Fields);
         var rules = TypeMemberRules(syntax.Rules);
+        _ = PopScope();
 
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
         var symbol = new DeclaredTypeSymbol(name,
+            typeParamSymbols,
             enums.Select(e => e.Symbol),
             fields.Select(f => f.Symbol),
             rules.Select(r => r.Symbol));
@@ -179,7 +193,7 @@ internal sealed class IrBuilder
             ? IrLocality.Public
             : IrLocality.None;
 
-        return new IrDeclarationType(syntax, symbol, enums, fields, rules, locality);
+        return new IrDeclarationType(syntax, symbol, typeParameters, enums, fields, rules, typeScope, locality);
     }
 
     private IEnumerable<IrTypeMemberEnum> TypeMemberEnums(TypeMemberListSyntax<MemberEnumSyntax>? syntax)
@@ -707,24 +721,32 @@ internal sealed class IrBuilder
 
     private IrExpressionTypeInitializer TypeInitializerExpression(ExpressionTypeInitializerSyntax syntax)
     {
-        var name = new SymbolName(syntax.Identifier.Name.Text);
-        if (!CurrentScope.TryLookupSymbol<TypeSymbol>(name, out var type))
+        var name = new SymbolName(syntax.Type.Name.Text);
+        if (!CurrentScope.TryLookupSymbol<DeclaredTypeSymbol>(name, out var type))
         {
-            _diagnostics.TypeNotFound(syntax.Location, syntax.Identifier.Name.Text);
-            type = new TypeSymbol(name);
+            _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
+            type = new DeclaredTypeSymbol(name, Enumerable.Empty<TypeParameterSymbol>(), 
+                Enumerable.Empty<EnumSymbol>(), Enumerable.Empty<FieldSymbol>(), Enumerable.Empty<RuleSymbol>());
         }
+
+        var typeArgs = TypeArguments(syntax.Type.TypeArguments);
 
         var initializers = new List<IrTypeInitializerField>();
         foreach (var fldInitSyntax in syntax.FieldInitializers)
         {
-            var fldName = new SymbolName(fldInitSyntax.Name.Text);
-            var field = new FieldSymbol(fldName, type);
+            if (!type.Fields.TryLookup(fldInitSyntax.Name.Text, out var field))
+            {
+                _diagnostics.FieldNotFoundOnType(fldInitSyntax.Location, type.Name.Value, fldInitSyntax.Name.Text);
+                field = new FieldSymbol(new SymbolName(fldInitSyntax.Name.Text), TypeSymbol.Unknown);
+            }
             var expression = Expression(fldInitSyntax.Expression);
             var init = new IrTypeInitializerField(fldInitSyntax, field, expression);
             initializers.Add(init);
         }
 
-        return new(syntax, type, initializers);
+        var matcher = new IrFieldTypeMatcher(type.TypeParameters, typeArgs, type.Fields, initializers);
+
+        return new(syntax, type, typeArgs, matcher.RewriteFieldInitializers());
     }
 
     private static IrExpressionLiteral LiteralBoolExpression(ExpressionLiteralBoolSyntax syntax)

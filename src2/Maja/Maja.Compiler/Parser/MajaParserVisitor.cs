@@ -165,6 +165,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitParameter([NotNull] MajaParser.ParameterContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.compParameter"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCompParameter([NotNull] MajaParser.CompParameterContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.argumentList"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -261,11 +267,23 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeParameterTemplate([NotNull] MajaParser.TypeParameterTemplateContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.typeParameterValue"/>.
+	/// Visit a parse tree produced by <see cref="MajaParser.compParameterList"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeParameterValue([NotNull] MajaParser.TypeParameterValueContext context);
+	Result VisitCompParameterList([NotNull] MajaParser.CompParameterListContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.compParameterListComma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCompParameterListComma([NotNull] MajaParser.CompParameterListCommaContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.compParameterListIndent"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCompParameterListIndent([NotNull] MajaParser.CompParameterListIndentContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.typeArgumentList"/>.
 	/// </summary>
@@ -398,19 +416,19 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpressionUnaryPrefix([NotNull] MajaParser.ExpressionUnaryPrefixContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expressionBinary</c>
-	/// labeled alternative in <see cref="MajaParser.expression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitExpressionBinary([NotNull] MajaParser.ExpressionBinaryContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionTypeInitializer</c>
 	/// labeled alternative in <see cref="MajaParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExpressionTypeInitializer([NotNull] MajaParser.ExpressionTypeInitializerContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionBinary</c>
+	/// labeled alternative in <see cref="MajaParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionBinary([NotNull] MajaParser.ExpressionBinaryContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionConst</c>
 	/// labeled alternative in <see cref="MajaParser.expression"/>.

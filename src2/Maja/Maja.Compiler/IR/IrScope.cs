@@ -170,6 +170,13 @@ internal sealed class IrFunctionScope : IrScope
     { }
 }
 
+internal sealed class IrTypeScope : IrScope
+{
+    public IrTypeScope(string name, IrScope? parent)
+        : base(name, parent)
+    { }
+}
+
 internal sealed class IrModuleScope : IrScope
 {
     private readonly Dictionary<string, ExternalModule> _modules = new();

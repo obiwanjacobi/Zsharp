@@ -35,6 +35,57 @@ public class TypeSyntaxTests
     }
 
     [Fact]
+    public void TypeDeclareStruct_Generics()
+    {
+        const string code =
+            "Type<T>" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: T" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        t.Name.Text.Should().Be("Type");
+        t.TypeParameters.Should().HaveCount(1);
+        var tp = t.TypeParameters.First();
+        tp.Type.Text.Should().Be("T");
+        t.Fields!.Items.Should().HaveCount(2);
+        t.Fields!.Items.First().Name.Text.Should().Be("fld1");
+        t.Fields!.Items.First().Type.Name.Text.Should().Be("T");
+        t.Fields!.Items.Skip(1).First().Name.Text.Should().Be("fld2");
+        t.Fields!.Items.Skip(1).First().Type.Name.Text.Should().Be("Str");
+
+        Syntax.RoundTrip(code, _output);
+    }
+
+    [Fact]
+    public void TypeDeclareStruct_GenericsDefault()
+    {
+        const string code =
+            "Type<T = U8>" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: T" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        t.Name.Text.Should().Be("Type");
+        t.TypeParameters.Should().HaveCount(1);
+        var tp = t.TypeParameters.First();
+        tp.Type.Text.Should().Be("T");
+        tp.DefaultType!.Text.Should().Be("U8");
+        t.Fields!.Items.Should().HaveCount(2);
+        t.Fields!.Items.First().Name.Text.Should().Be("fld1");
+        t.Fields!.Items.First().Type.Name.Text.Should().Be("T");
+        t.Fields!.Items.Skip(1).First().Name.Text.Should().Be("fld2");
+        t.Fields!.Items.Skip(1).First().Type.Name.Text.Should().Be("Str");
+
+        Syntax.RoundTrip(code, _output);
+    }
+
+    [Fact]
     public void TypeDeclareEnumComma()
     {
         const string code =
@@ -107,20 +158,18 @@ public class TypeSyntaxTests
     public void TypeInstantiateStruct()
     {
         const string code =
-            "Type" + Tokens.Eol +
-            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
-            Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
             "x := Type" + Tokens.Eol +
             Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
             Tokens.Indent1 + "fld2 = \"42\"" + Tokens.Eol
+            //"x := Type { fld1 = 42, fld2 = \"42\" }" + Tokens.Eol
             ;
 
         var result = Syntax.Parse(code);
-        result.Members.Should().HaveCount(2);
-        var v = result.Members.ElementAt(1).As<VariableDeclarationSyntax>();
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.First().As<VariableDeclarationSyntax>();
         v.Name.Text.Should().Be("x");
         var t = v.Expression.As<ExpressionTypeInitializerSyntax>();
-        t.Identifier.Name.Text.Should().Be("Type");
+        t.Type.Name.Text.Should().Be("Type");
         var f = t.FieldInitializers.ToList();
         f.Should().HaveCount(2);
         f[0].Name.Text.Should().Be("fld1");
@@ -128,6 +177,32 @@ public class TypeSyntaxTests
         f[1].Name.Text.Should().Be("fld2");
         f[1].Expression.As<ExpressionLiteralSyntax>().LiteralString!.Text.Should().Be("42");
 
-        //Syntax.RoundTrip(code, _output);
+        Syntax.RoundTrip(code, _output);
+    }
+
+    [Fact]
+    public void TypeInstantiateStruct_Generics()
+    {
+        const string code =
+            "x := Type<U8>" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            Tokens.Indent1 + "fld2 = \"42\"" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        v.Name.Text.Should().Be("x");
+        var t = v.Expression.As<ExpressionTypeInitializerSyntax>();
+        t.Type.Name.Text.Should().Be("Type");
+        t.Type.TypeArguments.Should().HaveCount(1);
+        var f = t.FieldInitializers.ToList();
+        f.Should().HaveCount(2);
+        f[0].Name.Text.Should().Be("fld1");
+        f[0].Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
+        f[1].Name.Text.Should().Be("fld2");
+        f[1].Expression.As<ExpressionLiteralSyntax>().LiteralString!.Text.Should().Be("42");
+
+        Syntax.RoundTrip(code, _output);
     }
 }

@@ -1,7 +1,7 @@
 parser grammar MajaParser;
 options { tokenVocab=MajaLexer; }
 
-compilationUnit: directiveMod? (directiveUse | directivePub | newline)* (declaration | statement | newline)*;
+compilationUnit: directiveMod? (directiveUse | directivePub | newline)* (declaration | statement | newline)* EOF;
 
 directiveMod: Mod freeSpace nameQualified;
 directivePub: Pub freeSpace nameQualifiedList;
@@ -24,33 +24,36 @@ statementLoop: Loop (Sp expressionLoop)? newline Indent codeBlock Dedent;
 declarationFunction: nameIdentifier Sp? Colon freeSpace typeParameterList? parameterList (Sp? Colon Sp type)? newline Indent codeBlock Dedent;
 declarationFunctionLocal: Indent declarationFunction Dedent;
 parameterList: ParenOpen (parameterListComma | newline parameterListIndent)? ParenClose;
-parameterListComma: parameter (Comma Sp parameter)*;
-parameterListIndent: Indent (comment* parameter newline)+ Dedent;
+parameterListComma: (parameter | compParameter) (Comma Sp (parameter | compParameter))*;
+parameterListIndent: Indent (comment* (parameter | compParameter) newline)+ Dedent;
 parameter: nameIdentifier Sp? Colon Sp type (Sp Eq Sp expression)?;
+compParameter: Hash parameter;
 argumentList: ParenOpen newline? (argumentListComma | argumentListIndent)? ParenClose;
 argumentListComma: argument (Comma Sp argument)*;
 argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Sp Eq Sp)? expression;
 
-declarationType: nameIdentifier typeParameterList? (Sp? Colon Sp type)? newline Indent declarationTypeMemberList Dedent;
+declarationType: nameIdentifier typeParameterList? compParameterList? (Sp? Colon Sp type)? newline Indent declarationTypeMemberList Dedent;
 declarationTypeMemberList: (declarationTypeMemberListEnum | declarationTypeMemberListField | declarationTypeMemberListRule | newline)+;
 declarationTypeMemberListEnum: (memberEnumValue newline)+ | ((memberEnum (Comma freeSpace memberEnum)*)+ newline);
 declarationTypeMemberListField: (memberField newline)+;
 declarationTypeMemberListRule: (memberRule newline)+;
-type: nameIdentifier typeArgumentList?;
+type: nameIdentifier typeArgumentList? argumentList?;
 typeParameterList: AngleOpen (typeParameterListComma | newline typeParameterListIndent) AngleClose;
 typeParameterListComma: typeParameter (Comma Sp typeParameter)*;
 typeParameterListIndent: Indent (comment* typeParameter newline)+ Dedent;
-typeParameter: typeParameterGeneric | typeParameterTemplate | typeParameterValue;
+typeParameter: typeParameterGeneric | typeParameterTemplate;
 typeParameterGeneric: type (Sp Eq Sp type)?;
 typeParameterTemplate: Hash type (Sp Eq Sp type)?;
-typeParameterValue: nameIdentifier Sp? Colon Sp type (Sp Eq Sp expression)?;
+compParameterList: ParenOpen (compParameterListComma | newline compParameterListIndent) ParenClose;
+compParameterListComma: compParameter (Comma Sp compParameter)*;
+compParameterListIndent: Indent (comment* compParameter newline)+ Dedent;
 typeArgumentList: AngleOpen (typeArgumentListComma | newline typeArgumentListIndent) AngleClose;
 typeArgumentListComma: typeArgument (Comma Sp typeArgument)*;
 typeArgumentListIndent: Indent (typeArgument newline)+ Dedent;
 typeArgument: type | expression;
 typeInitializer: typeInitializerComma | newline typeInitializerIndent;
-typeInitializerComma: CurlyOpen typeInitializerField (Comma Sp typeInitializerField)* CurlyClose;
+typeInitializerComma: CurlyOpen Sp typeInitializerField (Comma Sp typeInitializerField)* Sp CurlyClose;
 typeInitializerIndent: Indent (typeInitializerField newline)+ Dedent;
 typeInitializerField: nameIdentifier Sp Eq Sp expression;
 
@@ -65,15 +68,15 @@ declarationVariableInferred: nameIdentifier Sp? Colon Eq Sp expression;
 variableAssignment: nameIdentifier Sp Eq Sp expression;
 
 expression:
-      expressionConstant                                    #expressionConst
-    | expression Sp expressionOperatorBinary Sp expression  #expressionBinary
-    | expressionOperatorUnaryPrefix expression              #expressionUnaryPrefix
-    | expression typeArgumentList? argumentList             #expressionInvocation
-    | expression typeInitializer             				#expressionTypeInitializer
-    | BracketOpen expression? Range expression? BracketClose #expressionRange
-    | ParenOpen expression ParenClose                       #expressionPrecedence
-    | nameIdentifier                                        #expressionIdentifier
-    | expression Dot nameIdentifier                         #expressionMemberAccess
+      expressionConstant                                        #expressionConst
+    | expression Sp expressionOperatorBinary Sp expression      #expressionBinary
+    | expressionOperatorUnaryPrefix expression                  #expressionUnaryPrefix
+    | expression typeArgumentList? argumentList                 #expressionInvocation
+    | type typeInitializer             				            #expressionTypeInitializer
+    | BracketOpen expression? Range expression? BracketClose    #expressionRange
+    | ParenOpen expression ParenClose                           #expressionPrecedence
+    | nameIdentifier                                            #expressionIdentifier
+    | expression Dot nameIdentifier                             #expressionMemberAccess
     ;
 expressionConstant: expressionLiteral | expressionLiteralBool;
 expressionRule: expression;

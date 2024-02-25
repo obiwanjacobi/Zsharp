@@ -1,1 +1,1 @@
-x := y.fld1
+x := MyType{ fld1 = 42 }

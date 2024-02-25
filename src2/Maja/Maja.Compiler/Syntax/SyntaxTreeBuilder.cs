@@ -260,9 +260,6 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     public override SyntaxNodeOrToken[] VisitTypeParameterGeneric(TypeParameterGenericContext context)
         => CreateSyntaxNode<TypeParameterGenericContext, TypeParameterGenericSyntax>(context, base.VisitTypeParameterGeneric);
 
-    public override SyntaxNodeOrToken[] VisitTypeParameterValue(TypeParameterValueContext context)
-        => CreateSyntaxNode<TypeParameterValueContext, TypeParameterValueSyntax>(context, base.VisitTypeParameterValue);
-
     public override SyntaxNodeOrToken[] VisitType(TypeContext context)
         => CreateSyntaxNode<TypeContext, TypeSyntax>(context, base.VisitType);
 
@@ -371,11 +368,6 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
 
         return [new SyntaxNodeOrToken(node)];
     }
-
-    //public override SyntaxNodeOrToken[] VisitExpressionRule(ExpressionRuleContext context)
-    //{
-    //    return base.VisitExpressionRule(context);
-    //}
 
     //
     // Expression Operators

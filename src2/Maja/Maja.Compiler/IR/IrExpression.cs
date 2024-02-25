@@ -66,12 +66,14 @@ internal sealed class IrExpressionInvocation : IrExpression
 
 internal sealed class IrExpressionTypeInitializer : IrExpression
 {
-    public IrExpressionTypeInitializer(ExpressionTypeInitializerSyntax syntax, TypeSymbol symbol, IEnumerable<IrTypeInitializerField> fields)
+    public IrExpressionTypeInitializer(ExpressionTypeInitializerSyntax syntax, TypeSymbol symbol, IEnumerable<IrTypeArgument> typeArguments, IEnumerable<IrTypeInitializerField> fields)
         : base(syntax, symbol)
     {
+        TypeArguments = typeArguments.ToImmutableArray();
         Fields = fields.ToImmutableArray();
     }
 
+    public ImmutableArray<IrTypeArgument> TypeArguments { get; }
     public ImmutableArray<IrTypeInitializerField> Fields { get; }
 
     public new ExpressionTypeInitializerSyntax Syntax

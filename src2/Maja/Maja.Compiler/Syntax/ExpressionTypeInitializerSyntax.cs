@@ -15,8 +15,8 @@ public sealed class ExpressionTypeInitializerSyntax : ExpressionSyntax, ICreateS
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionTypeInitializer(this);
 
-    public ExpressionIdentifierSyntax Identifier
-        => ChildNodes.OfType<ExpressionIdentifierSyntax>().Single();
+    public TypeSyntax Type
+        => ChildNodes.OfType<TypeSyntax>().Single();
 
     public IEnumerable<TypeInitializerFieldSyntax> FieldInitializers
         => ChildNodes.OfType<TypeInitializerFieldSyntax>();

@@ -55,48 +55,50 @@ public partial class MajaParser : Parser {
 		RULE_statementElseIf = 11, RULE_statementRet = 12, RULE_statementAssignment = 13, 
 		RULE_statementExpression = 14, RULE_statementLoop = 15, RULE_declarationFunction = 16, 
 		RULE_declarationFunctionLocal = 17, RULE_parameterList = 18, RULE_parameterListComma = 19, 
-		RULE_parameterListIndent = 20, RULE_parameter = 21, RULE_argumentList = 22, 
-		RULE_argumentListComma = 23, RULE_argumentListIndent = 24, RULE_argument = 25, 
-		RULE_declarationType = 26, RULE_declarationTypeMemberList = 27, RULE_declarationTypeMemberListEnum = 28, 
-		RULE_declarationTypeMemberListField = 29, RULE_declarationTypeMemberListRule = 30, 
-		RULE_type = 31, RULE_typeParameterList = 32, RULE_typeParameterListComma = 33, 
-		RULE_typeParameterListIndent = 34, RULE_typeParameter = 35, RULE_typeParameterGeneric = 36, 
-		RULE_typeParameterTemplate = 37, RULE_typeParameterValue = 38, RULE_typeArgumentList = 39, 
-		RULE_typeArgumentListComma = 40, RULE_typeArgumentListIndent = 41, RULE_typeArgument = 42, 
-		RULE_typeInitializer = 43, RULE_typeInitializerComma = 44, RULE_typeInitializerIndent = 45, 
-		RULE_typeInitializerField = 46, RULE_memberEnumValue = 47, RULE_memberEnum = 48, 
-		RULE_memberField = 49, RULE_memberRule = 50, RULE_declarationVariable = 51, 
-		RULE_declarationVariableTyped = 52, RULE_declarationVariableInferred = 53, 
-		RULE_variableAssignment = 54, RULE_expression = 55, RULE_expressionConstant = 56, 
-		RULE_expressionRule = 57, RULE_expressionLoop = 58, RULE_expressionOperatorBinary = 59, 
-		RULE_expressionOperatorUnaryPrefix = 60, RULE_expressionOperatorArithmetic = 61, 
-		RULE_expressionOperatorArithmeticUnaryPrefix = 62, RULE_expressionOperatorLogic = 63, 
-		RULE_expressionOperatorLogicUnaryPrefix = 64, RULE_expressionOperatorComparison = 65, 
-		RULE_expressionOperatorBits = 66, RULE_expressionOperatorBitsUnaryPrefix = 67, 
-		RULE_expressionLiteralBool = 68, RULE_expressionLiteral = 69, RULE_nameQualified = 70, 
-		RULE_nameQualifiedList = 71, RULE_nameQualifiedListComma = 72, RULE_nameQualifiedListIndent = 73, 
-		RULE_nameIdentifier = 74, RULE_nameIdentifierList = 75, RULE_nameIdentifierListComma = 76, 
-		RULE_nameIdentifierListIndent = 77, RULE_string = 78, RULE_number = 79, 
-		RULE_comment = 80, RULE_newline = 81, RULE_freeSpace = 82;
+		RULE_parameterListIndent = 20, RULE_parameter = 21, RULE_compParameter = 22, 
+		RULE_argumentList = 23, RULE_argumentListComma = 24, RULE_argumentListIndent = 25, 
+		RULE_argument = 26, RULE_declarationType = 27, RULE_declarationTypeMemberList = 28, 
+		RULE_declarationTypeMemberListEnum = 29, RULE_declarationTypeMemberListField = 30, 
+		RULE_declarationTypeMemberListRule = 31, RULE_type = 32, RULE_typeParameterList = 33, 
+		RULE_typeParameterListComma = 34, RULE_typeParameterListIndent = 35, RULE_typeParameter = 36, 
+		RULE_typeParameterGeneric = 37, RULE_typeParameterTemplate = 38, RULE_compParameterList = 39, 
+		RULE_compParameterListComma = 40, RULE_compParameterListIndent = 41, RULE_typeArgumentList = 42, 
+		RULE_typeArgumentListComma = 43, RULE_typeArgumentListIndent = 44, RULE_typeArgument = 45, 
+		RULE_typeInitializer = 46, RULE_typeInitializerComma = 47, RULE_typeInitializerIndent = 48, 
+		RULE_typeInitializerField = 49, RULE_memberEnumValue = 50, RULE_memberEnum = 51, 
+		RULE_memberField = 52, RULE_memberRule = 53, RULE_declarationVariable = 54, 
+		RULE_declarationVariableTyped = 55, RULE_declarationVariableInferred = 56, 
+		RULE_variableAssignment = 57, RULE_expression = 58, RULE_expressionConstant = 59, 
+		RULE_expressionRule = 60, RULE_expressionLoop = 61, RULE_expressionOperatorBinary = 62, 
+		RULE_expressionOperatorUnaryPrefix = 63, RULE_expressionOperatorArithmetic = 64, 
+		RULE_expressionOperatorArithmeticUnaryPrefix = 65, RULE_expressionOperatorLogic = 66, 
+		RULE_expressionOperatorLogicUnaryPrefix = 67, RULE_expressionOperatorComparison = 68, 
+		RULE_expressionOperatorBits = 69, RULE_expressionOperatorBitsUnaryPrefix = 70, 
+		RULE_expressionLiteralBool = 71, RULE_expressionLiteral = 72, RULE_nameQualified = 73, 
+		RULE_nameQualifiedList = 74, RULE_nameQualifiedListComma = 75, RULE_nameQualifiedListIndent = 76, 
+		RULE_nameIdentifier = 77, RULE_nameIdentifierList = 78, RULE_nameIdentifierListComma = 79, 
+		RULE_nameIdentifierListIndent = 80, RULE_string = 81, RULE_number = 82, 
+		RULE_comment = 83, RULE_newline = 84, RULE_freeSpace = 85;
 	public static readonly string[] ruleNames = {
 		"compilationUnit", "directiveMod", "directivePub", "directiveUse", "codeBlock", 
 		"declaration", "declarationPub", "statement", "statementFlow", "statementIf", 
 		"statementElse", "statementElseIf", "statementRet", "statementAssignment", 
 		"statementExpression", "statementLoop", "declarationFunction", "declarationFunctionLocal", 
 		"parameterList", "parameterListComma", "parameterListIndent", "parameter", 
-		"argumentList", "argumentListComma", "argumentListIndent", "argument", 
-		"declarationType", "declarationTypeMemberList", "declarationTypeMemberListEnum", 
+		"compParameter", "argumentList", "argumentListComma", "argumentListIndent", 
+		"argument", "declarationType", "declarationTypeMemberList", "declarationTypeMemberListEnum", 
 		"declarationTypeMemberListField", "declarationTypeMemberListRule", "type", 
 		"typeParameterList", "typeParameterListComma", "typeParameterListIndent", 
-		"typeParameter", "typeParameterGeneric", "typeParameterTemplate", "typeParameterValue", 
-		"typeArgumentList", "typeArgumentListComma", "typeArgumentListIndent", 
-		"typeArgument", "typeInitializer", "typeInitializerComma", "typeInitializerIndent", 
-		"typeInitializerField", "memberEnumValue", "memberEnum", "memberField", 
-		"memberRule", "declarationVariable", "declarationVariableTyped", "declarationVariableInferred", 
-		"variableAssignment", "expression", "expressionConstant", "expressionRule", 
-		"expressionLoop", "expressionOperatorBinary", "expressionOperatorUnaryPrefix", 
-		"expressionOperatorArithmetic", "expressionOperatorArithmeticUnaryPrefix", 
-		"expressionOperatorLogic", "expressionOperatorLogicUnaryPrefix", "expressionOperatorComparison", 
+		"typeParameter", "typeParameterGeneric", "typeParameterTemplate", "compParameterList", 
+		"compParameterListComma", "compParameterListIndent", "typeArgumentList", 
+		"typeArgumentListComma", "typeArgumentListIndent", "typeArgument", "typeInitializer", 
+		"typeInitializerComma", "typeInitializerIndent", "typeInitializerField", 
+		"memberEnumValue", "memberEnum", "memberField", "memberRule", "declarationVariable", 
+		"declarationVariableTyped", "declarationVariableInferred", "variableAssignment", 
+		"expression", "expressionConstant", "expressionRule", "expressionLoop", 
+		"expressionOperatorBinary", "expressionOperatorUnaryPrefix", "expressionOperatorArithmetic", 
+		"expressionOperatorArithmeticUnaryPrefix", "expressionOperatorLogic", 
+		"expressionOperatorLogicUnaryPrefix", "expressionOperatorComparison", 
 		"expressionOperatorBits", "expressionOperatorBitsUnaryPrefix", "expressionLiteralBool", 
 		"expressionLiteral", "nameQualified", "nameQualifiedList", "nameQualifiedListComma", 
 		"nameQualifiedListIndent", "nameIdentifier", "nameIdentifierList", "nameIdentifierListComma", 
@@ -159,6 +161,7 @@ public partial class MajaParser : Parser {
 	}
 
 	public partial class CompilationUnitContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Eof() { return GetToken(MajaParser.Eof, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public DirectiveModContext directiveMod() {
 			return GetRuleContext<DirectiveModContext>(0);
 		}
@@ -214,34 +217,34 @@ public partial class MajaParser : Parser {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 167;
+			State = 173;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Mod) {
 				{
-				State = 166;
+				State = 172;
 				directiveMod();
 				}
 			}
 
-			State = 174;
+			State = 180;
 			ErrorHandler.Sync(this);
 			_alt = Interpreter.AdaptivePredict(TokenStream,2,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
-					State = 172;
+					State = 178;
 					ErrorHandler.Sync(this);
 					switch (TokenStream.LA(1)) {
 					case Use:
 						{
-						State = 169;
+						State = 175;
 						directiveUse();
 						}
 						break;
 					case Pub:
 						{
-						State = 170;
+						State = 176;
 						directivePub();
 						}
 						break;
@@ -249,7 +252,7 @@ public partial class MajaParser : Parser {
 					case Sp:
 					case Eol:
 						{
-						State = 171;
+						State = 177;
 						newline();
 						}
 						break;
@@ -258,42 +261,44 @@ public partial class MajaParser : Parser {
 					}
 					} 
 				}
-				State = 176;
+				State = 182;
 				ErrorHandler.Sync(this);
 				_alt = Interpreter.AdaptivePredict(TokenStream,2,Context);
 			}
-			State = 182;
+			State = 188;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 72339078676584744L) != 0) || _la==Sp || _la==Eol) {
 				{
-				State = 180;
+				State = 186;
 				ErrorHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(TokenStream,3,Context) ) {
 				case 1:
 					{
-					State = 177;
+					State = 183;
 					declaration();
 					}
 					break;
 				case 2:
 					{
-					State = 178;
+					State = 184;
 					statement();
 					}
 					break;
 				case 3:
 					{
-					State = 179;
+					State = 185;
 					newline();
 					}
 					break;
 				}
 				}
-				State = 184;
+				State = 190;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
+			State = 191;
+			Match(Eof);
 			}
 		}
 		catch (RecognitionException re) {
@@ -335,11 +340,11 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 185;
+			State = 193;
 			Match(Mod);
-			State = 186;
+			State = 194;
 			freeSpace();
-			State = 187;
+			State = 195;
 			nameQualified();
 			}
 		}
@@ -382,11 +387,11 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 189;
+			State = 197;
 			Match(Pub);
-			State = 190;
+			State = 198;
 			freeSpace();
-			State = 191;
+			State = 199;
 			nameQualifiedList();
 			}
 		}
@@ -429,11 +434,11 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 193;
+			State = 201;
 			Match(Use);
-			State = 194;
+			State = 202;
 			freeSpace();
-			State = 195;
+			State = 203;
 			nameQualifiedList();
 			}
 		}
@@ -488,35 +493,35 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 200;
+			State = 208;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
-				State = 200;
+				State = 208;
 				ErrorHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(TokenStream,5,Context) ) {
 				case 1:
 					{
-					State = 197;
+					State = 205;
 					statement();
 					}
 					break;
 				case 2:
 					{
-					State = 198;
+					State = 206;
 					declaration();
 					}
 					break;
 				case 3:
 					{
-					State = 199;
+					State = 207;
 					newline();
 					}
 					break;
 				}
 				}
-				State = 202;
+				State = 210;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 72339078676584744L) != 0) || _la==Sp || _la==Eol );
@@ -558,20 +563,20 @@ public partial class MajaParser : Parser {
 		DeclarationContext _localctx = new DeclarationContext(Context, State);
 		EnterRule(_localctx, 10, RULE_declaration);
 		try {
-			State = 206;
+			State = 214;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,7,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 204;
+				State = 212;
 				declarationPub();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 205;
+				State = 213;
 				declarationVariable();
 				}
 				break;
@@ -618,30 +623,30 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 210;
+			State = 218;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Pub) {
 				{
-				State = 208;
+				State = 216;
 				Match(Pub);
-				State = 209;
+				State = 217;
 				Match(Sp);
 				}
 			}
 
-			State = 214;
+			State = 222;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,9,Context) ) {
 			case 1:
 				{
-				State = 212;
+				State = 220;
 				declarationFunction();
 				}
 				break;
 			case 2:
 				{
-				State = 213;
+				State = 221;
 				declarationType();
 				}
 				break;
@@ -687,27 +692,27 @@ public partial class MajaParser : Parser {
 		StatementContext _localctx = new StatementContext(Context, State);
 		EnterRule(_localctx, 14, RULE_statement);
 		try {
-			State = 219;
+			State = 227;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,10,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 216;
+				State = 224;
 				statementFlow();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 217;
+				State = 225;
 				statementAssignment();
 				}
 				break;
 			case 3:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 218;
+				State = 226;
 				statementExpression();
 				}
 				break;
@@ -752,27 +757,27 @@ public partial class MajaParser : Parser {
 		StatementFlowContext _localctx = new StatementFlowContext(Context, State);
 		EnterRule(_localctx, 16, RULE_statementFlow);
 		try {
-			State = 224;
+			State = 232;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case Ret:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 221;
+				State = 229;
 				statementRet();
 				}
 				break;
 			case If:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 222;
+				State = 230;
 				statementIf();
 				}
 				break;
 			case Loop:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 223;
+				State = 231;
 				statementLoop();
 				}
 				break;
@@ -831,32 +836,32 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 226;
+			State = 234;
 			Match(If);
-			State = 227;
-			Match(Sp);
-			State = 228;
-			expression(0);
-			State = 229;
-			newline();
-			State = 230;
-			Match(Indent);
-			State = 231;
-			codeBlock();
-			State = 232;
-			Match(Dedent);
 			State = 235;
+			Match(Sp);
+			State = 236;
+			expression(0);
+			State = 237;
+			newline();
+			State = 238;
+			Match(Indent);
+			State = 239;
+			codeBlock();
+			State = 240;
+			Match(Dedent);
+			State = 243;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,12,Context) ) {
 			case 1:
 				{
-				State = 233;
+				State = 241;
 				statementElse();
 				}
 				break;
 			case 2:
 				{
-				State = 234;
+				State = 242;
 				statementElseIf();
 				}
 				break;
@@ -904,15 +909,15 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 237;
+			State = 245;
 			Match(Else);
-			State = 238;
+			State = 246;
 			newline();
-			State = 239;
+			State = 247;
 			Match(Indent);
-			State = 240;
+			State = 248;
 			codeBlock();
-			State = 241;
+			State = 249;
 			Match(Dedent);
 			}
 		}
@@ -972,52 +977,52 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 248;
+			State = 256;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case Else:
 				{
-				State = 243;
+				State = 251;
 				Match(Else);
-				State = 244;
+				State = 252;
 				freeSpace();
-				State = 245;
+				State = 253;
 				Match(If);
 				}
 				break;
 			case Elif:
 				{
-				State = 247;
+				State = 255;
 				Match(Elif);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			State = 250;
-			Match(Sp);
-			State = 251;
-			expression(0);
-			State = 252;
-			newline();
-			State = 253;
-			Match(Indent);
-			State = 254;
-			codeBlock();
-			State = 255;
-			Match(Dedent);
 			State = 258;
+			Match(Sp);
+			State = 259;
+			expression(0);
+			State = 260;
+			newline();
+			State = 261;
+			Match(Indent);
+			State = 262;
+			codeBlock();
+			State = 263;
+			Match(Dedent);
+			State = 266;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,14,Context) ) {
 			case 1:
 				{
-				State = 256;
+				State = 264;
 				statementElse();
 				}
 				break;
 			case 2:
 				{
-				State = 257;
+				State = 265;
 				statementElseIf();
 				}
 				break;
@@ -1061,16 +1066,16 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 260;
+			State = 268;
 			Match(Ret);
-			State = 263;
+			State = 271;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,15,Context) ) {
 			case 1:
 				{
-				State = 261;
+				State = 269;
 				Match(Sp);
-				State = 262;
+				State = 270;
 				expression(0);
 				}
 				break;
@@ -1120,15 +1125,15 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 265;
+			State = 273;
 			nameIdentifier();
-			State = 266;
+			State = 274;
 			Match(Sp);
-			State = 267;
+			State = 275;
 			Match(Eq);
-			State = 268;
+			State = 276;
 			Match(Sp);
-			State = 269;
+			State = 277;
 			expression(0);
 			}
 		}
@@ -1167,7 +1172,7 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 271;
+			State = 279;
 			expression(0);
 			}
 		}
@@ -1216,27 +1221,27 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 273;
+			State = 281;
 			Match(Loop);
-			State = 276;
+			State = 284;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,16,Context) ) {
 			case 1:
 				{
-				State = 274;
+				State = 282;
 				Match(Sp);
-				State = 275;
+				State = 283;
 				expressionLoop();
 				}
 				break;
 			}
-			State = 278;
+			State = 286;
 			newline();
-			State = 279;
+			State = 287;
 			Match(Indent);
-			State = 280;
+			State = 288;
 			codeBlock();
-			State = 281;
+			State = 289;
 			Match(Dedent);
 			}
 		}
@@ -1304,65 +1309,65 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 283;
+			State = 291;
 			nameIdentifier();
-			State = 285;
+			State = 293;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Sp) {
 				{
-				State = 284;
+				State = 292;
 				Match(Sp);
 				}
 			}
 
-			State = 287;
+			State = 295;
 			Match(Colon);
-			State = 288;
+			State = 296;
 			freeSpace();
-			State = 290;
+			State = 298;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==AngleOpen) {
 				{
-				State = 289;
+				State = 297;
 				typeParameterList();
 				}
 			}
 
-			State = 292;
+			State = 300;
 			parameterList();
-			State = 299;
+			State = 307;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,20,Context) ) {
 			case 1:
 				{
-				State = 294;
+				State = 302;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==Sp) {
 					{
-					State = 293;
+					State = 301;
 					Match(Sp);
 					}
 				}
 
-				State = 296;
+				State = 304;
 				Match(Colon);
-				State = 297;
+				State = 305;
 				Match(Sp);
-				State = 298;
+				State = 306;
 				type();
 				}
 				break;
 			}
-			State = 301;
+			State = 309;
 			newline();
-			State = 302;
+			State = 310;
 			Match(Indent);
-			State = 303;
+			State = 311;
 			codeBlock();
-			State = 304;
+			State = 312;
 			Match(Dedent);
 			}
 		}
@@ -1403,11 +1408,11 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 306;
+			State = 314;
 			Match(Indent);
-			State = 307;
+			State = 315;
 			declarationFunction();
-			State = 308;
+			State = 316;
 			Match(Dedent);
 			}
 		}
@@ -1454,14 +1459,15 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 310;
+			State = 318;
 			Match(ParenOpen);
-			State = 315;
+			State = 323;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case Identifier:
+			case Hash:
 				{
-				State = 311;
+				State = 319;
 				parameterListComma();
 				}
 				break;
@@ -1469,9 +1475,9 @@ public partial class MajaParser : Parser {
 			case Sp:
 			case Eol:
 				{
-				State = 312;
+				State = 320;
 				newline();
-				State = 313;
+				State = 321;
 				parameterListIndent();
 				}
 				break;
@@ -1480,7 +1486,7 @@ public partial class MajaParser : Parser {
 			default:
 				break;
 			}
-			State = 317;
+			State = 325;
 			Match(ParenClose);
 			}
 		}
@@ -1501,6 +1507,12 @@ public partial class MajaParser : Parser {
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ParameterContext parameter(int i) {
 			return GetRuleContext<ParameterContext>(i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterContext[] compParameter() {
+			return GetRuleContexts<CompParameterContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterContext compParameter(int i) {
+			return GetRuleContext<CompParameterContext>(i);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Comma() { return GetTokens(MajaParser.Comma); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Comma(int i) {
@@ -1531,23 +1543,55 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 319;
-			parameter();
-			State = 325;
+			State = 329;
+			ErrorHandler.Sync(this);
+			switch (TokenStream.LA(1)) {
+			case Identifier:
+				{
+				State = 327;
+				parameter();
+				}
+				break;
+			case Hash:
+				{
+				State = 328;
+				compParameter();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+			State = 339;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				State = 320;
+				State = 331;
 				Match(Comma);
-				State = 321;
+				State = 332;
 				Match(Sp);
-				State = 322;
-				parameter();
+				State = 335;
+				ErrorHandler.Sync(this);
+				switch (TokenStream.LA(1)) {
+				case Identifier:
+					{
+					State = 333;
+					parameter();
+					}
+					break;
+				case Hash:
+					{
+					State = 334;
+					compParameter();
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
 				}
 				}
-				State = 327;
+				}
+				State = 341;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -1567,17 +1611,23 @@ public partial class MajaParser : Parser {
 	public partial class ParameterListIndentContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Indent() { return GetToken(MajaParser.Indent, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Dedent() { return GetToken(MajaParser.Dedent, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext[] newline() {
+			return GetRuleContexts<NewlineContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext newline(int i) {
+			return GetRuleContext<NewlineContext>(i);
+		}
 		[System.Diagnostics.DebuggerNonUserCode] public ParameterContext[] parameter() {
 			return GetRuleContexts<ParameterContext>();
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ParameterContext parameter(int i) {
 			return GetRuleContext<ParameterContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext[] newline() {
-			return GetRuleContexts<NewlineContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterContext[] compParameter() {
+			return GetRuleContexts<CompParameterContext>();
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext newline(int i) {
-			return GetRuleContext<NewlineContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterContext compParameter(int i) {
+			return GetRuleContext<CompParameterContext>(i);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public CommentContext[] comment() {
 			return GetRuleContexts<CommentContext>();
@@ -1606,39 +1656,55 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 328;
+			State = 342;
 			Match(Indent);
-			State = 338;
+			State = 355;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 332;
+				State = 346;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				while (_la==Comment || _la==Sp) {
 					{
 					{
-					State = 329;
+					State = 343;
 					comment();
 					}
 					}
-					State = 334;
+					State = 348;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				}
-				State = 335;
-				parameter();
-				State = 336;
+				State = 351;
+				ErrorHandler.Sync(this);
+				switch (TokenStream.LA(1)) {
+				case Identifier:
+					{
+					State = 349;
+					parameter();
+					}
+					break;
+				case Hash:
+					{
+					State = 350;
+					compParameter();
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
+				}
+				State = 353;
 				newline();
 				}
 				}
-				State = 340;
+				State = 357;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-			} while ( _la==Comment || _la==Identifier || _la==Sp );
-			State = 342;
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 137506062344L) != 0) || _la==Sp );
+			State = 359;
 			Match(Dedent);
 			}
 		}
@@ -1690,40 +1756,82 @@ public partial class MajaParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 344;
+			State = 361;
 			nameIdentifier();
-			State = 346;
+			State = 363;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Sp) {
 				{
-				State = 345;
+				State = 362;
 				Match(Sp);
 				}
 			}
 
-			State = 348;
+			State = 365;
 			Match(Colon);
-			State = 349;
+			State = 366;
 			Match(Sp);
-			State = 350;
+			State = 367;
 			type();
-			State = 355;
+			State = 372;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,26,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,29,Context) ) {
 			case 1:
 				{
-				State = 351;
+				State = 368;
 				Match(Sp);
-				State = 352;
+				State = 369;
 				Match(Eq);
-				State = 353;
+				State = 370;
 				Match(Sp);
-				State = 354;
+				State = 371;
 				expression(0);
 				}
 				break;
 			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class CompParameterContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Hash() { return GetToken(MajaParser.Hash, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ParameterContext parameter() {
+			return GetRuleContext<ParameterContext>(0);
+		}
+		public CompParameterContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_compParameter; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCompParameter(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public CompParameterContext compParameter() {
+		CompParameterContext _localctx = new CompParameterContext(Context, State);
+		EnterRule(_localctx, 44, RULE_compParameter);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 374;
+			Match(Hash);
+			State = 375;
+			parameter();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1765,24 +1873,24 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ArgumentListContext argumentList() {
 		ArgumentListContext _localctx = new ArgumentListContext(Context, State);
-		EnterRule(_localctx, 44, RULE_argumentList);
+		EnterRule(_localctx, 46, RULE_argumentList);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 357;
+			State = 377;
 			Match(ParenOpen);
-			State = 359;
+			State = 379;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Comment || _la==Sp || _la==Eol) {
 				{
-				State = 358;
+				State = 378;
 				newline();
 				}
 			}
 
-			State = 363;
+			State = 383;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case True:
@@ -1801,13 +1909,13 @@ public partial class MajaParser : Parser {
 			case Minus:
 			case BitNot:
 				{
-				State = 361;
+				State = 381;
 				argumentListComma();
 				}
 				break;
 			case Indent:
 				{
-				State = 362;
+				State = 382;
 				argumentListIndent();
 				}
 				break;
@@ -1816,7 +1924,7 @@ public partial class MajaParser : Parser {
 			default:
 				break;
 			}
-			State = 365;
+			State = 385;
 			Match(ParenClose);
 			}
 		}
@@ -1862,28 +1970,28 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ArgumentListCommaContext argumentListComma() {
 		ArgumentListCommaContext _localctx = new ArgumentListCommaContext(Context, State);
-		EnterRule(_localctx, 46, RULE_argumentListComma);
+		EnterRule(_localctx, 48, RULE_argumentListComma);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 367;
+			State = 387;
 			argument();
-			State = 373;
+			State = 393;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				State = 368;
+				State = 388;
 				Match(Comma);
-				State = 369;
+				State = 389;
 				Match(Sp);
-				State = 370;
+				State = 390;
 				argument();
 				}
 				}
-				State = 375;
+				State = 395;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -1931,30 +2039,30 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ArgumentListIndentContext argumentListIndent() {
 		ArgumentListIndentContext _localctx = new ArgumentListIndentContext(Context, State);
-		EnterRule(_localctx, 48, RULE_argumentListIndent);
+		EnterRule(_localctx, 50, RULE_argumentListIndent);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 376;
+			State = 396;
 			Match(Indent);
-			State = 380;
+			State = 400;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 377;
+				State = 397;
 				argument();
-				State = 378;
+				State = 398;
 				newline();
 				}
 				}
-				State = 382;
+				State = 402;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 72339078676578304L) != 0) );
-			State = 384;
+			State = 404;
 			Match(Dedent);
 			}
 		}
@@ -1997,27 +2105,27 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ArgumentContext argument() {
 		ArgumentContext _localctx = new ArgumentContext(Context, State);
-		EnterRule(_localctx, 50, RULE_argument);
+		EnterRule(_localctx, 52, RULE_argument);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 391;
+			State = 411;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,31,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,34,Context) ) {
 			case 1:
 				{
-				State = 386;
+				State = 406;
 				nameIdentifier();
-				State = 387;
+				State = 407;
 				Match(Sp);
-				State = 388;
+				State = 408;
 				Match(Eq);
-				State = 389;
+				State = 409;
 				Match(Sp);
 				}
 				break;
 			}
-			State = 393;
+			State = 413;
 			expression(0);
 			}
 		}
@@ -2047,6 +2155,9 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public TypeParameterListContext typeParameterList() {
 			return GetRuleContext<TypeParameterListContext>(0);
 		}
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterListContext compParameterList() {
+			return GetRuleContext<CompParameterListContext>(0);
+		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Colon() { return GetToken(MajaParser.Colon, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Sp() { return GetTokens(MajaParser.Sp); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Sp(int i) {
@@ -2071,54 +2182,64 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public DeclarationTypeContext declarationType() {
 		DeclarationTypeContext _localctx = new DeclarationTypeContext(Context, State);
-		EnterRule(_localctx, 52, RULE_declarationType);
+		EnterRule(_localctx, 54, RULE_declarationType);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 395;
+			State = 415;
 			nameIdentifier();
-			State = 397;
+			State = 417;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==AngleOpen) {
 				{
-				State = 396;
+				State = 416;
 				typeParameterList();
 				}
 			}
 
-			State = 405;
+			State = 420;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,34,Context) ) {
+			_la = TokenStream.LA(1);
+			if (_la==ParenOpen) {
+				{
+				State = 419;
+				compParameterList();
+				}
+			}
+
+			State = 428;
+			ErrorHandler.Sync(this);
+			switch ( Interpreter.AdaptivePredict(TokenStream,38,Context) ) {
 			case 1:
 				{
-				State = 400;
+				State = 423;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==Sp) {
 					{
-					State = 399;
+					State = 422;
 					Match(Sp);
 					}
 				}
 
-				State = 402;
+				State = 425;
 				Match(Colon);
-				State = 403;
+				State = 426;
 				Match(Sp);
-				State = 404;
+				State = 427;
 				type();
 				}
 				break;
 			}
-			State = 407;
+			State = 430;
 			newline();
-			State = 408;
+			State = 431;
 			Match(Indent);
-			State = 409;
+			State = 432;
 			declarationTypeMemberList();
-			State = 410;
+			State = 433;
 			Match(Dedent);
 			}
 		}
@@ -2174,46 +2295,46 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public DeclarationTypeMemberListContext declarationTypeMemberList() {
 		DeclarationTypeMemberListContext _localctx = new DeclarationTypeMemberListContext(Context, State);
-		EnterRule(_localctx, 54, RULE_declarationTypeMemberList);
+		EnterRule(_localctx, 56, RULE_declarationTypeMemberList);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 416;
+			State = 439;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
-				State = 416;
+				State = 439;
 				ErrorHandler.Sync(this);
-				switch ( Interpreter.AdaptivePredict(TokenStream,35,Context) ) {
+				switch ( Interpreter.AdaptivePredict(TokenStream,39,Context) ) {
 				case 1:
 					{
-					State = 412;
+					State = 435;
 					declarationTypeMemberListEnum();
 					}
 					break;
 				case 2:
 					{
-					State = 413;
+					State = 436;
 					declarationTypeMemberListField();
 					}
 					break;
 				case 3:
 					{
-					State = 414;
+					State = 437;
 					declarationTypeMemberListRule();
 					}
 					break;
 				case 4:
 					{
-					State = 415;
+					State = 438;
 					newline();
 					}
 					break;
 				}
 				}
-				State = 418;
+				State = 441;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 137506062344L) != 0) || _la==Sp || _la==Eol );
@@ -2275,17 +2396,17 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public DeclarationTypeMemberListEnumContext declarationTypeMemberListEnum() {
 		DeclarationTypeMemberListEnumContext _localctx = new DeclarationTypeMemberListEnumContext(Context, State);
-		EnterRule(_localctx, 56, RULE_declarationTypeMemberListEnum);
+		EnterRule(_localctx, 58, RULE_declarationTypeMemberListEnum);
 		int _la;
 		try {
 			int _alt;
-			State = 443;
+			State = 466;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,40,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,44,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 423;
+				State = 446;
 				ErrorHandler.Sync(this);
 				_alt = 1;
 				do {
@@ -2293,9 +2414,9 @@ public partial class MajaParser : Parser {
 					case 1:
 						{
 						{
-						State = 420;
+						State = 443;
 						memberEnumValue();
-						State = 421;
+						State = 444;
 						newline();
 						}
 						}
@@ -2303,9 +2424,9 @@ public partial class MajaParser : Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					State = 425;
+					State = 448;
 					ErrorHandler.Sync(this);
-					_alt = Interpreter.AdaptivePredict(TokenStream,37,Context);
+					_alt = Interpreter.AdaptivePredict(TokenStream,41,Context);
 				} while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER );
 				}
 				break;
@@ -2313,39 +2434,39 @@ public partial class MajaParser : Parser {
 				EnterOuterAlt(_localctx, 2);
 				{
 				{
-				State = 437;
+				State = 460;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				do {
 					{
 					{
-					State = 427;
+					State = 450;
 					memberEnum();
-					State = 434;
+					State = 457;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 					while (_la==Comma) {
 						{
 						{
-						State = 428;
+						State = 451;
 						Match(Comma);
-						State = 429;
+						State = 452;
 						freeSpace();
-						State = 430;
+						State = 453;
 						memberEnum();
 						}
 						}
-						State = 436;
+						State = 459;
 						ErrorHandler.Sync(this);
 						_la = TokenStream.LA(1);
 					}
 					}
 					}
-					State = 439;
+					State = 462;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				} while ( _la==Identifier );
-				State = 441;
+				State = 464;
 				newline();
 				}
 				}
@@ -2392,12 +2513,12 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public DeclarationTypeMemberListFieldContext declarationTypeMemberListField() {
 		DeclarationTypeMemberListFieldContext _localctx = new DeclarationTypeMemberListFieldContext(Context, State);
-		EnterRule(_localctx, 58, RULE_declarationTypeMemberListField);
+		EnterRule(_localctx, 60, RULE_declarationTypeMemberListField);
 		try {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 448;
+			State = 471;
 			ErrorHandler.Sync(this);
 			_alt = 1;
 			do {
@@ -2405,9 +2526,9 @@ public partial class MajaParser : Parser {
 				case 1:
 					{
 					{
-					State = 445;
+					State = 468;
 					memberField();
-					State = 446;
+					State = 469;
 					newline();
 					}
 					}
@@ -2415,9 +2536,9 @@ public partial class MajaParser : Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				State = 450;
+				State = 473;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,41,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,45,Context);
 			} while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -2461,12 +2582,12 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public DeclarationTypeMemberListRuleContext declarationTypeMemberListRule() {
 		DeclarationTypeMemberListRuleContext _localctx = new DeclarationTypeMemberListRuleContext(Context, State);
-		EnterRule(_localctx, 60, RULE_declarationTypeMemberListRule);
+		EnterRule(_localctx, 62, RULE_declarationTypeMemberListRule);
 		try {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 455;
+			State = 478;
 			ErrorHandler.Sync(this);
 			_alt = 1;
 			do {
@@ -2474,9 +2595,9 @@ public partial class MajaParser : Parser {
 				case 1:
 					{
 					{
-					State = 452;
+					State = 475;
 					memberRule();
-					State = 453;
+					State = 476;
 					newline();
 					}
 					}
@@ -2484,9 +2605,9 @@ public partial class MajaParser : Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				State = 457;
+				State = 480;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,42,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,46,Context);
 			} while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -2508,6 +2629,9 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public TypeArgumentListContext typeArgumentList() {
 			return GetRuleContext<TypeArgumentListContext>(0);
 		}
+		[System.Diagnostics.DebuggerNonUserCode] public ArgumentListContext argumentList() {
+			return GetRuleContext<ArgumentListContext>(0);
+		}
 		public TypeContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -2524,23 +2648,33 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeContext type() {
 		TypeContext _localctx = new TypeContext(Context, State);
-		EnterRule(_localctx, 62, RULE_type);
+		EnterRule(_localctx, 64, RULE_type);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 459;
+			State = 482;
 			nameIdentifier();
-			State = 461;
+			State = 484;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==AngleOpen) {
 				{
-				State = 460;
+				State = 483;
 				typeArgumentList();
 				}
 			}
 
+			State = 487;
+			ErrorHandler.Sync(this);
+			switch ( Interpreter.AdaptivePredict(TokenStream,48,Context) ) {
+			case 1:
+				{
+				State = 486;
+				argumentList();
+				}
+				break;
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -2582,19 +2716,19 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeParameterListContext typeParameterList() {
 		TypeParameterListContext _localctx = new TypeParameterListContext(Context, State);
-		EnterRule(_localctx, 64, RULE_typeParameterList);
+		EnterRule(_localctx, 66, RULE_typeParameterList);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 463;
+			State = 489;
 			Match(AngleOpen);
-			State = 468;
+			State = 494;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case Identifier:
 			case Hash:
 				{
-				State = 464;
+				State = 490;
 				typeParameterListComma();
 				}
 				break;
@@ -2602,16 +2736,16 @@ public partial class MajaParser : Parser {
 			case Sp:
 			case Eol:
 				{
-				State = 465;
+				State = 491;
 				newline();
-				State = 466;
+				State = 492;
 				typeParameterListIndent();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			State = 470;
+			State = 496;
 			Match(AngleClose);
 			}
 		}
@@ -2657,28 +2791,28 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeParameterListCommaContext typeParameterListComma() {
 		TypeParameterListCommaContext _localctx = new TypeParameterListCommaContext(Context, State);
-		EnterRule(_localctx, 66, RULE_typeParameterListComma);
+		EnterRule(_localctx, 68, RULE_typeParameterListComma);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 472;
+			State = 498;
 			typeParameter();
-			State = 478;
+			State = 504;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				State = 473;
+				State = 499;
 				Match(Comma);
-				State = 474;
+				State = 500;
 				Match(Sp);
-				State = 475;
+				State = 501;
 				typeParameter();
 				}
 				}
-				State = 480;
+				State = 506;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -2732,44 +2866,44 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeParameterListIndentContext typeParameterListIndent() {
 		TypeParameterListIndentContext _localctx = new TypeParameterListIndentContext(Context, State);
-		EnterRule(_localctx, 68, RULE_typeParameterListIndent);
+		EnterRule(_localctx, 70, RULE_typeParameterListIndent);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 481;
+			State = 507;
 			Match(Indent);
-			State = 491;
+			State = 517;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 485;
+				State = 511;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				while (_la==Comment || _la==Sp) {
 					{
 					{
-					State = 482;
+					State = 508;
 					comment();
 					}
 					}
-					State = 487;
+					State = 513;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				}
-				State = 488;
+				State = 514;
 				typeParameter();
-				State = 489;
+				State = 515;
 				newline();
 				}
 				}
-				State = 493;
+				State = 519;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 137506062344L) != 0) || _la==Sp );
-			State = 495;
+			State = 521;
 			Match(Dedent);
 			}
 		}
@@ -2791,9 +2925,6 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public TypeParameterTemplateContext typeParameterTemplate() {
 			return GetRuleContext<TypeParameterTemplateContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public TypeParameterValueContext typeParameterValue() {
-			return GetRuleContext<TypeParameterValueContext>(0);
-		}
 		public TypeParameterContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -2810,32 +2941,27 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeParameterContext typeParameter() {
 		TypeParameterContext _localctx = new TypeParameterContext(Context, State);
-		EnterRule(_localctx, 70, RULE_typeParameter);
+		EnterRule(_localctx, 72, RULE_typeParameter);
 		try {
-			State = 500;
+			State = 525;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,48,Context) ) {
-			case 1:
+			switch (TokenStream.LA(1)) {
+			case Identifier:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 497;
+				State = 523;
 				typeParameterGeneric();
 				}
 				break;
-			case 2:
+			case Hash:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 498;
+				State = 524;
 				typeParameterTemplate();
 				}
 				break;
-			case 3:
-				EnterOuterAlt(_localctx, 3);
-				{
-				State = 499;
-				typeParameterValue();
-				}
-				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -2877,24 +3003,24 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeParameterGenericContext typeParameterGeneric() {
 		TypeParameterGenericContext _localctx = new TypeParameterGenericContext(Context, State);
-		EnterRule(_localctx, 72, RULE_typeParameterGeneric);
+		EnterRule(_localctx, 74, RULE_typeParameterGeneric);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 502;
+			State = 527;
 			type();
-			State = 507;
+			State = 532;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,49,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,54,Context) ) {
 			case 1:
 				{
-				State = 503;
+				State = 528;
 				Match(Sp);
-				State = 504;
+				State = 529;
 				Match(Eq);
-				State = 505;
+				State = 530;
 				Match(Sp);
-				State = 506;
+				State = 531;
 				type();
 				}
 				break;
@@ -2941,26 +3067,26 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeParameterTemplateContext typeParameterTemplate() {
 		TypeParameterTemplateContext _localctx = new TypeParameterTemplateContext(Context, State);
-		EnterRule(_localctx, 74, RULE_typeParameterTemplate);
+		EnterRule(_localctx, 76, RULE_typeParameterTemplate);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 509;
+			State = 534;
 			Match(Hash);
-			State = 510;
+			State = 535;
 			type();
-			State = 515;
+			State = 540;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,50,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,55,Context) ) {
 			case 1:
 				{
-				State = 511;
+				State = 536;
 				Match(Sp);
-				State = 512;
+				State = 537;
 				Match(Eq);
-				State = 513;
+				State = 538;
 				Match(Sp);
-				State = 514;
+				State = 539;
 				type();
 				}
 				break;
@@ -2978,77 +3104,222 @@ public partial class MajaParser : Parser {
 		return _localctx;
 	}
 
-	public partial class TypeParameterValueContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public NameIdentifierContext nameIdentifier() {
-			return GetRuleContext<NameIdentifierContext>(0);
+	public partial class CompParameterListContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ParenOpen() { return GetToken(MajaParser.ParenOpen, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ParenClose() { return GetToken(MajaParser.ParenClose, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterListCommaContext compParameterListComma() {
+			return GetRuleContext<CompParameterListCommaContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Colon() { return GetToken(MajaParser.Colon, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Sp() { return GetTokens(MajaParser.Sp); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Sp(int i) {
-			return GetToken(MajaParser.Sp, i);
+		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext newline() {
+			return GetRuleContext<NewlineContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
-			return GetRuleContext<TypeContext>(0);
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterListIndentContext compParameterListIndent() {
+			return GetRuleContext<CompParameterListIndentContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Eq() { return GetToken(MajaParser.Eq, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
-			return GetRuleContext<ExpressionContext>(0);
-		}
-		public TypeParameterValueContext(ParserRuleContext parent, int invokingState)
+		public CompParameterListContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_typeParameterValue; } }
+		public override int RuleIndex { get { return RULE_compParameterList; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTypeParameterValue(this);
+			if (typedVisitor != null) return typedVisitor.VisitCompParameterList(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public TypeParameterValueContext typeParameterValue() {
-		TypeParameterValueContext _localctx = new TypeParameterValueContext(Context, State);
-		EnterRule(_localctx, 76, RULE_typeParameterValue);
+	public CompParameterListContext compParameterList() {
+		CompParameterListContext _localctx = new CompParameterListContext(Context, State);
+		EnterRule(_localctx, 78, RULE_compParameterList);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 542;
+			Match(ParenOpen);
+			State = 547;
+			ErrorHandler.Sync(this);
+			switch (TokenStream.LA(1)) {
+			case Hash:
+				{
+				State = 543;
+				compParameterListComma();
+				}
+				break;
+			case Comment:
+			case Sp:
+			case Eol:
+				{
+				State = 544;
+				newline();
+				State = 545;
+				compParameterListIndent();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+			State = 549;
+			Match(ParenClose);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class CompParameterListCommaContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterContext[] compParameter() {
+			return GetRuleContexts<CompParameterContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterContext compParameter(int i) {
+			return GetRuleContext<CompParameterContext>(i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Comma() { return GetTokens(MajaParser.Comma); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Comma(int i) {
+			return GetToken(MajaParser.Comma, i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Sp() { return GetTokens(MajaParser.Sp); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Sp(int i) {
+			return GetToken(MajaParser.Sp, i);
+		}
+		public CompParameterListCommaContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_compParameterListComma; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCompParameterListComma(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public CompParameterListCommaContext compParameterListComma() {
+		CompParameterListCommaContext _localctx = new CompParameterListCommaContext(Context, State);
+		EnterRule(_localctx, 80, RULE_compParameterListComma);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 517;
-			nameIdentifier();
-			State = 519;
+			State = 551;
+			compParameter();
+			State = 557;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if (_la==Sp) {
+			while (_la==Comma) {
 				{
-				State = 518;
+				{
+				State = 552;
+				Match(Comma);
+				State = 553;
 				Match(Sp);
+				State = 554;
+				compParameter();
 				}
+				}
+				State = 559;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
 			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
 
-			State = 521;
-			Match(Colon);
-			State = 522;
-			Match(Sp);
-			State = 523;
-			type();
-			State = 528;
+	public partial class CompParameterListIndentContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Indent() { return GetToken(MajaParser.Indent, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Dedent() { return GetToken(MajaParser.Dedent, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterContext[] compParameter() {
+			return GetRuleContexts<CompParameterContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public CompParameterContext compParameter(int i) {
+			return GetRuleContext<CompParameterContext>(i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext[] newline() {
+			return GetRuleContexts<NewlineContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public NewlineContext newline(int i) {
+			return GetRuleContext<NewlineContext>(i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public CommentContext[] comment() {
+			return GetRuleContexts<CommentContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public CommentContext comment(int i) {
+			return GetRuleContext<CommentContext>(i);
+		}
+		public CompParameterListIndentContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_compParameterListIndent; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCompParameterListIndent(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public CompParameterListIndentContext compParameterListIndent() {
+		CompParameterListIndentContext _localctx = new CompParameterListIndentContext(Context, State);
+		EnterRule(_localctx, 82, RULE_compParameterListIndent);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 560;
+			Match(Indent);
+			State = 570;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,52,Context) ) {
-			case 1:
+			_la = TokenStream.LA(1);
+			do {
 				{
-				State = 524;
-				Match(Sp);
-				State = 525;
-				Match(Eq);
-				State = 526;
-				Match(Sp);
-				State = 527;
-				expression(0);
+				{
+				State = 564;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+				while (_la==Comment || _la==Sp) {
+					{
+					{
+					State = 561;
+					comment();
+					}
+					}
+					State = 566;
+					ErrorHandler.Sync(this);
+					_la = TokenStream.LA(1);
 				}
-				break;
-			}
+				State = 567;
+				compParameter();
+				State = 568;
+				newline();
+				}
+				}
+				State = 572;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+			} while ( _la==Comment || _la==Hash || _la==Sp );
+			State = 574;
+			Match(Dedent);
 			}
 		}
 		catch (RecognitionException re) {
@@ -3090,13 +3361,13 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeArgumentListContext typeArgumentList() {
 		TypeArgumentListContext _localctx = new TypeArgumentListContext(Context, State);
-		EnterRule(_localctx, 78, RULE_typeArgumentList);
+		EnterRule(_localctx, 84, RULE_typeArgumentList);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 530;
+			State = 576;
 			Match(AngleOpen);
-			State = 535;
+			State = 581;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case True:
@@ -3115,7 +3386,7 @@ public partial class MajaParser : Parser {
 			case Minus:
 			case BitNot:
 				{
-				State = 531;
+				State = 577;
 				typeArgumentListComma();
 				}
 				break;
@@ -3123,16 +3394,16 @@ public partial class MajaParser : Parser {
 			case Sp:
 			case Eol:
 				{
-				State = 532;
+				State = 578;
 				newline();
-				State = 533;
+				State = 579;
 				typeArgumentListIndent();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			State = 537;
+			State = 583;
 			Match(AngleClose);
 			}
 		}
@@ -3178,28 +3449,28 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeArgumentListCommaContext typeArgumentListComma() {
 		TypeArgumentListCommaContext _localctx = new TypeArgumentListCommaContext(Context, State);
-		EnterRule(_localctx, 80, RULE_typeArgumentListComma);
+		EnterRule(_localctx, 86, RULE_typeArgumentListComma);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 539;
+			State = 585;
 			typeArgument();
-			State = 545;
+			State = 591;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				State = 540;
+				State = 586;
 				Match(Comma);
-				State = 541;
+				State = 587;
 				Match(Sp);
-				State = 542;
+				State = 588;
 				typeArgument();
 				}
 				}
-				State = 547;
+				State = 593;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -3247,30 +3518,30 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeArgumentListIndentContext typeArgumentListIndent() {
 		TypeArgumentListIndentContext _localctx = new TypeArgumentListIndentContext(Context, State);
-		EnterRule(_localctx, 82, RULE_typeArgumentListIndent);
+		EnterRule(_localctx, 88, RULE_typeArgumentListIndent);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 548;
+			State = 594;
 			Match(Indent);
-			State = 552;
+			State = 598;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 549;
+				State = 595;
 				typeArgument();
-				State = 550;
+				State = 596;
 				newline();
 				}
 				}
-				State = 554;
+				State = 600;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 72339078676578304L) != 0) );
-			State = 556;
+			State = 602;
 			Match(Dedent);
 			}
 		}
@@ -3308,22 +3579,22 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeArgumentContext typeArgument() {
 		TypeArgumentContext _localctx = new TypeArgumentContext(Context, State);
-		EnterRule(_localctx, 84, RULE_typeArgument);
+		EnterRule(_localctx, 90, RULE_typeArgument);
 		try {
-			State = 560;
+			State = 606;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,56,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,63,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 558;
+				State = 604;
 				type();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 559;
+				State = 605;
 				expression(0);
 				}
 				break;
@@ -3366,15 +3637,15 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeInitializerContext typeInitializer() {
 		TypeInitializerContext _localctx = new TypeInitializerContext(Context, State);
-		EnterRule(_localctx, 86, RULE_typeInitializer);
+		EnterRule(_localctx, 92, RULE_typeInitializer);
 		try {
-			State = 566;
+			State = 612;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case CurlyOpen:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 562;
+				State = 608;
 				typeInitializerComma();
 				}
 				break;
@@ -3383,9 +3654,9 @@ public partial class MajaParser : Parser {
 			case Eol:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 563;
+				State = 609;
 				newline();
-				State = 564;
+				State = 610;
 				typeInitializerIndent();
 				}
 				break;
@@ -3406,6 +3677,10 @@ public partial class MajaParser : Parser {
 
 	public partial class TypeInitializerCommaContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CurlyOpen() { return GetToken(MajaParser.CurlyOpen, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Sp() { return GetTokens(MajaParser.Sp); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Sp(int i) {
+			return GetToken(MajaParser.Sp, i);
+		}
 		[System.Diagnostics.DebuggerNonUserCode] public TypeInitializerFieldContext[] typeInitializerField() {
 			return GetRuleContexts<TypeInitializerFieldContext>();
 		}
@@ -3416,10 +3691,6 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Comma() { return GetTokens(MajaParser.Comma); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Comma(int i) {
 			return GetToken(MajaParser.Comma, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Sp() { return GetTokens(MajaParser.Sp); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Sp(int i) {
-			return GetToken(MajaParser.Sp, i);
 		}
 		public TypeInitializerCommaContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -3437,34 +3708,38 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeInitializerCommaContext typeInitializerComma() {
 		TypeInitializerCommaContext _localctx = new TypeInitializerCommaContext(Context, State);
-		EnterRule(_localctx, 88, RULE_typeInitializerComma);
+		EnterRule(_localctx, 94, RULE_typeInitializerComma);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 568;
+			State = 614;
 			Match(CurlyOpen);
-			State = 569;
+			State = 615;
+			Match(Sp);
+			State = 616;
 			typeInitializerField();
-			State = 575;
+			State = 622;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				State = 570;
+				State = 617;
 				Match(Comma);
-				State = 571;
+				State = 618;
 				Match(Sp);
-				State = 572;
+				State = 619;
 				typeInitializerField();
 				}
 				}
-				State = 577;
+				State = 624;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 578;
+			State = 625;
+			Match(Sp);
+			State = 626;
 			Match(CurlyClose);
 			}
 		}
@@ -3510,30 +3785,30 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeInitializerIndentContext typeInitializerIndent() {
 		TypeInitializerIndentContext _localctx = new TypeInitializerIndentContext(Context, State);
-		EnterRule(_localctx, 90, RULE_typeInitializerIndent);
+		EnterRule(_localctx, 96, RULE_typeInitializerIndent);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 580;
+			State = 628;
 			Match(Indent);
-			State = 584;
+			State = 632;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 581;
+				State = 629;
 				typeInitializerField();
-				State = 582;
+				State = 630;
 				newline();
 				}
 				}
-				State = 586;
+				State = 634;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( _la==Identifier );
-			State = 588;
+			State = 636;
 			Match(Dedent);
 			}
 		}
@@ -3576,19 +3851,19 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public TypeInitializerFieldContext typeInitializerField() {
 		TypeInitializerFieldContext _localctx = new TypeInitializerFieldContext(Context, State);
-		EnterRule(_localctx, 92, RULE_typeInitializerField);
+		EnterRule(_localctx, 98, RULE_typeInitializerField);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 590;
+			State = 638;
 			nameIdentifier();
-			State = 591;
+			State = 639;
 			Match(Sp);
-			State = 592;
+			State = 640;
 			Match(Eq);
-			State = 593;
+			State = 641;
 			Match(Sp);
-			State = 594;
+			State = 642;
 			expression(0);
 			}
 		}
@@ -3631,24 +3906,24 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public MemberEnumValueContext memberEnumValue() {
 		MemberEnumValueContext _localctx = new MemberEnumValueContext(Context, State);
-		EnterRule(_localctx, 94, RULE_memberEnumValue);
+		EnterRule(_localctx, 100, RULE_memberEnumValue);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 596;
+			State = 644;
 			nameIdentifier();
-			State = 601;
+			State = 649;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,60,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,67,Context) ) {
 			case 1:
 				{
-				State = 597;
+				State = 645;
 				Match(Sp);
-				State = 598;
+				State = 646;
 				Match(Eq);
-				State = 599;
+				State = 647;
 				Match(Sp);
-				State = 600;
+				State = 648;
 				expressionConstant();
 				}
 				break;
@@ -3686,11 +3961,11 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public MemberEnumContext memberEnum() {
 		MemberEnumContext _localctx = new MemberEnumContext(Context, State);
-		EnterRule(_localctx, 96, RULE_memberEnum);
+		EnterRule(_localctx, 102, RULE_memberEnum);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 603;
+			State = 651;
 			nameIdentifier();
 			}
 		}
@@ -3737,41 +4012,41 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public MemberFieldContext memberField() {
 		MemberFieldContext _localctx = new MemberFieldContext(Context, State);
-		EnterRule(_localctx, 98, RULE_memberField);
+		EnterRule(_localctx, 104, RULE_memberField);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 605;
+			State = 653;
 			nameIdentifier();
-			State = 607;
+			State = 655;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Sp) {
 				{
-				State = 606;
+				State = 654;
 				Match(Sp);
 				}
 			}
 
-			State = 609;
+			State = 657;
 			Match(Colon);
-			State = 610;
+			State = 658;
 			Match(Sp);
-			State = 611;
+			State = 659;
 			type();
-			State = 616;
+			State = 664;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,62,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,69,Context) ) {
 			case 1:
 				{
-				State = 612;
+				State = 660;
 				Match(Sp);
-				State = 613;
+				State = 661;
 				Match(Eq);
-				State = 614;
+				State = 662;
 				Match(Sp);
-				State = 615;
+				State = 663;
 				expression(0);
 				}
 				break;
@@ -3810,13 +4085,13 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public MemberRuleContext memberRule() {
 		MemberRuleContext _localctx = new MemberRuleContext(Context, State);
-		EnterRule(_localctx, 100, RULE_memberRule);
+		EnterRule(_localctx, 106, RULE_memberRule);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 618;
+			State = 666;
 			Match(Hash);
-			State = 619;
+			State = 667;
 			expressionRule();
 			}
 		}
@@ -3854,22 +4129,22 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public DeclarationVariableContext declarationVariable() {
 		DeclarationVariableContext _localctx = new DeclarationVariableContext(Context, State);
-		EnterRule(_localctx, 102, RULE_declarationVariable);
+		EnterRule(_localctx, 108, RULE_declarationVariable);
 		try {
-			State = 623;
+			State = 671;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,63,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,70,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 621;
+				State = 669;
 				declarationVariableTyped();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 622;
+				State = 670;
 				declarationVariableInferred();
 				}
 				break;
@@ -3918,49 +4193,49 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public DeclarationVariableTypedContext declarationVariableTyped() {
 		DeclarationVariableTypedContext _localctx = new DeclarationVariableTypedContext(Context, State);
-		EnterRule(_localctx, 104, RULE_declarationVariableTyped);
+		EnterRule(_localctx, 110, RULE_declarationVariableTyped);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 625;
+			State = 673;
 			nameIdentifier();
-			State = 627;
+			State = 675;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Sp) {
 				{
-				State = 626;
+				State = 674;
 				Match(Sp);
 				}
 			}
 
-			State = 629;
+			State = 677;
 			Match(Colon);
-			State = 630;
+			State = 678;
 			Match(Sp);
-			State = 631;
+			State = 679;
 			type();
-			State = 638;
+			State = 686;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,66,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,73,Context) ) {
 			case 1:
 				{
-				State = 633;
+				State = 681;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==Sp) {
 					{
-					State = 632;
+					State = 680;
 					Match(Sp);
 					}
 				}
 
-				State = 635;
+				State = 683;
 				Match(Eq);
-				State = 636;
+				State = 684;
 				Match(Sp);
-				State = 637;
+				State = 685;
 				expression(0);
 				}
 				break;
@@ -4007,30 +4282,30 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public DeclarationVariableInferredContext declarationVariableInferred() {
 		DeclarationVariableInferredContext _localctx = new DeclarationVariableInferredContext(Context, State);
-		EnterRule(_localctx, 106, RULE_declarationVariableInferred);
+		EnterRule(_localctx, 112, RULE_declarationVariableInferred);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 640;
+			State = 688;
 			nameIdentifier();
-			State = 642;
+			State = 690;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Sp) {
 				{
-				State = 641;
+				State = 689;
 				Match(Sp);
 				}
 			}
 
-			State = 644;
+			State = 692;
 			Match(Colon);
-			State = 645;
+			State = 693;
 			Match(Eq);
-			State = 646;
+			State = 694;
 			Match(Sp);
-			State = 647;
+			State = 695;
 			expression(0);
 			}
 		}
@@ -4073,19 +4348,19 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public VariableAssignmentContext variableAssignment() {
 		VariableAssignmentContext _localctx = new VariableAssignmentContext(Context, State);
-		EnterRule(_localctx, 108, RULE_variableAssignment);
+		EnterRule(_localctx, 114, RULE_variableAssignment);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 649;
+			State = 697;
 			nameIdentifier();
-			State = 650;
+			State = 698;
 			Match(Sp);
-			State = 651;
+			State = 699;
 			Match(Eq);
-			State = 652;
+			State = 700;
 			Match(Sp);
-			State = 653;
+			State = 701;
 			expression(0);
 			}
 		}
@@ -4191,6 +4466,21 @@ public partial class MajaParser : Parser {
 			else return visitor.VisitChildren(this);
 		}
 	}
+	public partial class ExpressionTypeInitializerContext : ExpressionContext {
+		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
+			return GetRuleContext<TypeContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public TypeInitializerContext typeInitializer() {
+			return GetRuleContext<TypeInitializerContext>(0);
+		}
+		public ExpressionTypeInitializerContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpressionTypeInitializer(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
 	public partial class ExpressionBinaryContext : ExpressionContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext[] expression() {
 			return GetRuleContexts<ExpressionContext>();
@@ -4210,21 +4500,6 @@ public partial class MajaParser : Parser {
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionBinary(this);
-			else return visitor.VisitChildren(this);
-		}
-	}
-	public partial class ExpressionTypeInitializerContext : ExpressionContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
-			return GetRuleContext<ExpressionContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public TypeInitializerContext typeInitializer() {
-			return GetRuleContext<TypeInitializerContext>(0);
-		}
-		public ExpressionTypeInitializerContext(ExpressionContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IMajaParserVisitor<TResult> typedVisitor = visitor as IMajaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpressionTypeInitializer(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -4265,131 +4540,130 @@ public partial class MajaParser : Parser {
 		int _parentState = State;
 		ExpressionContext _localctx = new ExpressionContext(Context, _parentState);
 		ExpressionContext _prevctx = _localctx;
-		int _startState = 110;
-		EnterRecursionRule(_localctx, 110, RULE_expression, _p);
+		int _startState = 116;
+		EnterRecursionRule(_localctx, 116, RULE_expression, _p);
 		int _la;
 		try {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 674;
+			State = 725;
 			ErrorHandler.Sync(this);
-			switch (TokenStream.LA(1)) {
-			case True:
-			case False:
-			case NumberBin:
-			case NumberOct:
-			case NumberDec:
-			case NumberDecPrefix:
-			case NumberHex:
-			case Character:
-			case String:
+			switch ( Interpreter.AdaptivePredict(TokenStream,77,Context) ) {
+			case 1:
 				{
 				_localctx = new ExpressionConstContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
 
-				State = 656;
+				State = 704;
 				expressionConstant();
 				}
 				break;
-			case Not:
-			case Minus:
-			case BitNot:
+			case 2:
 				{
 				_localctx = new ExpressionUnaryPrefixContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 657;
+				State = 705;
 				expressionOperatorUnaryPrefix();
-				State = 658;
+				State = 706;
 				expression(7);
 				}
 				break;
-			case BracketOpen:
+			case 3:
+				{
+				_localctx = new ExpressionTypeInitializerContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
+				State = 708;
+				type();
+				State = 709;
+				typeInitializer();
+				}
+				break;
+			case 4:
 				{
 				_localctx = new ExpressionRangeContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 660;
+				State = 711;
 				Match(BracketOpen);
-				State = 662;
+				State = 713;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 72339078676578304L) != 0)) {
 					{
-					State = 661;
+					State = 712;
 					expression(0);
 					}
 				}
 
-				State = 664;
+				State = 715;
 				Match(Range);
-				State = 666;
+				State = 717;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 72339078676578304L) != 0)) {
 					{
-					State = 665;
+					State = 716;
 					expression(0);
 					}
 				}
 
-				State = 668;
+				State = 719;
 				Match(BracketClose);
 				}
 				break;
-			case ParenOpen:
+			case 5:
 				{
 				_localctx = new ExpressionPrecedenceContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 669;
+				State = 720;
 				Match(ParenOpen);
-				State = 670;
+				State = 721;
 				expression(0);
-				State = 671;
+				State = 722;
 				Match(ParenClose);
 				}
 				break;
-			case Identifier:
+			case 6:
 				{
 				_localctx = new ExpressionIdentifierContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 673;
+				State = 724;
 				nameIdentifier();
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
 			}
 			Context.Stop = TokenStream.LT(-1);
-			State = 694;
+			State = 743;
 			ErrorHandler.Sync(this);
-			_alt = Interpreter.AdaptivePredict(TokenStream,73,Context);
+			_alt = Interpreter.AdaptivePredict(TokenStream,80,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( ParseListeners!=null )
 						TriggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					State = 692;
+					State = 741;
 					ErrorHandler.Sync(this);
-					switch ( Interpreter.AdaptivePredict(TokenStream,72,Context) ) {
+					switch ( Interpreter.AdaptivePredict(TokenStream,79,Context) ) {
 					case 1:
 						{
 						_localctx = new ExpressionBinaryContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 676;
+						State = 727;
 						if (!(Precpred(Context, 8))) throw new FailedPredicateException(this, "Precpred(Context, 8)");
-						State = 677;
+						State = 728;
 						Match(Sp);
-						State = 678;
+						State = 729;
 						expressionOperatorBinary();
-						State = 679;
+						State = 730;
 						Match(Sp);
-						State = 680;
+						State = 731;
 						expression(9);
 						}
 						break;
@@ -4397,50 +4671,40 @@ public partial class MajaParser : Parser {
 						{
 						_localctx = new ExpressionInvocationContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 682;
+						State = 733;
 						if (!(Precpred(Context, 6))) throw new FailedPredicateException(this, "Precpred(Context, 6)");
-						State = 684;
+						State = 735;
 						ErrorHandler.Sync(this);
 						_la = TokenStream.LA(1);
 						if (_la==AngleOpen) {
 							{
-							State = 683;
+							State = 734;
 							typeArgumentList();
 							}
 						}
 
-						State = 686;
+						State = 737;
 						argumentList();
 						}
 						break;
 					case 3:
 						{
-						_localctx = new ExpressionTypeInitializerContext(new ExpressionContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 687;
-						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
-						State = 688;
-						typeInitializer();
-						}
-						break;
-					case 4:
-						{
 						_localctx = new ExpressionMemberAccessContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 689;
+						State = 738;
 						if (!(Precpred(Context, 1))) throw new FailedPredicateException(this, "Precpred(Context, 1)");
-						State = 690;
+						State = 739;
 						Match(Dot);
-						State = 691;
+						State = 740;
 						nameIdentifier();
 						}
 						break;
 					}
 					} 
 				}
-				State = 696;
+				State = 745;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,73,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,80,Context);
 			}
 			}
 		}
@@ -4478,9 +4742,9 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionConstantContext expressionConstant() {
 		ExpressionConstantContext _localctx = new ExpressionConstantContext(Context, State);
-		EnterRule(_localctx, 112, RULE_expressionConstant);
+		EnterRule(_localctx, 118, RULE_expressionConstant);
 		try {
-			State = 699;
+			State = 748;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case NumberBin:
@@ -4492,7 +4756,7 @@ public partial class MajaParser : Parser {
 			case String:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 697;
+				State = 746;
 				expressionLiteral();
 				}
 				break;
@@ -4500,7 +4764,7 @@ public partial class MajaParser : Parser {
 			case False:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 698;
+				State = 747;
 				expressionLiteralBool();
 				}
 				break;
@@ -4539,11 +4803,11 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionRuleContext expressionRule() {
 		ExpressionRuleContext _localctx = new ExpressionRuleContext(Context, State);
-		EnterRule(_localctx, 114, RULE_expressionRule);
+		EnterRule(_localctx, 120, RULE_expressionRule);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 701;
+			State = 750;
 			expression(0);
 			}
 		}
@@ -4578,11 +4842,11 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionLoopContext expressionLoop() {
 		ExpressionLoopContext _localctx = new ExpressionLoopContext(Context, State);
-		EnterRule(_localctx, 116, RULE_expressionLoop);
+		EnterRule(_localctx, 122, RULE_expressionLoop);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 703;
+			State = 752;
 			expression(0);
 			}
 		}
@@ -4626,36 +4890,36 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionOperatorBinaryContext expressionOperatorBinary() {
 		ExpressionOperatorBinaryContext _localctx = new ExpressionOperatorBinaryContext(Context, State);
-		EnterRule(_localctx, 118, RULE_expressionOperatorBinary);
+		EnterRule(_localctx, 124, RULE_expressionOperatorBinary);
 		try {
-			State = 709;
+			State = 758;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,75,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,82,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 705;
+				State = 754;
 				expressionOperatorArithmetic();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 706;
+				State = 755;
 				expressionOperatorLogic();
 				}
 				break;
 			case 3:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 707;
+				State = 756;
 				expressionOperatorComparison();
 				}
 				break;
 			case 4:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 708;
+				State = 757;
 				expressionOperatorBits();
 				}
 				break;
@@ -4698,29 +4962,29 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionOperatorUnaryPrefixContext expressionOperatorUnaryPrefix() {
 		ExpressionOperatorUnaryPrefixContext _localctx = new ExpressionOperatorUnaryPrefixContext(Context, State);
-		EnterRule(_localctx, 120, RULE_expressionOperatorUnaryPrefix);
+		EnterRule(_localctx, 126, RULE_expressionOperatorUnaryPrefix);
 		try {
-			State = 714;
+			State = 763;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case Minus:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 711;
+				State = 760;
 				expressionOperatorArithmeticUnaryPrefix();
 				}
 				break;
 			case Not:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 712;
+				State = 761;
 				expressionOperatorLogicUnaryPrefix();
 				}
 				break;
 			case BitNot:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 713;
+				State = 762;
 				expressionOperatorBitsUnaryPrefix();
 				}
 				break;
@@ -4763,12 +5027,12 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionOperatorArithmeticContext expressionOperatorArithmetic() {
 		ExpressionOperatorArithmeticContext _localctx = new ExpressionOperatorArithmeticContext(Context, State);
-		EnterRule(_localctx, 122, RULE_expressionOperatorArithmetic);
+		EnterRule(_localctx, 128, RULE_expressionOperatorArithmetic);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 716;
+			State = 765;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 17873661021126656L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -4808,11 +5072,11 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionOperatorArithmeticUnaryPrefixContext expressionOperatorArithmeticUnaryPrefix() {
 		ExpressionOperatorArithmeticUnaryPrefixContext _localctx = new ExpressionOperatorArithmeticUnaryPrefixContext(Context, State);
-		EnterRule(_localctx, 124, RULE_expressionOperatorArithmeticUnaryPrefix);
+		EnterRule(_localctx, 130, RULE_expressionOperatorArithmeticUnaryPrefix);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 718;
+			State = 767;
 			Match(Minus);
 			}
 		}
@@ -4846,12 +5110,12 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionOperatorLogicContext expressionOperatorLogic() {
 		ExpressionOperatorLogicContext _localctx = new ExpressionOperatorLogicContext(Context, State);
-		EnterRule(_localctx, 126, RULE_expressionOperatorLogic);
+		EnterRule(_localctx, 132, RULE_expressionOperatorLogic);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 720;
+			State = 769;
 			_la = TokenStream.LA(1);
 			if ( !(_la==And || _la==Or) ) {
 			ErrorHandler.RecoverInline(this);
@@ -4891,11 +5155,11 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionOperatorLogicUnaryPrefixContext expressionOperatorLogicUnaryPrefix() {
 		ExpressionOperatorLogicUnaryPrefixContext _localctx = new ExpressionOperatorLogicUnaryPrefixContext(Context, State);
-		EnterRule(_localctx, 128, RULE_expressionOperatorLogicUnaryPrefix);
+		EnterRule(_localctx, 134, RULE_expressionOperatorLogicUnaryPrefix);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 722;
+			State = 771;
 			Match(Not);
 			}
 		}
@@ -4933,12 +5197,12 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionOperatorComparisonContext expressionOperatorComparison() {
 		ExpressionOperatorComparisonContext _localctx = new ExpressionOperatorComparisonContext(Context, State);
-		EnterRule(_localctx, 130, RULE_expressionOperatorComparison);
+		EnterRule(_localctx, 136, RULE_expressionOperatorComparison);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 724;
+			State = 773;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 131947837784064L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -4987,69 +5251,69 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionOperatorBitsContext expressionOperatorBits() {
 		ExpressionOperatorBitsContext _localctx = new ExpressionOperatorBitsContext(Context, State);
-		EnterRule(_localctx, 132, RULE_expressionOperatorBits);
+		EnterRule(_localctx, 138, RULE_expressionOperatorBits);
 		try {
-			State = 737;
+			State = 786;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case BitAnd:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 726;
+				State = 775;
 				Match(BitAnd);
 				}
 				break;
 			case BitOr:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 727;
+				State = 776;
 				Match(BitOr);
 				}
 				break;
 			case BitXor_Imm:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 728;
+				State = 777;
 				Match(BitXor_Imm);
 				}
 				break;
 			case BitShiftL:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 729;
+				State = 778;
 				Match(BitShiftL);
 				}
 				break;
 			case AngleClose:
 				EnterOuterAlt(_localctx, 5);
 				{
-				State = 731;
+				State = 780;
 				ErrorHandler.Sync(this);
-				switch ( Interpreter.AdaptivePredict(TokenStream,77,Context) ) {
+				switch ( Interpreter.AdaptivePredict(TokenStream,84,Context) ) {
 				case 1:
 					{
-					State = 730;
+					State = 779;
 					Match(AngleClose);
 					}
 					break;
 				}
-				State = 733;
+				State = 782;
 				Match(AngleClose);
-				State = 734;
+				State = 783;
 				Match(AngleClose);
 				}
 				break;
 			case BitRollL:
 				EnterOuterAlt(_localctx, 6);
 				{
-				State = 735;
+				State = 784;
 				Match(BitRollL);
 				}
 				break;
 			case BitRollR:
 				EnterOuterAlt(_localctx, 7);
 				{
-				State = 736;
+				State = 785;
 				Match(BitRollR);
 				}
 				break;
@@ -5086,11 +5350,11 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionOperatorBitsUnaryPrefixContext expressionOperatorBitsUnaryPrefix() {
 		ExpressionOperatorBitsUnaryPrefixContext _localctx = new ExpressionOperatorBitsUnaryPrefixContext(Context, State);
-		EnterRule(_localctx, 134, RULE_expressionOperatorBitsUnaryPrefix);
+		EnterRule(_localctx, 140, RULE_expressionOperatorBitsUnaryPrefix);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 739;
+			State = 788;
 			Match(BitNot);
 			}
 		}
@@ -5124,12 +5388,12 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionLiteralBoolContext expressionLiteralBool() {
 		ExpressionLiteralBoolContext _localctx = new ExpressionLiteralBoolContext(Context, State);
-		EnterRule(_localctx, 136, RULE_expressionLiteralBool);
+		EnterRule(_localctx, 142, RULE_expressionLiteralBool);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 741;
+			State = 790;
 			_la = TokenStream.LA(1);
 			if ( !(_la==True || _la==False) ) {
 			ErrorHandler.RecoverInline(this);
@@ -5174,9 +5438,9 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public ExpressionLiteralContext expressionLiteral() {
 		ExpressionLiteralContext _localctx = new ExpressionLiteralContext(Context, State);
-		EnterRule(_localctx, 138, RULE_expressionLiteral);
+		EnterRule(_localctx, 144, RULE_expressionLiteral);
 		try {
-			State = 745;
+			State = 794;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case NumberBin:
@@ -5187,14 +5451,14 @@ public partial class MajaParser : Parser {
 			case Character:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 743;
+				State = 792;
 				number();
 				}
 				break;
 			case String:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 744;
+				State = 793;
 				@string();
 				}
 				break;
@@ -5240,26 +5504,26 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NameQualifiedContext nameQualified() {
 		NameQualifiedContext _localctx = new NameQualifiedContext(Context, State);
-		EnterRule(_localctx, 140, RULE_nameQualified);
+		EnterRule(_localctx, 146, RULE_nameQualified);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 747;
+			State = 796;
 			nameIdentifier();
-			State = 752;
+			State = 801;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Dot) {
 				{
 				{
-				State = 748;
+				State = 797;
 				Match(Dot);
-				State = 749;
+				State = 798;
 				nameIdentifier();
 				}
 				}
-				State = 754;
+				State = 803;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -5299,22 +5563,22 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NameQualifiedListContext nameQualifiedList() {
 		NameQualifiedListContext _localctx = new NameQualifiedListContext(Context, State);
-		EnterRule(_localctx, 142, RULE_nameQualifiedList);
+		EnterRule(_localctx, 148, RULE_nameQualifiedList);
 		try {
-			State = 757;
+			State = 806;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case Identifier:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 755;
+				State = 804;
 				nameQualifiedListComma();
 				}
 				break;
 			case Indent:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 756;
+				State = 805;
 				nameQualifiedListIndent();
 				}
 				break;
@@ -5364,50 +5628,50 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NameQualifiedListCommaContext nameQualifiedListComma() {
 		NameQualifiedListCommaContext _localctx = new NameQualifiedListCommaContext(Context, State);
-		EnterRule(_localctx, 144, RULE_nameQualifiedListComma);
+		EnterRule(_localctx, 150, RULE_nameQualifiedListComma);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 759;
+			State = 808;
 			nameQualified();
-			State = 761;
+			State = 810;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,82,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,89,Context) ) {
 			case 1:
 				{
-				State = 760;
+				State = 809;
 				Match(Sp);
 				}
 				break;
 			}
-			State = 772;
+			State = 821;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				State = 763;
+				State = 812;
 				Match(Comma);
-				State = 765;
+				State = 814;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				do {
 					{
 					{
-					State = 764;
+					State = 813;
 					Match(Sp);
 					}
 					}
-					State = 767;
+					State = 816;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				} while ( _la==Sp );
-				State = 769;
+				State = 818;
 				nameQualified();
 				}
 				}
-				State = 774;
+				State = 823;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -5455,30 +5719,30 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NameQualifiedListIndentContext nameQualifiedListIndent() {
 		NameQualifiedListIndentContext _localctx = new NameQualifiedListIndentContext(Context, State);
-		EnterRule(_localctx, 146, RULE_nameQualifiedListIndent);
+		EnterRule(_localctx, 152, RULE_nameQualifiedListIndent);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 775;
+			State = 824;
 			Match(Indent);
-			State = 779;
+			State = 828;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 776;
+				State = 825;
 				nameQualified();
-				State = 777;
+				State = 826;
 				newline();
 				}
 				}
-				State = 781;
+				State = 830;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( _la==Identifier );
-			State = 783;
+			State = 832;
 			Match(Dedent);
 			}
 		}
@@ -5511,11 +5775,11 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NameIdentifierContext nameIdentifier() {
 		NameIdentifierContext _localctx = new NameIdentifierContext(Context, State);
-		EnterRule(_localctx, 148, RULE_nameIdentifier);
+		EnterRule(_localctx, 154, RULE_nameIdentifier);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 785;
+			State = 834;
 			Match(Identifier);
 			}
 		}
@@ -5553,22 +5817,22 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NameIdentifierListContext nameIdentifierList() {
 		NameIdentifierListContext _localctx = new NameIdentifierListContext(Context, State);
-		EnterRule(_localctx, 150, RULE_nameIdentifierList);
+		EnterRule(_localctx, 156, RULE_nameIdentifierList);
 		try {
-			State = 789;
+			State = 838;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case Identifier:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 787;
+				State = 836;
 				nameQualifiedListComma();
 				}
 				break;
 			case Indent:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 788;
+				State = 837;
 				nameQualifiedListIndent();
 				}
 				break;
@@ -5618,50 +5882,50 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NameIdentifierListCommaContext nameIdentifierListComma() {
 		NameIdentifierListCommaContext _localctx = new NameIdentifierListCommaContext(Context, State);
-		EnterRule(_localctx, 152, RULE_nameIdentifierListComma);
+		EnterRule(_localctx, 158, RULE_nameIdentifierListComma);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 791;
+			State = 840;
 			nameIdentifier();
-			State = 793;
+			State = 842;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Sp) {
 				{
-				State = 792;
+				State = 841;
 				Match(Sp);
 				}
 			}
 
-			State = 804;
+			State = 853;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Comma) {
 				{
 				{
-				State = 795;
+				State = 844;
 				Match(Comma);
-				State = 797;
+				State = 846;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				do {
 					{
 					{
-					State = 796;
+					State = 845;
 					Match(Sp);
 					}
 					}
-					State = 799;
+					State = 848;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				} while ( _la==Sp );
-				State = 801;
+				State = 850;
 				nameIdentifier();
 				}
 				}
-				State = 806;
+				State = 855;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -5709,30 +5973,30 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NameIdentifierListIndentContext nameIdentifierListIndent() {
 		NameIdentifierListIndentContext _localctx = new NameIdentifierListIndentContext(Context, State);
-		EnterRule(_localctx, 154, RULE_nameIdentifierListIndent);
+		EnterRule(_localctx, 160, RULE_nameIdentifierListIndent);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 807;
+			State = 856;
 			Match(Indent);
-			State = 811;
+			State = 860;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 808;
+				State = 857;
 				nameIdentifier();
-				State = 809;
+				State = 858;
 				newline();
 				}
 				}
-				State = 813;
+				State = 862;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( _la==Identifier );
-			State = 815;
+			State = 864;
 			Match(Dedent);
 			}
 		}
@@ -5765,11 +6029,11 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public StringContext @string() {
 		StringContext _localctx = new StringContext(Context, State);
-		EnterRule(_localctx, 156, RULE_string);
+		EnterRule(_localctx, 162, RULE_string);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 817;
+			State = 866;
 			Match(String);
 			}
 		}
@@ -5807,12 +6071,12 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NumberContext number() {
 		NumberContext _localctx = new NumberContext(Context, State);
-		EnterRule(_localctx, 158, RULE_number);
+		EnterRule(_localctx, 164, RULE_number);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 819;
+			State = 868;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 199229440L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -5857,28 +6121,28 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public CommentContext comment() {
 		CommentContext _localctx = new CommentContext(Context, State);
-		EnterRule(_localctx, 160, RULE_comment);
+		EnterRule(_localctx, 166, RULE_comment);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 824;
+			State = 873;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Sp) {
 				{
 				{
-				State = 821;
+				State = 870;
 				Match(Sp);
 				}
 				}
-				State = 826;
+				State = 875;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 827;
+			State = 876;
 			Match(Comment);
-			State = 828;
+			State = 877;
 			Match(Eol);
 			}
 		}
@@ -5919,37 +6183,37 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public NewlineContext newline() {
 		NewlineContext _localctx = new NewlineContext(Context, State);
-		EnterRule(_localctx, 162, RULE_newline);
+		EnterRule(_localctx, 168, RULE_newline);
 		int _la;
 		try {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 833;
+			State = 882;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Sp) {
 				{
 				{
-				State = 830;
+				State = 879;
 				Match(Sp);
 				}
 				}
-				State = 835;
+				State = 884;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 837;
+			State = 886;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Comment) {
 				{
-				State = 836;
+				State = 885;
 				Match(Comment);
 				}
 			}
 
-			State = 840;
+			State = 889;
 			ErrorHandler.Sync(this);
 			_alt = 1;
 			do {
@@ -5957,7 +6221,7 @@ public partial class MajaParser : Parser {
 				case 1:
 					{
 					{
-					State = 839;
+					State = 888;
 					Match(Eol);
 					}
 					}
@@ -5965,9 +6229,9 @@ public partial class MajaParser : Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				State = 842;
+				State = 891;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,94,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,101,Context);
 			} while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -6006,26 +6270,26 @@ public partial class MajaParser : Parser {
 	[RuleVersion(0)]
 	public FreeSpaceContext freeSpace() {
 		FreeSpaceContext _localctx = new FreeSpaceContext(Context, State);
-		EnterRule(_localctx, 164, RULE_freeSpace);
+		EnterRule(_localctx, 170, RULE_freeSpace);
 		int _la;
 		try {
-			State = 850;
+			State = 899;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,96,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,103,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 845;
+				State = 894;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				do {
 					{
 					{
-					State = 844;
+					State = 893;
 					Match(Sp);
 					}
 					}
-					State = 847;
+					State = 896;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				} while ( _la==Sp );
@@ -6034,7 +6298,7 @@ public partial class MajaParser : Parser {
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 849;
+				State = 898;
 				newline();
 				}
 				break;
@@ -6053,7 +6317,7 @@ public partial class MajaParser : Parser {
 
 	public override bool Sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 55: return expression_sempred((ExpressionContext)_localctx, predIndex);
+		case 58: return expression_sempred((ExpressionContext)_localctx, predIndex);
 		}
 		return true;
 	}
@@ -6061,14 +6325,13 @@ public partial class MajaParser : Parser {
 		switch (predIndex) {
 		case 0: return Precpred(Context, 8);
 		case 1: return Precpred(Context, 6);
-		case 2: return Precpred(Context, 5);
-		case 3: return Precpred(Context, 1);
+		case 2: return Precpred(Context, 1);
 		}
 		return true;
 	}
 
 	private static int[] _serializedATN = {
-		4,1,71,853,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,71,902,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
 		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,2,21,7,21,
 		2,22,7,22,2,23,7,23,2,24,7,24,2,25,7,25,2,26,7,26,2,27,7,27,2,28,7,28,
@@ -6079,281 +6342,297 @@ public partial class MajaParser : Parser {
 		2,57,7,57,2,58,7,58,2,59,7,59,2,60,7,60,2,61,7,61,2,62,7,62,2,63,7,63,
 		2,64,7,64,2,65,7,65,2,66,7,66,2,67,7,67,2,68,7,68,2,69,7,69,2,70,7,70,
 		2,71,7,71,2,72,7,72,2,73,7,73,2,74,7,74,2,75,7,75,2,76,7,76,2,77,7,77,
-		2,78,7,78,2,79,7,79,2,80,7,80,2,81,7,81,2,82,7,82,1,0,3,0,168,8,0,1,0,
-		1,0,1,0,5,0,173,8,0,10,0,12,0,176,9,0,1,0,1,0,1,0,5,0,181,8,0,10,0,12,
-		0,184,9,0,1,1,1,1,1,1,1,1,1,2,1,2,1,2,1,2,1,3,1,3,1,3,1,3,1,4,1,4,1,4,
-		4,4,201,8,4,11,4,12,4,202,1,5,1,5,3,5,207,8,5,1,6,1,6,3,6,211,8,6,1,6,
-		1,6,3,6,215,8,6,1,7,1,7,1,7,3,7,220,8,7,1,8,1,8,1,8,3,8,225,8,8,1,9,1,
-		9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,3,9,236,8,9,1,10,1,10,1,10,1,10,1,10,1,10,
-		1,11,1,11,1,11,1,11,1,11,3,11,249,8,11,1,11,1,11,1,11,1,11,1,11,1,11,1,
-		11,1,11,3,11,259,8,11,1,12,1,12,1,12,3,12,264,8,12,1,13,1,13,1,13,1,13,
-		1,13,1,13,1,14,1,14,1,15,1,15,1,15,3,15,277,8,15,1,15,1,15,1,15,1,15,1,
-		15,1,16,1,16,3,16,286,8,16,1,16,1,16,1,16,3,16,291,8,16,1,16,1,16,3,16,
-		295,8,16,1,16,1,16,1,16,3,16,300,8,16,1,16,1,16,1,16,1,16,1,16,1,17,1,
-		17,1,17,1,17,1,18,1,18,1,18,1,18,1,18,3,18,316,8,18,1,18,1,18,1,19,1,19,
-		1,19,1,19,5,19,324,8,19,10,19,12,19,327,9,19,1,20,1,20,5,20,331,8,20,10,
-		20,12,20,334,9,20,1,20,1,20,1,20,4,20,339,8,20,11,20,12,20,340,1,20,1,
-		20,1,21,1,21,3,21,347,8,21,1,21,1,21,1,21,1,21,1,21,1,21,1,21,3,21,356,
-		8,21,1,22,1,22,3,22,360,8,22,1,22,1,22,3,22,364,8,22,1,22,1,22,1,23,1,
-		23,1,23,1,23,5,23,372,8,23,10,23,12,23,375,9,23,1,24,1,24,1,24,1,24,4,
-		24,381,8,24,11,24,12,24,382,1,24,1,24,1,25,1,25,1,25,1,25,1,25,3,25,392,
-		8,25,1,25,1,25,1,26,1,26,3,26,398,8,26,1,26,3,26,401,8,26,1,26,1,26,1,
-		26,3,26,406,8,26,1,26,1,26,1,26,1,26,1,26,1,27,1,27,1,27,1,27,4,27,417,
-		8,27,11,27,12,27,418,1,28,1,28,1,28,4,28,424,8,28,11,28,12,28,425,1,28,
-		1,28,1,28,1,28,1,28,5,28,433,8,28,10,28,12,28,436,9,28,4,28,438,8,28,11,
-		28,12,28,439,1,28,1,28,3,28,444,8,28,1,29,1,29,1,29,4,29,449,8,29,11,29,
-		12,29,450,1,30,1,30,1,30,4,30,456,8,30,11,30,12,30,457,1,31,1,31,3,31,
-		462,8,31,1,32,1,32,1,32,1,32,1,32,3,32,469,8,32,1,32,1,32,1,33,1,33,1,
-		33,1,33,5,33,477,8,33,10,33,12,33,480,9,33,1,34,1,34,5,34,484,8,34,10,
-		34,12,34,487,9,34,1,34,1,34,1,34,4,34,492,8,34,11,34,12,34,493,1,34,1,
-		34,1,35,1,35,1,35,3,35,501,8,35,1,36,1,36,1,36,1,36,1,36,3,36,508,8,36,
-		1,37,1,37,1,37,1,37,1,37,1,37,3,37,516,8,37,1,38,1,38,3,38,520,8,38,1,
-		38,1,38,1,38,1,38,1,38,1,38,1,38,3,38,529,8,38,1,39,1,39,1,39,1,39,1,39,
-		3,39,536,8,39,1,39,1,39,1,40,1,40,1,40,1,40,5,40,544,8,40,10,40,12,40,
-		547,9,40,1,41,1,41,1,41,1,41,4,41,553,8,41,11,41,12,41,554,1,41,1,41,1,
-		42,1,42,3,42,561,8,42,1,43,1,43,1,43,1,43,3,43,567,8,43,1,44,1,44,1,44,
-		1,44,1,44,5,44,574,8,44,10,44,12,44,577,9,44,1,44,1,44,1,45,1,45,1,45,
-		1,45,4,45,585,8,45,11,45,12,45,586,1,45,1,45,1,46,1,46,1,46,1,46,1,46,
-		1,46,1,47,1,47,1,47,1,47,1,47,3,47,602,8,47,1,48,1,48,1,49,1,49,3,49,608,
-		8,49,1,49,1,49,1,49,1,49,1,49,1,49,1,49,3,49,617,8,49,1,50,1,50,1,50,1,
-		51,1,51,3,51,624,8,51,1,52,1,52,3,52,628,8,52,1,52,1,52,1,52,1,52,3,52,
-		634,8,52,1,52,1,52,1,52,3,52,639,8,52,1,53,1,53,3,53,643,8,53,1,53,1,53,
-		1,53,1,53,1,53,1,54,1,54,1,54,1,54,1,54,1,54,1,55,1,55,1,55,1,55,1,55,
-		1,55,1,55,3,55,663,8,55,1,55,1,55,3,55,667,8,55,1,55,1,55,1,55,1,55,1,
-		55,1,55,3,55,675,8,55,1,55,1,55,1,55,1,55,1,55,1,55,1,55,1,55,3,55,685,
-		8,55,1,55,1,55,1,55,1,55,1,55,1,55,5,55,693,8,55,10,55,12,55,696,9,55,
-		1,56,1,56,3,56,700,8,56,1,57,1,57,1,58,1,58,1,59,1,59,1,59,1,59,3,59,710,
-		8,59,1,60,1,60,1,60,3,60,715,8,60,1,61,1,61,1,62,1,62,1,63,1,63,1,64,1,
-		64,1,65,1,65,1,66,1,66,1,66,1,66,1,66,3,66,732,8,66,1,66,1,66,1,66,1,66,
-		3,66,738,8,66,1,67,1,67,1,68,1,68,1,69,1,69,3,69,746,8,69,1,70,1,70,1,
-		70,5,70,751,8,70,10,70,12,70,754,9,70,1,71,1,71,3,71,758,8,71,1,72,1,72,
-		3,72,762,8,72,1,72,1,72,4,72,766,8,72,11,72,12,72,767,1,72,5,72,771,8,
-		72,10,72,12,72,774,9,72,1,73,1,73,1,73,1,73,4,73,780,8,73,11,73,12,73,
-		781,1,73,1,73,1,74,1,74,1,75,1,75,3,75,790,8,75,1,76,1,76,3,76,794,8,76,
-		1,76,1,76,4,76,798,8,76,11,76,12,76,799,1,76,5,76,803,8,76,10,76,12,76,
-		806,9,76,1,77,1,77,1,77,1,77,4,77,812,8,77,11,77,12,77,813,1,77,1,77,1,
-		78,1,78,1,79,1,79,1,80,5,80,823,8,80,10,80,12,80,826,9,80,1,80,1,80,1,
-		80,1,81,5,81,832,8,81,10,81,12,81,835,9,81,1,81,3,81,838,8,81,1,81,4,81,
-		841,8,81,11,81,12,81,842,1,82,4,82,846,8,82,11,82,12,82,847,1,82,3,82,
-		851,8,82,1,82,0,1,110,83,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,
+		2,78,7,78,2,79,7,79,2,80,7,80,2,81,7,81,2,82,7,82,2,83,7,83,2,84,7,84,
+		2,85,7,85,1,0,3,0,174,8,0,1,0,1,0,1,0,5,0,179,8,0,10,0,12,0,182,9,0,1,
+		0,1,0,1,0,5,0,187,8,0,10,0,12,0,190,9,0,1,0,1,0,1,1,1,1,1,1,1,1,1,2,1,
+		2,1,2,1,2,1,3,1,3,1,3,1,3,1,4,1,4,1,4,4,4,209,8,4,11,4,12,4,210,1,5,1,
+		5,3,5,215,8,5,1,6,1,6,3,6,219,8,6,1,6,1,6,3,6,223,8,6,1,7,1,7,1,7,3,7,
+		228,8,7,1,8,1,8,1,8,3,8,233,8,8,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,3,
+		9,244,8,9,1,10,1,10,1,10,1,10,1,10,1,10,1,11,1,11,1,11,1,11,1,11,3,11,
+		257,8,11,1,11,1,11,1,11,1,11,1,11,1,11,1,11,1,11,3,11,267,8,11,1,12,1,
+		12,1,12,3,12,272,8,12,1,13,1,13,1,13,1,13,1,13,1,13,1,14,1,14,1,15,1,15,
+		1,15,3,15,285,8,15,1,15,1,15,1,15,1,15,1,15,1,16,1,16,3,16,294,8,16,1,
+		16,1,16,1,16,3,16,299,8,16,1,16,1,16,3,16,303,8,16,1,16,1,16,1,16,3,16,
+		308,8,16,1,16,1,16,1,16,1,16,1,16,1,17,1,17,1,17,1,17,1,18,1,18,1,18,1,
+		18,1,18,3,18,324,8,18,1,18,1,18,1,19,1,19,3,19,330,8,19,1,19,1,19,1,19,
+		1,19,3,19,336,8,19,5,19,338,8,19,10,19,12,19,341,9,19,1,20,1,20,5,20,345,
+		8,20,10,20,12,20,348,9,20,1,20,1,20,3,20,352,8,20,1,20,1,20,4,20,356,8,
+		20,11,20,12,20,357,1,20,1,20,1,21,1,21,3,21,364,8,21,1,21,1,21,1,21,1,
+		21,1,21,1,21,1,21,3,21,373,8,21,1,22,1,22,1,22,1,23,1,23,3,23,380,8,23,
+		1,23,1,23,3,23,384,8,23,1,23,1,23,1,24,1,24,1,24,1,24,5,24,392,8,24,10,
+		24,12,24,395,9,24,1,25,1,25,1,25,1,25,4,25,401,8,25,11,25,12,25,402,1,
+		25,1,25,1,26,1,26,1,26,1,26,1,26,3,26,412,8,26,1,26,1,26,1,27,1,27,3,27,
+		418,8,27,1,27,3,27,421,8,27,1,27,3,27,424,8,27,1,27,1,27,1,27,3,27,429,
+		8,27,1,27,1,27,1,27,1,27,1,27,1,28,1,28,1,28,1,28,4,28,440,8,28,11,28,
+		12,28,441,1,29,1,29,1,29,4,29,447,8,29,11,29,12,29,448,1,29,1,29,1,29,
+		1,29,1,29,5,29,456,8,29,10,29,12,29,459,9,29,4,29,461,8,29,11,29,12,29,
+		462,1,29,1,29,3,29,467,8,29,1,30,1,30,1,30,4,30,472,8,30,11,30,12,30,473,
+		1,31,1,31,1,31,4,31,479,8,31,11,31,12,31,480,1,32,1,32,3,32,485,8,32,1,
+		32,3,32,488,8,32,1,33,1,33,1,33,1,33,1,33,3,33,495,8,33,1,33,1,33,1,34,
+		1,34,1,34,1,34,5,34,503,8,34,10,34,12,34,506,9,34,1,35,1,35,5,35,510,8,
+		35,10,35,12,35,513,9,35,1,35,1,35,1,35,4,35,518,8,35,11,35,12,35,519,1,
+		35,1,35,1,36,1,36,3,36,526,8,36,1,37,1,37,1,37,1,37,1,37,3,37,533,8,37,
+		1,38,1,38,1,38,1,38,1,38,1,38,3,38,541,8,38,1,39,1,39,1,39,1,39,1,39,3,
+		39,548,8,39,1,39,1,39,1,40,1,40,1,40,1,40,5,40,556,8,40,10,40,12,40,559,
+		9,40,1,41,1,41,5,41,563,8,41,10,41,12,41,566,9,41,1,41,1,41,1,41,4,41,
+		571,8,41,11,41,12,41,572,1,41,1,41,1,42,1,42,1,42,1,42,1,42,3,42,582,8,
+		42,1,42,1,42,1,43,1,43,1,43,1,43,5,43,590,8,43,10,43,12,43,593,9,43,1,
+		44,1,44,1,44,1,44,4,44,599,8,44,11,44,12,44,600,1,44,1,44,1,45,1,45,3,
+		45,607,8,45,1,46,1,46,1,46,1,46,3,46,613,8,46,1,47,1,47,1,47,1,47,1,47,
+		1,47,5,47,621,8,47,10,47,12,47,624,9,47,1,47,1,47,1,47,1,48,1,48,1,48,
+		1,48,4,48,633,8,48,11,48,12,48,634,1,48,1,48,1,49,1,49,1,49,1,49,1,49,
+		1,49,1,50,1,50,1,50,1,50,1,50,3,50,650,8,50,1,51,1,51,1,52,1,52,3,52,656,
+		8,52,1,52,1,52,1,52,1,52,1,52,1,52,1,52,3,52,665,8,52,1,53,1,53,1,53,1,
+		54,1,54,3,54,672,8,54,1,55,1,55,3,55,676,8,55,1,55,1,55,1,55,1,55,3,55,
+		682,8,55,1,55,1,55,1,55,3,55,687,8,55,1,56,1,56,3,56,691,8,56,1,56,1,56,
+		1,56,1,56,1,56,1,57,1,57,1,57,1,57,1,57,1,57,1,58,1,58,1,58,1,58,1,58,
+		1,58,1,58,1,58,1,58,1,58,3,58,714,8,58,1,58,1,58,3,58,718,8,58,1,58,1,
+		58,1,58,1,58,1,58,1,58,3,58,726,8,58,1,58,1,58,1,58,1,58,1,58,1,58,1,58,
+		1,58,3,58,736,8,58,1,58,1,58,1,58,1,58,5,58,742,8,58,10,58,12,58,745,9,
+		58,1,59,1,59,3,59,749,8,59,1,60,1,60,1,61,1,61,1,62,1,62,1,62,1,62,3,62,
+		759,8,62,1,63,1,63,1,63,3,63,764,8,63,1,64,1,64,1,65,1,65,1,66,1,66,1,
+		67,1,67,1,68,1,68,1,69,1,69,1,69,1,69,1,69,3,69,781,8,69,1,69,1,69,1,69,
+		1,69,3,69,787,8,69,1,70,1,70,1,71,1,71,1,72,1,72,3,72,795,8,72,1,73,1,
+		73,1,73,5,73,800,8,73,10,73,12,73,803,9,73,1,74,1,74,3,74,807,8,74,1,75,
+		1,75,3,75,811,8,75,1,75,1,75,4,75,815,8,75,11,75,12,75,816,1,75,5,75,820,
+		8,75,10,75,12,75,823,9,75,1,76,1,76,1,76,1,76,4,76,829,8,76,11,76,12,76,
+		830,1,76,1,76,1,77,1,77,1,78,1,78,3,78,839,8,78,1,79,1,79,3,79,843,8,79,
+		1,79,1,79,4,79,847,8,79,11,79,12,79,848,1,79,5,79,852,8,79,10,79,12,79,
+		855,9,79,1,80,1,80,1,80,1,80,4,80,861,8,80,11,80,12,80,862,1,80,1,80,1,
+		81,1,81,1,82,1,82,1,83,5,83,872,8,83,10,83,12,83,875,9,83,1,83,1,83,1,
+		83,1,84,5,84,881,8,84,10,84,12,84,884,9,84,1,84,3,84,887,8,84,1,84,4,84,
+		890,8,84,11,84,12,84,891,1,85,4,85,895,8,85,11,85,12,85,896,1,85,3,85,
+		900,8,85,1,85,0,1,116,86,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,
 		34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,
 		82,84,86,88,90,92,94,96,98,100,102,104,106,108,110,112,114,116,118,120,
 		122,124,126,128,130,132,134,136,138,140,142,144,146,148,150,152,154,156,
-		158,160,162,164,0,5,1,0,47,53,1,0,19,20,2,0,31,32,43,46,1,0,15,16,2,0,
-		21,25,27,27,891,0,167,1,0,0,0,2,185,1,0,0,0,4,189,1,0,0,0,6,193,1,0,0,
-		0,8,200,1,0,0,0,10,206,1,0,0,0,12,210,1,0,0,0,14,219,1,0,0,0,16,224,1,
-		0,0,0,18,226,1,0,0,0,20,237,1,0,0,0,22,248,1,0,0,0,24,260,1,0,0,0,26,265,
-		1,0,0,0,28,271,1,0,0,0,30,273,1,0,0,0,32,283,1,0,0,0,34,306,1,0,0,0,36,
-		310,1,0,0,0,38,319,1,0,0,0,40,328,1,0,0,0,42,344,1,0,0,0,44,357,1,0,0,
-		0,46,367,1,0,0,0,48,376,1,0,0,0,50,391,1,0,0,0,52,395,1,0,0,0,54,416,1,
-		0,0,0,56,443,1,0,0,0,58,448,1,0,0,0,60,455,1,0,0,0,62,459,1,0,0,0,64,463,
-		1,0,0,0,66,472,1,0,0,0,68,481,1,0,0,0,70,500,1,0,0,0,72,502,1,0,0,0,74,
-		509,1,0,0,0,76,517,1,0,0,0,78,530,1,0,0,0,80,539,1,0,0,0,82,548,1,0,0,
-		0,84,560,1,0,0,0,86,566,1,0,0,0,88,568,1,0,0,0,90,580,1,0,0,0,92,590,1,
-		0,0,0,94,596,1,0,0,0,96,603,1,0,0,0,98,605,1,0,0,0,100,618,1,0,0,0,102,
-		623,1,0,0,0,104,625,1,0,0,0,106,640,1,0,0,0,108,649,1,0,0,0,110,674,1,
-		0,0,0,112,699,1,0,0,0,114,701,1,0,0,0,116,703,1,0,0,0,118,709,1,0,0,0,
-		120,714,1,0,0,0,122,716,1,0,0,0,124,718,1,0,0,0,126,720,1,0,0,0,128,722,
-		1,0,0,0,130,724,1,0,0,0,132,737,1,0,0,0,134,739,1,0,0,0,136,741,1,0,0,
-		0,138,745,1,0,0,0,140,747,1,0,0,0,142,757,1,0,0,0,144,759,1,0,0,0,146,
-		775,1,0,0,0,148,785,1,0,0,0,150,789,1,0,0,0,152,791,1,0,0,0,154,807,1,
-		0,0,0,156,817,1,0,0,0,158,819,1,0,0,0,160,824,1,0,0,0,162,833,1,0,0,0,
-		164,850,1,0,0,0,166,168,3,2,1,0,167,166,1,0,0,0,167,168,1,0,0,0,168,174,
-		1,0,0,0,169,173,3,6,3,0,170,173,3,4,2,0,171,173,3,162,81,0,172,169,1,0,
-		0,0,172,170,1,0,0,0,172,171,1,0,0,0,173,176,1,0,0,0,174,172,1,0,0,0,174,
-		175,1,0,0,0,175,182,1,0,0,0,176,174,1,0,0,0,177,181,3,10,5,0,178,181,3,
-		14,7,0,179,181,3,162,81,0,180,177,1,0,0,0,180,178,1,0,0,0,180,179,1,0,
-		0,0,181,184,1,0,0,0,182,180,1,0,0,0,182,183,1,0,0,0,183,1,1,0,0,0,184,
-		182,1,0,0,0,185,186,5,4,0,0,186,187,3,164,82,0,187,188,3,140,70,0,188,
-		3,1,0,0,0,189,190,5,5,0,0,190,191,3,164,82,0,191,192,3,142,71,0,192,5,
-		1,0,0,0,193,194,5,6,0,0,194,195,3,164,82,0,195,196,3,142,71,0,196,7,1,
-		0,0,0,197,201,3,14,7,0,198,201,3,10,5,0,199,201,3,162,81,0,200,197,1,0,
-		0,0,200,198,1,0,0,0,200,199,1,0,0,0,201,202,1,0,0,0,202,200,1,0,0,0,202,
-		203,1,0,0,0,203,9,1,0,0,0,204,207,3,12,6,0,205,207,3,102,51,0,206,204,
-		1,0,0,0,206,205,1,0,0,0,207,11,1,0,0,0,208,209,5,5,0,0,209,211,5,70,0,
-		0,210,208,1,0,0,0,210,211,1,0,0,0,211,214,1,0,0,0,212,215,3,32,16,0,213,
-		215,3,52,26,0,214,212,1,0,0,0,214,213,1,0,0,0,215,13,1,0,0,0,216,220,3,
-		16,8,0,217,220,3,26,13,0,218,220,3,28,14,0,219,216,1,0,0,0,219,217,1,0,
-		0,0,219,218,1,0,0,0,220,15,1,0,0,0,221,225,3,24,12,0,222,225,3,18,9,0,
-		223,225,3,30,15,0,224,221,1,0,0,0,224,222,1,0,0,0,224,223,1,0,0,0,225,
-		17,1,0,0,0,226,227,5,12,0,0,227,228,5,70,0,0,228,229,3,110,55,0,229,230,
-		3,162,81,0,230,231,5,1,0,0,231,232,3,8,4,0,232,235,5,2,0,0,233,236,3,20,
-		10,0,234,236,3,22,11,0,235,233,1,0,0,0,235,234,1,0,0,0,235,236,1,0,0,0,
-		236,19,1,0,0,0,237,238,5,13,0,0,238,239,3,162,81,0,239,240,5,1,0,0,240,
-		241,3,8,4,0,241,242,5,2,0,0,242,21,1,0,0,0,243,244,5,13,0,0,244,245,3,
-		164,82,0,245,246,5,12,0,0,246,249,1,0,0,0,247,249,5,14,0,0,248,243,1,0,
-		0,0,248,247,1,0,0,0,249,250,1,0,0,0,250,251,5,70,0,0,251,252,3,110,55,
-		0,252,253,3,162,81,0,253,254,5,1,0,0,254,255,3,8,4,0,255,258,5,2,0,0,256,
-		259,3,20,10,0,257,259,3,22,11,0,258,256,1,0,0,0,258,257,1,0,0,0,258,259,
-		1,0,0,0,259,23,1,0,0,0,260,263,5,8,0,0,261,262,5,70,0,0,262,264,3,110,
-		55,0,263,261,1,0,0,0,263,264,1,0,0,0,264,25,1,0,0,0,265,266,3,148,74,0,
-		266,267,5,70,0,0,267,268,5,43,0,0,268,269,5,70,0,0,269,270,3,110,55,0,
-		270,27,1,0,0,0,271,272,3,110,55,0,272,29,1,0,0,0,273,276,5,11,0,0,274,
-		275,5,70,0,0,275,277,3,116,58,0,276,274,1,0,0,0,276,277,1,0,0,0,277,278,
-		1,0,0,0,278,279,3,162,81,0,279,280,5,1,0,0,280,281,3,8,4,0,281,282,5,2,
-		0,0,282,31,1,0,0,0,283,285,3,148,74,0,284,286,5,70,0,0,285,284,1,0,0,0,
-		285,286,1,0,0,0,286,287,1,0,0,0,287,288,5,38,0,0,288,290,3,164,82,0,289,
-		291,3,64,32,0,290,289,1,0,0,0,290,291,1,0,0,0,291,292,1,0,0,0,292,299,
-		3,36,18,0,293,295,5,70,0,0,294,293,1,0,0,0,294,295,1,0,0,0,295,296,1,0,
-		0,0,296,297,5,38,0,0,297,298,5,70,0,0,298,300,3,62,31,0,299,294,1,0,0,
-		0,299,300,1,0,0,0,300,301,1,0,0,0,301,302,3,162,81,0,302,303,5,1,0,0,303,
-		304,3,8,4,0,304,305,5,2,0,0,305,33,1,0,0,0,306,307,5,1,0,0,307,308,3,32,
-		16,0,308,309,5,2,0,0,309,35,1,0,0,0,310,315,5,29,0,0,311,316,3,38,19,0,
-		312,313,3,162,81,0,313,314,3,40,20,0,314,316,1,0,0,0,315,311,1,0,0,0,315,
-		312,1,0,0,0,315,316,1,0,0,0,316,317,1,0,0,0,317,318,5,30,0,0,318,37,1,
-		0,0,0,319,325,3,42,21,0,320,321,5,69,0,0,321,322,5,70,0,0,322,324,3,42,
-		21,0,323,320,1,0,0,0,324,327,1,0,0,0,325,323,1,0,0,0,325,326,1,0,0,0,326,
-		39,1,0,0,0,327,325,1,0,0,0,328,338,5,1,0,0,329,331,3,160,80,0,330,329,
-		1,0,0,0,331,334,1,0,0,0,332,330,1,0,0,0,332,333,1,0,0,0,333,335,1,0,0,
-		0,334,332,1,0,0,0,335,336,3,42,21,0,336,337,3,162,81,0,337,339,1,0,0,0,
-		338,332,1,0,0,0,339,340,1,0,0,0,340,338,1,0,0,0,340,341,1,0,0,0,341,342,
-		1,0,0,0,342,343,5,2,0,0,343,41,1,0,0,0,344,346,3,148,74,0,345,347,5,70,
-		0,0,346,345,1,0,0,0,346,347,1,0,0,0,347,348,1,0,0,0,348,349,5,38,0,0,349,
-		350,5,70,0,0,350,355,3,62,31,0,351,352,5,70,0,0,352,353,5,43,0,0,353,354,
-		5,70,0,0,354,356,3,110,55,0,355,351,1,0,0,0,355,356,1,0,0,0,356,43,1,0,
-		0,0,357,359,5,29,0,0,358,360,3,162,81,0,359,358,1,0,0,0,359,360,1,0,0,
-		0,360,363,1,0,0,0,361,364,3,46,23,0,362,364,3,48,24,0,363,361,1,0,0,0,
-		363,362,1,0,0,0,363,364,1,0,0,0,364,365,1,0,0,0,365,366,5,30,0,0,366,45,
-		1,0,0,0,367,373,3,50,25,0,368,369,5,69,0,0,369,370,5,70,0,0,370,372,3,
-		50,25,0,371,368,1,0,0,0,372,375,1,0,0,0,373,371,1,0,0,0,373,374,1,0,0,
-		0,374,47,1,0,0,0,375,373,1,0,0,0,376,380,5,1,0,0,377,378,3,50,25,0,378,
-		379,3,162,81,0,379,381,1,0,0,0,380,377,1,0,0,0,381,382,1,0,0,0,382,380,
-		1,0,0,0,382,383,1,0,0,0,383,384,1,0,0,0,384,385,5,2,0,0,385,49,1,0,0,0,
-		386,387,3,148,74,0,387,388,5,70,0,0,388,389,5,43,0,0,389,390,5,70,0,0,
-		390,392,1,0,0,0,391,386,1,0,0,0,391,392,1,0,0,0,392,393,1,0,0,0,393,394,
-		3,110,55,0,394,51,1,0,0,0,395,397,3,148,74,0,396,398,3,64,32,0,397,396,
-		1,0,0,0,397,398,1,0,0,0,398,405,1,0,0,0,399,401,5,70,0,0,400,399,1,0,0,
-		0,400,401,1,0,0,0,401,402,1,0,0,0,402,403,5,38,0,0,403,404,5,70,0,0,404,
-		406,3,62,31,0,405,400,1,0,0,0,405,406,1,0,0,0,406,407,1,0,0,0,407,408,
-		3,162,81,0,408,409,5,1,0,0,409,410,3,54,27,0,410,411,5,2,0,0,411,53,1,
-		0,0,0,412,417,3,56,28,0,413,417,3,58,29,0,414,417,3,60,30,0,415,417,3,
-		162,81,0,416,412,1,0,0,0,416,413,1,0,0,0,416,414,1,0,0,0,416,415,1,0,0,
-		0,417,418,1,0,0,0,418,416,1,0,0,0,418,419,1,0,0,0,419,55,1,0,0,0,420,421,
-		3,94,47,0,421,422,3,162,81,0,422,424,1,0,0,0,423,420,1,0,0,0,424,425,1,
-		0,0,0,425,423,1,0,0,0,425,426,1,0,0,0,426,444,1,0,0,0,427,434,3,96,48,
-		0,428,429,5,69,0,0,429,430,3,164,82,0,430,431,3,96,48,0,431,433,1,0,0,
-		0,432,428,1,0,0,0,433,436,1,0,0,0,434,432,1,0,0,0,434,435,1,0,0,0,435,
-		438,1,0,0,0,436,434,1,0,0,0,437,427,1,0,0,0,438,439,1,0,0,0,439,437,1,
-		0,0,0,439,440,1,0,0,0,440,441,1,0,0,0,441,442,3,162,81,0,442,444,1,0,0,
-		0,443,423,1,0,0,0,443,437,1,0,0,0,444,57,1,0,0,0,445,446,3,98,49,0,446,
-		447,3,162,81,0,447,449,1,0,0,0,448,445,1,0,0,0,449,450,1,0,0,0,450,448,
-		1,0,0,0,450,451,1,0,0,0,451,59,1,0,0,0,452,453,3,100,50,0,453,454,3,162,
-		81,0,454,456,1,0,0,0,455,452,1,0,0,0,456,457,1,0,0,0,457,455,1,0,0,0,457,
-		458,1,0,0,0,458,61,1,0,0,0,459,461,3,148,74,0,460,462,3,78,39,0,461,460,
-		1,0,0,0,461,462,1,0,0,0,462,63,1,0,0,0,463,468,5,31,0,0,464,469,3,66,33,
-		0,465,466,3,162,81,0,466,467,3,68,34,0,467,469,1,0,0,0,468,464,1,0,0,0,
-		468,465,1,0,0,0,469,470,1,0,0,0,470,471,5,32,0,0,471,65,1,0,0,0,472,478,
-		3,70,35,0,473,474,5,69,0,0,474,475,5,70,0,0,475,477,3,70,35,0,476,473,
-		1,0,0,0,477,480,1,0,0,0,478,476,1,0,0,0,478,479,1,0,0,0,479,67,1,0,0,0,
-		480,478,1,0,0,0,481,491,5,1,0,0,482,484,3,160,80,0,483,482,1,0,0,0,484,
-		487,1,0,0,0,485,483,1,0,0,0,485,486,1,0,0,0,486,488,1,0,0,0,487,485,1,
-		0,0,0,488,489,3,70,35,0,489,490,3,162,81,0,490,492,1,0,0,0,491,485,1,0,
-		0,0,492,493,1,0,0,0,493,491,1,0,0,0,493,494,1,0,0,0,494,495,1,0,0,0,495,
-		496,5,2,0,0,496,69,1,0,0,0,497,501,3,72,36,0,498,501,3,74,37,0,499,501,
-		3,76,38,0,500,497,1,0,0,0,500,498,1,0,0,0,500,499,1,0,0,0,501,71,1,0,0,
-		0,502,507,3,62,31,0,503,504,5,70,0,0,504,505,5,43,0,0,505,506,5,70,0,0,
-		506,508,3,62,31,0,507,503,1,0,0,0,507,508,1,0,0,0,508,73,1,0,0,0,509,510,
-		5,37,0,0,510,515,3,62,31,0,511,512,5,70,0,0,512,513,5,43,0,0,513,514,5,
-		70,0,0,514,516,3,62,31,0,515,511,1,0,0,0,515,516,1,0,0,0,516,75,1,0,0,
-		0,517,519,3,148,74,0,518,520,5,70,0,0,519,518,1,0,0,0,519,520,1,0,0,0,
-		520,521,1,0,0,0,521,522,5,38,0,0,522,523,5,70,0,0,523,528,3,62,31,0,524,
-		525,5,70,0,0,525,526,5,43,0,0,526,527,5,70,0,0,527,529,3,110,55,0,528,
-		524,1,0,0,0,528,529,1,0,0,0,529,77,1,0,0,0,530,535,5,31,0,0,531,536,3,
-		80,40,0,532,533,3,162,81,0,533,534,3,82,41,0,534,536,1,0,0,0,535,531,1,
-		0,0,0,535,532,1,0,0,0,536,537,1,0,0,0,537,538,5,32,0,0,538,79,1,0,0,0,
-		539,545,3,84,42,0,540,541,5,69,0,0,541,542,5,70,0,0,542,544,3,84,42,0,
-		543,540,1,0,0,0,544,547,1,0,0,0,545,543,1,0,0,0,545,546,1,0,0,0,546,81,
-		1,0,0,0,547,545,1,0,0,0,548,552,5,1,0,0,549,550,3,84,42,0,550,551,3,162,
-		81,0,551,553,1,0,0,0,552,549,1,0,0,0,553,554,1,0,0,0,554,552,1,0,0,0,554,
-		555,1,0,0,0,555,556,1,0,0,0,556,557,5,2,0,0,557,83,1,0,0,0,558,561,3,62,
-		31,0,559,561,3,110,55,0,560,558,1,0,0,0,560,559,1,0,0,0,561,85,1,0,0,0,
-		562,567,3,88,44,0,563,564,3,162,81,0,564,565,3,90,45,0,565,567,1,0,0,0,
-		566,562,1,0,0,0,566,563,1,0,0,0,567,87,1,0,0,0,568,569,5,35,0,0,569,575,
-		3,92,46,0,570,571,5,69,0,0,571,572,5,70,0,0,572,574,3,92,46,0,573,570,
-		1,0,0,0,574,577,1,0,0,0,575,573,1,0,0,0,575,576,1,0,0,0,576,578,1,0,0,
-		0,577,575,1,0,0,0,578,579,5,36,0,0,579,89,1,0,0,0,580,584,5,1,0,0,581,
-		582,3,92,46,0,582,583,3,162,81,0,583,585,1,0,0,0,584,581,1,0,0,0,585,586,
-		1,0,0,0,586,584,1,0,0,0,586,587,1,0,0,0,587,588,1,0,0,0,588,589,5,2,0,
-		0,589,91,1,0,0,0,590,591,3,148,74,0,591,592,5,70,0,0,592,593,5,43,0,0,
-		593,594,5,70,0,0,594,595,3,110,55,0,595,93,1,0,0,0,596,601,3,148,74,0,
-		597,598,5,70,0,0,598,599,5,43,0,0,599,600,5,70,0,0,600,602,3,112,56,0,
-		601,597,1,0,0,0,601,602,1,0,0,0,602,95,1,0,0,0,603,604,3,148,74,0,604,
-		97,1,0,0,0,605,607,3,148,74,0,606,608,5,70,0,0,607,606,1,0,0,0,607,608,
-		1,0,0,0,608,609,1,0,0,0,609,610,5,38,0,0,610,611,5,70,0,0,611,616,3,62,
-		31,0,612,613,5,70,0,0,613,614,5,43,0,0,614,615,5,70,0,0,615,617,3,110,
-		55,0,616,612,1,0,0,0,616,617,1,0,0,0,617,99,1,0,0,0,618,619,5,37,0,0,619,
-		620,3,114,57,0,620,101,1,0,0,0,621,624,3,104,52,0,622,624,3,106,53,0,623,
-		621,1,0,0,0,623,622,1,0,0,0,624,103,1,0,0,0,625,627,3,148,74,0,626,628,
-		5,70,0,0,627,626,1,0,0,0,627,628,1,0,0,0,628,629,1,0,0,0,629,630,5,38,
-		0,0,630,631,5,70,0,0,631,638,3,62,31,0,632,634,5,70,0,0,633,632,1,0,0,
-		0,633,634,1,0,0,0,634,635,1,0,0,0,635,636,5,43,0,0,636,637,5,70,0,0,637,
-		639,3,110,55,0,638,633,1,0,0,0,638,639,1,0,0,0,639,105,1,0,0,0,640,642,
-		3,148,74,0,641,643,5,70,0,0,642,641,1,0,0,0,642,643,1,0,0,0,643,644,1,
-		0,0,0,644,645,5,38,0,0,645,646,5,43,0,0,646,647,5,70,0,0,647,648,3,110,
-		55,0,648,107,1,0,0,0,649,650,3,148,74,0,650,651,5,70,0,0,651,652,5,43,
-		0,0,652,653,5,70,0,0,653,654,3,110,55,0,654,109,1,0,0,0,655,656,6,55,-1,
-		0,656,675,3,112,56,0,657,658,3,120,60,0,658,659,3,110,55,7,659,675,1,0,
-		0,0,660,662,5,33,0,0,661,663,3,110,55,0,662,661,1,0,0,0,662,663,1,0,0,
-		0,663,664,1,0,0,0,664,666,5,41,0,0,665,667,3,110,55,0,666,665,1,0,0,0,
-		666,667,1,0,0,0,667,668,1,0,0,0,668,675,5,34,0,0,669,670,5,29,0,0,670,
-		671,3,110,55,0,671,672,5,30,0,0,672,675,1,0,0,0,673,675,3,148,74,0,674,
-		655,1,0,0,0,674,657,1,0,0,0,674,660,1,0,0,0,674,669,1,0,0,0,674,673,1,
-		0,0,0,675,694,1,0,0,0,676,677,10,8,0,0,677,678,5,70,0,0,678,679,3,118,
-		59,0,679,680,5,70,0,0,680,681,3,110,55,9,681,693,1,0,0,0,682,684,10,6,
-		0,0,683,685,3,78,39,0,684,683,1,0,0,0,684,685,1,0,0,0,685,686,1,0,0,0,
-		686,693,3,44,22,0,687,688,10,5,0,0,688,693,3,86,43,0,689,690,10,1,0,0,
-		690,691,5,40,0,0,691,693,3,148,74,0,692,676,1,0,0,0,692,682,1,0,0,0,692,
-		687,1,0,0,0,692,689,1,0,0,0,693,696,1,0,0,0,694,692,1,0,0,0,694,695,1,
-		0,0,0,695,111,1,0,0,0,696,694,1,0,0,0,697,700,3,138,69,0,698,700,3,136,
-		68,0,699,697,1,0,0,0,699,698,1,0,0,0,700,113,1,0,0,0,701,702,3,110,55,
-		0,702,115,1,0,0,0,703,704,3,110,55,0,704,117,1,0,0,0,705,710,3,122,61,
-		0,706,710,3,126,63,0,707,710,3,130,65,0,708,710,3,132,66,0,709,705,1,0,
-		0,0,709,706,1,0,0,0,709,707,1,0,0,0,709,708,1,0,0,0,710,119,1,0,0,0,711,
-		715,3,124,62,0,712,715,3,128,64,0,713,715,3,134,67,0,714,711,1,0,0,0,714,
-		712,1,0,0,0,714,713,1,0,0,0,715,121,1,0,0,0,716,717,7,0,0,0,717,123,1,
-		0,0,0,718,719,5,48,0,0,719,125,1,0,0,0,720,721,7,1,0,0,721,127,1,0,0,0,
-		722,723,5,18,0,0,723,129,1,0,0,0,724,725,7,2,0,0,725,131,1,0,0,0,726,738,
-		5,54,0,0,727,738,5,55,0,0,728,738,5,57,0,0,729,738,5,58,0,0,730,732,5,
-		32,0,0,731,730,1,0,0,0,731,732,1,0,0,0,732,733,1,0,0,0,733,734,5,32,0,
-		0,734,738,5,32,0,0,735,738,5,59,0,0,736,738,5,60,0,0,737,726,1,0,0,0,737,
-		727,1,0,0,0,737,728,1,0,0,0,737,729,1,0,0,0,737,731,1,0,0,0,737,735,1,
-		0,0,0,737,736,1,0,0,0,738,133,1,0,0,0,739,740,5,56,0,0,740,135,1,0,0,0,
-		741,742,7,3,0,0,742,137,1,0,0,0,743,746,3,158,79,0,744,746,3,156,78,0,
-		745,743,1,0,0,0,745,744,1,0,0,0,746,139,1,0,0,0,747,752,3,148,74,0,748,
-		749,5,40,0,0,749,751,3,148,74,0,750,748,1,0,0,0,751,754,1,0,0,0,752,750,
-		1,0,0,0,752,753,1,0,0,0,753,141,1,0,0,0,754,752,1,0,0,0,755,758,3,144,
-		72,0,756,758,3,146,73,0,757,755,1,0,0,0,757,756,1,0,0,0,758,143,1,0,0,
-		0,759,761,3,140,70,0,760,762,5,70,0,0,761,760,1,0,0,0,761,762,1,0,0,0,
-		762,772,1,0,0,0,763,765,5,69,0,0,764,766,5,70,0,0,765,764,1,0,0,0,766,
-		767,1,0,0,0,767,765,1,0,0,0,767,768,1,0,0,0,768,769,1,0,0,0,769,771,3,
-		140,70,0,770,763,1,0,0,0,771,774,1,0,0,0,772,770,1,0,0,0,772,773,1,0,0,
-		0,773,145,1,0,0,0,774,772,1,0,0,0,775,779,5,1,0,0,776,777,3,140,70,0,777,
-		778,3,162,81,0,778,780,1,0,0,0,779,776,1,0,0,0,780,781,1,0,0,0,781,779,
-		1,0,0,0,781,782,1,0,0,0,782,783,1,0,0,0,783,784,5,2,0,0,784,147,1,0,0,
-		0,785,786,5,26,0,0,786,149,1,0,0,0,787,790,3,144,72,0,788,790,3,146,73,
-		0,789,787,1,0,0,0,789,788,1,0,0,0,790,151,1,0,0,0,791,793,3,148,74,0,792,
-		794,5,70,0,0,793,792,1,0,0,0,793,794,1,0,0,0,794,804,1,0,0,0,795,797,5,
-		69,0,0,796,798,5,70,0,0,797,796,1,0,0,0,798,799,1,0,0,0,799,797,1,0,0,
-		0,799,800,1,0,0,0,800,801,1,0,0,0,801,803,3,148,74,0,802,795,1,0,0,0,803,
-		806,1,0,0,0,804,802,1,0,0,0,804,805,1,0,0,0,805,153,1,0,0,0,806,804,1,
-		0,0,0,807,811,5,1,0,0,808,809,3,148,74,0,809,810,3,162,81,0,810,812,1,
-		0,0,0,811,808,1,0,0,0,812,813,1,0,0,0,813,811,1,0,0,0,813,814,1,0,0,0,
-		814,815,1,0,0,0,815,816,5,2,0,0,816,155,1,0,0,0,817,818,5,28,0,0,818,157,
-		1,0,0,0,819,820,7,4,0,0,820,159,1,0,0,0,821,823,5,70,0,0,822,821,1,0,0,
-		0,823,826,1,0,0,0,824,822,1,0,0,0,824,825,1,0,0,0,825,827,1,0,0,0,826,
-		824,1,0,0,0,827,828,5,3,0,0,828,829,5,71,0,0,829,161,1,0,0,0,830,832,5,
-		70,0,0,831,830,1,0,0,0,832,835,1,0,0,0,833,831,1,0,0,0,833,834,1,0,0,0,
-		834,837,1,0,0,0,835,833,1,0,0,0,836,838,5,3,0,0,837,836,1,0,0,0,837,838,
-		1,0,0,0,838,840,1,0,0,0,839,841,5,71,0,0,840,839,1,0,0,0,841,842,1,0,0,
-		0,842,840,1,0,0,0,842,843,1,0,0,0,843,163,1,0,0,0,844,846,5,70,0,0,845,
-		844,1,0,0,0,846,847,1,0,0,0,847,845,1,0,0,0,847,848,1,0,0,0,848,851,1,
-		0,0,0,849,851,3,162,81,0,850,845,1,0,0,0,850,849,1,0,0,0,851,165,1,0,0,
-		0,97,167,172,174,180,182,200,202,206,210,214,219,224,235,248,258,263,276,
-		285,290,294,299,315,325,332,340,346,355,359,363,373,382,391,397,400,405,
-		416,418,425,434,439,443,450,457,461,468,478,485,493,500,507,515,519,528,
-		535,545,554,560,566,575,586,601,607,616,623,627,633,638,642,662,666,674,
-		684,692,694,699,709,714,731,737,745,752,757,761,767,772,781,789,793,799,
-		804,813,824,833,837,842,847,850
+		158,160,162,164,166,168,170,0,5,1,0,47,53,1,0,19,20,2,0,31,32,43,46,1,
+		0,15,16,2,0,21,25,27,27,943,0,173,1,0,0,0,2,193,1,0,0,0,4,197,1,0,0,0,
+		6,201,1,0,0,0,8,208,1,0,0,0,10,214,1,0,0,0,12,218,1,0,0,0,14,227,1,0,0,
+		0,16,232,1,0,0,0,18,234,1,0,0,0,20,245,1,0,0,0,22,256,1,0,0,0,24,268,1,
+		0,0,0,26,273,1,0,0,0,28,279,1,0,0,0,30,281,1,0,0,0,32,291,1,0,0,0,34,314,
+		1,0,0,0,36,318,1,0,0,0,38,329,1,0,0,0,40,342,1,0,0,0,42,361,1,0,0,0,44,
+		374,1,0,0,0,46,377,1,0,0,0,48,387,1,0,0,0,50,396,1,0,0,0,52,411,1,0,0,
+		0,54,415,1,0,0,0,56,439,1,0,0,0,58,466,1,0,0,0,60,471,1,0,0,0,62,478,1,
+		0,0,0,64,482,1,0,0,0,66,489,1,0,0,0,68,498,1,0,0,0,70,507,1,0,0,0,72,525,
+		1,0,0,0,74,527,1,0,0,0,76,534,1,0,0,0,78,542,1,0,0,0,80,551,1,0,0,0,82,
+		560,1,0,0,0,84,576,1,0,0,0,86,585,1,0,0,0,88,594,1,0,0,0,90,606,1,0,0,
+		0,92,612,1,0,0,0,94,614,1,0,0,0,96,628,1,0,0,0,98,638,1,0,0,0,100,644,
+		1,0,0,0,102,651,1,0,0,0,104,653,1,0,0,0,106,666,1,0,0,0,108,671,1,0,0,
+		0,110,673,1,0,0,0,112,688,1,0,0,0,114,697,1,0,0,0,116,725,1,0,0,0,118,
+		748,1,0,0,0,120,750,1,0,0,0,122,752,1,0,0,0,124,758,1,0,0,0,126,763,1,
+		0,0,0,128,765,1,0,0,0,130,767,1,0,0,0,132,769,1,0,0,0,134,771,1,0,0,0,
+		136,773,1,0,0,0,138,786,1,0,0,0,140,788,1,0,0,0,142,790,1,0,0,0,144,794,
+		1,0,0,0,146,796,1,0,0,0,148,806,1,0,0,0,150,808,1,0,0,0,152,824,1,0,0,
+		0,154,834,1,0,0,0,156,838,1,0,0,0,158,840,1,0,0,0,160,856,1,0,0,0,162,
+		866,1,0,0,0,164,868,1,0,0,0,166,873,1,0,0,0,168,882,1,0,0,0,170,899,1,
+		0,0,0,172,174,3,2,1,0,173,172,1,0,0,0,173,174,1,0,0,0,174,180,1,0,0,0,
+		175,179,3,6,3,0,176,179,3,4,2,0,177,179,3,168,84,0,178,175,1,0,0,0,178,
+		176,1,0,0,0,178,177,1,0,0,0,179,182,1,0,0,0,180,178,1,0,0,0,180,181,1,
+		0,0,0,181,188,1,0,0,0,182,180,1,0,0,0,183,187,3,10,5,0,184,187,3,14,7,
+		0,185,187,3,168,84,0,186,183,1,0,0,0,186,184,1,0,0,0,186,185,1,0,0,0,187,
+		190,1,0,0,0,188,186,1,0,0,0,188,189,1,0,0,0,189,191,1,0,0,0,190,188,1,
+		0,0,0,191,192,5,0,0,1,192,1,1,0,0,0,193,194,5,4,0,0,194,195,3,170,85,0,
+		195,196,3,146,73,0,196,3,1,0,0,0,197,198,5,5,0,0,198,199,3,170,85,0,199,
+		200,3,148,74,0,200,5,1,0,0,0,201,202,5,6,0,0,202,203,3,170,85,0,203,204,
+		3,148,74,0,204,7,1,0,0,0,205,209,3,14,7,0,206,209,3,10,5,0,207,209,3,168,
+		84,0,208,205,1,0,0,0,208,206,1,0,0,0,208,207,1,0,0,0,209,210,1,0,0,0,210,
+		208,1,0,0,0,210,211,1,0,0,0,211,9,1,0,0,0,212,215,3,12,6,0,213,215,3,108,
+		54,0,214,212,1,0,0,0,214,213,1,0,0,0,215,11,1,0,0,0,216,217,5,5,0,0,217,
+		219,5,70,0,0,218,216,1,0,0,0,218,219,1,0,0,0,219,222,1,0,0,0,220,223,3,
+		32,16,0,221,223,3,54,27,0,222,220,1,0,0,0,222,221,1,0,0,0,223,13,1,0,0,
+		0,224,228,3,16,8,0,225,228,3,26,13,0,226,228,3,28,14,0,227,224,1,0,0,0,
+		227,225,1,0,0,0,227,226,1,0,0,0,228,15,1,0,0,0,229,233,3,24,12,0,230,233,
+		3,18,9,0,231,233,3,30,15,0,232,229,1,0,0,0,232,230,1,0,0,0,232,231,1,0,
+		0,0,233,17,1,0,0,0,234,235,5,12,0,0,235,236,5,70,0,0,236,237,3,116,58,
+		0,237,238,3,168,84,0,238,239,5,1,0,0,239,240,3,8,4,0,240,243,5,2,0,0,241,
+		244,3,20,10,0,242,244,3,22,11,0,243,241,1,0,0,0,243,242,1,0,0,0,243,244,
+		1,0,0,0,244,19,1,0,0,0,245,246,5,13,0,0,246,247,3,168,84,0,247,248,5,1,
+		0,0,248,249,3,8,4,0,249,250,5,2,0,0,250,21,1,0,0,0,251,252,5,13,0,0,252,
+		253,3,170,85,0,253,254,5,12,0,0,254,257,1,0,0,0,255,257,5,14,0,0,256,251,
+		1,0,0,0,256,255,1,0,0,0,257,258,1,0,0,0,258,259,5,70,0,0,259,260,3,116,
+		58,0,260,261,3,168,84,0,261,262,5,1,0,0,262,263,3,8,4,0,263,266,5,2,0,
+		0,264,267,3,20,10,0,265,267,3,22,11,0,266,264,1,0,0,0,266,265,1,0,0,0,
+		266,267,1,0,0,0,267,23,1,0,0,0,268,271,5,8,0,0,269,270,5,70,0,0,270,272,
+		3,116,58,0,271,269,1,0,0,0,271,272,1,0,0,0,272,25,1,0,0,0,273,274,3,154,
+		77,0,274,275,5,70,0,0,275,276,5,43,0,0,276,277,5,70,0,0,277,278,3,116,
+		58,0,278,27,1,0,0,0,279,280,3,116,58,0,280,29,1,0,0,0,281,284,5,11,0,0,
+		282,283,5,70,0,0,283,285,3,122,61,0,284,282,1,0,0,0,284,285,1,0,0,0,285,
+		286,1,0,0,0,286,287,3,168,84,0,287,288,5,1,0,0,288,289,3,8,4,0,289,290,
+		5,2,0,0,290,31,1,0,0,0,291,293,3,154,77,0,292,294,5,70,0,0,293,292,1,0,
+		0,0,293,294,1,0,0,0,294,295,1,0,0,0,295,296,5,38,0,0,296,298,3,170,85,
+		0,297,299,3,66,33,0,298,297,1,0,0,0,298,299,1,0,0,0,299,300,1,0,0,0,300,
+		307,3,36,18,0,301,303,5,70,0,0,302,301,1,0,0,0,302,303,1,0,0,0,303,304,
+		1,0,0,0,304,305,5,38,0,0,305,306,5,70,0,0,306,308,3,64,32,0,307,302,1,
+		0,0,0,307,308,1,0,0,0,308,309,1,0,0,0,309,310,3,168,84,0,310,311,5,1,0,
+		0,311,312,3,8,4,0,312,313,5,2,0,0,313,33,1,0,0,0,314,315,5,1,0,0,315,316,
+		3,32,16,0,316,317,5,2,0,0,317,35,1,0,0,0,318,323,5,29,0,0,319,324,3,38,
+		19,0,320,321,3,168,84,0,321,322,3,40,20,0,322,324,1,0,0,0,323,319,1,0,
+		0,0,323,320,1,0,0,0,323,324,1,0,0,0,324,325,1,0,0,0,325,326,5,30,0,0,326,
+		37,1,0,0,0,327,330,3,42,21,0,328,330,3,44,22,0,329,327,1,0,0,0,329,328,
+		1,0,0,0,330,339,1,0,0,0,331,332,5,69,0,0,332,335,5,70,0,0,333,336,3,42,
+		21,0,334,336,3,44,22,0,335,333,1,0,0,0,335,334,1,0,0,0,336,338,1,0,0,0,
+		337,331,1,0,0,0,338,341,1,0,0,0,339,337,1,0,0,0,339,340,1,0,0,0,340,39,
+		1,0,0,0,341,339,1,0,0,0,342,355,5,1,0,0,343,345,3,166,83,0,344,343,1,0,
+		0,0,345,348,1,0,0,0,346,344,1,0,0,0,346,347,1,0,0,0,347,351,1,0,0,0,348,
+		346,1,0,0,0,349,352,3,42,21,0,350,352,3,44,22,0,351,349,1,0,0,0,351,350,
+		1,0,0,0,352,353,1,0,0,0,353,354,3,168,84,0,354,356,1,0,0,0,355,346,1,0,
+		0,0,356,357,1,0,0,0,357,355,1,0,0,0,357,358,1,0,0,0,358,359,1,0,0,0,359,
+		360,5,2,0,0,360,41,1,0,0,0,361,363,3,154,77,0,362,364,5,70,0,0,363,362,
+		1,0,0,0,363,364,1,0,0,0,364,365,1,0,0,0,365,366,5,38,0,0,366,367,5,70,
+		0,0,367,372,3,64,32,0,368,369,5,70,0,0,369,370,5,43,0,0,370,371,5,70,0,
+		0,371,373,3,116,58,0,372,368,1,0,0,0,372,373,1,0,0,0,373,43,1,0,0,0,374,
+		375,5,37,0,0,375,376,3,42,21,0,376,45,1,0,0,0,377,379,5,29,0,0,378,380,
+		3,168,84,0,379,378,1,0,0,0,379,380,1,0,0,0,380,383,1,0,0,0,381,384,3,48,
+		24,0,382,384,3,50,25,0,383,381,1,0,0,0,383,382,1,0,0,0,383,384,1,0,0,0,
+		384,385,1,0,0,0,385,386,5,30,0,0,386,47,1,0,0,0,387,393,3,52,26,0,388,
+		389,5,69,0,0,389,390,5,70,0,0,390,392,3,52,26,0,391,388,1,0,0,0,392,395,
+		1,0,0,0,393,391,1,0,0,0,393,394,1,0,0,0,394,49,1,0,0,0,395,393,1,0,0,0,
+		396,400,5,1,0,0,397,398,3,52,26,0,398,399,3,168,84,0,399,401,1,0,0,0,400,
+		397,1,0,0,0,401,402,1,0,0,0,402,400,1,0,0,0,402,403,1,0,0,0,403,404,1,
+		0,0,0,404,405,5,2,0,0,405,51,1,0,0,0,406,407,3,154,77,0,407,408,5,70,0,
+		0,408,409,5,43,0,0,409,410,5,70,0,0,410,412,1,0,0,0,411,406,1,0,0,0,411,
+		412,1,0,0,0,412,413,1,0,0,0,413,414,3,116,58,0,414,53,1,0,0,0,415,417,
+		3,154,77,0,416,418,3,66,33,0,417,416,1,0,0,0,417,418,1,0,0,0,418,420,1,
+		0,0,0,419,421,3,78,39,0,420,419,1,0,0,0,420,421,1,0,0,0,421,428,1,0,0,
+		0,422,424,5,70,0,0,423,422,1,0,0,0,423,424,1,0,0,0,424,425,1,0,0,0,425,
+		426,5,38,0,0,426,427,5,70,0,0,427,429,3,64,32,0,428,423,1,0,0,0,428,429,
+		1,0,0,0,429,430,1,0,0,0,430,431,3,168,84,0,431,432,5,1,0,0,432,433,3,56,
+		28,0,433,434,5,2,0,0,434,55,1,0,0,0,435,440,3,58,29,0,436,440,3,60,30,
+		0,437,440,3,62,31,0,438,440,3,168,84,0,439,435,1,0,0,0,439,436,1,0,0,0,
+		439,437,1,0,0,0,439,438,1,0,0,0,440,441,1,0,0,0,441,439,1,0,0,0,441,442,
+		1,0,0,0,442,57,1,0,0,0,443,444,3,100,50,0,444,445,3,168,84,0,445,447,1,
+		0,0,0,446,443,1,0,0,0,447,448,1,0,0,0,448,446,1,0,0,0,448,449,1,0,0,0,
+		449,467,1,0,0,0,450,457,3,102,51,0,451,452,5,69,0,0,452,453,3,170,85,0,
+		453,454,3,102,51,0,454,456,1,0,0,0,455,451,1,0,0,0,456,459,1,0,0,0,457,
+		455,1,0,0,0,457,458,1,0,0,0,458,461,1,0,0,0,459,457,1,0,0,0,460,450,1,
+		0,0,0,461,462,1,0,0,0,462,460,1,0,0,0,462,463,1,0,0,0,463,464,1,0,0,0,
+		464,465,3,168,84,0,465,467,1,0,0,0,466,446,1,0,0,0,466,460,1,0,0,0,467,
+		59,1,0,0,0,468,469,3,104,52,0,469,470,3,168,84,0,470,472,1,0,0,0,471,468,
+		1,0,0,0,472,473,1,0,0,0,473,471,1,0,0,0,473,474,1,0,0,0,474,61,1,0,0,0,
+		475,476,3,106,53,0,476,477,3,168,84,0,477,479,1,0,0,0,478,475,1,0,0,0,
+		479,480,1,0,0,0,480,478,1,0,0,0,480,481,1,0,0,0,481,63,1,0,0,0,482,484,
+		3,154,77,0,483,485,3,84,42,0,484,483,1,0,0,0,484,485,1,0,0,0,485,487,1,
+		0,0,0,486,488,3,46,23,0,487,486,1,0,0,0,487,488,1,0,0,0,488,65,1,0,0,0,
+		489,494,5,31,0,0,490,495,3,68,34,0,491,492,3,168,84,0,492,493,3,70,35,
+		0,493,495,1,0,0,0,494,490,1,0,0,0,494,491,1,0,0,0,495,496,1,0,0,0,496,
+		497,5,32,0,0,497,67,1,0,0,0,498,504,3,72,36,0,499,500,5,69,0,0,500,501,
+		5,70,0,0,501,503,3,72,36,0,502,499,1,0,0,0,503,506,1,0,0,0,504,502,1,0,
+		0,0,504,505,1,0,0,0,505,69,1,0,0,0,506,504,1,0,0,0,507,517,5,1,0,0,508,
+		510,3,166,83,0,509,508,1,0,0,0,510,513,1,0,0,0,511,509,1,0,0,0,511,512,
+		1,0,0,0,512,514,1,0,0,0,513,511,1,0,0,0,514,515,3,72,36,0,515,516,3,168,
+		84,0,516,518,1,0,0,0,517,511,1,0,0,0,518,519,1,0,0,0,519,517,1,0,0,0,519,
+		520,1,0,0,0,520,521,1,0,0,0,521,522,5,2,0,0,522,71,1,0,0,0,523,526,3,74,
+		37,0,524,526,3,76,38,0,525,523,1,0,0,0,525,524,1,0,0,0,526,73,1,0,0,0,
+		527,532,3,64,32,0,528,529,5,70,0,0,529,530,5,43,0,0,530,531,5,70,0,0,531,
+		533,3,64,32,0,532,528,1,0,0,0,532,533,1,0,0,0,533,75,1,0,0,0,534,535,5,
+		37,0,0,535,540,3,64,32,0,536,537,5,70,0,0,537,538,5,43,0,0,538,539,5,70,
+		0,0,539,541,3,64,32,0,540,536,1,0,0,0,540,541,1,0,0,0,541,77,1,0,0,0,542,
+		547,5,29,0,0,543,548,3,80,40,0,544,545,3,168,84,0,545,546,3,82,41,0,546,
+		548,1,0,0,0,547,543,1,0,0,0,547,544,1,0,0,0,548,549,1,0,0,0,549,550,5,
+		30,0,0,550,79,1,0,0,0,551,557,3,44,22,0,552,553,5,69,0,0,553,554,5,70,
+		0,0,554,556,3,44,22,0,555,552,1,0,0,0,556,559,1,0,0,0,557,555,1,0,0,0,
+		557,558,1,0,0,0,558,81,1,0,0,0,559,557,1,0,0,0,560,570,5,1,0,0,561,563,
+		3,166,83,0,562,561,1,0,0,0,563,566,1,0,0,0,564,562,1,0,0,0,564,565,1,0,
+		0,0,565,567,1,0,0,0,566,564,1,0,0,0,567,568,3,44,22,0,568,569,3,168,84,
+		0,569,571,1,0,0,0,570,564,1,0,0,0,571,572,1,0,0,0,572,570,1,0,0,0,572,
+		573,1,0,0,0,573,574,1,0,0,0,574,575,5,2,0,0,575,83,1,0,0,0,576,581,5,31,
+		0,0,577,582,3,86,43,0,578,579,3,168,84,0,579,580,3,88,44,0,580,582,1,0,
+		0,0,581,577,1,0,0,0,581,578,1,0,0,0,582,583,1,0,0,0,583,584,5,32,0,0,584,
+		85,1,0,0,0,585,591,3,90,45,0,586,587,5,69,0,0,587,588,5,70,0,0,588,590,
+		3,90,45,0,589,586,1,0,0,0,590,593,1,0,0,0,591,589,1,0,0,0,591,592,1,0,
+		0,0,592,87,1,0,0,0,593,591,1,0,0,0,594,598,5,1,0,0,595,596,3,90,45,0,596,
+		597,3,168,84,0,597,599,1,0,0,0,598,595,1,0,0,0,599,600,1,0,0,0,600,598,
+		1,0,0,0,600,601,1,0,0,0,601,602,1,0,0,0,602,603,5,2,0,0,603,89,1,0,0,0,
+		604,607,3,64,32,0,605,607,3,116,58,0,606,604,1,0,0,0,606,605,1,0,0,0,607,
+		91,1,0,0,0,608,613,3,94,47,0,609,610,3,168,84,0,610,611,3,96,48,0,611,
+		613,1,0,0,0,612,608,1,0,0,0,612,609,1,0,0,0,613,93,1,0,0,0,614,615,5,35,
+		0,0,615,616,5,70,0,0,616,622,3,98,49,0,617,618,5,69,0,0,618,619,5,70,0,
+		0,619,621,3,98,49,0,620,617,1,0,0,0,621,624,1,0,0,0,622,620,1,0,0,0,622,
+		623,1,0,0,0,623,625,1,0,0,0,624,622,1,0,0,0,625,626,5,70,0,0,626,627,5,
+		36,0,0,627,95,1,0,0,0,628,632,5,1,0,0,629,630,3,98,49,0,630,631,3,168,
+		84,0,631,633,1,0,0,0,632,629,1,0,0,0,633,634,1,0,0,0,634,632,1,0,0,0,634,
+		635,1,0,0,0,635,636,1,0,0,0,636,637,5,2,0,0,637,97,1,0,0,0,638,639,3,154,
+		77,0,639,640,5,70,0,0,640,641,5,43,0,0,641,642,5,70,0,0,642,643,3,116,
+		58,0,643,99,1,0,0,0,644,649,3,154,77,0,645,646,5,70,0,0,646,647,5,43,0,
+		0,647,648,5,70,0,0,648,650,3,118,59,0,649,645,1,0,0,0,649,650,1,0,0,0,
+		650,101,1,0,0,0,651,652,3,154,77,0,652,103,1,0,0,0,653,655,3,154,77,0,
+		654,656,5,70,0,0,655,654,1,0,0,0,655,656,1,0,0,0,656,657,1,0,0,0,657,658,
+		5,38,0,0,658,659,5,70,0,0,659,664,3,64,32,0,660,661,5,70,0,0,661,662,5,
+		43,0,0,662,663,5,70,0,0,663,665,3,116,58,0,664,660,1,0,0,0,664,665,1,0,
+		0,0,665,105,1,0,0,0,666,667,5,37,0,0,667,668,3,120,60,0,668,107,1,0,0,
+		0,669,672,3,110,55,0,670,672,3,112,56,0,671,669,1,0,0,0,671,670,1,0,0,
+		0,672,109,1,0,0,0,673,675,3,154,77,0,674,676,5,70,0,0,675,674,1,0,0,0,
+		675,676,1,0,0,0,676,677,1,0,0,0,677,678,5,38,0,0,678,679,5,70,0,0,679,
+		686,3,64,32,0,680,682,5,70,0,0,681,680,1,0,0,0,681,682,1,0,0,0,682,683,
+		1,0,0,0,683,684,5,43,0,0,684,685,5,70,0,0,685,687,3,116,58,0,686,681,1,
+		0,0,0,686,687,1,0,0,0,687,111,1,0,0,0,688,690,3,154,77,0,689,691,5,70,
+		0,0,690,689,1,0,0,0,690,691,1,0,0,0,691,692,1,0,0,0,692,693,5,38,0,0,693,
+		694,5,43,0,0,694,695,5,70,0,0,695,696,3,116,58,0,696,113,1,0,0,0,697,698,
+		3,154,77,0,698,699,5,70,0,0,699,700,5,43,0,0,700,701,5,70,0,0,701,702,
+		3,116,58,0,702,115,1,0,0,0,703,704,6,58,-1,0,704,726,3,118,59,0,705,706,
+		3,126,63,0,706,707,3,116,58,7,707,726,1,0,0,0,708,709,3,64,32,0,709,710,
+		3,92,46,0,710,726,1,0,0,0,711,713,5,33,0,0,712,714,3,116,58,0,713,712,
+		1,0,0,0,713,714,1,0,0,0,714,715,1,0,0,0,715,717,5,41,0,0,716,718,3,116,
+		58,0,717,716,1,0,0,0,717,718,1,0,0,0,718,719,1,0,0,0,719,726,5,34,0,0,
+		720,721,5,29,0,0,721,722,3,116,58,0,722,723,5,30,0,0,723,726,1,0,0,0,724,
+		726,3,154,77,0,725,703,1,0,0,0,725,705,1,0,0,0,725,708,1,0,0,0,725,711,
+		1,0,0,0,725,720,1,0,0,0,725,724,1,0,0,0,726,743,1,0,0,0,727,728,10,8,0,
+		0,728,729,5,70,0,0,729,730,3,124,62,0,730,731,5,70,0,0,731,732,3,116,58,
+		9,732,742,1,0,0,0,733,735,10,6,0,0,734,736,3,84,42,0,735,734,1,0,0,0,735,
+		736,1,0,0,0,736,737,1,0,0,0,737,742,3,46,23,0,738,739,10,1,0,0,739,740,
+		5,40,0,0,740,742,3,154,77,0,741,727,1,0,0,0,741,733,1,0,0,0,741,738,1,
+		0,0,0,742,745,1,0,0,0,743,741,1,0,0,0,743,744,1,0,0,0,744,117,1,0,0,0,
+		745,743,1,0,0,0,746,749,3,144,72,0,747,749,3,142,71,0,748,746,1,0,0,0,
+		748,747,1,0,0,0,749,119,1,0,0,0,750,751,3,116,58,0,751,121,1,0,0,0,752,
+		753,3,116,58,0,753,123,1,0,0,0,754,759,3,128,64,0,755,759,3,132,66,0,756,
+		759,3,136,68,0,757,759,3,138,69,0,758,754,1,0,0,0,758,755,1,0,0,0,758,
+		756,1,0,0,0,758,757,1,0,0,0,759,125,1,0,0,0,760,764,3,130,65,0,761,764,
+		3,134,67,0,762,764,3,140,70,0,763,760,1,0,0,0,763,761,1,0,0,0,763,762,
+		1,0,0,0,764,127,1,0,0,0,765,766,7,0,0,0,766,129,1,0,0,0,767,768,5,48,0,
+		0,768,131,1,0,0,0,769,770,7,1,0,0,770,133,1,0,0,0,771,772,5,18,0,0,772,
+		135,1,0,0,0,773,774,7,2,0,0,774,137,1,0,0,0,775,787,5,54,0,0,776,787,5,
+		55,0,0,777,787,5,57,0,0,778,787,5,58,0,0,779,781,5,32,0,0,780,779,1,0,
+		0,0,780,781,1,0,0,0,781,782,1,0,0,0,782,783,5,32,0,0,783,787,5,32,0,0,
+		784,787,5,59,0,0,785,787,5,60,0,0,786,775,1,0,0,0,786,776,1,0,0,0,786,
+		777,1,0,0,0,786,778,1,0,0,0,786,780,1,0,0,0,786,784,1,0,0,0,786,785,1,
+		0,0,0,787,139,1,0,0,0,788,789,5,56,0,0,789,141,1,0,0,0,790,791,7,3,0,0,
+		791,143,1,0,0,0,792,795,3,164,82,0,793,795,3,162,81,0,794,792,1,0,0,0,
+		794,793,1,0,0,0,795,145,1,0,0,0,796,801,3,154,77,0,797,798,5,40,0,0,798,
+		800,3,154,77,0,799,797,1,0,0,0,800,803,1,0,0,0,801,799,1,0,0,0,801,802,
+		1,0,0,0,802,147,1,0,0,0,803,801,1,0,0,0,804,807,3,150,75,0,805,807,3,152,
+		76,0,806,804,1,0,0,0,806,805,1,0,0,0,807,149,1,0,0,0,808,810,3,146,73,
+		0,809,811,5,70,0,0,810,809,1,0,0,0,810,811,1,0,0,0,811,821,1,0,0,0,812,
+		814,5,69,0,0,813,815,5,70,0,0,814,813,1,0,0,0,815,816,1,0,0,0,816,814,
+		1,0,0,0,816,817,1,0,0,0,817,818,1,0,0,0,818,820,3,146,73,0,819,812,1,0,
+		0,0,820,823,1,0,0,0,821,819,1,0,0,0,821,822,1,0,0,0,822,151,1,0,0,0,823,
+		821,1,0,0,0,824,828,5,1,0,0,825,826,3,146,73,0,826,827,3,168,84,0,827,
+		829,1,0,0,0,828,825,1,0,0,0,829,830,1,0,0,0,830,828,1,0,0,0,830,831,1,
+		0,0,0,831,832,1,0,0,0,832,833,5,2,0,0,833,153,1,0,0,0,834,835,5,26,0,0,
+		835,155,1,0,0,0,836,839,3,150,75,0,837,839,3,152,76,0,838,836,1,0,0,0,
+		838,837,1,0,0,0,839,157,1,0,0,0,840,842,3,154,77,0,841,843,5,70,0,0,842,
+		841,1,0,0,0,842,843,1,0,0,0,843,853,1,0,0,0,844,846,5,69,0,0,845,847,5,
+		70,0,0,846,845,1,0,0,0,847,848,1,0,0,0,848,846,1,0,0,0,848,849,1,0,0,0,
+		849,850,1,0,0,0,850,852,3,154,77,0,851,844,1,0,0,0,852,855,1,0,0,0,853,
+		851,1,0,0,0,853,854,1,0,0,0,854,159,1,0,0,0,855,853,1,0,0,0,856,860,5,
+		1,0,0,857,858,3,154,77,0,858,859,3,168,84,0,859,861,1,0,0,0,860,857,1,
+		0,0,0,861,862,1,0,0,0,862,860,1,0,0,0,862,863,1,0,0,0,863,864,1,0,0,0,
+		864,865,5,2,0,0,865,161,1,0,0,0,866,867,5,28,0,0,867,163,1,0,0,0,868,869,
+		7,4,0,0,869,165,1,0,0,0,870,872,5,70,0,0,871,870,1,0,0,0,872,875,1,0,0,
+		0,873,871,1,0,0,0,873,874,1,0,0,0,874,876,1,0,0,0,875,873,1,0,0,0,876,
+		877,5,3,0,0,877,878,5,71,0,0,878,167,1,0,0,0,879,881,5,70,0,0,880,879,
+		1,0,0,0,881,884,1,0,0,0,882,880,1,0,0,0,882,883,1,0,0,0,883,886,1,0,0,
+		0,884,882,1,0,0,0,885,887,5,3,0,0,886,885,1,0,0,0,886,887,1,0,0,0,887,
+		889,1,0,0,0,888,890,5,71,0,0,889,888,1,0,0,0,890,891,1,0,0,0,891,889,1,
+		0,0,0,891,892,1,0,0,0,892,169,1,0,0,0,893,895,5,70,0,0,894,893,1,0,0,0,
+		895,896,1,0,0,0,896,894,1,0,0,0,896,897,1,0,0,0,897,900,1,0,0,0,898,900,
+		3,168,84,0,899,894,1,0,0,0,899,898,1,0,0,0,900,171,1,0,0,0,104,173,178,
+		180,186,188,208,210,214,218,222,227,232,243,256,266,271,284,293,298,302,
+		307,323,329,335,339,346,351,357,363,372,379,383,393,402,411,417,420,423,
+		428,439,441,448,457,462,466,473,480,484,487,494,504,511,519,525,532,540,
+		547,557,564,572,581,591,600,606,612,622,634,649,655,664,671,675,681,686,
+		690,713,717,725,735,741,743,748,758,763,780,786,794,801,806,810,816,821,
+		830,838,842,848,853,862,873,882,886,891,896,899
 	};
 
 	public static readonly ATN _ATN =

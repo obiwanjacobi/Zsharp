@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 
@@ -10,8 +11,8 @@ public sealed record FunctionSymbol : Symbol
         IEnumerable<TypeParameterSymbol> typeParameters, IEnumerable<ParameterSymbol> parameters, TypeSymbol? returnType)
         : base(name)
     {
-        TypeParameters = typeParameters;
-        Parameters = parameters;
+        TypeParameters = typeParameters.ToImmutableArray();
+        Parameters = parameters.ToImmutableArray();
         ReturnType = returnType ?? TypeSymbol.Void;
 
         Type = new TypeFunctionSymbol(
@@ -21,8 +22,8 @@ public sealed record FunctionSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Function;
 
-    public IEnumerable<TypeParameterSymbol> TypeParameters { get; }
-    public IEnumerable<ParameterSymbol> Parameters { get; }
+    public ImmutableArray<TypeParameterSymbol> TypeParameters { get; }
+    public ImmutableArray<ParameterSymbol> Parameters { get; }
     public TypeSymbol ReturnType { get; }
     public TypeFunctionSymbol Type { get; }
 }
@@ -33,16 +34,16 @@ public sealed record TypeFunctionSymbol : TypeSymbol
         IEnumerable<TypeParameterSymbol> typeParameters, IEnumerable<TypeSymbol> parameterTypes, TypeSymbol? returnType)
         : base(CreateFunctionTypeName(typeParameters, parameterTypes, returnType))
     {
-        TypeParameters = typeParameters;
-        ParameterTypes = parameterTypes;
+        TypeParameters = typeParameters.ToImmutableArray();
+        ParameterTypes = parameterTypes.ToImmutableArray();
         ReturnType = returnType ?? TypeSymbol.Void;
     }
 
     public override SymbolKind Kind
         => SymbolKind.TypeFunction;
 
-    public IEnumerable<TypeParameterSymbol> TypeParameters { get; }
-    public IEnumerable<TypeSymbol> ParameterTypes { get; }
+    public ImmutableArray<TypeParameterSymbol> TypeParameters { get; }
+    public ImmutableArray<TypeSymbol> ParameterTypes { get; }
     public TypeSymbol ReturnType { get; }
 
     private static SymbolName CreateFunctionTypeName(IEnumerable<TypeParameterSymbol> typeParameters,
