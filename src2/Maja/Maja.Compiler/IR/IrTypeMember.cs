@@ -1,4 +1,6 @@
-﻿using Maja.Compiler.Symbol;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
@@ -13,7 +15,7 @@ internal abstract class IrTypeMember : IrNode
         => (TypeMemberSyntax)base.Syntax;
 }
 
-internal sealed class IrTypeMemberEnum : IrTypeMember
+internal sealed class IrTypeMemberEnum : IrTypeMember, IrContainer
 {
     public IrTypeMemberEnum(MemberEnumSyntax syntax, EnumSymbol symbol, IrExpression? expr, object value)
         : base(syntax)
@@ -29,9 +31,12 @@ internal sealed class IrTypeMemberEnum : IrTypeMember
 
     public new MemberEnumSyntax Syntax
         => (MemberEnumSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => ValueExpression.GetDescendentsOfType<T>();
 }
 
-internal sealed class IrTypeMemberField : IrTypeMember
+internal sealed class IrTypeMemberField : IrTypeMember, IrContainer
 {
     public IrTypeMemberField(MemberFieldSyntax syntax, FieldSymbol symbol, IrType type, IrExpression? defaultValue)
         : base(syntax)
@@ -47,9 +52,13 @@ internal sealed class IrTypeMemberField : IrTypeMember
 
     public new MemberFieldSyntax Syntax
         => (MemberFieldSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Type.GetDescendentsOfType<T>()
+        .Concat(DefaultValue.GetDescendentsOfType<T>());
 }
 
-internal sealed class IrTypeMemberRule : IrTypeMember
+internal sealed class IrTypeMemberRule : IrTypeMember, IrContainer
 {
     public IrTypeMemberRule(MemberRuleSyntax syntax, RuleSymbol symbol, IrExpression expression)
         : base(syntax)
@@ -63,4 +72,7 @@ internal sealed class IrTypeMemberRule : IrTypeMember
 
     public new MemberRuleSyntax Syntax
         => (MemberRuleSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Expression.GetDescendentsOfType<T>();
 }

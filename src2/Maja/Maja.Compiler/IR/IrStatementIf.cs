@@ -1,8 +1,10 @@
-﻿using Maja.Compiler.Syntax;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
 
-internal sealed class IrStatementIf : IrStatement
+internal sealed class IrStatementIf : IrStatement, IrContainer
 {
     public IrStatementIf(StatementIfSyntax syntax, IrExpression condition, IrCodeBlock codeBlock, IrElseClause? elseClause, IrElseIfClause? elifClause)
         : base(syntax, IrLocality.None)
@@ -20,9 +22,19 @@ internal sealed class IrStatementIf : IrStatement
 
     public new StatementIfSyntax Syntax
         => (StatementIfSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+    {
+        var exprTypes = Condition.GetDescendentsOfType<T>();
+        var codeBlockTypes = CodeBlock.GetDescendentsOfType<T>();
+        var elseTypes = ElseClause is not null ? ElseClause.GetDescendentsOfType<T>() : Enumerable.Empty<T>();
+        var elseIfTypes = ElseIfClause is not null ? ElseIfClause.GetDescendentsOfType<T>() : Enumerable.Empty<T>();
+
+        return exprTypes.Concat(codeBlockTypes).Concat(elseIfTypes).Concat(elseTypes);
+    }
 }
 
-internal sealed class IrElseClause : IrNode
+internal sealed class IrElseClause : IrNode, IrContainer
 {
     public IrElseClause(StatementElseSyntax syntax, IrCodeBlock codeBlock)
         : base(syntax)
@@ -34,9 +46,12 @@ internal sealed class IrElseClause : IrNode
 
     public new StatementElseSyntax Syntax
         => (StatementElseSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => CodeBlock.GetDescendentsOfType<T>();
 }
 
-internal sealed class IrElseIfClause : IrNode
+internal sealed class IrElseIfClause : IrNode, IrContainer
 {
     public IrElseIfClause(StatementElseIfSyntax syntax, IrExpression condition, IrCodeBlock codeBlock, IrElseClause? elseClause, IrElseIfClause? elifClause)
         : base(syntax)
@@ -54,4 +69,14 @@ internal sealed class IrElseIfClause : IrNode
 
     public new StatementElseIfSyntax Syntax
         => (StatementElseIfSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+    {
+        var exprTypes = Condition.GetDescendentsOfType<T>();
+        var codeBlockTypes = CodeBlock.GetDescendentsOfType<T>();
+        var elseTypes = ElseClause is not null ? ElseClause.GetDescendentsOfType<T>() : Enumerable.Empty<T>();
+        var elseIfTypes = ElseIfClause is not null ? ElseIfClause.GetDescendentsOfType<T>() : Enumerable.Empty<T>();
+
+        return exprTypes.Concat(codeBlockTypes).Concat(elseIfTypes).Concat(elseTypes);
+    }
 }

@@ -1,4 +1,6 @@
-﻿using Maja.Compiler.Syntax;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
 
@@ -20,7 +22,7 @@ internal abstract class IrStatement : IrNode
         => (StatementSyntax)base.Syntax;
 }
 
-internal class IrStatementLoop : IrStatement
+internal class IrStatementLoop : IrStatement, IrContainer
 {
     public IrStatementLoop(StatementLoopSyntax syntax, IrExpression? expression, IrCodeBlock codeBlock)
         : base(syntax, IrLocality.None)
@@ -34,4 +36,7 @@ internal class IrStatementLoop : IrStatement
 
     public IrExpression? Expression { get; }
     public IrCodeBlock CodeBlock { get; }
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Expression.GetDescendentsOfType<T>().Concat(CodeBlock.GetDescendentsOfType<T>());
 }

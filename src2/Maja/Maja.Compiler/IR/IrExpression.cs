@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 
@@ -29,7 +30,7 @@ internal abstract class IrExpression : IrNode
         => (ExpressionSyntax)base.Syntax;
 }
 
-internal sealed class IrExpressionRange : IrExpression
+internal sealed class IrExpressionRange : IrExpression, IrContainer
 {
     public IrExpressionRange(ExpressionRangeSyntax syntax, IrExpression? start, IrExpression? end)
         : base(syntax, TypeSymbol.I32)  // I32 => dotnet compatible
@@ -43,9 +44,13 @@ internal sealed class IrExpressionRange : IrExpression
 
     public new ExpressionRangeSyntax Syntax
         => (ExpressionRangeSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Start.GetDescendentsOfType<T>()
+        .Concat(End.GetDescendentsOfType<T>());
 }
 
-internal sealed class IrExpressionInvocation : IrExpression
+internal sealed class IrExpressionInvocation : IrExpression, IrContainer
 {
     public IrExpressionInvocation(ExpressionInvocationSyntax syntax,
         FunctionSymbol symbol, IEnumerable<IrTypeArgument> typeArguments, IEnumerable<IrArgument> arguments, TypeSymbol type)
@@ -62,9 +67,13 @@ internal sealed class IrExpressionInvocation : IrExpression
     public FunctionSymbol Symbol { get; }
     public ImmutableArray<IrTypeArgument> TypeArguments { get; }
     public ImmutableArray<IrArgument> Arguments { get; }
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => TypeArguments.GetDescendentsOfType<T>()
+        .Concat(Arguments.GetDescendentsOfType<T>());
 }
 
-internal sealed class IrExpressionTypeInitializer : IrExpression
+internal sealed class IrExpressionTypeInitializer : IrExpression, IrContainer
 {
     public IrExpressionTypeInitializer(ExpressionTypeInitializerSyntax syntax, TypeSymbol symbol, IEnumerable<IrTypeArgument> typeArguments, IEnumerable<IrTypeInitializerField> fields)
         : base(syntax, symbol)
@@ -78,6 +87,10 @@ internal sealed class IrExpressionTypeInitializer : IrExpression
 
     public new ExpressionTypeInitializerSyntax Syntax
         => (ExpressionTypeInitializerSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => TypeArguments.GetDescendentsOfType<T>()
+        .Concat(Fields.GetDescendentsOfType<T>());
 }
 
 internal sealed class IrExpressionLiteral : IrExpression
@@ -97,7 +110,7 @@ internal sealed class IrExpressionLiteral : IrExpression
         => (ExpressionConstantSyntax)base.Syntax;
 }
 
-internal sealed class IrExpressionBinary : IrExpression
+internal sealed class IrExpressionBinary : IrExpression, IrContainer
 {
     internal IrExpressionBinary(
         IrExpression left, IrBinaryOperator op, IrExpression right)
@@ -122,4 +135,9 @@ internal sealed class IrExpressionBinary : IrExpression
 
     public new ExpressionBinarySyntax Syntax
         => (ExpressionBinarySyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Left.GetDescendentsOfType<T>()
+        .Concat(Operator.GetDescendentsOfType<T>())
+        .Concat(Right.GetDescendentsOfType<T>());
 }

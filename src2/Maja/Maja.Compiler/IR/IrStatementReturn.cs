@@ -1,8 +1,9 @@
-﻿using Maja.Compiler.Syntax;
+﻿using System.Collections.Generic;
+using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
 
-internal sealed class IrStatementReturn : IrStatement
+internal sealed class IrStatementReturn : IrStatement, IrContainer
 {
     public IrStatementReturn(StatementReturnSyntax syntax, IrExpression? expression)
         : base(syntax, IrLocality.None)
@@ -14,4 +15,7 @@ internal sealed class IrStatementReturn : IrStatement
         => (StatementReturnSyntax)base.Syntax;
 
     public IrExpression? Expression { get; }
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Expression.GetDescendentsOfType<T>();
 }

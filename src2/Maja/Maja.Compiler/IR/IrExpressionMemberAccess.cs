@@ -5,7 +5,7 @@ using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
 
-internal sealed class IrExpressionMemberAccess : IrExpression
+internal sealed class IrExpressionMemberAccess : IrExpression, IrContainer
 {
     public IrExpressionMemberAccess(ExpressionSyntax syntax, TypeSymbol type, IrExpression expression, IEnumerable<FieldSymbol> members)
         : base(syntax, type)
@@ -29,4 +29,7 @@ internal sealed class IrExpressionMemberAccess : IrExpression
         => Expression as IrExpressionInvocation;
 
     public ImmutableArray<FieldSymbol> Members { get; }
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Expression.GetDescendentsOfType<T>();
 }

@@ -21,7 +21,7 @@ internal abstract class IrDeclaration : IrNode
     public IrLocality Locality { get; }
 }
 
-internal sealed class IrDeclarationFunction : IrDeclaration
+internal sealed class IrDeclarationFunction : IrDeclaration, IrContainer
 {
     public IrDeclarationFunction(FunctionDeclarationSyntax syntax, FunctionSymbol symbol,
         IEnumerable<IrTypeParameter> typeParameters, IEnumerable<IrParameter> parameters, IrType returnType,
@@ -50,9 +50,15 @@ internal sealed class IrDeclarationFunction : IrDeclaration
 
     public new FunctionDeclarationSyntax Syntax
         => (FunctionDeclarationSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => TypeParameters.GetDescendentsOfType<T>()
+        .Concat(Parameters.GetDescendentsOfType<T>())
+        .Concat(ReturnType.GetDescendentsOfType<T>())
+        .Concat(Body.GetDescendentsOfType<T>());
 }
 
-internal sealed class IrDeclarationVariable : IrDeclaration
+internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
 {
     internal IrDeclarationVariable(VariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
         : base(IrLocality.None)
@@ -75,9 +81,12 @@ internal sealed class IrDeclarationVariable : IrDeclaration
 
     public new VariableDeclarationSyntax Syntax
         => (VariableDeclarationSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Initializer.GetDescendentsOfType<T>();
 }
 
-internal sealed class IrDeclarationType : IrDeclaration
+internal sealed class IrDeclarationType : IrDeclaration, IrContainer
 {
     public IrDeclarationType(TypeDeclarationSyntax syntax, TypeSymbol symbol, IEnumerable<IrTypeParameter> typeParameters,
         IEnumerable<IrTypeMemberEnum> enums, IEnumerable<IrTypeMemberField> fields, IEnumerable<IrTypeMemberRule> rules, IrTypeScope scope, IrLocality locality)
@@ -100,4 +109,10 @@ internal sealed class IrDeclarationType : IrDeclaration
 
     public new TypeDeclarationSyntax Syntax
         => (TypeDeclarationSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => TypeParameters.GetDescendentsOfType<T>()
+        .Concat(Enums.GetDescendentsOfType<T>())
+        .Concat(Fields.GetDescendentsOfType<T>())
+        .Concat(Rules.GetDescendentsOfType<T>());
 }

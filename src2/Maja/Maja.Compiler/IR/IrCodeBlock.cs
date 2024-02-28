@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
 
-internal sealed class IrCodeBlock : IrNode
+internal sealed class IrCodeBlock : IrNode, IrContainer
 {
     public IrCodeBlock(CodeBlockSyntax syntax,
         IEnumerable<IrStatement> statements, IEnumerable<IrDeclaration> declarations)
@@ -19,4 +20,8 @@ internal sealed class IrCodeBlock : IrNode
 
     public new CodeBlockSyntax Syntax
         => (CodeBlockSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Statements.GetDescendentsOfType<T>()
+            .Concat(Declarations.GetDescendentsOfType<T>());
 }

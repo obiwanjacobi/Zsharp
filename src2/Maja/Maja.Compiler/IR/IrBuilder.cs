@@ -391,9 +391,8 @@ internal sealed class IrBuilder
 
         if (returnType == IrType.Void)
         {
-            // TODO: this does not catch return statements inside if's and loops etc.
             var invalidReturns = block.Statements
-                .OfType<IrStatementReturn>()
+                .GetDescendentsOfType<IrStatementReturn>()
                 .Where(r => r.Expression is not null);
             foreach (var ret in invalidReturns)
             {

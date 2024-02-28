@@ -1,4 +1,5 @@
-﻿using Maja.Compiler.Symbol;
+﻿using System.Collections.Generic;
+using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
@@ -17,7 +18,7 @@ internal abstract class IrTypeParameter : IrNode
         => (TypeParameterSyntax)base.Syntax;
 }
 
-internal sealed class IrTypeParameterGeneric : IrTypeParameter
+internal sealed class IrTypeParameterGeneric : IrTypeParameter, IrContainer
 {
     public IrTypeParameterGeneric(TypeParameterGenericSyntax syntax, IrType? type, TypeParameterSymbol symbol)
         : base(syntax, symbol)
@@ -29,4 +30,7 @@ internal sealed class IrTypeParameterGeneric : IrTypeParameter
 
     public new TypeParameterGenericSyntax Syntax
         => (TypeParameterGenericSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Type.GetDescendentsOfType<T>();
 }
