@@ -247,11 +247,26 @@ DataStruct(#count: U16):
     Names: Str[count]           // <= TDB
     Names: Array<Str>(count)    // or this?
 
+// both type template and compile-time parameter
+DataStruct<#T>(#init: T):
+    fld1: T = init
+
+s := DataStruct<U8>(42)
+
 // can structures also have normal parameters?
 // interpret this as a primary constructor?
+// no: we have syntax for constructing a struct
 DataStruct(count: U16):
     Names: Str[count]           // <= TDB
     Names: Array<Str>(count)    // or this?
+
+//!!!! syntax conflict
+// function calls look the same as type instantiation
+s := MyStructure<U8>(42)    // type init
+f := MyFunction<U8>(42)     // function invocation
+
+// fix by changing the type syntax
+s : MyStructure<U8>(42) = { ... }   // type init
 ```
 
 > We don't have syntax for statically dimensioning an array (list), yet!

@@ -178,6 +178,10 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `#xxx:` | Compile-time label 'xxx' used to identity code blocks / scopes
 | `#_` | Comment
 
+In case of a fallback `?` we could use `or` perhaps?
+`opt? or 42` Use the `?` as the boolean operator and `or` for chaining.
+`opt1? or opt2? or 42`
+
 `#!` does make the distinction clear between compile-time functions and for instance inline exported functions: `#export fun: ()...` vs. `#! fun: () ...`.
 
 > Are there others like conditional assignment `?=`? Can any (applicable) operator be made conditional by prefixing `?` to it?

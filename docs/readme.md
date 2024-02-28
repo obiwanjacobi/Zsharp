@@ -5,7 +5,7 @@
 - [ ] Align array arithmetic across operators.md (lexical) and array.md (type). `++` vs `+` etc.
 - [ ] Address `Imm<T>` as a type modifier (only for structs?)
 - [ ] Talk about (ReadOnly)Span<T> with reference to `Ref<T>`, `Out<T>` and `Mut<T>`.
-- [ ] Make structure instantiation consistent with vars `s : MyStruct = ...` (used in nested structs example) or `s := Mystruct ...`? Also take into account the potential structure parameters (see templates).
+- [ ] Make structure instantiation consistent with vars `s : MyStruct = { ... }` (used in nested structs example) Also take into account the potential type and compile-time parameters (see templates).
 
 ## Done
 

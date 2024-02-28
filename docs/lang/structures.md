@@ -19,17 +19,11 @@ MyStruct
     field1: U8
     field2: Str
 
-// this?
-s := MyStruct           // instantiate an instance
-    field1 = 42         // assigning values
-    field2 = "42"
-
-// or this?
 s : MyStruct =
     field1 = 42
     field2 = "42"
 
-// alternative?
+// alternative
 s : MyStruct = { field1 = 42, field2 = "42" }
 ```
 
@@ -40,7 +34,7 @@ MyStruct
     field1: U8 = 42
     field2: U8 = 42
 
-s := MyStruct
+s : MyStruct =
     field2 = 101        // overwrites any value
 
 // s.field1 = 42
@@ -55,6 +49,7 @@ MyStruct
 fn: (p: MyStruct): U8
     ...
 
+// syntax?
 fn({field1 = 42, field2 = "42"})
 fn(MyStruct 
     field1 = 42
@@ -118,7 +113,7 @@ MyContainer
 The `MyContainer` structure still has the `field1` from `MyStruct` but it has to be reached by the `cnt` field. Here is how the structure would be initialized:
 
 ```C#
-s := MyContainer
+s : MyContainer =
     cnt.field1 = 42
     field2 = "OK"
 ```
@@ -194,7 +189,7 @@ someFn: (p: U8)
         fld1: U8
         fld2: Str
     
-    s = LocalStruct     // use it
+    s : LocalStruct =    // use it
         fld1 = 42
         fld2 = "42"
 
@@ -212,7 +207,7 @@ MyStruct
     fld1: U8
     fld2: Str
 
-s := Mut<MyStruct>      // mutable
+s = Mut<MyStruct> =      // mutable
     fld1 = 42
     fld2 = "42"
 
@@ -354,9 +349,9 @@ Allow fields of one structure to be mapped easily to fill fields of another stru
 > What operator to use? `<=`?
 
 ```csharp
-s1 := Struct1
+s1 : Struct1
 // manual
-s2 := Struct2
+s2 : Struct2 =
     fld1 = s1.x
     fld2 = s1.y
 
@@ -427,7 +422,7 @@ MapStruct1Struct2: Transform<Struct1, Struct2>
 ```csharp
 CustomFn1: (Struct1 self): U16
     ...
-Deconstruct2:
+Deconstruct2
     x: U16
     z: U16
 CustomFn2: (Struct2: self): Deconstruct2

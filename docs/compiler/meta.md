@@ -121,10 +121,10 @@ We can also use `enable` or `disable` that automatically push the previous state
 
 Add a pragma that provides the compilation context and the project settings (think Visual Studio macros).
 
-Project Setting | Description
---|--
-`#project.targetPath` | Full path to the generated assembly.
-`#project.configuration` | Debug or Release
+| Project Setting | Description
+|--|--
+| `#project.targetPath` | Full path to the generated assembly.
+| `#project.configuration` | Debug or Release
 
 ---
 
@@ -294,3 +294,10 @@ Problem here is that some pragma's start a new scope and others don't. How to fi
 
 > TBD: Give compile time code access to the type info of source code and possibly extend the source code. The original code cannot be altered but it can be enhanced or extended. Pre and post processing of functions, wrapping of structs, implementing interfaces etc. See also [Extensions](extensions.md).
 Also influencing type inferrence desicions the compiler makes for generic or template types.
+
+> TBD: `#!` = compile error, `#?` compile warning, `#$` compile info.
+
+```csharp
+if (compile-time-condition)
+    #! Hey, this is not suppose to happen.
+```

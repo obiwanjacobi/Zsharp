@@ -51,6 +51,12 @@ i := v.I8()      // I8: -1
 
 > Should we have specific conversion functions that explicitly state the conversion could be unsafe? `v.unsafeI8()`
 
+> TBD: explicit conversion semantics
+
+Promote/Extend: enlarge a type to a larger type.
+Demote/Wrap: shrink a larger type down to a smaller type (discard higher bits)
+Convert: from integer to floating point or visa versa
+
 ---
 
 ## Casting

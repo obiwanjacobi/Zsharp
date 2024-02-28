@@ -12,6 +12,7 @@ v := valueMaybe() ?? 42
 
 // cascade ?? operators
 x := v ?? valueMaybe() ?? 101
+x := v? or valueMaybe()? or 101
 
 // optional can be used in a logical expression: '?'
 if v?

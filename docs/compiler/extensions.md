@@ -13,6 +13,8 @@
 {Decorator}
 [[Decorator]]
 [{CodeAttribute()}]
+[<CodeAttribute()>]
+[(FunctionAttribute())]
 decoratedFn: ()
 ```
 
@@ -117,7 +119,7 @@ Allow programmatic inline manipulation of Abstract Syntax Tree nodes (or some sy
 
 ```csharp
 // some syntax to denote ast code: <[...]>
-// generates and Ast node for the code
+// generates an Ast node for the code
 ast := <[loop n in [0..42]]>
 // alternate 'astof'
 ast := astof(loop n in [0..42])

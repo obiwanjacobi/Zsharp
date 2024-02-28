@@ -192,6 +192,8 @@ Uses .NET `System.Security.SecureString`.
 `StrOf<T>` to allow a described string. `T` describes the structure of the content of the string. `StrOf<EmailAddress>` where `EmailAddress` contains validation (regex?).
 Related to custom data types.
 
+> TBD: this is basically a value object. So other types like `I32Of<T>` are also possible - where T contains a type that validates and describes the value object.
+
 ---
 
 ### Character
@@ -259,7 +261,7 @@ Note that the type of a function has a specific syntax:
 
 `<generic-types>(parameter-types): return-type`
 
-> Templates?
+> Templates? In order to incorporate Templates two flavors of FunctionTypes must exist: a compile-time and a run-time version. The compile-time version contains information about template-parameters (type parameters and normal parameters). The run-time version only contains information about generic type-parameters and normal parameters.
 
 ```csharp
 // returns a function that takes one param (U8) and returns a Str
@@ -627,6 +629,8 @@ i: U8^*?    // pointer to an optional immutable U8
 
 ### Immutable Types
 
+> TBD: now that the default is immutable, this should perhaps be reconsidered.
+
 Any type can be made immutable wrapping it in a `Imm<T>` type.
 
 ```csharp
@@ -782,6 +786,7 @@ A type constructor is a function with the same name as the type it creates and r
 ```csharp
 MyType: (): MyType  // valid constructor function
 Mytype: (): MyType  // not a constructor function
+// (function name not exact match with return type)
 ```
 
 The number and types of parameters a constructor function takes have no restrictions.
@@ -822,8 +827,6 @@ MyType: (p: U8): MyType!
 t := try MyType(42)
 ```
 
-> TBD: Find a different constructor function prototype that does not require copying the returned instance from the constructor function to the call site. For larger structs that is a performance hit.
-
 Struct will probably be .NET `record struct`s and cannot be returned by `ref`.
 
 Passing parameters to the base type.
@@ -840,6 +843,8 @@ MyType: (p: Str): MyType
     BaseType(p)     // return value?
     ...
 ```
+
+> TBD: do not allow this. There is always but one constructor function that create an instance of a type, even if that type has a base type.
 
 ---
 
@@ -917,7 +922,7 @@ OneOrTheOther :|    // <= special syntax is required
     s1: Struct1
     s2: Struct2
 
-s := OneOrTheOther
+s : OneOrTheOther =
     s1 = Struct1
         ...
 
@@ -1005,11 +1010,11 @@ MyStruct
 
 MyStructOpt : Opt<MyStruct>
 
-s := MyStruct
+s : MyStruct =
     fld1 = 42
     fld2 = "101"
 
-o := MyStructOpt
+o : MyStructOpt =
     fld2 = "42"     // partial init
 
 x := s + o       // what if these objects have a + operator defined?
@@ -1018,7 +1023,7 @@ x := { s + o }   // to differentiate from (overloaded) plus operator.
 // x.fld1 = 42
 // x.fld2 = "42"
 
-p := MyStructOpt
+p : MyStructOpt =
     fld1 = 101  // partial init
 
 y := o + p
@@ -1063,6 +1068,12 @@ MyUnion             // all fields share the same memory
     fld1: U8 |
     fld2: U16 |
     fld3: Str |     // trailing | ok
+
+// this syntax might be easier with parsing:
+MyUnion
+    | fld1: U8
+    | fld2: U16
+    | fld3: Str
 ```
 
 > Because there is no `union` keyword, anonymous or inline unions are not possible.
