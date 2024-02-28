@@ -46,6 +46,21 @@ public class FunctionTests
     }
 
     [Fact]
+    public void FuncDeclVoid_Err_RetValue_Descendent()
+    {
+        const string code =
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "if true" + Tokens.Eol +
+            Tokens.Indent2 + "ret 42" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+
+        program.Diagnostics.Should().NotBeEmpty();
+        program.Diagnostics.First().Text.Should().Contain("Void function");
+    }
+
+    [Fact]
     public void FuncDecl()
     {
         const string code =
