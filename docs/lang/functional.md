@@ -6,9 +6,7 @@ Z# also contains a couple of functional programming features that are described 
 
 A pure function is a function that returns the exact same result given the same inputs without any side effects.
 
-A pure function -without side-effects- can be recognized by the lack of (mutable?) captures and the presence of immutable (only in-) parameters. It also has to have a return value.
-
-> This is not always true (a database read function may return different results for the same inputs - even if we explicitly capture the non-mutable database connection) so we may need to introduce special syntax to indicate pure functional functions...
+A pure function -without side-effects- can be recognized by the lack of (mutable?) captures and the presence of immutable (only in-) parameters. It also has to have a return value. It does not use any IO.
 
 ```txt
 Pure functions can only call other pure functions. 
@@ -16,12 +14,20 @@ Impure functions (with side-effects) can also call pure functions.
 Pure functions cannot call impure functions, ever.
 ```
 
-The question is can the compiler detect that.
-Yes, it should be able to detect that if (and only if) it has information on all the calls that are made (recursive).
-This will become a problem when doing interop with .NET because .NET methods do not contain this data.
-Assuming all .NET methods are impure, because they can throw Exceptions, will quickly lead to not being able to create pure functions at all (I fear).
+To be able to discover if a function is pure, we need to mark IO as such.
+Only then will the compiler be able to statically analyze the function body and all transitive calls to determine purity.
 
-There are also cases where impure functions may be viewed as pure when the side-effect is not of interest to the program. Like `Console.WriteLine` and logging could be viewed as 'transparent'.
+```csharp
+// mark IO functions by ret value type?
+fnIO: (p1: U8): IO<U8>
+// mark IO functions by function type?
+fnIO: IO<(p1: U8): U8>
+```
+
+This will become a problem when doing interop with .NET because .NET methods do not contain this data.
+Assuming all .NET methods are impure, because they can throw Exceptions, will quickly lead to not being able to create pure functions at all or only in a very limitted way (I fear).
+
+There are also cases where perhaps impure functions may be viewed as pure when the side-effect is not of interest to the program. Like `Console.WriteLine` and logging could be viewed as 'transparent'.
 
 ```csharp
 // has imm param but potentially writes to globalVar
@@ -68,7 +74,7 @@ v := highFn([1,2])(42)
 
 See also [Piping Operator](#Piping-Operator).
 
-> Composition and value piping are different concepts. Function Composition is building functions from other functions at compile time. Value piping chains (result) values between multiple function calls (result of one function is parameter for next function).
+> Composition and value piping are different concepts. Function Composition is building functions from other functions at compile time. Value piping chains (result) values between multiple function calls (result of one function is parameter for next function) at runtime.
 
 ---
 
@@ -135,8 +141,6 @@ partialFn("42") // calls fn(42, "42")
 
 > `.NET`: Functions with captures (lambdas) and partial application will probably result in function classes that have members for the captured data and/or the applied (partial) function parameters.
 
-> TODO: look into monads. I don't understand them yet.
-
 ---
 
 ## Piping Operator
@@ -154,7 +158,7 @@ b := 42 |> fn3 |> fn2 |> fn1
 Subsequent function calls (after `|>`) will have their 1st param missing. That looks a bit strange (but no different than bound functions?). `()` can be omitted when a function has zero or one parameter?
 
 ```csharp
-[0..5] |> fn()  // passed in array
+(0..5) |> fn()  // passed in array
 ```
 
 Could also have a 'backward' piping operator? `<|` going the other way...
@@ -164,8 +168,12 @@ No - don't like it
 fn1() <| fn2() <| fn3() <| 42
 ```
 
+> TBD: Could come in usefule for fluent Apis that want to reverse the calls in order to have a more 'English' sentence.
+
 ---
 
 > TBD
 
 - Map, Apply, Bind ?? What are the names to use here? https://fsharpforfunandprofit.com/series/map-and-bind-and-apply-oh-my/
+
+> Monads?

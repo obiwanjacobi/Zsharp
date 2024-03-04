@@ -12,12 +12,10 @@ Naming Convention for template and generic type parameters:
 | S | Self Type | Self function parameter type
 | T | Item Type | Use when only a single template parameter.
 
-All other template and generic parameter names start with a capital letter and end with `T` (for types).
+All other template and generic parameter names start with a capital letter and end with `T`.
 
 Example:
 `transform<#InputT, #OutputT>(input: InputT, output: OutputT)`
-
-None-Type template parameters are always processed at compile-time and are also prefixed with a `#`.
 
 ---
 
@@ -27,7 +25,7 @@ None-Type template parameters are always processed at compile-time and are also 
 MyStruct<#T>
     f: T
 
-s := MyStruct<U8>
+s : MyStruct<U8> =
     f = 42
 ```
 
@@ -37,7 +35,7 @@ This will also work:
 MyStruct<#T>: T
     ...
 
-s := MyStruct<OtherStruct>
+s : MyStruct<OtherStruct>
 ```
 
 As well as
@@ -81,6 +79,11 @@ z := typedRet()      // Error! cannot determine type
 ## Template Parameters
 
 Template parameters are applied at compile time. A parameter name (first char) _MUST_ be capitalized when it is used as a Type.
+
+In most cases Template Type parameters can be inferred from it's usage. Explicitly specifying them is only needed when inference is ambiguous.
+`_` can be used in places where the Template parameter needs to be inferred when in combination with other type parameters that are explicitly stated.
+`fn<_, Str>(42, "42")`
+All type parameters can be omitted when they can be inferred from usage.
 
 ---
 
@@ -255,7 +258,7 @@ s := DataStruct<U8>(42)
 
 // can structures also have normal parameters?
 // interpret this as a primary constructor?
-// no: we have syntax for constructing a struct
+// No: we have syntax for constructing a struct
 DataStruct(count: U16):
     Names: Str[count]           // <= TDB
     Names: Array<Str>(count)    // or this?
@@ -267,6 +270,7 @@ f := MyFunction<U8>(42)     // function invocation
 
 // fix by changing the type syntax
 s : MyStructure<U8>(42) = { ... }   // type init
+f := MyCtor(42)         // constructor/convertor function
 ```
 
 > We don't have syntax for statically dimensioning an array (list), yet!

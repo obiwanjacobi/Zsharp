@@ -136,6 +136,14 @@ z := fn(42)  // calls the constant overload
 
 - Require specifying the parameter name when a literal is used?
 
+> TBD: Omit parameter type when they multiple parameters share the same type?
+
+```csharp
+// p1: U8, p2: U8, p3: Str
+add: (p1, p2: U8, p3: Str): U16
+    ...
+```
+
 ---
 
 ### Optional Parameters
@@ -159,7 +167,8 @@ fn: (p: U8)
 v: Opt<U8>  // not set
 
 // do not call function if v is not set.
-fn(v?)  // control on which param
+fn(v?)  // conflicts with bool operator '?'
+fn(?v)  // control on which param
 ?fn(v)  // any and all params
 
 // shorthand for
@@ -236,6 +245,8 @@ varFuncTempl: <#T>(p: U8, varP: Array<T>)
     ...
 varFuncParams: (p: U8, varP: Params<Any>)
     ...
+varFuncSpread: <#T>(p: U8, ...varP: Array<T>)
+    ...
 
 // different types allowed for 'Any'
 varFunc(42, (1, 3.14, "42"))
@@ -266,6 +277,9 @@ immFn: (p: ^U8)
 There are several wrapper types that can be used for this.
 
 ```C#
+// in parameter
+fn: (p: U8)
+    ...
 // mutable parameter
 fn: (p: Mut<U8>)
     ...
@@ -341,6 +355,8 @@ allowedFn(editable = false)
 
 > TBD
 
+(Arguments would be at the calling site -invocation- not the function implementation side.)
+
 Make a distinction in accessing parameters in the function implementation.
 
 The goal is to separate parameter references from local variables (or captures).
@@ -362,18 +378,12 @@ fn: (p: U8, s: Str)
     ...
 
 // anonymous type
-a := { s = "42", p = 42 }
+a := { s := "42", p := 42 }
 fn(...a)
 
 // map (syntax undetermined)
-m := { p = 42, s = "42" }
+m := { p := 42, s := "42" }
 fn(...m)
-
-// auto compiler generated struct (:: syntax?)
-c := fn::Parameters
-    p = 42
-    s = "42"
-fn(...c)
 
 // does that also work with any struct?
 MyStruct
@@ -381,11 +391,11 @@ MyStruct
     s: Str
     i: I64
 
-s = MyStruct
+s: MyStruct =
     ...
 
-fn(...s)    // error! cannot place i in params
-// should work if struct has correct named fields and nothing more.
+fn(...s) // ok as long as all parameters (without defaults) are covered.
+// s.i is ignored
 ```
 
 A template trick to allow any struct with the correct properties to be passed as function arguments.
@@ -446,7 +456,7 @@ fn(42, "42")
 
 Will there be an automatic overload of `fn` (using an immutable ptr to the parameter structure instance) or does the compiler unpack the structure at the call site to call the original function?
 
-> Will overloaded functions share one parameter structure with all the parameters - or - each have an individual parameter structure? (can we overload structs?)
+> Will overloaded functions share one parameter structure with all the parameters - or - each have an individual parameter structure? (can we overload structs?) => No
 
 > The compiler generated option should allow being mapped from a real object.
 
@@ -463,6 +473,18 @@ Perhaps a 'service' function type uses this principle but calls it a 'message' (
 
 Related to context variables?
 What syntax to use?
+
+```csharp
+// declarations
+fn: (p: U8, c: Context): U8 // as last parameter
+fn: (p: U8)(c: Context): U8 // explicit syntax
+
+// invocation
+c: Context =
+    ...
+fn(42, c)   // explicit
+fn(42)   // implicit
+```
 
 ---
 
@@ -487,7 +509,7 @@ fn: [c]<T>(p1: U8, p2: Str): Bool
 ```
 
 These validation rules could then be emitted as a separate function that can be inlined at the call site to prevent 'expensive' calls only to find out the params were not valid.
-This is only useful when the calls are expensive enough, so not for normal in process calls that require no dispatching, marshalling or any other type of processing.
+This is only useful when the calls are expensive enough, so not for normal in process calls that require no dispatching, marshalling or any other type of processing. Then the validation is done inside the function.
 
 ## Return values
 
@@ -657,18 +679,19 @@ A recursive function is a function that (eventually) calls itself.
 Is it a function Type annotation or a function Name annotation?
 
 ```csharp
-{Recursive}                 // decorator
-#recursive                  // pragma
-recurseFn: @(p: U8): U8     // syntax (on Type)
+{Recursive}                 // decorator => No
+#recursive                  // pragma => No
+recurseFn: @(p: U8): U8     // syntax (on Type) => No
 @recurseFn: (p: U8): U8     // syntax (on Name)
 rec recurseFn: (p: U8): U8     // syntax keyword
+recurseFn: Rec<(p: U8): U8>    // Wrapper on function type => No
         // exit condition here...
         return recurseFn(p)     // no extra syntax on call?
 ```
 
 > What if multiple functions are involved in the recursion? All should be marked?
 
-> What happens to captures in a recursive function?
+> What happens to captures in a recursive function? The point of capture should not surprise with 'wrong' values.
 
 ---
 
@@ -679,7 +702,7 @@ A new name can be assigned to an existing function, called an alias.
 ```csharp
 fn: (p: U8)
     ...
-aliasFn= fn
+aliasFn = fn
 
 // calls fn(42)
 aliasFn(42)
@@ -722,7 +745,7 @@ Using the `self` keyword as the (name of the) first parameter, a function can be
 boundFn: (self: MyStruct)
     ...
 
-s = MyStruct
+s : MyStruct =
     ...
 
 s.boundFn()
@@ -775,9 +798,9 @@ When calling a bound function, the 'self' parameter can be used as an 'object' u
 | T? | Ptr\<T?> | Function can write to var!
 | Ptr\<T> | T |
 | Ptr\<T> | Ptr\<T> |
-| Mut\<T> | <Mut>\<T> |
-| Mut\<T> | Ptr<Mut\<T>> |
-| Ptr<Mut\<T>> | Ptr<M ut\<T>> |
+| Mut\<T> | Mut\<T> |
+| Mut\<T> | Ptr\<Mut\<T>> |
+| Ptr<Mut\<T>> | Ptr<Mut\<T>> |
 
 > This means implicit conversions => something we don't want?
 We may want this conversion in order to reduce noise of transforming self parameter types.
@@ -799,20 +822,22 @@ b := e.isMagicValue()        // true
 
 ### Immutable Self
 
-> TBD: switch from `Imm<T>` to `Mut<T>` takes away a good way to express self-const-ness.
+> TBD: The switch from `Imm<T>` to `Mut<T>` takes away a good way to express self-const-ness.
 Is there another way to indication (non)const-ness?
 
 A function can publish its 'const-ness' by using an immutable self type.
 
 ```csharp
 // this function will not change (the content of) self
-constFn: (self: Imm<MyStruct>, p: U8): Str
-    ...
+constFn: (self: Imm<MyStruct>, p: U8): Str  // Imm<>
+constFn: (self: MyStruct, p: U8): Str       // Mut<>
 
 // this function will change (the content of) self
-nonConstFn: (self: MyStruct>, p: U8): Str
-    ...
+nonConstFn: (self: MyStruct, p: U8): Str        // Imm<>
+nonConstFn: (self: Mut<MyStruct>, p: U8): Str   // Mut<>
 ```
+
+> How does mutability of self relate to byValue parameter passing?
 
 A function that does not change self - or any other param for that matter - cannot call any other function on that parameter that DOES change its value. const-functions can only call other const-functions.
 
@@ -837,7 +862,7 @@ s.setX v        // calls setX(s, v)
 
 We call this the poor-man's property syntax. Do we require the function name to begin with `get_`/`set_` to match .NET properties? Or can we infer them?
 
-For non-bound functions?
+For non-bound functions:
 
 ```csharp
 fn: (): U8
@@ -847,7 +872,7 @@ fn: (): U8
 a = fn
 ```
 
-> How does this differ from taking a reference to a function (function pointer)?
+> How does this differ from taking a reference to a function (function pointer)? => it doesn't unless we change taking-a-function_reference syntax.
 
 ```csharp
 fn: (p: U8): U8
@@ -892,6 +917,12 @@ fn4: (self: Struct)
 s: Struct
 s.fn1()     // normal function call
     .fn2()  // continue with indent
+    .fn3()
+    .fn4()
+
+use s       // use 'use' keyword
+    .fn1()  // continue with indent
+    .fn2()
     .fn3()
     .fn4()
 ```
@@ -1598,6 +1629,9 @@ Use a `Task<T>` or normal `T` return type to indicate a non-`async` (sync) conte
 `Async<T>` is syntactic sugar for using the (C#) `async` keyword and the `Task<T>` return type.
 
 ```csharp
+// Alternative syntax
+fnAsync: Async<(): U8>  // wrapper type on function type
+
 // C#: async Task<Byte> fnAsync()
 fnAsync: (): Async<U8>
     // don't need await (implicit)
@@ -1925,7 +1959,7 @@ What is the syntax for an empty function.
 
 ```csharp
 // empty function (indent)
-emptyFn: (p1: U8): Str
+emptyFn: (p1: U8)  // No ret val
     _
 
 // function interface

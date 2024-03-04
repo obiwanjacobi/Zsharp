@@ -36,6 +36,33 @@ my-type
 
 ---
 
+## Symbols and Labels
+
+A general kind of identifiers are code labels.
+
+This syntax is basically consistent of all named code elements.
+
+```csharp
+symbol: <some other code>
+#label: <some other code>
+```
+
+Symbols will be compiled into the binary while labels are only available at compile-time.
+
+This allows some language features where an identifier/label/symbol refers to some specific code.
+
+| Label | Code | Type | Description |
+| -- | -- | -- | -- |
+| var | `x: U8` | Type | Variable declaration |
+| fn | `fn: (p: U8): U8` | FunctionType | Function declaration |
+| struct | `MyStruct` | Type | Structure declaration |
+| field | `fld: U8` | Type | Field declaration |
+| loop | `#outer: loop 42` | LocationType | Loop identifier* |
+
+*) The label is prefixed with a `#` to indicate it is a compile-time label and not a symbol that will be in the binary.
+
+---
+
 ## Case Sensitivity
 
 - Type identifiers start with an upper case letter.
@@ -115,30 +142,6 @@ Only needed when function call may include namespace/module parts...
 
 ---
 
-### Labels
-
-A general kind of identifiers are code labels.
-
-This syntax is basically consistent of all named code elements.
-
-```csharp
-label: <some other code>
-```
-
-This allows some language features where an identifier/label/symbol refers to some specific code.
-
-Label | Code | Type | Description |
-| -- | -- | -- | -- |
-| var | `x: U8` | Type | Variable declaration |
-| fn | `fn: (p: U8): U8` | FunctionType | Function declaration |
-| struct | `MyStruct` | Type | Structure declaration |
-| field | `fld: U8` | Type | Field declaration |
-| loop | `#outer: loop 42` | LocationType | Loop identifier* |
-
-*) The label is prefixed with a `#` to indicate it is a compile-time label and not a symbol that will be in the binary.
-
----
-
 ### Navigation
 
 Any identifier that has a `.` (dot) in it will be split up in parts. Those parts will be used to navigate to the correct 'location' where that symbol is defined.
@@ -176,7 +179,7 @@ MyStruct
     fld1: U8
     fld2: Str
 
-s := MyStruct
+s : MyStruct =
     fld1 = 42
     fld2 = "42"
 
@@ -216,13 +219,14 @@ get_MyProp: (self: MyStruct): U8
 p := MyProp      // no () required?
 ```
 
-Prefix | .NET | Description
---|--|--
-`get_` | property get | Implements a property getter.
-`set_` | property set | Implements a property setter.
-`checked_` | - | Z# operator checked implementation.
-`unchecked_` | - | Z# operator unchecked implementation.
-`op_` | - | Z# operator implementation (neither checked/unchecked)?
+| Prefix | .NET | Description |
+|--|--|--|
+| `get_` | property get | Implements a property getter. |
+| `set_` | property set | Implements a property setter. |
+| `opchk_` | - | Z# operator checked implementation (exception). |
+| `opuchk_` | - | Z# operator unchecked implementation (wrap). |
+| `op_` | - | Z# operator implementation where return type indicates semantics (`Err<T>`/`Opt<T>`) |
+| `opsat_` | - | Z# operator implementation that saturates? |
 
 > Perhaps start the prefix with a `_` to indicate that part is hidden?
 
@@ -257,8 +261,6 @@ MyEmptyAlias = _
 MyEmptyAlias(42)
 ```
 
-How do we know what type this alias represents (function, struct etc)?
+- How do we know what type this alias represents (function, struct etc)?
 
----
-
-> TBD: Aliases and variable initialization with type inference have a potential syntax clash. Using `:=` for type inferred assignment would fix that.
+- Can aliases be exported from a module or are they always local to the module they;re declare in?

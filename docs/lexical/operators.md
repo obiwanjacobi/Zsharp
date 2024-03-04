@@ -5,8 +5,7 @@ Most operators are syntactic sugar over a set of wellknown functions.
 Of these wellknown functions there are two flavors: unchecked and checked implementations. The unchecked flavor performs no validation. The checked version implements extra validation and 'checking' to help make sure the code is correct.
 
 > Use identifier prefixes to identify checked/unchecked operator functions implementations. (`checked_` / `unchecked_`?)
-
-Note that `checked` and `unchecked` do not refer to the .NET variants. It only means that any conversion the operator does is checked to be correct (or not checked).
+Or use a namespace for interop? `Checked.ArithmeticAdd()` The namespace can either be a dotnet namespace or static (nested) class.
 
 > TBD
 
@@ -16,9 +15,11 @@ Postfix arithmetic operator with:
 
 | Operator | Description
 |--|--
-| `!` | Overflow/Underflow will cause an exception. (`.NET checked`)
+| `&` | Overflow/Underflow will cause an exception. (`.NET checked`)
 | `\|` | Overflow/underflow will wrap around. (`.NET unchecked`)
 | `~` | Overflow/underflow will saturate.
+| `!` | Overflow/Underflow will return an error (`Err<T>`).
+| `?` | Overflow/underflow will result in `Nothing` (`Opt<T>`).
 
 (Zig has explicit operators too)
 
@@ -26,11 +27,13 @@ Postfix arithmetic operator with:
 a: U8 = 245
 b: U8 = 125
 
-c: U8 = a +! b  // overflow exception (370 > U8)
+c: U8 = a +& b  // overflow exception (370 > U8)
 c: U8 = a +| b  // wrap around (115)
 c: U8 = a +~ b  // saturate (255)
+c: U8! = a +! b // Error (Err<U8>)
+c: U8? = a +? b // Nothing (Opt<U8>)
 
-// Is checked `!` the default? or use .NET default (unchecked?)
+// Is checked `&` the default? or use .NET default (unchecked?)
 c: U8 = a + b   // ??
 ```
 
@@ -310,9 +313,12 @@ Operators for strings and characters.
 | `>=~` | Case (and culture) insensitive greater-than-or-equal - compare.
 | `=<~` | Case (and culture) insensitive lesser-than-or-equal - compare.
 | `s[2..6]` | sub-string using `Range`.
-| `<+` | Concat a string.
+| `<+` | Concat a string*.
 | `/<+` | Concat (join) a string with path separator.
 | `"x"<+` | Concat (join) a string with any (x) separator?
+
+*) Perhaps concatenation does not require an operator at all?
+`"Hello " "World"`
 
 Array operators should also work on string character items.
 
