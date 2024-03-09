@@ -188,12 +188,14 @@ internal sealed class IrBuilder
             _diagnostics.TypeAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
 
+        var baseType = Type(syntax.BaseType);
+        
         // TODO: inline declared types
         var locality = CurrentScope.IsExport(name) || syntax.IsPublic
             ? IrLocality.Public
             : IrLocality.None;
 
-        return new IrDeclarationType(syntax, symbol, typeParameters, enums, fields, rules, typeScope, locality);
+        return new IrDeclarationType(syntax, symbol, typeParameters, enums, fields, rules, baseType, typeScope, locality);
     }
 
     private IEnumerable<IrTypeMemberEnum> TypeMemberEnums(TypeMemberListSyntax<MemberEnumSyntax>? syntax)

@@ -22,6 +22,12 @@ public sealed class TypeDeclarationSyntax : MemberDeclarationSyntax, ICreateSynt
         => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
+    /// Optional base type.
+    /// </summary>
+    public TypeSyntax? BaseType
+        => ChildNodes.OfType<TypeSyntax>().SingleOrDefault();
+
+    /// <summary>
     /// The type parameters, if any.
     /// </summary>
     public IEnumerable<TypeParameterSyntax> TypeParameters

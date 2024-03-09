@@ -35,6 +35,24 @@ public class TypeSyntaxTests
     }
 
     [Fact]
+    public void TypeDeclareStruct_Derived()
+    {
+        const string code =
+            "Type : BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        t.Name.Text.Should().Be("Type");
+        t.BaseType.Should().NotBeNull();
+        t.BaseType!.Name.Text.Should().Be("BaseType");
+
+        Syntax.RoundTrip(code, _output);
+    }
+
+    [Fact]
     public void TypeDeclareStruct_Generics()
     {
         const string code =

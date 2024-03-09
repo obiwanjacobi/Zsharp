@@ -1,4 +1,4 @@
-﻿# Maja Compiler
+﻿  # Maja Compiler
 
 ## TODO
 
@@ -9,11 +9,12 @@ Started. Have ErrorToken with description.
 - [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
 - [ ] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
     - [ ] Indents (dedent) are not working correct with multiple indents (`SyntaxWriter`).
-- [ ] Type: base type (enum/struct/value)
-- [ ] Type: Generics
+- [ ] Type: base type (enum/struct/value).
+    - [ ] Resolve base types of derived types.
+- [ ] Type: Generics (type inference)
 - [ ] Type: Template
 - [ ] Type: Comp-parameter
-- [ ] Function: Generics
+- [ ] Function: Generics (type inference)
 - [ ] Function: Template
 - [ ] Function: Comp-parameter
 - [ ] Value (custom) Types (/w rules)
@@ -76,4 +77,4 @@ Only necessary when tree is allowed to change.
 
 ## Notes
 
-- CodeBlock is a statement or an expression?
+- Is CodeBlock a statement or an expression?

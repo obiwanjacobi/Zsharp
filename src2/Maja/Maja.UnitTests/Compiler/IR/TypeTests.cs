@@ -57,6 +57,39 @@ public class TypeTests
     }
 
     [Fact]
+    public void TypeDeclareFields_BaseType()
+    {
+        const string code =
+            "BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            "MyType : BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(2);
+        var baseType = program.Root.Declarations[0].As<IrDeclarationType>();
+        var symbol = baseType.Symbol.As<DeclaredTypeSymbol>();
+        symbol.Name.Value.Should().Be("Basetype");
+        symbol.Fields.Should().HaveCount(1);
+        baseType.Fields.Should().HaveCount(1);
+        baseType.Fields[0].DefaultValue.Should().BeNull();
+        baseType.Fields[0].Symbol.Name.Value.Should().Be("fld1");
+        baseType.Fields[0].Type.Symbol.Should().Be(TypeSymbol.U8);
+
+        var type = program.Root.Declarations[1].As<IrDeclarationType>();
+        type.BaseType!.Symbol.Name.Value.Should().Be("Basetype");
+        symbol = type.Symbol.As<DeclaredTypeSymbol>();
+        symbol.Name.Value.Should().Be("Mytype");
+        symbol.Fields.Should().HaveCount(1);
+        type.Fields.Should().HaveCount(1);
+        type.Fields[0].DefaultValue.Should().BeNull();
+        type.Fields[0].Symbol.Name.Value.Should().Be("fld2");
+        type.Fields[0].Type.Symbol.Should().Be(TypeSymbol.Str);
+    }
+
+    [Fact]
     public void TypeDeclareFields_Generics()
     {
         const string code =

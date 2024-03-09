@@ -145,14 +145,16 @@ internal abstract class IrRewriter
         var enums = RewriteEnums(type.Enums);
         var fields = RewriteFields(type.Fields);
         var rules = RewriteRules(type.Rules);
+        var baseType = RewriteType(type.BaseType);
 
         if (typeParams == type.TypeParameters &&
             enums == type.Enums &&
             fields == type.Fields &&
-            rules == type.Rules)
+            rules == type.Rules &&
+            baseType == type.BaseType)
             return type;
 
-        return new IrDeclarationType(type.Syntax, type.Symbol, typeParams, enums, fields, rules, type.Scope, type.Locality);
+        return new IrDeclarationType(type.Syntax, type.Symbol, typeParams, enums, fields, rules, baseType, type.Scope, type.Locality);
     }
 
     protected virtual ImmutableArray<IrTypeMemberEnum> RewriteEnums(ImmutableArray<IrTypeMemberEnum> memberEnums)
