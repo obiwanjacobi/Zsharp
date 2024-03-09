@@ -176,19 +176,20 @@ internal sealed class IrBuilder
         var rules = TypeMemberRules(syntax.Rules);
         _ = PopScope();
 
+        var baseType = Type(syntax.BaseType);
+
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
         var symbol = new DeclaredTypeSymbol(name,
             typeParamSymbols,
             enums.Select(e => e.Symbol),
             fields.Select(f => f.Symbol),
-            rules.Select(r => r.Symbol));
+            rules.Select(r => r.Symbol),
+            baseType?.Symbol);
 
         if (!CurrentScope.TryDeclareType(symbol))
         {
             _diagnostics.TypeAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
-
-        var baseType = Type(syntax.BaseType);
         
         // TODO: inline declared types
         var locality = CurrentScope.IsExport(name) || syntax.IsPublic
@@ -727,15 +728,16 @@ internal sealed class IrBuilder
         {
             _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
             type = new DeclaredTypeSymbol(name, Enumerable.Empty<TypeParameterSymbol>(), 
-                Enumerable.Empty<EnumSymbol>(), Enumerable.Empty<FieldSymbol>(), Enumerable.Empty<RuleSymbol>());
+                Enumerable.Empty<EnumSymbol>(), Enumerable.Empty<FieldSymbol>(), Enumerable.Empty<RuleSymbol>(), null);
         }
 
         var typeArgs = TypeArguments(syntax.Type.TypeArguments);
 
         var initializers = new List<IrTypeInitializerField>();
+        var fields = new List<FieldSymbol>();
         foreach (var fldInitSyntax in syntax.FieldInitializers)
         {
-            if (!type.Fields.TryLookup(fldInitSyntax.Name.Text, out var field))
+            if (!CurrentScope.TryLookupField(type, fldInitSyntax.Name.Text, out var field))
             {
                 _diagnostics.FieldNotFoundOnType(fldInitSyntax.Location, type.Name.Value, fldInitSyntax.Name.Text);
                 field = new FieldSymbol(new SymbolName(fldInitSyntax.Name.Text), TypeSymbol.Unknown);
@@ -743,9 +745,10 @@ internal sealed class IrBuilder
             var expression = Expression(fldInitSyntax.Expression);
             var init = new IrTypeInitializerField(fldInitSyntax, field, expression);
             initializers.Add(init);
+            fields.Add(field);
         }
 
-        var matcher = new IrFieldTypeMatcher(type.TypeParameters, typeArgs, type.Fields, initializers);
+        var matcher = new IrFieldTypeMatcher(type.TypeParameters, typeArgs, fields, initializers);
 
         return new(syntax, type, typeArgs, matcher.RewriteFieldInitializers());
     }

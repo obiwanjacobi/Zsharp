@@ -15,19 +15,22 @@ public record DeclaredTypeSymbol : TypeSymbol
         IEnumerable<TypeParameterSymbol> typeParameters,
         IEnumerable<EnumSymbol> enums,
         IEnumerable<FieldSymbol> fields,
-        IEnumerable<RuleSymbol> rules)
+        IEnumerable<RuleSymbol> rules,
+        TypeSymbol? baseType)
         : base(name)
     {
         TypeParameters = typeParameters.ToImmutableArray();
         Enums = enums.ToImmutableArray();
         Fields = fields.ToImmutableArray();
         Rules = rules.ToImmutableArray();
+        BaseType = baseType;
     }
 
     public ImmutableArray<TypeParameterSymbol> TypeParameters { get; }
     public virtual ImmutableArray<EnumSymbol> Enums { get; }
     public virtual ImmutableArray<FieldSymbol> Fields { get; }
     public ImmutableArray<RuleSymbol> Rules { get; }
+    public TypeSymbol? BaseType { get; }
 }
 
 public static class DeclaredTypeSymbolExtensions

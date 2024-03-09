@@ -161,6 +161,26 @@ internal abstract class IrScope
 
         return -1;
     }
+
+    // looks up fields on type and its base-types.
+    public bool TryLookupField(DeclaredTypeSymbol typeDecl, string name, [NotNullWhen(true)] out FieldSymbol? field)
+    {
+        var type = typeDecl;
+        while (type != null)
+        {
+            if (type.Fields.TryLookup(name, out field))
+                return true;
+
+            if (type.BaseType is not TypeSymbol baseType ||
+                !TryLookupSymbol<DeclaredTypeSymbol>(baseType.Name, out type))
+            {
+                break;
+            }
+        }
+
+        field = null;
+        return false;
+    }
 }
 
 internal sealed class IrFunctionScope : IrScope

@@ -82,6 +82,7 @@ public class TypeTests
         type.BaseType!.Symbol.Name.Value.Should().Be("Basetype");
         symbol = type.Symbol.As<DeclaredTypeSymbol>();
         symbol.Name.Value.Should().Be("Mytype");
+        symbol.BaseType!.Name.Value.Should().Be("Basetype");
         symbol.Fields.Should().HaveCount(1);
         type.Fields.Should().HaveCount(1);
         type.Fields[0].DefaultValue.Should().BeNull();
@@ -103,7 +104,7 @@ public class TypeTests
         program.Root.Declarations.Should().HaveCount(1);
         var type = program.Root.Declarations[0].As<IrDeclarationType>();
         type.TypeParameters.Should().HaveCount(1);
-        var tp = type.TypeParameters.First();
+        var tp = type.TypeParameters[0];
         tp.Symbol.Name.Value.Should().Be("T");
         type.Scope.Symbols.Should().HaveCount(1);
         var symbol = type.Symbol.As<DeclaredTypeSymbol>();
@@ -165,6 +166,36 @@ public class TypeTests
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(2);
         var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
+        v.TypeSymbol.Name.Value.Should().Be("Mytype");
+        var t = v.Initializer.As<IrExpressionTypeInitializer>();
+        t.TypeSymbol.Name.Value.Should().Be("Mytype");
+        t.Fields.Should().HaveCount(2);
+        var f = t.Fields.ToList();
+        f[0].Field.Name.Value.Should().Be("fld1");
+        f[0].Field.Type.Should().Be(TypeSymbol.U8);
+        f[0].Expression.As<IrExpressionLiteral>().ConstantValue!.ToI32().Should().Be(42);
+        f[1].Field.Name.Value.Should().Be("fld2");
+        f[1].Field.Type.Should().Be(TypeSymbol.Str);
+        f[1].Expression.As<IrExpressionLiteral>().ConstantValue!.ToStr().Should().Be("42");
+    }
+
+    [Fact]
+    public void TypeInstantiateFields_BaseType()
+    {
+        const string code =
+            "BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            "MyType : BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
+            "x := MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            Tokens.Indent1 + "fld2 = \"42\"" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(3);
+        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
         v.TypeSymbol.Name.Value.Should().Be("Mytype");
         var t = v.Initializer.As<IrExpressionTypeInitializer>();
         t.TypeSymbol.Name.Value.Should().Be("Mytype");
