@@ -195,7 +195,7 @@ internal class CodeBuilder : IrWalker<object?>
 
     private object? CreateStruct(IrDeclarationType type)
     {
-        var typeInfo = CSharpFactory.CreateType(type.Symbol.Name.Value);
+        var typeInfo = CSharpFactory.CreateType(type.Symbol.Name.Value, type.BaseType?.Symbol.Name.Value);
         CurrentNamespace.AddType(typeInfo);
 
         foreach (var field in type.Fields)

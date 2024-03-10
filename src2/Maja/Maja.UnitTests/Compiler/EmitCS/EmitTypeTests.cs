@@ -54,6 +54,30 @@ public class EmitTypeTests
     }
 
     [Fact]
+    public void TypeDeclaration_BaseType()
+    {
+        const string code =
+            "BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "Field: U8" + Tokens.Eol +
+            "MyType : BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "Name: Str" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" Basetype")
+            .And.Contain(" Mytype")
+            .And.Contain(" System.Byte Field { get; set; }")
+            .And.Contain(" System.String Name { get; set; }")
+            .And.NotContain("<unknown>")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
     public void TypeDeclarationInitialValue()
     {
         const string code =
@@ -92,6 +116,33 @@ public class EmitTypeTests
 
         emit.Should()
             .Contain(" Mytype")
+            .And.Contain(" System.Byte Field { get; set; }")
+            .And.Contain(" System.String Name { get; set; }")
+            .And.NotContain("<unknown>")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
+
+    [Fact]
+    public void TypeInitializer_BaseType()
+    {
+        const string code =
+            "BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "Field: U8" + Tokens.Eol +
+            "MyType : BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "Name: Str" + Tokens.Eol +
+            "x := MyType" + Tokens.Eol +
+            Tokens.Indent1 + "Field = 42" + Tokens.Eol +
+            Tokens.Indent1 + "Name = \"42\"" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" Basetype")
+            .And.Contain(" Mytype")
             .And.Contain(" System.Byte Field { get; set; }")
             .And.Contain(" System.String Name { get; set; }")
             .And.NotContain("<unknown>")

@@ -16,6 +16,9 @@ internal sealed class EvalTypeInstance
 
     public Dictionary<string, object> Fields { get; }
 
+    public T GetFieldValue<T>(string fieldName)
+        => (T)Fields[fieldName];
+
     public override string ToString()
     {
         var txt = new StringBuilder();

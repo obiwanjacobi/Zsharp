@@ -73,7 +73,7 @@ Keeping track of the progress of Maja features.
 | enum        |      | x | x | x |   |   |   | x |   | `MyType -> opt1, opt2`  |
 | custom      |      |   |   |   |   |   |   |   |   | `MyType: U8`  |
 | rule        |      |   |   |   |   |   |   |   |   | `MyType -> #fld1 > 0`  |
-| baseType    | flds | x | x | x |   |   |   |   |   | `MyType : BaseType`  |
+| baseType    | flds | x | x | x |   |   | x | x |   | `MyType : BaseType`  |
 
 ## Expressions
 

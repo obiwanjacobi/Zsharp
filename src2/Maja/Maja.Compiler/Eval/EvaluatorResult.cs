@@ -23,4 +23,14 @@ public class EvaluatorResult
 
     public bool TryLookupVariable(string variable, out object? value)
         => State.TryLookupVariable(variable, out value);
+    public bool TryLookupVariable<T>(string variable, out T? value)
+    {
+        if (State.TryLookupVariable(variable, out var val))
+        {
+            value = (T)val;
+            return true;
+        }
+        value = default;
+        return false;
+    }
 }
