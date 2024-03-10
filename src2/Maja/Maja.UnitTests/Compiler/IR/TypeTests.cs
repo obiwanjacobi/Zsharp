@@ -180,6 +180,36 @@ public class TypeTests
     }
 
     [Fact]
+    public void TypeAssignToBaseType()
+    {
+        const string code =
+            "BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol +
+            "MyType : BaseType" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
+            "x : BaseType = MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            Tokens.Indent1 + "fld2 = \"42\"" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(3);
+        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        v.TypeSymbol.Name.Value.Should().Be("Basetype");
+        var t = v.Initializer.As<IrExpressionTypeInitializer>();
+        t.TypeSymbol.Name.Value.Should().Be("Mytype");
+        t.Fields.Should().HaveCount(2);
+        var f = t.Fields.ToList();
+        f[0].Field.Name.Value.Should().Be("fld1");
+        f[0].Field.Type.Should().Be(TypeSymbol.U8);
+        f[0].Expression.As<IrExpressionLiteral>().ConstantValue!.ToI32().Should().Be(42);
+        f[1].Field.Name.Value.Should().Be("fld2");
+        f[1].Field.Type.Should().Be(TypeSymbol.Str);
+        f[1].Expression.As<IrExpressionLiteral>().ConstantValue!.ToStr().Should().Be("42");
+    }
+
+    [Fact]
     public void TypeInstantiateFields_BaseType()
     {
         const string code =
