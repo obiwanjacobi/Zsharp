@@ -7,10 +7,7 @@
 Started. Have ErrorToken with description.
 - [ ] Syntax parsing does not report invalid trailing tokens.
 - [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
-- [ ] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
-    - [ ] Indents (dedent) are not working correct with multiple indents (`SyntaxWriter`).
-- [ ] Type: base type (enum/struct/value).
-    - [ ] Resolve base types of derived types.
+- [ ] Indents (dedent) are not working correct with multiple indents (`SyntaxWriter`).
 - [ ] Type: Generics (type inference)
 - [ ] Type: Template
 - [ ] Type: Comp-parameter
@@ -31,6 +28,8 @@ Started. Have ErrorToken with description.
 
 ### Done
 
+- [x] Type: base type (enum/struct/value).
+- [x] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
 - [x] Diagnostics: Generate compiler warning for `##` comments
 - [x] UnitTests for Eval
 - [x] IR: Not all expression nodes have a TypeSymbol set (for instance Range)

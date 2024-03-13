@@ -25,6 +25,11 @@ s : MyStruct =
 
 // alternative
 s : MyStruct = { field1 = 42, field2 = "42" }
+
+// MyStruct : MyBase
+s : MyBase = MyStruct
+    field1 = 42
+    field2 = "42"
 ```
 
 A structure can have default values. If no value is explicitly specified each type is initialized with its `#default` value:

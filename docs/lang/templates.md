@@ -263,14 +263,14 @@ DataStruct(count: U16):
     Names: Str[count]           // <= TDB
     Names: Array<Str>(count)    // or this?
 
-//!!!! syntax conflict
+//!!!! ambiguous syntax
 // function calls look the same as type instantiation
 s := MyStructure<U8>(42)    // type init
 f := MyFunction<U8>(42)     // function invocation
 
 // fix by changing the type syntax
 s : MyStructure<U8>(42) = { ... }   // type init
-f := MyCtor(42)         // constructor/convertor function
+f := MyStructure(42)                // constructor/convertor function
 ```
 
 > We don't have syntax for statically dimensioning an array (list), yet!
