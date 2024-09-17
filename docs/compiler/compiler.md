@@ -22,6 +22,7 @@
 - Compiler as profiler?
 - Compiler as build-system? Use REPL/VM to execute zs-script using build-task lib...?
 - Semantic compiler rules available as functions to code (traits?).
+- Emit C#, WASM (and through a Roslyn Source Generator?).
 
 ---
 
