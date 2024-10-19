@@ -1,3 +1,4 @@
+ // $antlr-format off
 parser grammar MajaParser;
 options { tokenVocab=MajaLexer; }
 
@@ -33,7 +34,7 @@ argumentListComma: argument (Comma Sp argument)*;
 argumentListIndent: Indent (argument newline)+ Dedent;
 argument: (nameIdentifier Sp Eq Sp)? expression;
 
-declarationType: nameIdentifier typeParameterList? compParameterList? (Sp? Colon Sp type)? newline Indent declarationTypeMemberList Dedent;
+declarationType: nameIdentifier typeParameterList? (Sp? Colon Sp type)? newline Indent declarationTypeMemberList Dedent;
 declarationTypeMemberList: (declarationTypeMemberListEnum | declarationTypeMemberListField | declarationTypeMemberListRule | newline)+;
 declarationTypeMemberListEnum: (memberEnumValue newline)+ | ((memberEnum (Comma freeSpace memberEnum)*)+ newline);
 declarationTypeMemberListField: (memberField newline)+;
@@ -45,9 +46,6 @@ typeParameterListIndent: Indent (comment* typeParameter newline)+ Dedent;
 typeParameter: typeParameterGeneric | typeParameterTemplate;
 typeParameterGeneric: type (Sp Eq Sp type)?;
 typeParameterTemplate: Hash type (Sp Eq Sp type)?;
-compParameterList: ParenOpen (compParameterListComma | newline compParameterListIndent) ParenClose;
-compParameterListComma: compParameter (Comma Sp compParameter)*;
-compParameterListIndent: Indent (comment* compParameter newline)+ Dedent;
 typeArgumentList: AngleOpen (typeArgumentListComma | newline typeArgumentListIndent) AngleClose;
 typeArgumentListComma: typeArgument (Comma Sp typeArgument)*;
 typeArgumentListIndent: Indent (typeArgument newline)+ Dedent;

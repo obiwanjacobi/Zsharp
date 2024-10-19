@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Maja.Compiler/MajaParser.g4 by ANTLR 4.13.1
+// Generated from c:/My/MyProjects/Zsharp/src2/Maja/Maja.Compiler/MajaParser.g4 by ANTLR 4.13.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -266,24 +266,6 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitTypeParameterTemplate([NotNull] MajaParser.TypeParameterTemplateContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.compParameterList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitCompParameterList([NotNull] MajaParser.CompParameterListContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.compParameterListComma"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitCompParameterListComma([NotNull] MajaParser.CompParameterListCommaContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="MajaParser.compParameterListIndent"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitCompParameterListIndent([NotNull] MajaParser.CompParameterListIndentContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.typeArgumentList"/>.
 	/// </summary>

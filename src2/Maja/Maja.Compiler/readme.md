@@ -1,4 +1,4 @@
-﻿  # Maja Compiler
+﻿# Maja Compiler
 
 ## TODO
 
@@ -15,8 +15,8 @@ Started. Have ErrorToken with description.
 - [ ] Function: Template
 - [ ] Function: Comp-parameter
 - [ ] Value (custom) Types (/w rules)
-- [ ] Infer Type of type parameter from usage (invocation parameter or instantiation type)
-- [ ] Resolve operators to functions (later)
+- [ ] Infer Type of type parameter from usage (invocation parameter or instantiation type) (later)
+- [ ] Resolve operators to functions
 - [ ] local (nested) functions and types
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 - [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)

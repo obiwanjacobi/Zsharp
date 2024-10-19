@@ -1,5 +1,4 @@
 ﻿using System;
-using Maja.Compiler.IR;
 
 namespace Maja.Compiler.EmitCS.CSharp;
 

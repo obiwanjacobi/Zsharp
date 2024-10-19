@@ -1,7 +1,13 @@
+// $antlr-format off
 lexer grammar MajaLexer;
 
-tokens { Indent, Dedent }
-options { superClass=Dentlr.DentlrLexer; }
+tokens {
+    Indent,
+    Dedent
+}
+options {
+    superClass = Dentlr .DentlrLexer;
+}
 
 Comment: ('#_' | '##') .*? ~[\r\n]+;
 
@@ -60,8 +66,6 @@ Range: '..';
 Spread: '...';
 Eq: '=';
 Neq: '<>';
-// Gt: '>';
-// Lt: '<';
 GtEq: '>=';
 LtEq: '=<';
 Plus: '+';

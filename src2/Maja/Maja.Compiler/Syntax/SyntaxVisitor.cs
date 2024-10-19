@@ -24,7 +24,6 @@ public interface ISyntaxVisitor<R>
 
     R OnTypeParameterGeneric(TypeParameterGenericSyntax node);
     R OnTypeParameterTemplate(TypeParameterTemplateSyntax node);
-    R OnTypeParameterValue(TypeParameterValueSyntax node);
     R OnTypeArgument(TypeArgumentSyntax node);
     R OnTypeInitializerField(TypeInitializerFieldSyntax node);
 
@@ -128,9 +127,6 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
         => VisitChildren(node);
 
     public virtual R OnTypeParameterTemplate(TypeParameterTemplateSyntax node)
-        => VisitChildren(node);
-
-    public virtual R OnTypeParameterValue(TypeParameterValueSyntax node)
         => VisitChildren(node);
 
     public virtual R OnTypeArgument(TypeArgumentSyntax node)

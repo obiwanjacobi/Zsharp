@@ -99,7 +99,7 @@ public class FunctionSyntaxTests
     }
 
     [Fact]
-    public void FnTypeParams()
+    public void FnTypeParams_Generics()
     {
         const string code =
             "fn: <T>(p: T)" + Tokens.Eol +

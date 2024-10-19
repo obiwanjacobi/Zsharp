@@ -18,7 +18,7 @@
             "request": "launch",
             "input": "./src2/Maja/Maja.Compiler/antlr.debug.maja",
             "grammar": "./src2/Maja/Maja.Compiler/MajaParser.g4",
-            "startRule": "compilation_unit",
+            "startRule": "compilationUnit",
             "printParseTree": false,
             "visualParseTree": true,
             "internalConsoleOptions": "neverOpen"

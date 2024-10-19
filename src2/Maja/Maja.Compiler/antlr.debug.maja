@@ -1,1 +1,1 @@
-x := MyType{ fld1 = 42 }
+fn: <#type1>(p: U8, #t: Str): Str

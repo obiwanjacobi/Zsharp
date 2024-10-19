@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Maja.Compiler/MajaLexer.g4 by ANTLR 4.13.1
+// Generated from c:/My/MyProjects/Zsharp/src2/Maja/Maja.Compiler/MajaLexer.g4 by ANTLR 4.13.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -30,7 +30,7 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.13.1")]
 [System.CLSCompliant(false)]
-public partial class MajaLexer : Dentlr.DentlrLexer {
+public partial class MajaLexer : Dentlr .DentlrLexer {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int

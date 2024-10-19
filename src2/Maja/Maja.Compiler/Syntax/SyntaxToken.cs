@@ -122,6 +122,13 @@ public abstract class SyntaxToken
                 Location = location
             };
 
+        if (CompilerToken.IsValid(tokenTypeId))
+            return new CompilerToken(text)
+            {
+                TokenTypeId = tokenTypeId,
+                Location = location
+            };
+
         if (CommentToken.IsValid(tokenTypeId))
             return new CommentToken(text)
             {
@@ -192,6 +199,19 @@ public sealed class WhitespaceToken : SyntaxToken
 
     public static bool IsValid(int tokenTypeId)
         => tokenTypeId == MajaLexer.Sp;
+}
+
+/// <summary>
+/// Represents a compiler token.
+/// </summary>
+public sealed class CompilerToken : SyntaxToken
+{
+    public CompilerToken(string Text)
+        : base(Text)
+    { }
+
+    public static bool IsValid(int tokenTypeId)
+        => tokenTypeId == MajaLexer.Hash;
 }
 
 /// <summary>
