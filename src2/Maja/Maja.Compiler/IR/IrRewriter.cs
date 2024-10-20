@@ -124,7 +124,8 @@ internal abstract class IrRewriter
     {
         return parameter switch
         {
-            IrTypeParameterGeneric tpg => RewriteTypeParameterGeneric((IrTypeParameterGeneric)parameter),
+            IrTypeParameterGeneric tpg => RewriteTypeParameterGeneric(tpg),
+            IrTypeParameterTemplate tpt => RewriteTypeParameterTemplate(tpt),
             _ => throw new NotSupportedException($"Ir: TypeParameter {parameter} is not supported.")
         };
     }
@@ -137,6 +138,16 @@ internal abstract class IrRewriter
             return parameter;
 
         return new IrTypeParameterGeneric(parameter.Syntax, type!, parameter.Symbol);
+    }
+
+    protected virtual IrTypeParameterTemplate RewriteTypeParameterTemplate(IrTypeParameterTemplate parameter)
+    {
+        var type = RewriteType(parameter.Type);
+
+        if (type == parameter.Type)
+            return parameter;
+
+        return new IrTypeParameterTemplate(parameter.Syntax, type!, parameter.Symbol);
     }
 
     protected virtual IrDeclarationType RewriteDeclarationType(IrDeclarationType type)
