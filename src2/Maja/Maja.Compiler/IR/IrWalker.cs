@@ -61,7 +61,8 @@ internal abstract class IrWalker<R>
 
     public virtual R OnDeclarationFunction(IrDeclarationFunction function)
     {
-        var result = OnTypeParameters(function.TypeParameters.OfType<IrTypeParameterGeneric>());
+        var result = OnTypeParametersGeneric(function.TypeParameters.OfType<IrTypeParameterGeneric>());
+        result = AggregateResult(result, OnTypeParametersTemplate(function.TypeParameters.OfType<IrTypeParameterTemplate>()));
         result = AggregateResult(result, OnParameters(function.Parameters));
         result = AggregateResult(result, OnOptionalType(result, function.ReturnType));
         result = AggregateResult(result, OnCodeBlock(function.Body));
@@ -72,10 +73,20 @@ internal abstract class IrWalker<R>
             .Aggregate(Default, AggregateResult);
     public virtual R OnParameter(IrParameter parameter)
         => OnType(parameter.Type);
-    public virtual R OnTypeParameters(IEnumerable<IrTypeParameterGeneric> parameters)
-        => parameters.Select(OnTypeParameter)
+    public virtual R OnTypeParametersGeneric(IEnumerable<IrTypeParameterGeneric> parameters)
+        => parameters.Select(OnTypeParameterGeneric)
             .Aggregate(Default, AggregateResult);
-    public virtual R OnTypeParameter(IrTypeParameterGeneric parameter)
+    public virtual R OnTypeParameterGeneric(IrTypeParameterGeneric parameter)
+    {
+        if (parameter.Type is not null)
+            return OnType(parameter.Type);
+
+        return Default;
+    }
+    public virtual R OnTypeParametersTemplate(IEnumerable<IrTypeParameterTemplate> parameters)
+        => parameters.Select(OnTypeParameterTemplate)
+            .Aggregate(Default, AggregateResult);
+    public virtual R OnTypeParameterTemplate(IrTypeParameterTemplate parameter)
     {
         if (parameter.Type is not null)
             return OnType(parameter.Type);

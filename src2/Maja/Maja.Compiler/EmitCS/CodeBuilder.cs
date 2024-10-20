@@ -118,7 +118,7 @@ internal class CodeBuilder : IrWalker<object?>
         CurrentType.AddMethod(method);
         _scopes.Push(new Scope(method));
 
-        _ = OnTypeParameters(function.TypeParameters.OfType<IrTypeParameterGeneric>());
+        _ = OnTypeParametersGeneric(function.TypeParameters.OfType<IrTypeParameterGeneric>());
         _ = OnParameters(function.Parameters);
         _ = OnCodeBlock(function.Body);
 
@@ -126,7 +126,7 @@ internal class CodeBuilder : IrWalker<object?>
         return null;
     }
 
-    public override object? OnTypeParameter(IrTypeParameterGeneric parameter)
+    public override object? OnTypeParameterGeneric(IrTypeParameterGeneric parameter)
     {
         var p = new TypeParameter(parameter.Symbol.Name.Value);
         CurrentMethod.AddTypeParameter(p);

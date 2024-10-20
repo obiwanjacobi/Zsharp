@@ -89,7 +89,7 @@ public class FunctionTests
     }
 
     [Fact]
-    public void FuncDecl_TypeParams()
+    public void FuncDecl_TypeParams_Generics()
     {
         const string code =
             "fn: <T>(p1: T): Bool" + Tokens.Eol +
@@ -174,7 +174,7 @@ public class FunctionTests
     }
 
     [Fact]
-    public void InvocationTypeParam()
+    public void InvocationTypeParam_Generics()
     {
         const string code =
             "fn: <T>(p: T): T" + Tokens.Eol +

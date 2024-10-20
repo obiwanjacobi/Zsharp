@@ -34,3 +34,20 @@ internal sealed class IrTypeParameterGeneric : IrTypeParameter, IrContainer
     public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
         => Type.GetDescendentsOfType<T>();
 }
+
+internal sealed class IrTypeParameterTemplate : IrTypeParameter, IrContainer
+{
+    public IrTypeParameterTemplate(TypeParameterTemplateSyntax syntax, IrType? type, TypeParameterSymbol symbol)
+        : base(syntax, symbol)
+    {
+        Type = type;
+    }
+
+    public IrType? Type { get; }
+
+    public new TypeParameterTemplateSyntax Syntax
+        => (TypeParameterTemplateSyntax)base.Syntax;
+
+    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+        => Type.GetDescendentsOfType<T>();
+}

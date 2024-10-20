@@ -4,7 +4,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using Maja.Compiler.Diagnostics;
-using Maja.Compiler.EmitCS.CSharp;
 using Maja.Compiler.External;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
@@ -282,6 +281,7 @@ internal sealed class IrBuilder
             IrTypeParameter typeParam = typeParamSyntax switch
             {
                 TypeParameterGenericSyntax tpg => TypeParameterGeneric(tpg),
+                TypeParameterTemplateSyntax tpt => TypeParameterTemplate(tpt),
                 _ => throw new NotSupportedException($"IR: No support for TypeParameter '{typeParamSyntax.SyntaxKind}'")
             };
 
@@ -292,6 +292,14 @@ internal sealed class IrBuilder
     }
 
     private IrTypeParameterGeneric TypeParameterGeneric(TypeParameterGenericSyntax syntax)
+    {
+        var symbol = new TypeParameterSymbol(syntax.Type.Text);
+        var type = Type(syntax.DefaultType);
+
+        return new(syntax, type, symbol);
+    }
+
+    private IrTypeParameterTemplate TypeParameterTemplate(TypeParameterTemplateSyntax syntax)
     {
         var symbol = new TypeParameterSymbol(syntax.Type.Text);
         var type = Type(syntax.DefaultType);
