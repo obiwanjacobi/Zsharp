@@ -1,42 +1,48 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Maja.Compiler.Symbol;
 
 /// <summary>
-/// Symbol Table functionality on an optional external dictionary.
+/// Store declared symbols for lookup.
 /// </summary>
-internal static class SymbolTable
+internal sealed class SymbolTable
 {
-    public static bool TryDeclareSymbol<T>(ref Dictionary<string, Symbol>? table, T symbol)
+    private readonly Dictionary<string, Symbol> _table = new();
+
+    public IEnumerable<Symbol> Symbols
+        => _table.Values ?? Enumerable.Empty<Symbol>();
+
+    public bool TryDeclareSymbol<T>(T symbol)
         where T : Symbol
     {
-        table ??= new Dictionary<string, Symbol>();
-
-        if (table.ContainsKey(symbol.Name.Value))
+        if (_table.ContainsKey(symbol.Name.Value))
             return false;
 
-        table.Add(symbol.Name.Value, symbol);
+        _table.Add(symbol.Name.Value, symbol);
         return true;
     }
 
-    public static bool TryLookupSymbol(Dictionary<string, Symbol>? table, string name,
-        [NotNullWhen(true)] out Symbol? symbol)
-    {
-        if (table is null)
-        {
-            symbol = null;
-            return false;
-        }
+    public bool TryDeclareVariable(VariableSymbol symbol)
+        => TryDeclareSymbol(symbol);
 
-        return table.TryGetValue(name, out symbol);
-    }
+    public bool TryDeclareType(TypeSymbol symbol)
+        => TryDeclareSymbol(symbol);
 
-    public static bool TryLookupSymbol<T>(Dictionary<string, Symbol>? table, string name,
-        [NotNullWhen(true)] out T? symbol)
+    public bool TryDeclareFunction(FunctionSymbol symbol)
+        => TryDeclareSymbol(symbol);
+
+    public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol? symbol)
+        => _table.TryGetValue(name, out symbol);
+
+    public bool TryLookupSymbol(SymbolName name, [NotNullWhen(true)] out Symbol? symbol)
+        => _table.TryGetValue(name.Value, out symbol);
+
+    public bool TryLookupSymbol<T>(string name, [NotNullWhen(true)] out T? symbol)
         where T : Symbol
     {
-        if (TryLookupSymbol(table, name, out var genSym) &&
+        if (TryLookupSymbol(name, out var genSym) &&
             genSym is T typedSym)
         {
             symbol = typedSym;
@@ -46,4 +52,8 @@ internal static class SymbolTable
         symbol = null;
         return false;
     }
+
+    public bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
+        where T : Symbol
+        => TryLookupSymbol<T>(name.Value, out symbol);
 }
