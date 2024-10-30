@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using Maja.Compiler.Diagnostics;
 
 namespace Maja.Compiler.IR;
 
 internal abstract class IrRewriter
 {
+    protected DiagnosticList Diagnostics = new();
+
     protected virtual IrProgram RewriteProgram(IrProgram program)
     {
         var module = RewriteModule(program.Module);
@@ -21,14 +25,18 @@ internal abstract class IrRewriter
             declarations == program.Root.Declarations &&
             statements == program.Root.Statements;
 
-        if (module == program.Module &&
+        if (module == program.Module && !Diagnostics.HasDiagnostics &&
             compilationIsUnchanged)
             return program;
+
+        var diagnostics = new DiagnosticList();
+        diagnostics.AddRange(program.Diagnostics);
+        diagnostics.AddRange(Diagnostics);
 
         return new IrProgram(program.Syntax, program.Scope, module,
             compilationIsUnchanged ? program.Root : new IrCompilation(
                 program.Root.Syntax, imports, exports, statements, declarations),
-            program.Diagnostics);
+            diagnostics);
     }
 
     protected virtual IrModule RewriteModule(IrModule module)
@@ -208,6 +216,7 @@ internal abstract class IrRewriter
         return new IrDeclarationVariable(variable.Syntax, variable.Symbol, variable.TypeSymbol, initializer);
     }
 
+    [return: NotNullIfNotNull(nameof(type))]
     protected virtual IrType? RewriteType(IrType? type)
     {
         return type;
@@ -256,7 +265,8 @@ internal abstract class IrRewriter
         return new IrStatementIf(statement.Syntax, condition!, codeBlock, elseClause, elifClause);
     }
 
-    private IrElseClause? RewriteElseClause(IrElseClause? elseClause)
+    [return: NotNullIfNotNull(nameof(elseClause))]
+    protected virtual IrElseClause? RewriteElseClause(IrElseClause? elseClause)
     {
         if (elseClause is null) return null;
 
@@ -268,7 +278,8 @@ internal abstract class IrRewriter
         return new IrElseClause(elseClause.Syntax, codeBlock);
     }
 
-    private IrElseIfClause? RewriteElseIfClause(IrElseIfClause? elseIfClause)
+    [return: NotNullIfNotNull(nameof(elseIfClause))]
+    protected virtual IrElseIfClause? RewriteElseIfClause(IrElseIfClause? elseIfClause)
     {
         if (elseIfClause is null) return null;
 
@@ -301,6 +312,7 @@ internal abstract class IrRewriter
         return statement;
     }
 
+    [return: NotNullIfNotNull(nameof(expression))]
     protected virtual IrExpression? RewriteExpression(IrExpression? expression)
     {
         return expression switch
@@ -382,13 +394,17 @@ internal abstract class IrRewriter
     protected virtual IrExpressionTypeInitializer RewriteTypeInitializer(IrExpressionTypeInitializer initializer)
     {
         var typeArgs = RewriteTypeArguments(initializer.TypeArguments);
-        var fields = RewriteArray(initializer.Fields, RewriteTypeInitializerField);
+        var fields = RewriteTypeInitializerFields(initializer.Fields);
 
         if (typeArgs == initializer.TypeArguments &&
             fields == initializer.Fields)
             return initializer;
 
         return new IrExpressionTypeInitializer(initializer.Syntax, initializer.TypeSymbol, initializer.TypeArguments, fields);
+    }
+    protected virtual ImmutableArray<IrTypeInitializerField> RewriteTypeInitializerFields(ImmutableArray<IrTypeInitializerField> fields)
+    {
+        return RewriteArray(fields, RewriteTypeInitializerField);
     }
     protected virtual IrTypeInitializerField RewriteTypeInitializerField(IrTypeInitializerField initializer)
     {
@@ -433,5 +449,166 @@ internal abstract class IrRewriter
         return builder is null
             ? array
             : builder.MoveToImmutable();
+    }
+}
+
+// ----------------------------------------------------------------------------
+
+internal abstract class IrCopyRewriter : IrRewriter
+{
+    protected override IrArgument RewriteArgument(IrArgument argument)
+    {
+        var expression = RewriteExpression(argument.Expression)!;
+        return new IrArgument(argument.Syntax, expression, argument.Symbol);
+    }
+
+    protected override IrBinaryOperator RewriteBinaryOperator(IrBinaryOperator @operator)
+        => new IrBinaryOperator(@operator.Kind, @operator.OperandType);
+
+    protected override IrCodeBlock RewriteCodeBlock(IrCodeBlock codeBlock)
+    {
+        var statements = RewriteStatements(codeBlock.Statements);
+        var declarations = RewriteDeclarations(codeBlock.Declarations);
+        return new IrCodeBlock(codeBlock.Syntax, statements, declarations);
+    }
+
+    protected override IrDeclarationFunction RewriteDeclarationFunction(IrDeclarationFunction function)
+    {
+        var typeParameters = RewriteTypeParameters(function.TypeParameters);
+        var parameters = RewriteParameters(function.Parameters);
+        var returnType = RewriteType(function.ReturnType)!;
+        // TODO: the scope parent points to the original scope instance, not the duplicated one!
+        var scope = new IrFunctionScope(function.Scope.Name, function.Scope.Parent);
+        var codeBlock = RewriteCodeBlock(function.Body);
+
+        return new IrDeclarationFunction(function.Syntax, function.Symbol, typeParameters, parameters, returnType, scope, codeBlock, function.Locality);
+    }
+
+    protected override IrDeclarationType RewriteDeclarationType(IrDeclarationType type)
+    {
+        var typeParameters = RewriteTypeParameters(type.TypeParameters);
+        var enums = RewriteEnums(type.Enums);
+        var fields = RewriteFields(type.Fields);
+        var rules = RewriteRules(type.Rules);
+        // TODO: the scope parent points to the original scope instance, not the duplicated one!
+        var scope = new IrTypeScope(type.Scope.Name, type.Scope.Parent);
+
+        return new IrDeclarationType(type.Syntax, type.Symbol, typeParameters, enums, fields, rules, type.BaseType, scope, type.Locality);
+    }
+
+    protected override IrDeclarationVariable RewriteDeclarationVariable(IrDeclarationVariable variable)
+    {
+        var expression = RewriteExpression(variable.Initializer);
+        return new IrDeclarationVariable(variable.Syntax, variable.Symbol, variable.TypeSymbol, expression);
+    }
+
+    protected override IrExpressionBinary RewriteExpressionBinary(IrExpressionBinary expression)
+    {
+        var left = RewriteExpression(expression.Left)!;
+        var op = RewriteBinaryOperator(expression.Operator);
+        var right = RewriteExpression(expression.Right)!;
+        return new IrExpressionBinary(left, op, right);
+    }
+
+    protected override IrExpressionInvocation RewriteExpressionInvocation(IrExpressionInvocation expression)
+    {
+        var typeArguments = RewriteTypeArguments(expression.TypeArguments);
+        var arguments = RewriteArguments(expression.Arguments);
+        return new IrExpressionInvocation(expression.Syntax, expression.Symbol, typeArguments, arguments, expression.TypeSymbol);
+    }
+
+    protected override IrParameter RewriteParameter(IrParameter parameter)
+    {
+        var type = RewriteType(parameter.Type)!;
+        return new IrParameter(parameter.Syntax, parameter.Symbol, type);
+    }
+
+    protected override IrTypeMemberField RewriteField(IrTypeMemberField memberField)
+    {
+        var type = RewriteType(memberField.Type)!;
+        var expression = RewriteExpression(memberField.DefaultValue);
+        return new IrTypeMemberField(memberField.Syntax, memberField.Symbol, type, expression);
+    }
+
+    protected override IrTypeMemberRule RewriteRule(IrTypeMemberRule memberRule)
+    {
+        var expression = RewriteExpression(memberRule.Expression);
+        return new IrTypeMemberRule(memberRule.Syntax, memberRule.Symbol, expression);
+    }
+
+    protected override IrStatement RewriteStatementExpression(IrStatementExpression statement)
+    {
+        var expression = RewriteExpression(statement.Expression);
+        return new IrStatementExpression(statement.Syntax, expression, statement.Locality);
+    }
+
+    protected override IrStatement RewriteStatementIf(IrStatementIf statement)
+    {
+        var expression = RewriteExpression(statement.Condition);
+        var codeBlock = RewriteCodeBlock(statement.CodeBlock);
+        var elseClause = RewriteElseClause(statement.ElseClause);
+        var elifClause = RewriteElseIfClause(statement.ElseIfClause);
+
+        return new IrStatementIf(statement.Syntax, expression, codeBlock, elseClause, elifClause);
+    }
+
+    [return: NotNullIfNotNull(nameof(elseClause))]
+    protected override IrElseClause? RewriteElseClause(IrElseClause? elseClause)
+    {
+        if (elseClause is null) return null;
+        var codeBlock = RewriteCodeBlock(elseClause.CodeBlock);
+        return new IrElseClause(elseClause.Syntax, codeBlock);
+    }
+
+    [return: NotNullIfNotNull(nameof(elseIfClause))]
+    protected override IrElseIfClause? RewriteElseIfClause(IrElseIfClause? elseIfClause)
+    {
+        if (elseIfClause is null) return null;
+        var expression = RewriteExpression(elseIfClause.Condition);
+        var codeBlock = RewriteCodeBlock(elseIfClause.CodeBlock);
+        var elseClause = RewriteElseClause(elseIfClause.ElseClause);
+        var elifClause = RewriteElseIfClause(elseIfClause.ElseIfClause);
+        return new IrElseIfClause(elseIfClause.Syntax, expression, codeBlock, elseClause, elifClause);
+    }
+
+    protected override IrStatement RewriteStatementLoop(IrStatementLoop statement)
+    {
+        var expression = RewriteExpression(statement.Expression);
+        var codeBlock = RewriteCodeBlock(statement.CodeBlock);
+        return new IrStatementLoop(statement.Syntax, expression, codeBlock);
+    }
+
+    protected override IrStatement RewriteStatementReturn(IrStatementReturn statement)
+    {
+        var expression = RewriteExpression(statement.Expression);
+        return new IrStatementReturn(statement.Syntax, expression);
+    }
+
+    [return: NotNullIfNotNull("type")]
+    protected override IrType? RewriteType(IrType? type)
+    {
+        if (type is null) return null;
+        var symbol = type.Symbol;
+        return new IrType(type.Syntax, symbol);
+    }
+
+    protected override IrTypeArgument RewriteTypeArgument(IrTypeArgument typeArgument)
+    {
+        var type = RewriteType(typeArgument.Type);
+        return new IrTypeArgument(typeArgument.Syntax, type);
+    }
+
+    protected override IrExpressionTypeInitializer RewriteTypeInitializer(IrExpressionTypeInitializer initializer)
+    {
+        var symbol = initializer.TypeSymbol;
+        var typeArguments = RewriteTypeArguments(initializer.TypeArguments);
+        var fields = RewriteTypeInitializerFields(initializer.Fields);
+        return new IrExpressionTypeInitializer(initializer.Syntax, symbol, typeArguments, fields);
+    }
+
+    protected override IrTypeInitializerField RewriteTypeInitializerField(IrTypeInitializerField initializer)
+    {
+        var expression = RewriteExpression(initializer.Expression);
+        return new IrTypeInitializerField(initializer.Syntax, initializer.Field, expression);
     }
 }

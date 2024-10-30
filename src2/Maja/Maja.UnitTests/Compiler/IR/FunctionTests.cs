@@ -88,6 +88,22 @@ public class FunctionTests
         fn.Symbol.ReturnType.Should().Be(TypeSymbol.Bool);
     }
 
+    // see todo list
+    //[Fact] // fails
+    public void DeclarationWithForwardReference()
+    {
+        const string code =
+            "fn: (): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret fn2()" + Tokens.Eol +
+            "fn2: (): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret 42" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(2);
+    }
+
     [Fact]
     public void FuncDecl_TypeParams_Generics()
     {
@@ -171,6 +187,26 @@ public class FunctionTests
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
         v.Initializer!.ConstantValue.Should().BeNull();
         v.TypeSymbol.Should().Be(TypeSymbol.U8);
+    }
+
+    [Fact]
+    public void InvocationForwardReference()
+    {
+        const string code =
+            "fn()" + Tokens.Eol +
+            "fn: ()" + Tokens.Eol +
+            Tokens.Indent1 + "ret" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(1);
+        program.Root.Statements.Should().HaveCount(1);
+        var fn = program.Root.Statements[0]
+            .As<IrStatementExpression>().Expression
+            .As<IrExpressionInvocation>();
+        fn.Symbol!.Name.Value.Should().Be("fn");
+        fn.Arguments.Should().HaveCount(0);
     }
 
     [Fact]

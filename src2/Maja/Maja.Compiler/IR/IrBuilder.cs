@@ -97,6 +97,8 @@ internal sealed class IrBuilder
         GetScopeOf<IrModuleScope>().SetExports(exports);
         ProcessImports(imports);
 
+        // by first processing declarations before statements
+        // we prevent some complexity of finding forward refs of symbols.
         var members = Declarations(root.Members);
 
         _locallity = IrLocality.Module;
@@ -189,7 +191,7 @@ internal sealed class IrBuilder
         {
             _diagnostics.TypeAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
-        
+
         // TODO: inline declared types
         var locality = CurrentScope.IsExport(name) || syntax.IsPublic
             ? IrLocality.Public
@@ -662,10 +664,12 @@ internal sealed class IrBuilder
                 Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown);
         }
 
+        // TODO: Handle default type parameter values (missing invocation arguments)
         if (functionSymbol.TypeParameters.Count() != typeArgs.Count)
         {
             _diagnostics.MismatchTypeArgumentCount(syntax.Location, functionSymbol.Name.Value, typeArgs.Count);
         }
+        // TODO: Handle default parameter values (missing invocation arguments)
         if (functionSymbol.Parameters.Count() != args.Count)
         {
             _diagnostics.MismatchArgumentCount(syntax.Location, functionSymbol.Name.Value, args.Count);
@@ -735,7 +739,7 @@ internal sealed class IrBuilder
         if (!CurrentScope.TryLookupSymbol<DeclaredTypeSymbol>(name, out var type))
         {
             _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
-            type = new DeclaredTypeSymbol(name, Enumerable.Empty<TypeParameterSymbol>(), 
+            type = new DeclaredTypeSymbol(name, Enumerable.Empty<TypeParameterSymbol>(),
                 Enumerable.Empty<EnumSymbol>(), Enumerable.Empty<FieldSymbol>(), Enumerable.Empty<RuleSymbol>(), null);
         }
 

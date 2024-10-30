@@ -1,10 +1,9 @@
 ﻿# Compilation
 
-Once the SyntaxTree has been parsed from source code, 
-it can be passed to Compilation to produce a SemanticModel.
+The `Compilation` represents the complete set of data that is needed to compile code.
+It maintains a list of `SyntaxTree`'s, `AssemblyReference`'s and compiler options.
+It also describes the target assembly.
+The compilation can Emit code into the target assembly if no Error diagnostics are present in the `Compilation`.
 
-The Compilation will analyze the syntax nodes and identify and resolve symbols
-and construct a SemanticModel.
-
-The SemanticModel can then be used to further analyze the resulting structure 
-and to emit code based on the SemanticModel.
+A `CompilationModel` can be returned for a specific `SyntaxTree`.
+The `CompilationModel` can answer questions about the code, it's symbols and perform flow analysis (future).

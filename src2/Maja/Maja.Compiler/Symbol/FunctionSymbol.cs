@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using Maja.Compiler.IR;
 
 namespace Maja.Compiler.Symbol;
 
@@ -22,6 +23,9 @@ public sealed record FunctionSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Function;
 
+    public bool IsTemplate
+        => TypeParameters.OfType<IrTypeParameterTemplate>().Any();
+
     public ImmutableArray<TypeParameterSymbol> TypeParameters { get; }
     public ImmutableArray<ParameterSymbol> Parameters { get; }
     public TypeSymbol ReturnType { get; }
@@ -41,6 +45,9 @@ public sealed record TypeFunctionSymbol : TypeSymbol
 
     public override SymbolKind Kind
         => SymbolKind.TypeFunction;
+
+    public bool IsTemplate
+        => TypeParameters.OfType<IrTypeParameterTemplate>().Any();
 
     public ImmutableArray<TypeParameterSymbol> TypeParameters { get; }
     public ImmutableArray<TypeSymbol> ParameterTypes { get; }

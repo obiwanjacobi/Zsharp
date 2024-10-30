@@ -14,17 +14,22 @@ Started. Have ErrorToken with description.
 - [ ] Function: Generics (type inference)
 - [ ] Function: Template
 - [ ] Function: Comp-parameter
+- [ ] Function: Forward reference in body not resolved. Unresolved symbols in a scope should be passed onto its parent scope and reprocessed just before exiting the scope.
 - [ ] Value (custom) Types (/w rules)
-- [ ] Infer Type of type parameter from usage (invocation parameter or instantiation type) (later)
+- [ ] Function: Handle default value of parameter (missing invocation argument)
+- [ ] Handle default value of type parameter (missing invocation type argument or instantiation type)
+- [ ] Infer Type of type parameter from usage (invocation type argument or instantiation type)
 - [ ] Resolve operators to functions
-- [ ] local (nested) functions and types
+- [ ] Function body: local (nested) functions and types
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
-- [ ] Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
-- [ ] Allow named type-parameters (`IrArgumentMatcher`)
+- [ ] Function: Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
+- [ ] Function: Allow named type-parameters (`IrArgumentMatcher`)
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
 - [ ] IR: Validate file-global statements (only StatementExpression?)
-- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: ??
+- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
 - [ ] Research compiler feature flags with backwards compatibility with future versions.
+- [ ] Refactor Compilation and CompilationModel to split responsibilities. Compilation has everything to compile. CompilationModel is used to provide a public analysis API. Ir is internal.
+- [ ] Do we split IrBuilder in separate classes, each building a small part of the total Ir model?
 
 ### Done
 

@@ -4,6 +4,9 @@ using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.EmitCS.IR;
 
+/// <summary>
+/// Rewrites the Ir model to have a better/closer fit to emitting csharp.
+/// </summary>
 internal sealed class IrCodeRewriter : IrRewriter
 {
     public IrProgram CodeRewrite(IrProgram program)
@@ -13,7 +16,7 @@ internal sealed class IrCodeRewriter : IrRewriter
     {
         if (statement.Expression is IrExpressionRange rangeExpr)
         {
-            return CreateForLoop("i", rangeExpr.TypeSymbol,  rangeExpr.Start!, rangeExpr.End!, statement.CodeBlock, statement.Syntax);
+            return CreateForLoop("i", rangeExpr.TypeSymbol, rangeExpr.Start!, rangeExpr.End!, statement.CodeBlock, statement.Syntax);
         }
         else if (statement.Expression is IrExpressionIdentifier identExpr)
         {

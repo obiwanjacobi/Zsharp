@@ -39,6 +39,9 @@ internal sealed class IrDeclarationFunction : IrDeclaration, IrContainer
             typeParameters, parameters.Select(p => p.Type), returnType);
     }
 
+    public bool IsTemplate
+        => TypeParameters.OfType<IrTypeParameterTemplate>().Any();
+
     public FunctionSymbol Symbol { get; }
     public ImmutableArray<IrTypeParameter> TypeParameters { get; }
     public ImmutableArray<IrParameter> Parameters { get; }
@@ -101,6 +104,9 @@ internal sealed class IrDeclarationType : IrDeclaration, IrContainer
         Fields = fields.ToImmutableArray();
         Rules = rules.ToImmutableArray();
     }
+
+    public bool IsTemplate
+        => TypeParameters.OfType<IrTypeParameterTemplate>().Any();
 
     public TypeSymbol Symbol { get; }
     public IrTypeScope Scope { get; }
