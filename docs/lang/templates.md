@@ -299,8 +299,8 @@ For that we need a compile-time code reference / function pointer.
 The goal is to insert code into a template that is compiled as a new whole. The function will (probably) be inserted into the template instantiation as a local function.
 
 ```csharp
-// takes a function template parameter 'as code'
-repeat: <#fn: Fn<U8>>(c: U8)
+// takes a (non-type) function template parameter 'as code'
+repeat: (c: U8, #fn: Fn<U8>)
     loop n in [0..c]
         fn(n)   // need '#'? => no
 
@@ -309,7 +309,7 @@ repeat: <#fn: Fn<U8>>(c: U8)
     ...             // <= body is inserted into the template
 
 // compiled as a new function (body)
-repeat<doThisFn>(42)
+repeat(42, doThisFn)
 // will execute doThisFn (body) 42 times (p=0-41)
 ```
 
@@ -336,7 +336,7 @@ t := TemplateType<Str>
 
 ### Variable Number of Template Parameters
 
-> Not supported (yet).
+> Not supported.
 
 We really want to keep this as simple as possible.
 
@@ -350,9 +350,9 @@ A new name for an existing template resolved at compile time. The alias name wil
 
 ```csharp
 // template type alias
-AliasTemplate<T1, T2> = SomeType<T1, OtherType<T1, T2>>
+AliasTemplate<#T1, #T2> = SomeType<T1, OtherType<T1, T2>>
 // template function alias with partial application
-templateFn<T> = fnTempl<T, U8>
+templateFn<#T> = fnTempl<T, U8>
 ```
 
 Aliases can be exported from a module to be reused within the assembly.
@@ -367,8 +367,8 @@ When use of specific template parameter values require specific code.
 typedFn: <#T>(p: T)
     ...
 // Identified to be a specialization by name and function type (pattern).
-typedFn: <Bool>(p: Bool)    // repeat '<Bool>'?
-typedFn: (p: Bool)          // or not?
+typedFn: <Bool>(p: Bool)    // repeat '<Bool>'? (yes)
+typedFn: (p: Bool)          // or infer from usage? (no, this is a non-template overload)
     ...
 
 typedFn(42)         // default typedFn<T> called

@@ -80,10 +80,10 @@ Modules globally imported in an assembly file are available throughout the proje
     ...
 ```
 
-> Also allow `export` modules to have assembly-public modules that can be used by other project? That would mean that to determine at what accessability to generate the code, we need the full hierarchy of assembly-file and module file.
+> Also allow `export` modules to have assembly-public modules that can be used by other projects? That would mean that to determine at what accessability to generate the code, we need the full hierarchy of assembly-file and module file.
 
 |Assembly|Module|Module Access
-|--|--|--|
+|--|--|--
 | - | - | Private to the module.
 | - | export | Internal to the assembly.
 | export | - | Module (type) is assembly-public, but empty. (*)

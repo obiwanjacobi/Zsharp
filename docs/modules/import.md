@@ -104,13 +104,33 @@ Be explicit about what assembly to use to import the name/namespace? (for .NET c
 
 > TBD: this would require a fallback when resolving a type and if not found, trying to locate the identifier as an assembly.
 
+What if all referenced assemblies are imported by default?
+You need to be able to resolve type ambiguities. Type ambiguities are only a problem when they are actually referenced in the code.
+What about namespace ambiguities? What if multiple namespaces contain a lot of the same types?
+Do we want to alias each type individually or simply ignore one namespace entirely?
+
+```csharp
+# import .*                // <= import everything we know
+# import MyConsole = System.Console     // suppose there are 2 Console types.
+```
+
+Or do subsequent imports "narrow down" previous imports?
+
+```csharp
+# import .*         // suppose we also have another IO namespace with similar types.
+# import System.IO  // but we choose this one.
+```
+
+---
+
 Or more C# like - always specify .NET namespaces (`.*`) or specific type / Z# modules?
 
 ```csharp
 # import System.IO          // <= namespace
+# import System.Console     // <= type
 ```
 
-> TBD: this does not fit well with Z#'s `module` paradigm.
+This requires a secondary lookup of the external type if the first lookup as a namespace fails.
 
 ---
 

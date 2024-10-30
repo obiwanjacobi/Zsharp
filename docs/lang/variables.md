@@ -80,7 +80,7 @@ An immutable variable is initialized when declared (not assigned to later).
 c: U8 = 10      // c has value 10 and cannot be changed
 
 c = 42              // error! cannot change value
-b : Mut<U8> = c     // now a is mutable
+b : Mut<U8> = c     // now b is mutable
 
 a: U8 = b       // ok, immutable copy of b
 ```
@@ -157,7 +157,7 @@ This helps with passing necessary but non-informative parameters.
 with x
     ...
 
-use x
+use x   // 'use' could be a replacement for import or 'using'
     ...
 
 push x
@@ -169,6 +169,19 @@ push x
 - How to combine context vars and capture blocks?
 
 Could be useful for passing async cancellation tokens etc.
+
+> TBD: What if we could use a capture block and indicate/mark each variable that could be used as a context variable?
+
+```csharp
+x := 42
+y := 101
+
+|with x, with y|    // capture block with marked 'with'
+|use x, use y|      // capture block with marked 'use'
+|dep x, dep y|      // capture block with marked 'dep'endency
+|&x, &y|            // syntax for some sort of operator
+    ...             // x and y are context variables
+```
 
 > What happens when multiple of the same type are specified? Compile Error? Match Array\<T>?
 
@@ -194,23 +207,6 @@ with (s, v)     // use '()' for lists? Or is (s, v) a tuple now?
 > Can `self` parameters also come from context? Is there a reason to prohibit that?
 
 Nested `with` contexts are stacked with a reference to its parent. That means that existing types can be overridden with new values and type-lookup is done from most nested (or current) context up to the root context. The value of the first context that has the type registered, will be used.
-
-Another use of the `with` keyword.
-
-```csharp
-MyType: (p: U8): MyType
-    ...
-MyFn: (self: MyType, str: Str)
-    ...
-
-t := MyType(42)
-with t
-    .MyFn("blabla")
-
-// or
-with MyType(42)
-    .MyFn("blabla")
-```
 
 ---
 

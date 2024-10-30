@@ -15,25 +15,23 @@ Postfix arithmetic operator with:
 
 | Operator | Description
 |--|--
-| `&` | Overflow/Underflow will cause an exception. (`.NET checked`)
-| `\|` | Overflow/underflow will wrap around. (`.NET unchecked`)
-| `~` | Overflow/underflow will saturate.
+| `\|` | Overflow/underflow will saturate.
+| `%` | Overflow/underflow will wrap around. (`.NET unchecked`)
+| `~` | Overflow/Underflow will cause an exception. (`.NET checked`)
 | `!` | Overflow/Underflow will return an error (`Err<T>`).
 | `?` | Overflow/underflow will result in `Nothing` (`Opt<T>`).
-
-(Zig has explicit operators too)
 
 ```csharp
 a: U8 = 245
 b: U8 = 125
 
-c: U8 = a +& b  // overflow exception (370 > U8)
-c: U8 = a +| b  // wrap around (115)
-c: U8 = a +~ b  // saturate (255)
+c: U8 = a +| b  // saturate (255)
+c: U8 = a +% b  // wrap around (115)
+c: U8 = a +~ b  // overflow exception (370 > U8)
 c: U8! = a +! b // Error (Err<U8>)
 c: U8? = a +? b // Nothing (Opt<U8>)
 
-// Is checked `&` the default? or use .NET default (unchecked?)
+// Is checked `~` the default? or use .NET default (unchecked?)
 c: U8 = a + b   // ??
 ```
 
@@ -93,10 +91,10 @@ Arithmetic, comparison, bitwise and logical operators.
 | `or` | LogicOr | Logical Or
 | `nor` | LogicOr | Logical Nor?
 | `xor` | LogicXor | Logical Xor
-| `xnor` | LogicXor | Logical Xnor?
+| `nxor` | LogicNxor | Logical Nxor?
 | `not` | LogicNot | Logical Negation
 | `&` | - | Bitwise And*
-| `|` | - | Bitwise Or*
+| `\|` | - | Bitwise Or*
 | `^` | - | Bitwise Exclusive Or*
 | `~` | - | Bitwise Negation (complement/invert)*
 | `>>` | - | Bitwise Shift Right
@@ -139,13 +137,15 @@ Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `x
 More mathematic concepts as operators?
 PI (and other constants), rad, deg, vectors, matrix, infinity, sin, cos, tan (inv), rounding (floor, ceiling), medium, mean, average, factorial/permutation/combination, sum...
 
-Operator that cascades the left value? See C# pattern matching with `is`.
+Operator that cascades the left value? See C# pattern matching with `is`: `if c is 42 or 101`.
 So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 101`. See also [match expression](../expressions/match.md). Would also work with `if c in (42, 101)`.
 
 | Operator | Fn Name | Description
 |--|--|--
 | `&&` | cascading l-value logical-and
 | `\|\|` | cascading l-value logical-or
+
+> TBD: The `is` expression is probably easier to read and understand. No extra operators needed.
 
 ---
 
@@ -257,16 +257,10 @@ To be determined:
 | `=>` | used in mapping / some sort of (forward) assignment? (implies?)
 | `<=` | map structure / assign struct properties
 | `()` | Function Object operator
-| `\|>` | Parameter pipe?
-| `<\|` | Reverse parameter pipe? (don't like it)
+| `\|>` | Parameter pipe
+| `<\|` | Reverse parameter pipe (don't like it)
 | `<=>` | Swap operator
 | `::` | traits? (type of type)
-| `:=` | equals type (bool/condition) (also assignment with type inference)
-| `:?` | type is (C# is keyword)
-| `?:` | alt - type is (C# is keyword)
-| `<:?` | type as (optional cast)
-| `<:` | down cast type
-| `:>` | up cast type? (is implicit)
 | `<-` | reserved (assign mutable variable?)
 | `->>` | parallel execution (also sign extended shift)
 | `=>>` | parallel execution and collect results (in tuple or deconstruct)
@@ -296,6 +290,30 @@ x := root.collection[?0]    // x: Opt<T>
 ```
 
 Use of safe navigation (in any form) always results in an Optional `Opt<T>` that is nothing if the path could not be navigated completely.
+
+---
+
+## Type Operator Symbols
+
+Operators that operate on types.
+
+| Operator | Description
+|---|---
+| `:=` | equals type (bool/condition) (also assignment with type inference)
+| `:?` | type is (C# is keyword)
+| `<:?` | type as (optional cast)
+| `<:` | down cast type
+| `:>` | up cast type? (is implicit)
+
+Alternatives where the `:` is always last (more consistent?):
+
+| Operator | Description
+|---|---
+| `=:` | equals type (no clash with assignment)
+| `?:` | type is (C# is keyword)
+| `<?:` | type as (optional cast)
+| `<:` | down cast type
+| `>:` | up cast type? (is implicit)
 
 ---
 
@@ -344,6 +362,16 @@ pi := 3.1415
 
 // how to specify three operands?
 if f = pi ~ 0.01
+    // same (within margin)
+```
+
+Also applicable to dates:
+
+```csharp
+now := DateTime.Now
+d := DateTime.Now.AddDays(1)    // just some date
+
+if f = now ~ TimeSpan.FromMinutes(1)
     // same (within margin)
 ```
 

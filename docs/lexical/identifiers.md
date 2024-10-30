@@ -120,6 +120,15 @@ s.[intellisense does not show _id]
 
 > Do we want to give meaning to identifiers ending with a `_`? Could we use this for weak-functions (or weak-anything)?
 
+> TBD: We could also use `_` as a prefix for any symbol to indicate it is a private symbol. This would not require to explicitly `export` a public symbol.
+
+```csharp
+_privateFn: ()
+    ...
+publicFn: ()
+    ...
+```
+
 ---
 
 ## Fully Qualified Names

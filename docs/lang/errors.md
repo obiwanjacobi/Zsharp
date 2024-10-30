@@ -54,7 +54,7 @@ A (predicted) common pattern is that a function will call many functions itself 
 MyFunc: (): Bool!
     // propagate error from function
     b := try couldWork() // try -> catch(err) return err
-    // b is the plain type - without the Err<> component.
+    // b is the plain type - without the Err<> wrapper type.
     use(b)
 ```
 
@@ -63,6 +63,41 @@ It takes away some of the noise of simple error handling.
 The explicit keywords `catch` and `try` -and in a lesser sense `match` are explicitly chosen to make it clear how these errors are handled in the code.
 
 Note that both `catch` and `try` strip of the `Err<T>` part from the return value of the function. So variable has no `Err<T>` component/decorator type, it's just its plain Type (`T`).
+
+> TBD: use the `try` keyword for converting errors to exceptions?
+
+> TBD: Use the `catch` keyword for convering exceptions to errors?
+
+```csharp
+throwsException: ()
+    throw ...
+returnsError: (): Void!
+    return Error(...)
+
+// using errors
+throwsException() catch(err)
+
+// using exceptions
+try returnsError()
+// what type of exception?
+```
+
+This would require the previous examples to use different keywords. Perhaps `tryError` and `catchError`? (then rename try and catch to `tryException` and `catchException`?) (`try-error` and `catch-error` / `try-expection` and `catch-expection`)
+
+Or leave `try` and `catch` for exceptions (like in C#) and use `catchErr` and `tryErr` for errors?
+
+Use `!` to propagate errors instead of `try`? What to use for exceptions?
+
+```csharp
+actionOrError: (): Void!
+    // use ! to propagete errors
+    v := couldWork()!
+    use(v)
+```
+
+> What if multiple transitions between errors and exceptions take place? How do you preserve the original error/exception type? Have an `Exception` field in `Error` and store error instances in context data (under a fixed key) in an exception.
+
+It would be benificial to have the option to handle exceptions on per call basis as this would blend better with the (Z#) error handling mechanism.
 
 The `catch` and `try` keywords can only be used on functions that actually return errors.
 

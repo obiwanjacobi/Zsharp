@@ -48,6 +48,8 @@ A range results in a (virtual) list with numbers. So shouldn't the syntax reflex
 rng := (0..10)       // range from 0 to 9 -incl.
 stp := (0..10: 2)    // 0, 2, 4, 6, 8
 stp := (0..10+ 2)    // alternate syntax? (bc ':' is for type)
+stp := (0..10; 2)
+stp := (0..10, 2)
 ```
 
 > TBD: use list syntax `()` when creating range objects. Use index syntax `[]` when extracting from Array or List objects.

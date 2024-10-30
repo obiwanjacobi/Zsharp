@@ -291,7 +291,7 @@ fn: (p: Ref<U8>)
     ...
 ```
 
-This is one usage of `Ptr<T>` that may actually be useful.
+> TBD: If we assume immutable types by default and have a `Mut<T>` for mutable data, then a `Mut<T>` would represent an out parameter, `Ref<T>` a ref parameter and a normal type as a constant parameter.
 
 Alternative for out parameters is to return it as a return value.
 If multiple out parameter and/or return values exist, the return type becomes a tuple.
@@ -300,13 +300,16 @@ If multiple out parameter and/or return values exist, the return type becomes a 
 // import
 // C# bool TryParse(string, out int)
 
-result = TryParse("42")
+result := TryParse("42")
 b, i := result
 // b = true
 // i = 42
-```
 
-> TBD: If we assume immutable types by default and have a `Mut<T>` for mutable data, then a `Mut<T>` would represent an out parameter, `Ref<T>` a ref parameter and a normal type as a constant parameter.
+// - or ? -
+option := TryParse("42")
+// option.Value = 42
+// otherwise 'nothing'
+```
 
 ```csharp
 // immutable / constant parameter
@@ -486,11 +489,13 @@ fn(42, c)   // explicit
 fn(42)   // implicit
 ```
 
+> TBD For implicit parameter on the call site we can use the `with` keyword or a capture to indicate what instances to use for the implicit parameters.
+
 ---
 
 ### Parameter Validation
 
-Some types could have default validations without the code having to explicitly asak for it. These validations are not implicit because they are suggested in the code, just not explicitly stated.
+Some types could have default validations without the code having to explicitly ask for it. These validations are not implicit because they are suggested in the code, just not explicitly stated.
 
 - `null` (interop): automatically validate not-null based on ref-nullability.
 - `Enum` (interop): validate standard .NET Enum values to lie inside the defined range.
@@ -510,6 +515,22 @@ fn: [c]<T>(p1: U8, p2: Str): Bool
 
 These validation rules could then be emitted as a separate function that can be inlined at the call site to prevent 'expensive' calls only to find out the params were not valid.
 This is only useful when the calls are expensive enough, so not for normal in process calls that require no dispatching, marshalling or any other type of processing. Then the validation is done inside the function.
+
+### Parameter Inference
+
+> TBD Can the parameters (and return type) of a function be inferred from the function body and/or the specified arguments?
+
+```csharp
+//inferredFn: (p: U?): Bool
+inferredFn :=
+    return p = 42
+
+inferredFn(4242)
+```
+
+> How will the size of `p` be determined?
+
+> How will the parser know the difference between a variable and a function?
 
 ## Return values
 
@@ -1022,6 +1043,8 @@ fn: (self: Struct1)
 FunctionCall: (self: Struct1)   // or operator by name
     ...
 ```
+
+> This is used for dereferencing a `Ptr`. The `Ptr` type has a special `()` operator that calls the `Deref` function.
 
 ---
 

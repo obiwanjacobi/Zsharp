@@ -161,6 +161,27 @@ use; with; [a]  // line breaks?
 
 ---
 
+> TBD: Use captures as a dependency list to run a function when one of the captured values changes?
+
+```csharp
+x :=^ 42        // mutable
+fn: [x](p: U8)
+    ...
+
+// some sort of registration?
+// what will be the parameter values when the function re-triggers?
+Reactive.OnCaptureChange(fn, p = 42)    // lifts the captures as dependencies
+// what happens to any return value from fn?
+// returned from Reactive.OnCaptureChange as an (async) enumerator?
+
+x = 101     // trigger fn
+x = 2112    // trigger fn
+
+// how is the variable x hooked in order to produce a trigger?
+```
+
+---
+
 > TBD: debug-only captures?
 
 > TBD: have a capture syntax that forwards the dependency towards any subsequent calls inside the capture block. This would help in identifying pure functions?
