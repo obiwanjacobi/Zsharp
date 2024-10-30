@@ -16,7 +16,7 @@ internal abstract class IrScope
         Parent = parent;
     }
 
-    public SymbolTable Symbols { get; } = new();
+    protected SymbolTable SymbolTable { get; } = new();
 
     public string Name { get; }
     public virtual string FullName
@@ -34,24 +34,36 @@ internal abstract class IrScope
         return false;
     }
 
+    public IReadOnlyCollection<Symbol.Symbol> Symbols
+        => SymbolTable.Symbols;
+
+    public bool TryDeclareVariable(VariableSymbol symbol)
+        => SymbolTable.TryDeclareSymbol(symbol);
+
+    public bool TryDeclareType(TypeSymbol symbol)
+        => SymbolTable.TryDeclareSymbol(symbol);
+
+    public bool TryDeclareFunction(FunctionSymbol symbol)
+        => SymbolTable.TryDeclareSymbol(symbol);
+
     public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
-        => Symbols.TryLookupSymbol<Symbol.Symbol>(name, out symbol);
+        => SymbolTable.TryLookupSymbol<Symbol.Symbol>(name, out symbol);
 
     public virtual bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
         where T : Symbol.Symbol
     {
-        if (Symbols.TryLookupSymbol<T>(name.FullName, out symbol))
+        if (SymbolTable.TryLookupSymbol<T>(name.FullName, out symbol))
         {
             return true;
         }
 
-        if (Symbols.TryLookupSymbol<T>(name.Value, out symbol) &&
+        if (SymbolTable.TryLookupSymbol<T>(name.Value, out symbol) &&
             symbol.Name.Namespace.Value == FullName)
         {
             return true;
         }
 
-        var result = Symbols.Symbols.Where(s => name.MatchesWith(s.Name) >= 0);
+        var result = SymbolTable.Symbols.Where(s => name.MatchesWith(s.Name) >= 0);
         if (result.Any())
         {
             Debug.Assert(result.Count() == 1);
@@ -71,19 +83,19 @@ internal abstract class IrScope
 
     public virtual bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out FunctionSymbol? symbol)
     {
-        if (Symbols.TryLookupSymbol(name.FullName, out symbol))
+        if (SymbolTable.TryLookupSymbol(name.FullName, out symbol))
         {
             return true;
         }
 
-        if (Symbols.TryLookupSymbol(name.Value, out symbol) &&
+        if (SymbolTable.TryLookupSymbol(name.Value, out symbol) &&
             symbol.Name.Namespace.Value == FullName)
         {
             return true;
         }
 
         if (FunctionOverloadPicker.TryPickFunctionSymbol(
-            Symbols.Symbols.OfType<FunctionSymbol>(), name, argumentTypes, out symbol))
+            SymbolTable.Symbols.OfType<FunctionSymbol>(), name, argumentTypes, out symbol))
             return true;
 
         if (Parent is not null)
@@ -96,7 +108,7 @@ internal abstract class IrScope
     }
 
     // find type and locate member on type, then return the type of the member
-    public virtual bool TryLookupMemberType(SymbolName type, SymbolName member, [NotNullWhen(true)] out TypeSymbol? memberType)
+    public bool TryLookupMemberType(SymbolName type, SymbolName member, [NotNullWhen(true)] out TypeSymbol? memberType)
     {
         if (TryLookupSymbol<DeclaredTypeSymbol>(type, out var typeDecl))
         {
@@ -116,7 +128,7 @@ internal abstract class IrScope
         {
             var name = new SymbolName(param.Name.FullName);
             var symbol = new TypeSymbol(name);
-            if (!Symbols.TryDeclareType(symbol))
+            if (!TryDeclareType(symbol))
                 return index;
 
             index++;
@@ -132,7 +144,7 @@ internal abstract class IrScope
         {
             var name = new SymbolName(param.Name.FullName);
             var variable = new VariableSymbol(name, param.Type);
-            if (!Symbols.TryDeclareVariable(variable))
+            if (!TryDeclareVariable(variable))
                 return index;
 
             index++;
@@ -151,7 +163,7 @@ internal abstract class IrScope
                 return true;
 
             if (type.BaseType is not TypeSymbol baseType ||
-                !Symbols.TryLookupSymbol<DeclaredTypeSymbol>(baseType.Name, out type))
+                !SymbolTable.TryLookupSymbol<DeclaredTypeSymbol>(baseType.Name, out type))
             {
                 break;
             }
@@ -280,12 +292,12 @@ internal sealed class IrGlobalScope : IrScope
 
     private void DeclareType(TypeSymbol symbol)
     {
-        if (!Symbols.TryDeclareType(symbol))
+        if (!TryDeclareType(symbol))
             throw new InvalidOperationException($"TypeSymbol {symbol.Name} could not be declared in the global scope! Duplicates?");
     }
 
     public bool TryDeclareModule(ModuleSymbol symbol)
-        => Symbols.TryDeclareSymbol(symbol);
+        => SymbolTable.TryDeclareSymbol(symbol);
 
     public override string FullName
         => String.Empty;

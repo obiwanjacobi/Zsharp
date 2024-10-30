@@ -106,7 +106,7 @@ public class TypeTests
         type.TypeParameters.Should().HaveCount(1);
         var tp = type.TypeParameters[0];
         tp.Symbol.Name.Value.Should().Be("T");
-        type.Scope.Symbols.Symbols.Should().HaveCount(1);
+        type.Scope.Symbols.Should().HaveCount(1);
         var symbol = type.Symbol.As<DeclaredTypeSymbol>();
         symbol.Name.Value.Should().Be("Mytype");
         symbol.Fields.Should().HaveCount(2);

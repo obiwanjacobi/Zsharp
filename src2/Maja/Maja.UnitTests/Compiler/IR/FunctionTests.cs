@@ -24,7 +24,7 @@ public class FunctionTests
         fn.Parameters.Should().BeEmpty();
         fn.ReturnType.Symbol.Should().Be(TypeSymbol.Void);
         // scope
-        fn.Scope.Symbols.Symbols.Should().BeEmpty();
+        fn.Scope.Symbols.Should().BeEmpty();
         // symbol
         fn.Symbol.Name.Value.Should().Be("fn");
         fn.Symbol.Parameters.Should().BeEmpty();
@@ -77,7 +77,7 @@ public class FunctionTests
         fn.Parameters.Should().HaveCount(2);
         fn.ReturnType!.Symbol.Should().Be(TypeSymbol.Bool);
         // scope
-        fn.Scope.Symbols.Symbols.Should().HaveCount(2);
+        fn.Scope.Symbols.Should().HaveCount(2);
         fn.Scope.TryLookupSymbol("p1", out var p1).Should().BeTrue();
         fn.Scope.TryLookupSymbol("p2", out var p2).Should().BeTrue();
         p1!.Kind.Should().Be(SymbolKind.Variable);
@@ -122,7 +122,7 @@ public class FunctionTests
         fn.Parameters.Should().HaveCount(1);
         fn.ReturnType!.Symbol.Should().Be(TypeSymbol.Bool);
         // scope
-        fn.Scope.Symbols.Symbols.Should().HaveCount(2);
+        fn.Scope.Symbols.Should().HaveCount(2);
         fn.Scope.TryLookupSymbol("p1", out var p1).Should().BeTrue();
         p1!.Kind.Should().Be(SymbolKind.Variable);
         // symbol

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Maja.Compiler.Symbol;
 
@@ -11,8 +10,8 @@ internal sealed class SymbolTable
 {
     private readonly Dictionary<string, Symbol> _table = new();
 
-    public IEnumerable<Symbol> Symbols
-        => _table.Values ?? Enumerable.Empty<Symbol>();
+    public IReadOnlyCollection<Symbol> Symbols
+        => _table.Values;
 
     public bool TryDeclareSymbol<T>(T symbol)
         where T : Symbol
@@ -23,15 +22,6 @@ internal sealed class SymbolTable
         _table.Add(symbol.Name.Value, symbol);
         return true;
     }
-
-    public bool TryDeclareVariable(VariableSymbol symbol)
-        => TryDeclareSymbol(symbol);
-
-    public bool TryDeclareType(TypeSymbol symbol)
-        => TryDeclareSymbol(symbol);
-
-    public bool TryDeclareFunction(FunctionSymbol symbol)
-        => TryDeclareSymbol(symbol);
 
     public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol? symbol)
         => _table.TryGetValue(name, out symbol);

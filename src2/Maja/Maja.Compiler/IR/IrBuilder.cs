@@ -187,7 +187,7 @@ internal sealed class IrBuilder
             rules.Select(r => r.Symbol),
             baseType?.Symbol);
 
-        if (!CurrentScope.Symbols.TryDeclareType(symbol))
+        if (!CurrentScope.TryDeclareType(symbol))
         {
             _diagnostics.TypeAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
@@ -327,7 +327,7 @@ internal sealed class IrBuilder
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
         var symbol = new VariableSymbol(name, type!);
 
-        if (!CurrentScope.Symbols.TryDeclareVariable(symbol))
+        if (!CurrentScope.TryDeclareVariable(symbol))
         {
             _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
@@ -351,7 +351,7 @@ internal sealed class IrBuilder
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
         var variableSymbol = new VariableSymbol(name, typeSymbol);
 
-        if (!CurrentScope.Symbols.TryDeclareVariable(variableSymbol))
+        if (!CurrentScope.TryDeclareVariable(variableSymbol))
         {
             _diagnostics.VariableAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
@@ -387,7 +387,7 @@ internal sealed class IrBuilder
         var name = new SymbolName(parentScope.FullName, syntax.Identifier.Text);
         var symbol = new FunctionSymbol(name, typeParamSymbols, paramSymbols, returnType.Symbol);
 
-        if (!parentScope.Symbols.TryDeclareFunction(symbol))
+        if (!parentScope.TryDeclareFunction(symbol))
         {
             _diagnostics.FunctionAlreadyDelcared(syntax.Location, symbol.Name.FullName);
         }
