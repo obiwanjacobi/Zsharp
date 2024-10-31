@@ -29,7 +29,7 @@ h := 0xFF_FF
 
 > TBD I am thinking of defaulting to Int64 for all literal numbers.
 
-> Add postfixes to indicate type? `a := 42u` (unsigned)
+> Add postfixes to indicate type? `a := 42u` (unsigned) NO!
 
 Use the actual type name?
 
@@ -38,6 +38,8 @@ a := 42#U8
 b := 1024#I16
 c := 3.1415#F32
 ```
+
+NO! The type of the literal is inferred from the context or the default is used (Integers=I64, Floats=F64).
 
 ---
 
@@ -79,6 +81,7 @@ Char | Note
 `t | Tab
 `f | Line Feed
 `b | Bell
+`` | ` (backtick)
 
 More?
 

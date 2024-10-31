@@ -490,7 +490,7 @@ names := arr.>fn(42)
 
 ---
 
-## Short-hand Operators
+## Mutating Operators
 
 All these operators work as follows:
 _Read left, [op] right to left, write left_
@@ -518,6 +518,15 @@ These operators cannot be overloaded, they simply use the standard operators.
 | `^=` | read - 'immutable' ?? - write
 | `\|>=` | ?
 | `<\|=` | ? (or `=<\|`)
+
+> TBD: Some of these could be interlocked.
+
+What syntax to use? `|+=|`, `\\+=`
+
+| Operator | Description
+|---|---
+| `\|+=\|` | interlocked (read - add - write)
+| `\|-=\|` | interlocked (read - subtract - write)
 
 Do we allow a list of right values? (yes)
 

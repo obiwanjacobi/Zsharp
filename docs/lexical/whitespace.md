@@ -176,6 +176,8 @@ fn: ()
     y := 2112
 ```
 
+> TBD: Ignore comments in determining indentation.
+
 ---
 
 > TBD
