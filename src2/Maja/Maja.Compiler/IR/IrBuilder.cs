@@ -295,7 +295,7 @@ internal sealed class IrBuilder
 
     private IrTypeParameterGeneric TypeParameterGeneric(TypeParameterGenericSyntax syntax)
     {
-        var symbol = new TypeParameterSymbol(syntax.Type.Text);
+        var symbol = new TypeParameterGenericSymbol(syntax.Type.Text);
         var type = Type(syntax.DefaultType);
 
         return new(syntax, type, symbol);
@@ -303,7 +303,7 @@ internal sealed class IrBuilder
 
     private IrTypeParameterTemplate TypeParameterTemplate(TypeParameterTemplateSyntax syntax)
     {
-        var symbol = new TypeParameterSymbol(syntax.Type.Text);
+        var symbol = new TypeParameterTemplateSymbol(syntax.Type.Text);
         var type = Type(syntax.DefaultType);
 
         return new(syntax, type, symbol);
@@ -389,7 +389,7 @@ internal sealed class IrBuilder
 
         if (!parentScope.TryDeclareFunction(symbol))
         {
-            _diagnostics.FunctionAlreadyDelcared(syntax.Location, symbol.Name.FullName);
+            _diagnostics.FunctionAlreadyDeclared(syntax.Location, symbol.Name.FullName);
         }
 
         index = functionScope.TryDeclareVariables(paramSymbols);
@@ -418,7 +418,16 @@ internal sealed class IrBuilder
             ? IrLocality.Public
             : IrLocality.None;
 
-        return new IrDeclarationFunction(syntax, symbol, typeParameters, parameters, returnType, functionScope, block, locality);
+        var functionDecl = new IrDeclarationFunction(syntax, symbol, typeParameters, parameters, returnType, functionScope, block, locality);
+
+        // templates are registered for later instantiation processing
+        if (functionDecl.IsTemplate &&
+            !CurrentScope.TryRegisterTemplateFunction(functionDecl))
+        {
+            _diagnostics.FunctionTemplateAlreadyDeclared(syntax.Location, symbol.Name.FullName);
+        }
+
+        return functionDecl;
     }
 
     private IrCodeBlock CodeBlock(CodeBlockSyntax syntax)
@@ -673,6 +682,11 @@ internal sealed class IrBuilder
         if (functionSymbol.Parameters.Count() != args.Count)
         {
             _diagnostics.MismatchArgumentCount(syntax.Location, functionSymbol.Name.Value, args.Count);
+        }
+
+        if (functionSymbol.IsTemplate &&
+            CurrentScope.TryLookupTemplateFunction(functionSymbol.Name.Value, out var templateFunction))
+        {
         }
 
         var matcher = new IrArgumentMatcher(

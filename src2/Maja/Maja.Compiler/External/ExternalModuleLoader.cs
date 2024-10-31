@@ -70,7 +70,7 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
 
             var typeParameters = new List<TypeParameterSymbol>();
             typeParameters.AddRange(method.GenericParameters
-                .Select(p => new TypeParameterSymbol(p.Name)));
+                .Select(p => new TypeParameterGenericSymbol(p.Name)));
 
             var functionName = method.Name == ".ctor"
                 ? method.GetDeclaringType().Name

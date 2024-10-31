@@ -46,8 +46,11 @@ internal static class SyntaxDiagnostics
 
 internal static class IrDiagnostics
 {
-    public static void FunctionAlreadyDelcared(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
+    public static void FunctionAlreadyDeclared(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Function '{functionName}' is already declared.");
+
+    public static void FunctionTemplateAlreadyDeclared(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Function Template '{functionName}' is already declared.");
 
     public static void ParameterNameAlreadyDeclared(this DiagnosticList diagnostics, SyntaxLocation location, string parameterName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Parameter name '{parameterName}' is already declared.");
@@ -60,6 +63,9 @@ internal static class IrDiagnostics
 
     public static void FunctionNotFound(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Function reference '{functionName}' cannot be resolved. Function not found.");
+
+    public static void FunctionTemplateNotFound(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Function template reference '{functionName}' cannot be resolved. Function not found.");
 
     public static void NoParameterForNamedArgument(this DiagnosticList diagnostics, SyntaxLocation location, string argumentName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"The named argument'{argumentName}' does not match to a function parameter. Function parameter not found.");

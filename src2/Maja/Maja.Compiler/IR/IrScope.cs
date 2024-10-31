@@ -16,8 +16,6 @@ internal abstract class IrScope
         Parent = parent;
     }
 
-    protected SymbolTable SymbolTable { get; } = new();
-
     public string Name { get; }
     public virtual string FullName
         => Parent is null
@@ -33,6 +31,12 @@ internal abstract class IrScope
 
         return false;
     }
+
+    //
+    // Symbol Declarations
+    //
+
+    protected SymbolTable SymbolTable { get; } = new();
 
     public IReadOnlyCollection<Symbol.Symbol> Symbols
         => SymbolTable.Symbols;
@@ -171,6 +175,39 @@ internal abstract class IrScope
 
         field = null;
         return false;
+    }
+
+    //
+    // Template Declarations
+    //
+
+    private Dictionary<string, IrDeclaration> _templateDecls = new();
+
+    public bool TryRegisterTemplateFunction(IrDeclarationFunction templateFunction)
+    {
+        Debug.Assert(templateFunction.IsTemplate);
+        // TODO: should this be the function-name and type-name combined?
+        var name = templateFunction.Symbol.Name.Value;
+
+        if (!_templateDecls.ContainsKey(name))
+        {
+            _templateDecls.Add(name, templateFunction);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TryLookupTemplateFunction(string name, [NotNullWhen(true)] out IrDeclarationFunction? templateFunction)
+    {
+        templateFunction = null;
+
+        if (_templateDecls.TryGetValue(name, out var templDecl))
+        {
+            templateFunction = templDecl as IrDeclarationFunction;
+        }
+
+        return templateFunction is not null;
     }
 }
 
