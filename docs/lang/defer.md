@@ -110,3 +110,12 @@ use resource
 
 // dispose
 ```
+
+```csharp
+// auto scoped
+isRunning :=^ true  // ^ mutable
+use
+    isRunning = false
+
+// execute use block
+```

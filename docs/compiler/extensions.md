@@ -8,6 +8,8 @@
 
 > A 'code attribute' or 'decorator' extension. Annotated code that gets in the loop for generating the code for that scope. This, for instance, allows implementation of detailed entry and exit tracing and function interception etc.
 
+> A compile-time attribute. Some tag that is visible at compile time to the compiler (or compiler extension) but does not appear in the binary. `#[MyCompilerTag]
+
 ```csharp
 // Syntax??
 {Decorator}

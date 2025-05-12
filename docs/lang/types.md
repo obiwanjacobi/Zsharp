@@ -627,6 +627,14 @@ i: U8^*?    // pointer to an optional immutable U8
 
 ---
 
+### Mutable Types
+
+TODO:
+How is `Mut<T>` placed on a struct to make its member mutable?
+Do you have to individually mark them as such?
+How to make an immutable var to a mutable struct?
+How to make a mutable var to an immutable struct?
+
 ### Immutable Types
 
 > TBD: now that the default is immutable, this should perhaps be reconsidered.

@@ -471,15 +471,17 @@ Perhaps a 'service' function type uses this principle but calls it a 'message' (
 
 > TBD
 
-- Implicit arguments at call site
-- Implicit parameters at declaration
+- Implicit arguments at call site (context/capture)?
+- Implicit parameters at declaration? - no, decl is always explicit; capture, or context params
 
-Related to context variables?
-What syntax to use?
+- Related to context variables?
+- What is the difference between Implicit/Context parameters and Captures?
+- What syntax to use?
 
 ```csharp
 // declarations
 fn: (p: U8, c: Context): U8 // as last parameter
+fn: (p: U8, _c: Context): U8 // '_' means hidden
 fn: (p: U8)(c: Context): U8 // explicit syntax
 
 // invocation
@@ -489,7 +491,7 @@ fn(42, c)   // explicit
 fn(42)   // implicit
 ```
 
-> TBD For implicit parameter on the call site we can use the `with` keyword or a capture to indicate what instances to use for the implicit parameters.
+> TBD For implicit parameter on the call site we can use the `with` keyword or a capture to indicate what instances to use for the implicit parameters. See also [Context Variables](variables.md#context-variables).
 
 ---
 
@@ -530,7 +532,7 @@ inferredFn(4242)
 
 > How will the size of `p` be determined?
 
-> How will the parser know the difference between a variable and a function?
+> How will the parser know the difference between a variable and a function? (use val/var keyword)
 
 ## Return values
 
@@ -550,14 +552,14 @@ MyFunc(p: U8, p2: U16): MyStruct
 
 ```csharp
 // use a tuple/anonymous struct for retval
-MyFunc(p: U8, p2: U16): (field1: U8, field2: U16)
-MyFunc(p: U8, p2: U16): { field1: U8, field2: U16 }     // object notation
+MyFunc(p: U8, p2: U16): (field1: U8, field2: U16)       // list notation
+MyFunc(p: U8, p2: U16): {field1: U8, field2: U16}       // object notation
     return {
         field1 = p
         field2 = p2
     }
 
-// unnamed fields?
+// unnamed return fields?
 MyFunc(p: U8, p2: U16): (U8, U16)
     return p, p2
 
@@ -589,10 +591,18 @@ For fluent interfaces where the return value is the same as the `self` type, not
 ```csharp
 fn: (p: U8): (retval: U8)
     retval = p          // this would set the return value
+fn: (p: U8): (retval: U8)
+    p           // return expression
+fn: (p: U8): (retval: U8)
+    return p    // return statement
 
 fn: (p: U8): (retval1: U8, retval2: Str)
     retval1 = p
     retval2 = Str(p)
+fn: (p: U8): (retval1: U8, retval2: Str)
+    (p, Str(p))             // return expression
+fn: (p: U8): (retval1: U8, retval2: Str)
+    return (p, Str(p))      // return statement
 ```
 
 ---
@@ -683,6 +693,36 @@ toString := (intToString, boolToString)
 
 s := toString(42)        // intToString
 s := toString(true)      // boolToString
+```
+
+---
+
+## Function Type
+
+A function type is a type that describes the signature of a function.
+
+```csharp
+fn: (p: U8): U8     // FunctionType = '(U8): U8'
+fn: <G>(p: U8, s: G): Bool // FunctionType = '<G1>(U8, G): Bool'
+fn: <G, #T>(p: T, s: G): Bool // FunctionType = '<G1T1>(T, G): Bool'
+```
+
+Generic and template types will be encoded into the function type.
+Function types with Template type parameters are open types and cannot be instantiated.
+
+Function types can be declared separately from the function implementation.
+
+```csharp
+// syntax?
+ft := Fn<(U8): U8>
+```
+
+Function Types can be derived from and specialized.
+
+```csharp
+// syntax?
+ft := Fn<(U8): U8>
+ftd := Fn<(U8): U8> : ft
 ```
 
 ---
@@ -861,6 +901,31 @@ nonConstFn: (self: Mut<MyStruct>, p: U8): Str   // Mut<>
 > How does mutability of self relate to byValue parameter passing?
 
 A function that does not change self - or any other param for that matter - cannot call any other function on that parameter that DOES change its value. const-functions can only call other const-functions.
+
+> TBD
+
+It would be nice to see a difference on the caller site if a function is mutating the self instance or not. This would make understanding code easier.
+The idea is similar to that .NET requires out parameter using the `out` keyword on the caller site.
+
+```csharp
+constFn: (self: MyStruct, p: U8): Str
+    ...
+nonConstFn: (self: Mut<MyStruct>, p: U8): Str
+    ...
+
+s := Mut<MyStruct>
+    ...
+
+a := s.constFn(42)     // will not change s
+b := s.nonConstFn(42)  // will change s
+
+// syntax: to indicate the object is being changed?
+b := s<.nonConstFn(42) // '<' also used in mapper and object concatenation
+b := s*.nonConstFn(42) // '*' don't associate numeric operators? Pointer?
+b := s!.nonConstFn(42) // '!' it's not an error, but it does draw attention
+b := s&.nonConstFn(42) // '&' as a reference, or use the Ref<T> type?
+b := Ref<s>.nonConstFn(42) // use the Ref<T> type?
+```
 
 ---
 
@@ -1317,7 +1382,7 @@ The state of the function is captured (closure) specific to each call-site.
 
 ---
 
-## Events
+## Event Handlers
 
 No specific support for events. Use Function Interfaces and callback function pointers.
 
@@ -1813,6 +1878,8 @@ with cts.Token
     // c passed as CancellationToken
     task(42, "42");
 ```
+
+> TBD: If we let function-types derive than we could make a base function-type that has an implicit parameter for the cancellation token and derive any async function type from it.
 
 ---
 

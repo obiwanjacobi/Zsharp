@@ -272,4 +272,8 @@ MyEmptyAlias(42)
 
 - How do we know what type this alias represents (function, struct etc)?
 
-- Can aliases be exported from a module or are they always local to the module they;re declare in?
+- Can aliases be exported from a module or are they always local to the module they're declared in?
+
+- do we want an operator for aliases where the symbol-name being aliased is not in scope?
+    `=` => both symbol name and alias are in scope. `alias = symbolName`
+    `=_` => only alias is in scope. `alias =_ symbolName`

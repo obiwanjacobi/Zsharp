@@ -146,7 +146,7 @@ fn: [global: U8](): U8
 
 > TBD
 
-See this as local dependency injection for functions.
+See this as local parameter dependency injection for functions.
 
 This helps with passing necessary but non-informative parameters.
 
@@ -237,3 +237,41 @@ fn(42)
 > use Lazy\<T> .NET type as is?
 
 > Use Nullable\<T> as is?
+
+## Compile Time Variables
+
+> TBD
+
+Have variables that are processed at compile time to drive the result of compiled code.
+
+```csharp
+rtFn: (p: U8)    // runtime function (in binary)
+    ...
+
+# code := 0;    // # => compile-time var
+
+if (...)
+    rtFn(code)
+    code += 1
+
+if (...)
+    rtFn(code)
+    code += 1
+```
+
+The compile-time variable `code` is processed as the code is compiled and generates calls to `rtFn` with values `0` and `1`.
+
+```csharp
+# txt :=^ "Error: "     // compile-time mutable var
+
+if (...)
+    txt <+ "Error details "
+
+if (...)
+    txt <+ "Error context "
+
+// not sure if we'll have a static_assert, but...
+# static_assert(..., txt)
+```
+
+Construct an compile-time error message using a mutable compile-time variable.

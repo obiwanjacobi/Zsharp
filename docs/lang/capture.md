@@ -1,6 +1,6 @@
 # Capture
 
-Captures are snapshots (copies) or references to contextual state -like local variables- that accompany a child context.
+Captures are read-only snapshots (copies) or references to contextual state -like local variables- that accompany a child context.
 
 ```csharp
 // basic capture syntax
@@ -18,9 +18,9 @@ x := 42
 
 ## Function Capture
 
-Function can use captures to be able to reference global variables in their body.
+Function can use captures to be able to reference global variables in their body. All dependencies of a function are explicitly declared either as normal parameters (implicit or context parameters) or captures.
 
-> TBD: have the function capture syntax look exactly the same as the block-capture. `fn: (p: U8): U8 = [c] ...`
+> TBD: have the function capture syntax look exactly the same as the block-capture. `fn: (p: U8): U8 = [c] ...` or `fn: (p: U8): U8 = |c| ...`
 
 ```csharp
 x = 42
@@ -72,7 +72,7 @@ Captures also may be used as a synchronization mechanism for shared data. At the
 
 In case of a mutable capture, it's value is written back to the original storage when the block of code is completed.
 
-> Should mutable captures be renamed/aliased? `[x = y.Ptr()]`
+> Should mutable captures be renamed/aliased? `[x = y.Ptr()]`   -- old: don't use Ptr()
 
 That would also suggest that capture blocks themselves could be multi-threading / execute separately from other parts of the function if the dependencies would allow it. Not sure if this 'feature' would be desirable for it would make reasoning about the code harder.
 
@@ -82,7 +82,7 @@ That would also suggest that capture blocks themselves could be multi-threading 
 
 > Add syntax/semantics for auto-disposing captured vars?
 
-> Do captures also wait for nested async calls (join) until exiting their scope?
+> Do captures also wait for nested async calls (join) until exiting their scope? - Yes.
 
 Read-only capture are never a problem, the problem exists when using pointer-captures that are written to sometime during the execution of the function/lambda or code block.
 

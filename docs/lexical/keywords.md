@@ -6,6 +6,7 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 |--|--
 | `loop` | Loop statement
 | `break` | Break out of a loop
+| `brk` | Alternative for Break
 | `continue` | Skip to next iteration
 | `cont` | Alternative continue?
 | `if` | Conditional branch
@@ -19,7 +20,7 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 | `catch` | Handle Error
 | `match` | Pattern matching
 
-Project and File keywords
+## Project and File keywords
 
 | Keyword | Description
 |--|--
@@ -77,24 +78,29 @@ if 42 in arr        // false
 
 ## Reserved for future use
 
-Keyword | Description
---|--
-`defer` | defers execution until end of scope
-`errdefer` | defers execution till exit with error
-`out` | opposite of in?
-`var` | thread local?
-`val` | constant value?
-`def` | default? (looks like define!)
-`ref` | explicit reference? / read-only pointer?
-`deref` | unpack a reference (too similar to defer)
-`rec` | recursive function?
-`use` | inline module imports? IDisposable wrapper?
-`any` | a type that can be anything (object) (not a keyword but a type?)
-`asm` | inline assembly (IL?)
-`with` | context variables
-`async` | async execution (state machine)
-`await` | awaiting async execution
-`fun` | for pure functions?
+| Keyword | Description
+| -- | --
+| `defer` | defers execution until end of scope
+| `errdefer` | defers execution till exit with error
+| `out` | opposite of in?
+| `var` | mutable variable? / thread local?
+| `val` | constant value?
+| `def` | default? (looks like define!)
+| `ref` | explicit reference? / read-only pointer?
+| `deref` | unpack a reference (too similar to defer)
+| `rec` | recursive function?
+| `use` | inline module imports? IDisposable wrapper?
+| `any` | a type that can be anything (object) (not a keyword but a type?)
+| `asm` | inline assembly (IL?)
+| `with` | context variables
+| `async` | async execution (state machine)
+| `await` | awaiting async execution
+| `fun` | for pure functions?
+| `class` | for future OOP extension
+| `use` | Alternative for import
+| `pub` | Alternative for export
+| `is` | TBD
+| `as` | TBD
 
 > Use `var` to make mutable variables and normal syntax is always immutable?
 Kotlin uses val for constants/immutable and var for mutable vars.

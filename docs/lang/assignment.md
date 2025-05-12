@@ -273,6 +273,8 @@ sum := add(...x) // a, b = x
 ```C#
 // spread operator ...
 a, b, ...rest := [1, 2, 3, 4, 5]
+// -or- spread the array and the rest is a range? (Yes, better)
+a, b, ..rest := ...[1, 2, 3, 4, 5]
 
 // a: U8 = 1
 // b: U8 = 2
@@ -286,7 +288,7 @@ arr := [1, 2, 3, 4, 5]
 
 func: (p: U8)
     ...
-func(...arr)    // called 5 times? (unclear!)
+func(...arr)    // called 5 times? (no, unclear!)
 
 func5: (p1: U8, p2: U8, p3: U8, p4: U8, p5: U8)
     ...
@@ -297,7 +299,7 @@ func5(arr)      // without spread operator? => no
 // must at least be the number of parameters without default values.
 
 // should also work with a tuple (anonymous type)
-params := { p1=1, p2=2, p3=3 p4=4 p5=5 }
+params := { p1=1, p2=2, p3=3, p4=4, p5=5 }
 func5(...params)
 ```
 
@@ -331,6 +333,8 @@ _, _, a := s
 
 ```
 
+> Use the spread operator `...` on the right-hand-side value to indicate it is being deconstructed?
+
 > Is there a need to override how deconstruction is done on a (custom) type? => yes
 
 > TBD: Do we need to distinguish between array, tuple and object deconstruction?
@@ -342,6 +346,18 @@ a, b := [1, 2]
 a, b := (1, 2)
 // object/tuple
 a, b := {a=1, b=2}
+```
+
+> TBD: deconstruct variable names with aliases.
+
+```csharp
+o =: {x=42, y=101}
+
+aliasX=x, aliasY=y := o
+// here we need a different '=' operator for aliases!
+// can we parse the '=' in these terms?
+aliasX=.x, aliasY=.y := o   // '=.' operator? (both alias and name are in scope)
+aliasX=_x, aliasY=_y := o   // '=_' operator? (only alias is in scope - see Identifiers/Aliases)
 ```
 
 ---

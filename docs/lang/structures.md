@@ -296,7 +296,8 @@ Also known as Tuples.
 
 > `.NET` makes a distinction between (two types of) tuples and anonymous types - Z# does not. We do need to choose how Z# is going to leverage these .NET Tuples in the code generation.
 
-> Use `{}` for object creation syntax.
+> Use `{}` for object syntax?
+> Use `()` for list syntax?
 
 ```csharp
 a := { Fld1 = 42, Fld2 = "42" }

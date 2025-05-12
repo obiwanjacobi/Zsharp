@@ -32,6 +32,7 @@ c: U8! = a +! b // Error (Err<U8>)
 c: U8? = a +? b // Nothing (Opt<U8>)
 
 // Is checked `~` the default? or use .NET default (unchecked?)
+// Or using '+' refers to a compiler profile setting?
 c: U8 = a + b   // ??
 ```
 
@@ -73,6 +74,7 @@ Arithmetic, comparison, bitwise and logical operators.
 | `*` | ArithmeticMultiply | Multiplication
 | `/` | ArithmeticDivide | Division
 | `%` | ArithmeticRemainder | Remainder
+| `/%` | ArithmeticDivideRemainder | Divide and remainder (tuple)
 | `**` | ArithmeticPower | Power (3 ** 2 = 9)
 | `//` | ArithmeticRoot | Root/Log (9 // 2 = 3)
 | `%%` | ArithmeticModulo | Modulo (negative numbers)
@@ -172,7 +174,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `!` | Possible Error (return type)
 | `?` | Optional variable or parameter/return value / boolean operator / fallback
 | `?=` | Optional variable conditional assignment
-| `->` | Line continuation (instead of indent)
+| `->` | Line continuation (instead of indent) / fun decl return type?
 | `#` | Pragma / Attribute access / Execute at compile-time
 | `#!` | Compile-time code definition (perhaps only `#`)
 | `#!` | Compile-time error (alt)
@@ -290,6 +292,44 @@ x := root.collection[?0]    // x: Opt<T>
 ```
 
 Use of safe navigation (in any form) always results in an Optional `Opt<T>` that is nothing if the path could not be navigated completely.
+
+Expression Type of safe navigation - specifying a default value:
+
+TBD: syntax of specifying a default value is not set.
+
+```csharp
+x: Opt<SomeType> = ...
+// will the condition expression type be bool?
+if x?.IsTrue
+    ...
+// we don't wanna write
+if x?.IsTrue = true
+    ...
+// or
+if x?.IsTrue ?? true
+    ...
+
+// allow a default value to be specified when it fails?
+if x?false?.IsTrue
+    ...
+
+// v will be Opt<SomeIntegerType>
+v := x?.Count
+// v will be SomeIntegerType (based on Count)
+v := x?0?.Count
+```
+
+// default value syntax?
+
+```csharp
+b := x?.IsTrue          // Opt<Bool>
+b := x?<false>.IsTrue   // No, <> is for type parameters
+b := x?(false).IsTrue   // No, () is for function parameters and lists
+b := x?[false].IsTrue   // No, [] is for indexing arrays/lists
+b := x?|false|.IsTrue   // No, || is alt for captures
+b := x?false?.IsTrue    // could work
+// other?
+```
 
 ---
 
@@ -459,6 +499,7 @@ arr: Array<Person> = (...)
 
 // returns the names of all persons in the array
 names := arr.>Name
+names := ...arr.Name    // alternate?
 // names: Array<Str>
 
 // Collect multiple properties?
@@ -644,4 +685,14 @@ MyUnaryOperator: <T>(other: T): T
 
 [[TernaryOperator(">>|", "|<<")]]
 MyTernaryOperator: <T>(self: T, other: T, third: T): T
+```
+
+---
+
+Allow all operators to be written in postfix notation?
+
+In some cases a postfix notation makes your code more readable, especially when chaining operators.
+
+```csharp
+//??
 ```

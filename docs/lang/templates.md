@@ -344,6 +344,43 @@ We really want to keep this as simple as possible.
 
 ---
 
+### Just-in-time Template Parameters
+
+> TBD - Not sure what else to call it...
+
+The idea is that a one template parameter determines the value or type of another template parameter.
+
+An obvious example is that if there is one template parameter that indicates size in bytes or bits and another that will be sized to that specified size parameter.
+
+```csharp
+fnBits: <T> (#size: U8): T
+    // T.#size is set to the #size parameter
+
+byte := fnBits(8)       // U8
+short := fnBits(16)     // U16
+thirty2 := fnBits(32)   // U32
+
+// what happens when you specify sub-values of data type size?
+twenty4 := fnBits(24)   // U32?
+```
+
+Perhaps some rule to govern the relations between these template parameters?
+
+```csharp
+fnBits: <T>(#size: U8): T
+    #size <= 8 => U8
+    #size <= 16 => U16
+    #size <= 32 => U32
+
+// syntax of rule table?
+fnBits: <T>(#size: U8): T
+    #size <= 8 ? U8 :
+    #size <= 16 ? U16 :
+    #size <= 32 ? U32 : U64
+```
+
+---
+
 ## Template Alias
 
 A new name for an existing template resolved at compile time. The alias name will not appear in the binary.
