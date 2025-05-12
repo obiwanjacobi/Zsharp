@@ -138,7 +138,7 @@ internal abstract class IrRewriter
         };
     }
 
-    protected virtual IrTypeParameterGeneric RewriteTypeParameterGeneric(IrTypeParameterGeneric parameter)
+    protected virtual IrTypeParameter RewriteTypeParameterGeneric(IrTypeParameterGeneric parameter)
     {
         var type = RewriteType(parameter.Type);
 
@@ -148,7 +148,7 @@ internal abstract class IrRewriter
         return new IrTypeParameterGeneric(parameter.Syntax, type!, parameter.Symbol);
     }
 
-    protected virtual IrTypeParameterTemplate RewriteTypeParameterTemplate(IrTypeParameterTemplate parameter)
+    protected virtual IrTypeParameter RewriteTypeParameterTemplate(IrTypeParameterTemplate parameter)
     {
         var type = RewriteType(parameter.Type);
 

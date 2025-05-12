@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 
@@ -32,7 +33,7 @@ internal sealed class IrTypeParameterGeneric : IrTypeParameter, IrContainer
         => (TypeParameterGenericSyntax)base.Syntax;
 
     public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Type.GetDescendentsOfType<T>();
+        => Type?.GetDescendentsOfType<T>() ?? Enumerable.Empty<T>();
 }
 
 internal sealed class IrTypeParameterTemplate : IrTypeParameter, IrContainer
@@ -49,5 +50,19 @@ internal sealed class IrTypeParameterTemplate : IrTypeParameter, IrContainer
         => (TypeParameterTemplateSyntax)base.Syntax;
 
     public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Type.GetDescendentsOfType<T>();
+        => Type?.GetDescendentsOfType<T>() ?? Enumerable.Empty<T>();
+}
+
+internal sealed class IrTypeParameterTemplateResolved : IrTypeParameter
+{
+    public IrTypeParameterTemplateResolved(TypeParameterTemplateSyntax syntax, TypeSymbol typeSymbol, TypeParameterSymbol symbol)
+        : base(syntax, symbol)
+    {
+        TypeSymbol = typeSymbol;
+    }
+
+    public TypeSymbol TypeSymbol { get; }
+
+    public new TypeParameterTemplateSyntax Syntax
+        => (TypeParameterTemplateSyntax)base.Syntax;
 }

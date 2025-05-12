@@ -10,14 +10,14 @@ internal abstract class IrTemplateRewriter : IrRewriter
 {
     // TODO: support partial type-parameter replacement.
 
-    protected Dictionary<TypeSymbol, TypeSymbol>? TypeMap { get; set; }
+    protected Dictionary<SymbolName, TypeSymbol>? TypeMap { get; set; }
 
     [return: NotNullIfNotNull("type")]
     protected override IrType? RewriteType(IrType? type)
     {
         if (type is null) return null;
 
-        if (TypeMap!.TryGetValue(type.Symbol, out var newTypeSymbol))
+        if (TypeMap!.TryGetValue(type.Symbol.Name, out var newTypeSymbol))
         {
             return new IrType(type.Syntax, newTypeSymbol);
         }
@@ -25,15 +25,35 @@ internal abstract class IrTemplateRewriter : IrRewriter
         return base.RewriteType(type);
     }
 
+    protected override IrTypeParameter RewriteTypeParameterTemplate(IrTypeParameterTemplate parameter)
+    {
+        if (TypeMap!.TryGetValue(parameter.Symbol.Name, out var newTypeSymbol))
+        {
+            return new IrTypeParameterTemplateResolved(parameter.Syntax, newTypeSymbol, parameter.Symbol);
+        }
+
+        return parameter;
+    }
+
     protected override IrExpressionTypeInitializer RewriteTypeInitializer(IrExpressionTypeInitializer initializer)
     {
-        if (TypeMap!.TryGetValue(initializer.TypeSymbol, out var newTypeSymbol))
+        if (TypeMap!.TryGetValue(initializer.TypeSymbol.Name, out var newTypeSymbol))
         {
             var fields = RewriteTypeInitializerFields(initializer.Fields);
             return new IrExpressionTypeInitializer(initializer.Syntax, newTypeSymbol, Enumerable.Empty<IrTypeArgument>(), fields);
         }
 
         return base.RewriteTypeInitializer(initializer);
+    }
+
+    protected override IrExpressionIdentifier RewriteExpressionIdentifier(IrExpressionIdentifier expression)
+    {
+        if (TypeMap!.TryGetValue(expression.TypeSymbol.Name, out var newTypeSymbol))
+        {
+            return new IrExpressionIdentifier(expression.Syntax, expression.Symbol, newTypeSymbol);
+        }
+
+        return expression;
     }
 }
 
@@ -53,10 +73,10 @@ internal sealed class IrTemplateFunctionRewriter : IrTemplateRewriter
         return RewriteDeclarationFunction(_template);
     }
 
-    private static Dictionary<TypeSymbol, TypeSymbol> CreateTypeMap(ImmutableArray<IrTypeParameter> typeParameters, IEnumerable<IrTypeArgument> typeArguments)
+    private static Dictionary<SymbolName, TypeSymbol> CreateTypeMap(ImmutableArray<IrTypeParameter> typeParameters, IEnumerable<IrTypeArgument> typeArguments)
     {
         return typeParameters.Zip(typeArguments)
-            .ToDictionary(p => (TypeSymbol)p.First.Symbol, p => p.Second.Type.Symbol);
+            .ToDictionary(p => p.First.Symbol.Name, p => p.Second.Type.Symbol);
     }
 }
 

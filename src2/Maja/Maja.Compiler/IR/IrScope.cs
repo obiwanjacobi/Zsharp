@@ -205,9 +205,15 @@ internal abstract class IrScope
         if (_templateDecls.TryGetValue(name, out var templDecl))
         {
             templateFunction = templDecl as IrDeclarationFunction;
+            return templateFunction is not null;
         }
 
-        return templateFunction is not null;
+        if (Parent is not null)
+        {
+            return Parent.TryLookupTemplateFunction(name, out templateFunction);
+        }
+
+        return false;
     }
 }
 

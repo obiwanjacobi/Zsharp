@@ -684,9 +684,15 @@ internal sealed class IrBuilder
             _diagnostics.MismatchArgumentCount(syntax.Location, functionSymbol.Name.Value, args.Count);
         }
 
+        // TODO: is this part of the argumentMatcher / FunctionOverloadResolver?
         if (functionSymbol.IsTemplate &&
             CurrentScope.TryLookupTemplateFunction(functionSymbol.Name.Value, out var templateFunction))
         {
+            var instantiator = new IrTemplateInstantiator();
+            if (instantiator.Resolve(templateFunction, typeArgs, out var instantiatedTemplate))
+            {
+                CurrentScope.Parent.RegisterTemplateFunctionInstantiation(instantiatedTemplate);
+            }
         }
 
         var matcher = new IrArgumentMatcher(
