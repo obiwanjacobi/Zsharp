@@ -2,6 +2,9 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Assignment of a variable (as a statement, not an expression)
+/// </summary>
 public sealed class StatementAssignmentSyntax : StatementSyntax, ICreateSyntaxNode<StatementAssignmentSyntax>
 {
     private StatementAssignmentSyntax(string text)

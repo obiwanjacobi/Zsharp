@@ -2,6 +2,9 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// A symbol name or identifier used in an expression.
+/// </summary>
 public sealed class ExpressionIdentifierSyntax : ExpressionSyntax, ICreateSyntaxNode<ExpressionIdentifierSyntax>
 {
     private ExpressionIdentifierSyntax(string text)

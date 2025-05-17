@@ -6,8 +6,10 @@ using Maja.Compiler.Parser;
 
 namespace Maja.Compiler.Syntax;
 
-// the root/accessor of the syntax tree
-// implements helper methods and probably cache
+/// <summary>
+/// The root/accessor of the syntax tree.
+/// Implements helper methods and probably cache.
+/// </summary>
 public sealed class SyntaxTree
 {
     private AntlrInputStream? _inputStream;

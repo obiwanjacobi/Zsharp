@@ -2,6 +2,9 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Children of the TypeInitializerSyntax for its fields.
+/// </summary>
 public sealed class TypeInitializerFieldSyntax : SyntaxNode, ICreateSyntaxNode<TypeInitializerFieldSyntax>
 {
     private TypeInitializerFieldSyntax(string text)

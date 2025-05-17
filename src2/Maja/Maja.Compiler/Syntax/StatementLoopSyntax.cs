@@ -2,6 +2,9 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// The loop keyword with it's (optional) properties.
+/// </summary>
 public sealed class StatementLoopSyntax : StatementSyntax, ICreateSyntaxNode<StatementLoopSyntax>
 {
     public StatementLoopSyntax(string text)

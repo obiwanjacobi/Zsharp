@@ -6,6 +6,9 @@ using Maja.Compiler.Parser;
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Serializes SyntaxNodes into text.
+/// </summary>
 public sealed class SyntaxWriter
 {
     private readonly StringBuilder _writer = new();

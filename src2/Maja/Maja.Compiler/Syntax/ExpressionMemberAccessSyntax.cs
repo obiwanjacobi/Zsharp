@@ -2,6 +2,9 @@
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// Part of an expression that accesses a member of an object.
+/// </summary>
 public sealed class ExpressionMemberAccessSyntax : ExpressionSyntax, ICreateSyntaxNode<ExpressionMemberAccessSyntax>
 {
     public ExpressionMemberAccessSyntax(string text)

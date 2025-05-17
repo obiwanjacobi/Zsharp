@@ -19,7 +19,7 @@ internal sealed class IrBuilder
     private readonly DiagnosticList _diagnostics = new();
     private readonly Stack<IrScope> _scopes = new();
     private readonly IExternalModuleLoader _moduleLoader;
-    private IrLocality _locallity = IrLocality.None;
+    private IrLocality _locality = IrLocality.None;
 
     public const string DefaultModuleName = "DefMod";
 
@@ -101,9 +101,9 @@ internal sealed class IrBuilder
         // we prevent some complexity of finding forward refs of symbols.
         var members = Declarations(root.Members);
 
-        _locallity = IrLocality.Module;
+        _locality = IrLocality.Module;
         var statements = Statements(root.Statements);
-        _locallity = IrLocality.None;
+        _locality = IrLocality.None;
 
         return new IrCompilation(root, imports, exports, statements, members);
     }
@@ -505,7 +505,7 @@ internal sealed class IrBuilder
         }
 
         // TODO: check expr.TypeSymbol against variableSymbol.Type
-        return new IrStatementAssignment(syntax, variableSymbol, expr, _locallity);
+        return new IrStatementAssignment(syntax, variableSymbol, expr, _locality);
     }
 
     private IrStatementExpression StatementExpression(StatementExpressionSyntax syntax)
@@ -516,7 +516,7 @@ internal sealed class IrBuilder
         {
             _diagnostics.InvalidStatementExpression(syntax.Location);
         }
-        return new IrStatementExpression(syntax, expr, _locallity);
+        return new IrStatementExpression(syntax, expr, _locality);
     }
 
     private IrStatementReturn StatementReturn(StatementReturnSyntax syntax)
@@ -691,7 +691,7 @@ internal sealed class IrBuilder
             var instantiator = new IrTemplateInstantiator();
             if (instantiator.Resolve(templateFunction, typeArgs, out var instantiatedTemplate))
             {
-                CurrentScope.Parent.RegisterTemplateFunctionInstantiation(instantiatedTemplate);
+                //CurrentScope.Parent.RegisterTemplateFunctionInstantiation(instantiatedTemplate);
             }
         }
 

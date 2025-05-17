@@ -1,7 +1,8 @@
-﻿using System.Linq;
+﻿namespace Maja.Compiler.Syntax;
 
-namespace Maja.Compiler.Syntax;
-
+/// <summary>
+/// Represents a range expression: [0..2]
+/// </summary>
 public sealed class ExpressionRangeSyntax : ExpressionSyntax, ICreateSyntaxNode<ExpressionRangeSyntax>
 {
     public ExpressionRangeSyntax(string text)

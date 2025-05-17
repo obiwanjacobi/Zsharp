@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace Maja.Compiler.Syntax;
 
+/// <summary>
+/// An expression that initializes a structure and its fields
+/// </summary>
 public sealed class ExpressionTypeInitializerSyntax : ExpressionSyntax, ICreateSyntaxNode<ExpressionTypeInitializerSyntax>
 {
     private ExpressionTypeInitializerSyntax(string text)

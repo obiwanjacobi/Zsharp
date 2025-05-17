@@ -140,6 +140,18 @@ fn: [global: U8](): U8
     return global
 ```
 
+### Static Variables
+
+> TBD
+
+```csharp
+fn: (p: U8): Str
+    st := 42    // how to declare a 'global' variable that is only reachable in function scope?
+
+fn: [_st: U8](p: U8): Str   // hidden capture? (requires type)
+    use_st
+```
+
 ---
 
 ## Context Variables
