@@ -35,7 +35,7 @@ internal class NullModuleLoader : IExternalModuleLoader
 {
     public bool TryLookupModule(SymbolName name, [NotNullWhen(true)] out ExternalModule? module)
     {
-        module = new ExternalModule(name, Enumerable.Empty<FunctionSymbol>(), Enumerable.Empty<TypeSymbol>());
+        module = new ExternalModule(name, Enumerable.Empty<DeclaredFunctionSymbol>(), Enumerable.Empty<TypeSymbol>());
         return true;
     }
 

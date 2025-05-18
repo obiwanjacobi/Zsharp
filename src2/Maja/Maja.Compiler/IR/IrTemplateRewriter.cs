@@ -9,8 +9,6 @@ namespace Maja.Compiler.IR;
 
 internal abstract class IrTemplateRewriter : IrRewriter
 {
-    // TODO: support partial type-parameter replacement.
-
     protected Dictionary<SymbolName, TypeSymbol>? TypeMap { get; set; }
 
     [return: NotNullIfNotNull("type")]
@@ -47,6 +45,30 @@ internal abstract class IrTemplateRewriter : IrRewriter
         return base.RewriteTypeInitializer(initializer);
     }
 
+    protected override IrTypeMemberField RewriteField(IrTypeMemberField memberField)
+    {
+        if (TypeMap!.TryGetValue(memberField.Type.Symbol.Name, out var newFieldTypeSymbol))
+        {
+            var newFieldType = RewriteType(memberField.Type);
+            var newFieldSymbol = new FieldSymbol(memberField.Symbol.Name, newFieldTypeSymbol);
+            return new IrTypeMemberField(memberField.Syntax, newFieldSymbol, newFieldType, memberField.DefaultValue);
+        }
+
+        return base.RewriteField(memberField);
+    }
+
+    protected override IrParameter RewriteParameter(IrParameter parameter)
+    {
+        if (TypeMap!.TryGetValue(parameter.Type.Symbol.Name, out var newParamTypeSymbol))
+        {
+            var newParamType = RewriteType(parameter.Type);
+            var newParamSymbol = new ParameterSymbol(parameter.Symbol.Name, newParamTypeSymbol);
+            return new IrParameter(parameter.Syntax, newParamSymbol, newParamType);
+        }
+
+        return base.RewriteParameter(parameter);
+    }
+
     protected override IrExpressionIdentifier RewriteExpressionIdentifier(IrExpressionIdentifier expression)
     {
         if (TypeMap!.TryGetValue(expression.TypeSymbol.Name, out var newTypeSymbol))
@@ -57,6 +79,7 @@ internal abstract class IrTemplateRewriter : IrRewriter
         return expression;
     }
 
+    // TODO: support partial type-parameter replacement.
     protected static Dictionary<SymbolName, TypeSymbol> CreateTypeMap(ImmutableArray<IrTypeParameter> typeParameters, IEnumerable<IrTypeArgument> typeArguments)
     {
         return typeParameters.Zip(typeArguments)

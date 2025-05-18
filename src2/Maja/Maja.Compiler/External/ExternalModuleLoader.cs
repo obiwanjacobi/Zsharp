@@ -52,7 +52,7 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
 
     private ExternalModule CreateExternalModule(SymbolName symbolName, TypeMetadata typeMetadata)
     {
-        var functions = new List<FunctionSymbol>();
+        var functions = new List<DeclaredFunctionSymbol>();
         var type = _factory.Create(typeMetadata);
 
         foreach (var method in typeMetadata.GetFunctions())
@@ -78,7 +78,7 @@ internal sealed class ExternalModuleLoader : IExternalModuleLoader
 
             var rt = _factory.Create(method.ReturnType);
             var name = new SymbolName(typeMetadata.FullName, functionName);
-            var fn = new FunctionSymbol(name, typeParameters, parameters, rt);
+            var fn = new DeclaredFunctionSymbol(name, typeParameters, parameters, rt);
             functions.Add(fn);
         }
 

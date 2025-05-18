@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Maja.Compiler.Symbol;
 
-public sealed record FunctionSymbol : Symbol
+public sealed record DeclaredFunctionSymbol : Symbol
 {
-    public FunctionSymbol(SymbolName name,
+    public DeclaredFunctionSymbol(SymbolName name,
         IEnumerable<TypeParameterSymbol> typeParameters, IEnumerable<ParameterSymbol> parameters, TypeSymbol? returnType)
         : base(name)
     {
@@ -16,7 +16,7 @@ public sealed record FunctionSymbol : Symbol
         ReturnType = returnType ?? TypeSymbol.Void;
 
         Type = new TypeFunctionSymbol(
-            typeParameters, parameters.Select(p => p.Type).ToList(), returnType);
+            typeParameters, parameters.Select(p => p.Type), returnType);
     }
 
     public override SymbolKind Kind

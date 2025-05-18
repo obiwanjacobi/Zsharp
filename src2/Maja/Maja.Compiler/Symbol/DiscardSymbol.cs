@@ -2,7 +2,7 @@
 
 namespace Maja.Compiler.Symbol;
 
-public sealed record DiscardSymbol : VariableSymbol
+public sealed record DiscardSymbol : DeclaredVariableSymbol
 {
     public DiscardSymbol()
         : base(new SymbolName(SyntaxToken.Discard), TypeSymbol.Unknown)

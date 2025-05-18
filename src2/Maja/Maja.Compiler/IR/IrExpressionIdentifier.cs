@@ -5,18 +5,18 @@ namespace Maja.Compiler.IR;
 
 internal sealed class IrExpressionIdentifier : IrExpression
 {
-    internal IrExpressionIdentifier(VariableSymbol symbol, TypeSymbol type)
+    internal IrExpressionIdentifier(DeclaredVariableSymbol symbol, TypeSymbol type)
         : base(type)
     {
         Symbol = symbol;
     }
-    public IrExpressionIdentifier(ExpressionIdentifierSyntax syntax, VariableSymbol symbol, TypeSymbol type)
+    public IrExpressionIdentifier(ExpressionIdentifierSyntax syntax, DeclaredVariableSymbol symbol, TypeSymbol type)
         : base(syntax, type)
     {
         Symbol = symbol;
     }
 
-    public VariableSymbol Symbol { get; }
+    public DeclaredVariableSymbol Symbol { get; }
 
     public new ExpressionIdentifierSyntax Syntax
         => (ExpressionIdentifierSyntax)base.Syntax;

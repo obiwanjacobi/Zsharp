@@ -100,6 +100,9 @@ internal static class IrDiagnostics
     public static void FieldNotFoundOnType(this DiagnosticList diagnostics, SyntaxLocation location, string typeName, string fieldName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Field reference '{fieldName}' cannot be resolved. Type {typeName} does not define it.");
 
+    public static void TypeTemplateAlreadyDeclared(this DiagnosticList diagnostics, SyntaxLocation location, string typeName)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Type Template '{typeName}' is already declared.");
+
     public static void DiscardOnlyInvocation(this DiagnosticList diagnostics, SyntaxLocation location)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Invalid Assignment. Only the result of an invocation can be assigned to the discard '_'.");
 

@@ -107,7 +107,8 @@ internal abstract class IrRewriter
             body == function.Body)
             return function;
 
-        var functionSymbol = new FunctionSymbol(
+        // TODO: needs deeper replacement for templates!
+        var functionSymbol = new DeclaredFunctionSymbol(
             function.Symbol.Name,
             typeParameters.Select(tp => tp.Symbol),
             parameters.Select(p => p.Symbol),
@@ -183,7 +184,17 @@ internal abstract class IrRewriter
             baseType == type.BaseType)
             return type;
 
-        return new IrDeclarationType(type.Syntax, type.Symbol, typeParams, enums, fields, rules, baseType, type.Scope, type.Locality);
+        // TODO: needs deeper replacement for templates!
+        var typeSymbol = new DeclaredTypeSymbol(
+            type.Symbol.Name,
+            typeParams.Select(tp => tp.Symbol),
+            enums.Select(e => e.Symbol),
+            fields.Select(f => f.Symbol),
+            rules.Select(r => r.Symbol),
+            baseType?.Symbol
+        );
+
+        return new IrDeclarationType(type.Syntax, typeSymbol, typeParams, enums, fields, rules, baseType, type.Scope, type.Locality);
     }
 
     protected virtual ImmutableArray<IrTypeMemberEnum> RewriteEnums(ImmutableArray<IrTypeMemberEnum> memberEnums)

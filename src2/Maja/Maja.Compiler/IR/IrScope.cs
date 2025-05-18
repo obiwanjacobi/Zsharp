@@ -25,12 +25,7 @@ internal abstract class IrScope
     public IrScope? Parent { get; }
 
     public virtual bool IsExport(SymbolName name)
-    {
-        if (Parent is not null)
-            return Parent.IsExport(name);
-
-        return false;
-    }
+        => Parent?.IsExport(name) ?? false;
 
     //
     // Symbol Declarations
@@ -41,13 +36,13 @@ internal abstract class IrScope
     public IReadOnlyCollection<Symbol.Symbol> Symbols
         => SymbolTable.Symbols;
 
-    public bool TryDeclareVariable(VariableSymbol symbol)
+    public bool TryDeclareVariable(DeclaredVariableSymbol symbol)
         => SymbolTable.TryDeclareSymbol(symbol);
 
     public bool TryDeclareType(TypeSymbol symbol)
         => SymbolTable.TryDeclareSymbol(symbol);
 
-    public bool TryDeclareFunction(FunctionSymbol symbol)
+    public bool TryDeclareFunction(DeclaredFunctionSymbol symbol)
         => SymbolTable.TryDeclareSymbol(symbol);
 
     public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
@@ -85,7 +80,7 @@ internal abstract class IrScope
         return false;
     }
 
-    public virtual bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out FunctionSymbol? symbol)
+    public virtual bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out DeclaredFunctionSymbol? symbol)
     {
         if (SymbolTable.TryLookupSymbol(name.FullName, out symbol))
         {
@@ -99,7 +94,7 @@ internal abstract class IrScope
         }
 
         if (FunctionOverloadPicker.TryPickFunctionSymbol(
-            SymbolTable.Symbols.OfType<FunctionSymbol>(), name, argumentTypes, out symbol))
+            SymbolTable.Symbols.OfType<DeclaredFunctionSymbol>(), name, argumentTypes, out symbol))
             return true;
 
         if (Parent is not null)
@@ -147,7 +142,7 @@ internal abstract class IrScope
         foreach (var param in parameters)
         {
             var name = new SymbolName(param.Name.FullName);
-            var variable = new VariableSymbol(name, param.Type);
+            var variable = new DeclaredVariableSymbol(name, param.Type);
             if (!TryDeclareVariable(variable))
                 return index;
 
@@ -215,6 +210,39 @@ internal abstract class IrScope
 
         return false;
     }
+
+    public bool TryRegisterTemplateType(IrDeclarationType templateType)
+    {
+        Debug.Assert(templateType.IsTemplate);
+        // TODO: should this be the function-name and type-name combined?
+        var name = templateType.Symbol.Name.Value;
+
+        if (!_templateDecls.ContainsKey(name))
+        {
+            _templateDecls.Add(name, templateType);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TryLookupTemplateType(string name, [NotNullWhen(true)] out IrDeclarationType? templateType)
+    {
+        templateType = null;
+
+        if (_templateDecls.TryGetValue(name, out var templDecl))
+        {
+            templateType = templDecl as IrDeclarationType;
+            return templateType is not null;
+        }
+
+        if (Parent is not null)
+        {
+            return Parent.TryLookupTemplateType(name, out templateType);
+        }
+
+        return false;
+    }
 }
 
 internal sealed class IrFunctionScope : IrScope
@@ -269,12 +297,12 @@ internal sealed class IrModuleScope : IrScope
         return symbol is not null;
     }
 
-    public override bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out FunctionSymbol? symbol)
+    public override bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out DeclaredFunctionSymbol? symbol)
     {
         if (base.TryLookupFunctionSymbol(name, argumentTypes, out symbol))
             return true;
 
-        var matches = new List<FunctionSymbol>();
+        var matches = new List<DeclaredFunctionSymbol>();
         foreach (var module in _modules.Values)
         {
             var fns = module.LookupFunctions(name, argumentTypes);

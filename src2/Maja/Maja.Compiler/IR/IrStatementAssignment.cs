@@ -7,20 +7,20 @@ namespace Maja.Compiler.IR;
 internal class IrStatementAssignment : IrStatement, IrContainer
 {
     // used for generated code (no syntax)
-    internal IrStatementAssignment(VariableSymbol symbol, IrExpression expression, IrLocality locality)
+    internal IrStatementAssignment(DeclaredVariableSymbol symbol, IrExpression expression, IrLocality locality)
         : base(locality)
     {
         Symbol = symbol;
         Expression = expression;
     }
-    public IrStatementAssignment(StatementAssignmentSyntax syntax, VariableSymbol symbol, IrExpression expression, IrLocality locality)
+    public IrStatementAssignment(StatementAssignmentSyntax syntax, DeclaredVariableSymbol symbol, IrExpression expression, IrLocality locality)
         : base(syntax, locality)
     {
         Symbol = symbol;
         Expression = expression;
     }
 
-    public VariableSymbol Symbol { get; }
+    public DeclaredVariableSymbol Symbol { get; }
     public IrExpression Expression { get; }
 
     public new StatementAssignmentSyntax Syntax

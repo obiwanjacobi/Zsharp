@@ -9,10 +9,10 @@ namespace Maja.Compiler.IR;
 internal static class FunctionOverloadPicker
 {
     public static bool TryPickFunctionSymbol(
-        IEnumerable<FunctionSymbol> functions,
+        IEnumerable<DeclaredFunctionSymbol> functions,
         SymbolName partialName,
         IEnumerable<TypeSymbol> argumentTypes,
-        [NotNullWhen(true)] out FunctionSymbol? function)
+        [NotNullWhen(true)] out DeclaredFunctionSymbol? function)
     {
         var candidates = SelectCandidates(functions, partialName, argumentTypes);
 
@@ -28,8 +28,8 @@ internal static class FunctionOverloadPicker
         return false;
     }
 
-    public static IEnumerable<FunctionSymbol> SelectCandidates(
-        IEnumerable<FunctionSymbol> functions,
+    public static IEnumerable<DeclaredFunctionSymbol> SelectCandidates(
+        IEnumerable<DeclaredFunctionSymbol> functions,
         SymbolName partialName,
         IEnumerable<TypeSymbol> argumentTypes)
     {

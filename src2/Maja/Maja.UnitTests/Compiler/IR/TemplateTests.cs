@@ -54,6 +54,7 @@ public class TemplateTests
         var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
         v.TypeSymbol.Should().Be(TypeSymbol.U8);
         var fn = v.Initializer.As<IrExpressionInvocation>();
+        fn.Symbol.Type.Name.Value.Should().Be("(U8):U8");
         fn.Symbol.Parameters[0].Type.Name.Value.Should().Be("U8");
         fn.Symbol.ReturnType.Name.Value.Should().Be("U8");
     }

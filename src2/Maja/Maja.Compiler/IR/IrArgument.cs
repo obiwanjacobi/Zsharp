@@ -7,7 +7,7 @@ namespace Maja.Compiler.IR;
 internal class IrArgument : IrNode, IrContainer
 {
     public IrArgument(ArgumentSyntax syntax,
-        IrExpression expression, VariableSymbol? symbol)
+        IrExpression expression, DeclaredVariableSymbol? symbol)
         : base(syntax)
     {
         Expression = expression;
@@ -15,7 +15,7 @@ internal class IrArgument : IrNode, IrContainer
     }
 
     public IrExpression Expression { get; }
-    public VariableSymbol? Symbol { get; }
+    public DeclaredVariableSymbol? Symbol { get; }
 
     public new ArgumentSyntax Syntax
         => (ArgumentSyntax)base.Syntax;

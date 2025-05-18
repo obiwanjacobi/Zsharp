@@ -23,7 +23,7 @@ internal abstract class IrDeclaration : IrNode
 
 internal sealed class IrDeclarationFunction : IrDeclaration, IrContainer
 {
-    public IrDeclarationFunction(FunctionDeclarationSyntax syntax, FunctionSymbol symbol,
+    public IrDeclarationFunction(FunctionDeclarationSyntax syntax, DeclaredFunctionSymbol symbol,
         IEnumerable<IrTypeParameter> typeParameters, IEnumerable<IrParameter> parameters, IrType returnType,
         IrFunctionScope scope, IrCodeBlock codeBlock, IrLocality locality)
         : base(syntax, locality)
@@ -42,7 +42,7 @@ internal sealed class IrDeclarationFunction : IrDeclaration, IrContainer
     public bool IsTemplate
         => TypeParameters.OfType<IrTypeParameterTemplate>().Any();
 
-    public FunctionSymbol Symbol { get; }
+    public DeclaredFunctionSymbol Symbol { get; }
     public ImmutableArray<IrTypeParameter> TypeParameters { get; }
     public ImmutableArray<IrParameter> Parameters { get; }
     public IrType ReturnType { get; }
@@ -63,14 +63,14 @@ internal sealed class IrDeclarationFunction : IrDeclaration, IrContainer
 
 internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
 {
-    internal IrDeclarationVariable(VariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
+    internal IrDeclarationVariable(DeclaredVariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
         : base(IrLocality.None)
     {
         Symbol = symbol;
         TypeSymbol = type;
         Initializer = initializer;
     }
-    public IrDeclarationVariable(VariableDeclarationSyntax syntax, VariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
+    public IrDeclarationVariable(VariableDeclarationSyntax syntax, DeclaredVariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
         : base(syntax, IrLocality.None)
     {
         Symbol = symbol;
@@ -78,7 +78,7 @@ internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
         Initializer = initializer;
     }
 
-    public VariableSymbol Symbol { get; }
+    public DeclaredVariableSymbol Symbol { get; }
     public TypeSymbol TypeSymbol { get; }
     public IrExpression? Initializer { get; }
 
@@ -91,7 +91,7 @@ internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
 
 internal sealed class IrDeclarationType : IrDeclaration, IrContainer
 {
-    public IrDeclarationType(TypeDeclarationSyntax syntax, TypeSymbol symbol, IEnumerable<IrTypeParameter> typeParameters,
+    public IrDeclarationType(TypeDeclarationSyntax syntax, DeclaredTypeSymbol symbol, IEnumerable<IrTypeParameter> typeParameters,
         IEnumerable<IrTypeMemberEnum> enums, IEnumerable<IrTypeMemberField> fields, IEnumerable<IrTypeMemberRule> rules,
         IrType? baseType, IrTypeScope scope, IrLocality locality)
         : base(syntax, locality)
@@ -108,7 +108,7 @@ internal sealed class IrDeclarationType : IrDeclaration, IrContainer
     public bool IsTemplate
         => TypeParameters.OfType<IrTypeParameterTemplate>().Any();
 
-    public TypeSymbol Symbol { get; }
+    public DeclaredTypeSymbol Symbol { get; }
     public IrTypeScope Scope { get; }
     public IrType? BaseType { get; }
     public ImmutableArray<IrTypeParameter> TypeParameters { get; }

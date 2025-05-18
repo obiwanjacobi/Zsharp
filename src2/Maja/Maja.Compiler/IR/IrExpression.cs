@@ -53,7 +53,7 @@ internal sealed class IrExpressionRange : IrExpression, IrContainer
 internal sealed class IrExpressionInvocation : IrExpression, IrContainer
 {
     public IrExpressionInvocation(ExpressionInvocationSyntax syntax,
-        FunctionSymbol symbol, IEnumerable<IrTypeArgument> typeArguments, IEnumerable<IrArgument> arguments, TypeSymbol type)
+        DeclaredFunctionSymbol symbol, IEnumerable<IrTypeArgument> typeArguments, IEnumerable<IrArgument> arguments, TypeSymbol type)
         : base(syntax, type)
     {
         Symbol = symbol;
@@ -64,7 +64,7 @@ internal sealed class IrExpressionInvocation : IrExpression, IrContainer
     public new ExpressionInvocationSyntax Syntax
         => (ExpressionInvocationSyntax)base.Syntax;
 
-    public FunctionSymbol Symbol { get; }
+    public DeclaredFunctionSymbol Symbol { get; }
     public ImmutableArray<IrTypeArgument> TypeArguments { get; }
     public ImmutableArray<IrArgument> Arguments { get; }
 

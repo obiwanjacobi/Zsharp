@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Maja.Compiler.Diagnostics;
 
 namespace Maja.Compiler.IR;
 
 internal sealed class IrTemplateInstantiator
 {
-    private readonly DiagnosticList _diagnostics = new();
-
-    public bool Manifest(IrDeclarationFunction template, IEnumerable<IrTypeArgument> arguments, out IrDeclarationFunction function)
+    public bool TryManifest(IrDeclarationFunction template, IEnumerable<IrTypeArgument> arguments, out IrDeclarationFunction function)
     {
         var success = true;
 
@@ -22,7 +19,7 @@ internal sealed class IrTemplateInstantiator
         return success;
     }
 
-    public bool Manifest(IrDeclarationType template, IEnumerable<IrTypeArgument> arguments, out IrDeclarationType type)
+    public bool TryManifest(IrDeclarationType template, IEnumerable<IrTypeArgument> arguments, out IrDeclarationType type)
     {
         var success = true;
 

@@ -26,6 +26,9 @@ public record DeclaredTypeSymbol : TypeSymbol
         BaseType = baseType;
     }
 
+    public bool IsTemplate
+        => TypeParameters.OfType<TypeParameterTemplateSymbol>().Any();
+
     public ImmutableArray<TypeParameterSymbol> TypeParameters { get; }
     public virtual ImmutableArray<EnumSymbol> Enums { get; }
     public virtual ImmutableArray<FieldSymbol> Fields { get; }

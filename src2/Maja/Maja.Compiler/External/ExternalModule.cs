@@ -8,7 +8,7 @@ namespace Maja.Compiler.External;
 internal sealed class ExternalModule
 {
     public ExternalModule(SymbolName symbolName,
-        IEnumerable<FunctionSymbol> functions,
+        IEnumerable<DeclaredFunctionSymbol> functions,
         IEnumerable<TypeSymbol> types)
     {
         SymbolName = symbolName;
@@ -18,9 +18,9 @@ internal sealed class ExternalModule
 
     public SymbolName SymbolName { get; }
     public ImmutableArray<TypeSymbol> Types { get; }
-    public ImmutableArray<FunctionSymbol> Functions { get; }
+    public ImmutableArray<DeclaredFunctionSymbol> Functions { get; }
 
-    public IEnumerable<FunctionSymbol> LookupFunctions(SymbolName name, IEnumerable<TypeSymbol> argumentTypes)
+    public IEnumerable<DeclaredFunctionSymbol> LookupFunctions(SymbolName name, IEnumerable<TypeSymbol> argumentTypes)
         => FunctionOverloadPicker.SelectCandidates(Functions, name, argumentTypes);
 
     public IEnumerable<TypeSymbol> LookupTypes(SymbolName name)

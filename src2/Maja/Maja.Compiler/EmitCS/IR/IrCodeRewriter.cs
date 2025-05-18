@@ -46,7 +46,7 @@ internal sealed class IrCodeRewriter : IrRewriter
     private IrCodeStatementForLoop CreateForLoop(string varName, TypeSymbol type, IrExpression initExpr, IrExpression endValExpr,
         IrCodeBlock codeBlock, StatementLoopSyntax syntax)
     {
-        var symbol = new VariableSymbol(SymbolName.InternalName($"__{varName}"), type);
+        var symbol = new DeclaredVariableSymbol(SymbolName.InternalName($"__{varName}"), type);
         var initializer = new IrDeclarationVariable(symbol, type, initExpr);
 
         var condition = new IrExpressionBinary(

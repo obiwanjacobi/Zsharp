@@ -197,7 +197,16 @@ internal sealed class IrBuilder
             ? IrLocality.Public
             : IrLocality.None;
 
-        return new IrDeclarationType(syntax, symbol, typeParameters, enums, fields, rules, baseType, typeScope, locality);
+        var typeDecl = new IrDeclarationType(syntax, symbol, typeParameters, enums, fields, rules, baseType, typeScope, locality);
+
+        // templates are registered for later instantiation processing
+        if (typeDecl.IsTemplate &&
+            !CurrentScope.TryRegisterTemplateType(typeDecl))
+        {
+            _diagnostics.TypeTemplateAlreadyDeclared(syntax.Location, symbol.Name.FullName);
+        }
+
+        return typeDecl;
     }
 
     private IEnumerable<IrTypeMemberEnum> TypeMemberEnums(TypeMemberListSyntax<MemberEnumSyntax>? syntax)
@@ -325,7 +334,7 @@ internal sealed class IrBuilder
         initializer = rewriter.RewriteExpression(initializer);
 
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
-        var symbol = new VariableSymbol(name, type!);
+        var symbol = new DeclaredVariableSymbol(name, type!);
 
         if (!CurrentScope.TryDeclareVariable(symbol))
         {
@@ -349,7 +358,7 @@ internal sealed class IrBuilder
         }
 
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
-        var variableSymbol = new VariableSymbol(name, typeSymbol);
+        var variableSymbol = new DeclaredVariableSymbol(name, typeSymbol);
 
         if (!CurrentScope.TryDeclareVariable(variableSymbol))
         {
@@ -385,7 +394,7 @@ internal sealed class IrBuilder
         var returnType = Type(syntax.ReturnType) ?? IrType.Void;
 
         var name = new SymbolName(parentScope.FullName, syntax.Identifier.Text);
-        var symbol = new FunctionSymbol(name, typeParamSymbols, paramSymbols, returnType.Symbol);
+        var symbol = new DeclaredFunctionSymbol(name, typeParamSymbols, paramSymbols, returnType.Symbol);
 
         if (!parentScope.TryDeclareFunction(symbol))
         {
@@ -486,7 +495,7 @@ internal sealed class IrBuilder
     {
         var expr = Expression(syntax.Expression);
 
-        VariableSymbol? variableSymbol;
+        DeclaredVariableSymbol? variableSymbol;
         if (DiscardSymbol.IsDiscard(syntax.Name.Text))
         {
             variableSymbol = new DiscardSymbol();
@@ -497,10 +506,10 @@ internal sealed class IrBuilder
         else
         {
             var name = new SymbolName(syntax.Name.Text);
-            if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out variableSymbol))
+            if (!CurrentScope.TryLookupSymbol<DeclaredVariableSymbol>(name, out variableSymbol))
             {
                 _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
-                variableSymbol = new VariableSymbol(name, expr.TypeSymbol);
+                variableSymbol = new DeclaredVariableSymbol(name, expr.TypeSymbol);
             }
         }
 
@@ -603,10 +612,10 @@ internal sealed class IrBuilder
     private IrExpressionIdentifier IdentifierExpression(ExpressionIdentifierSyntax syntax)
     {
         var name = new SymbolName(syntax.Name.Text);
-        if (!CurrentScope.TryLookupSymbol<VariableSymbol>(name, out var symbol))
+        if (!CurrentScope.TryLookupSymbol<DeclaredVariableSymbol>(name, out var symbol))
         {
             _diagnostics.VariableNotFound(syntax.Location, syntax.Name.Text);
-            symbol = new VariableSymbol(name, TypeSymbol.Unknown);
+            symbol = new DeclaredVariableSymbol(name, TypeSymbol.Unknown);
         }
 
         var type = symbol.Type ?? TypeSymbol.Unknown;
@@ -669,7 +678,7 @@ internal sealed class IrBuilder
         {
             _diagnostics.FunctionNotFound(syntax.Location, syntax.Identifier.Text);
             // TODO: should have as many (type) params as the invocation uses.
-            functionSymbol = new FunctionSymbol(name, Enumerable.Empty<TypeParameterSymbol>(),
+            functionSymbol = new DeclaredFunctionSymbol(name, Enumerable.Empty<TypeParameterSymbol>(),
                 Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown);
         }
 
@@ -689,7 +698,7 @@ internal sealed class IrBuilder
             CurrentScope.TryLookupTemplateFunction(functionSymbol.Name.Value, out var templateFunction))
         {
             var instantiator = new IrTemplateInstantiator();
-            if (instantiator.Manifest(templateFunction, typeArgs, out var instantiatedTemplate))
+            if (instantiator.TryManifest(templateFunction, typeArgs, out var instantiatedTemplate))
             {
                 functionSymbol = instantiatedTemplate.Symbol;
                 //CurrentScope.Parent.TryRegisterTemplateFunctionInstantiation(instantiatedTemplate);
@@ -725,11 +734,11 @@ internal sealed class IrBuilder
     private IrArgument Argument(ArgumentSyntax syntax)
     {
         var expr = Expression(syntax.Expression);
-        VariableSymbol? argSymbol = null;
+        DeclaredVariableSymbol? argSymbol = null;
         if (syntax.Name is NameSyntax paramName)
         {
             var name = new SymbolName(paramName.Text);
-            argSymbol = new VariableSymbol(name, TypeSymbol.Unknown);
+            argSymbol = new DeclaredVariableSymbol(name, TypeSymbol.Unknown);
         }
 
         return new IrArgument(syntax, expr, argSymbol);
@@ -757,22 +766,20 @@ internal sealed class IrBuilder
     private IrExpressionTypeInitializer TypeInitializerExpression(ExpressionTypeInitializerSyntax syntax)
     {
         var name = new SymbolName(syntax.Type.Name.Text);
-        if (!CurrentScope.TryLookupSymbol<DeclaredTypeSymbol>(name, out var type))
+        if (!CurrentScope.TryLookupSymbol<DeclaredTypeSymbol>(name, out var typeSymbol))
         {
             _diagnostics.TypeNotFound(syntax.Location, syntax.Type.Name.Text);
-            type = new DeclaredTypeSymbol(name, Enumerable.Empty<TypeParameterSymbol>(),
+            typeSymbol = new DeclaredTypeSymbol(name, Enumerable.Empty<TypeParameterSymbol>(),
                 Enumerable.Empty<EnumSymbol>(), Enumerable.Empty<FieldSymbol>(), Enumerable.Empty<RuleSymbol>(), null);
         }
-
-        var typeArgs = TypeArguments(syntax.Type.TypeArguments);
 
         var initializers = new List<IrTypeInitializerField>();
         var fields = new List<FieldSymbol>();
         foreach (var fldInitSyntax in syntax.FieldInitializers)
         {
-            if (!CurrentScope.TryLookupField(type, fldInitSyntax.Name.Text, out var field))
+            if (!CurrentScope.TryLookupField(typeSymbol, fldInitSyntax.Name.Text, out var field))
             {
-                _diagnostics.FieldNotFoundOnType(fldInitSyntax.Location, type.Name.Value, fldInitSyntax.Name.Text);
+                _diagnostics.FieldNotFoundOnType(fldInitSyntax.Location, typeSymbol.Name.Value, fldInitSyntax.Name.Text);
                 field = new FieldSymbol(new SymbolName(fldInitSyntax.Name.Text), TypeSymbol.Unknown);
             }
             var expression = Expression(fldInitSyntax.Expression);
@@ -781,9 +788,23 @@ internal sealed class IrBuilder
             fields.Add(field);
         }
 
-        var matcher = new IrFieldTypeMatcher(type.TypeParameters, typeArgs, fields, initializers);
+        var typeArgs = TypeArguments(syntax.Type.TypeArguments);
 
-        return new(syntax, type, typeArgs, matcher.RewriteFieldInitializers());
+        // Type template processing
+        if (typeSymbol.IsTemplate &&
+            CurrentScope.TryLookupTemplateType(typeSymbol.Name.Value, out var templateType))
+        {
+            var instantiator = new IrTemplateInstantiator();
+            if (instantiator.TryManifest(templateType, typeArgs, out var instantiatedTemplate))
+            {
+                typeSymbol = instantiatedTemplate.Symbol;
+                //CurrentScope.Parent.TryRegisterTemplateFunctionInstantiation(instantiatedTemplate);
+            }
+        }
+
+        var matcher = new IrFieldTypeMatcher(typeSymbol.TypeParameters, typeArgs, fields, initializers);
+
+        return new(syntax, typeSymbol, typeArgs, matcher.RewriteFieldInitializers());
     }
 
     private static IrExpressionLiteral LiteralBoolExpression(ExpressionLiteralBoolSyntax syntax)

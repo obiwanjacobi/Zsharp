@@ -1,8 +1,8 @@
 ﻿namespace Maja.Compiler.Symbol;
 
-public record VariableSymbol : SymbolWithType
+public record DeclaredVariableSymbol : SymbolWithType
 {
-    public VariableSymbol(SymbolName name, TypeSymbol type)
+    public DeclaredVariableSymbol(SymbolName name, TypeSymbol type)
         : base(name, type)
     { }
 
