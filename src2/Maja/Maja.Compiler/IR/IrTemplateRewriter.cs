@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Maja.Compiler.Symbol;
@@ -55,15 +56,21 @@ internal abstract class IrTemplateRewriter : IrRewriter
 
         return expression;
     }
+
+    protected static Dictionary<SymbolName, TypeSymbol> CreateTypeMap(ImmutableArray<IrTypeParameter> typeParameters, IEnumerable<IrTypeArgument> typeArguments)
+    {
+        return typeParameters.Zip(typeArguments)
+            .ToDictionary(p => p.First.Symbol.Name, p => p.Second.Type.Symbol);
+    }
 }
 
 internal sealed class IrTemplateFunctionRewriter : IrTemplateRewriter
 {
     private readonly IrDeclarationFunction _template;
 
-
     public IrTemplateFunctionRewriter(IrDeclarationFunction template)
     {
+        Debug.Assert(template.IsTemplate);
         _template = template;
     }
 
@@ -72,14 +79,21 @@ internal sealed class IrTemplateFunctionRewriter : IrTemplateRewriter
         TypeMap = CreateTypeMap(_template.TypeParameters, typeArguments);
         return RewriteDeclarationFunction(_template);
     }
-
-    private static Dictionary<SymbolName, TypeSymbol> CreateTypeMap(ImmutableArray<IrTypeParameter> typeParameters, IEnumerable<IrTypeArgument> typeArguments)
-    {
-        return typeParameters.Zip(typeArguments)
-            .ToDictionary(p => p.First.Symbol.Name, p => p.Second.Type.Symbol);
-    }
 }
 
 internal sealed class IrTemplateTypeRewriter : IrTemplateRewriter
 {
+    private readonly IrDeclarationType _template;
+
+    public IrTemplateTypeRewriter(IrDeclarationType template)
+    {
+        Debug.Assert(template.IsTemplate);
+        _template = template;
+    }
+
+    public IrDeclarationType Rewrite(IEnumerable<IrTypeArgument> typeArguments)
+    {
+        TypeMap = CreateTypeMap(_template.TypeParameters, typeArguments);
+        return RewriteDeclarationType(_template);
+    }
 }

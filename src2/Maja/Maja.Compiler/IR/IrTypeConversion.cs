@@ -48,7 +48,6 @@ internal static class IrTypeConversion
         return false;
     }
 
-
     public static bool TrySelectInferredType(this TypeInferredSymbol inferredSymbol, TypeSymbol fromType, [NotNullWhen(true)] out TypeSymbol? convertedType)
     {
         if (inferredSymbol.Candidates.Contains(fromType))
@@ -57,7 +56,7 @@ internal static class IrTypeConversion
             return true;
         }
 
-        // TODO: macth candidates to fromType as best as possible.
+        // TODO: match candidates to fromType as best as possible.
 
         return inferredSymbol.TryGetPreferredType(out convertedType);
     }

@@ -8,6 +8,10 @@ public sealed record ParameterSymbol : SymbolWithType
         : base(new SymbolName(name), type)
     { }
 
+    public ParameterSymbol(SymbolName name, TypeSymbol type)
+        : base(name, type)
+    { }
+
     public override SymbolKind Kind
         => SymbolKind.Parameter;
 }

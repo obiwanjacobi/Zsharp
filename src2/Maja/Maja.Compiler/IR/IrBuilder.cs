@@ -689,9 +689,10 @@ internal sealed class IrBuilder
             CurrentScope.TryLookupTemplateFunction(functionSymbol.Name.Value, out var templateFunction))
         {
             var instantiator = new IrTemplateInstantiator();
-            if (instantiator.Resolve(templateFunction, typeArgs, out var instantiatedTemplate))
+            if (instantiator.Manifest(templateFunction, typeArgs, out var instantiatedTemplate))
             {
-                //CurrentScope.Parent.RegisterTemplateFunctionInstantiation(instantiatedTemplate);
+                functionSymbol = instantiatedTemplate.Symbol;
+                //CurrentScope.Parent.TryRegisterTemplateFunctionInstantiation(instantiatedTemplate);
             }
         }
 

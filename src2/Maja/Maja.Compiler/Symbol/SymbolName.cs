@@ -15,30 +15,30 @@ public sealed record SymbolName
         Value = name;
         OriginalName = originalName;
     }
-    
-    public SymbolName(string fullName)
+
+    public SymbolName(string fullName, bool isType = false)
     {
         var parts = fullName.Split(SyntaxToken.Separator);
-        
-        var name = parts[parts.Length - 1];
+
+        var name = parts[^1];
         var nsParts = parts[..^1];
 
         Namespace = nsParts.Any() ? new SymbolNamespace(nsParts) : SymbolNamespace.Empty;
-        Value = ToCanonical(name);
+        Value = isType ? name : ToCanonical(name);
         OriginalName = name;
     }
 
-    public SymbolName(string ns, string name)
+    public SymbolName(string ns, string name, bool isType = false)
     {
         Namespace = String.IsNullOrEmpty(ns) ? SymbolNamespace.Empty : new SymbolNamespace(ns);
-        Value = ToCanonical(name);
+        Value = isType ? name : ToCanonical(name);
         OriginalName = name;
     }
 
-    public SymbolName(IEnumerable<string> nsParts, string name)
+    public SymbolName(IEnumerable<string> nsParts, string name, bool isType = false)
     {
         Namespace = nsParts.Any() ? new SymbolNamespace(nsParts) : SymbolNamespace.Empty;
-        Value = ToCanonical(name);
+        Value = isType ? name : ToCanonical(name);
         OriginalName = name;
     }
 

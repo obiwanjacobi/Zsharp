@@ -57,6 +57,12 @@ public sealed record TypeFunctionSymbol : TypeSymbol
     {
         var name = new StringBuilder();
 
+        var templParams = typeParameters.OfType<TypeParameterTemplateSymbol>();
+        if (templParams.Any())
+        {
+            // TODO: are template parameters part of the function-type name?
+        }
+
         name.Append('(');
         foreach (var paramType in parameterTypes)
         {
@@ -70,13 +76,13 @@ public sealed record TypeFunctionSymbol : TypeSymbol
                 .Append(returnType.Name.Value);
         }
 
-        var generics = typeParameters.Count();
+        var generics = typeParameters.OfType<TypeParameterGenericSymbol>().Count();
         if (generics > 0)
         {
             name.Append('`')
                 .Append(generics);
         }
 
-        return new SymbolName(name.ToString());
+        return new SymbolName(name.ToString(), isType: true);
     }
 }

@@ -4,7 +4,7 @@ using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.IR;
 
-// Not based on the IrRewriter because type propagation is not bottum up.
+// Not based on the IrRewriter because type propagation is not bottom up.
 internal class IrExpressionTypeRewriter
 {
     private readonly Stack<TypeSymbol> _typeStack = new();
@@ -48,7 +48,7 @@ internal class IrExpressionTypeRewriter
             rightType = _typeStack.Peek();
             leftType = _typeStack.Peek();
         }
-        
+
 
         var left = expression.Left;
         var right = expression.Right;

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Maja.Compiler.Diagnostics;
+using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.IR;
 
@@ -105,7 +107,14 @@ internal abstract class IrRewriter
             body == function.Body)
             return function;
 
-        return new IrDeclarationFunction(function.Syntax, function.Symbol, typeParameters, parameters, retType, function.Scope, body, function.Locality);
+        var functionSymbol = new FunctionSymbol(
+            function.Symbol.Name,
+            typeParameters.Select(tp => tp.Symbol),
+            parameters.Select(p => p.Symbol),
+            retType.Symbol
+        );
+
+        return new IrDeclarationFunction(function.Syntax, functionSymbol, typeParameters, parameters, retType, function.Scope, body, function.Locality);
     }
 
     protected virtual ImmutableArray<IrParameter> RewriteParameters(ImmutableArray<IrParameter> parameters)
@@ -120,7 +129,8 @@ internal abstract class IrRewriter
         if (type == parameter.Type)
             return parameter;
 
-        return new IrParameter(parameter.Syntax, parameter.Symbol, type!);
+        var paramSymbol = new ParameterSymbol(parameter.Symbol.Name, type.Symbol);
+        return new IrParameter(parameter.Syntax, paramSymbol, type!);
     }
 
     protected virtual ImmutableArray<IrTypeParameter> RewriteTypeParameters(ImmutableArray<IrTypeParameter> parameters)
