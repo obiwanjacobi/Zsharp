@@ -13,7 +13,7 @@ public class EmitStatementTests
     public void StatementIf()
     {
         const string code =
-            "x := 42" + Tokens.Eol + 
+            "x := 42" + Tokens.Eol +
             "a := 0" + Tokens.Eol +
             "if x = 42" + Tokens.Eol +
             Tokens.Indent1 + "a = 42" + Tokens.Eol

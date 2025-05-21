@@ -12,19 +12,24 @@ internal static class Emit
     public static string FromCode(string code, ITestOutputHelper? output = null, [CallerMemberName] string callerName = "")
     {
         var program = Ir.Build(code, allowError: false, source: callerName);
-        
+
         var lowering = new IrCodeRewriter();
-        program = lowering.CodeRewrite(program);
-        
+        var programs = lowering.CodeRewrite(program);
+
         var builder = new CodeBuilder();
-        var ns = builder.OnProgram(program);
-        
-        if (output is not null)
+
+        foreach (var prog in programs)
         {
-            var dump = ObjectDumper.Dump(ns);
-            output.WriteLine(dump);
-            output.WriteLine("");
+            var ns = builder.OnProgram(prog);
+
+            if (output is not null)
+            {
+                var dump = ObjectDumper.Dump(ns);
+                output.WriteLine(dump);
+                output.WriteLine("");
+            }
         }
+
         return builder.ToString();
     }
 

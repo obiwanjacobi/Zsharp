@@ -69,7 +69,7 @@ Keeping track of the progress of Maja features.
 |             | enum | x | x |   |   |   |   |   |   | `MyType -> fld: U8 -> Opt1, Opt2`  |
 |             | init | x | x | x |   |   | x | x |   | `MyType -> fld = 42`  |
 | generics    |      | x | x | x |   |   |   |   |   | `MyType<T> -> fld: T`  |
-| template    |      | x | x |   |   |   |   |   |   | `MyType<#T> -> fld: T`  |
+| template    |      | x | x | x |   |   |   |   |   | `MyType<#T> -> fld: T`  |
 | enum        |      | x | x | x |   |   |   | x |   | `MyType -> opt1, opt2`  |
 | custom      |      |   |   |   |   |   |   |   |   | `MyType: U8`  |
 | rule        |      |   |   |   |   |   |   |   |   | `MyType -> #fld1 > 0`  |

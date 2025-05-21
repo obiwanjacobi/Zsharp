@@ -38,8 +38,10 @@ internal sealed class IrBuilder
         _scopes.Push(scope);
         return parentScope;
     }
-    private IrScope PopScope() => _scopes.Pop();
-    private IrScope CurrentScope => _scopes.Peek();
+    private IrScope PopScope()
+        => _scopes.Pop();
+    private IrScope CurrentScope
+        => _scopes.Peek();
 
     private T GetScopeOf<T>() where T : IrScope
         => _scopes.OfType<T>().Last();
@@ -56,7 +58,16 @@ internal sealed class IrBuilder
         var compilation = builder.Compilation(syntaxTree.Root);
         var scope = (IrModuleScope)builder.PopScope();
 
+        compilation = AddTemplateInstantiations(compilation, scope.TemplateInstantiations);
+
         return new IrProgram(syntaxTree.Root, scope, module, compilation, builder.Diagnostics);
+    }
+
+    private static IrCompilation AddTemplateInstantiations(IrCompilation compilation, IEnumerable<IrDeclaration> concreteDecls)
+    {
+        return new IrCompilation(
+            compilation.Syntax, compilation.Imports, compilation.Exports,
+            compilation.Statements, compilation.Declarations.Concat(concreteDecls));
     }
 
     private IrModule Module(CompilationUnitSyntax syntax)
@@ -700,8 +711,9 @@ internal sealed class IrBuilder
             var instantiator = new IrTemplateInstantiator();
             if (instantiator.TryManifest(templateFunction, typeArgs, out var instantiatedTemplate))
             {
-                // TODO: Register for code generation
-                //CurrentScope.TryRegisterTemplateFunctionInstantiation(instantiatedTemplate);
+                // Register for code generation
+                if (!CurrentScope.TryRegisterTemplateFunctionInstantiation(functionSymbol.Name.Value, instantiatedTemplate))
+                    throw new MajaException($"Registering a function template instantiation for {functionSymbol.Name.FullName} failed.");
 
                 functionSymbol = instantiatedTemplate.Symbol;
             }

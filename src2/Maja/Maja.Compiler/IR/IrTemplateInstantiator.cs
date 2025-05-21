@@ -14,7 +14,7 @@ internal sealed class IrTemplateInstantiator
             throw new MajaException($"Can't call {nameof(IrTemplateInstantiator)}: function {template.Symbol.Name} that is not a template.");
 
         var functionRewriter = new IrTemplateFunctionRewriter(template);
-        function = functionRewriter.Rewrite(arguments);
+        function = functionRewriter.Rewrite(arguments).Single();
 
         return success;
     }
@@ -28,7 +28,7 @@ internal sealed class IrTemplateInstantiator
             throw new MajaException($"Can't call {nameof(IrTemplateInstantiator)}: type {template.Symbol.Name} that is not a template.");
 
         var typeRewriter = new IrTemplateTypeRewriter(template);
-        type = typeRewriter.Rewrite(arguments);
+        type = typeRewriter.Rewrite(arguments).Single();
 
         return success;
     }

@@ -11,7 +11,7 @@ internal abstract class IrTemplateRewriter : IrRewriter
 {
     protected Dictionary<SymbolName, TypeSymbol>? TypeMap { get; set; }
 
-    protected override IrDeclarationType RewriteDeclarationType(IrDeclarationType type)
+    protected override IEnumerable<IrDeclarationType> RewriteDeclarationType(IrDeclarationType type)
     {
         if (type.IsTemplate)
         {
@@ -19,14 +19,15 @@ internal abstract class IrTemplateRewriter : IrRewriter
             var enums = RewriteEnums(type.Enums);
             var fields = RewriteFields(type.Fields);
             var rules = RewriteRules(type.Rules);
-            var baseType = RewriteType(type.BaseType);
+            var types = RewriteType(type.BaseType);
+            var baseType = types.SingleOrDefault();
 
             if (typeParams == type.TypeParameters &&
                 enums == type.Enums &&
                 fields == type.Fields &&
                 rules == type.Rules &&
                 baseType == type.BaseType)
-                return type;
+                return [type];
 
             // TODO: needs deeper replacement for templates!
             var typeSymbol = new TypeTemplateSymbol(
@@ -38,20 +39,20 @@ internal abstract class IrTemplateRewriter : IrRewriter
                 baseType?.Symbol
             );
 
-            return new IrDeclarationType(type.Syntax, typeSymbol, typeParams, enums, fields, rules, baseType, type.Scope, type.Locality);
+            return [new IrDeclarationType(type.Syntax, typeSymbol, typeParams, enums, fields, rules, baseType, type.Scope, type.Locality)];
         }
 
         return base.RewriteDeclarationType(type);
     }
 
     [return: NotNullIfNotNull("type")]
-    protected override IrType? RewriteType(IrType? type)
+    protected override IEnumerable<IrType> RewriteType(IrType? type)
     {
-        if (type is null) return null;
+        if (type is null) return [];
 
         if (TypeMap!.TryGetValue(type.Symbol.Name, out var newTypeSymbol))
         {
-            return new IrType(type.Syntax, newTypeSymbol);
+            return [new IrType(type.Syntax, newTypeSymbol)];
         }
 
         return base.RewriteType(type);
@@ -67,7 +68,7 @@ internal abstract class IrTemplateRewriter : IrRewriter
         return parameter;
     }
 
-    protected override IrExpressionTypeInitializer RewriteExpressionTypeInitializer(IrExpressionTypeInitializer initializer)
+    protected override IrExpression RewriteExpressionTypeInitializer(IrExpressionTypeInitializer initializer)
     {
         if (TypeMap!.TryGetValue(initializer.TypeSymbol.Name, out var newTypeSymbol))
         {
@@ -93,7 +94,8 @@ internal abstract class IrTemplateRewriter : IrRewriter
     {
         if (TypeMap!.TryGetValue(memberField.Type.Symbol.Name, out var newFieldTypeSymbol))
         {
-            var newFieldType = RewriteType(memberField.Type);
+            var types = RewriteType(memberField.Type);
+            var newFieldType = types.Single();
             var newFieldSymbol = new FieldSymbol(memberField.Symbol.Name, newFieldTypeSymbol);
             return new IrTypeMemberField(memberField.Syntax, newFieldSymbol, newFieldType, memberField.DefaultValue);
         }
@@ -101,13 +103,14 @@ internal abstract class IrTemplateRewriter : IrRewriter
         return base.RewriteField(memberField);
     }
 
-    protected override IrParameter RewriteParameter(IrParameter parameter)
+    protected override IEnumerable<IrParameter> RewriteParameter(IrParameter parameter)
     {
         if (TypeMap!.TryGetValue(parameter.Type.Symbol.Name, out var newParamTypeSymbol))
         {
-            var newParamType = RewriteType(parameter.Type);
+            var types = RewriteType(parameter.Type);
+            var newParamType = types.Single();
             var newParamSymbol = new ParameterSymbol(parameter.Symbol.Name, newParamTypeSymbol);
-            return new IrParameter(parameter.Syntax, newParamSymbol, newParamType);
+            return [new IrParameter(parameter.Syntax, newParamSymbol, newParamType)];
         }
 
         return base.RewriteParameter(parameter);
@@ -141,7 +144,7 @@ internal sealed class IrTemplateFunctionRewriter : IrTemplateRewriter
         _template = template;
     }
 
-    public IrDeclarationFunction Rewrite(IEnumerable<IrTypeArgument> typeArguments)
+    public IEnumerable<IrDeclarationFunction> Rewrite(IEnumerable<IrTypeArgument> typeArguments)
     {
         TypeMap = CreateTypeMap(_template.TypeParameters, typeArguments);
         return RewriteDeclarationFunction(_template);
@@ -158,7 +161,7 @@ internal sealed class IrTemplateTypeRewriter : IrTemplateRewriter
         _template = template;
     }
 
-    public IrDeclarationType Rewrite(IEnumerable<IrTypeArgument> typeArguments)
+    public IEnumerable<IrDeclarationType> Rewrite(IEnumerable<IrTypeArgument> typeArguments)
     {
         TypeMap = CreateTypeMap(_template.TypeParameters, typeArguments);
         return RewriteDeclarationType(_template);

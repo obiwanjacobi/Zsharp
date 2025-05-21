@@ -8,10 +8,14 @@ internal static class Emit
     public static string EmitCode(IrProgram program)
     {
         var lowering = new IrCodeRewriter();
-        program = lowering.CodeRewrite(program);
+        var programs = lowering.CodeRewrite(program);
 
         var builder = new CodeBuilder();
-        var ns = builder.OnProgram(program);
+
+        foreach (var prog in programs)
+        {
+            var ns = builder.OnProgram(prog);
+        }
 
         return builder.ToString();
     }

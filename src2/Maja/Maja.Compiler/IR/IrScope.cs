@@ -211,6 +211,17 @@ internal abstract class IrScope
         return false;
     }
 
+    public virtual bool TryRegisterTemplateFunctionInstantiation(string name, IrDeclarationFunction functionDecl)
+    {
+        if (_templateDecls.ContainsKey(name))
+        {
+            var moduleScope = this.OfType<IrModuleScope>();
+            return moduleScope.TryRegisterTemplateFunctionInstantiation(name, functionDecl);
+        }
+
+        return Parent?.TryRegisterTemplateFunctionInstantiation(name, functionDecl) ?? false;
+    }
+
     public bool TryRegisterTemplateType(IrDeclarationType templateType)
     {
         Debug.Assert(templateType.IsTemplate);
@@ -242,6 +253,17 @@ internal abstract class IrScope
         }
 
         return false;
+    }
+
+    public virtual bool TryRegisterTemplateTypeInstantiation(string name, IrDeclarationType typeDecl)
+    {
+        if (_templateDecls.ContainsKey(name))
+        {
+            var moduleScope = this.OfType<IrModuleScope>();
+            return moduleScope.TryRegisterTemplateTypeInstantiation(name, typeDecl);
+        }
+
+        return Parent?.TryRegisterTemplateTypeInstantiation(name, typeDecl) ?? false;
     }
 }
 
@@ -315,6 +337,30 @@ internal sealed class IrModuleScope : IrScope
         return symbol is not null;
     }
 
+    private Dictionary<string, IrDeclaration> _templateInstanceDecls = new();
+    public IEnumerable<IrDeclaration> TemplateInstantiations
+        => _templateInstanceDecls.Values;
+
+    public override bool TryRegisterTemplateFunctionInstantiation(string name, IrDeclarationFunction functionDecl)
+    {
+        if (!_templateInstanceDecls.ContainsKey(name))
+        {
+            _templateInstanceDecls.Add(name, functionDecl);
+            return true;
+        }
+
+        return false;
+    }
+    public override bool TryRegisterTemplateTypeInstantiation(string name, IrDeclarationType typeDecl)
+    {
+        if (!_templateInstanceDecls.ContainsKey(name))
+        {
+            _templateInstanceDecls.Add(name, typeDecl);
+            return true;
+        }
+
+        return false;
+    }
 
     public bool TryDeclareModule(ExternalModule module)
     {
@@ -372,4 +418,17 @@ internal sealed class IrGlobalScope : IrScope
 
     public override string FullName
         => String.Empty;
+}
+
+internal static class IrScopeExtensions
+{
+    public static T OfType<T>(this IrScope scope)
+        where T : IrScope
+    {
+        return scope is T
+            ? (T)scope
+            : scope.Parent?.OfType<T>() ??
+                throw new MajaException($"Reached the scope root looking for {typeof(T).Name}.");
+        ;
+    }
 }
