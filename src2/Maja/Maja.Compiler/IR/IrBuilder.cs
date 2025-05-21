@@ -180,14 +180,14 @@ internal sealed class IrBuilder
         var baseType = Type(syntax.BaseType);
 
         var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
-        var symbol = new DeclaredTypeSymbol(name,
+        var typeSymbol = new DeclaredTypeSymbol(name,
             typeParamSymbols,
             enums.Select(e => e.Symbol),
             fields.Select(f => f.Symbol),
             rules.Select(r => r.Symbol),
             baseType?.Symbol);
 
-        if (!CurrentScope.TryDeclareType(symbol))
+        if (!CurrentScope.TryDeclareType(typeSymbol))
         {
             _diagnostics.TypeAlreadyDeclared(syntax.Location, syntax.Name.Text);
         }
@@ -197,13 +197,13 @@ internal sealed class IrBuilder
             ? IrLocality.Public
             : IrLocality.None;
 
-        var typeDecl = new IrDeclarationType(syntax, symbol, typeParameters, enums, fields, rules, baseType, typeScope, locality);
+        var typeDecl = new IrDeclarationType(syntax, typeSymbol, typeParameters, enums, fields, rules, baseType, typeScope, locality);
 
         // templates are registered for later instantiation processing
         if (typeDecl.IsTemplate &&
             !CurrentScope.TryRegisterTemplateType(typeDecl))
         {
-            _diagnostics.TypeTemplateAlreadyDeclared(syntax.Location, symbol.Name.FullName);
+            _diagnostics.TypeTemplateAlreadyDeclared(syntax.Location, typeSymbol.Name.FullName);
         }
 
         return typeDecl;
@@ -700,8 +700,10 @@ internal sealed class IrBuilder
             var instantiator = new IrTemplateInstantiator();
             if (instantiator.TryManifest(templateFunction, typeArgs, out var instantiatedTemplate))
             {
+                // TODO: Register for code generation
+                //CurrentScope.TryRegisterTemplateFunctionInstantiation(instantiatedTemplate);
+
                 functionSymbol = instantiatedTemplate.Symbol;
-                //CurrentScope.Parent.TryRegisterTemplateFunctionInstantiation(instantiatedTemplate);
             }
         }
 
@@ -773,23 +775,7 @@ internal sealed class IrBuilder
                 Enumerable.Empty<EnumSymbol>(), Enumerable.Empty<FieldSymbol>(), Enumerable.Empty<RuleSymbol>(), null);
         }
 
-        var initializers = new List<IrTypeInitializerField>();
-        var fields = new List<FieldSymbol>();
-        foreach (var fldInitSyntax in syntax.FieldInitializers)
-        {
-            if (!CurrentScope.TryLookupField(typeSymbol, fldInitSyntax.Name.Text, out var field))
-            {
-                _diagnostics.FieldNotFoundOnType(fldInitSyntax.Location, typeSymbol.Name.Value, fldInitSyntax.Name.Text);
-                field = new FieldSymbol(new SymbolName(fldInitSyntax.Name.Text), TypeSymbol.Unknown);
-            }
-            var expression = Expression(fldInitSyntax.Expression);
-            var init = new IrTypeInitializerField(fldInitSyntax, field, expression);
-            initializers.Add(init);
-            fields.Add(field);
-        }
-
         var typeArgs = TypeArguments(syntax.Type.TypeArguments);
-
         // Type template processing
         if (typeSymbol.IsTemplate &&
             CurrentScope.TryLookupTemplateType(typeSymbol.Name.Value, out var templateType))
@@ -797,14 +783,37 @@ internal sealed class IrBuilder
             var instantiator = new IrTemplateInstantiator();
             if (instantiator.TryManifest(templateType, typeArgs, out var instantiatedTemplate))
             {
+                // TODO: Register for code generation
+                //CurrentScope.TryRegisterTemplateTypeInstantiation(templateType, instantiatedTemplate);
+
                 typeSymbol = instantiatedTemplate.Symbol;
-                //CurrentScope.Parent.TryRegisterTemplateFunctionInstantiation(instantiatedTemplate);
             }
         }
 
-        var matcher = new IrFieldTypeMatcher(typeSymbol.TypeParameters, typeArgs, fields, initializers);
+        var initializers = new List<IrTypeInitializerField>();
+        var fields = new List<FieldSymbol>();
+        foreach (var fldInitSyntax in syntax.FieldInitializers)
+        {
+            // TODO: Use the instantiatedTemplate(.Symbol) to resolve the fields
+            if (!CurrentScope.TryLookupField(typeSymbol, fldInitSyntax.Name.Text, out var field))
+            {
+                _diagnostics.FieldNotFoundOnType(fldInitSyntax.Location, typeSymbol.Name.Value, fldInitSyntax.Name.Text);
+                field = new FieldSymbol(new SymbolName(fldInitSyntax.Name.Text), TypeSymbol.Unknown);
+            }
+            // TODO: can the expression contain type-params from the template?
+            var expression = Expression(fldInitSyntax.Expression);
+            var init = new IrTypeInitializerField(fldInitSyntax, field, expression);
+            initializers.Add(init);
+            fields.Add(field);
+        }
 
-        return new(syntax, typeSymbol, typeArgs, matcher.RewriteFieldInitializers());
+        if (typeSymbol.IsGeneric)
+        {
+            var matcher = new IrFieldTypeMatcher(typeSymbol.TypeParameters, typeArgs, fields, initializers);
+            return new(syntax, typeSymbol, typeArgs, matcher.RewriteFieldInitializers());
+        }
+
+        return new(syntax, typeSymbol, typeArgs, initializers);
     }
 
     private static IrExpressionLiteral LiteralBoolExpression(ExpressionLiteralBoolSyntax syntax)

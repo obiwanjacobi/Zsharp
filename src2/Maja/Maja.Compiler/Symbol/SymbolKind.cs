@@ -12,6 +12,7 @@ public enum SymbolKind
     Parameter,
     TypeFunction,
     TypeParameter,
+    TypeTemplate,
     Field,
     Enum,
     Rule,

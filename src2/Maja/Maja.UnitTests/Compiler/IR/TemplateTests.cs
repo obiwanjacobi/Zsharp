@@ -70,7 +70,7 @@ public class TemplateTests
         var program = Ir.Build(code);
         program.Root.Declarations.Should().HaveCount(1);
         var type = program.Root.Declarations[0].As<IrDeclarationType>();
-        type.Symbol.Name.Value.Should().Be("Templ");
+        type.Symbol.TemplateName.FullName.Should().Be("Defmod.Templ#1");
         type.TypeParameters.Should().HaveCount(1);
         var templType = type.TypeParameters.First().As<IrTypeParameterTemplate>();
         templType.Symbol.Name.Value.Should().Be("T");
@@ -89,10 +89,10 @@ public class TemplateTests
         var program = Ir.Build(code);
         program.Root.Declarations.Should().HaveCount(2);
         var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
-        v.TypeSymbol.Name.Value.Should().Be("Templ");
+        v.TypeSymbol.As<TypeTemplateSymbol>().TemplateName.FullName.Should().Be("Defmod.Templ#U8");
 
         var instance = v.Initializer.As<IrExpressionTypeInitializer>();
-        instance.TypeSymbol.Name.Value.Should().Be("Templ");
+        instance.TypeSymbol.As<TypeTemplateSymbol>().TemplateName.FullName.Should().Be("Defmod.Templ#U8");
         instance.Fields[0].Field.Type.Name.Value.Should().Be("U8");
     }
 }

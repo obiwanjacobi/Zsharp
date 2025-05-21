@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,8 @@ public sealed record DeclaredFunctionSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Function;
 
+    public bool IsGeneric
+        => TypeParameters.OfType<TypeParameterGenericSymbol>().Any();
     public bool IsTemplate
         => TypeParameters.OfType<TypeParameterTemplateSymbol>().Any();
 
@@ -63,12 +66,9 @@ public sealed record TypeFunctionSymbol : TypeSymbol
             // TODO: are template parameters part of the function-type name?
         }
 
-        name.Append('(');
-        foreach (var paramType in parameterTypes)
-        {
-            name.Append(paramType.Name.Value);
-        }
-        name.Append(')');
+        name.Append('(')
+            .Append(String.Join(',', parameterTypes.Select(pt => pt.Name.Value)))
+            .Append(')');
 
         if (returnType is not null)
         {

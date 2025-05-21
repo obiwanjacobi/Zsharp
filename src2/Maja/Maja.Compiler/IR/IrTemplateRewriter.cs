@@ -11,6 +11,39 @@ internal abstract class IrTemplateRewriter : IrRewriter
 {
     protected Dictionary<SymbolName, TypeSymbol>? TypeMap { get; set; }
 
+    protected override IrDeclarationType RewriteDeclarationType(IrDeclarationType type)
+    {
+        if (type.IsTemplate)
+        {
+            var typeParams = RewriteTypeParameters(type.TypeParameters);
+            var enums = RewriteEnums(type.Enums);
+            var fields = RewriteFields(type.Fields);
+            var rules = RewriteRules(type.Rules);
+            var baseType = RewriteType(type.BaseType);
+
+            if (typeParams == type.TypeParameters &&
+                enums == type.Enums &&
+                fields == type.Fields &&
+                rules == type.Rules &&
+                baseType == type.BaseType)
+                return type;
+
+            // TODO: needs deeper replacement for templates!
+            var typeSymbol = new TypeTemplateSymbol(
+                type.Symbol.Name,
+                TypeMap!.Values,
+                enums.Select(e => e.Symbol),
+                fields.Select(f => f.Symbol),
+                rules.Select(r => r.Symbol),
+                baseType?.Symbol
+            );
+
+            return new IrDeclarationType(type.Syntax, typeSymbol, typeParams, enums, fields, rules, baseType, type.Scope, type.Locality);
+        }
+
+        return base.RewriteDeclarationType(type);
+    }
+
     [return: NotNullIfNotNull("type")]
     protected override IrType? RewriteType(IrType? type)
     {
@@ -34,7 +67,7 @@ internal abstract class IrTemplateRewriter : IrRewriter
         return parameter;
     }
 
-    protected override IrExpressionTypeInitializer RewriteTypeInitializer(IrExpressionTypeInitializer initializer)
+    protected override IrExpressionTypeInitializer RewriteExpressionTypeInitializer(IrExpressionTypeInitializer initializer)
     {
         if (TypeMap!.TryGetValue(initializer.TypeSymbol.Name, out var newTypeSymbol))
         {
@@ -42,7 +75,18 @@ internal abstract class IrTemplateRewriter : IrRewriter
             return new IrExpressionTypeInitializer(initializer.Syntax, newTypeSymbol, Enumerable.Empty<IrTypeArgument>(), fields);
         }
 
-        return base.RewriteTypeInitializer(initializer);
+        return base.RewriteExpressionTypeInitializer(initializer);
+    }
+
+    protected override IrTypeInitializerField RewriteTypeInitializerField(IrTypeInitializerField initializer)
+    {
+        if (TypeMap!.TryGetValue(initializer.Field.Type.Name, out var newFieldTypeSymbol))
+        {
+            var newFieldSymbol = new FieldSymbol(initializer.Field.Name, newFieldTypeSymbol);
+            return new(initializer.Syntax, newFieldSymbol, initializer.Expression);
+        }
+
+        return base.RewriteTypeInitializerField(initializer);
     }
 
     protected override IrTypeMemberField RewriteField(IrTypeMemberField memberField)

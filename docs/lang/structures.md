@@ -229,6 +229,19 @@ s[name] = 42
 
 Syntax should be the same as with the `Dyn`amic Type.
 
+> TBD: Reference sub-structures
+
+```csharp
+Struct
+    nested: NestedStruct
+        fld1: U8
+        fld2: Str
+    name: Str
+
+// declares a var 'sub' that has the type of 'NestedStruct' (also works with anonymous nested types)
+sub : Struct#nested
+```
+
 ---
 
 ## Structure Layout

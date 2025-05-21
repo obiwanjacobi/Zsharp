@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 
 namespace Maja.Compiler.Symbol;
 
@@ -9,7 +10,9 @@ public record DeclaredTypeSymbol : TypeSymbol
 {
     protected DeclaredTypeSymbol(SymbolName name)
         : base(name)
-    { }
+    {
+        TemplateName = name;
+    }
 
     public DeclaredTypeSymbol(SymbolName name,
         IEnumerable<TypeParameterSymbol> typeParameters,
@@ -24,16 +27,33 @@ public record DeclaredTypeSymbol : TypeSymbol
         Fields = fields.ToImmutableArray();
         Rules = rules.ToImmutableArray();
         BaseType = baseType;
+        TemplateName = CreateTypeName(name, typeParameters);
     }
 
+    public bool IsGeneric
+        => TypeParameters.OfType<TypeParameterGenericSymbol>().Any();
     public bool IsTemplate
         => TypeParameters.OfType<TypeParameterTemplateSymbol>().Any();
+    // In case of template declarations this is the full type name
+    public SymbolName TemplateName { get; protected set; }
 
     public ImmutableArray<TypeParameterSymbol> TypeParameters { get; }
     public virtual ImmutableArray<EnumSymbol> Enums { get; }
     public virtual ImmutableArray<FieldSymbol> Fields { get; }
     public ImmutableArray<RuleSymbol> Rules { get; }
     public TypeSymbol? BaseType { get; }
+
+    private static SymbolName CreateTypeName(SymbolName typeName, IEnumerable<TypeSymbol> typeTemplateTypes)
+    {
+        if (!typeTemplateTypes.Any())
+            return typeName;
+
+        var name = new StringBuilder(typeName.FullName)
+            .Append('#')
+            .Append(typeTemplateTypes.Count());
+
+        return new SymbolName(name.ToString(), isType: true);
+    }
 }
 
 public static class DeclaredTypeSymbolExtensions
