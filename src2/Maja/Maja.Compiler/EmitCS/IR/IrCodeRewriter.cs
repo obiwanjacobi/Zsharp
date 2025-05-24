@@ -18,6 +18,11 @@ internal sealed class IrCodeRewriter : IrRewriter
         return type.IsTemplate ? [] : base.RewriteDeclarationType(type);
     }
 
+    protected override IEnumerable<IrDeclarationFunction> RewriteDeclarationFunction(IrDeclarationFunction function)
+    {
+        return function.IsTemplate ? [] : base.RewriteDeclarationFunction(function);
+    }
+
     protected override IEnumerable<IrStatement> RewriteStatementLoop(IrStatementLoop statement)
     {
         if (statement.Expression is IrExpressionRange rangeExpr)

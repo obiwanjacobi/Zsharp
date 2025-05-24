@@ -22,9 +22,9 @@ public class EmitTemplateTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain(" fn(System.Byte")
-            .And.Contain("  ")
-            .And.Contain(" return ")
+            .Contain(" fn(System.Byte p")
+            .And.Contain(" v = fn((System.Byte)42)")
+            .And.Contain(" return p")
             .And.NotContain("<unknown>")
             ;
 
@@ -45,9 +45,10 @@ public class EmitTemplateTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain(" fn()")
-            .And.Contain(" void ")
-            .And.Contain(" return ")
+            .Contain(" s = new Defmod.Templ()")
+            .And.Contain(" fld1 = 42")      // No cast to System.Byte!
+            .And.Contain(" record class Templ")
+            .And.Contain(" System.Byte fld1 { get; set; }")
             .And.NotContain("<unknown>")
             ;
 

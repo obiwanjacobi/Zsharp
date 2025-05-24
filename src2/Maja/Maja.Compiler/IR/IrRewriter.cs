@@ -492,63 +492,31 @@ internal abstract class IrRewriter
     private static ImmutableArray<T> RewriteArray<T>(ImmutableArray<T> array, Func<T, T?> itemRewriter)
         where T : class
     {
-        ImmutableArray<T>.Builder? builder = null;
+        var list = new List<T>();
 
         for (var i = 0; i < array.Length; i++)
         {
             var oldItem = array[i];
             var newItem = itemRewriter(oldItem);
 
-            if (oldItem != newItem &&
-                builder is null)
-            {
-                builder = ImmutableArray.CreateBuilder<T>(array.Length);
-
-                // add items before first new one
-                for (var j = 0; j < i; j++)
-                    builder.Add(array[j]);
-            }
-
-            if (builder is not null &&
-                newItem is not null)
-                builder.Add(newItem);
+            list.Add(newItem);
         }
 
-        return builder is null
-            ? array
-            : builder.MoveToImmutable();
+        return list.ToImmutableArray();
     }
 
     private static ImmutableArray<T> RewriteArray<T>(ImmutableArray<T> array, Func<T, IEnumerable<T>> itemRewriter)
         where T : class
     {
-        ImmutableArray<T>.Builder? builder = null;
-
+        var list = new List<T>();
         for (var i = 0; i < array.Length; i++)
         {
             var oldItem = array[i];
             var newItems = itemRewriter(oldItem);
-
-            var newCount = newItems.Count();
-            if (newCount > 0 &&
-                (!newItems.Contains(oldItem) || newCount > 1) &&
-                builder is null)
-            {
-                builder = ImmutableArray.CreateBuilder<T>(array.Length);
-
-                // add items before first new one
-                for (var j = 0; j < i; j++)
-                    builder.Add(array[j]);
-            }
-
-            if (builder is not null &&
-                newItems is not null)
-                builder.AddRange(newItems);
+            list.AddRange(newItems);
         }
 
-        return builder is null
-            ? array
-            : builder.MoveToImmutable();
+        return list.ToImmutableArray();
     }
 }
 

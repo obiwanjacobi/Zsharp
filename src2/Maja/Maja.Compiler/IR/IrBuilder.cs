@@ -795,8 +795,9 @@ internal sealed class IrBuilder
             var instantiator = new IrTemplateInstantiator();
             if (instantiator.TryManifest(templateType, typeArgs, out var instantiatedTemplate))
             {
-                // TODO: Register for code generation
-                //CurrentScope.TryRegisterTemplateTypeInstantiation(templateType, instantiatedTemplate);
+                // Register for code generation
+                if (!CurrentScope.TryRegisterTemplateTypeInstantiation(typeSymbol.Name.Value, instantiatedTemplate))
+                    throw new MajaException($"Registering a type template instantiation for {typeSymbol.Name.FullName} failed.");
 
                 typeSymbol = instantiatedTemplate.Symbol;
             }
