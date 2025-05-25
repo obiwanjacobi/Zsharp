@@ -39,9 +39,12 @@ internal sealed class IrBuilder
         return parentScope;
     }
     private T PopScope<T>()
-        where T : IrScope // IIrScope
-        // TODO: Freeze scope to make it read only
-        => (T)_scopes.Pop();
+        where T : IrScope
+    {
+        var scope = (T)_scopes.Pop();
+        scope.Freeze();
+        return scope;
+    }
     private IrScope CurrentScope
         => _scopes.Peek();
 

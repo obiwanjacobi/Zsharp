@@ -49,8 +49,8 @@ Keeping track of the progress of Maja features.
 |            | type  | x | x | x |   |   |   | x |   | `fn: <T>(p: T)`  |
 |            | ret   | x | x | x |   |   | x | x |   | `fn: (): U8`  |
 | generics   |       |   |   |   |   |   |   |   |   | `fn: <T>()`  |
-| template   |       |   |   |   |   |   |   |   |   | `fn: <#T>()`  |
-| invocation |       | x | x | x |   |   | x |   |   | `fn()`  |
+| template   |       |   |   |   |   |   |   | x |   | `fn: <#T>()`  |
+| invocation |       | x | x | x |   |   | x | x |   | `fn()`  |
 |         | generics | x | x | x |   |   |   | x |   | `fn<T>()`  |
 
 ## Variable

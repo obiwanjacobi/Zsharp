@@ -10,6 +10,8 @@ namespace Maja.Compiler.IR;
 
 internal abstract class IrScope
 {
+    private bool _frozen = false;
+
     protected IrScope(string originalName, IrScope? parent)
     {
         Name = originalName;
@@ -27,6 +29,15 @@ internal abstract class IrScope
     public virtual bool IsExport(SymbolName name)
         => Parent?.IsExport(name) ?? false;
 
+    public void Freeze()
+        => _frozen = true;
+
+    protected void ThrowIfFrozen()
+    {
+        if (_frozen)
+            throw new MajaException($"IrScope {FullName} cannot change, it has been frozen making it read-only.");
+    }
+
     //
     // Symbol Declarations
     //
@@ -37,13 +48,20 @@ internal abstract class IrScope
         => SymbolTable.Symbols;
 
     public bool TryDeclareVariable(DeclaredVariableSymbol symbol)
-        => SymbolTable.TryDeclareSymbol(symbol);
-
+    {
+        ThrowIfFrozen();
+        return SymbolTable.TryDeclareSymbol(symbol);
+    }
     public bool TryDeclareType(TypeSymbol symbol)
-        => SymbolTable.TryDeclareSymbol(symbol);
-
+    {
+        ThrowIfFrozen();
+        return SymbolTable.TryDeclareSymbol(symbol);
+    }
     public bool TryDeclareFunction(DeclaredFunctionSymbol symbol)
-        => SymbolTable.TryDeclareSymbol(symbol);
+    {
+        ThrowIfFrozen();
+        return SymbolTable.TryDeclareSymbol(symbol);
+    }
 
     public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
         => SymbolTable.TryLookupSymbol<Symbol.Symbol>(name, out symbol);
@@ -122,6 +140,8 @@ internal abstract class IrScope
 
     public int TryDeclareTypes(IEnumerable<TypeParameterSymbol> typeParameters)
     {
+        ThrowIfFrozen();
+
         var index = 0;
         foreach (var param in typeParameters)
         {
@@ -138,6 +158,8 @@ internal abstract class IrScope
 
     public int TryDeclareVariables(IEnumerable<ParameterSymbol> parameters)
     {
+        ThrowIfFrozen();
+
         var index = 0;
         foreach (var param in parameters)
         {
@@ -180,6 +202,7 @@ internal abstract class IrScope
 
     public bool TryRegisterTemplateFunction(IrDeclarationFunction templateFunction)
     {
+        ThrowIfFrozen();
         Debug.Assert(templateFunction.IsTemplate);
         // TODO: should this be the function-name and type-name combined?
         var name = templateFunction.Symbol.Name.Value;
@@ -213,6 +236,8 @@ internal abstract class IrScope
 
     public virtual bool TryRegisterTemplateFunctionInstantiation(string name, IrDeclarationFunction functionDecl)
     {
+        ThrowIfFrozen();
+
         if (_templateDecls.ContainsKey(name))
         {
             var moduleScope = this.OfType<IrModuleScope>();
@@ -224,6 +249,7 @@ internal abstract class IrScope
 
     public bool TryRegisterTemplateType(IrDeclarationType templateType)
     {
+        ThrowIfFrozen();
         Debug.Assert(templateType.IsTemplate);
         // TODO: should this be the function-name and type-name combined?
         var name = templateType.Symbol.Name.Value;
@@ -257,6 +283,7 @@ internal abstract class IrScope
 
     public virtual bool TryRegisterTemplateTypeInstantiation(string name, IrDeclarationType typeDecl)
     {
+        ThrowIfFrozen();
         if (_templateDecls.ContainsKey(name))
         {
             var moduleScope = this.OfType<IrModuleScope>();
@@ -294,6 +321,7 @@ internal sealed class IrModuleScope : IrScope
     private List<SymbolName>? _exports;
     internal void SetExports(IEnumerable<IrExport> exports)
     {
+        ThrowIfFrozen();
         _exports = exports.Select(exp => exp.Name).ToList();
     }
 
@@ -343,6 +371,7 @@ internal sealed class IrModuleScope : IrScope
 
     public override bool TryRegisterTemplateFunctionInstantiation(string name, IrDeclarationFunction functionDecl)
     {
+        ThrowIfFrozen();
         if (!_templateInstanceDecls.ContainsKey(name))
         {
             _templateInstanceDecls.Add(name, functionDecl);
@@ -353,6 +382,7 @@ internal sealed class IrModuleScope : IrScope
     }
     public override bool TryRegisterTemplateTypeInstantiation(string name, IrDeclarationType typeDecl)
     {
+        ThrowIfFrozen();
         if (!_templateInstanceDecls.ContainsKey(name))
         {
             _templateInstanceDecls.Add(name, typeDecl);
@@ -364,6 +394,7 @@ internal sealed class IrModuleScope : IrScope
 
     public bool TryDeclareModule(ExternalModule module)
     {
+        ThrowIfFrozen();
         var name = module.SymbolName.FullName;
 
         if (!_modules.ContainsKey(name))
@@ -414,7 +445,10 @@ internal sealed class IrGlobalScope : IrScope
     }
 
     public bool TryDeclareModule(ModuleSymbol symbol)
-        => SymbolTable.TryDeclareSymbol(symbol);
+    {
+        ThrowIfFrozen();
+        return SymbolTable.TryDeclareSymbol(symbol);
+    }
 
     public override string FullName
         => String.Empty;
