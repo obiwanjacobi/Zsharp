@@ -58,14 +58,13 @@ internal abstract class IrTemplateRewriter : IrRewriter
         return base.RewriteType(type);
     }
 
-    protected override IrTypeParameter RewriteTypeParameterTemplate(IrTypeParameterTemplate parameter)
+    protected override ImmutableArray<IrTypeParameter> RewriteTypeParameters(ImmutableArray<IrTypeParameter> parameters)
     {
-        if (TypeMap!.TryGetValue(parameter.Symbol.Name, out var newTypeSymbol))
-        {
-            return new IrTypeParameterTemplateResolved(parameter.Syntax, newTypeSymbol, parameter.Symbol);
-        }
-
-        return parameter;
+        // no template parameters in a concrete template instantiation
+        return parameters
+            .OfType<IrTypeParameterGeneric>()
+            .Cast<IrTypeParameter>()
+            .ToImmutableArray();
     }
 
     protected override IrExpression RewriteExpressionTypeInitializer(IrExpressionTypeInitializer initializer)

@@ -38,8 +38,10 @@ internal sealed class IrBuilder
         _scopes.Push(scope);
         return parentScope;
     }
-    private IrScope PopScope()
-        => _scopes.Pop();
+    private T PopScope<T>()
+        where T : IrScope // IIrScope
+        // TODO: Freeze scope to make it read only
+        => (T)_scopes.Pop();
     private IrScope CurrentScope
         => _scopes.Peek();
 
@@ -52,14 +54,15 @@ internal sealed class IrBuilder
             throw new InvalidOperationException("Cannot Compile when there are syntax errors.");
 
         var builder = new IrBuilder(moduleLoader, parentScope);
-        var module = builder.Module(syntaxTree.Root);
-        _ = builder.PushScope(new IrModuleScope(module.Symbol.Name.FullOriginalName, builder.CurrentScope));
+        var moduleSymbol = ModuleSymbol(syntaxTree.Root);
+        _ = builder.PushScope(new IrModuleScope(moduleSymbol.Name.FullOriginalName, builder.CurrentScope));
 
         var compilation = builder.Compilation(syntaxTree.Root);
-        var scope = (IrModuleScope)builder.PopScope();
+        var scope = builder.PopScope<IrModuleScope>();
 
         compilation = AddTemplateInstantiations(compilation, scope.TemplateInstantiations);
 
+        var module = builder.Module(syntaxTree.Root, moduleSymbol, scope);
         return new IrProgram(syntaxTree.Root, scope, module, compilation, builder.Diagnostics);
     }
 
@@ -70,34 +73,28 @@ internal sealed class IrBuilder
             compilation.Statements, compilation.Declarations.Concat(concreteDecls));
     }
 
-    private IrModule Module(CompilationUnitSyntax syntax)
+    private static ModuleSymbol ModuleSymbol(CompilationUnitSyntax syntax)
     {
-        SyntaxNode syn;
-        SymbolName name;
+        return new(syntax.Module?.Identifier.ToSymbolName()
+            ?? new SymbolName(DefaultModuleName));
+    }
 
-        if (syntax.Module is not null)
-        {
-            syn = syntax.Module;
-            name = syntax.Module.Identifier.ToSymbolName();
-        }
-        else
-        {
-            syn = syntax;
-            name = new SymbolName(DefaultModuleName);
-        }
+    private IrModule Module(CompilationUnitSyntax syntax, ModuleSymbol symbol, IrModuleScope scope)
+    {
+        SyntaxNode syn = syntax.Module is not null
+            ? syntax.Module
+            : syntax;
 
-        var symbol = new ModuleSymbol(name);
-
-        if (CurrentScope is IrGlobalScope globalScope &&
-            !globalScope.TryDeclareModule(symbol) &&
-            globalScope.TryLookupSymbol<ModuleSymbol>(name, out var existingSymbol))
-        {
-            symbol = existingSymbol;
-        }
+        //if (CurrentScope is IrGlobalScope globalScope &&
+        //    !globalScope.TryDeclareModule(symbol) &&
+        //    globalScope.TryLookupSymbol<ModuleSymbol>(name, out var existingSymbol))
+        //{
+        //    symbol = existingSymbol;
+        //}
 
         // TODO: would like to return the existing IrModule as well...
 
-        return new IrModule(syn, symbol);
+        return new IrModule(syn, symbol, scope);
     }
 
     private IrCompilation Compilation(CompilationUnitSyntax root)
@@ -182,15 +179,15 @@ internal sealed class IrBuilder
                 typeParameters[index].Syntax.Location, typeParameters[index].Symbol.Name.FullName);
         }
 
-        _ = PushScope(typeScope);
+        var parentScope = PushScope(typeScope);
         var enums = TypeMemberEnums(syntax.Enums);
         var fields = TypeMemberFields(syntax.Fields);
         var rules = TypeMemberRules(syntax.Rules);
-        _ = PopScope();
+        typeScope = PopScope<IrTypeScope>();
 
         var baseType = Type(syntax.BaseType);
 
-        var name = new SymbolName(CurrentScope.FullName, syntax.Name.Text);
+        var name = new SymbolName(parentScope.FullName, syntax.Name.Text);
         var typeSymbol = new DeclaredTypeSymbol(name,
             typeParamSymbols,
             enums.Select(e => e.Symbol),
@@ -420,7 +417,7 @@ internal sealed class IrBuilder
         }
 
         var block = CodeBlock(syntax.CodeBlock);
-        _ = PopScope();
+        functionScope = PopScope<IrFunctionScope>();
 
         if (returnType == IrType.Void)
         {

@@ -24,6 +24,7 @@ Started. Have ErrorToken with description.
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 - [ ] Function: Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Function: Allow named type-parameters (`IrArgumentMatcher`)
+- [ ] IrScope 'Freeze' to make readonly when popped from builder stack and included in Ir-model.
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
 - [ ] IR: Validate file-global statements (only StatementExpression?)
 - [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets

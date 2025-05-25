@@ -78,12 +78,12 @@ internal class CodeBuilder : IrWalker<object?>
     {
         _ = OnImports(compilation.Imports);
         _ = OnExports(compilation.Exports);
-        
+
         var ns = CurrentNamespace;
         var mc = ns.GetModuleClass();
 
         _scopes.Push(new Scope(mc));
-        
+
         if (compilation.Statements.Any())
         {
             var mi = CSharpFactory.CreateModuleInitializer(mc.Name);
@@ -387,7 +387,16 @@ internal class CodeBuilder : IrWalker<object?>
     public override object? OnExpressionInvocation(IrExpressionInvocation invocation)
     {
         Writer.WriteSymbol(invocation.Symbol);
-        return base.OnExpressionInvocation(invocation);
+
+        object? result = null;
+
+        // TODO: Lookup the function being invoked and see if its a template
+        // for now detect a difference between Ir-model and symbol...
+        if (invocation.Symbol.TypeParameters.Length == invocation.TypeArguments.Length)
+            // the template type-arguments specified in code are not represented in C#
+            result = OnInvocationTypeArguments(invocation.TypeArguments);
+        result = AggregateResult(result, OnInvocationArguments(invocation.Arguments));
+        return result;
     }
 
     public override object? OnInvocationTypeArguments(IEnumerable<IrTypeArgument> arguments)

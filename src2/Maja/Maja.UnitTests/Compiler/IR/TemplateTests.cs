@@ -89,7 +89,7 @@ public class TemplateTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Declarations.Should().HaveCount(2);
+        program.Root.Declarations.Should().HaveCount(3);
         var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
         v.TypeSymbol.As<TypeTemplateSymbol>().TemplateName.FullName.Should().Be("Defmod.Templ#U8");
 

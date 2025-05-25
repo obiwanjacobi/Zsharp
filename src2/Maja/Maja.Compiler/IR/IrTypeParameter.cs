@@ -52,17 +52,3 @@ internal sealed class IrTypeParameterTemplate : IrTypeParameter, IrContainer
     public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
         => Type?.GetDescendentsOfType<T>() ?? Enumerable.Empty<T>();
 }
-
-internal sealed class IrTypeParameterTemplateResolved : IrTypeParameter
-{
-    public IrTypeParameterTemplateResolved(TypeParameterTemplateSyntax syntax, TypeSymbol typeSymbol, TypeParameterSymbol symbol)
-        : base(syntax, symbol)
-    {
-        TypeSymbol = typeSymbol;
-    }
-
-    public TypeSymbol TypeSymbol { get; }
-
-    public new TypeParameterTemplateSyntax Syntax
-        => (TypeParameterTemplateSyntax)base.Syntax;
-}

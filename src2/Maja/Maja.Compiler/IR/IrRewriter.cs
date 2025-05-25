@@ -158,7 +158,6 @@ internal abstract class IrRewriter
         {
             IrTypeParameterGeneric tpg => RewriteTypeParameterGeneric(tpg),
             IrTypeParameterTemplate tpt => RewriteTypeParameterTemplate(tpt),
-            IrTypeParameterTemplateResolved tptr => RewriteTypeParameterTemplateResolved(tptr),
             _ => throw new NotSupportedException($"Ir: TypeParameter {parameter.GetType()} is not supported.")
         };
     }
@@ -183,11 +182,6 @@ internal abstract class IrRewriter
             return parameter;
 
         return new IrTypeParameterTemplate(parameter.Syntax, type!, parameter.Symbol);
-    }
-
-    protected virtual IrTypeParameter RewriteTypeParameterTemplateResolved(IrTypeParameterTemplateResolved parameter)
-    {
-        return parameter;
     }
 
     protected virtual IEnumerable<IrDeclarationType> RewriteDeclarationType(IrDeclarationType type)
@@ -498,8 +492,8 @@ internal abstract class IrRewriter
         {
             var oldItem = array[i];
             var newItem = itemRewriter(oldItem);
-
-            list.Add(newItem);
+            if (newItem is not null)
+                list.Add(newItem);
         }
 
         return list.ToImmutableArray();
