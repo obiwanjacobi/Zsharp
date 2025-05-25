@@ -71,7 +71,7 @@ internal class CodeBuilder : IrWalker<object?>
         ns.AddType(mc);
 
         _scopes.Push(new Scope(ns));
-        return null;
+        return base.OnModule(module);
     }
 
     public override object? OnCompilation(IrCompilation compilation)
@@ -390,9 +390,10 @@ internal class CodeBuilder : IrWalker<object?>
 
         object? result = null;
 
-        // TODO: Lookup the function being invoked and see if its a template
-        // for now detect a difference between Ir-model and symbol...
-        if (invocation.Symbol.TypeParameters.Length == invocation.TypeArguments.Length)
+        var scope = PeekScope();
+        // Lookup the function being invoked and see if its a template
+        if (scope.TryLookupSymbol<DeclaredFunctionSymbol>(invocation.Symbol.Name, out var functionSymbol) &&
+            !functionSymbol.IsTemplate && functionSymbol.TypeParameters.Length == invocation.TypeArguments.Length)
             // the template type-arguments specified in code are not represented in C#
             result = OnInvocationTypeArguments(invocation.TypeArguments);
         result = AggregateResult(result, OnInvocationArguments(invocation.Arguments));

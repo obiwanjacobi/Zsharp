@@ -10,10 +10,20 @@ internal abstract class IrWalker<R>
     public virtual R AggregateResult(R aggregate, R newResult)
         => newResult;
 
+    private readonly Stack<IrScope> _scopes = new();
+    protected IrScope PeekScope()
+        => _scopes.Peek();
+    protected void PushScope(IrScope scope)
+        => _scopes.Push(scope);
+    protected IrScope PopScope()
+        => _scopes.Pop();
+
     public virtual R OnProgram(IrProgram program)
     {
         var result = OnModule(program.Module);
         result = AggregateResult(result, OnCompilation(program.Root));
+        // module scope
+        PopScope();
         return result;
     }
     public virtual R OnCompilation(IrCompilation compilation)
@@ -32,7 +42,10 @@ internal abstract class IrWalker<R>
     }
 
     public virtual R OnModule(IrModule module)
-        => Default;
+    {
+        PushScope(module.Scope);
+        return Default;
+    }
 
     public virtual R OnExports(IEnumerable<IrExport> exports)
         => exports.Select(OnExport)
@@ -62,10 +75,12 @@ internal abstract class IrWalker<R>
     public virtual R OnDeclarationFunction(IrDeclarationFunction function)
     {
         var result = OnTypeParametersGeneric(function.TypeParameters.OfType<IrTypeParameterGeneric>());
+        PushScope(function.Scope);
         result = AggregateResult(result, OnTypeParametersTemplate(function.TypeParameters.OfType<IrTypeParameterTemplate>()));
         result = AggregateResult(result, OnParameters(function.Parameters));
         result = AggregateResult(result, OnOptionalType(result, function.ReturnType));
         result = AggregateResult(result, OnCodeBlock(function.Body));
+        PopScope();
         return result;
     }
     public virtual R OnParameters(IEnumerable<IrParameter> parameters)
@@ -96,9 +111,11 @@ internal abstract class IrWalker<R>
 
     public virtual R OnDeclarationType(IrDeclarationType type)
     {
+        PushScope(type.Scope);
         var result = OnTypeMemberEnums(type.Enums);
         result = AggregateResult(result, OnTypeMemberFields(type.Fields));
         result = AggregateResult(result, OnTypeMemberRules(type.Rules));
+        PopScope();
         return result;
     }
     public virtual R OnTypeMemberEnums(IEnumerable<IrTypeMemberEnum> memberEnums)

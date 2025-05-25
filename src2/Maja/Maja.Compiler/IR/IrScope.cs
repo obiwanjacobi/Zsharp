@@ -241,7 +241,8 @@ internal abstract class IrScope
         if (_templateDecls.ContainsKey(name))
         {
             var moduleScope = this.OfType<IrModuleScope>();
-            return moduleScope.TryRegisterTemplateFunctionInstantiation(name, functionDecl);
+            return moduleScope.TryRegisterTemplateFunctionInstantiation(name, functionDecl) &&
+                TryDeclareFunction(functionDecl.Symbol);
         }
 
         return Parent?.TryRegisterTemplateFunctionInstantiation(name, functionDecl) ?? false;
@@ -287,7 +288,8 @@ internal abstract class IrScope
         if (_templateDecls.ContainsKey(name))
         {
             var moduleScope = this.OfType<IrModuleScope>();
-            return moduleScope.TryRegisterTemplateTypeInstantiation(name, typeDecl);
+            return moduleScope.TryRegisterTemplateTypeInstantiation(name, typeDecl) &&
+                TryDeclareType(typeDecl.Symbol);
         }
 
         return Parent?.TryRegisterTemplateTypeInstantiation(name, typeDecl) ?? false;
