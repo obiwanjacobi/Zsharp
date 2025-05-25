@@ -151,6 +151,14 @@ internal sealed class IrBuilder
 
     private List<IrDeclaration> Declarations(IEnumerable<MemberDeclarationSyntax> syntax)
     {
+        // 2-phase declaration processing:
+        // - register top level symbols
+        // - process function body
+        foreach (var fds in syntax.OfType<FunctionDeclarationSyntax>())
+        {
+            DeclarationFunctionSymbol(fds);
+        }
+
         var declarations = new List<IrDeclaration>();
 
         foreach (var mbr in syntax)
@@ -383,6 +391,11 @@ internal sealed class IrBuilder
         }
 
         return new IrDeclarationVariable(syntax, variableSymbol, typeSymbol, initializer);
+    }
+
+    private void DeclarationFunctionSymbol(FunctionDeclarationSyntax syntax)
+    {
+
     }
 
     private IrDeclarationFunction DeclarationFunction(FunctionDeclarationSyntax syntax)
@@ -680,7 +693,6 @@ internal sealed class IrBuilder
 
     private IrExpressionInvocation InvocationExpression(ExpressionInvocationSyntax syntax)
     {
-        var typeArgs = TypeArguments(syntax.TypeArguments);
         var args = Arguments(syntax.Arguments);
         var argSymbols = args.Select(a => a.Expression.TypeSymbol);
 
@@ -693,6 +705,7 @@ internal sealed class IrBuilder
                 Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown);
         }
 
+        var typeArgs = TypeArguments(syntax.TypeArguments);
         // TODO: Handle default type parameter values (missing invocation arguments)
         if (functionSymbol.TypeParameters.Count() != typeArgs.Count)
         {

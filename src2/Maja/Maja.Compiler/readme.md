@@ -9,10 +9,8 @@ Started. Have ErrorToken with description.
 - [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
 - [ ] Indents (dedent) are not working correct with multiple indents (`SyntaxWriter`).
 - [ ] Type: Generics (type inference)
-- [ ] Type: Template
 - [ ] Type: Comp-parameter
 - [ ] Function: Generics (type inference)
-- [ ] Function: Template
 - [ ] Function: Comp-parameter
 - [ ] Function: Forward reference in body not resolved. Unresolved symbols in a scope should be passed onto its parent scope and reprocessed just before exiting the scope.
 - [ ] Value (custom) Types (/w rules)
@@ -24,7 +22,6 @@ Started. Have ErrorToken with description.
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 - [ ] Function: Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Function: Allow named type-parameters (`IrArgumentMatcher`)
-- [ ] IrScope 'Freeze' to make readonly when popped from builder stack and included in Ir-model.
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
 - [ ] IR: Validate file-global statements (only StatementExpression?)
 - [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
@@ -34,6 +31,9 @@ Started. Have ErrorToken with description.
 
 ### Done
 
+- [x] IrScope 'Freeze' to make readonly when popped from builder stack and included in Ir-model.
+- [x] Type: Template
+- [x] Function: Template
 - [x] Type: base type (enum/struct/value).
 - [x] Syntax: serialze Syntax model into Maja code. Should be the exact same as source.
 - [x] Diagnostics: Generate compiler warning for `##` comments
