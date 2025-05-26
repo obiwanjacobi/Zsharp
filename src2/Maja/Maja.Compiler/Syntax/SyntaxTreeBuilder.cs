@@ -191,7 +191,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     //
 
     public override SyntaxNodeOrToken[] VisitDeclarationFunction(DeclarationFunctionContext context)
-        => CreateSyntaxNode<DeclarationFunctionContext, FunctionDeclarationSyntax>(context, base.VisitDeclarationFunction);
+        => CreateSyntaxNode<DeclarationFunctionContext, DeclarationFunctionSyntax>(context, base.VisitDeclarationFunction);
 
     public override SyntaxNodeOrToken[] VisitParameter(ParameterContext context)
         => CreateSyntaxNode<ParameterContext, ParameterSyntax>(context, base.VisitParameter);
@@ -201,7 +201,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     //
 
     public override SyntaxNodeOrToken[] VisitDeclarationType(DeclarationTypeContext context)
-        => CreateSyntaxNode<DeclarationTypeContext, TypeDeclarationSyntax>(context, base.VisitDeclarationType);
+        => CreateSyntaxNode<DeclarationTypeContext, DeclarationTypeSyntax>(context, base.VisitDeclarationType);
 
     public override SyntaxNodeOrToken[] VisitDeclarationTypeMemberListEnum(DeclarationTypeMemberListEnumContext context)
         => CreateSyntaxNode<DeclarationTypeMemberListEnumContext, TypeMemberListSyntax<MemberEnumSyntax>>(context, base.VisitDeclarationTypeMemberListEnum);
@@ -337,10 +337,10 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
         => CreateSyntaxNode<ExpressionIdentifierContext, ExpressionIdentifierSyntax>(context, base.VisitExpressionIdentifier);
 
     public override SyntaxNodeOrToken[] VisitNumber(NumberContext context)
-        => CreateSyntaxNode<NumberContext, LiteralNumberSyntax>(context, base.VisitNumber);
+        => CreateSyntaxNode<NumberContext, ExpressionLiteralNumberSyntax>(context, base.VisitNumber);
 
     public override SyntaxNodeOrToken[] VisitString(StringContext context)
-        => CreateSyntaxNode<StringContext, LiteralStringSyntax>(context, base.VisitString);
+        => CreateSyntaxNode<StringContext, ExpressionLiteralStringSyntax>(context, base.VisitString);
 
     public override SyntaxNodeOrToken[] VisitExpressionInvocation(ExpressionInvocationContext context)
         => CreateSyntaxNode<ExpressionInvocationContext, ExpressionInvocationSyntax>(context, base.VisitExpressionInvocation);

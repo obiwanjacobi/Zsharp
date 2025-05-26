@@ -33,8 +33,8 @@ public sealed class CompilationUnitSyntax : SyntaxNode, ICreateSyntaxNode<Compil
     /// <summary>
     /// Filtered collection of member (function, type and variable) declarations.
     /// </summary>
-    public IEnumerable<MemberDeclarationSyntax> Members
-        => ChildNodes.OfType<MemberDeclarationSyntax>();
+    public IEnumerable<DeclarationMemberSyntax> Members
+        => ChildNodes.OfType<DeclarationMemberSyntax>();
 
     /// <summary>
     /// Filtered collection of statements.

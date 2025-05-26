@@ -5,9 +5,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Common base class for a variable declaration.
 /// </summary>
-public abstract class VariableDeclarationSyntax : MemberDeclarationSyntax
+public abstract class DeclarationVariableSyntax : DeclarationMemberSyntax
 {
-    protected VariableDeclarationSyntax(string text)
+    protected DeclarationVariableSyntax(string text)
         : base(text)
     { }
 
@@ -27,7 +27,7 @@ public abstract class VariableDeclarationSyntax : MemberDeclarationSyntax
 /// <summary>
 /// Represents a variable declaration with an explicit type.
 /// </summary>
-public sealed class VariableDeclarationTypedSyntax : VariableDeclarationSyntax, ICreateSyntaxNode<VariableDeclarationTypedSyntax>
+public sealed class VariableDeclarationTypedSyntax : DeclarationVariableSyntax, ICreateSyntaxNode<VariableDeclarationTypedSyntax>
 {
     private VariableDeclarationTypedSyntax(string text)
         : base(text)
@@ -59,7 +59,7 @@ public sealed class VariableDeclarationTypedSyntax : VariableDeclarationSyntax, 
 /// Represents a variable declaration where it's type is to be inferred.
 /// Expression is set.
 /// </summary>
-public sealed class VariableDeclarationInferredSyntax : VariableDeclarationSyntax, ICreateSyntaxNode<VariableDeclarationInferredSyntax>
+public sealed class VariableDeclarationInferredSyntax : DeclarationVariableSyntax, ICreateSyntaxNode<VariableDeclarationInferredSyntax>
 {
     private VariableDeclarationInferredSyntax(string text)
         : base(text)

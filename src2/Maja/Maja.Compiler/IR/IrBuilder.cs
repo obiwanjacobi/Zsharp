@@ -149,12 +149,12 @@ internal sealed class IrBuilder
         }
     }
 
-    private List<IrDeclaration> Declarations(IEnumerable<MemberDeclarationSyntax> syntax)
+    private List<IrDeclaration> Declarations(IEnumerable<DeclarationMemberSyntax> syntax)
     {
         // 2-phase declaration processing:
         // - register top level symbols
         // - process function body
-        foreach (var fds in syntax.OfType<FunctionDeclarationSyntax>())
+        foreach (var fds in syntax.OfType<DeclarationFunctionSyntax>())
         {
             DeclarationFunctionSymbol(fds);
         }
@@ -165,10 +165,10 @@ internal sealed class IrBuilder
         {
             IrDeclaration decl = mbr switch
             {
-                FunctionDeclarationSyntax fds => DeclarationFunction(fds),
+                DeclarationFunctionSyntax fds => DeclarationFunction(fds),
                 VariableDeclarationTypedSyntax vdt => DeclarationVariableTyped(vdt),
                 VariableDeclarationInferredSyntax vdi => DeclarationVariableInferred(vdi),
-                TypeDeclarationSyntax tds => DeclarationType(tds),
+                DeclarationTypeSyntax tds => DeclarationType(tds),
                 _ => throw new NotSupportedException($"IR: No support for Declaration '{mbr.SyntaxKind}'")
             };
 
@@ -178,7 +178,7 @@ internal sealed class IrBuilder
         return declarations;
     }
 
-    private IrDeclarationType DeclarationType(TypeDeclarationSyntax syntax)
+    private IrDeclarationType DeclarationType(DeclarationTypeSyntax syntax)
     {
         var typeScope = new IrTypeScope(syntax.Name.Text, CurrentScope);
         var typeParameters = TypeParameters(syntax.TypeParameters);
@@ -393,12 +393,12 @@ internal sealed class IrBuilder
         return new IrDeclarationVariable(syntax, variableSymbol, typeSymbol, initializer);
     }
 
-    private void DeclarationFunctionSymbol(FunctionDeclarationSyntax syntax)
+    private void DeclarationFunctionSymbol(DeclarationFunctionSyntax syntax)
     {
 
     }
 
-    private IrDeclarationFunction DeclarationFunction(FunctionDeclarationSyntax syntax)
+    private IrDeclarationFunction DeclarationFunction(DeclarationFunctionSyntax syntax)
     {
         var functionScope = new IrFunctionScope(syntax.Identifier.Text, CurrentScope);
         var parentScope = PushScope(functionScope);

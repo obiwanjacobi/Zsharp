@@ -6,9 +6,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a type declaration.
 /// </summary>
-public sealed class TypeDeclarationSyntax : MemberDeclarationSyntax, ICreateSyntaxNode<TypeDeclarationSyntax>
+public sealed class DeclarationTypeSyntax : DeclarationMemberSyntax, ICreateSyntaxNode<DeclarationTypeSyntax>
 {
-    private TypeDeclarationSyntax(string text)
+    private DeclarationTypeSyntax(string text)
         : base(text)
     { }
 
@@ -53,7 +53,7 @@ public sealed class TypeDeclarationSyntax : MemberDeclarationSyntax, ICreateSynt
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnTypeDeclaration(this);
-    public static TypeDeclarationSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+    public static DeclarationTypeSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
             Location = location,

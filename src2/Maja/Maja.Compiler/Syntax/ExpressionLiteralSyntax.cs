@@ -3,9 +3,9 @@
 /// <summary>
 /// Represents a literal numerical value.
 /// </summary>
-public sealed class LiteralNumberSyntax : ExpressionSyntax, ICreateSyntaxNode<LiteralNumberSyntax>
+public sealed class ExpressionLiteralNumberSyntax : ExpressionSyntax, ICreateSyntaxNode<ExpressionLiteralNumberSyntax>
 {
-    private LiteralNumberSyntax(string text)
+    private ExpressionLiteralNumberSyntax(string text)
         : base(text)
     { }
 
@@ -15,7 +15,7 @@ public sealed class LiteralNumberSyntax : ExpressionSyntax, ICreateSyntaxNode<Li
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralNumber(this);
 
-    public static LiteralNumberSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+    public static ExpressionLiteralNumberSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
             Location = location,
@@ -28,9 +28,9 @@ public sealed class LiteralNumberSyntax : ExpressionSyntax, ICreateSyntaxNode<Li
 /// <summary>
 /// Represents a literal string value.
 /// </summary>
-public sealed class LiteralStringSyntax : ExpressionSyntax, ICreateSyntaxNode<LiteralStringSyntax>
+public sealed class ExpressionLiteralStringSyntax : ExpressionSyntax, ICreateSyntaxNode<ExpressionLiteralStringSyntax>
 {
-    private LiteralStringSyntax(string text)
+    private ExpressionLiteralStringSyntax(string text)
         : base(text.Trim('"'))
     { }
 
@@ -40,7 +40,7 @@ public sealed class LiteralStringSyntax : ExpressionSyntax, ICreateSyntaxNode<Li
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnLiteralString(this);
 
-    public static LiteralStringSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+    public static ExpressionLiteralStringSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
             Location = location,

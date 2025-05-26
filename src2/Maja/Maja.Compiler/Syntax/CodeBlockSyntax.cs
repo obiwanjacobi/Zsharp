@@ -18,8 +18,8 @@ public sealed class CodeBlockSyntax : SyntaxNode, ICreateSyntaxNode<CodeBlockSyn
     /// <summary>
     /// Filtered collection of only member (function, type and variable) declarations.
     /// </summary>
-    public IEnumerable<MemberDeclarationSyntax> Members
-        => ChildNodes.OfType<MemberDeclarationSyntax>();
+    public IEnumerable<DeclarationMemberSyntax> Members
+        => ChildNodes.OfType<DeclarationMemberSyntax>();
 
     /// <summary>
     /// Filtered collection of only statements.

@@ -113,7 +113,9 @@ internal abstract class IrScope
 
         if (FunctionOverloadPicker.TryPickFunctionSymbol(
             SymbolTable.Symbols.OfType<DeclaredFunctionSymbol>(), name, argumentTypes, out symbol))
+        {
             return true;
+        }
 
         if (Parent is not null)
         {
@@ -442,6 +444,7 @@ internal sealed class IrGlobalScope : IrScope
 
     private void DeclareType(TypeSymbol symbol)
     {
+        ThrowIfFrozen();
         if (!TryDeclareType(symbol))
             throw new InvalidOperationException($"TypeSymbol {symbol.Name} could not be declared in the global scope! Duplicates?");
     }

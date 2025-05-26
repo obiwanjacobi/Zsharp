@@ -23,7 +23,7 @@ public class TypeSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        var t = result.Members.First().As<DeclarationTypeSyntax>();
         t.Name.Text.Should().Be("Type");
         t.Fields!.Items.Should().HaveCount(2);
         t.Fields!.Items.First().Name.Text.Should().Be("fld1");
@@ -44,7 +44,7 @@ public class TypeSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        var t = result.Members.First().As<DeclarationTypeSyntax>();
         t.Name.Text.Should().Be("Type");
         t.BaseType.Should().NotBeNull();
         t.BaseType!.Name.Text.Should().Be("BaseType");
@@ -63,7 +63,7 @@ public class TypeSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        var t = result.Members.First().As<DeclarationTypeSyntax>();
         t.Name.Text.Should().Be("Type");
         t.TypeParameters.Should().HaveCount(1);
         var tp = t.TypeParameters.First();
@@ -88,7 +88,7 @@ public class TypeSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        var t = result.Members.First().As<DeclarationTypeSyntax>();
         t.Name.Text.Should().Be("Type");
         t.TypeParameters.Should().HaveCount(1);
         var tp = t.TypeParameters.First();
@@ -113,7 +113,7 @@ public class TypeSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        var t = result.Members.First().As<DeclarationTypeSyntax>();
         t.Name.Text.Should().Be("Type");
         t.Enums!.Items.Should().HaveCount(2);
         t.Enums!.Items.First().Name.Text.Should().Be("Option1");
@@ -133,7 +133,7 @@ public class TypeSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        var t = result.Members.First().As<DeclarationTypeSyntax>();
         t.Name.Text.Should().Be("Type");
         t.Enums!.Items.Should().HaveCount(2);
         t.Enums!.Items.First().Name.Text.Should().Be("Option1");
@@ -156,7 +156,7 @@ public class TypeSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var t = result.Members.First().As<TypeDeclarationSyntax>();
+        var t = result.Members.First().As<DeclarationTypeSyntax>();
         t.Name.Text.Should().Be("Type");
 
         t.Enums!.Items.Should().HaveCount(2);
@@ -184,7 +184,7 @@ public class TypeSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<DeclarationVariableSyntax>();
         v.Name.Text.Should().Be("x");
         var t = v.Expression.As<ExpressionTypeInitializerSyntax>();
         t.Type.Name.Text.Should().Be("Type");
@@ -209,7 +209,7 @@ public class TypeSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<DeclarationVariableSyntax>();
         v.Name.Text.Should().Be("x");
         var t = v.Expression.As<ExpressionTypeInitializerSyntax>();
         t.Type.Name.Text.Should().Be("Type");

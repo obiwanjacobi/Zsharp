@@ -19,7 +19,7 @@ public sealed class CompilationModel
 
     internal IrProgram Program { get; }
 
-    public Symbol.Symbol? GetDeclaredSymbol(MemberDeclarationSyntax declarationSyntax)
+    public Symbol.Symbol? GetDeclaredSymbol(DeclarationMemberSyntax declarationSyntax)
     {
         return null;
     }

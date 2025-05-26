@@ -27,14 +27,14 @@ public sealed class ExpressionLiteralSyntax : ExpressionConstantSyntax, ICreateS
     /// <summary>
     /// Set when the literal expression represents a number value.
     /// </summary>
-    public LiteralNumberSyntax? LiteralNumber
-        => ChildNodes.OfType<LiteralNumberSyntax>().SingleOrDefault();
+    public ExpressionLiteralNumberSyntax? LiteralNumber
+        => ChildNodes.OfType<ExpressionLiteralNumberSyntax>().SingleOrDefault();
 
     /// <summary>
     /// Set when the literal expression represents a string value.
     /// </summary>
-    public LiteralStringSyntax? LiteralString
-        => ChildNodes.OfType<LiteralStringSyntax>().SingleOrDefault();
+    public ExpressionLiteralStringSyntax? LiteralString
+        => ChildNodes.OfType<ExpressionLiteralStringSyntax>().SingleOrDefault();
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnExpressionLiteral(this);

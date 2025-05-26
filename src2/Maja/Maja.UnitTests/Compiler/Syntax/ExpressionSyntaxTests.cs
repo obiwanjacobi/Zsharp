@@ -21,7 +21,7 @@ public class ExpressionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<DeclarationVariableSyntax>();
         var expr = v.Expression!.As<ExpressionBinarySyntax>();
         expr.Left.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
         expr.Operator.Text.Should().Be("+");
@@ -42,7 +42,7 @@ public class ExpressionSyntaxTests
 
         var result = Syntax.Parse(code, throwOnError: false);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<DeclarationVariableSyntax>();
         var lvl0 = v.Expression!.As<ExpressionBinarySyntax>();
         var lvl1 = lvl0.Left.As<ExpressionBinarySyntax>();
         var lvl2 = lvl1.Left.As<ExpressionBinarySyntax>();
@@ -75,7 +75,7 @@ public class ExpressionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<DeclarationVariableSyntax>();
         var lvl0 = v.Expression!.As<ExpressionBinarySyntax>();
         var lvl1 = lvl0.Left.As<ExpressionBinarySyntax>();
         lvl1.Left.As<ExpressionLiteralSyntax>().Text.Should().Be("42");
@@ -109,7 +109,7 @@ public class ExpressionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<DeclarationVariableSyntax>();
         var expr = v.Expression!.As<ExpressionBinarySyntax>();
         expr.Left.As<ExpressionIdentifierSyntax>().Name.Text.Should().Be("y");
         expr.Right.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
@@ -148,7 +148,7 @@ public class ExpressionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<DeclarationVariableSyntax>();
         var expr = v.Expression!.As<ExpressionInvocationSyntax>();
         expr.Identifier.Text.Should().Be("fn");
         expr.Arguments.Should().BeEmpty();
@@ -165,7 +165,7 @@ public class ExpressionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<DeclarationVariableSyntax>();
         var expr = v.Expression!.As<ExpressionInvocationSyntax>();
         expr.Identifier.Text.Should().Be("fn");
         expr.Arguments.First().ChildNodes[0]
@@ -183,7 +183,7 @@ public class ExpressionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationSyntax>();
+        var v = result.Members.First().As<DeclarationVariableSyntax>();
         var expr = v.Expression!.As<ExpressionInvocationSyntax>();
         expr.Identifier.Text.Should().Be("fn");
         expr.TypeArguments.First().ChildNodes[0]
@@ -201,7 +201,7 @@ public class ExpressionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.ElementAt(0).As<VariableDeclarationSyntax>();
+        var v = result.Members.ElementAt(0).As<DeclarationVariableSyntax>();
         v.Name.Text.Should().Be("y");
         var expr = v.Expression.As<ExpressionMemberAccessSyntax>();
         expr.Name.Text.Should().Be("fld1");
@@ -220,7 +220,7 @@ public class ExpressionSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.ElementAt(0).As<VariableDeclarationSyntax>();
+        var v = result.Members.ElementAt(0).As<DeclarationVariableSyntax>();
         v.Name.Text.Should().Be("y");
         var expr = v.Expression.As<ExpressionMemberAccessSyntax>();
 
@@ -246,25 +246,25 @@ public class ExpressionSyntaxTests
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(4);
 
-        var v = result.Members.ElementAt(0).As<VariableDeclarationSyntax>();
+        var v = result.Members.ElementAt(0).As<DeclarationVariableSyntax>();
         v.Name.Text.Should().Be("x");
         var rng = v.Expression.As<ExpressionRangeSyntax>();
         rng.Start.Should().NotBeNull();
         rng.End.Should().NotBeNull();
 
-        v = result.Members.ElementAt(1).As<VariableDeclarationSyntax>();
+        v = result.Members.ElementAt(1).As<DeclarationVariableSyntax>();
         v.Name.Text.Should().Be("y");
         rng = v.Expression.As<ExpressionRangeSyntax>();
         rng.Start.Should().BeNull();
         rng.End.Should().NotBeNull();
 
-        v = result.Members.ElementAt(2).As<VariableDeclarationSyntax>();
+        v = result.Members.ElementAt(2).As<DeclarationVariableSyntax>();
         v.Name.Text.Should().Be("z");
         rng = v.Expression.As<ExpressionRangeSyntax>();
         rng.Start.Should().NotBeNull();
         rng.End.Should().BeNull();
 
-        v = result.Members.ElementAt(3).As<VariableDeclarationSyntax>();
+        v = result.Members.ElementAt(3).As<DeclarationVariableSyntax>();
         v.Name.Text.Should().Be("a");
         rng = v.Expression.As<ExpressionRangeSyntax>();
         rng.Start.Should().BeNull();

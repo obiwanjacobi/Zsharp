@@ -15,12 +15,12 @@ public interface ISyntaxVisitor<R>
     R OnUseImport(UseImportSyntax node);
     R OnCodeBlock(CodeBlockSyntax node);
 
-    R OnFunctionDeclaration(FunctionDeclarationSyntax node);
+    R OnFunctionDeclaration(DeclarationFunctionSyntax node);
     R OnParameter(ParameterSyntax node);
     R OnArgument(ArgumentSyntax node);
 
     R OnType(TypeSyntax node);
-    R OnTypeDeclaration(TypeDeclarationSyntax node);
+    R OnTypeDeclaration(DeclarationTypeSyntax node);
 
     R OnTypeParameterGeneric(TypeParameterGenericSyntax node);
     R OnTypeParameterTemplate(TypeParameterTemplateSyntax node);
@@ -56,8 +56,8 @@ public interface ISyntaxVisitor<R>
 
     R OnExpressionOperator(ExpressionOperatorSyntax node);
 
-    R OnLiteralNumber(LiteralNumberSyntax node);
-    R OnLiteralString(LiteralStringSyntax node);
+    R OnLiteralNumber(ExpressionLiteralNumberSyntax node);
+    R OnLiteralString(ExpressionLiteralStringSyntax node);
 
     R OnName(NameSyntax node);
     R OnQualifiedName(QualifiedNameSyntax node);
@@ -105,7 +105,7 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnCodeBlock(CodeBlockSyntax node)
         => VisitChildren(node);
 
-    public virtual R OnFunctionDeclaration(FunctionDeclarationSyntax node)
+    public virtual R OnFunctionDeclaration(DeclarationFunctionSyntax node)
         => VisitChildren(node);
 
     public virtual R OnParameter(ParameterSyntax node)
@@ -120,7 +120,7 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnTypeInitializerField(TypeInitializerFieldSyntax node)
         => VisitChildren(node);
 
-    public virtual R OnTypeDeclaration(TypeDeclarationSyntax node)
+    public virtual R OnTypeDeclaration(DeclarationTypeSyntax node)
         => VisitChildren(node);
 
     public virtual R OnTypeParameterGeneric(TypeParameterGenericSyntax node)
@@ -195,9 +195,9 @@ public abstract class SyntaxVisitor<R> : ISyntaxVisitor<R>
     public virtual R OnExpressionOperator(ExpressionOperatorSyntax node)
         => VisitChildren(node);
 
-    public virtual R OnLiteralNumber(LiteralNumberSyntax node)
+    public virtual R OnLiteralNumber(ExpressionLiteralNumberSyntax node)
         => VisitChildren(node);
-    public virtual R OnLiteralString(LiteralStringSyntax node)
+    public virtual R OnLiteralString(ExpressionLiteralStringSyntax node)
         => VisitChildren(node);
 
     public virtual R OnName(NameSyntax node)

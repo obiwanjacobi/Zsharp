@@ -6,9 +6,9 @@ namespace Maja.Compiler.Syntax;
 /// <summary>
 /// Represents a function declaration.
 /// </summary>
-public sealed class FunctionDeclarationSyntax : MemberDeclarationSyntax, ICreateSyntaxNode<FunctionDeclarationSyntax>
+public sealed class DeclarationFunctionSyntax : DeclarationMemberSyntax, ICreateSyntaxNode<DeclarationFunctionSyntax>
 {
-    private FunctionDeclarationSyntax(string text)
+    private DeclarationFunctionSyntax(string text)
         : base(text)
     { }
 
@@ -47,7 +47,7 @@ public sealed class FunctionDeclarationSyntax : MemberDeclarationSyntax, ICreate
 
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnFunctionDeclaration(this);
-    public static FunctionDeclarationSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+    public static DeclarationFunctionSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
             Location = location,

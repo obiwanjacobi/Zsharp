@@ -23,7 +23,7 @@ internal abstract class IrDeclaration : IrNode
 
 internal sealed class IrDeclarationFunction : IrDeclaration, IrContainer
 {
-    public IrDeclarationFunction(FunctionDeclarationSyntax syntax, DeclaredFunctionSymbol symbol,
+    public IrDeclarationFunction(DeclarationFunctionSyntax syntax, DeclaredFunctionSymbol symbol,
         IEnumerable<IrTypeParameter> typeParameters, IEnumerable<IrParameter> parameters, IrType returnType,
         IrFunctionScope scope, IrCodeBlock codeBlock, IrLocality locality)
         : base(syntax, locality)
@@ -51,8 +51,8 @@ internal sealed class IrDeclarationFunction : IrDeclaration, IrContainer
 
     public IrTypeFunction Type { get; }
 
-    public new FunctionDeclarationSyntax Syntax
-        => (FunctionDeclarationSyntax)base.Syntax;
+    public new DeclarationFunctionSyntax Syntax
+        => (DeclarationFunctionSyntax)base.Syntax;
 
     public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
         => TypeParameters.GetDescendentsOfType<T>()
@@ -70,7 +70,7 @@ internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
         TypeSymbol = type;
         Initializer = initializer;
     }
-    public IrDeclarationVariable(VariableDeclarationSyntax syntax, DeclaredVariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
+    public IrDeclarationVariable(DeclarationVariableSyntax syntax, DeclaredVariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
         : base(syntax, IrLocality.None)
     {
         Symbol = symbol;
@@ -82,8 +82,8 @@ internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
     public TypeSymbol TypeSymbol { get; }
     public IrExpression? Initializer { get; }
 
-    public new VariableDeclarationSyntax Syntax
-        => (VariableDeclarationSyntax)base.Syntax;
+    public new DeclarationVariableSyntax Syntax
+        => (DeclarationVariableSyntax)base.Syntax;
 
     public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
         => Initializer.GetDescendentsOfType<T>();
@@ -91,7 +91,7 @@ internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
 
 internal sealed class IrDeclarationType : IrDeclaration, IrContainer
 {
-    public IrDeclarationType(TypeDeclarationSyntax syntax, DeclaredTypeSymbol symbol, IEnumerable<IrTypeParameter> typeParameters,
+    public IrDeclarationType(DeclarationTypeSyntax syntax, DeclaredTypeSymbol symbol, IEnumerable<IrTypeParameter> typeParameters,
         IEnumerable<IrTypeMemberEnum> enums, IEnumerable<IrTypeMemberField> fields, IEnumerable<IrTypeMemberRule> rules,
         IrType? baseType, IrTypeScope scope, IrLocality locality)
         : base(syntax, locality)
@@ -116,8 +116,8 @@ internal sealed class IrDeclarationType : IrDeclaration, IrContainer
     public ImmutableArray<IrTypeMemberField> Fields { get; }
     public ImmutableArray<IrTypeMemberRule> Rules { get; }
 
-    public new TypeDeclarationSyntax Syntax
-        => (TypeDeclarationSyntax)base.Syntax;
+    public new DeclarationTypeSyntax Syntax
+        => (DeclarationTypeSyntax)base.Syntax;
 
     public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
         => TypeParameters.GetDescendentsOfType<T>()
