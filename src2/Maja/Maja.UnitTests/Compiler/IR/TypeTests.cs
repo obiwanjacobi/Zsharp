@@ -133,7 +133,7 @@ public class TypeTests
         program.Diagnostics.Should().HaveCount(1);
         var err = program.Diagnostics[0];
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
-        err.Text.Should().Contain("Type 'MyType' is already declared.");
+        err.Text.Should().Contain("Type 'DefMod.MyType' is already declared.");
     }
 
     [Fact]
@@ -262,5 +262,20 @@ public class TypeTests
         var f = t.Fields.ToList();
         f[0].Field.Name.Value.Should().Be("fld1");
         f[0].Field.Type.Name.Value.Should().Be("U8");
+    }
+
+    [Fact]
+    public void TypeWithForwardReferenceAndUse()
+    {
+        const string code =
+            "x := MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: U8" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(2);
     }
 }

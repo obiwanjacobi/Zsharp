@@ -11,26 +11,17 @@ namespace Maja.Compiler.IR;
 internal abstract class IrRewriter
 {
     protected DiagnosticList Diagnostics = new();
+    public IEnumerable<DiagnosticMessage> GetDiagnostics()
+        => Diagnostics;
 
     protected virtual IEnumerable<IrProgram> RewriteProgram(IrProgram program)
     {
         var modules = RewriteModule(program.Module);
-
-        // compilation
-        var exports = RewriteExports(program.Root.Exports);
-        var imports = RewriteImports(program.Root.Imports);
-        var declarations = RewriteDeclarations(program.Root.Declarations);
-        var statements = RewriteStatements(program.Root.Statements);
-
-        var compilationIsUnchanged =
-            exports == program.Root.Exports &&
-            imports == program.Root.Imports &&
-            declarations == program.Root.Declarations &&
-            statements == program.Root.Statements;
+        var compilation = RewriteCompilation(program.Root);
 
         if (modules.IsExactly(program.Module) &&
             !Diagnostics.HasDiagnostics &&
-            compilationIsUnchanged)
+            program.Root == compilation)
             return [program];
 
         var diagnostics = new DiagnosticList();
@@ -40,15 +31,27 @@ internal abstract class IrRewriter
         var programs = new List<IrProgram>();
         foreach (var module in modules)
         {
-            var prog = new IrProgram(program.Syntax, program.Scope, module,
-            compilationIsUnchanged ? program.Root : new IrCompilation(
-                program.Root.Syntax, imports, exports, statements, declarations),
-            diagnostics);
-
+            var prog = new IrProgram(program.Syntax, program.Scope, module, compilation, diagnostics);
             programs.Add(prog);
         }
 
         return programs;
+    }
+
+    protected virtual IrCompilation RewriteCompilation(IrCompilation compilation)
+    {
+        var exports = RewriteExports(compilation.Exports);
+        var imports = RewriteImports(compilation.Imports);
+        var declarations = RewriteDeclarations(compilation.Declarations);
+        var statements = RewriteStatements(compilation.Statements);
+
+        if (exports == compilation.Exports &&
+            imports == compilation.Imports &&
+            declarations == compilation.Declarations &&
+            statements == compilation.Statements)
+            return compilation;
+
+        return new IrCompilation(compilation.Syntax, imports, exports, statements, declarations);
     }
 
     protected virtual IEnumerable<IrModule> RewriteModule(IrModule module)
@@ -119,7 +122,6 @@ internal abstract class IrRewriter
             body == function.Body)
             return [function];
 
-        // TODO: needs deeper replacement for templates!
         var functionSymbol = new DeclaredFunctionSymbol(
             function.Symbol.Name,
             typeParameters.Select(tp => tp.Symbol),
@@ -200,7 +202,6 @@ internal abstract class IrRewriter
             baseType == type.BaseType)
             return [type];
 
-        // TODO: needs deeper replacement for templates!
         var typeSymbol = new DeclaredTypeSymbol(
             type.Symbol.Name,
             typeParams.Select(tp => tp.Symbol),

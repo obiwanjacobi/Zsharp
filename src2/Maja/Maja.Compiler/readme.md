@@ -20,6 +20,7 @@ Started. Have ErrorToken with description.
 - [ ] Resolve operators to functions
 - [ ] Function body: local (nested) functions and types
 - [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
+- [ ] Invocation Argument: has a DeclaredVariableSymbol!? why?
 - [ ] Function: Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Function: Allow named type-parameters (`IrArgumentMatcher`)
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.

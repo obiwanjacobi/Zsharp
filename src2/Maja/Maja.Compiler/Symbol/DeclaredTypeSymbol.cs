@@ -12,6 +12,10 @@ public record DeclaredTypeSymbol : TypeSymbol
         : base(name)
     {
         TemplateName = name;
+        TypeParameters = [];
+        Enums = [];
+        Fields = [];
+        Rules = [];
     }
 
     public DeclaredTypeSymbol(SymbolName name,
@@ -28,6 +32,16 @@ public record DeclaredTypeSymbol : TypeSymbol
         Rules = rules.ToImmutableArray();
         BaseType = baseType;
         TemplateName = CreateTypeName(name, typeParameters);
+    }
+
+    public override bool IsUnresolved
+    {
+        get
+        {
+            return TypeParameters.Any(tp => tp.IsUnresolved) ||
+                Fields.Any(f => f.IsUnresolved) ||
+                (BaseType?.IsUnresolved ?? false);
+        }
     }
 
     public bool IsGeneric
@@ -53,6 +67,21 @@ public record DeclaredTypeSymbol : TypeSymbol
             .Append(typeTemplateTypes.Count());
 
         return new SymbolName(name.ToString(), isType: true);
+    }
+}
+
+public record UnresolvedDeclaredTypeSymbol : DeclaredTypeSymbol
+{
+    public UnresolvedDeclaredTypeSymbol(SymbolName name)
+        : base(name, Enumerable.Empty<TypeParameterSymbol>(), Enumerable.Empty<EnumSymbol>(),
+            Enumerable.Empty<FieldSymbol>(), Enumerable.Empty<RuleSymbol>(), null)
+    { }
+
+    public override bool IsUnresolved => true;
+    public override bool TryIsUnresolved([NotNullWhen(true)] out UnresolvedDeclaredTypeSymbol? unresolvedSymbol)
+    {
+        unresolvedSymbol = this;
+        return true;
     }
 }
 

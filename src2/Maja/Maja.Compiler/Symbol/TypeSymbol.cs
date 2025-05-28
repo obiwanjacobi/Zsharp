@@ -1,8 +1,11 @@
-﻿namespace Maja.Compiler.Symbol;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Maja.Compiler.Symbol;
 
 public record TypeSymbol : Symbol
 {
     internal static readonly TypeSymbol Unknown = new("<unknown>");
+    internal static readonly TypeSymbol Unresolved = new("<unresolved>");
 
     // built-in types
     public static readonly TypeSymbol Void = new("Void");
@@ -41,6 +44,18 @@ public record TypeSymbol : Symbol
     public virtual bool IsExternal => false;
     public bool IsWellknown { get; }
 
+    public virtual bool IsUnresolved => false;
+    public virtual bool TryIsUnresolved([NotNullWhen(true)] out UnresolvedTypeSymbol? unresolvedSymbol)
+    {
+        unresolvedSymbol = null;
+        return false;
+    }
+    public virtual bool TryIsUnresolved([NotNullWhen(true)] out UnresolvedDeclaredTypeSymbol? unresolvedSymbol)
+    {
+        unresolvedSymbol = null;
+        return false;
+    }
+
     public virtual bool MatchesWith(TypeSymbol other)
     {
         if (other == this) return true;
@@ -64,7 +79,7 @@ public record TypeSymbol : Symbol
         if (other == TypeSymbol.F64)
             return this == TypeSymbol.F16 || this == TypeSymbol.F32;
         if (other == TypeSymbol.F96)
-            return this == TypeSymbol.F16 || this == TypeSymbol.F32|| this == TypeSymbol.F64;
+            return this == TypeSymbol.F16 || this == TypeSymbol.F32 || this == TypeSymbol.F64;
 
         return false;
     }
@@ -127,4 +142,18 @@ public record TypeSymbol : Symbol
         => type == TypeSymbol.C16;
     public static bool IsStr(TypeSymbol type)
         => type == TypeSymbol.Str;
+}
+
+public sealed record UnresolvedTypeSymbol : TypeSymbol
+{
+    public UnresolvedTypeSymbol(SymbolName name)
+        : base(name)
+    { }
+
+    public override bool IsUnresolved => true;
+    public override bool TryIsUnresolved([NotNullWhen(true)] out UnresolvedTypeSymbol? unresolvedSymbol)
+    {
+        unresolvedSymbol = this;
+        return true;
+    }
 }

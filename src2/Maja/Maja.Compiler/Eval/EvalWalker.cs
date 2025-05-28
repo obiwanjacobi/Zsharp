@@ -140,7 +140,7 @@ internal sealed class EvalWalker : IrWalker<object?>
             return result;
         }
 
-        _state.Diagnostics.FunctionNotFound(invocation.Syntax.Location, invocation.Symbol.Name.FullName);
+        _state.Diagnostics.FunctionNotFound(invocation.Syntax.Location, invocation.Symbol.Name.FullOriginalName);
         return null;
     }
 
@@ -148,7 +148,7 @@ internal sealed class EvalWalker : IrWalker<object?>
     {
         if (!_state.TryLookupType(expression.TypeSymbol.Name.Value, out var typeDecl))
         {
-            _state.Diagnostics.TypeNotFound(expression.Syntax.Location, expression.TypeSymbol.Name.Value);
+            _state.Diagnostics.TypeNotFound(expression.Syntax.Location, expression.TypeSymbol.Name.FullOriginalName);
             return null;
         }
 
@@ -188,7 +188,7 @@ internal sealed class EvalWalker : IrWalker<object?>
             if (!type.Fields.TryGetValue(fld, out var val))
             {
                 _state.Diagnostics.FieldNotFoundOnType(memberAccess.Syntax.Location,
-                    type.TypeDeclaration.Symbol.Name.Value, fld);
+                    type.TypeDeclaration.Symbol.Name.FullOriginalName, fld);
                 return IrConstant.Zero;
             }
 
@@ -208,11 +208,10 @@ internal sealed class EvalWalker : IrWalker<object?>
     public override object? OnStatementAssignment(IrStatementAssignment statement)
     {
         var value = (IrConstant)OnExpression(statement.Expression)!;
-        var name = statement.Symbol.Name.FullName;
 
-        if (!_state.TrySetVariable(name, value.Value))
+        if (!_state.TrySetVariable(statement.Symbol.Name.FullName, value.Value))
         {
-            _state.Diagnostics.VariableNotFound(statement.Syntax.Location, name);
+            _state.Diagnostics.VariableNotFound(statement.Syntax.Location, statement.Symbol.Name.FullOriginalName);
         }
         return value;
     }

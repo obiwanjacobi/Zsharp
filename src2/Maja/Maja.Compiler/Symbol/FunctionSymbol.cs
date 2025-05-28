@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Maja.Compiler.Symbol;
 
-public sealed record DeclaredFunctionSymbol : Symbol
+public record DeclaredFunctionSymbol : Symbol
 {
     public DeclaredFunctionSymbol(SymbolName name,
         IEnumerable<TypeParameterSymbol> typeParameters, IEnumerable<ParameterSymbol> parameters, TypeSymbol? returnType)
@@ -23,6 +23,16 @@ public sealed record DeclaredFunctionSymbol : Symbol
     public override SymbolKind Kind
         => SymbolKind.Function;
 
+    public virtual bool IsUnresolved
+    {
+        get
+        {
+            return TypeParameters.Any(tp => tp.IsUnresolved) ||
+                Parameters.Any(p => p.IsUnresolved) ||
+                ReturnType.IsUnresolved;
+        }
+    }
+
     public bool IsGeneric
         => TypeParameters.OfType<TypeParameterGenericSymbol>().Any();
     public bool IsTemplate
@@ -32,6 +42,16 @@ public sealed record DeclaredFunctionSymbol : Symbol
     public ImmutableArray<ParameterSymbol> Parameters { get; }
     public TypeSymbol ReturnType { get; }
     public TypeFunctionSymbol Type { get; }
+}
+
+public sealed record UnresolvedDeclaredFunctionSymbol : DeclaredFunctionSymbol
+{
+    public UnresolvedDeclaredFunctionSymbol(SymbolName name)
+        : base(name, Enumerable.Empty<TypeParameterSymbol>(),
+                Enumerable.Empty<ParameterSymbol>(), TypeSymbol.Unknown)
+    { }
+
+    public override bool IsUnresolved => true;
 }
 
 public sealed record TypeFunctionSymbol : TypeSymbol

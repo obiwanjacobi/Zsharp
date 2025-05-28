@@ -88,8 +88,7 @@ public class FunctionTests
         fn.Symbol.ReturnType.Should().Be(TypeSymbol.Bool);
     }
 
-    // see todo list
-    //[Fact] // fails
+    [Fact]
     public void DeclarationWithForwardReference()
     {
         const string code =
@@ -102,6 +101,34 @@ public class FunctionTests
         var program = Ir.Build(code);
         program.Root.Should().NotBeNull();
         program.Root.Declarations.Should().HaveCount(2);
+        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        fn.Body.Statements.Should().HaveCount(1);
+        var ret = fn.Body.Statements[0].As<IrStatementReturn>();
+        var invoke = ret.Expression.As<IrExpressionInvocation>();
+        invoke.TypeSymbol.IsUnresolved.Should().BeFalse();
+    }
+
+    [Fact]
+    public void DeclarationWithForwardReference_ParameterType()
+    {
+        const string code =
+            "fn: (): MyType" + Tokens.Eol +
+            Tokens.Indent1 + "ret MyType" + Tokens.Eol +
+            Tokens.Indent2 + "Fld = 42" + Tokens.Eol +
+            "MyType" + Tokens.Eol +
+            Tokens.Indent1 + "Fld: U8" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Should().NotBeNull();
+        program.Root.Declarations.Should().HaveCount(2);
+        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        fn.Body.Statements.Should().HaveCount(1);
+        var ret = fn.Body.Statements[0].As<IrStatementReturn>();
+        var typeInit = ret.Expression.As<IrExpressionTypeInitializer>();
+        typeInit.TypeSymbol.IsUnresolved.Should().BeFalse();
+        typeInit.Fields.Should().HaveCount(1);
+        typeInit.Fields[0].Field.Type.Should().Be(TypeSymbol.U8);
     }
 
     [Fact]
@@ -146,7 +173,7 @@ public class FunctionTests
         program.Diagnostics.Should().HaveCount(1);
         var err = program.Diagnostics[0];
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
-        err.Text.Should().Contain("Function 'Defmod.fn' is already declared.");
+        err.Text.Should().Contain("Function 'DefMod.fn' is already declared.");
     }
 
     [Fact]

@@ -87,7 +87,7 @@ public class VariableTests
         program.Diagnostics.Should().HaveCount(1);
         var err = program.Diagnostics[0];
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
-        err.Text.Should().Contain("Variable name 'x' is already declared.");
+        err.Text.Should().Contain("Variable name 'DefMod.fn.x' is already declared.");
     }
 
     [Fact]
@@ -118,7 +118,7 @@ public class VariableTests
         program.Diagnostics.Should().HaveCount(1);
         var err = program.Diagnostics[0];
         err.MessageKind.Should().Be(DiagnosticMessageKind.Error);
-        err.Text.Should().Contain("Variable name 'x' is already declared.");
+        err.Text.Should().Contain("Variable name 'DefMod.x' is already declared.");
     }
 
     [Fact]

@@ -26,4 +26,6 @@ public abstract record SymbolWithType : Symbol
     }
 
     public TypeSymbol Type { get; }
+
+    public virtual bool IsUnresolved => Type.IsUnresolved || Type == TypeSymbol.Unknown;
 }

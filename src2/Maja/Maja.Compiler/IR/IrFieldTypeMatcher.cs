@@ -35,8 +35,8 @@ internal class IrFieldTypeMatcher
             {
                 if (!TryReWriteInitializerExpression(info.Field.Type, info.Initializer, out var newInit))
                     _diagnostics.TypeMismatch(info.Initializer.Syntax.Location,
-                        info.Initializer.Expression.TypeSymbol.Name.FullName,
-                        info.Field.Type.Name.FullName);
+                        info.Initializer.Expression.TypeSymbol.Name.FullOriginalName,
+                        info.Field.Type.Name.FullOriginalName);
 
                 fieldInits.Add(newInit);
             }

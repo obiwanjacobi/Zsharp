@@ -49,8 +49,8 @@ internal sealed class IrArgumentMatcher
             {
                 if (!TryReWriteArgumentExpression(info.Parameter.Type, info.Argument, out var newArg))
                     _diagnostics.TypeMismatch(info.Argument.Syntax.Location,
-                        info.Argument.Expression.TypeSymbol.Name.FullName,
-                        info.Parameter.Type.Name.FullName);
+                        info.Argument.Expression.TypeSymbol.Name.FullOriginalName,
+                        info.Parameter.Type.Name.FullOriginalName);
 
                 args.Add(newArg);
             }
@@ -101,7 +101,7 @@ internal sealed class IrArgumentMatcher
             {
                 if (!lookupParams.TryGetValue(arg.Symbol!.Name, out var parameter))
                 {
-                    _diagnostics.NoParameterForNamedArgument(arg.Syntax.Location, arg.Symbol!.Name.Value);
+                    _diagnostics.NoParameterForNamedArgument(arg.Syntax.Location, arg.Symbol!.Name.FullOriginalName);
                     continue;
                 }
 
