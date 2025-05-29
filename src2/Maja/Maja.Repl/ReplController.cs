@@ -39,7 +39,6 @@ internal abstract class ReplController
     }
 
     protected abstract bool ProcessInput(string inputText);
-    protected abstract void DisplayTextLine(ReplDocument document, ReplView view, string line);
 
     protected void SubmitInput()
         => _inputSubmitted = true;
@@ -47,7 +46,7 @@ internal abstract class ReplController
     private string GetInput()
     {
         var document = new ReplDocument();
-        var view = new ReplView(document, DisplayTextLine);
+        var view = new ReplView(document);
 
         _inputSubmitted = false;
         while (!_inputSubmitted)

@@ -6,7 +6,9 @@ namespace Maja.Repl;
 internal class MajaController : ReplController
 {
     private const char CommandChar = ';';
+    private const char PrintChar = '?';
     private readonly Evaluator _evaluator = new();
+    private EvaluatorResult? _lastResult;
 
     // overrides ReplController virtuals to implement specifics
 
@@ -25,6 +27,11 @@ internal class MajaController : ReplController
             SubmitInput();
             return true;
         }
+        else if (line.StartsWith(PrintChar))
+        {
+            SubmitInput();
+            return true;
+        }
         else if (line.StartsWith(CommandChar))
         {
             switch (line[1..])
@@ -34,7 +41,7 @@ internal class MajaController : ReplController
                     view.SkipLines(8);
                     document.Clear();
                     break;
-                case "cls":
+                case "clr":
                     Console.Clear();
                     view.Reset();
                     document.Clear();
@@ -48,7 +55,7 @@ internal class MajaController : ReplController
                 default:
                     break;
             }
-            
+
             return true;
         }
 
@@ -57,8 +64,25 @@ internal class MajaController : ReplController
 
     protected override bool ProcessInput(string inputText)
     {
-        Console.WriteLine();
+        if (String.IsNullOrWhiteSpace(inputText)) return true;
 
+        if (inputText.StartsWith(PrintChar))
+        {
+            var varName = inputText[1..];
+
+            if (_lastResult is null ||
+                !_lastResult.TryLookupVariable(varName, out var varValue))
+            {
+                Console.WriteLine($"\tCould not find {varName}");
+            }
+            else
+            {
+                Console.WriteLine($" => {varValue}");
+            }
+            return true;
+        }
+
+        Console.WriteLine();
         var result = _evaluator.Eval(inputText);
         Console.WriteLine();
         if (result.Diagnostics.Any())
@@ -71,6 +95,7 @@ internal class MajaController : ReplController
         }
         else
         {
+            _lastResult = result;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(result.Value);
         }
@@ -79,21 +104,17 @@ internal class MajaController : ReplController
         return true;
     }
 
-    protected override void DisplayTextLine(ReplDocument document, ReplView view, string line)
-    {
-        Console.Write(line);
-    }
-
     public static void PrintHelpMessage()
     {
         Console.ForegroundColor = ConsoleColor.DarkGreen;
-        
+
         Console.WriteLine();
         Console.WriteLine("Maja Read-Evaluate-Print Loop (REPL) version 1.0-alpha");
         Console.WriteLine("Write code and end with a ';' to execute.");
         Console.WriteLine("Repl commands:");
+        Console.WriteLine("    ?<var> - prints the variable value.");
         Console.WriteLine("    ;help - prints this message.");
-        Console.WriteLine("    ;cls  - clears the input and the screen.");
+        Console.WriteLine("    ;clr  - clears the input and the screen.");
         Console.WriteLine("    ;rst  - resets the Repl state.");
         Console.WriteLine();
 

@@ -12,7 +12,6 @@ Started. Have ErrorToken with description.
 - [ ] Type: Comp-parameter
 - [ ] Function: Generics (type inference)
 - [ ] Function: Comp-parameter
-- [ ] Function: Forward reference in body not resolved. Unresolved symbols in a scope should be passed onto its parent scope and reprocessed just before exiting the scope.
 - [ ] Value (custom) Types (/w rules)
 - [ ] Function: Handle default value of parameter (missing invocation argument)
 - [ ] Handle default value of type parameter (missing invocation type argument or instantiation type)
@@ -32,7 +31,8 @@ Started. Have ErrorToken with description.
 
 ### Done
 
-- [x] IrScope 'Freeze' to make readonly when popped from builder stack and included in Ir-model.
+- [x] Function: Forward reference in body not resolved. Unresolved symbols in a scope should be passed onto its parent scope and reprocessed just before exiting the scope.
+- [x] - [x] IrScope 'Freeze' to make readonly when popped from builder stack and included in Ir-model.
 - [x] Type: Template
 - [x] Function: Template
 - [x] Type: base type (enum/struct/value).

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
+using Maja.Compiler.Symbol;
 
 namespace Maja.Compiler.Eval;
 
@@ -42,6 +42,18 @@ public sealed class EvaluatorState
     {
         if (_variables.TryGetValue(fullName, out value))
             return true;
+
+        // match partial name
+        var symbolName = new SymbolName(fullName);
+        foreach (var kvp in _variables)
+        {
+            var varName = new SymbolName(kvp.Key);
+            if (varName.MatchesWith(symbolName) == 0)
+            {
+                value = kvp.Value;
+                return true;
+            }
+        }
 
         if (_parent is not null)
             return _parent.TryLookupVariable(fullName, out value);

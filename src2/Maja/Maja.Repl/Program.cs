@@ -7,13 +7,13 @@ internal static class Program
         MajaController.PrintHelpMessage();
 
         var repl = new MajaController();
-        
-        foreach(var file in args)
+
+        foreach (var file in args)
         {
             var content = File.ReadAllText(file);
             repl.Load(content);
         }
-        
+
         repl.Run();
     }
 }

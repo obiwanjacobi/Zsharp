@@ -49,7 +49,7 @@ internal sealed class IrBuilder
         => _scopes.Peek();
 
     private T GetScopeOf<T>() where T : IrScope
-        => _scopes.OfType<T>().Last();
+        => _scopes.OfType<T>().First();
 
     public static IrProgram Program(SyntaxTree syntaxTree, IExternalModuleLoader moduleLoader, IrScope? parentScope = null)
     {

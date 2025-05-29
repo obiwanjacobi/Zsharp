@@ -5,16 +5,11 @@ namespace Maja.Repl;
 internal sealed class ReplView
 {
     private readonly ReplDocument _document;
-    private readonly TextPrinter _displayText;
     private int _cursorTop;
 
-    public delegate void TextPrinter(ReplDocument document, ReplView view, string text);
-
-    public ReplView(ReplDocument document, TextPrinter displayText)
+    public ReplView(ReplDocument document)
     {
         _document = document;
-        _displayText = displayText;
-
         _document.CollectionChanged += Document_CollectionChanged;
         _cursorTop = Console.CursorTop;
 
@@ -74,7 +69,7 @@ internal sealed class ReplView
             else
                 Console.Write("· ");
 
-            _displayText(_document, this, line);
+            Console.Write(line);
 
             // blank out the rest of the line
             Console.Write(new string(' ', Console.WindowWidth - line.Length));
@@ -107,13 +102,20 @@ internal sealed class ReplView
 
     private void SetCursorPos()
     {
-        Console.CursorTop = _cursorTop + CurrentLineIndex;
+        var top = _cursorTop + CurrentLineIndex;
+        if (Console.BufferHeight > top)
+            Console.CursorTop = top;
         Console.CursorLeft = 2 + CurrentCharIndex;
     }
 
     public void Reset()
     {
         _cursorTop = 0;
+        Clear();
+    }
+
+    public void Clear()
+    {
         _currentLineIndex = 0;
         _currentCharIndex = 0;
         SetCursorPos();
