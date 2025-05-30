@@ -15,8 +15,8 @@ public class TemplateTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Declarations.Should().HaveCount(1);
-        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        program.Module.Declarations.Should().HaveCount(1);
+        var fn = program.Module.Declarations[0].As<IrDeclarationFunction>();
         fn.Symbol.Name.Value.Should().Be("fn");
         fn.Type.Symbol.Name.Value.Should().Be("(T):T");
         fn.TypeParameters.Should().HaveCount(1);
@@ -33,8 +33,8 @@ public class TemplateTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Declarations.Should().HaveCount(1);
-        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        program.Module.Declarations.Should().HaveCount(1);
+        var fn = program.Module.Declarations[0].As<IrDeclarationFunction>();
         fn.TypeParameters.Should().HaveCount(1);
         var templType = fn.TypeParameters.First().As<IrTypeParameterTemplate>();
         templType.Type!.Symbol.Name.Value.Should().Be("Str");
@@ -50,8 +50,8 @@ public class TemplateTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Declarations.Should().HaveCount(3);
-        var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
+        program.Module.Declarations.Should().HaveCount(3);
+        var v = program.Module.Declarations[1].As<IrDeclarationVariable>();
         v.TypeSymbol.Should().Be(TypeSymbol.U8);
         var fn = v.Initializer.As<IrExpressionInvocation>();
         fn.Symbol.Type.Name.Value.Should().Be("(U8):U8");
@@ -70,8 +70,8 @@ public class TemplateTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Declarations.Should().HaveCount(1);
-        var type = program.Root.Declarations[0].As<IrDeclarationType>();
+        program.Module.Declarations.Should().HaveCount(1);
+        var type = program.Module.Declarations[0].As<IrDeclarationType>();
         type.TypeParameters.Should().HaveCount(1);
         var templType = type.TypeParameters.First().As<IrTypeParameterTemplate>();
         templType.Symbol.Name.Value.Should().Be("T");
@@ -88,8 +88,8 @@ public class TemplateTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Declarations.Should().HaveCount(3);
-        var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
+        program.Module.Declarations.Should().HaveCount(3);
+        var v = program.Module.Declarations[1].As<IrDeclarationVariable>();
         v.TypeSymbol.As<TypeTemplateSymbol>().Name.FullName.Should().Be("Defmod.Templ#U8");
 
         var instance = v.Initializer.As<IrExpressionTypeInitializer>();
@@ -109,8 +109,8 @@ public class TemplateTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Declarations.Should().HaveCount(4);
-        var f = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        program.Module.Declarations.Should().HaveCount(4);
+        var f = program.Module.Declarations[2].As<IrDeclarationVariable>();
         f.TypeSymbol.Should().Be(TypeSymbol.U8);
 
         var instance = f.Initializer.As<IrExpressionMemberAccess>();
@@ -134,8 +134,8 @@ public class TemplateTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Declarations.Should().HaveCount(5);
-        var b = program.Root.Declarations[3].As<IrDeclarationVariable>();
+        program.Module.Declarations.Should().HaveCount(5);
+        var b = program.Module.Declarations[3].As<IrDeclarationVariable>();
         b.TypeSymbol.Should().Be(TypeSymbol.Bool);
 
         var invoke = b.Initializer.As<IrExpressionInvocation>();

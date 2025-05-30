@@ -14,9 +14,9 @@ public class VariableTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+        var v = program.Module.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Initializer!.TypeInferredSymbol.Should().BeNull();
         v.Initializer!.ConstantValue.Should().NotBeNull();
@@ -33,9 +33,9 @@ public class VariableTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+        var v = program.Module.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
         v.Initializer!.ConstantValue.Should().NotBeNull();
@@ -52,9 +52,9 @@ public class VariableTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+        var v = program.Module.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
     }
@@ -69,8 +69,8 @@ public class VariableTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(2);
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(2);
     }
 
     [Fact]
@@ -99,9 +99,9 @@ public class VariableTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Statements.Should().HaveCount(1);
-        var stat = program.Root.Statements[0].As<IrStatementAssignment>();
+        program.Module.Should().NotBeNull();
+        program.Module.Statements.Should().HaveCount(1);
+        var stat = program.Module.Statements[0].As<IrStatementAssignment>();
         stat.Symbol.Name.Value.Should().Be("x");
         stat.Expression.As<IrExpressionLiteral>().ConstantValue!.Value.Should().Be(42);
     }

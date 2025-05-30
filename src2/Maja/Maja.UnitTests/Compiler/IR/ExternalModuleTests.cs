@@ -19,10 +19,10 @@ public class ExternalModuleTests
             ;
 
         var program = Ir.Build(code, builder.ToModuleLoader());
-        program.Root.Should().NotBeNull();
-        program.Root.Imports.Should().HaveCount(1);
-        program.Root.Statements.Should().HaveCount(1);
-        var stat = program.Root.Statements[0].As<IrStatementExpression>();
+        program.Module.Should().NotBeNull();
+        program.Module.Imports.Should().HaveCount(1);
+        program.Module.Statements.Should().HaveCount(1);
+        var stat = program.Module.Statements[0].As<IrStatementExpression>();
         var invoke = stat.Expression.As<IrExpressionInvocation>();
         invoke.Symbol.Name.Namespace.OriginalName.Should().Be("System.Console");
         invoke.Arguments.Should().HaveCount(1);
@@ -44,10 +44,10 @@ public class ExternalModuleTests
             ;
 
         var program = Ir.Build(code, builder.ToModuleLoader());
-        program.Root.Should().NotBeNull();
-        program.Root.Imports.Should().HaveCount(1);
-        program.Root.Declarations.Should().HaveCount(1);
-        var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Imports.Should().HaveCount(1);
+        program.Module.Declarations.Should().HaveCount(1);
+        var v = program.Module.Declarations[0].As<IrDeclarationVariable>();
         v.TypeSymbol.IsExternal.Should().BeTrue();
         var colors = v.TypeSymbol.As<DeclaredTypeSymbol>();
         colors.Enums.Should().HaveCount(16);

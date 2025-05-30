@@ -14,20 +14,17 @@ internal static class Emit
         var program = Ir.Build(code, allowError: false, source: callerName);
 
         var lowering = new IrCodeRewriter();
-        var programs = lowering.CodeRewrite(program);
+        var codeProg = lowering.CodeRewrite(program);
 
         var builder = new CodeBuilder();
 
-        foreach (var prog in programs)
-        {
-            var ns = builder.OnProgram(prog);
+        var ns = builder.OnProgram(codeProg);
 
-            if (output is not null)
-            {
-                var dump = ObjectDumper.Dump(ns);
-                output.WriteLine(dump);
-                output.WriteLine("");
-            }
+        if (output is not null)
+        {
+            var dump = ObjectDumper.Dump(ns);
+            output.WriteLine(dump);
+            output.WriteLine("");
         }
 
         return builder.ToString();

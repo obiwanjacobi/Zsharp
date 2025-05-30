@@ -57,33 +57,29 @@ internal sealed class IrBuilder
             throw new InvalidOperationException("Cannot Compile when there are syntax errors.");
 
         var builder = new IrBuilder(moduleLoader, parentScope);
-        var moduleSymbol = ModuleSymbol(syntaxTree.Root);
-        _ = builder.PushScope(new IrModuleScope(moduleSymbol.Name.FullOriginalName, builder.CurrentScope));
+        var module = builder.Module(syntaxTree.Root);
+        module = AddTemplateInstantiations(module);
 
-        var compilation = builder.Compilation(syntaxTree.Root);
-        var moduleScope = builder.PopScope<IrModuleScope>();
-
-        compilation = AddTemplateInstantiations(compilation, moduleScope.TemplateInstantiations);
-
-        var resolver = new IrResolveSymbolsRewriter(moduleScope);
-        compilation = resolver.FixUnresolvedSymbols(compilation);
+        var resolver = new IrResolveSymbolsRewriter(module.Scope);
+        module = resolver.FixUnresolvedSymbols(module);
         builder._diagnostics.AddRange(resolver.GetDiagnostics());
 
         var validator = new IrValidationRewriter();
-        if (validator.Validate(compilation))
+        if (validator.Validate(module))
             builder._diagnostics.AddRange(validator.GetDiagnostics());
 
-        var module = builder.Module(syntaxTree.Root, moduleSymbol, moduleScope);
-        return new IrProgram(syntaxTree.Root, moduleScope, module, compilation, builder.Diagnostics);
+
+        return new IrProgram(syntaxTree.Root, module, builder.Diagnostics);
     }
 
-    private static IrCompilation AddTemplateInstantiations(IrCompilation compilation, IEnumerable<IrDeclaration> concreteDecls)
+    private static IrModule AddTemplateInstantiations(IrModule module)
     {
-        if (!concreteDecls.Any()) return compilation;
+        var concreteDecls = module.Scope.TemplateInstantiations;
+        if (!concreteDecls.Any()) return module;
 
-        return new IrCompilation(
-            compilation.Syntax, compilation.Imports, compilation.Exports,
-            compilation.Statements, compilation.Declarations.Concat(concreteDecls));
+        return new IrModule(module.Syntax, module.Symbol, module.Scope,
+            module.Imports, module.Exports,
+            module.Statements, module.Declarations.Concat(concreteDecls));
     }
 
     private static ModuleSymbol ModuleSymbol(CompilationUnitSyntax syntax)
@@ -92,42 +88,52 @@ internal sealed class IrBuilder
             ?? new SymbolName(DefaultModuleName));
     }
 
-    private IrModule Module(CompilationUnitSyntax syntax, ModuleSymbol symbol, IrModuleScope scope)
+    private IrModule Module(CompilationUnitSyntax syntax)
     {
+        var symbol = ModuleSymbol(syntax);
         SyntaxNode syn = syntax.Module is not null
             ? syntax.Module
             : syntax;
 
-        //if (CurrentScope is IrGlobalScope globalScope &&
-        //    !globalScope.TryDeclareModule(symbol) &&
-        //    globalScope.TryLookupSymbol<ModuleSymbol>(symbol.Name, out var existingSymbol))
-        //{
-        //    symbol = existingSymbol;
-        //}
+        _ = PushScope(new IrModuleScope(symbol.Name.FullOriginalName, CurrentScope));
+        _locality = IrLocality.Module;
 
-        // TODO: would like to return the existing IrModule as well...
-
-        return new IrModule(syn, symbol, scope);
-    }
-
-    private IrCompilation Compilation(CompilationUnitSyntax root)
-    {
-        var exports = PublicExports(root.PublicExports);
-        var imports = UseImports(root.UseImports);
+        var exports = PublicExports(syntax.PublicExports);
+        var imports = UseImports(syntax.UseImports);
 
         GetScopeOf<IrModuleScope>().SetExports(exports);
         ProcessImports(imports);
 
         // by first processing declarations before statements
         // we prevent some complexity of finding forward refs of symbols.
-        var members = Declarations(root.Members);
+        var members = Declarations(syntax.Members);
+        var statements = Statements(syntax.Statements);
 
-        _locality = IrLocality.Module;
-        var statements = Statements(root.Statements);
         _locality = IrLocality.None;
+        var moduleScope = PopScope<IrModuleScope>();
 
-        return new IrCompilation(root, imports, exports, statements, members);
+        return new IrModule(syn, symbol, moduleScope,
+            imports, exports, statements, members);
     }
+
+    //private IrCompilation Compilation(CompilationUnitSyntax root)
+    //{
+    //    var exports = PublicExports(root.PublicExports);
+    //    var imports = UseImports(root.UseImports);
+
+    //    GetScopeOf<IrModuleScope>().SetExports(exports);
+    //    ProcessImports(imports);
+
+    //    // by first processing declarations before statements
+    //    // we prevent some complexity of finding forward refs of symbols.
+    //    var members = Declarations(root.Members);
+
+    //    _locality = IrLocality.Module;
+    //    var statements = Statements(root.Statements);
+    //    _locality = IrLocality.None;
+
+    //    return new IrCompilation(root, imports, exports, statements, members);
+    //}
 
     private void ProcessImports(IEnumerable<IrImport> imports)
     {

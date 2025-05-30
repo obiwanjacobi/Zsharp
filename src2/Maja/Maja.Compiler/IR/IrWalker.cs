@@ -21,17 +21,6 @@ internal abstract class IrWalker<R>
     public virtual R OnProgram(IrProgram program)
     {
         var result = OnModule(program.Module);
-        result = AggregateResult(result, OnCompilation(program.Root));
-        // module scope
-        PopScope();
-        return result;
-    }
-    public virtual R OnCompilation(IrCompilation compilation)
-    {
-        var result = OnImports(compilation.Imports);
-        result = AggregateResult(result, OnExports(compilation.Exports));
-        result = AggregateResult(result, OnDeclarations(compilation.Declarations));
-        result = AggregateResult(result, OnStatements(compilation.Statements));
         return result;
     }
     public virtual R OnCodeBlock(IrCodeBlock codeBlock)
@@ -44,7 +33,12 @@ internal abstract class IrWalker<R>
     public virtual R OnModule(IrModule module)
     {
         PushScope(module.Scope);
-        return Default;
+        var result = OnImports(module.Imports);
+        result = AggregateResult(result, OnExports(module.Exports));
+        result = AggregateResult(result, OnDeclarations(module.Declarations));
+        result = AggregateResult(result, OnStatements(module.Statements));
+        PopScope();
+        return result;
     }
 
     public virtual R OnExports(IEnumerable<IrExport> exports)

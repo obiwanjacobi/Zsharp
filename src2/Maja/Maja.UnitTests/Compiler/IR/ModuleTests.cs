@@ -10,8 +10,8 @@ public class ModuleTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Exports.Should().HaveCount(1);
+        program.Module.Should().NotBeNull();
+        program.Module.Exports.Should().HaveCount(1);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class ModuleTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Exports.Should().HaveCount(1);
+        program.Module.Exports.Should().HaveCount(1);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class ModuleTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Exports.Should().HaveCount(2);
+        program.Module.Exports.Should().HaveCount(2);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class ModuleTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Exports.Should().HaveCount(2);
+        program.Module.Exports.Should().HaveCount(2);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class ModuleTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Exports.Should().HaveCount(4);
+        program.Module.Exports.Should().HaveCount(4);
     }
 
     [Fact]
@@ -81,9 +81,9 @@ public class ModuleTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Imports.Should().HaveCount(1);
+        program.Module.Imports.Should().HaveCount(1);
 
-        var import = program.Root.Imports[0];
+        var import = program.Module.Imports[0];
         import.SymbolName.Namespace.Value.Should().Be("qualified");
         import.SymbolName.Namespace.OriginalName.Should().Be("qu_Alified");
         import.SymbolName.Value.Should().Be("Name");
@@ -100,6 +100,6 @@ public class ModuleTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Imports.Should().HaveCount(2);
+        program.Module.Imports.Should().HaveCount(2);
     }
 }

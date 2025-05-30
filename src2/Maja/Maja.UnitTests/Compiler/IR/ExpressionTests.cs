@@ -1,9 +1,6 @@
 using System.Linq;
-using FluentAssertions.Equivalency;
-using Maja.Compiler.Diagnostics;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
-using Maja.Compiler.Syntax;
 
 namespace Maja.UnitTests.Compiler.IR;
 
@@ -39,10 +36,10 @@ public class ExpressionTests
         var expectedTypeSymbol = TypeSymbol.I64;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        
-        var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+
+        var v = program.Module.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
         v.TypeSymbol.Should().Be(expectedTypeSymbol);
@@ -50,7 +47,7 @@ public class ExpressionTests
         v.Initializer!.TypeSymbol.Should().Be(expectedTypeSymbol);
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(42);
-        
+
         var sub = v.Initializer.As<IrExpressionBinary>();
         sub.TypeSymbol.Should().Be(expectedTypeSymbol);
         sub.Left.TypeSymbol.Should().Be(expectedTypeSymbol);
@@ -67,10 +64,10 @@ public class ExpressionTests
         var expectedTypeSymbol = TypeSymbol.I64;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        
-        var v = program.Root.Declarations[0].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+
+        var v = program.Module.Declarations[0].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
         v.TypeSymbol.Should().Be(expectedTypeSymbol);
@@ -78,12 +75,12 @@ public class ExpressionTests
         v.Initializer!.TypeSymbol.Should().Be(expectedTypeSymbol);
         v.Initializer!.ConstantValue.Should().NotBeNull();
         v.Initializer!.ConstantValue!.Value.Should().Be(84);
-        
+
         var sub = v.Initializer.As<IrExpressionBinary>();
         sub.TypeSymbol.Should().Be(expectedTypeSymbol);
         sub.Left.TypeSymbol.Should().Be(expectedTypeSymbol);
         sub.Right.TypeSymbol.Should().Be(expectedTypeSymbol);
-        
+
         var sub2 = sub.Left.As<IrExpressionBinary>();
         sub2.TypeSymbol.Should().Be(expectedTypeSymbol);
         sub2.Left.TypeSymbol.Should().Be(expectedTypeSymbol);
@@ -101,9 +98,9 @@ public class ExpressionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(3);
-        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(3);
+        var v = program.Module.Declarations[2].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
         v.TypeSymbol.Should().Be(TypeSymbol.U8);
@@ -126,9 +123,9 @@ public class ExpressionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(3);
-        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(3);
+        var v = program.Module.Declarations[2].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.TypeSymbol.Should().Be(TypeSymbol.U8);
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
@@ -153,9 +150,9 @@ public class ExpressionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(3);
-        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(3);
+        var v = program.Module.Declarations[2].As<IrDeclarationVariable>();
         v.Initializer!.TypeSymbol.Name.Value.Should().Be("U8");
         v.TypeSymbol.Name.Value.Should().Be("U8");
         var xs = v.Initializer.As<IrExpressionMemberAccess>();
@@ -178,9 +175,9 @@ public class ExpressionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(3);
-        var v = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(3);
+        var v = program.Module.Declarations[2].As<IrDeclarationVariable>();
         v.Initializer!.TypeSymbol.Name.Value.Should().Be("U8");
         v.TypeSymbol.Name.Value.Should().Be("U8");
         var xs = v.Initializer.As<IrExpressionMemberAccess>();

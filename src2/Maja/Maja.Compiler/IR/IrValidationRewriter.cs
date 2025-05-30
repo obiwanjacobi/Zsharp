@@ -2,9 +2,9 @@
 
 internal sealed class IrValidationRewriter : IrRewriter
 {
-    public bool Validate(IrCompilation compilation)
+    public bool Validate(IrModule module)
     {
-        RewriteCompilation(compilation);
+        RewriteModule(module);
         return !Diagnostics.HasDiagnostics;
     }
 }

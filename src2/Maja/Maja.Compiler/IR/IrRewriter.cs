@@ -14,49 +14,36 @@ internal abstract class IrRewriter
     public IEnumerable<DiagnosticMessage> GetDiagnostics()
         => Diagnostics;
 
-    protected virtual IEnumerable<IrProgram> RewriteProgram(IrProgram program)
+    protected virtual IrProgram RewriteProgram(IrProgram program)
     {
-        var modules = RewriteModule(program.Module);
-        var compilation = RewriteCompilation(program.Root);
+        var module = RewriteModule(program.Module);
 
-        if (modules.IsExactly(program.Module) &&
-            !Diagnostics.HasDiagnostics &&
-            program.Root == compilation)
-            return [program];
+        if (module == program.Module &&
+            !Diagnostics.HasDiagnostics)
+            return program;
 
         var diagnostics = new DiagnosticList();
         diagnostics.AddRange(program.Diagnostics);
         diagnostics.AddRange(Diagnostics);
 
-        var programs = new List<IrProgram>();
-        foreach (var module in modules)
-        {
-            var prog = new IrProgram(program.Syntax, program.Scope, module, compilation, diagnostics);
-            programs.Add(prog);
-        }
-
-        return programs;
+        return new IrProgram(program.Syntax, module, diagnostics);
     }
 
-    protected virtual IrCompilation RewriteCompilation(IrCompilation compilation)
+    protected virtual IrModule RewriteModule(IrModule module)
     {
-        var exports = RewriteExports(compilation.Exports);
-        var imports = RewriteImports(compilation.Imports);
-        var declarations = RewriteDeclarations(compilation.Declarations);
-        var statements = RewriteStatements(compilation.Statements);
+        var exports = RewriteExports(module.Exports);
+        var imports = RewriteImports(module.Imports);
+        var declarations = RewriteDeclarations(module.Declarations);
+        var statements = RewriteStatements(module.Statements);
 
-        if (exports == compilation.Exports &&
-            imports == compilation.Imports &&
-            declarations == compilation.Declarations &&
-            statements == compilation.Statements)
-            return compilation;
+        if (exports == module.Exports &&
+            imports == module.Imports &&
+            declarations == module.Declarations &&
+            statements == module.Statements)
+            return module;
 
-        return new IrCompilation(compilation.Syntax, imports, exports, statements, declarations);
-    }
-
-    protected virtual IEnumerable<IrModule> RewriteModule(IrModule module)
-    {
-        return [module];
+        return new IrModule(module.Syntax, module.Symbol, module.Scope,
+            imports, exports, statements, declarations);
     }
 
     protected virtual ImmutableArray<IrExport> RewriteExports(ImmutableArray<IrExport> exports)

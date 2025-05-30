@@ -16,9 +16,9 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+        var fn = program.Module.Declarations[0].As<IrDeclarationFunction>();
         fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().BeEmpty();
@@ -69,9 +69,9 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+        var fn = program.Module.Declarations[0].As<IrDeclarationFunction>();
         fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.Parameters.Should().HaveCount(2);
@@ -99,9 +99,9 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(2);
-        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(2);
+        var fn = program.Module.Declarations[0].As<IrDeclarationFunction>();
         fn.Body.Statements.Should().HaveCount(1);
         var ret = fn.Body.Statements[0].As<IrStatementReturn>();
         var invoke = ret.Expression.As<IrExpressionInvocation>();
@@ -120,9 +120,9 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(2);
-        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(2);
+        var fn = program.Module.Declarations[0].As<IrDeclarationFunction>();
         fn.Body.Statements.Should().HaveCount(1);
         var ret = fn.Body.Statements[0].As<IrStatementReturn>();
         var typeInit = ret.Expression.As<IrExpressionTypeInitializer>();
@@ -140,9 +140,9 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        var fn = program.Root.Declarations[0].As<IrDeclarationFunction>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+        var fn = program.Module.Declarations[0].As<IrDeclarationFunction>();
         fn.Body.Statements.Should().HaveCount(1);
         fn.Body.Declarations.Should().BeEmpty();
         fn.TypeParameters.Should().HaveCount(1);
@@ -186,10 +186,10 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        program.Root.Statements.Should().HaveCount(1);
-        var fn = program.Root.Statements[0]
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+        program.Module.Statements.Should().HaveCount(1);
+        var fn = program.Module.Statements[0]
             .As<IrStatementExpression>().Expression
             .As<IrExpressionInvocation>();
         fn.Symbol!.Name.Value.Should().Be("fn");
@@ -206,9 +206,9 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(2);
-        var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(2);
+        var v = program.Module.Declarations[1].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.Symbol.Type.Should().Be(TypeSymbol.U8);
         v.Initializer!.TypeSymbol.Should().Be(TypeSymbol.U8);
@@ -226,10 +226,10 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        program.Root.Statements.Should().HaveCount(1);
-        var fn = program.Root.Statements[0]
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+        program.Module.Statements.Should().HaveCount(1);
+        var fn = program.Module.Statements[0]
             .As<IrStatementExpression>().Expression
             .As<IrExpressionInvocation>();
         fn.Symbol!.Name.Value.Should().Be("fn");
@@ -246,9 +246,9 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(2);
-        var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(2);
+        var v = program.Module.Declarations[1].As<IrDeclarationVariable>();
         v.Symbol.Name.Value.Should().Be("x");
         v.TypeSymbol.Name.Value.Should().Be("U8");
         var invok = v.Initializer.As<IrExpressionInvocation>();
@@ -296,10 +296,10 @@ public class FunctionTests
             ;
 
         var program = Ir.Build(code);
-        program.Root.Should().NotBeNull();
-        program.Root.Declarations.Should().HaveCount(1);
-        program.Root.Statements.Should().HaveCount(1);
-        var fn = program.Root.Statements[0].As<IrStatementExpression>()
+        program.Module.Should().NotBeNull();
+        program.Module.Declarations.Should().HaveCount(1);
+        program.Module.Statements.Should().HaveCount(1);
+        var fn = program.Module.Statements[0].As<IrStatementExpression>()
             .Expression.As<IrExpressionInvocation>();
         fn.Symbol!.Name.Value.Should().Be("fn");
         fn.Arguments.Should().HaveCount(1);

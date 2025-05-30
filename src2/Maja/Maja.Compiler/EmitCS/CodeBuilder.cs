@@ -55,8 +55,7 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnProgram(IrProgram program)
     {
-        _ = base.OnProgram(program);
-        var ns = _scopes.Pop().Namespace!;
+        var ns = (Namespace)base.OnProgram(program)!;
         Debug.Assert(_scopes.Count == 0);
 
         var serializer = new CSharpSerializer(_writer);
@@ -66,38 +65,36 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnModule(IrModule module)
     {
+        PushScope(module.Scope);
+
         var ns = CSharpFactory.CreateNamespace(module);
         var mc = CSharpFactory.CreateModuleClass(module);
         ns.AddType(mc);
 
         _scopes.Push(new Scope(ns));
-        return base.OnModule(module);
-    }
 
-    public override object? OnCompilation(IrCompilation compilation)
-    {
-        _ = OnImports(compilation.Imports);
-        _ = OnExports(compilation.Exports);
-
-        var ns = CurrentNamespace;
-        var mc = ns.GetModuleClass();
+        _ = OnImports(module.Imports);
+        _ = OnExports(module.Exports);
 
         _scopes.Push(new Scope(mc));
 
-        if (compilation.Statements.Any())
+        if (module.Statements.Any())
         {
             var mi = CSharpFactory.CreateModuleInitializer(mc.Name);
             mc.AddMethod(mi);
             _scopes.Push(new Scope(mi));
             _ = OnParameters(Enumerable.Empty<IrParameter>());
-            _ = OnStatements(compilation.Statements);
-            _scopes.Pop();
+            _ = OnStatements(module.Statements);
+            _ = _scopes.Pop();
         }
 
-        _ = OnDeclarations(compilation.Declarations);
+        _ = OnDeclarations(module.Declarations);
 
-        _scopes.Pop();
-        return null;
+        _ = _scopes.Pop();  // mc
+        _ = _scopes.Pop();  // ns
+
+        PopScope();
+        return ns;
     }
 
     public override object? OnImport(IrImport import)

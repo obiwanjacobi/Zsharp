@@ -47,7 +47,7 @@ public sealed class Evaluator
             }
             else
             {
-                PushScope(program.Scope);
+                PushScope(program.Module.Scope);
                 result = Eval(program);
 
                 if (_state.Diagnostics.HasDiagnostics)

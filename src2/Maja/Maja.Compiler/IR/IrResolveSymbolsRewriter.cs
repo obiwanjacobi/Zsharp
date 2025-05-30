@@ -25,8 +25,8 @@ internal sealed class IrResolveSymbolsRewriter : IrRewriter
     private IrScope CurrentScope
         => _scopes.Peek();
 
-    public IrCompilation FixUnresolvedSymbols(IrCompilation compilation)
-        => RewriteCompilation(compilation);
+    public IrModule FixUnresolvedSymbols(IrModule module)
+        => RewriteModule(module);
 
     // fixup function invocation of a forward declared function
     protected override IrExpression RewriteExpressionInvocation(IrExpressionInvocation expression)
@@ -132,13 +132,13 @@ internal sealed class IrResolveSymbolsRewriter : IrRewriter
 
     //-------------------------------------------------------------------------
     // keeping track of scopes
-    protected override IEnumerable<IrProgram> RewriteProgram(IrProgram program)
+    protected override IrModule RewriteModule(IrModule module)
     {
         // module scope
-        _scopes.Push(program.Scope);
-        var progs = base.RewriteProgram(program);
+        _scopes.Push(module.Scope);
+        var newModule = base.RewriteModule(module);
         _ = _scopes.Pop();
-        return progs;
+        return newModule;
     }
     protected override IEnumerable<IrDeclarationFunction> RewriteDeclarationFunction(IrDeclarationFunction function)
     {

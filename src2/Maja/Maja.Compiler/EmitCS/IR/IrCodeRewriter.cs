@@ -10,7 +10,7 @@ namespace Maja.Compiler.EmitCS.IR;
 /// </summary>
 internal sealed class IrCodeRewriter : IrRewriter
 {
-    public IEnumerable<IrProgram> CodeRewrite(IrProgram program)
+    public IrProgram CodeRewrite(IrProgram program)
         => RewriteProgram(program);
 
     protected override IEnumerable<IrDeclarationType> RewriteDeclarationType(IrDeclarationType type)

@@ -31,6 +31,7 @@ Started. Have ErrorToken with description.
 
 ### Done
 
+- [x] IR: Refactor structure of compilation, program and module (hierarchy in that order).
 - [x] Function: Forward reference in body not resolved. Unresolved symbols in a scope should be passed onto its parent scope and reprocessed just before exiting the scope.
 - [x] - [x] IrScope 'Freeze' to make readonly when popped from builder stack and included in Ir-model.
 - [x] Type: Template

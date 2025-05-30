@@ -41,7 +41,7 @@ public class BasicSyntaxTests
         var msg = result.Diagnostics.First();
         msg.MessageKind.Should().Be(DiagnosticMessageKind.Warning);
         msg.Text.Should().Contain("Warning");
-        
+
         Syntax.RoundTrip(code, _output);
     }
 
