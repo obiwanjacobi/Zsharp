@@ -14,10 +14,11 @@ public sealed record TypeTemplateSymbol : DeclaredTypeSymbol
         IEnumerable<FieldSymbol> fields,
         IEnumerable<RuleSymbol> rules,
         TypeSymbol? baseType)
-        : base(name, Enumerable.Empty<TypeParameterSymbol>(), enums, fields, rules, baseType)
+        : base(CreateTypeName(name, typeArgumentTypes),
+            Enumerable.Empty<TypeParameterSymbol>(), enums, fields, rules, baseType)
     {
         TypeArgumentTypes = typeArgumentTypes.ToImmutableArray();
-        TemplateName = CreateTypeName(name, typeArgumentTypes);
+        //TemplateName = CreateTypeName(name, typeArgumentTypes);
     }
 
     public ImmutableArray<TypeSymbol> TypeArgumentTypes { get; }

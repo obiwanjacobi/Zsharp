@@ -2,7 +2,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 
 namespace Maja.Compiler.Symbol;
 
@@ -11,7 +10,6 @@ public record DeclaredTypeSymbol : TypeSymbol
     protected DeclaredTypeSymbol(SymbolName name)
         : base(name)
     {
-        TemplateName = name;
         TypeParameters = [];
         Enums = [];
         Fields = [];
@@ -25,13 +23,13 @@ public record DeclaredTypeSymbol : TypeSymbol
         IEnumerable<RuleSymbol> rules,
         TypeSymbol? baseType)
         : base(name)
+    //: base(CreateTypeName(name, typeParameters))
     {
         TypeParameters = typeParameters.ToImmutableArray();
         Enums = enums.ToImmutableArray();
         Fields = fields.ToImmutableArray();
         Rules = rules.ToImmutableArray();
         BaseType = baseType;
-        TemplateName = CreateTypeName(name, typeParameters);
     }
 
     public override bool IsUnresolved
@@ -48,8 +46,6 @@ public record DeclaredTypeSymbol : TypeSymbol
         => TypeParameters.OfType<TypeParameterGenericSymbol>().Any();
     public bool IsTemplate
         => TypeParameters.OfType<TypeParameterTemplateSymbol>().Any();
-    // In case of template declarations this is the full type name
-    public SymbolName TemplateName { get; protected set; }
 
     public ImmutableArray<TypeParameterSymbol> TypeParameters { get; }
     public virtual ImmutableArray<EnumSymbol> Enums { get; }
@@ -57,17 +53,17 @@ public record DeclaredTypeSymbol : TypeSymbol
     public ImmutableArray<RuleSymbol> Rules { get; }
     public TypeSymbol? BaseType { get; }
 
-    private static SymbolName CreateTypeName(SymbolName typeName, IEnumerable<TypeSymbol> typeTemplateTypes)
-    {
-        if (!typeTemplateTypes.Any())
-            return typeName;
+    //private static SymbolName CreateTypeName(SymbolName typeName, IEnumerable<TypeSymbol> typeTemplateTypes)
+    //{
+    //    if (!typeTemplateTypes.Any())
+    //        return typeName;
 
-        var name = new StringBuilder(typeName.FullName)
-            .Append('#')
-            .Append(typeTemplateTypes.Count());
+    //    var name = new StringBuilder(typeName.FullName)
+    //        .Append('#')
+    //        .Append(typeTemplateTypes.Count());
 
-        return new SymbolName(name.ToString(), isType: true);
-    }
+    //    return new SymbolName(name.ToString(), isType: true);
+    //}
 }
 
 public record UnresolvedDeclaredTypeSymbol : DeclaredTypeSymbol

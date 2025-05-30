@@ -16,24 +16,20 @@ internal sealed class SymbolTable
     public bool TryDeclareSymbol<T>(T symbol)
         where T : Symbol
     {
-        if (_table.ContainsKey(symbol.Name.Value))
+        var name = symbol.Name.FullName;
+
+        if (_table.ContainsKey(name))
             return false;
 
-        _table.Add(symbol.Name.Value, symbol);
+        _table.Add(name, symbol);
         return true;
     }
-
-    public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol? symbol)
-        => _table.TryGetValue(name, out symbol);
-
-    public bool TryLookupSymbol(SymbolName name, [NotNullWhen(true)] out Symbol? symbol)
-        => _table.TryGetValue(name.Value, out symbol);
 
     public bool TryLookupSymbol<T>(string name, [NotNullWhen(true)] out T? symbol)
         where T : Symbol
     {
-        if (TryLookupSymbol(name, out var genSym) &&
-            genSym is T typedSym)
+        if (_table.TryGetValue(name, out var genSymbol) &&
+            genSymbol is T typedSym)
         {
             symbol = typedSym;
             return true;
@@ -42,8 +38,4 @@ internal sealed class SymbolTable
         symbol = null;
         return false;
     }
-
-    public bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
-        where T : Symbol
-        => TryLookupSymbol<T>(name.Value, out symbol);
 }

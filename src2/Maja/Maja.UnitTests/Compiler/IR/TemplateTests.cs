@@ -7,7 +7,7 @@ namespace Maja.UnitTests.Compiler.IR;
 public class TemplateTests
 {
     [Fact]
-    public void Func_TypeParams_Template()
+    public void Func_Template()
     {
         const string code =
             "fn: <#T>(p: T): T" + Tokens.Eol +
@@ -25,7 +25,7 @@ public class TemplateTests
     }
 
     [Fact]
-    public void Func_TypeParamsWithDefault_Template()
+    public void Func_Template_Defaults()
     {
         const string code =
             "fn: <#T = Str>(p: T): T" + Tokens.Eol +
@@ -41,7 +41,7 @@ public class TemplateTests
     }
 
     [Fact]
-    public void Func_TypeParamsInstantiate_Template()
+    public void Func_TemplateInstantiate()
     {
         const string code =
             "fn: <#T>(p: T): T" + Tokens.Eol +
@@ -62,7 +62,7 @@ public class TemplateTests
     }
 
     [Fact]
-    public void Type_TypeParams_Template()
+    public void Type_Template()
     {
         const string code =
             "Templ<#T>" + Tokens.Eol +
@@ -72,14 +72,13 @@ public class TemplateTests
         var program = Ir.Build(code);
         program.Root.Declarations.Should().HaveCount(1);
         var type = program.Root.Declarations[0].As<IrDeclarationType>();
-        type.Symbol.TemplateName.FullName.Should().Be("Defmod.Templ#1");
         type.TypeParameters.Should().HaveCount(1);
         var templType = type.TypeParameters.First().As<IrTypeParameterTemplate>();
         templType.Symbol.Name.Value.Should().Be("T");
     }
 
     [Fact]
-    public void Type_TypeParamsInstantiate_Template()
+    public void Type_TemplateInstantiate()
     {
         const string code =
             "Templ<#T>" + Tokens.Eol +
@@ -91,10 +90,55 @@ public class TemplateTests
         var program = Ir.Build(code);
         program.Root.Declarations.Should().HaveCount(3);
         var v = program.Root.Declarations[1].As<IrDeclarationVariable>();
-        v.TypeSymbol.As<TypeTemplateSymbol>().TemplateName.FullName.Should().Be("Defmod.Templ#U8");
+        v.TypeSymbol.As<TypeTemplateSymbol>().Name.FullName.Should().Be("Defmod.Templ#U8");
 
         var instance = v.Initializer.As<IrExpressionTypeInitializer>();
-        instance.TypeSymbol.As<TypeTemplateSymbol>().TemplateName.FullName.Should().Be("Defmod.Templ#U8");
+        instance.TypeSymbol.As<TypeTemplateSymbol>().Name.FullName.Should().Be("Defmod.Templ#U8");
         instance.Fields[0].Field.Type.Name.Value.Should().Be("U8");
+    }
+
+    [Fact]
+    public void Type_TemplateInstantiate_UseField()
+    {
+        const string code =
+            "Templ<#T>" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: T" + Tokens.Eol +
+            "s := Templ<U8>" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            "f: U8 = s.fld1" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Declarations.Should().HaveCount(4);
+        var f = program.Root.Declarations[2].As<IrDeclarationVariable>();
+        f.TypeSymbol.Should().Be(TypeSymbol.U8);
+
+        var instance = f.Initializer.As<IrExpressionMemberAccess>();
+        instance.Members.Should().HaveCount(1);
+        instance.Members[0].Name.Value.Should().Be("fld1");
+        instance.Members[0].Type.Should().Be(TypeSymbol.U8);
+        instance.Expression.TypeSymbol.Name.Value.Should().Be("Templ#U8");
+    }
+
+    [Fact]
+    public void Type_TemplateInstantiate_UseFieldInFunction()
+    {
+        const string code =
+            "Templ<#T>" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: T" + Tokens.Eol +
+            "fn: (p: U8): Bool" + Tokens.Eol +
+            Tokens.Indent1 + "ret p = 42" + Tokens.Eol +
+            "s := Templ<U8>" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            "b := fn(s.fld1)" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code);
+        program.Root.Declarations.Should().HaveCount(5);
+        var b = program.Root.Declarations[3].As<IrDeclarationVariable>();
+        b.TypeSymbol.Should().Be(TypeSymbol.Bool);
+
+        var invoke = b.Initializer.As<IrExpressionInvocation>();
+        invoke.Arguments[0].Expression.TypeSymbol.Name.Value.Should().Be("U8");
     }
 }

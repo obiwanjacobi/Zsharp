@@ -52,7 +52,7 @@ internal abstract class IrScope
         ThrowIfFrozen();
         return SymbolTable.TryDeclareSymbol(symbol);
     }
-    public bool TryDeclareType(TypeSymbol symbol)
+    public bool TryDeclareType(DeclaredTypeSymbol symbol)
     {
         ThrowIfFrozen();
         return SymbolTable.TryDeclareSymbol(symbol);
@@ -63,7 +63,8 @@ internal abstract class IrScope
         return SymbolTable.TryDeclareSymbol(symbol);
     }
 
-    public bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
+    // for use in unit tests
+    internal bool TryLookupSymbol(string name, [NotNullWhen(true)] out Symbol.Symbol? symbol)
         => SymbolTable.TryLookupSymbol<Symbol.Symbol>(name, out symbol);
 
     public virtual bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
@@ -80,12 +81,10 @@ internal abstract class IrScope
             return true;
         }
 
-        var result = SymbolTable.Symbols.Where(s => name.MatchesWith(s.Name) >= 0);
-        if (result.Any())
+        var foundSymbols = FindSymbols<T>(name, (s, _) => s.Name.MatchesWith(name) >= 0);
+        if (foundSymbols.Any())
         {
-            Debug.Assert(result.Count() == 1);
-
-            symbol = (T)result.First();
+            symbol = foundSymbols.Single();
             return true;
         }
 
@@ -96,6 +95,16 @@ internal abstract class IrScope
 
         symbol = null;
         return false;
+    }
+
+    private IEnumerable<T> FindSymbols<T>(SymbolName name, Func<T, string, bool> predicate)
+        where T : Symbol.Symbol
+    {
+        var result = SymbolTable.Symbols
+            .OfType<T>()
+            .Where(s => predicate(s, FullName));
+
+        return result;
     }
 
     public virtual bool TryLookupFunctionSymbol(SymbolName name, IEnumerable<TypeSymbol> argumentTypes, [NotNullWhen(true)] out DeclaredFunctionSymbol? symbol)
@@ -117,6 +126,13 @@ internal abstract class IrScope
             return true;
         }
 
+        var result = SymbolTable.Symbols.Where(s => s.Name.MatchesWith(name) >= 0);
+        if (result.Any())
+        {
+            symbol = (DeclaredFunctionSymbol)result.Single();
+            return true;
+        }
+
         if (Parent is not null)
         {
             return Parent.TryLookupFunctionSymbol(name, argumentTypes, out symbol);
@@ -127,53 +143,19 @@ internal abstract class IrScope
     }
 
     // find type and locate member on type, then return the type of the member
-    public bool TryLookupMemberType(SymbolName type, SymbolName member, [NotNullWhen(true)] out TypeSymbol? memberType)
+    public bool TryLookupMemberType(TypeSymbol type, SymbolName member, [NotNullWhen(true)] out TypeSymbol? memberType)
     {
-        if (TryLookupSymbol<DeclaredTypeSymbol>(type, out var typeDecl))
+        SymbolName typeName = type.Name;
+
+        if (TryLookupSymbol<DeclaredTypeSymbol>(typeName, out var memberTypeDecl))
         {
-            var field = typeDecl.Fields.SingleOrDefault(f => f.Name == member);
+            var field = memberTypeDecl.Fields.SingleOrDefault(f => f.Name == member);
             memberType = field?.Type;
             return memberType is not null;
         }
 
         memberType = null;
         return false;
-    }
-
-    public int TryDeclareTypes(IEnumerable<TypeParameterSymbol> typeParameters)
-    {
-        ThrowIfFrozen();
-
-        var index = 0;
-        foreach (var param in typeParameters)
-        {
-            var name = new SymbolName(param.Name.FullName);
-            var symbol = new TypeSymbol(name);
-            if (!TryDeclareType(symbol))
-                return index;
-
-            index++;
-        }
-
-        return -1;
-    }
-
-    public int TryDeclareVariables(IEnumerable<ParameterSymbol> parameters)
-    {
-        ThrowIfFrozen();
-
-        var index = 0;
-        foreach (var param in parameters)
-        {
-            var name = new SymbolName(param.Name.FullName);
-            var variable = new DeclaredVariableSymbol(name, param.Type);
-            if (!TryDeclareVariable(variable))
-                return index;
-
-            index++;
-        }
-
-        return -1;
     }
 
     // looks up fields on type and its base-types.
@@ -186,7 +168,7 @@ internal abstract class IrScope
                 return true;
 
             if (type.BaseType is not TypeSymbol baseType ||
-                !SymbolTable.TryLookupSymbol<DeclaredTypeSymbol>(baseType.Name, out type))
+                !SymbolTable.TryLookupSymbol<DeclaredTypeSymbol>(baseType.Name.FullName, out type))
             {
                 break;
             }
@@ -207,7 +189,7 @@ internal abstract class IrScope
         ThrowIfFrozen();
         Debug.Assert(templateFunction.IsTemplate);
         // TODO: should this be the function-name and type-name combined?
-        var name = templateFunction.Symbol.Name.Value;
+        var name = templateFunction.Symbol.Name.FullName;
 
         if (!_templateDecls.ContainsKey(name))
         {
@@ -236,15 +218,18 @@ internal abstract class IrScope
         return false;
     }
 
-    public virtual bool TryRegisterTemplateFunctionInstantiation(string name, IrDeclarationFunction functionDecl)
+    public bool TryRegisterTemplateFunctionInstantiation(string name, IrDeclarationFunction functionDecl)
     {
         ThrowIfFrozen();
 
         if (_templateDecls.ContainsKey(name))
         {
             var moduleScope = this.OfType<IrModuleScope>();
-            return moduleScope.TryRegisterTemplateFunctionInstantiation(name, functionDecl) &&
-                TryDeclareFunction(functionDecl.Symbol);
+            return moduleScope.RegisterTemplateFunctionInstantiation(name, functionDecl)
+                // TODO: this fails because the param-types are not part of the registration-name
+                // so template-functions have the same name as template-instantiations.
+                //&& TryDeclareFunction(functionDecl.Symbol)
+                ;
         }
 
         return Parent?.TryRegisterTemplateFunctionInstantiation(name, functionDecl) ?? false;
@@ -255,7 +240,7 @@ internal abstract class IrScope
         ThrowIfFrozen();
         Debug.Assert(templateType.IsTemplate);
         // TODO: should this be the function-name and type-name combined?
-        var name = templateType.Symbol.Name.Value;
+        var name = templateType.Symbol.Name.FullName;
 
         if (!_templateDecls.ContainsKey(name))
         {
@@ -284,13 +269,13 @@ internal abstract class IrScope
         return false;
     }
 
-    public virtual bool TryRegisterTemplateTypeInstantiation(string name, IrDeclarationType typeDecl)
+    public bool TryRegisterTemplateTypeInstantiation(string name, IrDeclarationType typeDecl)
     {
         ThrowIfFrozen();
         if (_templateDecls.ContainsKey(name))
         {
             var moduleScope = this.OfType<IrModuleScope>();
-            return moduleScope.TryRegisterTemplateTypeInstantiation(name, typeDecl) &&
+            return moduleScope.RegisterTemplateTypeInstantiation(name, typeDecl) &&
                 TryDeclareType(typeDecl.Symbol);
         }
 
@@ -298,14 +283,57 @@ internal abstract class IrScope
     }
 }
 
-internal sealed class IrFunctionScope : IrScope
+internal abstract class IrLocalScope : IrScope
+{
+    protected IrLocalScope(string originalName, IrScope? parent)
+        : base(originalName, parent)
+    { }
+
+    public int TryDeclareTypes(IEnumerable<TypeParameterSymbol> typeParameters)
+    {
+        ThrowIfFrozen();
+
+        var index = 0;
+        foreach (var param in typeParameters)
+        {
+            var name = new SymbolName(param.Name.FullName);
+            var symbol = new TypeSymbol(name);
+
+            if (!SymbolTable.TryDeclareSymbol(symbol))
+                return index;
+
+            index++;
+        }
+
+        return -1;
+    }
+}
+internal sealed class IrFunctionScope : IrLocalScope
 {
     public IrFunctionScope(string name, IrScope? parent)
         : base(name, parent)
     { }
+
+    public int TryDeclareVariables(IEnumerable<ParameterSymbol> parameters)
+    {
+        ThrowIfFrozen();
+
+        var index = 0;
+        foreach (var param in parameters)
+        {
+            var name = new SymbolName(param.Name.FullName);
+            var variable = new DeclaredVariableSymbol(name, param.Type);
+            if (!TryDeclareVariable(variable))
+                return index;
+
+            index++;
+        }
+
+        return -1;
+    }
 }
 
-internal sealed class IrTypeScope : IrScope
+internal sealed class IrTypeScope : IrLocalScope
 {
     public IrTypeScope(string name, IrScope? parent)
         : base(name, parent)
@@ -330,7 +358,7 @@ internal sealed class IrModuleScope : IrScope
     }
 
     public override bool IsExport(SymbolName name)
-        => _exports?.Exists(exp => exp.MatchesWith(name) == 0) == true;
+        => _exports?.Exists(exp => name.MatchesWith(exp) == 0) == true;
 
     public override bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
         where T : class //Symbol.Symbol
@@ -373,7 +401,7 @@ internal sealed class IrModuleScope : IrScope
     public IEnumerable<IrDeclaration> TemplateInstantiations
         => _templateInstanceDecls.Values;
 
-    public override bool TryRegisterTemplateFunctionInstantiation(string name, IrDeclarationFunction functionDecl)
+    public bool RegisterTemplateFunctionInstantiation(string name, IrDeclarationFunction functionDecl)
     {
         ThrowIfFrozen();
         if (!_templateInstanceDecls.ContainsKey(name))
@@ -384,7 +412,7 @@ internal sealed class IrModuleScope : IrScope
 
         return false;
     }
-    public override bool TryRegisterTemplateTypeInstantiation(string name, IrDeclarationType typeDecl)
+    public bool RegisterTemplateTypeInstantiation(string name, IrDeclarationType typeDecl)
     {
         ThrowIfFrozen();
         if (!_templateInstanceDecls.ContainsKey(name))
@@ -413,7 +441,7 @@ internal sealed class IrModuleScope : IrScope
     public bool TryLookupModule(SymbolName partialName,
         [NotNullWhen(true)] out ExternalModule? module)
     {
-        module = _modules.Values.SingleOrDefault(m => partialName.MatchesWith(m.SymbolName) != -1);
+        module = _modules.Values.SingleOrDefault(m => m.SymbolName.MatchesWith(partialName) != -1);
         return module is not null;
     }
 }
@@ -445,7 +473,7 @@ internal sealed class IrGlobalScope : IrScope
     private void DeclareType(TypeSymbol symbol)
     {
         ThrowIfFrozen();
-        if (!TryDeclareType(symbol))
+        if (!SymbolTable.TryDeclareSymbol(symbol))
             throw new InvalidOperationException($"TypeSymbol {symbol.Name} could not be declared in the global scope! Duplicates?");
     }
 

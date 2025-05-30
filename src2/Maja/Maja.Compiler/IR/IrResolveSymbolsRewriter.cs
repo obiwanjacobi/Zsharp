@@ -86,7 +86,7 @@ internal sealed class IrResolveSymbolsRewriter : IrRewriter
             {
                 if (f.Field.IsUnresolved)
                 {
-                    if (!CurrentScope.TryLookupMemberType(typeSymbol.Name, f.Field.Name, out var fieldType))
+                    if (!CurrentScope.TryLookupMemberType(typeSymbol, f.Field.Name, out var fieldType))
                     {
                         Diagnostics.FieldNotFoundOnType(f.Syntax.Location, typeSymbol.Name.FullOriginalName, f.Field.Name.FullOriginalName);
                         fieldType = TypeSymbol.Unresolved;

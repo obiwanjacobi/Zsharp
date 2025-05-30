@@ -43,7 +43,7 @@ internal static class CSharpFactory
         => new(name, value);
 
     public static Type CreateType(string name, string? baseTypeName = null)
-        => new(name, TypeKeyword.Record)
+        => new(name.Replace('#', '_'), TypeKeyword.Record)
         {
             AccessModifiers = AccessModifiers.Internal,
             BaseTypeName = baseTypeName

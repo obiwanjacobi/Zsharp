@@ -38,7 +38,7 @@ public sealed record SymbolNamespace
     internal string DebuggerDisplay()
         => ToString();
     public override string ToString()
-        => $"{Value} ({OriginalName})";
+        => String.IsNullOrEmpty(Value) ? String.Empty : $"{Value} ({OriginalName})";
 
     public static SymbolNamespace Empty
         => new();

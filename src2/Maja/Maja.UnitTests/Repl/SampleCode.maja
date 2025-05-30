@@ -1,11 +1,11 @@
-MyType
-  fld1: U8
+MyType<#T>
+  fld1: T
   fld2: Str
 
 fn: (p: U8): Bool
   ret p = 42
 
-x := MyType
+x := MyType<U8>
   fld1 = 42
   fld2 = "Maja"
 

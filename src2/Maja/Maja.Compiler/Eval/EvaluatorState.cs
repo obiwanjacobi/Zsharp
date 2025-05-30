@@ -48,7 +48,7 @@ public sealed class EvaluatorState
         foreach (var kvp in _variables)
         {
             var varName = new SymbolName(kvp.Key);
-            if (varName.MatchesWith(symbolName) == 0)
+            if (symbolName.MatchesWith(varName) == 0)
             {
                 value = kvp.Value;
                 return true;

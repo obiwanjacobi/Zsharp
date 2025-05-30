@@ -35,7 +35,7 @@ internal static class FunctionOverloadPicker
     {
         var argTypeList = argumentTypes.ToList();
         var candidates = functions
-            .Where(fn => partialName.MatchesWith(fn.Name) >= 0
+            .Where(fn => fn.Name.MatchesWith(partialName) >= 0
                 && fn.Parameters.Count() == argTypeList.Count
                 && MatchArgumentTypes(argTypeList, fn.Parameters.Select(p => p.Type)));
 

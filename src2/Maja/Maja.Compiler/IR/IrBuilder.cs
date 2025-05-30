@@ -650,7 +650,7 @@ internal sealed class IrBuilder
         // variable (root)
         if (left is IrExpressionIdentifier identifier)
         {
-            if (!CurrentScope.TryLookupMemberType(identifier.TypeSymbol.Name, name, out var memberType))
+            if (!CurrentScope.TryLookupMemberType(identifier.TypeSymbol, name, out var memberType))
             {
                 _diagnostics.FieldNotFoundOnType(syntax.Location, identifier.TypeSymbol.Name.FullOriginalName, name.FullOriginalName);
                 memberType = TypeSymbol.Unknown;
@@ -662,7 +662,7 @@ internal sealed class IrBuilder
         // function (root)
         if (left is IrExpressionInvocation invocation)
         {
-            if (!CurrentScope.TryLookupMemberType(invocation.TypeSymbol.Name, name, out var memberType))
+            if (!CurrentScope.TryLookupMemberType(invocation.TypeSymbol, name, out var memberType))
             {
                 _diagnostics.FieldNotFoundOnType(syntax.Location, invocation.TypeSymbol.Name.FullOriginalName, name.FullOriginalName);
                 memberType = TypeSymbol.Unknown;
@@ -674,14 +674,14 @@ internal sealed class IrBuilder
         // aggregate
         if (left is IrExpressionMemberAccess memberAccess)
         {
-            var typeName = memberAccess.Members.Last().Type.Name;
-            if (!CurrentScope.TryLookupMemberType(typeName, name, out var memberType))
+            var memberType = memberAccess.Members.Last().Type;
+            if (!CurrentScope.TryLookupMemberType(memberType, name, out var memberTypeDecl))
             {
-                _diagnostics.FieldNotFoundOnType(syntax.Location, typeName.FullOriginalName, name.FullOriginalName);
-                memberType = TypeSymbol.Unknown;
+                _diagnostics.FieldNotFoundOnType(syntax.Location, memberType.Name.FullOriginalName, name.FullOriginalName);
+                memberTypeDecl = TypeSymbol.Unknown;
             }
             var symbol = new FieldSymbol(name, memberType);
-            return new IrExpressionMemberAccess(syntax, memberType, memberAccess.Expression, [.. memberAccess.Members, symbol]);
+            return new IrExpressionMemberAccess(syntax, memberTypeDecl, memberAccess.Expression, [.. memberAccess.Members, symbol]);
         }
 
         throw new MajaException($"Unexpected member access left expression type: {left.GetType().FullName}.");
@@ -713,13 +713,13 @@ internal sealed class IrBuilder
 
         // TODO: is this part of the argumentMatcher / FunctionOverloadResolver?
         if (functionSymbol.IsTemplate &&
-            CurrentScope.TryLookupTemplateFunction(functionSymbol.Name.Value, out var templateFunction))
+            CurrentScope.TryLookupTemplateFunction(functionSymbol.Name.FullName, out var templateFunction))
         {
             var instantiator = new IrTemplateInstantiator();
             if (instantiator.TryManifest(templateFunction, typeArgs, out var instantiatedTemplate))
             {
                 // Register for code generation
-                if (!CurrentScope.TryRegisterTemplateFunctionInstantiation(functionSymbol.Name.Value, instantiatedTemplate))
+                if (!CurrentScope.TryRegisterTemplateFunctionInstantiation(functionSymbol.Name.FullName, instantiatedTemplate))
                     throw new MajaException($"Registering a function template instantiation for {functionSymbol.Name.FullName} failed.");
 
                 functionSymbol = instantiatedTemplate.Symbol;
@@ -797,13 +797,13 @@ internal sealed class IrBuilder
         var typeArgs = TypeArguments(syntax.Type.TypeArguments);
         // Type template processing
         if (typeSymbol.IsTemplate &&
-            CurrentScope.TryLookupTemplateType(typeSymbol.Name.Value, out var templateType))
+            CurrentScope.TryLookupTemplateType(typeSymbol.Name.FullName, out var templateType))
         {
             var instantiator = new IrTemplateInstantiator();
             if (instantiator.TryManifest(templateType, typeArgs, out var instantiatedTemplate))
             {
                 // Register for code generation
-                if (!CurrentScope.TryRegisterTemplateTypeInstantiation(typeSymbol.Name.Value, instantiatedTemplate))
+                if (!CurrentScope.TryRegisterTemplateTypeInstantiation(typeSymbol.Name.FullName, instantiatedTemplate))
                     throw new MajaException($"Registering a type template instantiation for {typeSymbol.Name.FullName} failed.");
 
                 typeSymbol = instantiatedTemplate.Symbol;

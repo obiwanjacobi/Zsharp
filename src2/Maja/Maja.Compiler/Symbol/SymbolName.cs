@@ -59,23 +59,26 @@ public sealed record SymbolName
                 ? OriginalName
                 : $"{Namespace.OriginalName}.{OriginalName}";
 
-    public int MatchesWith(SymbolName fullName)
+    // returns negative if no match. Zero and positive is a match
+    // The 'this' instance contains the full-name
+    public int MatchesWith(SymbolName partialName)
     {
+        var fullName = this;
         // fullName: namespace.module.name
-        // -match
+        // -match partialName:
         // namespace.module.name
         // module.name
         // name
 
-        if (fullName.Value == Value)
+        if (fullName.Value == partialName.Value)
         {
-            if (Namespace.NameParts.Count > 0 &&
-                Namespace.NameParts.Count <= fullName.Namespace.NameParts.Count)
+            if (partialName.Namespace.NameParts.Count > 0 &&
+                partialName.Namespace.NameParts.Count <= fullName.Namespace.NameParts.Count)
             {
-                var i = Namespace.NameParts.Count - 1;
+                var i = partialName.Namespace.NameParts.Count - 1;
                 for (; i >= 0; i--)
                 {
-                    if (Namespace.NameParts[i] != fullName.Namespace.NameParts[i])
+                    if (partialName.Namespace.NameParts[i] != fullName.Namespace.NameParts[i])
                         return -1;
                 }
                 return i + 1;

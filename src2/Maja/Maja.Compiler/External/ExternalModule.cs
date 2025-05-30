@@ -29,7 +29,7 @@ internal sealed class ExternalModule
 
         foreach (var tp in Types)
         {
-            if (name.MatchesWith(tp.Name) >= 0)
+            if (tp.Name.MatchesWith(name) >= 0)
             {
                 results.Add(tp);
             }
