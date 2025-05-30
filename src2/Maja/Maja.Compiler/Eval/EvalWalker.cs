@@ -21,6 +21,16 @@ internal sealed class EvalWalker : IrWalker<object?>
         return new EvaluationStatePopper(this);
     }
 
+    public override object? OnDeclarations(IEnumerable<IrDeclaration> declarations)
+    {
+        var decls = new List<IrDeclaration>();
+        decls.AddRange(declarations.OfType<IrDeclarationType>());
+        decls.AddRange(declarations.OfType<IrDeclarationFunction>());
+        decls.AddRange(declarations.OfType<IrDeclarationVariable>());
+
+        return base.OnDeclarations(decls);
+    }
+
     public override object? OnDeclarationVariable(IrDeclarationVariable variable)
     {
         var symbol = variable.Symbol;
@@ -119,7 +129,7 @@ internal sealed class EvalWalker : IrWalker<object?>
 
     public override object? OnExpressionInvocation(IrExpressionInvocation invocation)
     {
-        if (_state.TryLookupFunction(invocation.Symbol.Name.Value, out var function))
+        if (_state.TryLookupFunction(invocation.Symbol.Name.FullName, out var function))
         {
             using var scope = NewScope(function.Scope);
 
@@ -131,8 +141,8 @@ internal sealed class EvalWalker : IrWalker<object?>
             // register parameter values as local vars
             for (var i = 0; i < Math.Min(args.Length, function.Parameters.Length); i++)
             {
-                Debug.Assert(args[i] is not null, $"Argument index {i} is null.");
-                _state.SetVariable(function.Parameters[i].Symbol.Name.Value, args[i]!.Value);
+                Debug.Assert(args[i] is not null, $"Argument at index {i} is null.");
+                _state.SetVariable(function.Parameters[i].Symbol.Name.FullName, args[i]!.Value);
             }
 
             var result = OnCodeBlock(function.Body);
@@ -146,7 +156,7 @@ internal sealed class EvalWalker : IrWalker<object?>
 
     public override object? OnExpressionTypeInitializer(IrExpressionTypeInitializer expression)
     {
-        if (!_state.TryLookupType(expression.TypeSymbol.Name.Value, out var typeDecl))
+        if (!_state.TryLookupType(expression.TypeSymbol.Name.FullName, out var typeDecl))
         {
             _state.Diagnostics.TypeNotFound(expression.Syntax.Location, expression.TypeSymbol.Name.FullOriginalName);
             return null;
@@ -156,7 +166,7 @@ internal sealed class EvalWalker : IrWalker<object?>
         foreach (var fld in expression.Fields)
         {
             var val = OnTypeInitializerField(fld);
-            fields[fld.Field.Name.Value] = val!;
+            fields[fld.Field.Name.FullName] = val!;
         }
 
         var instance = new EvalTypeInstance(typeDecl, fields);
@@ -183,7 +193,7 @@ internal sealed class EvalWalker : IrWalker<object?>
         if (value is null) return IrConstant.Zero;
 
         var type = (EvalTypeInstance)value.Value;
-        foreach (var fld in memberAccess.Members.Select(fld => fld.Name.Value))
+        foreach (var fld in memberAccess.Members.Select(fld => fld.Name.FullName))
         {
             if (!type.Fields.TryGetValue(fld, out var val))
             {
