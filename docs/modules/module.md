@@ -88,7 +88,26 @@ Although currently the idea is selectively generate C# records based on the pres
 
 - `module`: a namespace for 'flat' code
 - `class`/`record`: .NET class or record
+- `struct`: how to differentiate between class and struct?
 - `service`: rpc-style distributed (stateless) 'module'
 - `actor`: message based stateful object
 - `workflow`: stateful orchestration
 - `unittest`: a unit test file that is compiled into a separate assembly and can be run in unit test runners.
+
+> TBD: class,struct,record => how to define these characteristics/properties in a more generic way?
+
+| Attribute | class | struct | record-class | record-struct |
+| -- | -- | -- | -- | -- |
+| Immutable | o | `readonly` | o | `readonly` |
+| Mutable | x | x | x | x |
+| Value ref | - | x | - | x |
+| Reference ref | x | - | x | - |
+| Value equal | o |  x | x | x |
+| Reference equal | x |  - | x | - |
+| Stack allocated | - | x (`ref`) | - | x |
+| Heap Allocated | x | - (box) | x | - (box) |
+| Inheritence | x | - | x | x |
+
+`x` => available by default
+`o` => can be generated
+`-` => not available

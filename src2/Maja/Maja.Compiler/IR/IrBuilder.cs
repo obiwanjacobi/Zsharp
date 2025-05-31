@@ -690,7 +690,10 @@ internal sealed class IrBuilder
             return new IrExpressionMemberAccess(syntax, memberTypeDecl, memberAccess.Expression, [.. memberAccess.Members, symbol]);
         }
 
-        throw new MajaException($"Unexpected member access left expression type: {left.GetType().FullName}.");
+        _diagnostics.InvalidExpressionLeftValueMemberAccess(left.Syntax.Location, left.Syntax.Text);
+
+        var unknownSymbol = new UnresolvedTypeSymbol(TypeSymbol.Unknown.Name);
+        return new IrExpressionMemberAccess(syntax, unknownSymbol, left, Enumerable.Empty<FieldSymbol>());
     }
 
     private IrExpressionInvocation InvocationExpression(ExpressionInvocationSyntax syntax)

@@ -66,15 +66,16 @@ declarationVariableInferred: nameIdentifier Sp? Colon Eq Sp expression;
 variableAssignment: nameIdentifier Sp Eq Sp expression;
 
 expression:
-      expressionConstant                                        #expressionConst
-    | expression Sp expressionOperatorBinary Sp expression      #expressionBinary
+      ParenOpen expression ParenClose                           #expressionPrecedence
     | expressionOperatorUnaryPrefix expression                  #expressionUnaryPrefix
+    | expression expressionOperatorUnaryPostfix                 #expressionUnaryPostfix
+    | expression Sp expressionOperatorBinary Sp expression      #expressionBinary
     | expression typeArgumentList? argumentList                 #expressionInvocation
     | type typeInitializer             				            #expressionTypeInitializer
-    | BracketOpen expression? Range expression? BracketClose    #expressionRange
-    | ParenOpen expression ParenClose                           #expressionPrecedence
-    | nameIdentifier                                            #expressionIdentifier
     | expression Dot nameIdentifier                             #expressionMemberAccess
+    | BracketOpen expression? Range expression? BracketClose    #expressionRange
+    | nameIdentifier                                            #expressionIdentifier
+    | expressionConstant                                        #expressionConst
     ;
 expressionConstant: expressionLiteral | expressionLiteralBool;
 expressionRule: expression;
@@ -82,11 +83,13 @@ expressionLoop: expression;
 
 expressionOperatorBinary: expressionOperatorArithmetic | expressionOperatorLogic | expressionOperatorComparison | expressionOperatorBits;
 expressionOperatorUnaryPrefix: expressionOperatorArithmeticUnaryPrefix | expressionOperatorLogicUnaryPrefix | expressionOperatorBitsUnaryPrefix;
+expressionOperatorUnaryPostfix: expressionOperatorLogicUnaryPostfix;
 
 expressionOperatorArithmetic: Plus | Minus | Divide | Multiply | Modulo | Power | Root;
-expressionOperatorArithmeticUnaryPrefix: Minus;
+expressionOperatorArithmeticUnaryPrefix: Plus | Minus;
 expressionOperatorLogic: And | Or;
 expressionOperatorLogicUnaryPrefix: <assoc=right> Not;
+expressionOperatorLogicUnaryPostfix: Question;
 expressionOperatorComparison: Eq | Neq | AngleClose | AngleOpen | GtEq | LtEq;
 expressionOperatorBits: BitAnd | BitOr | BitXor_Imm | BitShiftL | AngleClose? AngleClose AngleClose | BitRollL | BitRollR;
 expressionOperatorBitsUnaryPrefix: <assoc=right> BitNot;

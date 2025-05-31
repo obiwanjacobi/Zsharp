@@ -280,17 +280,17 @@ MyStruct2
 // TODO: a different syntax is used here!
 
 // in order
-v : MyStruct2 =
+v := MyStruct2
     { 42, "42" }
     { 101, "101" }
 
 // by name
-v: MyStruct2 =
+v := MyStruct2
     first = { fld1 = 42, fld2 = "42" }
     second = { fld1 = 101, fld2 = "101" }
 
 // structured by name
-v: MyStruct2 =
+v := MyStruct2
     first =
         fld1 = 42
         fld2 = "42"
@@ -313,14 +313,17 @@ Also known as Tuples.
 > Use `()` for list syntax?
 
 ```csharp
+// types inferred
 a := { Fld1 = 42, Fld2 = "42" }
+// explicitly typed
+a := { Fld1: U8 = 42, Fld2: Str = "42" }
 
 // a is a tuple with two fields
 x := a.Fld1  // U8
 y := a.Fld2  // Str
 
 // deconstruct - creates new vars
-(fld1, fld2) := a        // -or-
+(fld1, fld2) := a        // -or- (confusing: list-operator)
 fld1, fld2 := a
 fld1, fld2 := ...a       // spread operator?
 

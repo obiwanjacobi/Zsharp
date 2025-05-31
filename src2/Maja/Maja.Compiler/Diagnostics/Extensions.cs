@@ -114,4 +114,7 @@ internal static class IrDiagnostics
 
     public static void ImportNotFound(this DiagnosticList diagnostics, SyntaxLocation location, string importName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Import reference '{importName}' cannot be resolved. Module not found.");
+
+    public static void InvalidExpressionLeftValueMemberAccess(this DiagnosticList diagnostics, SyntaxLocation location, string leftExpression)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"The expression '{leftExpression}' cannot be used as a left-value in a member-access expression.");
 }

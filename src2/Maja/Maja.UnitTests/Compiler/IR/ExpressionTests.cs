@@ -184,4 +184,18 @@ public class ExpressionTests
         xs.Expression.As<IrExpressionInvocation>().Symbol.Name.Value.Should().Be("fn");
         xs.Members.Last().Name.Value.Should().Be("fld1");
     }
+
+    [Fact]
+    public void InvalidExpression_MemberAccess()
+    {
+        const string code =
+            "x := (2 + 4).fld1" + Tokens.Eol
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+
+        program.Diagnostics.Should().HaveCount(1);
+        program.Diagnostics[0].Text.Should().Contain("2 + 4");
+
+    }
 }
