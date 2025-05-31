@@ -82,6 +82,9 @@ internal static class IrDiagnostics
     public static void VoidFunctionCannotReturnValue(this DiagnosticList diagnostics, SyntaxLocation location, string functionName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"The Void function '{functionName}' cannot return a value.");
 
+    public static void FunctionReturnValueUnhandled(this DiagnosticList diagnostics, SyntaxLocation location, string expression)
+        => diagnostics.Add(DiagnosticMessageKind.Error, location, $"The return value of the function call in '{expression}' must be handled. Use discard '_' if the value can be ignored.");
+
     public static void CannotAssignVariableWithVoid(this DiagnosticList diagnostics, SyntaxLocation location, string variableName)
         => diagnostics.Add(DiagnosticMessageKind.Error, location, $"Cannot assign Void to variable '{variableName}'.");
 

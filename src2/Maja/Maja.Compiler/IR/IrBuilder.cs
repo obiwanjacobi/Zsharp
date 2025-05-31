@@ -552,6 +552,11 @@ internal sealed class IrBuilder
         {
             _diagnostics.InvalidStatementExpression(syntax.Location);
         }
+        else if (expr.TypeSymbol != TypeSymbol.Void)
+        {
+            _diagnostics.FunctionReturnValueUnhandled(syntax.Location, expr.Syntax.Text);
+        }
+
         return new IrStatementExpression(syntax, expr, _locality);
     }
 

@@ -196,6 +196,20 @@ public class ExpressionTests
 
         program.Diagnostics.Should().HaveCount(1);
         program.Diagnostics[0].Text.Should().Contain("2 + 4");
+    }
 
+    [Fact]
+    public void InvalidExpression_Invocation()
+    {
+        const string code =
+            "fn: (p: U8): U8" + Tokens.Eol +
+            Tokens.Indent1 + "ret p" + Tokens.Eol +
+            "fn(42)"
+            ;
+
+        var program = Ir.Build(code, allowError: true);
+
+        program.Diagnostics.Should().HaveCount(1);
+        program.Diagnostics[0].Text.Should().Contain("return value");
     }
 }
