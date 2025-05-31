@@ -11,7 +11,7 @@ namespace Maja.Compiler.Syntax;
 public sealed class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
 {
     private SyntaxTokenList()
-        : base(Empty)
+        : base(ReadOnlyCollection<SyntaxToken>.Empty)
     { }
 
     private SyntaxTokenList(IEnumerable<SyntaxToken> tokenList)
@@ -27,6 +27,8 @@ public sealed class SyntaxTokenList : ReadOnlyCollection<SyntaxToken>
         => tokenList is not null && tokenList.Count > 0
             ? new SyntaxTokenList(tokenList)
             : new SyntaxTokenList();
+
+    public static new SyntaxTokenList Empty => new SyntaxTokenList();
 
     private SyntaxNode? _parent;
     /// <summary>

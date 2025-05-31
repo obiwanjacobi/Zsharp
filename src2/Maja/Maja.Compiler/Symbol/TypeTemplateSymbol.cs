@@ -31,7 +31,7 @@ public sealed record TypeTemplateSymbol : DeclaredTypeSymbol
         if (!typeTemplateTypes.Any())
             return typeName;
 
-        var name = new StringBuilder(typeName.FullName)
+        var name = new StringBuilder(typeName.FullOriginalName)
             .Append('#')
             .Append(String.Join(',', typeTemplateTypes.Select(ttt => ttt.Name.Value)));
 

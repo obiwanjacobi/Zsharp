@@ -2,12 +2,20 @@
 
 ## TODO
 
+- [ ] Do we split IrBuilder in separate classes, each building a small part of the total Ir model?
+- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
+- [ ] Research compiler feature flags with backwards compatibility with future versions.
+- [ ] Refactor Compilation and CompilationModel to split responsibilities. Compilation has everything to compile. CompilationModel is used to provide a public analysis API. Ir is internal.
+
+Syntax:
 - [ ] ErrorNode: Use context info to built better error message. Include referenced symbol location.
 - [ ] Syntax/Parser: Error handling: MissingTokens, SkippedTokens (Antlr ErrorStrategy/ErrorListener?)
 Started. Have ErrorToken with description.
 - [ ] Syntax parsing does not report invalid trailing tokens.
 - [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
-- [ ] Indents (dedent) are not working correct with multiple indents (`SyntaxWriter`).
+- [ ] SyntaxWriter: Indents (dedent) are not working correct with multiple indents.
+
+Ir:
 - [ ] Type: Generics (type inference)
 - [ ] Type: Comp-parameter
 - [ ] Function: Generics (type inference)
@@ -16,21 +24,19 @@ Started. Have ErrorToken with description.
 - [ ] Function: Handle default value of parameter (missing invocation argument)
 - [ ] Handle default value of type parameter (missing invocation type argument or instantiation type)
 - [ ] Infer Type of type parameter from usage (invocation type argument or instantiation type)
-- [ ] Resolve operators to functions
 - [ ] Function body: local (nested) functions and types
-- [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 - [ ] Invocation Argument: has a DeclaredVariableSymbol!? why?
 - [ ] Function: Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Function: Allow named type-parameters (`IrArgumentMatcher`)
+- [ ] Resolve operators to functions
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
-- [ ] IR: Validate file-global statements (only StatementExpression?)
-- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
-- [ ] Research compiler feature flags with backwards compatibility with future versions.
-- [ ] Refactor Compilation and CompilationModel to split responsibilities. Compilation has everything to compile. CompilationModel is used to provide a public analysis API. Ir is internal.
-- [ ] Do we split IrBuilder in separate classes, each building a small part of the total Ir model?
+
+Emit:
+- [ ] Emit: output `System.CodeDom.Compiler.GeneratedCode` and `Maja.AliasAttribute`
 
 ### Done
 
+- [x] IR: Validate file-global statements (only StatementExpression?)
 - [x] IR: Refactor structure of compilation, program and module (hierarchy in that order).
 - [x] Function: Forward reference in body not resolved. Unresolved symbols in a scope should be passed onto its parent scope and reprocessed just before exiting the scope.
 - [x] - [x] IrScope 'Freeze' to make readonly when popped from builder stack and included in Ir-model.

@@ -74,4 +74,31 @@ internal class ExternalTypeFactory : IExternalTypeFactory
 
         return new FieldSymbol(name, type);
     }
+
+    public DeclaredFunctionSymbol Create(TypeMetadata type, FunctionMetadata method)
+    {
+        var parameters = new List<ParameterSymbol>();
+        if (!method.IsStatic)
+        {
+            var majaType = Create(type);
+            parameters.Add(new ParameterSymbol(ParameterSymbol.Self, majaType));
+        }
+
+        parameters.AddRange(method.Parameters
+            .Select(p => new ParameterSymbol(p.Name,
+                Create(p.ParameterType)))
+            );
+
+        var typeParameters = new List<TypeParameterSymbol>();
+        typeParameters.AddRange(method.GenericParameters
+            .Select(p => new TypeParameterGenericSymbol(p.Name)));
+
+        var functionName = method.Name == ".ctor"
+            ? method.GetDeclaringType().Name
+            : method.Name;
+
+        var retType = Create(method.ReturnType);
+        var name = new SymbolName(type.FullName, functionName);
+        return new DeclaredFunctionSymbol(name, typeParameters, parameters, retType);
+    }
 }

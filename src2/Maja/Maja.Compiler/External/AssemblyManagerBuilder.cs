@@ -14,8 +14,8 @@ internal sealed class AssemblyManagerBuilder
         _assemblyManager.PreloadDependencies = preloadDependencies;
     }
 
-    public AssemblyManager AssemblyManager
-        => _assemblyManager;
+    //public AssemblyManager AssemblyManager
+    //    => _assemblyManager;
 
     public IExternalModuleLoader ToModuleLoader()
         => new ExternalModuleLoader(_assemblyManager);

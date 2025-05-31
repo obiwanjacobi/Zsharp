@@ -35,7 +35,7 @@ internal sealed class AssemblyMetadata
     public IEnumerable<TypeMetadata> GetPublicTypes()
         => _types ??= new(_assembly.GetTypes()
             .Where(t => t.IsPublic)
-            .Select(t => new TypeMetadata(t))
+            .Select(t => new TypeMetadata(t, this))
             );
 
     public IEnumerable<AssemblyName> GetDependencyNames()

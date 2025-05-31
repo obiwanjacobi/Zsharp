@@ -114,7 +114,7 @@ public class EmitFunctionTests
             .Contain(" fn()")
             .And.Contain(" System.Byte ")
             .And.Contain(" return 42;")
-            .And.Contain(" x = fn();")
+            .And.Contain(" x = DefMod.fn();")
             .And.NotContain("<unknown>")
             ;
 
@@ -137,7 +137,7 @@ public class EmitFunctionTests
             .Contain("System.Byte fn(")
             .And.Contain(" System.Byte ")
             .And.Contain(" return p;")
-            .And.Contain(" x = fn((System.Byte)42);")
+            .And.Contain(" x = DefMod.fn((System.Byte)42);")
             .And.NotContain("<unknown>")
             ;
 
@@ -159,7 +159,7 @@ public class EmitFunctionTests
         emit.Should()
             .Contain("T fn<T>(T p)")
             .And.Contain(" return p;")
-            .And.Contain(" x = fn<System.Byte>(")
+            .And.Contain(" x = DefMod.fn<System.Byte>(")
             .And.Contain("42);")
             .And.NotContain("<unknown>")
             ;
@@ -179,7 +179,7 @@ public class EmitFunctionTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain("public static class Module")
+            .Contain("public static class DefMod")
             .And.Contain("public static void fn()")
             .And.NotContain("<unknown>")
             ;

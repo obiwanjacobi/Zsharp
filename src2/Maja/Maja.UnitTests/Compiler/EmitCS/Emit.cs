@@ -1,17 +1,21 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
 using Maja.Compiler.EmitCS;
+using Maja.Compiler.EmitCS.CSharp.Project;
 using Maja.Compiler.EmitCS.IR;
-using Maja.Compiler.EmmitCS.CSharp.Project;
+using Maja.Compiler.External;
 using Maja.UnitTests.Compiler.IR;
 
 namespace Maja.UnitTests.Compiler.EmitCS;
 
 internal static class Emit
 {
-    public static string FromCode(string code, ITestOutputHelper? output = null, [CallerMemberName] string callerName = "")
+    public static string FromCode(string code, IExternalModuleLoader? moduleLoader = null, ITestOutputHelper? output = null, [CallerMemberName] string callerName = "")
     {
-        var program = Ir.Build(code, allowError: false, source: callerName);
+        if (moduleLoader is null)
+            moduleLoader = new NullModuleLoader();
+
+        var program = Ir.Build(code, moduleLoader, allowError: false, source: callerName);
 
         var lowering = new IrCodeRewriter();
         var codeProg = lowering.CodeRewrite(program);
@@ -30,30 +34,39 @@ internal static class Emit
         return builder.ToString();
     }
 
-    public static void AssertBuild(string emit, ITestOutputHelper? output = null, [CallerMemberName] string callerName = "")
+    public static void AssertBuild(string emit, IExternalModuleLoader? moduleLoader = null, ITestOutputHelper? output = null, [CallerMemberName] string callerName = "")
     {
-        var result = Build(emit, callerName);
+        var result = Build(emit, moduleLoader, callerName);
 
-        if (output is not null)
-            output.WriteLine(result);
+        output?.WriteLine(result);
 
         result.Should().NotBeNullOrEmpty()
             .And.NotContain("ERROR")
-            .And.NotContain("FAILED.");
+            .And.NotContain("FAILED");
     }
 
-    public static string Build(string code, [CallerMemberName] string callerName = "")
+    public static string Build(string code, IExternalModuleLoader? moduleLoader = null, [CallerMemberName] string callerName = "")
     {
         var path = $"./{callerName}";
         Directory.CreateDirectory(path);
         File.WriteAllText(Path.Combine(path, $"{callerName}.cs"), code);
 
+        var project = new CSharpProject
+        {
+            TargetPath = $"{callerName}/bin"
+        };
+
+        if (moduleLoader is not null)
+        {
+            foreach (var assembly in moduleLoader.Assemblies)
+            {
+                project.AddReference(assembly);
+            }
+        }
+
         var build = new CSharpBuild()
         {
-            Project = new CSharpProject
-            {
-                TargetPath = $"{callerName}/bin"
-            },
+            Project = project,
             ProjectPath = path
         };
 

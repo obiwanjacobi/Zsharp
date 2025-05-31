@@ -169,7 +169,7 @@ public class EmitStatementTests
         emit.Should()
             .Contain("for (")
             .And.Contain("__x = ")
-            .And.Contain("__x < x")
+            .And.Contain("__x < DefMod.x")
             .And.NotContain("<unknown>")
             ;
 
@@ -191,7 +191,7 @@ public class EmitStatementTests
         emit.Should()
             .Contain(" a ")
             .And.Contain("while (")
-            .And.Contain("(a < 42)")
+            .And.Contain("(DefMod.a < 42)")
             .And.NotContain("<unknown>")
             ;
 

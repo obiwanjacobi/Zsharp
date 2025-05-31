@@ -64,6 +64,9 @@ internal sealed class IrBuilder
         module = resolver.FixUnresolvedSymbols(module);
         builder._diagnostics.AddRange(resolver.GetDiagnostics());
 
+        var operatorFunctions = new IrOperatorFunctionRewriter(builder._moduleLoader);
+        module = operatorFunctions.Resolve(module);
+
         var validator = new IrValidationRewriter();
         if (validator.Validate(module))
             builder._diagnostics.AddRange(validator.GetDiagnostics());

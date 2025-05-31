@@ -8,12 +8,17 @@ namespace Maja.Compiler.External.Metadata;
 [DebuggerDisplay("{Name}")]
 internal sealed class TypeMetadata
 {
+    private readonly AssemblyMetadata? _assembly;
     private readonly Type _type;
 
-    public TypeMetadata(Type type)
+    public TypeMetadata(Type type, AssemblyMetadata? assembly = null)
     {
+        _assembly = assembly;
         _type = type ?? throw new ArgumentNullException(nameof(type));
     }
+
+    public AssemblyMetadata Assembly => _assembly
+        ?? throw new InvalidOperationException("No Assembly was set for this Type.");
 
     public string Namespace
         => _type.Namespace ?? String.Empty;
@@ -52,7 +57,7 @@ internal sealed class TypeMetadata
     private TypeMetadata? _declaringType;
     public TypeMetadata GetDeclaringType()
         => _declaringType ??= new TypeMetadata(_type.DeclaringType
-            ?? throw new InvalidOperationException("TypeMetadata: DeclaringType is null."));
+            ?? throw new InvalidOperationException("TypeMetadata: DeclaringType is null."), _assembly);
 
     public bool HasBaseType
         => _type.BaseType is not null;
@@ -60,7 +65,7 @@ internal sealed class TypeMetadata
     private TypeMetadata? _baseType;
     public TypeMetadata GetBaseType()
         => _baseType ??= new TypeMetadata(_type.BaseType
-            ?? throw new InvalidOperationException("TypeMetadata: BaseType is null."));
+            ?? throw new InvalidOperationException("TypeMetadata: BaseType is null."), _assembly);
 
     public bool HasElementType
         => _type.GetElementType() is not null;
@@ -68,7 +73,7 @@ internal sealed class TypeMetadata
     private TypeMetadata? _elemType;
     public TypeMetadata GetElementType()
         => _elemType ??= new TypeMetadata(_type.GetElementType()
-            ?? throw new InvalidOperationException("TypeMetadata: Element Type is null."));
+            ?? throw new InvalidOperationException("TypeMetadata: Element Type is null."), _assembly);
 
     private TypeMetadata? _enumType;
     public TypeMetadata GetEnumType()
@@ -79,7 +84,7 @@ internal sealed class TypeMetadata
             if (field is null)
                 throw new InvalidOperationException($"GetEnumType failed. Type {FullName} is not an Enum.");
 
-            _enumType = new TypeMetadata(field.FieldType);
+            _enumType = new TypeMetadata(field.FieldType, _assembly);
         }
         return _enumType;
     }
@@ -119,11 +124,11 @@ internal sealed class TypeMetadata
     {
         _methods ??= new(_type.GetMethods()
             .Where(m => m.IsPublic)
-            .Select(m => new FunctionMetadata(m))
+            .Select(m => new FunctionMetadata(m, this))
             .Concat(
                 _type.GetConstructors()
                 .Where(c => c.IsPublic)
-                .Select(c => new FunctionMetadata(c))
+                .Select(c => new FunctionMetadata(c, this))
         ));
 
         return _methods;
@@ -142,4 +147,26 @@ internal sealed class TypeMetadata
 
         return _nestedTypes;
     }
+
+    private List<OperatorFunctionMetadata>? _operatorFunctions;
+    public IEnumerable<OperatorFunctionMetadata> GetOperatorFunctions()
+    {
+        if (_operatorFunctions is null)
+        {
+            _operatorFunctions = new();
+            foreach (var method in _type.GetMethods().Where(m => m.IsPublic))
+            {
+                var attrs = method.GetCustomAttributes(typeof(OperatorAttribute), true);
+
+                if (attrs.Length > 0)
+                {
+                    var opFn = new OperatorFunctionMetadata(method, (OperatorAttribute)attrs[0], this);
+                    _operatorFunctions.Add(opFn);
+                }
+            }
+        }
+
+        return _operatorFunctions;
+    }
+
 }

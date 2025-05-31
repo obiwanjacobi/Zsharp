@@ -27,8 +27,13 @@ internal sealed class CSharpSerializer
 
     public void Write(Namespace @namespace)
     {
-        Tab().Append("namespace ").AppendLine(@namespace.Name);
-        _writer.OpenScope();
+        bool hasNamespace = !String.IsNullOrEmpty(@namespace.Name);
+
+        if (hasNamespace)
+        {
+            Tab().Append("namespace ").AppendLine(@namespace.Name);
+            _writer.OpenScope();
+        }
 
         foreach (var use in @namespace.Usings)
         {
@@ -45,7 +50,8 @@ internal sealed class CSharpSerializer
             Write(type);
         }
 
-        _writer.CloseScope();
+        if (hasNamespace)
+            _writer.CloseScope();
     }
 
     public void Write(Enum @enum)
@@ -109,6 +115,16 @@ internal sealed class CSharpSerializer
         foreach (var method in type.Methods)
         {
             Write(method);
+        }
+
+        foreach (var subType in type.Types)
+        {
+            Write(subType);
+        }
+
+        foreach (var enumType in type.Enums)
+        {
+            Write(enumType);
         }
 
         _writer.CloseScope();

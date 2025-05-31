@@ -28,3 +28,9 @@ use namespace.namespace
 ```
 
 This will scan all Assemblies for the namespace and bring all types contained within this namespace into scope.
+
+## Extensions
+
+### Operator Functions
+
+All operators are represented by a specific function. The return type and parameter types determine when an operator-function is called in a specific situation. So the same operator can have multiple functions that implement it for different mix of types involved.

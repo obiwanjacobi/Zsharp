@@ -10,7 +10,7 @@ namespace Maja.Compiler.Syntax;
 public sealed class SyntaxNodeOrTokenList : ReadOnlyCollection<SyntaxNodeOrToken>
 {
     private SyntaxNodeOrTokenList()
-        : base(Empty)
+        : base(ReadOnlyCollection<SyntaxNodeOrToken>.Empty)
     { }
 
     private SyntaxNodeOrTokenList(IEnumerable<SyntaxNodeOrToken> tokenList)
@@ -26,6 +26,8 @@ public sealed class SyntaxNodeOrTokenList : ReadOnlyCollection<SyntaxNodeOrToken
         => nodeOrTokenList is not null && nodeOrTokenList.Count > 0
             ? new SyntaxNodeOrTokenList(nodeOrTokenList)
             : new SyntaxNodeOrTokenList();
+
+    public static new SyntaxNodeOrTokenList Empty { get; } = new SyntaxNodeOrTokenList();
 
     /// <summary>
     /// Returns SyntaxNodes of the type T.

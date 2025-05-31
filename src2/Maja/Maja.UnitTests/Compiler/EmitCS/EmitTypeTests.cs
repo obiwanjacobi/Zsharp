@@ -22,7 +22,7 @@ public class EmitTypeTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain(" Mytype")
+            .Contain(" MyType")
             .And.Contain("Option1")
             .And.Contain("Option2")
             .And.NotContain("<unknown>")
@@ -44,7 +44,7 @@ public class EmitTypeTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain(" Mytype")
+            .Contain(" MyType")
             .And.Contain(" System.Byte Field { get; set; }")
             .And.Contain(" System.String Name { get; set; }")
             .And.NotContain("<unknown>")
@@ -67,8 +67,8 @@ public class EmitTypeTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain(" Basetype")
-            .And.Contain(" Mytype")
+            .Contain(" BaseType")
+            .And.Contain(" MyType")
             .And.Contain(" System.Byte Field { get; set; }")
             .And.Contain(" System.String Name { get; set; }")
             .And.NotContain("<unknown>")
@@ -90,7 +90,7 @@ public class EmitTypeTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain(" Mytype")
+            .Contain(" MyType")
             .And.Contain(" System.Byte Field { get; set; } = 42")
             .And.Contain(" System.String Name { get; set; } = \"Test\"")
             .And.NotContain("<unknown>")
@@ -115,7 +115,7 @@ public class EmitTypeTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain(" Mytype")
+            .Contain(" MyType")
             .And.Contain(" System.Byte Field { get; set; }")
             .And.Contain(" System.String Name { get; set; }")
             .And.NotContain("<unknown>")
@@ -141,8 +141,8 @@ public class EmitTypeTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain(" Basetype")
-            .And.Contain(" Mytype")
+            .Contain(" BaseType")
+            .And.Contain(" MyType")
             .And.Contain(" System.Byte Field { get; set; }")
             .And.Contain(" System.String Name { get; set; }")
             .And.NotContain("<unknown>")

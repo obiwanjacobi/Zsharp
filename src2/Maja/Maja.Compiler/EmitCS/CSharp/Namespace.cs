@@ -36,7 +36,7 @@ internal sealed class Namespace
     public IEnumerable<Enum> Enums => _enums;
 
     public void AddEnum(Enum @enum)
-        => _enums.Add(@enum);   
+        => _enums.Add(@enum);
 
     public Type GetModuleClass()
         => _types[0];

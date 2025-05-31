@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace Maja.Compiler.EmmitCS.CSharp.Project;
+namespace Maja.Compiler.EmitCS.CSharp.Project;
 
 internal sealed class CSharpBuild
 {

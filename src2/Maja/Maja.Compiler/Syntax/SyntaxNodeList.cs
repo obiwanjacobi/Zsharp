@@ -12,7 +12,7 @@ namespace Maja.Compiler.Syntax;
 public sealed class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
 {
     private SyntaxNodeList()
-        : base(Empty)
+        : base(ReadOnlyCollection<SyntaxNode>.Empty)
     { }
 
     private SyntaxNodeList(IList<SyntaxNode> nodeList)
@@ -28,6 +28,8 @@ public sealed class SyntaxNodeList : ReadOnlyCollection<SyntaxNode>
         => nodeList is not null && nodeList.Count > 0
             ? new SyntaxNodeList(nodeList)
             : new SyntaxNodeList();
+
+    public static new SyntaxNodeList Empty => new SyntaxNodeList();
 
     private SyntaxNode? _parent;
     /// <summary>

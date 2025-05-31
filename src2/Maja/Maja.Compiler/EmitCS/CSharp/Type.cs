@@ -47,6 +47,19 @@ internal sealed class Type
         AdjustAccessModifier(method.AccessModifiers);
     }
 
+    private readonly List<Type> _types = new();
+    public IEnumerable<Type> Types
+        => _types;
+
+    public void AddType(Type type)
+        => _types.Add(type);
+
+    private readonly List<Enum> _enums = new();
+    public IEnumerable<Enum> Enums => _enums;
+
+    public void AddEnum(Enum @enum)
+        => _enums.Add(@enum);
+
     private void AdjustAccessModifier(AccessModifiers childAccess)
     {
         if (childAccess == AccessModifiers.Public)

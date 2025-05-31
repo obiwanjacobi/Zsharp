@@ -7,7 +7,7 @@ internal abstract class IrNode
     protected IrNode()
     { }
 
-    protected IrNode(SyntaxNode syntax)
+    protected IrNode(SyntaxNode? syntax)
     {
         _syntax = syntax;
     }
@@ -16,6 +16,6 @@ internal abstract class IrNode
         => _syntax is not null;
 
     private readonly SyntaxNode? _syntax;
-    public SyntaxNode Syntax => _syntax 
+    public SyntaxNode Syntax => _syntax
         ?? throw new MajaException("No Syntax was set for this generated IR node.");
 }

@@ -12,7 +12,9 @@ namespace Maja.UnitTests.Compiler.IR;
 internal static class Ir
 {
     public static IrProgram Build(string code, bool allowError = false, [CallerMemberName] string source = "")
-        => Build(code, new NullModuleLoader(), allowError, source);
+    {
+        return Build(code, new NullModuleLoader(), allowError, source);
+    }
 
     public static IrProgram Build(string code, IExternalModuleLoader moduleLoader, bool allowError = false, [CallerMemberName] string source = "")
     {
@@ -33,6 +35,8 @@ internal static class Ir
 
 internal class NullModuleLoader : IExternalModuleLoader
 {
+    public IEnumerable<string> Assemblies => [];
+
     public bool TryLookupModule(SymbolName name, [NotNullWhen(true)] out ExternalModule? module)
     {
         module = new ExternalModule(name, Enumerable.Empty<DeclaredFunctionSymbol>(), Enumerable.Empty<TypeSymbol>());
@@ -40,4 +44,9 @@ internal class NullModuleLoader : IExternalModuleLoader
     }
 
     public List<ExternalModule> LookupNamespace(SymbolNamespace @namespace) => new List<ExternalModule>();
+    public bool TryLookupOperator(string operatorSymbol, TypeSymbol returnType, IEnumerable<TypeSymbol> parameterTypes, [NotNullWhen(true)] out DeclaredFunctionSymbol? function)
+    {
+        function = null;
+        return false;
+    }
 }

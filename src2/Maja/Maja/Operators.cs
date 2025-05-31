@@ -10,11 +10,23 @@ public static class Operators
 
     [Operator("+", OperatorProperty.Associative | OperatorProperty.Commutative | OperatorProperty.Distributive)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Byte ArithmeticAddU8(Byte left, Byte right) => (Byte)(left + right);
+
+    [Operator("+", OperatorProperty.Associative | OperatorProperty.Commutative | OperatorProperty.Distributive)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static UInt16 ArithmeticAdd(Byte left, Byte right) => (UInt16)(left + right);
 
     [Operator("+", OperatorProperty.Associative | OperatorProperty.Commutative | OperatorProperty.Distributive)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static UInt16 ArithmeticAddU16(UInt16 left, UInt16 right) => (UInt16)(left + right);
+
+    [Operator("+", OperatorProperty.Associative | OperatorProperty.Commutative | OperatorProperty.Distributive)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static UInt32 ArithmeticAdd(UInt16 left, UInt16 right) => (UInt32)left + (UInt32)right;
+
+    [Operator("+", OperatorProperty.Associative | OperatorProperty.Commutative | OperatorProperty.Distributive)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static UInt32 ArithmeticAddU32(UInt32 left, UInt32 right) => (UInt32)(left + right);
 
     [Operator("+", OperatorProperty.Associative | OperatorProperty.Commutative | OperatorProperty.Distributive)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

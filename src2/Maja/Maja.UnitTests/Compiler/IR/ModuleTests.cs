@@ -80,7 +80,8 @@ public class ModuleTests
             "use qu_Alified.N_ame" + Tokens.Eol
             ;
 
-        var program = Ir.Build(code);
+        // use dummy module loader to suppress module-not-found error
+        var program = Ir.Build(code, new NullModuleLoader());
         program.Module.Imports.Should().HaveCount(1);
 
         var import = program.Module.Imports[0];
@@ -99,7 +100,8 @@ public class ModuleTests
             "use qualified.name2" + Tokens.Eol
             ;
 
-        var program = Ir.Build(code);
+        // use dummy module loader to suppress module-not-found error
+        var program = Ir.Build(code, new NullModuleLoader());
         program.Module.Imports.Should().HaveCount(2);
     }
 }

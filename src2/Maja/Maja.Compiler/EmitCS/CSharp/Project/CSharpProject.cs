@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-namespace Maja.Compiler.EmmitCS.CSharp.Project;
+namespace Maja.Compiler.EmitCS.CSharp.Project;
 
 internal sealed class CSharpProject
 {
     internal CSharpProject()
     {
-        TargetFrameworkMoniker = "net7.0";
+        TargetFrameworkMoniker = "net9.0";
         TargetPath = String.Empty;
     }
 

@@ -8,19 +8,22 @@ using System.Reflection;
 namespace Maja.Compiler.External.Metadata;
 
 [DebuggerDisplay("{Name}")]
-internal sealed class FunctionMetadata
+internal class FunctionMetadata
 {
     private readonly MethodInfo? _method;
     private readonly ConstructorInfo? _constructor;
+    private readonly TypeMetadata _type;
 
-    public FunctionMetadata(MethodInfo method)
+    public FunctionMetadata(MethodInfo method, TypeMetadata type)
     {
         _method = method ?? throw new ArgumentNullException(nameof(method));
+        _type = type;
     }
 
-    public FunctionMetadata(ConstructorInfo constructor)
+    public FunctionMetadata(ConstructorInfo constructor, TypeMetadata type)
     {
         _constructor = constructor ?? throw new ArgumentNullException(nameof(constructor));
+        _type = type;
     }
 
     public string Name
@@ -32,7 +35,7 @@ internal sealed class FunctionMetadata
     private TypeMetadata? _retType;
     public TypeMetadata ReturnType
         => _retType ??= new TypeMetadata(
-            _method?.ReturnType ?? _constructor?.DeclaringType ?? throw _panic);
+            _method?.ReturnType ?? _constructor?.DeclaringType ?? throw _panic, _type.Assembly);
 
     private List<ParameterMetadata>? _params;
     public IEnumerable<ParameterMetadata> Parameters
@@ -47,18 +50,25 @@ internal sealed class FunctionMetadata
             .Select(g => new GenericParameterMetadata(g)));
 
 
-    private TypeMetadata? _declType;
     public TypeMetadata GetDeclaringType()
     {
-        if (_declType is null)
-        {
-            var declType = _method?.DeclaringType ?? _constructor?.DeclaringType ?? throw _panic;
-            if (declType is null)
-                throw new InvalidOperationException("MethodMetadata: DeclaringType is null.");
-            _declType = new TypeMetadata(declType);
-        }
-        return _declType;
+        return _type;
     }
 
     private static readonly /*InternalError*/Exception _panic = new("No method or constructor object set.");
+}
+
+[DebuggerDisplay("{Name} ({Operator})")]
+internal sealed class OperatorFunctionMetadata : FunctionMetadata
+{
+    public OperatorFunctionMetadata(MethodInfo method, OperatorAttribute attribute, TypeMetadata type)
+        : base(method, type)
+    {
+        _attribute = attribute;
+    }
+
+    public string Operator => _attribute.Symbol;
+
+    private readonly OperatorAttribute _attribute;
+    public OperatorAttribute Attribute => _attribute;
 }

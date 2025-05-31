@@ -20,4 +20,8 @@
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Maja\Maja.csproj" />
+  </ItemGroup>
+
 </Project>

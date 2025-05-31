@@ -1,3 +1,5 @@
+using Maja.Compiler.External;
+
 namespace Maja.UnitTests.Compiler.EmitCS;
 
 public class EmitExpressionTests
@@ -47,7 +49,7 @@ public class EmitExpressionTests
             .And.Contain(" y ")
             .And.Contain(" = ")
             .And.Contain("42")
-            .And.Contain("(x + (System.Int64)101)")
+            .And.Contain("(DefMod.x + (System.Int64)101)")
             .And.NotContain("<unknown>")
             ;
 
@@ -64,16 +66,21 @@ public class EmitExpressionTests
             "x := fn(y + 42)" + Tokens.Eol
             ;
 
-        var emit = Emit.FromCode(code);
+        var moduleLoader = new AssemblyManagerBuilder()
+            .AddMsCoreLib()
+            .AddMaja()
+            .ToModuleLoader();
+
+        var emit = Emit.FromCode(code, moduleLoader);
         _output.WriteLine(emit);
 
         emit.Should()
             .Contain("System.Byte y = (System.Byte)42;")
-            .And.Contain("System.Byte x = fn((System.Byte)(y + (System.Byte)42));")
+            .And.Contain("System.Byte x = DefMod.fn(Maja.Operators.ArithmeticAddU8(DefMod.y, (System.Byte)42));")
             .And.NotContain("<unknown>")
             ;
 
-        Emit.AssertBuild(emit);
+        Emit.AssertBuild(emit, moduleLoader);
     }
 
     [Fact]
@@ -91,7 +98,7 @@ public class EmitExpressionTests
 
         emit.Should()
             .Contain("System.Byte y = (System.Byte)42;")
-            .And.Contain("System.Byte x = fn((System.Byte)(fn(y) + (System.Byte)42));")
+            .And.Contain("System.Byte x = DefMod.fn((System.Byte)(DefMod.fn(DefMod.y) + (System.Byte)42));")
             .And.NotContain("<unknown>")
             ;
 
@@ -115,7 +122,7 @@ public class EmitExpressionTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain("y = x.fld1;")
+            .Contain("y = DefMod.x.fld1;")
             .And.NotContain("<unknown>")
             ;
 
@@ -140,7 +147,7 @@ public class EmitExpressionTests
         _output.WriteLine(emit);
 
         emit.Should()
-            .Contain("y = fn().fld1;")
+            .Contain("y = DefMod.fn().fld1;")
             .And.NotContain("<unknown>")
             ;
 

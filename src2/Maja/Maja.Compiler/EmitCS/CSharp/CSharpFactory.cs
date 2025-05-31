@@ -9,10 +9,10 @@ namespace Maja.Compiler.EmitCS.CSharp;
 internal static class CSharpFactory
 {
     public static Namespace CreateNamespace(IrModule module)
-        => new(module.Symbol.Name.FullName);
+        => new(module.Symbol.Name.Namespace.OriginalName);
 
     public static Type CreateModuleClass(IrModule module)
-        => new("Module", TypeKeyword.Class)
+        => new(module.Symbol.Name.OriginalName, TypeKeyword.Class)
         {
             AccessModifiers = AccessModifiers.Internal,
             TypeModifiers = TypeModifiers.Static

@@ -77,7 +77,7 @@ internal sealed class CSharpWriter
 
     public CSharpWriter WriteSymbol(Symbol.Symbol symbol)
     {
-        _writer.Append(symbol.Name.Value);
+        _writer.Append(symbol.Name.FullOriginalName);
         return this;
     }
 

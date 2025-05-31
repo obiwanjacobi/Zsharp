@@ -15,6 +15,8 @@ internal class IrArgument : IrNode, IrContainer
     }
 
     public IrExpression Expression { get; }
+    // TODO: this should not be a DeclaredVariable!
+    // - it represent the name of the parameter (optional)
     public DeclaredVariableSymbol? Symbol { get; }
 
     public new ArgumentSyntax Syntax

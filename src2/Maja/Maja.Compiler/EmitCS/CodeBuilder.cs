@@ -83,7 +83,7 @@ internal class CodeBuilder : IrWalker<object?>
             var mi = CSharpFactory.CreateModuleInitializer(mc.Name);
             mc.AddMethod(mi);
             _scopes.Push(new Scope(mi));
-            _ = OnParameters(Enumerable.Empty<IrParameter>());
+            _ = OnParameters(Enumerable.Empty<IrParameter>());  // for '()'
             _ = OnStatements(module.Statements);
             _ = _scopes.Pop();
         }
@@ -178,8 +178,11 @@ internal class CodeBuilder : IrWalker<object?>
 
     private object? CreateEnum(IrDeclarationType type)
     {
-        var enumInfo = CSharpFactory.CreateEnum(type.Symbol.Name.Value);
-        CurrentNamespace.AddEnum(enumInfo);
+        var enumInfo = CSharpFactory.CreateEnum(type.Symbol.Name.OriginalName);
+        if (IsModuleClassScope)
+            CurrentType.AddEnum(enumInfo);
+        else
+            CurrentNamespace.AddEnum(enumInfo);
 
         foreach (var opt in type.Enums)
         {
@@ -192,8 +195,12 @@ internal class CodeBuilder : IrWalker<object?>
 
     private object? CreateStruct(IrDeclarationType type)
     {
-        var typeInfo = CSharpFactory.CreateType(type.Symbol.Name.Value, type.BaseType?.Symbol.Name.Value);
-        CurrentNamespace.AddType(typeInfo);
+        var typeInfo = CSharpFactory.CreateType(type.Symbol.Name.OriginalName, type.BaseType?.Symbol.Name.FullOriginalName);
+
+        if (IsModuleClassScope)
+            CurrentType.AddType(typeInfo);
+        else
+            CurrentNamespace.AddType(typeInfo);
 
         foreach (var field in type.Fields)
         {
@@ -288,7 +295,7 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnStatementAssignment(IrStatementAssignment statement)
     {
-        var name = GetCSharpName(statement.Symbol.Name, statement.Locality);
+        var name = statement.Symbol.Name.OriginalName;
         Writer.StartAssignment(name);
         _ = OnExpression(statement.Expression);
 
@@ -364,7 +371,7 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnExpressionIdentifier(IrExpressionIdentifier identifier)
     {
-        Writer.Write(identifier.Symbol.Name.Value);
+        Writer.Write(identifier.Symbol.Name.FullOriginalName);
         return null;
     }
 
@@ -393,6 +400,7 @@ internal class CodeBuilder : IrWalker<object?>
             !functionSymbol.IsTemplate && functionSymbol.TypeParameters.Length == invocation.TypeArguments.Length)
             // the template type-arguments specified in code are not represented in C#
             result = OnInvocationTypeArguments(invocation.TypeArguments);
+
         result = AggregateResult(result, OnInvocationArguments(invocation.Arguments));
         return result;
     }
@@ -402,7 +410,16 @@ internal class CodeBuilder : IrWalker<object?>
         if (arguments.Any())
         {
             Writer.Write("<");
-            _ = base.OnInvocationTypeArguments(arguments);
+            bool first = true;
+            foreach (var arg in arguments)
+            {
+                if (!first)
+                    Writer.WriteComma();
+
+                OnType(arg.Type);
+
+                first = false;
+            }
             Writer.Write(">");
         }
 
@@ -411,7 +428,16 @@ internal class CodeBuilder : IrWalker<object?>
     public override object? OnInvocationArguments(IEnumerable<IrArgument> arguments)
     {
         Writer.Write("(");
-        _ = base.OnInvocationArguments(arguments);
+        bool first = true;
+        foreach (var arg in arguments)
+        {
+            if (!first)
+                Writer.WriteComma();
+
+            OnExpression(arg.Expression);
+
+            first = false;
+        }
         Writer.Write(")");
         return null;
     }
@@ -435,20 +461,11 @@ internal class CodeBuilder : IrWalker<object?>
     public override object? OnType(IrType type)
         => OnType(type.Symbol);
 
-    public object? OnType(TypeSymbol type)
+    private object? OnType(TypeSymbol type)
     {
         var netType = MajaTypeMapper.MapToDotNetType(type);
         Writer.Write(netType);
         return null;
-    }
-
-    private static string GetCSharpName(SymbolName name, IrLocality locality)
-    {
-        return locality switch
-        {
-            IrLocality.Module => $"{name.Namespace.Value}.Module.{name.Value}",
-            _ => name.FullName
-        };
     }
 
     public override string ToString()
