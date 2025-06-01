@@ -52,4 +52,18 @@ public class ErrorSyntaxTests
         errors.Should().HaveCount(1);
         errors[0].TokenTypeName.Should().Be("Identifier");
     }
+
+    [Fact]
+    public void SyntaxError_InvalidSemiColon()
+    {
+        const string code =
+            "x := 42;" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code, throwOnError: false);
+        result.HasError.Should().BeTrue();
+        var errors = result.GetErrors().ToList();
+        errors.Should().HaveCount(1);
+        errors[0].TokenTypeName.Should().Be("SemiColon");
+    }
 }
