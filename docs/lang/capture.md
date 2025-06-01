@@ -6,10 +6,6 @@ Captures are read-only snapshots (copies) or references to contextual state -lik
 // basic capture syntax
 x := 42
 
-[x]
-    ...
-
-// alternate?
 |x|
     ...
 ```
@@ -20,11 +16,11 @@ x := 42
 
 Function can use captures to be able to reference global variables in their body. All dependencies of a function are explicitly declared either as normal parameters (implicit or context parameters) or captures.
 
-> TBD: have the function capture syntax look exactly the same as the block-capture. `fn: (p: U8): U8 = [c] ...` or `fn: (p: U8): U8 = |c| ...`
+> TBD: have the function capture syntax look exactly the same as the block-capture. `fn: (p: U8): U8 = |c| ...`
 
 ```csharp
 x = 42
-fn: [x](p: U8): Bool
+fn: |x|(p: U8): Bool
     return p = x        // true if p = 42
 ```
 
@@ -37,7 +33,7 @@ fn: (p: U8, predicate: Fn<(U8): Bool>)
 
 x = 42
 // lambda captures x to compare with
-fn(42, [x](p) -> p = x)
+fn(42, |x|(p) -> p = x)
 
 // how would the alternate syntax work with lambdas?
 fn(42, (p) -> |x| p = x)
@@ -49,7 +45,7 @@ fn(42, (p) -> |x| p = x)
 x := 42     //global
 fn: (): U8
     some_code_here
-    [x]     // capture global
+    |x|     // capture global
         work_with_x_here
     
     x_is_out_of_scope_here
@@ -64,7 +60,7 @@ An additional syntax is considered for capturing dependencies of any code block.
 ```csharp
 v := 42
 // following code is dependent on v
-[v]
+|v|
     // use v here
 ```
 
@@ -96,7 +92,7 @@ Block-captures work as functions would.
 
 ```csharp
 x := 42
-fn: [x](p: U8): Bool
+fn: |x|(p: U8): Bool
     return x = p
 
 // no capture has to be specified in call
@@ -115,12 +111,12 @@ import
 // Fn => (): Void
 l = List<Fn>(10)
 loop c in [0..10]
-    l.Add([c]() -> Print(c))
+    l.Add(|c|() -> Print(c))
 for fn in l
     fn();   // what does it print?
 ```
 
-`[c]` is capturing by value, so it should print 0-9.
+`|c|` is capturing by value, so it should print 0-9.
 
 ---
 
@@ -128,7 +124,7 @@ Capture state is not 'committed' when the capture scope is exited in an error co
 
 ```csharp
 x := 42
-try [x]
+try |x|
     x = 101
     Error("Oh no!")
 
@@ -143,7 +139,7 @@ Like all Aliases, using the assignment operator will rename the capture for (ins
 
 ```csharp
 x := 42
-fn: [y=x](p: U8): Bool
+fn: |y=x|(p: U8): Bool
     return y = p    // true if p = 42
 ```
 
@@ -153,9 +149,9 @@ fn: [y=x](p: U8): Bool
 
 ```csharp
 a := 42
-use, with, [a]  // commas?
+use, with, |a|  // commas?
     ...
-use; with; [a]  // line breaks?
+use; with; |a|  // line breaks?
     ...
 ```
 
@@ -165,7 +161,7 @@ use; with; [a]  // line breaks?
 
 ```csharp
 x :=^ 42        // mutable
-fn: [x](p: U8)
+fn: |x|(p: U8)
     ...
 
 // some sort of registration?

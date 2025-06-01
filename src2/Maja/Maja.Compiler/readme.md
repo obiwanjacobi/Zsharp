@@ -3,11 +3,11 @@
 ## TODO
 
 - [ ] Do we split IrBuilder in separate classes, each building a small part of the total Ir model?
-- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
 - [ ] Research compiler feature flags with backwards compatibility with future versions.
 - [ ] Refactor Compilation and CompilationModel to split responsibilities. Compilation has everything to compile. CompilationModel is used to provide a public analysis API. Ir is internal.
 
 Syntax:
+- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
 - [ ] ErrorNode: Use context info to built better error message. Include referenced symbol location.
 - [ ] Syntax/Parser: Error handling: MissingTokens, SkippedTokens (Antlr ErrorStrategy/ErrorListener?)
 Started. Have ErrorToken with description.
@@ -28,7 +28,6 @@ Ir:
 - [ ] Invocation Argument: has a DeclaredVariableSymbol!? why?
 - [ ] Function: Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Function: Allow named type-parameters (`IrArgumentMatcher`)
-- [ ] Resolve operators to functions
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
 
 Emit:
@@ -36,6 +35,7 @@ Emit:
 
 ### Done
 
+- [x] Resolve operators to functions. Current impl scans external assemblies only (not local decls) and matches on operator symbol and types (exactly).
 - [x] IR: Validate file-global statements (only StatementExpression?)
 - [x] IR: Refactor structure of compilation, program and module (hierarchy in that order).
 - [x] Function: Forward reference in body not resolved. Unresolved symbols in a scope should be passed onto its parent scope and reprocessed just before exiting the scope.

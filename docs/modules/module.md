@@ -27,6 +27,18 @@ The statements will be run in order (top to bottom) when the module is initializ
 
 > Packaging libraries is not part of the language but a function of the compiler. It uses modules to group code together. The module identifies all the code -not just the exported public identifiers.
 
+> TBD: Allow multiple modules to be defined in the same file.
+
+```csharp
+# module Module1
+    // code for Module1 goes here (indented)
+
+# module Module2
+    // code for Module2 goes here (indented)
+```
+
+The only difference between global and scope `module` directive is that the next line either is indented or not. That may be a bit tricky.
+
 ---
 
 > Should the module statements `module` and `import` only be used at the top of the file, or can they appear anywhere?
@@ -71,9 +83,10 @@ The return value (which can be a tuple) is the response message the client recei
 Async/await is a separate concern and is mainly used as a .NET interop feature.
 
 A runtime framework is needed to host these services.
-I don't think HTTP would be a good fit. Something like gRPC would do better perhaps?
+I don't think HTTP would be a good fit. Something like gRPC would do better perhaps? Or configurable?
 
 Maybe have a service be the conventional remote API and a component be the in-memory implementation for it? That way a component can be wrapped in different types of Service endpoints (REST/gRPC/JSON/XML)...?
+
 > Actor Model / Active Object Pattern? An isolated component with an Event/Message Queue and a private (pooled?) processing thread... Preferably stateless? No (non-constant) data sharing across threads, ever.
 
 We may want to add a proxy to immutable objects to share the proxy (identity) and not the object itself (Clojure does this) - so that changes to the immutable object -becoming a new instance- can be pointed to by the proxy?

@@ -169,8 +169,8 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `'' ''` | Special Name
 | `@` | Disable String formatting features / keyword escape?
 | `{ }` | String formatting parameter / Code Decorator / Object construction
-| `[ ]` | Index / Slice / Range / Capture
-| `\| \|` | Alternate Capture
+| `[ ]` | Index / Slice / Range
+| `\| \|` | Capture
 | `!` | Possible Error (return type)
 | `?` | Optional variable or parameter/return value / boolean operator / fallback
 | `?=` | Optional variable conditional assignment

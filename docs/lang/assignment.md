@@ -223,7 +223,7 @@ s: Atom<Struct>
 s = {fld1: 42, fld2: "42"}  // Atom overrides = operator
 
 // or a capture?
-[s]
+|s|
     s.fld1 = 101
     s.fld2 = "101"
 ```

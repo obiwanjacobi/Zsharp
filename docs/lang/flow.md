@@ -459,7 +459,7 @@ loop                  // loop #1
 
 ```csharp
 c :=^ 0
-[c]     // capture scope
+|c|     // capture scope
     x := c * 42
     if x = 0
         break

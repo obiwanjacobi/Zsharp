@@ -41,14 +41,14 @@ fn: <G>(p: G)
 fn: <G, R>(p: G): R
 
 // capture on fn impl
-fn: [c]<T>(p: T): Bool        // by val
-fn: [c.Ptr()]<T>(p: T): Bool  // by ref
+fn: |c|<T>(p: T): Bool        // by val
+fn: |c.Ref()|<T>(p: T): Bool  // by ref
 
 fn: InterfaceName
 // interface impl with capture
-fn: InterfaceName [c]
+fn: InterfaceName |c|
 // repeated function type decl with capture
-fn: InterfaceName [c.Ptr()]<T>(p: T): Bool
+fn: InterfaceName |c.Ref()|<T>(p: T): Bool
 
 // TBD
 // function type from object interface
@@ -67,7 +67,7 @@ fn: () =    // like variable syntax?
 
 x: U8 = 42
 fn: () =
-    [x]         // capture just like normal code?
+    |x|         // capture just like normal code?
         ...     // extra indent...
 
 // infer function type?
@@ -199,7 +199,7 @@ fn: (p: U8 = 42, q: U8 = p)
     ...
 
 // reference capture as default value
-fn: [x](p: U8 = 42, q: U8 = x)
+fn: |x|(p: U8 = 42, q: U8 = x)
     ...
 ```
 
@@ -508,7 +508,7 @@ Some types could have default validations without the code having to explicitly 
 Some way to do basic parameter validation in a structured manner.
 
 ```csharp
-fn: [c]<T>(p1: U8, p2: Str): Bool
+fn: |c|<T>(p1: U8, p2: Str): Bool
     // same rules as for types?
     #p1 =< 42
     #p2.Length < 100
@@ -1192,11 +1192,11 @@ MyFunc: (): U8
     return LocalFun(42)
 ```
 
-Local variables (or function parameters) can be captured by local functions using the capture `[ ]` syntax.
+Local variables (or function parameters) can be captured by local functions using the capture `| |` syntax.
 
 ```csharp
 OuterFn: (p: U8)
-    localFn: [p](c: U8): Bool
+    localFn: |p|(c: U8): Bool
         return p = c
 
     if localFn(42)  // use
@@ -1517,7 +1517,7 @@ c.add(4)
 c.add(4)>.sub(2)
 
 // capture?
-[c]
+|c|
     .add(4)
     .sub(2)
 

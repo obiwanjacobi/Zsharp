@@ -140,10 +140,10 @@ For .NET Interop, we need a way to use the `try` and `catch` keywords for a bloc
 ```csharp
 fn: (): U8!     // can return Error
     a := 42
-    try [a]     // any Error out of this block is forwarded
+    try |a|     // any Error out of this block is forwarded
         // code here inside capture
     
-    try [a]
+    try |a|
         // capture code
     catch(err)
         // capture error code
