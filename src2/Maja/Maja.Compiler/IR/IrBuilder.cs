@@ -772,15 +772,15 @@ internal sealed class IrBuilder
     private IrArgument Argument(ArgumentSyntax syntax)
     {
         var expr = Expression(syntax.Expression);
-        // TODO: Is this correct? An argument is not a declaration!
-        DeclaredVariableSymbol? argSymbol = null;
+        ParameterSymbol? paramSymbol = null;
         if (syntax.Name is NameSyntax paramName)
         {
             var name = new SymbolName(paramName.Text);
-            argSymbol = new DeclaredVariableSymbol(name, TypeSymbol.Unknown);
+            // parameter type to be resolved later.
+            paramSymbol = new ParameterSymbol(name, TypeSymbol.Unknown);
         }
 
-        return new IrArgument(syntax, expr, argSymbol);
+        return new IrArgument(syntax, expr, paramSymbol);
     }
 
     private List<IrTypeArgument> TypeArguments(IEnumerable<TypeArgumentSyntax> arguments)

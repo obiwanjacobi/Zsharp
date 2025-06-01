@@ -9,7 +9,6 @@
 Syntax:
 - [ ] Syntax/Parser: Error handling: MissingTokens, SkippedTokens (Antlr ErrorStrategy/ErrorListener?)
 Started. Have ErrorToken with description.
-- [ ] Syntax parsing does not report invalid trailing tokens.
 - [ ] Syntax: Assignment to member access expression (l-value) (now nameIdentifier)
 - [ ] SyntaxWriter: Indents (dedent) are not working correct with multiple indents.
 
@@ -23,7 +22,6 @@ Ir:
 - [ ] Handle default value of type parameter (missing invocation type argument or instantiation type)
 - [ ] Infer Type of type parameter from usage (invocation type argument or instantiation type)
 - [ ] Function body: local (nested) functions and types
-- [ ] Invocation Argument: has a DeclaredVariableSymbol!? why?
 - [ ] Function: Allow unnamed parameter(s) together with named parameters (`IrArgumentMatcher`)
 - [ ] Function: Allow named type-parameters (`IrArgumentMatcher`)
 - [ ] Compile-time code: emit compile-time assembly. Call compile-time custom code.
@@ -33,6 +31,8 @@ Emit:
 
 ### Done
 
+- [x] Invocation Argument: has a DeclaredVariableSymbol!? why? (now ParameterSymbol)
+- [x] Syntax parsing does not report invalid trailing tokens.
 - [x] ErrorNode: Use context info to built better error message (not much you can do).
 - [x] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
 - [x] Resolve operators to functions. Current impl scans external assemblies only (not local decls) and matches on operator symbol and types (exactly).
