@@ -307,3 +307,13 @@ arr := I32[?]
 > TBD
 
 Reuse F# libraries to implement immutable array/list/dictionary sharing algorithms?
+
+## Sequence
+
+An alias type for the dotnet `IEnumerable<T>` type.
+
+```csharp
+arr = (1, 2, 3, 4, 5)
+seq : Seq<U8> = arr
+
+```

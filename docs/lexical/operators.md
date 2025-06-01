@@ -49,7 +49,7 @@ In order of precedence (top is highest):
 | Ternary | ternary operators are applied last.
 
 That means that an expression with multiple (binary) expressions **MUST** use `( )`
-to indicate the order of execution - unless all the operators are the same.
+to indicate the order of execution - unless all the operators are the same (left to right).
 
 > We may need to define precedence between the different types of operators as well.
 So arithmetic operators should run before comparison operators for instance.
@@ -103,7 +103,7 @@ Arithmetic, comparison, bitwise and logical operators.
 | `<<` | - | Bitwise Shift Left
 | `>\|` | - | Bitwise Rotate Right
 | `\|<` | - | Bitwise Rotate Left
-| `->>` | - | sign extend (arithmetic) bit shift right
+| `->>` | - | sign extend (arithmetic) bit shift right (also parallel execute)
 | `>>>` | - | -alt- sign extend (arithmetic) bit shift right
 | `=` | - | Value Assignment
 | `:=` | - | Value Assignment with inferred Type
@@ -115,8 +115,8 @@ That also means that the bitwise short-hand operators (`&=`, `|=` or `^=`) no lo
 Ternary operators can contain other ternary operators. Nested ternaries each have their own indent level.
 
 ```csharp
-x := a > b 
-    ? a 
+x := a > b
+    ? a
     : b > c
         ? b
         : c
@@ -136,7 +136,7 @@ y := 1
 
 Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `xnor` or use dedicated keywords?
 
-More mathematic concepts as operators?
+> More mathematic concepts as operators?
 PI (and other constants), rad, deg, vectors, matrix, infinity, sin, cos, tan (inv), rounding (floor, ceiling), medium, mean, average, factorial/permutation/combination, sum...
 
 Operator that cascades the left value? See C# pattern matching with `is`: `if c is 42 or 101`.
@@ -155,27 +155,27 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 
 | Symbol | Description
 |---|---
-| `_` | Unused / Discard / Hidden
+| `_` | Unused / Discard / Hidden / symbol separator (ignored) / digit separator (ignored)
 | `.` | Members Access / bound access
 | `..` | Range operator
 | `...` | Spread operator
 | `,` | List Separator (or use expression separator?)
 | `:` | (Sub)Type Specifier
-| `;` | Expression separator (like in F#)
+| `;` | Expression separator? (like in F#)
 | `< >` | Type Parameter
-| `( )` | Function / Tuple / Array/List initialization
+| `( )` | Function / Array/List initialization
 | `" "` | String Literal
 | `' '` | Character Literal
 | `'' ''` | Special Name
-| `@` | Disable String formatting features / keyword escape / Extensions?
-| `{ }` | String formatting parameter / Object construction
+| `@` | Disable String formatting features / keyword escape / Compiler extensions?
+| `{ }` | String formatting parameter / (anonymous) Object construction
 | `[ ]` | Index / Slice / Range
 | `\| \|` | Capture
-| `!` | Possible Error (return type)
+| `!` | Possible Error (return type) (`Err<T>`)
 | `?` | Optional variable or parameter/return value / boolean operator / fallback
 | `?=` | Optional variable conditional assignment
-| `->` | Line continuation (instead of indent) / fun decl return type?
-| `#` | Pragma / Attribute access / Execute at compile-time
+| `->` | Line continuation (instead of indent) / fun decl return type (instead of `:`)?
+| `#` | Attribute access / Execute at compile-time
 | `#!` | Compile-time code definition (perhaps only `#`)
 | `#!` | Compile-time error (alt)
 | `#?` | Compile-time warning
@@ -204,7 +204,7 @@ o: U8? = _
 
 // on which side is the optional?
 x := a ?+ o
-// does it matter?
+// the optional is on the side of the '?'
 x := o ?+ a
 ```
 
@@ -238,6 +238,7 @@ b := s is tryFn(42) or tryFn(101)    // weird
 | `!` | `Err<T>`  | Error return value or T
 | `?` | `Opt<T>`  | Optional; T or Nothing
 | `*` | `Ptr<T>`  | Pointer to T
+| `&` | `Ref<T>`  | Reference to T
 | `^` | `Mut<T>`  | Mutable T
 | `%` | `Atom<T>`  | Atomic T
 | ?? | `Async<T>`  | Async T ??
@@ -253,7 +254,7 @@ To be determined:
 | Operator | Description
 |---|---
 | `\` | reserved
-| `$` | to string / auto-constant string checked by compiler.
+| `$` | to-string / auto-constant string checked by compiler / Disable String formatting features (alt)
 | `!` | reserved (factorial?)
 | `?.` | Safe Navigation
 | `=>` | used in mapping / some sort of (forward) assignment? (implies?)
@@ -261,7 +262,7 @@ To be determined:
 | `()` | Function Object operator
 | `\|>` | Parameter pipe
 | `<\|` | Reverse parameter pipe (don't like it)
-| `<=>` | Swap operator
+| `<=>` | Swap operator? / bi-directional mapping operator
 | `::` | traits? (type of type)
 | `<-` | reserved (assign mutable variable?)
 | `->>` | parallel execution (also sign extended shift)
@@ -295,17 +296,17 @@ Use of safe navigation (in any form) always results in an Optional `Opt<T>` that
 
 Expression Type of safe navigation - specifying a default value:
 
-TBD: syntax of specifying a default value is not set.
+TBD: syntax of specifying a default value.
 
 ```csharp
 x: Opt<SomeType> = ...
 // will the condition expression type be bool?
 if x?.IsTrue
     ...
-// we don't wanna write
+// we don't wanna write (works, but suboptimal)
 if x?.IsTrue = true
     ...
-// or
+// or (this is what we have now)
 if x?.IsTrue ?? true
     ...
 
@@ -371,9 +372,9 @@ Operators for strings and characters.
 | `>=~` | Case (and culture) insensitive greater-than-or-equal - compare.
 | `=<~` | Case (and culture) insensitive lesser-than-or-equal - compare.
 | `s[2..6]` | sub-string using `Range`.
-| `<+` | Concat a string*.
+| `<+` | Concat a string*. (also works for chars?)
 | `/<+` | Concat (join) a string with path separator.
-| `"x"<+` | Concat (join) a string with any (x) separator?
+| `'x'<+` | Concat (join) a string with any (x) separator?
 
 *) Perhaps concatenation does not require an operator at all?
 `"Hello " "World"`
@@ -402,7 +403,7 @@ pi := 3.1415
 
 // how to specify three operands?
 if f = pi ~ 0.01
-    // same (within margin)
+    // equals (within margin)
 ```
 
 Also applicable to dates:
@@ -412,7 +413,7 @@ now := DateTime.Now
 d := DateTime.Now.AddDays(1)    // just some date
 
 if f = now ~ TimeSpan.FromMinutes(1)
-    // same (within margin)
+    // equals (within margin)
 ```
 
 ---
@@ -437,7 +438,7 @@ Operators starting with `<` indicates a structural operation, like adding or rem
 | `-=` | mutable - subtract a value from all array/list elements
 | `*=` | mutable - multiply a value with all array/list elements
 | `x=` | mutable - x = any arithmetic operator acts on all elements of the array/list
-| `<+` | add item(s) to the end of an array/list (concat)
+| `<+` | add item(s) to the end of an array/list (concat) (same as string concat)
 | `<-` | remove item(s) from anywhere in array/list (first exact match)
 | `<^` | insert item(s) into array/list (front)
 | `<&` | add item(s) to array/list/tree as a child (?)
@@ -452,7 +453,7 @@ Operators starting with `<` indicates a structural operation, like adding or rem
 | `</` | split in array with chunks/tuples of n
 | `<\|` | zip two arrays
 | `<~` | unzip (split)
-| `.>` | Collect the property values on all instances in the array
+| `.>` | Collect the property values on all instances in the array (Select)
 | `[..]` | Range operator returns a sub array/list.
 | `[i]` | Index (i) operator returns a single item.
 | `[?i]` | Safe index (i) operator returns an optional single item.
@@ -468,11 +469,12 @@ arr2 := (5, 4, 3, 2, 1)
 arr3 := arr1 + arr2
 // arr3 = (6, 6, 6, 6, 6)
 
+// mutable
 arr1 <+= 42      // arr1 = (1, 2, 3, 4, 5, 42)
 arr2 <^= 101     // arr2 = (101, 5, 4, 3, 2, 1)
 
-arr4 := arr1 + arr2
-// arr4 = (102, 7, 7, 7, 7, 43)
+arr4 := arr1 <+ arr2
+// arr4 = (1, 2, 3, 4, 5, 42, 101, 5, 4, 3, 2, 1)
 ```
 
 ```csharp
@@ -481,7 +483,7 @@ arr := (1, 2, 3, 4, 5)
 arr2 := arr <+ 6   // arr2 = (1, 2, 3, 4, 5, 6)
 // remove multiple items - whole array must match!
 arr3 := arr <- (1, 2, 3)    // arr3 = (4, 5, 6)
-// arr is unchanged
+// 'arr' is unchanged
 
 // contains
 b := 4 in arr            // true
@@ -519,12 +521,14 @@ names := arr.>fn
 
 // Do we allow more function parameters?
 
+// 'self' param is array item-type
 fn: (self: Person, magic: U8): Str
     return "$self.Name called with $magic."
 
 // calls fn with magic=42 for all persons in the array
 names := arr.>fn(42)
 // How to make it clear 42 is duplicated to all calls!? Use of '.>'?
+names := arr.>fn|42|        //??
 ```
 
 > TBD: Allow 'array programming' operator (overloads) that target simd instructions?
@@ -560,7 +564,7 @@ These operators cannot be overloaded, they simply use the standard operators.
 | `\|>=` | ?
 | `<\|=` | ? (or `=<\|`)
 
-> TBD: Some of these could be interlocked.
+> TBD: Some of these could be interlocked. Perhaps the `Atom<T>` type automatically uses an interlocked impl?
 
 What syntax to use? `|+=|`, `\\+=`
 
@@ -598,11 +602,15 @@ Note the type-operator is on the right side of the equals sign.
 
 ```csharp
 a: U8 = 42
-err =! a    // err: Err<U8>
-opt =? a    // opt: Opt<U8>
-ptr =* a    // ptr: Ptr<U8>
-mut =^ a    // mut: Mut<U8>
-atom =% a    // atom: Atom<U8>
+// infer var type ':'
+err :=! a    // err: Err<U8>
+opt :=? a    // opt: Opt<U8>
+ptr :=* a    // ptr: Ptr<U8>
+atom :=% a   // atom: Atom<U8>
+
+// explicit var type
+mut: Mut<U8>    // declare mutable
+mut =^ a
 
 // as parameters inline
 fnErr(!a)
@@ -619,31 +627,15 @@ fnImm(imm =^ a)
 fnAtom(imm =% a)
 ```
 
-> Or are these conversions implicit?
+> Or are these conversions implicit? No.
 
 ---
 
-> What if operators cause overflow (or underflow)? A bitwise shift `<<` can shift out bits - sort of the point. Does every operator determine for itself if overflow is a problem or is there a general principle?
+> What if operators cause overflow (or underflow)? A bitwise shift `<<` can shift out bits - sort of the point. Does every operator determine for itself if overflow is a problem or is there a general principle? Yes - each operator (function) determines the consequences for itself.
 
 > What syntax to specifically use/call checked or unchecked operator implementations? How to ignore overflow?
 
 See `TBD` note at the top about checked, wrap around and saturate operators.
-
-```csharp
-a := 42
-// checked on U16 target by default
-x: U16 = a ** a
-
-// use explicit conversion overload?
-x: U16 = U16(a ** a, .Unchecked)
-
-// use explicit conversion function?
-x: U16 = U16unchecked(a ** a)
-
-// unchecked operator?
-x: U16 = $(a ** a)
-x: U16 = !(a ** a)
-```
 
 ---
 
@@ -657,11 +649,9 @@ We could spell out each character to make a unique name that is still callable f
 - '`.>>.`' => `op_dotgtgtdot`
 - '`|<<`' => `op_pipeltlt`
 
----
+As with external (dotnet) assemblies, local code implements a function that performs the operators operation/function and decorates it with the `OperatorAttribute` code attribute defined in the standard library to indicate this function is called as an operator -the operator symbol is specified in the attribute. The compiler will try to resolve all the operators used in the code to lookup these operator functions.
 
-> TBD: Is operator overloading useful for operators other than arithmetic, comparable and possibly logical?
-
-Which operators will definitely not be overloadable?
+See below.
 
 ---
 
@@ -689,10 +679,17 @@ MyTernaryOperator: <T>(self: T, other: T, third: T): T
 
 ---
 
+> TBD: Is operator overloading useful for operators other than arithmetic, comparable and possibly logical?
+
+Which operators will definitely not be overloadable?
+
+---
+
 Allow all operators to be written in postfix notation?
 
 In some cases a postfix notation makes your code more readable, especially when chaining operators.
 
 ```csharp
-//??
+x := 42 101 +       // meh
+x := (42, 101) +    // list notation
 ```
