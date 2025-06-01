@@ -7,7 +7,6 @@
 - [ ] Refactor Compilation and CompilationModel to split responsibilities. Compilation has everything to compile. CompilationModel is used to provide a public analysis API. Ir is internal.
 
 Syntax:
-- [ ] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
 - [ ] ErrorNode: Use context info to built better error message. Include referenced symbol location.
 - [ ] Syntax/Parser: Error handling: MissingTokens, SkippedTokens (Antlr ErrorStrategy/ErrorListener?)
 Started. Have ErrorToken with description.
@@ -35,6 +34,7 @@ Emit:
 
 ### Done
 
+- [x] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
 - [x] Resolve operators to functions. Current impl scans external assemblies only (not local decls) and matches on operator symbol and types (exactly).
 - [x] IR: Validate file-global statements (only StatementExpression?)
 - [x] IR: Refactor structure of compilation, program and module (hierarchy in that order).

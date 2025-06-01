@@ -86,7 +86,7 @@ public abstract class SyntaxToken
                 TokenTypeId = tokenTypeId,
                 Location = location
             };
-        
+
         if (OperatorToken.IsValid(tokenTypeId))
             return new OperatorToken(text)
             {
@@ -94,8 +94,8 @@ public abstract class SyntaxToken
                 Location = location
             };
 
-        if (RoundBracketToken.IsValid(tokenTypeId))
-            return new RoundBracketToken(text)
+        if (ParenthesisToken.IsValid(tokenTypeId))
+            return new ParenthesisToken(text)
             {
                 TokenTypeId = tokenTypeId,
                 Location = location
@@ -108,8 +108,8 @@ public abstract class SyntaxToken
                 Location = location
             };
 
-        if (CurlyBracketToken.IsValid(tokenTypeId))
-            return new CurlyBracketToken(text)
+        if (CurlyBracesToken.IsValid(tokenTypeId))
+            return new CurlyBracesToken(text)
             {
                 TokenTypeId = tokenTypeId,
                 Location = location
@@ -281,9 +281,9 @@ public sealed class OperatorToken : SyntaxToken
 /// <summary>
 /// Represents a parenthesis token: ()
 /// </summary>
-public sealed class RoundBracketToken : SyntaxToken
+public sealed class ParenthesisToken : SyntaxToken
 {
-    public RoundBracketToken(string Text)
+    public ParenthesisToken(string Text)
         : base(Text)
     { }
 
@@ -307,9 +307,9 @@ public sealed class SquareBracketToken : SyntaxToken
 /// <summary>
 /// Represents the token: {}
 /// </summary>
-public sealed class CurlyBracketToken : SyntaxToken
+public sealed class CurlyBracesToken : SyntaxToken
 {
-    public CurlyBracketToken(string Text)
+    public CurlyBracesToken(string Text)
         : base(Text)
     { }
 
