@@ -38,4 +38,18 @@ public class ErrorSyntaxTests
         // Parser cannot make anything of this: all error tokens
         result.Children.Should().AllSatisfy(c => c.HasError.Should().BeTrue());
     }
+
+    [Fact]
+    public void SyntaxError_InvalidIndentifier()
+    {
+        const string code =
+            "x := 42 fld1" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code, throwOnError: false);
+        result.HasError.Should().BeTrue();
+        var errors = result.GetErrors().ToList();
+        errors.Should().HaveCount(1);
+        errors[0].TokenTypeName.Should().Be("Identifier");
+    }
 }

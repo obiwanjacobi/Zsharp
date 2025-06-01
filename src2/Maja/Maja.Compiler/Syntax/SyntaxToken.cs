@@ -45,6 +45,9 @@ public abstract class SyntaxToken
     /// </summary>
     public int TokenTypeId { get; init; }
 
+    // -3 because Indent(1)/Dedent(2) tokens are not in de names list and tokenIds start at 1.
+    public string TokenTypeName => MajaLexer.ruleNames[TokenTypeId - 3];
+
     public virtual bool HasError
         => false;
 
