@@ -131,7 +131,6 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     }
 
     public override SyntaxNodeOrToken[] VisitErrorNode(IErrorNode node)
-        // TODO: use context information to build a better error message.
         => new[] { new SyntaxNodeOrToken(
             new ErrorToken(node.GetText())
         {

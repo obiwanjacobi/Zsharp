@@ -7,7 +7,6 @@
 - [ ] Refactor Compilation and CompilationModel to split responsibilities. Compilation has everything to compile. CompilationModel is used to provide a public analysis API. Ir is internal.
 
 Syntax:
-- [ ] ErrorNode: Use context info to built better error message. Include referenced symbol location.
 - [ ] Syntax/Parser: Error handling: MissingTokens, SkippedTokens (Antlr ErrorStrategy/ErrorListener?)
 Started. Have ErrorToken with description.
 - [ ] Syntax parsing does not report invalid trailing tokens.
@@ -34,6 +33,7 @@ Emit:
 
 ### Done
 
+- [x] ErrorNode: Use context info to built better error message (not much you can do).
 - [x] Rename token: (): parentheses, {}: (curly) braces, []: brackets, <>: angle brackets
 - [x] Resolve operators to functions. Current impl scans external assemblies only (not local decls) and matches on operator symbol and types (exactly).
 - [x] IR: Validate file-global statements (only StatementExpression?)
