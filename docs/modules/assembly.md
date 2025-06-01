@@ -140,11 +140,11 @@ The `Attribute` postfix in the class name can be omitted just as in C#.
 # assembly Name.OfMy.Assembly
 
 // decorator syntax
-{AssemblyFileVersion("1.0.0.0")}
-{AssemblyProduct("ProductName")}
+[[AssemblyFileVersion("1.0.0.0")]]
+[[AssemblyProduct("ProductName")]]
 
 // do we have project settings available as pragmas?
-{AssemblyConfiguration(#project.configuration)}
+[[AssemblyConfiguration(#project.configuration)]]
 ```
 
 Strong-naming an Assembly can be done with assembly attributes.
@@ -163,7 +163,7 @@ An Assembly file can also contain compile time code and other `#` directives.
     ...
 
 // calling the function to yield the version string
-{AssemblyVersion(#calculateVersion()}
+[[AssemblyVersion(#calculateVersion()]]
 ```
 
 ---

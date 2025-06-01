@@ -71,7 +71,7 @@ Check Flags:
 > TBD: Coupling a flag to a function?
 
 ```C#
-{Conditional(Checks.Bounds)}
+[[Conditional(Checks.Bounds)]]
 checkFn: <T>(arr: Array<T>, index: U8)
     ...
 ```

@@ -167,8 +167,8 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `" "` | String Literal
 | `' '` | Character Literal
 | `'' ''` | Special Name
-| `@` | Disable String formatting features / keyword escape?
-| `{ }` | String formatting parameter / Code Decorator / Object construction
+| `@` | Disable String formatting features / keyword escape / Extensions?
+| `{ }` | String formatting parameter / Object construction
 | `[ ]` | Index / Slice / Range
 | `\| \|` | Capture
 | `!` | Possible Error (return type)
@@ -266,7 +266,7 @@ To be determined:
 | `<-` | reserved (assign mutable variable?)
 | `->>` | parallel execution (also sign extended shift)
 | `=>>` | parallel execution and collect results (in tuple or deconstruct)
-| `[[ ]]` | Alternate Decorators syntax (instead of `{}`)
+| `[[ ]]` | Decorators syntax (also see `@`)
 | `[< >]` | Type Decorators (Attributes) syntax (instead of `{}`)
 | `[( )]` | Function Decorators syntax (instead of `{}`)
 

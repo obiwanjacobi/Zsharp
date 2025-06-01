@@ -740,7 +740,7 @@ A recursive function is a function that (eventually) calls itself.
 Is it a function Type annotation or a function Name annotation?
 
 ```csharp
-{Recursive}                 // decorator => No
+[[Recursive]]               // decorator => No
 #recursive                  // pragma => No
 recurseFn: @(p: U8): U8     // syntax (on Type) => No
 @recurseFn: (p: U8): U8     // syntax (on Name)
@@ -1097,7 +1097,7 @@ s = Struct1
 s()     // how??
 
 // normal function tagged as object function
-{#ObjectFunction}
+[[#ObjectFunction]]
 fn: (self: Struct1)
     ...
 

@@ -12,41 +12,37 @@
 
 ```csharp
 // Syntax??
-{Decorator}
 [[Decorator]]
-[{CodeAttribute()}]
-[<CodeAttribute()>]
-[(FunctionAttribute())]
+[<CodeAttribute()>]     // type
+[(FunctionAttribute())] // function
 decoratedFn: ()
 ```
 
-> I like the `[[]]` syntax for it doesn't interfere with the object syntax `{}`.
-
 ```C#
 // function code attributes
-{CodeAttr}
+[[CodeAttr]]
 myFunction: (p: U8) Bool
 
 // multiple code attributes
-{CodeAttr1, CodeAttr2}      // comma separated
+[[CodeAttr1, CodeAttr2]]     // comma separated
 myFunction: (p: U8) Bool
 
 // parameter decorator
-{p: CodeAttr}
+[[p: CodeAttr]]
 myFunction: (p: U8) Bool
 
 // : for retval
-{: CodeAttr}
+[[: CodeAttr]]
 myFunction: (p: U8) Bool
 
 // full set
-{p: CodeAttr}               // order does not matter
-{: CodeAttr}
-{CodeAttr1, CodeAttr2}      // for function
+[[p: CodeAttr]]               // order does not matter
+[[: CodeAttr]]
+[[CodeAttr1, CodeAttr2]]      // for function
 myFunction: (p: U8) Bool
 
 // full set on 1 line
-{p: CodeAttr, : CodeAttr, CodeAttr1, CodeAttr2}
+[[p: CodeAttr, : CodeAttr, CodeAttr1, CodeAttr2]]
 myFunction: (p: U8) Bool
 ```
 
@@ -54,9 +50,9 @@ Code attributes with parameters:
 
 ```C#
 // func(param)
-{CodeAttr("Parameter")}
+[[CodeAttr("Parameter")]]
 // multiple params
-{CodeAttr(42, "42")}
+[[CodeAttr(42, "42")]]
 ```
 
 ## Decorator Functions
@@ -108,7 +104,7 @@ Decorator functions are run at compile time (_are they?_) and should therefor us
     ...
 
 // the self parameter is passed implicitly
-{MyFnDecorator(42)}   // mark it here too?
+[[MyFnDecorator(42)]]   // mark it here too?
 SomeDecoratedFn: ()
     ...
 ```

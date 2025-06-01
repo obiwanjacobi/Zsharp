@@ -236,7 +236,6 @@ Syntax?
 ```csharp
 #inline     // pragma (hint)
 @inline()   // compiler function
-{inline}    // extension/decorator
 [[inline]]  // extension/decorator
 inlineFn: (p: U8): Bool -> p = 42
 ```
