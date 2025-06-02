@@ -1,4 +1,6 @@
-﻿namespace Maja.Compiler.EmitCS.CSharp;
+﻿using System.Collections.Generic;
+
+namespace Maja.Compiler.EmitCS.CSharp;
 
 internal sealed class Field
 {
@@ -17,4 +19,6 @@ internal sealed class Field
     public string TypeName { get; }
 
     public string? InitialValue { get; set; }
+
+    public IEnumerable<string> TypeArguments { get; internal set; } = [];
 }

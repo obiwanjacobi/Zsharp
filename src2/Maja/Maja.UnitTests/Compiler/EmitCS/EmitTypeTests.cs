@@ -150,4 +150,29 @@ public class EmitTypeTests
 
         Emit.AssertBuild(emit);
     }
+
+    [Fact]
+    public void TypeInstantiateFields_Generics()
+    {
+        const string code =
+            "MyType<T>" + Tokens.Eol +
+            Tokens.Indent1 + "fld1: T" + Tokens.Eol +
+            Tokens.Indent1 + "fld2: Str" + Tokens.Eol +
+            "x := MyType<U8>" + Tokens.Eol +
+            Tokens.Indent1 + "fld1 = 42" + Tokens.Eol +
+            Tokens.Indent1 + "fld2 = \"42\"" + Tokens.Eol
+            ;
+
+        var emit = Emit.FromCode(code);
+        _output.WriteLine(emit);
+
+        emit.Should()
+            .Contain(" MyType<T>")
+            .And.Contain(" T fld1 { get; set; }")
+            .And.Contain(" System.String fld2 { get; set; }")
+            .And.NotContain("<unknown>")
+            ;
+
+        Emit.AssertBuild(emit);
+    }
 }

@@ -96,6 +96,11 @@ internal sealed class CSharpSerializer
             .Append(type.Name)
             ;
 
+        if (type.GenericParameters.Any())
+            _writer.Write('<')
+                .Write(String.Join(", ", type.GenericParameters))
+                .Write('>');
+
         if (!String.IsNullOrEmpty(type.BaseTypeName))
             _writer.Write(" : ").Write(type.BaseTypeName);
 
@@ -214,9 +219,15 @@ internal sealed class CSharpSerializer
             .Append(CSharpWriter.SpaceChar)
             .Append(field.FieldModifiers.ToCode())
             .Append(CSharpWriter.SpaceChar)
-            .Append(field.TypeName)
-            .Append(CSharpWriter.SpaceChar)
-            .Append(field.Name);
+            .Append(field.TypeName);
+
+        if (field.TypeArguments.Any())
+            _writer.Write('<')
+                .Write(String.Join(", ", field.TypeArguments))
+                .Write('>');
+
+        _writer.Write(CSharpWriter.SpaceChar)
+                .Write(field.Name);
 
         if (!String.IsNullOrEmpty(field.InitialValue))
         {

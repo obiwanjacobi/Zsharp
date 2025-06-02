@@ -46,7 +46,7 @@ public class EmitTemplateTests
 
         emit.Should()
             .Contain(" s = new DefMod.Templ_U8()")
-            .And.Contain(" fld1 = 42")      // No cast to System.Byte!
+            .And.Contain(" fld1 = 42")      // No cast to System.Byte!?
             .And.Contain(" record class Templ_U8")
             .And.Contain(" System.Byte fld1 { get; set; }")
             .And.NotContain("<unknown>")

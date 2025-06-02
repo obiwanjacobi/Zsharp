@@ -100,14 +100,14 @@ internal class CodeBuilder : IrWalker<object?>
     public override object? OnImport(IrImport import)
     {
         var ns = CurrentNamespace;
-        ns.AddUsing(import.SymbolName.FullName);
+        ns.AddUsing(import.SymbolName.FullOriginalName);
         return null;
     }
 
     public override object? OnDeclarationFunction(IrDeclarationFunction function)
     {
         var netType = MajaTypeMapper.MapToDotNetType(function.ReturnType.Symbol);
-        var method = CSharpFactory.CreateMethod(function.Symbol.Name.Value, netType);
+        var method = CSharpFactory.CreateMethod(function.Symbol.Name.OriginalName, netType);
 
         if (function.Locality == IrLocality.Public)
             method.AccessModifiers = AccessModifiers.Public;
@@ -125,7 +125,7 @@ internal class CodeBuilder : IrWalker<object?>
 
     public override object? OnTypeParameterGeneric(IrTypeParameterGeneric parameter)
     {
-        var p = new TypeParameter(parameter.Symbol.Name.Value);
+        var p = new TypeParameter(parameter.Symbol.Name.OriginalName);
         CurrentMethod.AddTypeParameter(p);
         return null;
     }
@@ -133,7 +133,7 @@ internal class CodeBuilder : IrWalker<object?>
     public override object? OnParameter(IrParameter parameter)
     {
         var netType = MajaTypeMapper.MapToDotNetType(parameter.Type.Symbol);
-        var p = new Parameter(parameter.Symbol.Name.Value, netType);
+        var p = new Parameter(parameter.Symbol.Name.OriginalName, netType);
         CurrentMethod.AddParameter(p);
         return null;
     }
@@ -144,16 +144,28 @@ internal class CodeBuilder : IrWalker<object?>
 
         if (IsModuleClassScope)
         {
-            var field = CSharpFactory.CreateField(variable.Symbol.Name.Value, netType);
+            var field = CSharpFactory.CreateField(variable.Symbol.Name.OriginalName, netType);
             CurrentType.AddField(field);
-            using var eos = SetWriter(new CSharpWriter());
+
+            if (variable.Initializer is IrExpressionTypeInitializer typeInit &&
+                typeInit.TypeSymbol is DeclaredTypeSymbol declaredTypeSymbol &&
+                declaredTypeSymbol.IsGeneric)
+            {
+                field.TypeArguments = typeInit.TypeArguments
+                    .Select(ta => MajaTypeMapper.MapToDotNetType(ta.Type.Symbol))
+                    .ToList();
+            }
+
             if (variable.Initializer is not null)
+            {
+                using var eos = SetWriter(new CSharpWriter());
                 _ = OnExpression(variable.Initializer);
-            field.InitialValue = Writer.ToString();
+                field.InitialValue = Writer.ToString();
+            }
         }
         else
         {
-            Writer.StartVariable(netType, variable.Symbol.Name.Value);
+            Writer.StartVariable(netType, variable.Symbol.Name.OriginalName);
             if (variable.Initializer is not null)
             {
                 Writer.Assignment();
@@ -186,7 +198,7 @@ internal class CodeBuilder : IrWalker<object?>
 
         foreach (var opt in type.Enums)
         {
-            var enumOpt = CSharpFactory.CreateEnumOption(opt.Symbol.Name.Value, opt.ValueExpression?.ConstantValue?.ToString());
+            var enumOpt = CSharpFactory.CreateEnumOption(opt.Symbol.Name.OriginalName, opt.ValueExpression?.ConstantValue?.ToString());
             enumInfo.AddOption(enumOpt);
         }
 
@@ -197,6 +209,10 @@ internal class CodeBuilder : IrWalker<object?>
     {
         var typeInfo = CSharpFactory.CreateType(type.Symbol.Name.OriginalName, type.BaseType?.Symbol.Name.FullOriginalName);
 
+        typeInfo.GenericParameters = type.TypeParameters
+            .Select(tp => tp.Symbol.Name.OriginalName)
+            .ToList();
+
         if (IsModuleClassScope)
             CurrentType.AddType(typeInfo);
         else
@@ -205,7 +221,7 @@ internal class CodeBuilder : IrWalker<object?>
         foreach (var field in type.Fields)
         {
             var netType = MajaTypeMapper.MapToDotNetType(field.Type.Symbol);
-            var prop = CSharpFactory.CreateProperty(field.Symbol.Name.Value, netType);
+            var prop = CSharpFactory.CreateProperty(field.Symbol.Name.OriginalName, netType);
             prop.AccessModifiers = AccessModifiers.Public;
             prop.FieldModifiers = FieldModifiers.None;
             prop.InitialValue = field.DefaultValue?.ConstantValue?.AsString();
@@ -446,6 +462,16 @@ internal class CodeBuilder : IrWalker<object?>
     {
         Writer.Write("new ");
         OnType(expression.TypeSymbol);
+        if (expression.TypeArguments.Any() &&
+            expression.TypeSymbol is DeclaredTypeSymbol declaredTypeSymbol &&
+            declaredTypeSymbol.IsGeneric)
+        {
+            Writer.Write('<')
+                .Write(String.Join(", ", expression.TypeArguments
+                    .Select(ta => MajaTypeMapper.MapToDotNetType(ta.Type.Symbol))))
+                .Write('>');
+        }
+
         Writer.Write("()")
             .Newline();
 

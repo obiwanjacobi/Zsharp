@@ -57,6 +57,8 @@ internal sealed class Type
     private readonly List<Enum> _enums = new();
     public IEnumerable<Enum> Enums => _enums;
 
+    public IEnumerable<string> GenericParameters { get; internal set; } = [];
+
     public void AddEnum(Enum @enum)
         => _enums.Add(@enum);
 

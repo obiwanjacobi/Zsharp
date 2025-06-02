@@ -71,7 +71,8 @@ internal static class MajaTypeMapper
         else if (majaType == TypeSymbol.Void)
             return "void";
 
-        return majaType.Name.FullOriginalName
+        var name = majaType.Name.FullOriginalName
             .Replace('#', '_');     // replace template instantiations markers
+        return name;
     }
 }
