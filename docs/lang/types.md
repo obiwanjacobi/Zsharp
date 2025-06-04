@@ -823,7 +823,7 @@ t := MyType(42)
 // t is an instance of MyType initialized with 42 (T=U8)
 ```
 
-A name-clash can occur when you introduce a new Type with a name that (falsely) matches an existing function as its constructor function. Unfortunately that would mean you would have to alias the existing function to a different name at the locations where it is used and that also reference the new Type. See [Import](../modules/import.md) for more on aliasing.
+A name-clash can occur when you introduce a new Type with a name that (falsely) matches an existing function as its constructor function. Unfortunately that would mean you would have to alias the existing function to a different name at the locations where it is used and that also reference the new Type. See [Use](../modules/use.md) for more on aliasing.
 
 When construction of the type is not trivial and Errors may occur the type constructor function has to have a return type of `Err<T>`.
 

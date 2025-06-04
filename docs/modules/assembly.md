@@ -13,7 +13,7 @@ We could introduce an `#initialize` (similar to `#execute`) to allow to specify 
 
 ```csharp
 // comments in front are allowed
-# assembly Name.OfMy.Assembly
+#assembly Name.OfMy.Assembly
 ```
 
 There can be multiple assembly files in one compilation run. This will result in generating multiple assembly files.
@@ -25,10 +25,10 @@ There can be multiple assembly files in one compilation run. This will result in
 Here an example of an assembly that includes module1 and module2 that are compiled in this project (not external):
 
 ```csharp
-# assembly Name.OfMy.Assembly
+#assembly Name.OfMy.Assembly
 
 // included in the compiled assembly
-# include
+#include
     implModule1
     implModule2
 ```
@@ -38,25 +38,25 @@ The `include` keyword includes the compiled source code module into the specifie
 > TBD: include by file names?
 
 ```csharp
-# assembly Name.OfMy.Assembly
+#assembly Name.OfMy.Assembly
 
 // included in the compiled assembly
-# include
+#include
     file1.zs
     file2.zs
 ```
 
 > TBD: Include all by default and Exclude files specifically?
 
-> TBD: if local modules are included by file name, they could be specified using the `import` keyword and we would not need the `include` keyword. Then again, the `include` keyword could be a general way to include a file's content into another file. However that is not how it is used here. `include` in the assembly file could (be made to) mean to include a library as source code (point to -remote- root folder).
+> TBD: if local modules are included by file name, they could be specified using the `use` keyword and we would not need the `include` keyword. Then again, the `include` keyword could be a general way to include a file's content into another file. However that is not how it is used here. `include` in the assembly file could (be made to) mean to include a library as source code (point to -remote- root folder).
 
 > Or perhaps introduce a `load` that distinguishes between different `include` flavors?
 
 ```csharp
-# assembly Name.OfMy.Assembly
+#assembly Name.OfMy.Assembly
 
 // included in the compiled assembly
-# include
+#include
     file1.zs
     folder/src  // include a folder (recursive)
     'http://project.github.com/master/src'    // remote source
@@ -64,30 +64,30 @@ The `include` keyword includes the compiled source code module into the specifie
 
 ---
 
-## Global Import
+## Global Usings
 
 Modules globally imported in an assembly file are available throughout the project code files without explicit reference.
 
 ```csharp
-# assembly Name.OfMy.Assembly
+#assembly Name.OfMy.Assembly
 
-// global imports
-# import
+// global usings
+#use
     externalModule1
     internalModuleToo
 
-# include
+#include
     ...
 ```
 
-> Also allow `export` modules to have assembly-public modules that can be used by other projects? That would mean that to determine at what accessability to generate the code, we need the full hierarchy of assembly-file and module file.
+> Also allow `pub` modules to have assembly-public modules that can be used by other projects? That would mean that to determine at what accessability to generate the code, we need the full hierarchy of assembly-file and module file.
 
 |Assembly|Module|Module Access
 |--|--|--
 | - | - | Private to the module.
-| - | export | Internal to the assembly.
-| export | - | Module (type) is assembly-public, but empty. (*)
-| export | export | Public to the assembly.
+| - | public | Internal to the assembly.
+| public | - | Module (type) is assembly-public, but empty. (*)
+| public | public | Public to the assembly.
 
 *) Should probably give a warning.
 
@@ -137,7 +137,7 @@ Standard .NET Assembly code Attributes can be applied to the assembly.
 The `Attribute` postfix in the class name can be omitted just as in C#.
 
 ```csharp
-# assembly Name.OfMy.Assembly
+#assembly Name.OfMy.Assembly
 
 // decorator syntax
 [[AssemblyFileVersion("1.0.0.0")]]
@@ -156,7 +156,7 @@ Strong-naming an Assembly can be done with assembly attributes.
 An Assembly file can also contain compile time code and other `#` directives.
 
 ```csharp
-# assembly Name.OfMy.Assembly
+#assembly Name.OfMy.Assembly
 
 // a compile-time function
 #! calculateVersion(): Str
@@ -173,8 +173,8 @@ An Assembly file can also contain compile time code and other `#` directives.
 If the assembly is an executable the entry point of the program is listed in the assembly file.
 
 ```csharp
-# assembly Name.OfMy.Assembly
-# execute MyEntryPointFn
+#assembly Name.OfMy.Assembly
+#execute MyEntryPointFn
 ```
 
 If `#execute` is not specified the assembly is a (dynamic link) library.
@@ -206,10 +206,10 @@ Clearly this is nowhere near the information for a full project management and b
 What about embedded resources? How to tell the project to embed a resource.
 
 ```csharp
-# assembly Name.OfMy.Assembly
+#assembly Name.OfMy.Assembly
 
 // files included in the compiled assembly as resources
-# include
+#include
     image1.jpg
     assembly.dll
 ```

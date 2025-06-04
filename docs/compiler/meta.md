@@ -77,7 +77,7 @@ A pragma is prefixed with: `#` that starts at the indent level of the current sc
 > Is the space after `#` mandatory or optional?
 
 ```C#
-# ignore("CE3091")    // compiler fn call - starts a scope!
+#ignore("CE3091")    // compiler fn call - starts a scope!
     code_that_causes_CE3091
     more_code_that_causes_CE3091
 well_behaved_code
@@ -88,7 +88,7 @@ well_behaved_code
 A scope level 'options' pragma that executes all pragmas for that scope.
 
 ```C#
-# push()
+#push()
     enable(Checks.Bounds)
     enable(Checks.Overflow)
 
@@ -98,7 +98,7 @@ A scope level 'options' pragma that executes all pragmas for that scope.
 At the end of the scope the options are `pop`ed automatically and previous settings are restored. Before the end of the scope the `pop` pragma can be used to restore the settings manually.
 
 ```csharp
-# pop() _
+#pop() _
 ```
 
 We can also use `enable` or `disable` that automatically push the previous state and a `restore` pragma to restore it afterwards.
@@ -106,8 +106,8 @@ We can also use `enable` or `disable` that automatically push the previous state
 | Pragma | Description
 |--|--
 | module | Assigning code to a module
-| import | Importing code from a module
-| export | Making code public
+| use | Importing code from a module
+| pub | Making code public
 | push | Pushing compiler configuration onto the (compile-time) stack
 | pop | Popping compiler configuration from the (compile-time) stack
 | enable | Enable a compiler feature (checks)

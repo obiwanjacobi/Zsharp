@@ -1534,8 +1534,6 @@ with c
 ```csharp
 baseFn: (p: Str)
     // export local function makes it available
-    #export nestedFn: (p: U8): Bool
-    // or a new keyword? (publish)
     pub nestedFn: (p: U8): Bool
         ...
 

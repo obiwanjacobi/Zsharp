@@ -266,20 +266,20 @@ Purpose is to not expose internal structures that are allocated on behalf of cli
 Use a type-less `Ptr`.
 
 ```csharp
-export outFn: (p: U8): Ptr
+#pub outFn: (p: U8): Ptr
     s := MyStruct
         ...
 
     return s.Ptr()  // cast/convert
 
-export inFn: (p: Ptr): U8
+#pub inFn: (p: Ptr): U8
     s: MyStruct = p()
     x: OtherStruct = p()  // error! not the correct type
     ...
 
 // usage
-import outFn    // pseudo
-import inFn     // pseudo
+#use outFn    // pseudo
+#use inFn     // pseudo
 
 o := outFn(42)  // o: Ptr
 o.x             // error! Ptr does not allow member access

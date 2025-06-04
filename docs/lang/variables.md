@@ -169,7 +169,7 @@ This helps with passing necessary but non-informative parameters.
 with x
     ...
 
-use x   // 'use' could be a replacement for import or 'using'
+use x
     ...
 
 push x
@@ -260,7 +260,7 @@ Have variables that are processed at compile time to drive the result of compile
 rtFn: (p: U8)    // runtime function (in binary)
     ...
 
-# code := 0;    // # => compile-time var
+#code := 0;    // # => compile-time var
 
 if (...)
     rtFn(code)
@@ -274,7 +274,7 @@ if (...)
 The compile-time variable `code` is processed as the code is compiled and generates calls to `rtFn` with values `0` and `1`.
 
 ```csharp
-# txt :=^ "Error: "     // compile-time mutable var
+#txt :=^ "Error: "     // compile-time mutable var
 
 if (...)
     txt <+ "Error details "
@@ -283,7 +283,7 @@ if (...)
     txt <+ "Error context "
 
 // not sure if we'll have a static_assert, but...
-# static_assert(..., txt)
+#static_assert(..., txt)
 ```
 
 Construct an compile-time error message using a mutable compile-time variable.

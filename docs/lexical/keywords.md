@@ -27,11 +27,9 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 | `assembly` | Identify the name of the resulting assembly.
 | `ref` | Reference an external library/assembly/project
 | `module` | Declare a file belongs to a named module.
-| `import` | Reference exported symbols from another module.
-| `export` | Declare symbols to be publicly available from a module.
+| `use` | Reference public symbols from another module.
+| `pub` | Declare symbols to be publicly available from a module.
 | `include` | Copy in the content of a file at the location of this statement.
-
-> TBD: `import` and `export` will possibly be replaced by `use` and `pub`.
 
 > TBD: `use` keyword to bring other things in scope besides modules.
 
@@ -97,8 +95,8 @@ if 42 in arr        // false
 | `await` | awaiting async execution
 | `fun` | for pure functions?
 | `class` | for future OOP extension
-| `use` | Alternative for import
-| `pub` | Alternative for export
+| `use` | import public code from another module
+| `pub` | public  code
 | `is` | TBD
 | `as` | TBD
 

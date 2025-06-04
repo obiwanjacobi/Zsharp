@@ -104,7 +104,7 @@ sameAsX = fn(42)   // true
 > How does capture work inside loops?
 
 ```csharp
-import
+#use
     Fn
     Print
 

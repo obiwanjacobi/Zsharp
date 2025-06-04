@@ -1,12 +1,12 @@
 # Module
 
 The `module` directive attaches the code in the file to a named (logical) unit.
-This name is also used with [`import`](import.md).
+This name is also used with [`use`](use.md).
 
 Multiple code files can be part of the same module within the same assembly.
 
 ```C#
-# module math
+#module math
 ```
 
 Note the use of the `#` pragma syntax, for the module functionality is a compiler feature that is performed at compile-time.
@@ -15,7 +15,7 @@ The name may contain a few special characters: `.` and `_` .
 This is a valid module name:
 
 ```C#
-# module myproject.Custom_String1
+#module myproject.Custom_String1
 ```
 
 Module names are [Identifiers](../lexical/identifiers.md) too.
@@ -25,15 +25,15 @@ In a sense, the module name is also the namespace of the code in the file.
 A module file can contain type, variable and function declarations as well as (top-level) statements.
 The statements will be run in order (top to bottom) when the module is initialized.
 
-> Packaging libraries is not part of the language but a function of the compiler. It uses modules to group code together. The module identifies all the code -not just the exported public identifiers.
+> Packaging libraries is not part of the language but a function of the compiler. It uses modules to group code together. The module identifies all the code -not just the public identifiers.
 
 > TBD: Allow multiple modules to be defined in the same file.
 
 ```csharp
-# module Module1
+#module Module1
     // code for Module1 goes here (indented)
 
-# module Module2
+#module Module2
     // code for Module2 goes here (indented)
 ```
 
@@ -41,7 +41,7 @@ The only difference between global and scope `module` directive is that the next
 
 ---
 
-> Should the module statements `module` and `import` only be used at the top of the file, or can they appear anywhere?
+> Should the module statements `module` and `use` only be used at the top of the file, or can they appear anywhere?
 
 > `.NET`: Circular Assembly references are not supported. Multiple modules can go into one Assembly.
 
@@ -54,7 +54,7 @@ The only difference between global and scope `module` directive is that the next
 
 ```csharp
 // file-scope
-# module this_is_my_module
+#module this_is_my_module
 globalVar: U8 = 42  // accessible by all files in module?
 ```
 
@@ -77,7 +77,7 @@ A service would be an 'object' that communicates via messaging - the original OO
 
 Services as single threaded and concurrent. No additional threads allowed inside a service.
 
-Exported functions are the public API for the service and the function parameters are the fields inside the request-message it receives.
+Public functions are the public API for the service and the function parameters are the fields inside the request-message it receives.
 The return value (which can be a tuple) is the response message the client receives.
 
 Async/await is a separate concern and is mainly used as a .NET interop feature.

@@ -37,11 +37,11 @@ Values:
 |Feature         |   |Grammar|Ast|Semantics|Emit|Runtime|Description|
 |----------------|--------------|:-:|:-:|:-:|:-:|---|---------------------|
 | module | decl                 | x |   | R |   |   | `module myModule`   |
-| module | import               | x |   | R |   |   | `import yourModule` |
-| export | func                 | x | x | R | x |   | `export myFunc`     |
-| export | enum                 | x | x | R | x |   | `export myEnum`     |
-| export | struct               | x | x | R | x |   | `export myStruct`   |
-| export | in-place             | x |   | R |   |   | `export fn: ()`...  |
+| module | import               | x |   | R |   |   | `use yourModule` |
+| export | func                 | x | x | R | x |   | `pub myFunc`     |
+| export | enum                 | x | x | R | x |   | `pub myEnum`     |
+| export | struct               | x | x | R | x |   | `pub myStruct`   |
+| export | in-place             | x |   | R |   |   | `pub fn: ()`...  |
 
 ---
 

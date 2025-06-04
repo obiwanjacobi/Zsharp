@@ -8,17 +8,17 @@ Z# | .NET (C#) | Parent
 project [name] | namespace [name] | Assembly [name]
 module [name] | public static class [name] | namespace
 \<module w/o exports> | private static class [name] | namespace
-export function [name] | public static [name] | module class
+pub function [name] | public static [name] | module class
 function [name] | private static [name] | module class
 function [name] (self) | private \<Self> [name] | Self class
-export function [name] (self) | public \<Self> [name] | Self class
-export struct [name] | public struct [name] | module class
+pub function [name] (self) | public \<Self> [name] | Self class
+pub struct [name] | public struct [name] | module class
 - or - | public record [name] | module class
 struct [name] | private struct [name] | module class
 - or - | private record [name] | module class
-export enum [name] | public enum [name] | module class
+pub enum [name] | public enum [name] | module class
 enum [name] | private enum [name] | module class
-export type [name] | public struct [name] | module class
+pub type [name] | public struct [name] | module class
 - or - [name] | public record [name] | module class
 type [name] | public struct [name] | module class
  \- or - | Primitive .NET Type |

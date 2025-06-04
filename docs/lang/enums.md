@@ -31,7 +31,7 @@ The literal values can be specified using any valid format. See [Literals](../le
 Enums can be exported from a module. In that case it is part of the API interface and all values must be assigned explicitly. You're less likely to break a public API when adding new enum options if its values are explicitly listed.
 
 ```csharp
-#export MyEnum
+#use MyEnum
     opt0 = 0
     opt1 = 1
     opt2        // error!

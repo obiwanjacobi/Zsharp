@@ -5,7 +5,7 @@ Extra files can accompany the binary output, that provide extra meta data about 
 - debug symbols
 - source code (zipped)
 - symbol table
-- modules, exports and imports
+- modules, exports (pub) and imports (use)
 
 ## NuGet
 

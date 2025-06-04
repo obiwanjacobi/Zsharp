@@ -57,7 +57,7 @@ Specifying the check flags in code:
 ```C#
 arr := [1, 2, 3, 4, 5]
 
-# enable(Checks.Bounds)
+#enable(Checks.Bounds)
     arr[42]         // will always be checked
 ```
 

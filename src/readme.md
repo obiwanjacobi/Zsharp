@@ -25,5 +25,5 @@ Using .NET it becomes possible to intermix (compiled) Zsharp code with other .NE
 
 ### Calling Zsharp code from other .NET code
 
-Perhaps add extra checking on the public (exported) functions.
+Perhaps add extra checking on the public functions.
 

@@ -30,7 +30,7 @@ my-type
 
 > TBD: I don't see any objection to add '`-`' (minus sign) as a valid character for an identifier...? Or start an identifier with a digit? The parser should be able to match that correctly.
 
-> TBD: Is there a practical reason not to allow special characters or even names that only consist of special characters (as custom operators)?
+> TBD: Is there a practical reason not to allow special characters or even names that only consist of special characters (as custom operators)? This only works when white-space is significant: `hello-world` would be a name, but `hello - world` would be a subtraction.
 
 > TBD: Specifically allowing `.` in an identifier could provide some flexibility for applying namespaces within a module. It could also be used to separate name parts with a non-optional character (`_` is an optional character).
 
@@ -65,9 +65,9 @@ This allows some language features where an identifier/label/symbol refers to so
 
 ## Case Sensitivity
 
-- Type identifiers start with an upper case letter.
-- Local Variables and Function Parameters must have a lower case first letter.
-- Function names can use either.
+- Type identifiers **must** start with an upper case character.
+- Local Variables and Function Parameters **must** have a lower case first character.
+- Function names can use either upper or lower case first character.
 
 Identifiers are the same when:
 
@@ -75,7 +75,7 @@ Identifiers are the same when:
 - All other letters match (case insensitive)
 - `_` are ignored (removed) when comparing.
 
-> TBD: exclude function names from having to match case of first letter of function name? That would allow for fully adapting your own naming conventions - at least for functions. Types still have to start with a capital first char.
+> TBD: exclude function names from having to match case of first letter of function name? That would allow for fully adapting your own naming conventions - at least for functions. Types still have to start with a capital first character.
 
 ---
 
@@ -107,7 +107,7 @@ _ = myFn(42)        // return value not used
 ```
 
 If an identifier starts with a `_` it is hidden from immediate public access.
-The field will be `internal` in .NET for an exported structure, otherwise it'll be private.
+The field will be `internal` in .NET for a public structure, otherwise it'll be private.
 
 ```csharp
 MyStruct
@@ -120,7 +120,7 @@ s.[intellisense does not show _id]
 
 > Do we want to give meaning to identifiers ending with a `_`? Could we use this for weak-functions (or weak-anything)?
 
-> TBD: We could also use `_` as a prefix for any symbol to indicate it is a private symbol. This would not require to explicitly `export` a public symbol.
+> TBD: We could also use `_` as a prefix for any symbol to indicate it is a private symbol. This would not require to explicitly `pub` a public symbol.
 
 ```csharp
 _privateFn: ()
@@ -134,20 +134,8 @@ publicFn: ()
 ## Fully Qualified Names
 
 ```csharp
-MyModule.v2.MyFunction
+MyModule.Lib.MyFunction
 ```
-
-> Do we want to distinguish between namespace separators and `obj.fn()` calls?
-
-```csharp
-// namespace / module name (also for import, export aliases)
-MyModule::v2::MyFunction
-
-// function call
-obj.MyFunction(42)
-```
-
-Only needed when function call may include namespace/module parts...
 
 ---
 
@@ -156,27 +144,27 @@ Only needed when function call may include namespace/module parts...
 Any identifier that has a `.` (dot) in it will be split up in parts. Those parts will be used to navigate to the correct 'location' where that symbol is defined.
 
 - Absolute navigation: starting at the root scope (global)
-- Relative navigation: starting at the current module
+- Relative navigation: starting at the current scope
 
-> For now, relative navigation is only supported for symbols that do not have dot-name. In the `import` statement, long navigation paths (namespaces) can be aliased to shorter names to be used in the module's source code.
+> For now, relative navigation is only supported for symbols that do not have dot-name. In the `use` statement, long navigation paths (namespaces) can be aliased to shorter names to be used in the module's source code.
 
-`import` statements for external modules are always specified in absolute (fully qualified) names.
-`import` statements for local modules are specified with relative (in the same namespace) or absolute names.
+`use` statements for external modules are always specified in absolute (fully qualified) names.
+`use` statements for local modules are specified with relative (in the same namespace) or absolute names.
 
 ```csharp
 // external module
-import System.Console   // type
-import System.*         // namespace
+#use System.Console   // type
+#use System.*         // namespace
 
 // local module
-import myModule         // module (type)
-import namespace.module // same as external module
+#use myModule         // module (type)
+#use namespace.module // same as external module
 ```
 
 Fully qualified names in code are resolved during compilation.
 
 ```csharp
-// this should not require an import statement
+// this should not require an #use statement
 fn: ()
     System.Console.WriteLine("Hello World")
 ```
