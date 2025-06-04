@@ -8,13 +8,15 @@ Unlike most languages, whitespace matters in Z#. Similar to Python and F#.
 
 Spaces are used to separate code elements in order to make them distinct.
 
-`iftrue` does not mean anything, while `if true` represents an `if` statement with a condition (`true`). The space separates the parts and makes them meaningful.
+`iftrue` is interpreted as a symbol, while `if true` represents an `if` statement with a condition (`true`).
+The space separates the parts and makes them meaningful.
 
 ---
 
 ## Indentation
 
-Z# uses whitespace -indents- to signal scope. Where a lot of languages use `{}` to declare a scope, Z# attempts to minimize noise and do away with those characters.
+Z# uses whitespace -indents- to signal scope.
+Where a lot of languages use `{}` to declare a scope, Z# attempts to minimize noise and do away with those characters.
 
 **An _`indent`_ is represented by a sequence of spaces.**
 Typically 4 spaces are used. The number of spaces must be consistent throughout a single file but can differ between files. The first indent that is encountered is taken as the template for all others to follow.
@@ -57,6 +59,7 @@ global-scope        // exports
 
     <Function>
         function-scope
+            capture-scope
 
     <Type>
         type-scope
@@ -70,22 +73,12 @@ As a general rule: broken up lines continue on the next line one indent further 
 
 ---
 
-### Literal Strings
-
-No extra quotes are required. The new-line (EOL) character(s) and the indent white-space(s) will **NOT** become part of the string.
-
-```C#
-s := "this is a very long string to demonstrate
-        how to break up long literal strings"
-```
-
-So in this example there is a trailing space after 'demonstrate' in order to separate that word from the next word 'how'.
-
----
-
 ### Functions
 
-The function name cannot be split. Parameters can be spread out over multiple lines. The opening parenthesis is always next to the function name. The closing parenthesis can either be directly after the last parameter or at the beginning (same indent/scope as the function name) of a new line. Commas that separate the parameters go directly after its previous parameter and cannot be on the start of a new line (after a double indent).
+The function name cannot be split. Parameters can be spread out over multiple lines.
+The opening parenthesis is always next to the function name.
+The closing parenthesis can either be directly after the last parameter or at the beginning (same indent/scope as the function name) of a new line.
+Commas that separate the parameters go directly after its previous parameter and cannot be on the start of a new line (after a double indent).
 
 ```C#
 my_very_long_function_name_with_lots_of_parameters: (
@@ -108,7 +101,7 @@ function_with_params_but_no_commas: (
     ...
 ```
 
-> The `()` are becoming the list delimiters. Does not using commas also apply to general lists?
+> TBD: The `()` are becoming the list delimiters. Does not using commas also apply to general lists?
 
 ```csharp
 lst := (
@@ -129,6 +122,8 @@ lst := (1, 2, 3, 4, 5, 6)
 ## Merging lines
 
 Use the `->` operator to continue a line of code.
+
+TBD: The `->` is considered for the return type of a function declaration.
 
 ```csharp
 fn: ()

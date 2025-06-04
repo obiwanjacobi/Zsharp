@@ -168,7 +168,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `' '` | Character Literal
 | `'' ''` | Special Name
 | `@` | Disable String formatting features / keyword escape / Compiler extensions?
-| `{ }` | String formatting parameter / (anonymous) Object construction
+| `{ }` | (anonymous) Object construction
 | `[ ]` | Index / Slice / Range
 | `\| \|` | Capture
 | `!` | Possible Error (return type) (`Err<T>`)
@@ -254,7 +254,7 @@ To be determined:
 | Operator | Description
 |---|---
 | `\` | reserved
-| `$` | to-string / auto-constant string checked by compiler / Disable String formatting features (alt)
+| `$` | to-string / auto-constant string checked by compiler / String formatting parameter
 | `!` | reserved (factorial?)
 | `?.` | Safe Navigation
 | `=>` | used in mapping / some sort of (forward) assignment? (implies?)

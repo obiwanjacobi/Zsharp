@@ -19,6 +19,8 @@ Think of it as an `.editorconfig` for the compiler.
 - choose the default type for real number literals (F16-96)
 - max number of fields in an anonymous type (max 3 fields)
 - Turn warning comment `##` on or off.
+- Allow the use of type reflection.
+- Allow dynamic assembly loading (`use` without the `#`)
 
 - have each language feature assigned to a category and allow the compiler profile to select which categories are on by default and which ones need an extra switch in the code. The aim is to allow only those features that are considered safe and applicable to the project. Some exceptions can be made by adding special permissions (pragmas?) in the source code.
 - some options may be mutually exclusive. This allows new features to be introduced that are conflicting with existing ones.

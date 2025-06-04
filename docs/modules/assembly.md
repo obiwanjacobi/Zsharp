@@ -80,10 +80,11 @@ Modules globally imported in an assembly file are available throughout the proje
     ...
 ```
 
-> Also allow `pub` modules to have assembly-public modules that can be used by other projects? That would mean that to determine at what accessability to generate the code, we need the full hierarchy of assembly-file and module file.
+> TBD: Also allow `pub` modules to have assembly-public modules that can be used by other projects?
+> That would mean that to determine at what accessability to generate the code, we need the full hierarchy of assembly-file and module file.
 
-|Assembly|Module|Module Access
-|--|--|--
+| Assembly | Module | Module Access
+| -- | -- | --
 | - | - | Private to the module.
 | - | public | Internal to the assembly.
 | public | - | Module (type) is assembly-public, but empty. (*)
@@ -103,6 +104,7 @@ Project dependencies can be listed in the assembly file as well.
 - External Assembly References
 - NuGet Packages
 - Project References (TBD)
+- Runtime vs Compile-time dependencies
 
 ```csharp
 // TBD: project reference?
@@ -118,7 +120,7 @@ Project dependencies can be listed in the assembly file as well.
 #sdk Net5.0@CoreAppSDK
 ```
 
-Other project attributes may include any property and its value. Some sort of generic way to specify?
+> TBD: Other project attributes may include any property and its value. Some sort of generic way to specify?
 
 ```csharp
 #prop=value
@@ -181,7 +183,7 @@ If `#execute` is not specified the assembly is a (dynamic link) library.
 
 The function specified must be present in one of the included modules.
 
-The declaration of the entry point function must be one of:
+The declaration of the entry point function must be one of (the name can be anything, does not have to be 'main'):
 
 ```csharp
 main: ()
@@ -196,12 +198,15 @@ main: (args: IEnumerable<CommandLineArgument>): I32
 
 > TBD
 
-Clearly this is nowhere near the information for a full project management and build system. Do we try to force everything we need into an assembly file, or do we introduce another (project) file?
+Clearly this is nowhere near the information for a full project management and build system.
+Do we try to force everything we need into an assembly file, or do we introduce another (project) file?
 
 - a Z# version specifier with what version of the language the assembly is compatible.
 - various compiler switches (compiler profile).
 
 ---
+
+> TBD
 
 What about embedded resources? How to tell the project to embed a resource.
 
@@ -210,19 +215,19 @@ What about embedded resources? How to tell the project to embed a resource.
 
 // files included in the compiled assembly as resources
 #include
-    image1.jpg
-    assembly.dll
+    images/image1.jpg
+    bin/assembly.dll
 ```
 
 No control over naming (namespace and resource name)!
-Have a compile-time function for this? `#embedFile("image1.jpg", "namespace.resourceName")` or have an `#embed` pragma?
+Have a compile-time function for this? `#embedFile("image1.jpg", "namespace.resourceName")`?
 
 Doing this in a module file could indicate a different scope/nesting and perhaps use the module's name as a namespace.
 
 How about string/int resources?
 
 ```csharp
-// $ auto resource string
+// $ auto resource string (is also the character to disable string formatting!)
 resourceText = $"Text loaded from resource"
 
 // performs a load resource (with local var)
