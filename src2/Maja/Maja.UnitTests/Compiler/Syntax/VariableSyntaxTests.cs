@@ -107,4 +107,24 @@ public class VariableSyntaxTests
 
         Syntax.RoundTrip(code, _output);
     }
+
+    [Fact]
+    public void VarInferred_AssignmentOperators()
+    {
+        const string code =
+            "x :<= 42" + Tokens.Eol
+            ;
+
+        var result = Syntax.Parse(code);
+        result.Members.Should().HaveCount(1);
+        var v = result.Members.First().As<VariableDeclarationInferredSyntax>();
+
+        v.AssignmentOperator.Should().NotBeNull();
+        var o = v.AssignmentOperator!.Operators.ToList();
+        o.Should().HaveCount(2);
+        o[0].Text.Should().Be("<");
+        o[1].Text.Should().Be("=");
+
+        Syntax.RoundTrip(code, _output);
+    }
 }

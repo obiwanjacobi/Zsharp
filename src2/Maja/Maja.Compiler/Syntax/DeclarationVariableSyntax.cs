@@ -18,6 +18,12 @@ public abstract class DeclarationVariableSyntax : DeclarationMemberSyntax
         => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>
+    /// The assignment operator(s) used.
+    /// </summary>
+    public OperatorAssignmentSyntax? AssignmentOperator
+        => ChildNodes.OfType<OperatorAssignmentSyntax>().SingleOrDefault();
+
+    /// <summary>
     /// The initialization expression, if specified.
     /// </summary>
     public ExpressionSyntax? Expression

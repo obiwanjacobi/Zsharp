@@ -24,7 +24,7 @@ public enum SyntaxKind
     ValueTypeParameter = 2003,
     Type = 2004,
     TypeArgument = 2005,
-    TypeInitializerField  = 2006,
+    TypeInitializerField = 2006,
 
     MemberList = 2500,
     MemberField = 2501,
@@ -44,6 +44,8 @@ public enum SyntaxKind
     LiteralNumber = 3053,
     LiteralString = 3054,
     RangeExpression = 3055,
+
+    AssignmentOperator = 3500,
 
     StatementExpression = 4000,
     StatementIf = 4001,

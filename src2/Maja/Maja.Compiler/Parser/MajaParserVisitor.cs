@@ -315,6 +315,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeInitializerField([NotNull] MajaParser.TypeInitializerFieldContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.operatorWrapperTypes"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOperatorWrapperTypes([NotNull] MajaParser.OperatorWrapperTypesContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MajaParser.memberEnumValue"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -362,6 +368,12 @@ public interface IMajaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitVariableAssignment([NotNull] MajaParser.VariableAssignmentContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MajaParser.operatorAssignment"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOperatorAssignment([NotNull] MajaParser.OperatorAssignmentContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionIdentifier</c>
 	/// labeled alternative in <see cref="MajaParser.expression"/>.

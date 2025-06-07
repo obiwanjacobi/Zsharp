@@ -468,6 +468,9 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     public override SyntaxNodeOrToken[] VisitStatementAssignment(StatementAssignmentContext context)
         => CreateSyntaxNode<StatementAssignmentContext, StatementAssignmentSyntax>(context, base.VisitStatementAssignment);
 
+    public override SyntaxNodeOrToken[] VisitOperatorAssignment(OperatorAssignmentContext context)
+        => CreateSyntaxNode<OperatorAssignmentContext, OperatorAssignmentSyntax>(context, base.VisitOperatorAssignment);
+
     public override SyntaxNodeOrToken[] VisitStatementIf(StatementIfContext context)
         => CreateSyntaxNode<StatementIfContext, StatementIfSyntax>(context, base.VisitStatementIf);
 
