@@ -54,6 +54,7 @@ typeInitializer: typeInitializerComma | newline typeInitializerIndent;
 typeInitializerComma: CurlyOpen Sp typeInitializerField (Comma Sp typeInitializerField)* Sp CurlyClose;
 typeInitializerIndent: Indent (typeInitializerField newline)+ Dedent;
 typeInitializerField: nameIdentifier Sp Eq Sp expression;
+operatorWrapperTypes: Error | Question | Multiply | BitAnd | Modulo | BitXor_Imm;
 
 memberEnumValue: nameIdentifier (Sp Eq Sp expressionConstant)?;
 memberEnum: nameIdentifier;
@@ -61,9 +62,10 @@ memberField: nameIdentifier Sp? Colon Sp type (Sp Eq Sp expression)?;
 memberRule: Hash expressionRule;
 
 declarationVariable: declarationVariableTyped | declarationVariableInferred;
-declarationVariableTyped: nameIdentifier Sp? Colon Sp type (Sp? Eq Sp expression)?;
-declarationVariableInferred: nameIdentifier Sp? Colon Eq Sp expression;
-variableAssignment: nameIdentifier Sp Eq Sp expression;
+declarationVariableTyped: nameIdentifier Sp? Colon Sp type (Sp? operatorAssignment Sp expression)?;
+declarationVariableInferred: nameIdentifier Sp? Colon operatorAssignment Sp expression;
+variableAssignment: nameIdentifier Sp operatorAssignment Sp expression;
+operatorAssignment: (Question | AngleOpen | expressionOperatorArithmetic)? Eq (operatorWrapperTypes)?;
 
 expression:
       ParenOpen expression ParenClose                           #expressionPrecedence

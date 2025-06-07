@@ -156,11 +156,11 @@ internal sealed class TypeMetadata
             _operatorFunctions = new();
             foreach (var method in _type.GetMethods().Where(m => m.IsPublic))
             {
-                var attrs = method.GetCustomAttributes(typeof(OperatorAttribute), true);
+                var attrs = method.GetCustomAttributes(typeof(BinaryOperatorAttribute), true);
 
                 if (attrs.Length > 0)
                 {
-                    var opFn = new OperatorFunctionMetadata(method, (OperatorAttribute)attrs[0], this);
+                    var opFn = new OperatorFunctionMetadata(method, (BinaryOperatorAttribute)attrs[0], this);
                     _operatorFunctions.Add(opFn);
                 }
             }

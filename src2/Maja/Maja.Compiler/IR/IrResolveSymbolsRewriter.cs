@@ -121,6 +121,7 @@ internal sealed class IrResolveSymbolsRewriter : IrRewriter
     {
         if (typeSymbol.TryIsUnresolved(out UnresolvedTypeSymbol? unresolvedSymbol))
         {
+            // CS8600: is not a problem
             if (!CurrentScope.TryLookupSymbol<TypeSymbol>(unresolvedSymbol.Name, out typeSymbol))
             {
                 Diagnostics.TypeNotFound(location, unresolvedSymbol.Name.FullOriginalName);

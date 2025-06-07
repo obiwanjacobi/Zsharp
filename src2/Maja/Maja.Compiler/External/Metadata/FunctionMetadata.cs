@@ -61,7 +61,7 @@ internal class FunctionMetadata
 [DebuggerDisplay("{Name} ({Operator})")]
 internal sealed class OperatorFunctionMetadata : FunctionMetadata
 {
-    public OperatorFunctionMetadata(MethodInfo method, OperatorAttribute attribute, TypeMetadata type)
+    public OperatorFunctionMetadata(MethodInfo method, BinaryOperatorAttribute attribute, TypeMetadata type)
         : base(method, type)
     {
         _attribute = attribute;
@@ -69,6 +69,6 @@ internal sealed class OperatorFunctionMetadata : FunctionMetadata
 
     public string Operator => _attribute.Symbol;
 
-    private readonly OperatorAttribute _attribute;
-    public OperatorAttribute Attribute => _attribute;
+    private readonly BinaryOperatorAttribute _attribute;
+    public BinaryOperatorAttribute Attribute => _attribute;
 }
