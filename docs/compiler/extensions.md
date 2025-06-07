@@ -1,10 +1,10 @@
 # Extensions
 
-> `.NET` Code Attributes are objects, decorators are functions. How to make these meet? Also we may need to rethink some of the extension points.
+> `.NET` Code Attributes are objects, decorators are functions. How to make these meet? Also we may need to rethink some of the extension points. (The decorator functions return the Code Attribute info to generate?)
 
 > TBD: compiler extensions. plugins that supply code. Don't allow language extension, but do allow compile-time function extensions. (see also Roslyn source generators)
 
-> A meta extension: implement a custom # tag. Register code with the compiler to be called when the `#` tag is encountered. The extension either manipulates the (an) Abstract Syntax Tree or emits code as text.
+> A meta extension: implement a custom `#`-tag. Register code with the compiler to be called when the `#` tag is encountered. The extension either manipulates the (an) Abstract Syntax Tree or emits code as text.
 
 > A 'code attribute' or 'decorator' extension. Annotated code that gets in the loop for generating the code for that scope. This, for instance, allows implementation of detailed entry and exit tracing and function interception etc.
 
@@ -121,6 +121,8 @@ Allow programmatic inline manipulation of Abstract Syntax Tree nodes (or some sy
 ast := <[loop n in [0..42]]>
 // alternate 'astof'
 ast := astof(loop n in [0..42])
+// alternate 'eval'
+ast := eval(loop n in [0..42])
 // add another ast node (as child?)
 ast += <[    WriteLine(n)]>
 

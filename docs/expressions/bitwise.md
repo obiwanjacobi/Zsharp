@@ -4,14 +4,14 @@ Bitwise operators result in a value of the same type as the left operand manipul
 
 |Operator|Function
 |--------|------
-| & | And
-| \| | Or
-| ^ | Xor
-| ~ | Negate / Invert
-| >> | Shift Right*
-| << | Shift Left
-| >\| | Rotate Right
-| \|< | Rotate Left
+| `&` | And
+| `\|` | Or
+| `^` | Xor
+| `~` | Negate / Invert
+| `>>` | Shift Right*
+| `<<` | Shift Left
+| `>\|` | Rotate Right
+| `\|<` | Rotate Left
 
 > *) For signed data types an arithmetic shift is used. For unsigned data types a logical shift is used.
 

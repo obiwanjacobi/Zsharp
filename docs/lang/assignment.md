@@ -1,5 +1,7 @@
 # Assignment
 
+> Assignment is a statement, not an expression.
+
 | Operator | Function
 |--|--
 | = | Assign value (right to left)
@@ -28,7 +30,7 @@ The receiving (left) operand can also be a path to a field.
 MyStruct
     field1: U8
 
-s: MyStruct
+s: Mut<MyStruct>
 s.field1 = 42
 ```
 
@@ -75,26 +77,17 @@ a := (x > 101)
 
 ## Assignment Chaining
 
-> TBD: It would be easiest to make assignment a statement (therefor cannot be used inside conditions)
-and that would also mean that assignment cannot be chained.
+> The assignment can not be chained across multiple variables (left operand) that all get assigned the same value (right operand).
 
-The assignment can be chained across multiple variables (left operand) that all get assigned the same value (right operand). Type inference works as expected and the inferred type is applied to all untyped vars.
+None of this works:
 
 ```csharp
-// all var types are inferred
 a := b := c := 42
-// a: U8 = 42
-// b: U8 = 42
-// c: U8 = 42
 
-b: Mut<U16>     // must be mutable to be assigned later
-a := b = c: U32 = 42
-// a: U8 = 42
-// b: U16 = 42
-// c: U32 = 42
+b: Mut<U16>
+c: Mut<U32>
+b = c = 42
 ```
-
-> How to determine its not an is-equals comparison?
 
 ---
 
@@ -109,7 +102,11 @@ s: MyStruct
 
 // reference passing
 x := s
+
 // this will make a new copy of Struct
+// '<=' copies the instance
+// '^' makes the result mutable
+// ':' inferres the type for the var
 x :<=^ s     // mutable assignment
 
 // only changes x, not s
@@ -195,7 +192,7 @@ Atomic locking requires guaranteed unlocking... (defer keyword)
 ```csharp
 a: Atom<U8> = 42
 
-a.Lock()
+a.Lock()    // mandatory timeout?
 defer a.Unlock()    // defer keyword
 
 // compact syntax?
@@ -250,55 +247,29 @@ See also the `Volatile` dotnet class.
 
 Deconstruction is _copying_ the value into a variable or parameter.
 
-```csharp
-a, b := ...
-// a and b can be used as separate vars
-sum = add(a, b)
-```
-
-> TBD: auto deconstruction? => no
-
-```csharp
-add: (a: U8, b: U8): U16
-    ...
-
-// deconstruct either by name or in order (types must match exactly)
-sum := add(x)    // a, b = x
-// use spread operator to make deconstruction clear? => yes
-sum := add(...x) // a, b = x
-```
-
 ### Deconstructing an Array
 
 ```C#
-// spread operator ...
-a, b, ...rest := [1, 2, 3, 4, 5]
-// -or- spread the array and the rest is a range? (Yes, better)
-a, b, ..rest := ...[1, 2, 3, 4, 5]
-
+// spread the array and the rest is a range
+a, b, ..rest := ...(1, 2, 3, 4, 5)
 // a: U8 = 1
 // b: U8 = 2
-// rest: Array<U8> = [3, 4, 5]
+// rest: Array<U8> = (3, 4, 5)
 ```
 
 ### Deconstructing Function Parameters
 
 ```C#
-arr := [1, 2, 3, 4, 5]
-
-func: (p: U8)
-    ...
-func(...arr)    // called 5 times? (no, unclear!)
+arr := (1, 2, 3, 4, 5)
 
 func5: (p1: U8, p2: U8, p3: U8, p4: U8, p5: U8)
     ...
-func5(...arr)   // or with 5 params?
-func5(arr)      // without spread operator? => no
+func5(...arr)   // with 5 params
 
 // what if the param count does not match array item count?
 // must at least be the number of parameters without default values.
 
-// should also work with a tuple (anonymous type)
+// should also work with an anonymous type
 params := { p1=1, p2=2, p3=3, p4=4, p5=5 }
 func5(...params)
 ```
@@ -314,50 +285,39 @@ MyStruct
 s = MyStruct
     ...
 
-// partial by name
-field1, field3 = s
+// partial by name (ignore case)
+field1, field3 = ...s
 // field1: U8 = <value of s.Field1>
 // field3: U8 = <value of s.Field3>
 // <value of s.Field2> is not used
 
-a, b := s      // error! field names must match (case insensitive)
+a, b := ...s      // error! field names must match (case insensitive)
 // or when in-order - all fields must be specified (or ignored)
 
-a, _, _ := s
+a, _, _ := ...s
 // a: U8 = <value of s.Field1>
 // <value of s.Field2 and s.Field3> are ignored
 
-_, _, a := s
+_, _, a := ...s
 // a: U8 = <value of s.Field3>
 // <value of s.Field1 and s.Field2> are ignored
 
 ```
 
-> Use the spread operator `...` on the right-hand-side value to indicate it is being deconstructed?
+> Use the spread operator `...` on the right-hand-side value to indicate it is being deconstructed
 
-> Is there a need to override how deconstruction is done on a (custom) type? => yes
+> Is there a need to override how deconstruction is done on a (custom) type? => Yes
 
-> TBD: Do we need to distinguish between array, tuple and object deconstruction?
-
-```csharp
-// array (old)
-a, b := [1, 2]
-// (new) list/array
-a, b := (1, 2)
-// object/tuple
-a, b := {a=1, b=2}
-```
-
-> TBD: deconstruct variable names with aliases.
+> TBD: deconstruct variable names with aliases? => No
 
 ```csharp
 o =: {x=42, y=101}
 
-aliasX=x, aliasY=y := o
+aliasX=x, aliasY=y := ...o
 // here we need a different '=' operator for aliases!
 // can we parse the '=' in these terms?
-aliasX=.x, aliasY=.y := o   // '=.' operator? (both alias and name are in scope)
-aliasX=_x, aliasY=_y := o   // '=_' operator? (only alias is in scope - see Identifiers/Aliases)
+aliasX=.x, aliasY=.y := ...o   // '=.' operator? (both alias and name are in scope)
+aliasX=_x, aliasY=_y := ...o   // '=_' operator? (only alias is in scope - see Identifiers/Aliases)
 ```
 
 ---
@@ -372,11 +332,11 @@ y := 101
 
 // left = deconstruct
 // right = anonymous struct '{}'
-x, y = { y, x }
+x, y = ...{ y, x }
 // x = 101
 // y = 42
 
-// swap operator (needed?)
+// swap operator (still needed?)
 x <=> y
 ```
 

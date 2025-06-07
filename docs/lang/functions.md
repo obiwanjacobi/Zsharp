@@ -1591,16 +1591,36 @@ accept: (self: MyStruct, v: Visitor)
 ## Operator Functions
 
 All operators are implemented as functions. The operator is an (implicit) alias for the actual function.
-
-> Will the compiler supply standard implementation for common operators on custom types? (C++ spaceship operator)
-
-> Value based equivalence out of the box for custom types?
-
+The compiler supplies a set of standard implementations for common operators on common types.
 All operator functions will be tested by the compiler if they confirm to the correct operator rules.
 
 For more information refer to [Lexical Operators](../lexical/operators.md).
 
 Any type can implement an operator-function.
+
+Implement operators by tagging regular functions with the operator symbols.
+(This seems to be the best way to also interop with normal .NET / C#.)
+
+```csharp
+// must follow the infix function rules.
+[[BinaryOperator(">>|")]]
+MyWeirdOperator: <T>(self: T, other: T): T
+    ...
+
+a := 42
+x := a >>| 101   // calls MyWeirdOperator
+
+// How to do unary or ternary operators?
+[[UnaryOperator("-")]]
+MyUnaryOperator: <T>(other: T): T
+
+[[TernaryOperator(">>|", "|<<")]]
+MyTernaryOperator: <T>(self: T, other: T, third: T): T
+```
+
+The code decorators for operators also provide information on the operator laws. See [Operator overloads](../compiler/checked.md#operator-overloads).
+
+> TBD: Value based equivalence out of the box for custom types?
 
 ---
 

@@ -2,7 +2,7 @@
 
 How?
 
-Direct/steer compiler by calling functions? (just like pragmas)
+Direct/steer compiler by calling functions?
 
 Conditional code attribute?
 

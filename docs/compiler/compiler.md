@@ -26,7 +26,7 @@
 
 ---
 
-> entry function (main?)? no command line parameters? Code Attribute? Environment/command line etc. as singleton object?
+> Entry function (main?)? no command line parameters? Code Attribute? Environment/command line etc. as singleton object?
 
 > TBD: Compiler reports each 'issue' based on config. A compiler-profile can make an 'issue' a warning or error etc.
 

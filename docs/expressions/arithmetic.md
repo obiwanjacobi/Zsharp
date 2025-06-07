@@ -12,8 +12,6 @@
 
 > *) Division for integer types are rounded towards zero.
 
-> *) Cannot do square-root with `//` for it conflicts with comment syntax. Perhaps `/*`? Or change the comment syntax?
-
 Some examples:
 
 ```C#
@@ -25,11 +23,12 @@ d := 16 % 3   // 1
 x := (2 + a) * (b / 3) + d
 ```
 
-> TBD: Do operands need to be (made) of the same type?
+> TBD: Do operands need to be of the same type?
 
 Can you add an `U8` and an `U16`?
 
 I think we could make 'overloads' operator functions that take all possible operand data types and have an optimized implementation for each one.
+If an operator is 'Commutative', the operands can be swapped to match the data types. That way you do not have to implement a function for each variation.
 
 ---
 

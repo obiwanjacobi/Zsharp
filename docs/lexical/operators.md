@@ -174,7 +174,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `!` | Possible Error (return type) (`Err<T>`)
 | `?` | Optional variable or parameter/return value / boolean operator / fallback
 | `?=` | Optional variable conditional assignment
-| `->` | Line continuation (instead of indent) / fun decl return type (instead of `:`)?
+| `->` | Match case continuation / Line continuation (instead of indent) / fun decl return type (instead of `:`)?
 | `#` | Attribute access / Execute at compile-time
 | `#!` | Compile-time code definition (perhaps only `#`)
 | `#!` | Compile-time error (alt)
@@ -258,7 +258,7 @@ To be determined:
 | `!` | reserved (factorial?)
 | `?.` | Safe Navigation
 | `=>` | used in mapping / some sort of (forward) assignment? (implies?)
-| `<=` | map structure / assign struct properties
+| `<=` | map structure / assign struct properties / copy instance
 | `()` | Function Object operator
 | `\|>` | Parameter pipe
 | `<\|` | Reverse parameter pipe (don't like it)
@@ -336,7 +336,7 @@ b := x?false?.IsTrue    // could work
 
 ## Type Operator Symbols
 
-Operators that operate on types.
+Binary Operators that operate on types.
 
 | Operator | Description
 |---|---
@@ -355,6 +355,14 @@ Alternatives where the `:` is always last (more consistent?):
 | `<?:` | type as (optional cast)
 | `<:` | down cast type
 | `>:` | up cast type? (is implicit)
+
+```csharp
+MyStruct : BaseStruct
+    ...
+x := MyStruct
+y := x <? OtherStruct   // y: Opt<OtherStruct>(Nothing)
+z := x <: BaseStruct    // z: BaseStruct
+```
 
 ---
 
@@ -544,6 +552,9 @@ These operators cannot be overloaded, they simply use the standard operators.
 
 | Operator | Description
 |---|---
+| `++` | Increment variable (prefix or postfix)
+| `--` | Decrement variable (prefix or postfix)
+| `xx` | x = Any arithmentic operator (prefix or postfix)
 | `+=` | read (left) - add (right to left) - write (left)
 | `-=` | read - subtract - write
 | `*=` | read - multiply - write
@@ -636,46 +647,6 @@ fnAtom(imm =% a)
 > What syntax to specifically use/call checked or unchecked operator implementations? How to ignore overflow?
 
 See `TBD` note at the top about checked, wrap around and saturate operators.
-
----
-
-> TBD
-
-- allow custom defined operators? `.>>.`, `|<<` etc. Requires identifiers to be less strict. Also requires escape characters in function definition symbol: `''.>>.'': (...): Bool`. The names would be considered normal functions and therefor -to be used as operators- would need to adhere to the infix function rules.
-
-Then there is also a `.NET` interop problem. How are these operators exposed to (for instance) a C# program?
-We could spell out each character to make a unique name that is still callable from other .NET languages.
-
-- '`.>>.`' => `op_dotgtgtdot`
-- '`|<<`' => `op_pipeltlt`
-
-As with external (dotnet) assemblies, local code implements a function that performs the operators operation/function and decorates it with the `OperatorAttribute` code attribute defined in the standard library to indicate this function is called as an operator -the operator symbol is specified in the attribute. The compiler will try to resolve all the operators used in the code to lookup these operator functions.
-
-See below.
-
----
-
-> TBD
-
-Implement operators by tagging regular functions with the operator signs.
-This seems to be the best way to also interop with normal .NET / C#.
-
-```csharp
-// must follow the infix function rules.
-[[BinaryOperator(">>|")]]
-MyWeirdOperator: <T>(self: T, other: T): T
-    ...
-
-a := 42
-x := a >>| 101   // calls MyWeirdOperator
-
-// How to do unary or ternary operators?
-[[UnaryOperator("-")]]
-MyUnaryOperator: <T>(other: T): T
-
-[[TernaryOperator(">>|", "|<<")]]
-MyTernaryOperator: <T>(self: T, other: T, third: T): T
-```
 
 ---
 

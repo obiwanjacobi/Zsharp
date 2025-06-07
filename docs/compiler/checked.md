@@ -35,9 +35,9 @@ Operator overloads are checked by a built-in test framework to ensure they follo
 
 ## Compile Time Conditions
 
-A fairly fine grained control over what functions are checked and what function are not check may be desireable. This should be specified on the compiler command line as well as in code.
+A fairly fine grained control over what functions are checked and what function are not checked may be desireable. This should be specified on the compiler command line as well as in code.
 
-For some code it may be necessary to always check boundaries for example... (cannot imagine this happening)
+For some code it may (or may not) be necessary to always check boundaries for example...
 
 ### Removing Code
 
@@ -49,16 +49,8 @@ In the next example `conditionalFn` has been removed and all dependent code will
 t := conditionalFn(true, "example")
 if t = 42
     code_that_uses_t
+
 other_code              // only this code will remain
-```
-
-Specifying the check flags in code:
-
-```C#
-arr := [1, 2, 3, 4, 5]
-
-#enable(Checks.Bounds)
-    arr[42]         // will always be checked
 ```
 
 Check Flags:
@@ -90,9 +82,3 @@ MyFunction: (p: U8): Bool
 #! CheckMyFunction: (p:U8): Error?
     ...
 ```
-
----
-
-> TBD
-
-A way to suppress compiler warnings.

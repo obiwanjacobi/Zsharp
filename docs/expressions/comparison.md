@@ -24,12 +24,16 @@ Here is a conditional comparison example:
 
 ```C#
 a := 42
-b := a <> 42 ? true : false
+b := a <> 42 ? true : false     // :-(
+b := (a <> 42)?                 // :-)
 ```
 
 > Because both the `Equals` and the `Assignment` operators use the '`=`' symbol, it is not possible to assign values inside a comparison expression.
 
 ```C#
+myFunc: (): U8
+    ...
+
 if a = myFunc()      // error! a is undeclared
     ...
 
@@ -40,6 +44,4 @@ if a = myFunc()      // ok, compare return value with 42 (a=42)
 
 ---
 
-TBD
-
-Chain the equals operator? `if a = b = c = d`?
+> TBD: Chain the equals operator? `if a = b = c = d`? No.

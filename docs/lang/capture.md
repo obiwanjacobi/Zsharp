@@ -3,9 +3,8 @@
 Captures are read-only snapshots (copies) or references to contextual state -like local variables- that accompany a child context.
 
 ```csharp
-// basic capture syntax
 x := 42
-
+// basic capture syntax
 |x|
     ...
 ```
