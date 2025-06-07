@@ -63,23 +63,26 @@ internal sealed class IrDeclarationFunction : IrDeclaration, IrContainer
 
 internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
 {
-    internal IrDeclarationVariable(DeclaredVariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
+    internal IrDeclarationVariable(DeclaredVariableSymbol symbol, TypeSymbol type, IrOperatorAssignment? assignmentOperator, IrExpression? initializer)
         : base(IrLocality.None)
     {
         Symbol = symbol;
         TypeSymbol = type;
+        AssignmentOperator = assignmentOperator;
         Initializer = initializer;
     }
-    public IrDeclarationVariable(DeclarationVariableSyntax syntax, DeclaredVariableSymbol symbol, TypeSymbol type, IrExpression? initializer)
+    public IrDeclarationVariable(DeclarationVariableSyntax syntax, DeclaredVariableSymbol symbol, TypeSymbol type, IrOperatorAssignment? assignmentOperator, IrExpression? initializer)
         : base(syntax, IrLocality.None)
     {
         Symbol = symbol;
         TypeSymbol = type;
+        AssignmentOperator = assignmentOperator;
         Initializer = initializer;
     }
 
     public DeclaredVariableSymbol Symbol { get; }
     public TypeSymbol TypeSymbol { get; }
+    public IrOperatorAssignment? AssignmentOperator { get; }
     public IrExpression? Initializer { get; }
 
     public new DeclarationVariableSyntax Syntax

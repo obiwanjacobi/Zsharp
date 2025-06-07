@@ -1101,7 +1101,9 @@ public partial class MajaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Sp(int i) {
 			return GetToken(MajaParser.Sp, i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Eq() { return GetToken(MajaParser.Eq, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public OperatorAssignmentContext operatorAssignment() {
+			return GetRuleContext<OperatorAssignmentContext>(0);
+		}
 		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
 			return GetRuleContext<ExpressionContext>(0);
 		}
@@ -1130,7 +1132,7 @@ public partial class MajaParser : Parser {
 			State = 276;
 			Match(Sp);
 			State = 277;
-			Match(Eq);
+			operatorAssignment();
 			State = 278;
 			Match(Sp);
 			State = 279;
@@ -6470,9 +6472,9 @@ public partial class MajaParser : Parser {
 		3,22,11,0,268,266,1,0,0,0,268,267,1,0,0,0,268,269,1,0,0,0,269,23,1,0,0,
 		0,270,273,5,8,0,0,271,272,5,70,0,0,272,274,3,114,57,0,273,271,1,0,0,0,
 		273,274,1,0,0,0,274,25,1,0,0,0,275,276,3,156,78,0,276,277,5,70,0,0,277,
-		278,5,43,0,0,278,279,5,70,0,0,279,280,3,114,57,0,280,27,1,0,0,0,281,282,
-		3,114,57,0,282,29,1,0,0,0,283,286,5,11,0,0,284,285,5,70,0,0,285,287,3,
-		120,60,0,286,284,1,0,0,0,286,287,1,0,0,0,287,288,1,0,0,0,288,289,3,170,
+		278,3,112,56,0,278,279,5,70,0,0,279,280,3,114,57,0,280,27,1,0,0,0,281,
+		282,3,114,57,0,282,29,1,0,0,0,283,286,5,11,0,0,284,285,5,70,0,0,285,287,
+		3,120,60,0,286,284,1,0,0,0,286,287,1,0,0,0,287,288,1,0,0,0,288,289,3,170,
 		85,0,289,290,5,1,0,0,290,291,3,8,4,0,291,292,5,2,0,0,292,31,1,0,0,0,293,
 		295,3,156,78,0,294,296,5,70,0,0,295,294,1,0,0,0,295,296,1,0,0,0,296,297,
 		1,0,0,0,297,298,5,38,0,0,298,300,3,172,86,0,299,301,3,66,33,0,300,299,

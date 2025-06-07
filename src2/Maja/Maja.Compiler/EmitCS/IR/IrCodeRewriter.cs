@@ -58,7 +58,7 @@ internal sealed class IrCodeRewriter : IrRewriter
         IrCodeBlock codeBlock, StatementLoopSyntax syntax)
     {
         var symbol = new DeclaredVariableSymbol(SymbolName.InternalName($"__{varName}"), type);
-        var initializer = new IrDeclarationVariable(symbol, type, initExpr);
+        var initializer = new IrDeclarationVariable(symbol, type, IrOperatorAssignment.Assign(), initExpr);
 
         var condition = new IrExpressionBinary(
             new IrExpressionIdentifier(symbol, type),
@@ -71,7 +71,8 @@ internal sealed class IrCodeRewriter : IrRewriter
             new IrBinaryOperator(IrBinaryOperatorKind.Add, type),
             new IrExpressionLiteral(type, 1)
             );
-        var step = new IrStatementAssignment(symbol, addOne, IrLocality.None);
+
+        var step = new IrStatementAssignment(symbol, IrOperatorAssignment.Assign(), addOne, IrLocality.None);
 
         return new IrCodeStatementForLoop(syntax, initializer, condition, step, codeBlock);
     }

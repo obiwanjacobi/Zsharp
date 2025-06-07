@@ -146,3 +146,31 @@ internal sealed class IrUnaryOperator : IrNode
     public new ExpressionOperatorSyntax Syntax
         => (ExpressionOperatorSyntax)base.Syntax;
 }
+
+internal sealed class IrOperatorAssignment : IrNode
+{
+    // for code generation
+    internal IrOperatorAssignment()
+        : base(null)
+    {
+        WrapperType = null;
+    }
+    public IrOperatorAssignment(OperatorAssignmentSyntax syntax, TypeSymbol? wrapperType)
+        : base(syntax)
+    {
+        WrapperType = wrapperType;
+    }
+
+    public TypeSymbol? WrapperType { get; }
+    public bool CopyInstance
+        => Syntax.CopyInstance;
+
+    public new OperatorAssignmentSyntax Syntax
+        => (OperatorAssignmentSyntax)base.Syntax;
+
+    /// <summary>
+    /// Plain and simple assignment: '='
+    /// </summary>
+    internal static IrOperatorAssignment Assign()
+        => new();
+}

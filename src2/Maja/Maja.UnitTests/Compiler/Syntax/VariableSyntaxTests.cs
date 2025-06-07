@@ -105,6 +105,8 @@ public class VariableSyntaxTests
         stat.Name.Text.Should().Be("x");
         stat.Expression.As<ExpressionLiteralSyntax>().Text.Should().Be("42");
 
+        stat.AssignmentOperator.Operators.Should().HaveCount(1);
+
         Syntax.RoundTrip(code, _output);
     }
 

@@ -371,7 +371,12 @@ internal sealed class IrBuilder
             _diagnostics.VariableAlreadyDeclared(syntax.Location, symbol.Name.FullOriginalName);
         }
 
-        return new IrDeclarationVariable(syntax, symbol, type!, initializer);
+        IrOperatorAssignment? assignment =
+            syntax.AssignmentOperator is null
+            ? null
+            : new IrOperatorAssignment(syntax.AssignmentOperator, initializer.TypeSymbol);
+
+        return new IrDeclarationVariable(syntax, symbol, type!, assignment, initializer);
     }
 
     private IrDeclarationVariable DeclarationVariableTyped(VariableDeclarationTypedSyntax syntax)
@@ -401,7 +406,13 @@ internal sealed class IrBuilder
             initializer = rewriter.RewriteExpression(initializer);
         }
 
-        return new IrDeclarationVariable(syntax, variableSymbol, typeSymbol, initializer);
+        TypeSymbol? wrapperType = null;
+        IrOperatorAssignment? assignment =
+            syntax.AssignmentOperator is null
+            ? null
+            : new IrOperatorAssignment(syntax.AssignmentOperator, wrapperType);
+
+        return new IrDeclarationVariable(syntax, variableSymbol, typeSymbol, assignment, initializer);
     }
 
     private IrDeclarationFunction DeclarationFunction(DeclarationFunctionSyntax syntax)
@@ -543,8 +554,11 @@ internal sealed class IrBuilder
             }
         }
 
+        TypeSymbol? wrapperType = null;     // TODO
+        var assignment = new IrOperatorAssignment(syntax.AssignmentOperator, wrapperType);
+
         // TODO: check expr.TypeSymbol against variableSymbol.Type
-        return new IrStatementAssignment(syntax, variableSymbol, expr, _locality);
+        return new IrStatementAssignment(syntax, variableSymbol, assignment, expr, _locality);
     }
 
     private IrStatementExpression StatementExpression(StatementExpressionSyntax syntax)

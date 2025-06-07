@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
+using Maja.Compiler.Parser;
 
 namespace Maja.Compiler.Syntax;
 
@@ -20,6 +21,12 @@ public sealed class OperatorAssignmentSyntax : SyntaxNode, ICreateSyntaxNode<Ope
         => Children
             .Where(c => c.Token is not null)
             .Select(c => c.Token!);
+
+    /// <summary>
+    /// Indicates the presence of the '<' token that makes a copy of the instance during assignment.
+    /// </summary>
+    public bool CopyInstance
+        => Children.Any(c => c.Token is not null && c.Token.TokenTypeId == MajaLexer.AngleOpen);
 
     //public WrapperTypeOperators
 

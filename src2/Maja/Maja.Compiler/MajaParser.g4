@@ -18,7 +18,7 @@ statementIf: If Sp expression newline Indent codeBlock Dedent (statementElse | s
 statementElse: Else newline Indent codeBlock Dedent;
 statementElseIf: (Else freeSpace If | Elif) Sp expression newline Indent codeBlock Dedent (statementElse | statementElseIf)?;
 statementRet: Ret (Sp expression)?;
-statementAssignment: nameIdentifier Sp Eq Sp expression;
+statementAssignment: nameIdentifier Sp operatorAssignment Sp expression;
 statementExpression: expression;
 statementLoop: Loop (Sp expressionLoop)? newline Indent codeBlock Dedent;
 

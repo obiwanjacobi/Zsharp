@@ -14,9 +14,21 @@ public sealed class StatementAssignmentSyntax : StatementSyntax, ICreateSyntaxNo
     public override SyntaxKind SyntaxKind
         => SyntaxKind.StatementAssignment;
 
+    /// <summary>
+    /// Name of the variable assigned to.
+    /// </summary>
     public NameSyntax Name
         => ChildNodes.OfType<NameSyntax>().Single();
 
+    /// <summary>
+    /// The assignment operator(s) used.
+    /// </summary>
+    public OperatorAssignmentSyntax AssignmentOperator
+        => ChildNodes.OfType<OperatorAssignmentSyntax>().Single();
+
+    /// <summary>
+    /// The expression (value) being assigned.
+    /// </summary>
     public ExpressionSyntax Expression
         => ChildNodes.OfType<ExpressionSyntax>().Single();
 
