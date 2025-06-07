@@ -32,8 +32,8 @@ internal sealed class IrTypeMemberEnum : IrTypeMember, IrContainer
     public new MemberEnumSyntax Syntax
         => (MemberEnumSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => ValueExpression.GetDescendentsOfType<T>();
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => ValueExpression.GetDescendantsOfType<T>();
 }
 
 internal sealed class IrTypeMemberField : IrTypeMember, IrContainer
@@ -53,9 +53,9 @@ internal sealed class IrTypeMemberField : IrTypeMember, IrContainer
     public new MemberFieldSyntax Syntax
         => (MemberFieldSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Type.GetDescendentsOfType<T>()
-        .Concat(DefaultValue.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Type.GetDescendantsOfType<T>()
+        .Concat(DefaultValue.GetDescendantsOfType<T>());
 }
 
 internal sealed class IrTypeMemberRule : IrTypeMember, IrContainer
@@ -73,6 +73,6 @@ internal sealed class IrTypeMemberRule : IrTypeMember, IrContainer
     public new MemberRuleSyntax Syntax
         => (MemberRuleSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Expression.GetDescendentsOfType<T>();
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Expression.GetDescendantsOfType<T>();
 }

@@ -21,7 +21,7 @@ internal sealed class IrCodeBlock : IrNode, IrContainer
     public new CodeBlockSyntax Syntax
         => (CodeBlockSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Statements.GetDescendentsOfType<T>()
-            .Concat(Declarations.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Statements.GetDescendantsOfType<T>()
+            .Concat(Declarations.GetDescendantsOfType<T>());
 }

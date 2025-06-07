@@ -444,7 +444,7 @@ internal sealed class IrBuilder
         if (returnType == IrType.Void)
         {
             var invalidReturns = block.Statements
-                .GetDescendentsOfType<IrStatementReturn>()
+                .GetDescendantsOfType<IrStatementReturn>()
                 .Where(r => r.Expression is not null);
             foreach (var ret in invalidReturns)
             {

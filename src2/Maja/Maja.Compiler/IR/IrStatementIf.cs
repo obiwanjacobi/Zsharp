@@ -23,12 +23,12 @@ internal sealed class IrStatementIf : IrStatement, IrContainer
     public new StatementIfSyntax Syntax
         => (StatementIfSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
     {
-        var exprTypes = Condition.GetDescendentsOfType<T>();
-        var codeBlockTypes = CodeBlock.GetDescendentsOfType<T>();
-        var elseTypes = ElseClause is not null ? ElseClause.GetDescendentsOfType<T>() : Enumerable.Empty<T>();
-        var elseIfTypes = ElseIfClause is not null ? ElseIfClause.GetDescendentsOfType<T>() : Enumerable.Empty<T>();
+        var exprTypes = Condition.GetDescendantsOfType<T>();
+        var codeBlockTypes = CodeBlock.GetDescendantsOfType<T>();
+        var elseTypes = ElseClause is not null ? ElseClause.GetDescendantsOfType<T>() : Enumerable.Empty<T>();
+        var elseIfTypes = ElseIfClause is not null ? ElseIfClause.GetDescendantsOfType<T>() : Enumerable.Empty<T>();
 
         return exprTypes.Concat(codeBlockTypes).Concat(elseIfTypes).Concat(elseTypes);
     }
@@ -47,8 +47,8 @@ internal sealed class IrElseClause : IrNode, IrContainer
     public new StatementElseSyntax Syntax
         => (StatementElseSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => CodeBlock.GetDescendentsOfType<T>();
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => CodeBlock.GetDescendantsOfType<T>();
 }
 
 internal sealed class IrElseIfClause : IrNode, IrContainer
@@ -70,12 +70,12 @@ internal sealed class IrElseIfClause : IrNode, IrContainer
     public new StatementElseIfSyntax Syntax
         => (StatementElseIfSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
     {
-        var exprTypes = Condition.GetDescendentsOfType<T>();
-        var codeBlockTypes = CodeBlock.GetDescendentsOfType<T>();
-        var elseTypes = ElseClause is not null ? ElseClause.GetDescendentsOfType<T>() : Enumerable.Empty<T>();
-        var elseIfTypes = ElseIfClause is not null ? ElseIfClause.GetDescendentsOfType<T>() : Enumerable.Empty<T>();
+        var exprTypes = Condition.GetDescendantsOfType<T>();
+        var codeBlockTypes = CodeBlock.GetDescendantsOfType<T>();
+        var elseTypes = ElseClause is not null ? ElseClause.GetDescendantsOfType<T>() : Enumerable.Empty<T>();
+        var elseIfTypes = ElseIfClause is not null ? ElseIfClause.GetDescendantsOfType<T>() : Enumerable.Empty<T>();
 
         return exprTypes.Concat(codeBlockTypes).Concat(elseIfTypes).Concat(elseTypes);
     }

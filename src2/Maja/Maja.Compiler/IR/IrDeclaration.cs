@@ -54,11 +54,11 @@ internal sealed class IrDeclarationFunction : IrDeclaration, IrContainer
     public new DeclarationFunctionSyntax Syntax
         => (DeclarationFunctionSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => TypeParameters.GetDescendentsOfType<T>()
-        .Concat(Parameters.GetDescendentsOfType<T>())
-        .Concat(ReturnType.GetDescendentsOfType<T>())
-        .Concat(Body.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => TypeParameters.GetDescendantsOfType<T>()
+        .Concat(Parameters.GetDescendantsOfType<T>())
+        .Concat(ReturnType.GetDescendantsOfType<T>())
+        .Concat(Body.GetDescendantsOfType<T>());
 }
 
 internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
@@ -85,8 +85,8 @@ internal sealed class IrDeclarationVariable : IrDeclaration, IrContainer
     public new DeclarationVariableSyntax Syntax
         => (DeclarationVariableSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Initializer.GetDescendentsOfType<T>();
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Initializer.GetDescendantsOfType<T>();
 }
 
 internal sealed class IrDeclarationType : IrDeclaration, IrContainer
@@ -119,9 +119,9 @@ internal sealed class IrDeclarationType : IrDeclaration, IrContainer
     public new DeclarationTypeSyntax Syntax
         => (DeclarationTypeSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => TypeParameters.GetDescendentsOfType<T>()
-        .Concat(Enums.GetDescendentsOfType<T>())
-        .Concat(Fields.GetDescendentsOfType<T>())
-        .Concat(Rules.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => TypeParameters.GetDescendantsOfType<T>()
+        .Concat(Enums.GetDescendantsOfType<T>())
+        .Concat(Fields.GetDescendantsOfType<T>())
+        .Concat(Rules.GetDescendantsOfType<T>());
 }

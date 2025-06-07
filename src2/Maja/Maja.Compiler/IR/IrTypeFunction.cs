@@ -23,8 +23,8 @@ internal sealed class IrTypeFunction : IrNode, IrContainer
     public ImmutableArray<IrType> ParameterTypes { get; }
     public IrType ReturnType { get; }
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => TypeParameters.GetDescendentsOfType<T>()
-        .Concat(ParameterTypes.GetDescendentsOfType<T>())
-        .Concat(ReturnType.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => TypeParameters.GetDescendantsOfType<T>()
+        .Concat(ParameterTypes.GetDescendantsOfType<T>())
+        .Concat(ReturnType.GetDescendantsOfType<T>());
 }

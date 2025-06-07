@@ -45,9 +45,9 @@ internal sealed class IrExpressionRange : IrExpression, IrContainer
     public new ExpressionRangeSyntax Syntax
         => (ExpressionRangeSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Start.GetDescendentsOfType<T>()
-        .Concat(End.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Start.GetDescendantsOfType<T>()
+        .Concat(End.GetDescendantsOfType<T>());
 }
 
 internal sealed class IrExpressionInvocation : IrExpression, IrContainer
@@ -68,9 +68,9 @@ internal sealed class IrExpressionInvocation : IrExpression, IrContainer
     public ImmutableArray<IrTypeArgument> TypeArguments { get; }
     public ImmutableArray<IrArgument> Arguments { get; }
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => TypeArguments.GetDescendentsOfType<T>()
-        .Concat(Arguments.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => TypeArguments.GetDescendantsOfType<T>()
+        .Concat(Arguments.GetDescendantsOfType<T>());
 }
 
 internal sealed class IrExpressionTypeInitializer : IrExpression, IrContainer
@@ -88,9 +88,9 @@ internal sealed class IrExpressionTypeInitializer : IrExpression, IrContainer
     public new ExpressionTypeInitializerSyntax Syntax
         => (ExpressionTypeInitializerSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => TypeArguments.GetDescendentsOfType<T>()
-        .Concat(Fields.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => TypeArguments.GetDescendantsOfType<T>()
+        .Concat(Fields.GetDescendantsOfType<T>());
 }
 
 internal sealed class IrExpressionLiteral : IrExpression
@@ -136,8 +136,8 @@ internal sealed class IrExpressionBinary : IrExpression, IrContainer
     public new ExpressionBinarySyntax Syntax
         => (ExpressionBinarySyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Left.GetDescendentsOfType<T>()
-        .Concat(Operator.GetDescendentsOfType<T>())
-        .Concat(Right.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Left.GetDescendantsOfType<T>()
+        .Concat(Operator.GetDescendantsOfType<T>())
+        .Concat(Right.GetDescendantsOfType<T>());
 }

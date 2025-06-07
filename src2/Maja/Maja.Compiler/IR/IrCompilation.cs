@@ -23,6 +23,6 @@ internal sealed class IrCompilation : IrNode, IrContainer
     public ImmutableArray<IrStatement> Statements { get; }
     public ImmutableArray<IrDeclaration> Declarations { get; }
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Statements.GetDescendentsOfType<T>().Concat(Declarations.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Statements.GetDescendantsOfType<T>().Concat(Declarations.GetDescendantsOfType<T>());
 }

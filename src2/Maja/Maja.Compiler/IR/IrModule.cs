@@ -36,5 +36,5 @@ internal sealed class IrModule : IrNode
     public ImmutableArray<IrDeclaration> Declarations { get; }
 
     public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Statements.GetDescendentsOfType<T>().Concat(Declarations.GetDescendentsOfType<T>());
+        => Statements.GetDescendantsOfType<T>().Concat(Declarations.GetDescendantsOfType<T>());
 }

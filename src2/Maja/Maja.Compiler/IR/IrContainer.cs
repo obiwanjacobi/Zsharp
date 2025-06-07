@@ -4,12 +4,12 @@ namespace Maja.Compiler.IR;
 
 internal interface IrContainer
 {
-    IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode;
+    IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode;
 }
 
 internal static class IrContainerExtensions
 {
-    public static IEnumerable<T> GetDescendentsOfType<T>(this IEnumerable<IrNode> nodes)
+    public static IEnumerable<T> GetDescendantsOfType<T>(this IEnumerable<IrNode> nodes)
         where T : IrNode
     {
         foreach (var node in nodes)
@@ -18,12 +18,12 @@ internal static class IrContainerExtensions
                 yield return nodeType;
 
             if (node is IrContainer container)
-                foreach (var t in container.GetDescendentsOfType<T>())
+                foreach (var t in container.GetDescendantsOfType<T>())
                     yield return t;
         }
     }
 
-    public static IEnumerable<T> GetDescendentsOfType<T>(this IrNode? node)
+    public static IEnumerable<T> GetDescendantsOfType<T>(this IrNode? node)
         where T : IrNode
     {
         if (node is null) yield break;
@@ -32,7 +32,7 @@ internal static class IrContainerExtensions
             yield return nodeType;
 
         if (node is IrContainer container)
-            foreach (var t in container.GetDescendentsOfType<T>())
+            foreach (var t in container.GetDescendantsOfType<T>())
                 yield return t;
     }
 }

@@ -16,6 +16,6 @@ internal sealed class IrStatementReturn : IrStatement, IrContainer
 
     public IrExpression? Expression { get; }
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Expression.GetDescendentsOfType<T>();
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Expression.GetDescendantsOfType<T>();
 }

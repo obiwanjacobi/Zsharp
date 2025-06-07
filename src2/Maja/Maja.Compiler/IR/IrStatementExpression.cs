@@ -16,6 +16,6 @@ internal class IrStatementExpression : IrStatement, IrContainer
     public new StatementExpressionSyntax Syntax
         => (StatementExpressionSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Expression.GetDescendentsOfType<T>();
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Expression.GetDescendantsOfType<T>();
 }

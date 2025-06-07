@@ -37,6 +37,6 @@ internal class IrStatementLoop : IrStatement, IrContainer
     public IrExpression? Expression { get; }
     public IrCodeBlock CodeBlock { get; }
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Expression.GetDescendentsOfType<T>().Concat(CodeBlock.GetDescendentsOfType<T>());
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Expression.GetDescendantsOfType<T>().Concat(CodeBlock.GetDescendantsOfType<T>());
 }

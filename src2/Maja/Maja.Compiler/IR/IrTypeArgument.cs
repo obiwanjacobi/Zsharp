@@ -16,6 +16,6 @@ internal class IrTypeArgument : IrNode, IrContainer
     public new TypeArgumentSyntax Syntax
         => (TypeArgumentSyntax)base.Syntax;
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Type.GetDescendentsOfType<T>();
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Type.GetDescendantsOfType<T>();
 }

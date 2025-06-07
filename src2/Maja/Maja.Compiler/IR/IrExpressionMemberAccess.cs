@@ -30,6 +30,6 @@ internal sealed class IrExpressionMemberAccess : IrExpression, IrContainer
 
     public ImmutableArray<FieldSymbol> Members { get; }
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Expression.GetDescendentsOfType<T>();
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Expression.GetDescendantsOfType<T>();
 }
