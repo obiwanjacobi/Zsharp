@@ -66,7 +66,7 @@ internal class IrExpressionTypeRewriter
             opType = expression.Operator.OperandType;
 
         if (opType != expression.Operator.OperandType)
-            op = new IrBinaryOperator(op.Syntax, opType);
+            op = new IrOperatorBinary(op.Syntax, opType);
 
         return new IrExpressionBinary(expression.Syntax, left, op, right);
     }

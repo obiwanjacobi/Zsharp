@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 
 namespace Maja.Compiler.IR;
 
-internal enum IrBinaryOperatorKind
+internal enum IrOperatorBinaryKind
 {
     // arithmetic
     Add,
@@ -39,15 +40,15 @@ internal enum IrBinaryOperatorKind
     Xor,
 }
 
-internal sealed class IrBinaryOperator : IrNode
+internal sealed class IrOperatorBinary : IrNode
 {
-    public IrBinaryOperator(IrBinaryOperatorKind operatorKind, TypeSymbol operandType)
+    public IrOperatorBinary(IrOperatorBinaryKind operatorKind, TypeSymbol operandType)
     {
         Kind = operatorKind;
         OperandType = operandType;
         TargetType = DetermineTargetType(operandType);
     }
-    public IrBinaryOperator(ExpressionOperatorSyntax syntax, TypeSymbol operandType)
+    public IrOperatorBinary(ExpressionOperatorSyntax syntax, TypeSymbol operandType)
         : base(syntax)
     {
         Kind = DetermineKind(syntax);
@@ -59,51 +60,51 @@ internal sealed class IrBinaryOperator : IrNode
     {
         switch (Kind)
         {
-            case IrBinaryOperatorKind.Equals:
-            case IrBinaryOperatorKind.NotEquals:
-            case IrBinaryOperatorKind.Greater:
-            case IrBinaryOperatorKind.GreaterOrEquals:
-            case IrBinaryOperatorKind.Lesser:
-            case IrBinaryOperatorKind.LesserOrEquals:
+            case IrOperatorBinaryKind.Equals:
+            case IrOperatorBinaryKind.NotEquals:
+            case IrOperatorBinaryKind.Greater:
+            case IrOperatorBinaryKind.GreaterOrEquals:
+            case IrOperatorBinaryKind.Lesser:
+            case IrOperatorBinaryKind.LesserOrEquals:
                 return TypeSymbol.Bool;
             default:
                 return operandType;
         }
     }
 
-    private static IrBinaryOperatorKind DetermineKind(ExpressionOperatorSyntax syntax)
+    private static IrOperatorBinaryKind DetermineKind(ExpressionOperatorSyntax syntax)
     {
         return syntax.OperatorKind switch
         {
-            ExpressionOperatorKind.And => IrBinaryOperatorKind.And,
-            ExpressionOperatorKind.BitAnd => IrBinaryOperatorKind.BitwiseAnd,
-            ExpressionOperatorKind.BitOr => IrBinaryOperatorKind.BitwiseOr,
-            ExpressionOperatorKind.BitRollLeft => IrBinaryOperatorKind.BitwiseRollLeft,
-            ExpressionOperatorKind.BitRollRight => IrBinaryOperatorKind.BitwiseRollRight,
-            ExpressionOperatorKind.BitShiftLeft => IrBinaryOperatorKind.BitwiseShiftLeft,
-            ExpressionOperatorKind.BitShiftRight => IrBinaryOperatorKind.BitwiseShiftRight,
-            ExpressionOperatorKind.BitShiftRightSign => IrBinaryOperatorKind.BitwiseShiftRightSign,
-            ExpressionOperatorKind.BitXor => IrBinaryOperatorKind.BitwiseXor,
-            ExpressionOperatorKind.Divide => IrBinaryOperatorKind.Divide,
-            ExpressionOperatorKind.Equals => IrBinaryOperatorKind.Equals,
-            ExpressionOperatorKind.Greater => IrBinaryOperatorKind.Greater,
-            ExpressionOperatorKind.GreaterOrEquals => IrBinaryOperatorKind.GreaterOrEquals,
-            ExpressionOperatorKind.Lesser => IrBinaryOperatorKind.Lesser,
-            ExpressionOperatorKind.LesserOrEquals => IrBinaryOperatorKind.LesserOrEquals,
-            ExpressionOperatorKind.Minus => IrBinaryOperatorKind.Subtract,
-            ExpressionOperatorKind.Modulo => IrBinaryOperatorKind.Modulo,
-            ExpressionOperatorKind.Multiply => IrBinaryOperatorKind.Multiply,
-            ExpressionOperatorKind.NotEquals => IrBinaryOperatorKind.NotEquals,
-            ExpressionOperatorKind.Or => IrBinaryOperatorKind.Or,
-            ExpressionOperatorKind.Plus => IrBinaryOperatorKind.Add,
-            ExpressionOperatorKind.Power => IrBinaryOperatorKind.Power,
-            ExpressionOperatorKind.Root => IrBinaryOperatorKind.Root,
-            ExpressionOperatorKind.Xor => IrBinaryOperatorKind.Xor,
+            ExpressionOperatorKind.And => IrOperatorBinaryKind.And,
+            ExpressionOperatorKind.BitAnd => IrOperatorBinaryKind.BitwiseAnd,
+            ExpressionOperatorKind.BitOr => IrOperatorBinaryKind.BitwiseOr,
+            ExpressionOperatorKind.BitRollLeft => IrOperatorBinaryKind.BitwiseRollLeft,
+            ExpressionOperatorKind.BitRollRight => IrOperatorBinaryKind.BitwiseRollRight,
+            ExpressionOperatorKind.BitShiftLeft => IrOperatorBinaryKind.BitwiseShiftLeft,
+            ExpressionOperatorKind.BitShiftRight => IrOperatorBinaryKind.BitwiseShiftRight,
+            ExpressionOperatorKind.BitShiftRightSign => IrOperatorBinaryKind.BitwiseShiftRightSign,
+            ExpressionOperatorKind.BitXor => IrOperatorBinaryKind.BitwiseXor,
+            ExpressionOperatorKind.Divide => IrOperatorBinaryKind.Divide,
+            ExpressionOperatorKind.Equals => IrOperatorBinaryKind.Equals,
+            ExpressionOperatorKind.Greater => IrOperatorBinaryKind.Greater,
+            ExpressionOperatorKind.GreaterOrEquals => IrOperatorBinaryKind.GreaterOrEquals,
+            ExpressionOperatorKind.Lesser => IrOperatorBinaryKind.Lesser,
+            ExpressionOperatorKind.LesserOrEquals => IrOperatorBinaryKind.LesserOrEquals,
+            ExpressionOperatorKind.Minus => IrOperatorBinaryKind.Subtract,
+            ExpressionOperatorKind.Modulo => IrOperatorBinaryKind.Modulo,
+            ExpressionOperatorKind.Multiply => IrOperatorBinaryKind.Multiply,
+            ExpressionOperatorKind.NotEquals => IrOperatorBinaryKind.NotEquals,
+            ExpressionOperatorKind.Or => IrOperatorBinaryKind.Or,
+            ExpressionOperatorKind.Plus => IrOperatorBinaryKind.Add,
+            ExpressionOperatorKind.Power => IrOperatorBinaryKind.Power,
+            ExpressionOperatorKind.Root => IrOperatorBinaryKind.Root,
+            ExpressionOperatorKind.Xor => IrOperatorBinaryKind.Xor,
             _ => throw new NotSupportedException($"IR: No support for Binary operator {syntax.OperatorKind}."),
         };
     }
 
-    public IrBinaryOperatorKind Kind { get; }
+    public IrOperatorBinaryKind Kind { get; }
     public TypeSymbol OperandType { get; }
     public TypeSymbol TargetType { get; }
 
@@ -111,7 +112,7 @@ internal sealed class IrBinaryOperator : IrNode
         => (ExpressionOperatorSyntax)base.Syntax;
 }
 
-internal enum IrUnaryOperatorKind
+internal enum IrOperatorUnaryKind
 {
     Identity,   // plus does nothing
     Negate,     // arithmetic
@@ -119,28 +120,28 @@ internal enum IrUnaryOperatorKind
     Not,        // logic
 }
 
-internal sealed class IrUnaryOperator : IrNode
+internal sealed class IrOperatorUnary : IrNode
 {
-    public IrUnaryOperator(ExpressionOperatorSyntax syntax, TypeSymbol operandType)
+    public IrOperatorUnary(ExpressionOperatorSyntax syntax, TypeSymbol operandType)
         : base(syntax)
     {
         Kind = DetermineKind(syntax);
         OperandType = operandType;
     }
 
-    private static IrUnaryOperatorKind DetermineKind(ExpressionOperatorSyntax syntax)
+    private static IrOperatorUnaryKind DetermineKind(ExpressionOperatorSyntax syntax)
     {
         return syntax.OperatorKind switch
         {
-            ExpressionOperatorKind.Plus => IrUnaryOperatorKind.Identity,
-            ExpressionOperatorKind.Minus => IrUnaryOperatorKind.Negate,
-            ExpressionOperatorKind.BitNot => IrUnaryOperatorKind.Invert,
-            ExpressionOperatorKind.Not => IrUnaryOperatorKind.Not,
+            ExpressionOperatorKind.Plus => IrOperatorUnaryKind.Identity,
+            ExpressionOperatorKind.Minus => IrOperatorUnaryKind.Negate,
+            ExpressionOperatorKind.BitNot => IrOperatorUnaryKind.Invert,
+            ExpressionOperatorKind.Not => IrOperatorUnaryKind.Not,
             _ => throw new NotSupportedException($"IR: No support for Unary operator {syntax.OperatorKind}."),
         };
     }
 
-    public IrUnaryOperatorKind Kind { get; }
+    public IrOperatorUnaryKind Kind { get; }
     public TypeSymbol OperandType { get; }
 
     public new ExpressionOperatorSyntax Syntax
@@ -150,11 +151,9 @@ internal sealed class IrUnaryOperator : IrNode
 internal sealed class IrOperatorAssignment : IrNode
 {
     // for code generation
-    internal IrOperatorAssignment()
+    private IrOperatorAssignment()
         : base(null)
-    {
-        WrapperType = null;
-    }
+    { }
     public IrOperatorAssignment(OperatorAssignmentSyntax syntax, TypeSymbol? wrapperType)
         : base(syntax)
     {
@@ -163,7 +162,7 @@ internal sealed class IrOperatorAssignment : IrNode
 
     public TypeSymbol? WrapperType { get; }
     public bool CopyInstance
-        => Syntax.CopyInstance;
+        => Syntax.Operators.Any(t => OperatorAssignmentSyntax.DetermineKind(t) == AssignmentOperatorKind.Copy);
 
     public new OperatorAssignmentSyntax Syntax
         => (OperatorAssignmentSyntax)base.Syntax;

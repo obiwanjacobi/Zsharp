@@ -18,7 +18,6 @@ public sealed record TypeTemplateSymbol : DeclaredTypeSymbol
             Enumerable.Empty<TypeParameterSymbol>(), enums, fields, rules, baseType)
     {
         TypeArgumentTypes = typeArgumentTypes.ToImmutableArray();
-        //TemplateName = CreateTypeName(name, typeArgumentTypes);
     }
 
     public ImmutableArray<TypeSymbol> TypeArgumentTypes { get; }

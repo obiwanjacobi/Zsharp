@@ -7,7 +7,7 @@ namespace Maja.Compiler.Eval;
 internal static class EvaluateConstant
 {
     public static IrConstant? Evaluate(TypeSymbol leftType, IrConstant leftValue,
-        IrBinaryOperator op, TypeSymbol rightType, IrConstant rightValue)
+        IrOperatorBinary op, TypeSymbol rightType, IrConstant rightValue)
     {
         if (!IrTypeConversion.TryDecideType(leftType, rightType, out var type))
             return null;
@@ -21,11 +21,11 @@ internal static class EvaluateConstant
 
             val = op.Kind switch
             {
-                IrBinaryOperatorKind.And => leftBool && rightBool,
-                IrBinaryOperatorKind.Equals => leftBool == rightBool,
-                IrBinaryOperatorKind.NotEquals => leftBool != rightBool,
-                IrBinaryOperatorKind.Or => leftBool || rightBool,
-                IrBinaryOperatorKind.Xor => leftBool ^ rightBool,
+                IrOperatorBinaryKind.And => leftBool && rightBool,
+                IrOperatorBinaryKind.Equals => leftBool == rightBool,
+                IrOperatorBinaryKind.NotEquals => leftBool != rightBool,
+                IrOperatorBinaryKind.Or => leftBool || rightBool,
+                IrOperatorBinaryKind.Xor => leftBool ^ rightBool,
                 _ => null
             };
         }
@@ -37,27 +37,27 @@ internal static class EvaluateConstant
 
             val = op.Kind switch
             {
-                IrBinaryOperatorKind.Add => leftInt + rightInt,
-                IrBinaryOperatorKind.BitwiseAnd => leftInt & rightInt,
-                IrBinaryOperatorKind.BitwiseOr => leftInt | rightInt,
-                IrBinaryOperatorKind.BitwiseRollLeft => leftInt << (int)rightInt,
-                IrBinaryOperatorKind.BitwiseRollRight => leftInt >> (int)rightInt,
-                IrBinaryOperatorKind.BitwiseShiftLeft => leftInt << (int)rightInt,
-                IrBinaryOperatorKind.BitwiseShiftRight => leftInt >> (int)rightInt,
-                IrBinaryOperatorKind.BitwiseShiftRightSign => leftInt >> (int)rightInt,
-                IrBinaryOperatorKind.BitwiseXor => leftInt ^ rightInt,
-                IrBinaryOperatorKind.Divide => leftInt / rightInt,
-                IrBinaryOperatorKind.Equals => leftInt == rightInt,
-                IrBinaryOperatorKind.Greater => leftInt > rightInt,
-                IrBinaryOperatorKind.GreaterOrEquals => leftInt >= rightInt,
-                IrBinaryOperatorKind.Lesser => leftInt < rightInt,
-                IrBinaryOperatorKind.LesserOrEquals => leftInt <= rightInt,
-                IrBinaryOperatorKind.Modulo => leftInt % rightInt,
-                IrBinaryOperatorKind.Multiply => leftInt * rightInt,
-                IrBinaryOperatorKind.NotEquals => leftInt != rightInt,
-                IrBinaryOperatorKind.Power => (long)Math.Pow(leftInt, rightInt),
-                IrBinaryOperatorKind.Root => (long)Math.Log(leftInt, rightInt),
-                IrBinaryOperatorKind.Subtract => leftInt - rightInt,
+                IrOperatorBinaryKind.Add => leftInt + rightInt,
+                IrOperatorBinaryKind.BitwiseAnd => leftInt & rightInt,
+                IrOperatorBinaryKind.BitwiseOr => leftInt | rightInt,
+                IrOperatorBinaryKind.BitwiseRollLeft => leftInt << (int)rightInt,
+                IrOperatorBinaryKind.BitwiseRollRight => leftInt >> (int)rightInt,
+                IrOperatorBinaryKind.BitwiseShiftLeft => leftInt << (int)rightInt,
+                IrOperatorBinaryKind.BitwiseShiftRight => leftInt >> (int)rightInt,
+                IrOperatorBinaryKind.BitwiseShiftRightSign => leftInt >> (int)rightInt,
+                IrOperatorBinaryKind.BitwiseXor => leftInt ^ rightInt,
+                IrOperatorBinaryKind.Divide => leftInt / rightInt,
+                IrOperatorBinaryKind.Equals => leftInt == rightInt,
+                IrOperatorBinaryKind.Greater => leftInt > rightInt,
+                IrOperatorBinaryKind.GreaterOrEquals => leftInt >= rightInt,
+                IrOperatorBinaryKind.Lesser => leftInt < rightInt,
+                IrOperatorBinaryKind.LesserOrEquals => leftInt <= rightInt,
+                IrOperatorBinaryKind.Modulo => leftInt % rightInt,
+                IrOperatorBinaryKind.Multiply => leftInt * rightInt,
+                IrOperatorBinaryKind.NotEquals => leftInt != rightInt,
+                IrOperatorBinaryKind.Power => (long)Math.Pow(leftInt, rightInt),
+                IrOperatorBinaryKind.Root => (long)Math.Log(leftInt, rightInt),
+                IrOperatorBinaryKind.Subtract => leftInt - rightInt,
                 _ => null
             };
         }
@@ -69,19 +69,19 @@ internal static class EvaluateConstant
 
             val = op.Kind switch
             {
-                IrBinaryOperatorKind.Add => leftFloat + rightFloat,
-                IrBinaryOperatorKind.Divide => leftFloat / rightFloat,
-                IrBinaryOperatorKind.Equals => leftFloat == rightFloat,
-                IrBinaryOperatorKind.Greater => leftFloat > rightFloat,
-                IrBinaryOperatorKind.GreaterOrEquals => leftFloat >= rightFloat,
-                IrBinaryOperatorKind.Lesser => leftFloat < rightFloat,
-                IrBinaryOperatorKind.LesserOrEquals => leftFloat <= rightFloat,
-                IrBinaryOperatorKind.Modulo => leftFloat % rightFloat,
-                IrBinaryOperatorKind.Multiply => leftFloat * rightFloat,
-                IrBinaryOperatorKind.NotEquals => leftFloat != rightFloat,
-                IrBinaryOperatorKind.Power => Math.Pow(leftFloat, rightFloat),
-                IrBinaryOperatorKind.Root => Math.Log(leftFloat, rightFloat),
-                IrBinaryOperatorKind.Subtract => leftFloat - rightFloat,
+                IrOperatorBinaryKind.Add => leftFloat + rightFloat,
+                IrOperatorBinaryKind.Divide => leftFloat / rightFloat,
+                IrOperatorBinaryKind.Equals => leftFloat == rightFloat,
+                IrOperatorBinaryKind.Greater => leftFloat > rightFloat,
+                IrOperatorBinaryKind.GreaterOrEquals => leftFloat >= rightFloat,
+                IrOperatorBinaryKind.Lesser => leftFloat < rightFloat,
+                IrOperatorBinaryKind.LesserOrEquals => leftFloat <= rightFloat,
+                IrOperatorBinaryKind.Modulo => leftFloat % rightFloat,
+                IrOperatorBinaryKind.Multiply => leftFloat * rightFloat,
+                IrOperatorBinaryKind.NotEquals => leftFloat != rightFloat,
+                IrOperatorBinaryKind.Power => Math.Pow(leftFloat, rightFloat),
+                IrOperatorBinaryKind.Root => Math.Log(leftFloat, rightFloat),
+                IrOperatorBinaryKind.Subtract => leftFloat - rightFloat,
                 _ => null
             };
         }

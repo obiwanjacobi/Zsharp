@@ -338,28 +338,28 @@ internal class CodeBuilder : IrWalker<object?>
         return res;
     }
 
-    public override object? OnOperatorBinary(IrBinaryOperator op)
+    public override object? OnOperatorBinary(IrOperatorBinary op)
     {
         var netOperator = op.Kind switch
         {
-            IrBinaryOperatorKind.Add => "+",
-            IrBinaryOperatorKind.And => "and",
-            IrBinaryOperatorKind.BitwiseAnd => "&&",
-            IrBinaryOperatorKind.BitwiseOr => "||",
-            IrBinaryOperatorKind.BitwiseShiftLeft => "<<",
-            IrBinaryOperatorKind.BitwiseShiftRight => ">>",
-            IrBinaryOperatorKind.BitwiseXor => "^",
-            IrBinaryOperatorKind.Divide => "/",
-            IrBinaryOperatorKind.Equals => "==",
-            IrBinaryOperatorKind.Greater => ">",
-            IrBinaryOperatorKind.GreaterOrEquals => ">=",
-            IrBinaryOperatorKind.Lesser => "<",
-            IrBinaryOperatorKind.LesserOrEquals => "<=",
-            IrBinaryOperatorKind.Modulo => "%",
-            IrBinaryOperatorKind.Multiply => "*",
-            IrBinaryOperatorKind.NotEquals => "!=",
-            IrBinaryOperatorKind.Or => "or",
-            IrBinaryOperatorKind.Subtract => "-",
+            IrOperatorBinaryKind.Add => "+",
+            IrOperatorBinaryKind.And => "and",
+            IrOperatorBinaryKind.BitwiseAnd => "&&",
+            IrOperatorBinaryKind.BitwiseOr => "||",
+            IrOperatorBinaryKind.BitwiseShiftLeft => "<<",
+            IrOperatorBinaryKind.BitwiseShiftRight => ">>",
+            IrOperatorBinaryKind.BitwiseXor => "^",
+            IrOperatorBinaryKind.Divide => "/",
+            IrOperatorBinaryKind.Equals => "==",
+            IrOperatorBinaryKind.Greater => ">",
+            IrOperatorBinaryKind.GreaterOrEquals => ">=",
+            IrOperatorBinaryKind.Lesser => "<",
+            IrOperatorBinaryKind.LesserOrEquals => "<=",
+            IrOperatorBinaryKind.Modulo => "%",
+            IrOperatorBinaryKind.Multiply => "*",
+            IrOperatorBinaryKind.NotEquals => "!=",
+            IrOperatorBinaryKind.Or => "or",
+            IrOperatorBinaryKind.Subtract => "-",
             _ => throw new NotSupportedException($"Binary Operator '{op.Kind}' is not supported.")
         };
 

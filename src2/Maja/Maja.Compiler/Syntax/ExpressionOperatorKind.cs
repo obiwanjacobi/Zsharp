@@ -54,3 +54,11 @@ public enum ExpressionOperatorCardinality
     Binary,
     Ternary
 }
+
+public enum AssignmentOperatorKind
+{
+    Unknown,
+    Invalid,
+    Assign,
+    Copy,
+}

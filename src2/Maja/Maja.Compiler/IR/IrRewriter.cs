@@ -388,7 +388,7 @@ internal abstract class IrRewriter
     {
         var left = RewriteExpression(expression.Left);
         var right = RewriteExpression(expression.Right);
-        var op = RewriteBinaryOperator(expression.Operator);
+        var op = RewriteOperatorBinary(expression.Operator);
 
         if (left == expression.Left &&
             right == expression.Right &&
@@ -398,7 +398,7 @@ internal abstract class IrRewriter
         return new IrExpressionBinary(expression.Syntax, left!, expression.Operator, right!);
     }
 
-    protected virtual IrBinaryOperator RewriteBinaryOperator(IrBinaryOperator @operator)
+    protected virtual IrOperatorBinary RewriteOperatorBinary(IrOperatorBinary @operator)
     {
         return @operator;
     }

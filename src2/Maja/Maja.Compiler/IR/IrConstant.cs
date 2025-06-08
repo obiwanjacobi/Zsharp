@@ -63,7 +63,7 @@ internal class IrConstant
 
     public static IrConstant Zero => new(0);
 
-    public static IrConstant? Fold(IrExpression left, IrBinaryOperator op, IrExpression right)
+    public static IrConstant? Fold(IrExpression left, IrOperatorBinary op, IrExpression right)
     {
         if (left.ConstantValue is null || right.ConstantValue is null)
             return null;

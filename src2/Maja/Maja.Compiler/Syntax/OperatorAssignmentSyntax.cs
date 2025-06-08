@@ -22,13 +22,8 @@ public sealed class OperatorAssignmentSyntax : SyntaxNode, ICreateSyntaxNode<Ope
             .Where(c => c.Token is not null)
             .Select(c => c.Token!);
 
-    /// <summary>
-    /// Indicates the presence of the '<' token that makes a copy of the instance during assignment.
-    /// </summary>
-    public bool CopyInstance
-        => Children.Any(c => c.Token is not null && c.Token.TokenTypeId == MajaLexer.AngleOpen);
-
-    //public WrapperTypeOperators
+    //public OperatorWrapperTypeSyntax? WrapperType
+    //    => ChildNodes.OfType<OperatorWrapperTypeSyntax>().SingleOrDefault();
 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnOperatorAssignment(this);
@@ -41,4 +36,14 @@ public sealed class OperatorAssignmentSyntax : SyntaxNode, ICreateSyntaxNode<Ope
             ChildNodes = childNodes,
             TrailingTokens = trailingTokens
         };
+
+    public static AssignmentOperatorKind DetermineKind(SyntaxToken token)
+    {
+        return token.TokenTypeId switch
+        {
+            MajaLexer.Eq => AssignmentOperatorKind.Assign,
+            MajaLexer.AngleOpen => AssignmentOperatorKind.Copy,
+            _ => AssignmentOperatorKind.Invalid
+        };
+    }
 }

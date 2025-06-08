@@ -635,6 +635,13 @@ Do you have to individually mark them as such?
 How to make an immutable var to a mutable struct?
 How to make a mutable var to an immutable struct?
 
+```csharp
+// mutable struct members
+MyStruct
+    fld1: Mut<U8>
+    fld2: Mut<Str>
+```
+
 ### Immutable Types
 
 > TBD: now that the default is immutable, this should perhaps be reconsidered.

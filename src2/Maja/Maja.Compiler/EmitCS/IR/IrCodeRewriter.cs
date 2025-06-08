@@ -62,13 +62,13 @@ internal sealed class IrCodeRewriter : IrRewriter
 
         var condition = new IrExpressionBinary(
             new IrExpressionIdentifier(symbol, type),
-            new IrBinaryOperator(IrBinaryOperatorKind.Lesser, type),
+            new IrOperatorBinary(IrOperatorBinaryKind.Lesser, type),
             endValExpr
             );
 
         var addOne = new IrExpressionBinary(
             new IrExpressionIdentifier(symbol, type),
-            new IrBinaryOperator(IrBinaryOperatorKind.Add, type),
+            new IrOperatorBinary(IrOperatorBinaryKind.Add, type),
             new IrExpressionLiteral(type, 1)
             );
 

@@ -113,7 +113,7 @@ internal sealed class IrExpressionLiteral : IrExpression
 internal sealed class IrExpressionBinary : IrExpression, IrContainer
 {
     internal IrExpressionBinary(
-        IrExpression left, IrBinaryOperator op, IrExpression right)
+        IrExpression left, IrOperatorBinary op, IrExpression right)
         : base(op.TargetType, IrConstant.Fold(left, op, right))
     {
         Left = left;
@@ -121,7 +121,7 @@ internal sealed class IrExpressionBinary : IrExpression, IrContainer
         Right = right;
     }
     public IrExpressionBinary(ExpressionBinarySyntax syntax,
-        IrExpression left, IrBinaryOperator op, IrExpression right)
+        IrExpression left, IrOperatorBinary op, IrExpression right)
         : base(syntax, op.TargetType, IrConstant.Fold(left, op, right))
     {
         Left = left;
@@ -130,7 +130,7 @@ internal sealed class IrExpressionBinary : IrExpression, IrContainer
     }
 
     public IrExpression Left { get; }
-    public IrBinaryOperator Operator { get; }
+    public IrOperatorBinary Operator { get; }
     public IrExpression Right { get; }
 
     public new ExpressionBinarySyntax Syntax

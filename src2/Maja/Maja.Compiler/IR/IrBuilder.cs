@@ -900,7 +900,7 @@ internal sealed class IrBuilder
         if (!IrTypeConversion.TryDecideType(left.TypeSymbol, right.TypeSymbol, out var opType))
             opType = left.TypeSymbol;
 
-        var op = new IrBinaryOperator(syntax.Operator, opType);
+        var op = new IrOperatorBinary(syntax.Operator, opType);
 
         return new IrExpressionBinary(syntax, left, op, right);
     }

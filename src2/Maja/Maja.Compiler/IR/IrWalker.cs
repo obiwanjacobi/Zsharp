@@ -155,7 +155,7 @@ internal abstract class IrWalker<R>
         result = AggregateResult(result, OnExpression(expression.Right));
         return result;
     }
-    public virtual R OnOperatorBinary(IrBinaryOperator op)
+    public virtual R OnOperatorBinary(IrOperatorBinary op)
         => Default;
     public virtual R OnExpressionLiteral(IrExpressionLiteral expression)
         => Default;

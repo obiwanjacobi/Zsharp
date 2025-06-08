@@ -12,8 +12,8 @@ internal abstract class IrCopyRewriter : IrRewriter
         return [new IrArgument(argument.Syntax, expression, argument.Symbol)];
     }
 
-    protected override IrBinaryOperator RewriteBinaryOperator(IrBinaryOperator @operator)
-        => new IrBinaryOperator(@operator.Kind, @operator.OperandType);
+    protected override IrOperatorBinary RewriteOperatorBinary(IrOperatorBinary @operator)
+        => new IrOperatorBinary(@operator.Kind, @operator.OperandType);
 
     protected override IrCodeBlock RewriteCodeBlock(IrCodeBlock codeBlock)
     {
@@ -58,7 +58,7 @@ internal abstract class IrCopyRewriter : IrRewriter
     protected override IrExpressionBinary RewriteExpressionBinary(IrExpressionBinary expression)
     {
         var left = RewriteExpression(expression.Left)!;
-        var op = RewriteBinaryOperator(expression.Operator);
+        var op = RewriteOperatorBinary(expression.Operator);
         var right = RewriteExpression(expression.Right)!;
         return new IrExpressionBinary(left, op, right);
     }
