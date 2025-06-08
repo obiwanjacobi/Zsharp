@@ -21,3 +21,18 @@ Type Conversion functions are implemented in checked and unchecked versions.
 
 - Wrapper types: Opt<T>, Err<T>, Mut<T>, Atom<T>, (Mem<T>? Ptr<T>?)
 - Operator functions (checked/unchecked?)
+- Code generation for Operator and Conversion functions.
+
+---
+
+## Code Generation
+
+Generate the Operator Functions and the Conversion Functions.
+
+- target file name
+- target class name
+- data types involved (return and parameters)
+- operators: saturate,wrap-around, exception and error
+- specific impl for each type (cast params to ret-type)
+- decide metafile type (xml, json, yml or C#)
+- decide text generation tech (reuse EmitCS from compiler?)
