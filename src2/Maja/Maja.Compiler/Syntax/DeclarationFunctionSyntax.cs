@@ -18,7 +18,7 @@ public sealed class DeclarationFunctionSyntax : DeclarationMemberSyntax, ICreate
     /// <summary>
     /// The name of the declared function.
     /// </summary>
-    public NameSyntax Identifier
+    public NameSyntax Name
         => ChildNodes.OfType<NameSyntax>().Single();
 
     /// <summary>

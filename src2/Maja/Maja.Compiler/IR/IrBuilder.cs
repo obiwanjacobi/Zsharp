@@ -119,25 +119,6 @@ internal sealed class IrBuilder
             imports, exports, statements, members);
     }
 
-    //private IrCompilation Compilation(CompilationUnitSyntax root)
-    //{
-    //    var exports = PublicExports(root.PublicExports);
-    //    var imports = UseImports(root.UseImports);
-
-    //    GetScopeOf<IrModuleScope>().SetExports(exports);
-    //    ProcessImports(imports);
-
-    //    // by first processing declarations before statements
-    //    // we prevent some complexity of finding forward refs of symbols.
-    //    var members = Declarations(root.Members);
-
-    //    _locality = IrLocality.Module;
-    //    var statements = Statements(root.Statements);
-    //    _locality = IrLocality.None;
-
-    //    return new IrCompilation(root, imports, exports, statements, members);
-    //}
-
     private void ProcessImports(IEnumerable<IrImport> imports)
     {
         foreach (var import in imports)
@@ -177,8 +158,8 @@ internal sealed class IrBuilder
             IrDeclaration decl = mbr switch
             {
                 DeclarationFunctionSyntax fds => DeclarationFunction(fds),
-                VariableDeclarationTypedSyntax vdt => DeclarationVariableTyped(vdt),
-                VariableDeclarationInferredSyntax vdi => DeclarationVariableInferred(vdi),
+                DeclarationVariableTypedSyntax vdt => DeclarationVariableTyped(vdt),
+                DeclarationVariableInferredSyntax vdi => DeclarationVariableInferred(vdi),
                 DeclarationTypeSyntax tds => DeclarationType(tds),
                 _ => throw new NotSupportedException($"IR: No support for Declaration '{mbr.SyntaxKind}'")
             };
@@ -348,7 +329,7 @@ internal sealed class IrBuilder
         return new(syntax, type, symbol);
     }
 
-    private IrDeclarationVariable DeclarationVariableInferred(VariableDeclarationInferredSyntax syntax)
+    private IrDeclarationVariable DeclarationVariableInferred(DeclarationVariableInferredSyntax syntax)
     {
         var initializer = Expression(syntax.Expression!);
 
@@ -379,7 +360,7 @@ internal sealed class IrBuilder
         return new IrDeclarationVariable(syntax, symbol, type!, assignment, initializer);
     }
 
-    private IrDeclarationVariable DeclarationVariableTyped(VariableDeclarationTypedSyntax syntax)
+    private IrDeclarationVariable DeclarationVariableTyped(DeclarationVariableTypedSyntax syntax)
     {
         IrExpression? initializer = null;
         if (syntax.Expression is ExpressionSyntax synExpr)
@@ -417,7 +398,7 @@ internal sealed class IrBuilder
 
     private IrDeclarationFunction DeclarationFunction(DeclarationFunctionSyntax syntax)
     {
-        var functionScope = new IrFunctionScope(syntax.Identifier.Text, CurrentScope);
+        var functionScope = new IrFunctionScope(syntax.Name.Text, CurrentScope);
         var parentScope = PushScope(functionScope);
 
         var typeParameters = TypeParameters(syntax.TypeParameters);
@@ -434,7 +415,7 @@ internal sealed class IrBuilder
 
         var returnType = Type(syntax.ReturnType) ?? IrType.Void;
 
-        var name = new SymbolName(parentScope.FullName, syntax.Identifier.Text);
+        var name = new SymbolName(parentScope.FullName, syntax.Name.Text);
         var symbol = new DeclaredFunctionSymbol(name, typeParamSymbols, paramSymbols, returnType.Symbol);
 
         if (!parentScope.TryDeclareFunction(symbol))

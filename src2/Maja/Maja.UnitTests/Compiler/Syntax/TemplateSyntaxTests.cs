@@ -23,7 +23,7 @@ public class TemplateSyntaxTests
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
         var fn = result.Members.First().As<DeclarationFunctionSyntax>();
-        fn.Identifier.Text.Should().Be("fn");
+        fn.Name.Text.Should().Be("fn");
         fn.TypeParameters.Should().HaveCount(1);
         var param = fn.TypeParameters.First().As<TypeParameterTemplateSyntax>();
         param.Text.Should().Be("#T");
@@ -43,7 +43,7 @@ public class TemplateSyntaxTests
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
         var fn = result.Members.First().As<DeclarationFunctionSyntax>();
-        fn.Identifier.Text.Should().Be("fn");
+        fn.Name.Text.Should().Be("fn");
         fn.TypeParameters.Should().HaveCount(1);
         var param = fn.TypeParameters.First().As<TypeParameterTemplateSyntax>();
         param.Type.Text.Should().Be("T");

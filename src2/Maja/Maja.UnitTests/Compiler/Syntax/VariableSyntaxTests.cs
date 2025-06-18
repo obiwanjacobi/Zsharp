@@ -21,7 +21,7 @@ public class VariableSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
+        var v = result.Members.First().As<DeclarationVariableTypedSyntax>();
         v.Name.Text.Should().Be("x");
         v.Type!.Name.Text.Should().Be("U8");
 
@@ -37,7 +37,7 @@ public class VariableSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
+        var v = result.Members.First().As<DeclarationVariableTypedSyntax>();
         v.Name.Text.Should().Be("x");
         v.Type!.Name.Text.Should().Be("U8");
         v.Expression.Should().NotBeNull();
@@ -55,7 +55,7 @@ public class VariableSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
+        var v = result.Members.First().As<DeclarationVariableTypedSyntax>();
         v.Name.Text.Should().Be("x");
         v.Type!.Name.Text.Should().Be("Bit");
         v.Type!.TypeArguments.Should().HaveCount(2);
@@ -78,7 +78,7 @@ public class VariableSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationInferredSyntax>();
+        var v = result.Members.First().As<DeclarationVariableInferredSyntax>();
         v.Name.Text.Should().Be("x");
         v.Expression.As<ExpressionLiteralSyntax>().LiteralNumber!.Text.Should().Be("42");
 
@@ -96,7 +96,7 @@ public class VariableSyntaxTests
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
 
-        var v = result.Members.First().As<VariableDeclarationTypedSyntax>();
+        var v = result.Members.First().As<DeclarationVariableTypedSyntax>();
         v.Name.Text.Should().Be("x");
         v.Type.Name.Text.Should().Be("U8");
 
@@ -119,7 +119,7 @@ public class VariableSyntaxTests
 
         var result = Syntax.Parse(code);
         result.Members.Should().HaveCount(1);
-        var v = result.Members.First().As<VariableDeclarationInferredSyntax>();
+        var v = result.Members.First().As<DeclarationVariableInferredSyntax>();
 
         v.AssignmentOperator.Should().NotBeNull();
         var o = v.AssignmentOperator!.Operators.ToList();

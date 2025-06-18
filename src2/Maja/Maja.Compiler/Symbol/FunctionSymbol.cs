@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Maja.Compiler.Symbol;
 
+// function declaration
 public record DeclaredFunctionSymbol : Symbol
 {
     public DeclaredFunctionSymbol(SymbolName name,
@@ -54,6 +55,22 @@ public sealed record UnresolvedDeclaredFunctionSymbol : DeclaredFunctionSymbol
     public override bool IsUnresolved => true;
 }
 
+// function reference
+public sealed record UnresolvedFunctionSymbol : Symbol
+{
+    public UnresolvedFunctionSymbol(SymbolName name, int argCount)
+        : base(name)
+    {
+        ArgumentCount = argCount;
+    }
+
+    public int ArgumentCount { get; }
+
+    public override SymbolKind Kind
+        => SymbolKind.Function;
+}
+
+// function type
 public sealed record TypeFunctionSymbol : TypeSymbol
 {
     public TypeFunctionSymbol(

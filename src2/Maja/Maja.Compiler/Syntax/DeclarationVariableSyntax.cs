@@ -33,9 +33,9 @@ public abstract class DeclarationVariableSyntax : DeclarationMemberSyntax
 /// <summary>
 /// Represents a variable declaration with an explicit type.
 /// </summary>
-public sealed class VariableDeclarationTypedSyntax : DeclarationVariableSyntax, ICreateSyntaxNode<VariableDeclarationTypedSyntax>
+public sealed class DeclarationVariableTypedSyntax : DeclarationVariableSyntax, ICreateSyntaxNode<DeclarationVariableTypedSyntax>
 {
-    private VariableDeclarationTypedSyntax(string text)
+    private DeclarationVariableTypedSyntax(string text)
         : base(text)
     { }
 
@@ -51,7 +51,7 @@ public sealed class VariableDeclarationTypedSyntax : DeclarationVariableSyntax, 
     public override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnVariableDeclarationTyped(this);
 
-    public static VariableDeclarationTypedSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+    public static DeclarationVariableTypedSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
             Location = location,
@@ -65,9 +65,9 @@ public sealed class VariableDeclarationTypedSyntax : DeclarationVariableSyntax, 
 /// Represents a variable declaration where it's type is to be inferred.
 /// Expression is set.
 /// </summary>
-public sealed class VariableDeclarationInferredSyntax : DeclarationVariableSyntax, ICreateSyntaxNode<VariableDeclarationInferredSyntax>
+public sealed class DeclarationVariableInferredSyntax : DeclarationVariableSyntax, ICreateSyntaxNode<DeclarationVariableInferredSyntax>
 {
-    private VariableDeclarationInferredSyntax(string text)
+    private DeclarationVariableInferredSyntax(string text)
         : base(text)
     { }
 
@@ -77,7 +77,7 @@ public sealed class VariableDeclarationInferredSyntax : DeclarationVariableSynta
     public sealed override R Accept<R>(ISyntaxVisitor<R> visitor)
         => visitor.OnVariableDeclarationInferred(this);
 
-    public static VariableDeclarationInferredSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
+    public static DeclarationVariableInferredSyntax Create(string text, SyntaxLocation location, SyntaxNodeOrTokenList children, SyntaxNodeList childNodes, SyntaxTokenList trailingTokens)
         => new(text)
         {
             Location = location,

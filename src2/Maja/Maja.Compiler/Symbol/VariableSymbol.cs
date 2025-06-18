@@ -9,3 +9,13 @@ public record DeclaredVariableSymbol : SymbolWithType
     public override SymbolKind Kind
         => SymbolKind.Variable;
 }
+
+public sealed record UnresolvedVariableSymbol : Symbol
+{
+    public UnresolvedVariableSymbol(SymbolName name)
+        : base(name)
+    { }
+
+    public override SymbolKind Kind
+        => SymbolKind.Variable;
+}

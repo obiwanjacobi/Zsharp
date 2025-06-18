@@ -273,7 +273,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     {
         var children = Children(base.VisitDeclarationVariableTyped, context);
 
-        var node = VariableDeclarationTypedSyntax.Create(context.GetText(),
+        var node = DeclarationVariableTypedSyntax.Create(context.GetText(),
             Location(context),
             children.All,
             children.Nodes,
@@ -291,7 +291,7 @@ internal sealed class SyntaxTreeBuilder : MajaParserBaseVisitor<SyntaxNodeOrToke
     {
         var children = Children(base.VisitDeclarationVariableInferred, context);
 
-        var node = VariableDeclarationInferredSyntax.Create(context.GetText(),
+        var node = DeclarationVariableInferredSyntax.Create(context.GetText(),
             Location(context),
             children.All,
             children.Nodes,

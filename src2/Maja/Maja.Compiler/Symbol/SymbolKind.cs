@@ -2,6 +2,7 @@
 
 public enum SymbolKind
 {
+    None,
     Unknown,
     Assembly,
     Namespace,

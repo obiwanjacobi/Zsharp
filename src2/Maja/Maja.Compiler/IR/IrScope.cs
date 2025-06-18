@@ -358,7 +358,7 @@ internal sealed class IrModuleScope : IrScope
     }
 
     public override bool IsExport(SymbolName name)
-        => _exports?.Exists(exp => name.MatchesWith(exp) == 0) == true;
+        => _exports?.Exists(exp => exp.MatchesWith(name) >= 0) == true;
 
     public override bool TryLookupSymbol<T>(SymbolName name, [NotNullWhen(true)] out T? symbol)
         where T : class //Symbol.Symbol
