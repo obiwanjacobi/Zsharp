@@ -107,7 +107,7 @@ internal class IrProcessManager
             var item = _channel.Reader.ReadAsync(token).AsTask().Result;
             if (item == null) return;
 
-            ProcessResolvedDependencies(item);
+            ProcessResolvedReferences(item);
 
             var type = item.GetType();
             if (_processors.TryGetValue(type, out var processors))
@@ -176,7 +176,7 @@ internal class IrProcessManager
         }
     }
 
-    private void ProcessResolvedDependencies(IrProcess item)
+    private void ProcessResolvedReferences(IrProcess item)
     {
         var refsToRemove = new List<IrProcess>();
 

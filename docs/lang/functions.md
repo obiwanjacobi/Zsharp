@@ -553,6 +553,10 @@ MyFunc(p: U8, p2: U16): MyStruct
 ```csharp
 // use a tuple/anonymous struct for retval
 MyFunc(p: U8, p2: U16): (field1: U8, field2: U16)       // list notation
+    field1 = p      // this suggests named return values are mutable :-(
+    field2 = p2
+    return field1, field2
+
 MyFunc(p: U8, p2: U16): {field1: U8, field2: U16}       // object notation
     return {
         field1 = p
@@ -816,8 +820,17 @@ boundFn(s)
 Alternate syntax?
 
 ```csharp
+// implicit self
 MyStruct.boundFn: (p: U8)
     // still use the 'self' keyword
+    self.fld1 = p
+    // or a shortened version?
+    .fld1 = p
+```
+
+```csharp
+// isolate explicit self from params
+boundFn: (self: MyStruct)(p: U8)
     self.fld1 = p
     // or a shortened version?
     .fld1 = p

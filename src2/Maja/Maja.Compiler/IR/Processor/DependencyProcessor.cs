@@ -4,13 +4,28 @@ internal sealed class DeclarationFunctionSymbolsProc : IrProcessor<IrProcessFunc
 {
     public override IrProcessorState Run(IIrProcessorContext context, IrProcessFunction item)
     {
-        item.Symbol = item.Syntax.ToSymbol(item.Scope);
+        if (item.Symbol is null)
+        {
+            item.Symbol = item.Syntax.ToSymbol(item.Scope);
+            var codeBlock = new IrProcessCodeBlock(item.Syntax.CodeBlock, item.Scope);
+            item.AddReference(codeBlock);
+            context.Enqueue(codeBlock);
+        }
+        else if (!item.Symbol.IsUnresolved)
+        {
+            // TODO: this only needs to happen once
+            if (!item.Scope.TryDeclareFunction(item.Symbol))
+            {
+                // diagnostic
+            }
 
-        var codeBlock = new IrProcessCodeBlock(item.Syntax.CodeBlock, item.Scope);
-        IrProcessReference.Connect(item, codeBlock);
+            if (item.Dependencies.IsDone)
+            {
+                var factory = new IrFactory(context, item);
+                item.Model = factory.DeclarationFunction(item.Syntax, item.Symbol, item.Scope);
 
-        context.Enqueue(codeBlock);
-
+            }
+        }
         return IrProcessorState.Empty;
     }
 }
@@ -40,7 +55,7 @@ internal sealed class CodeBlockSymbolsProc : IrProcessor<IrProcessCodeBlock>
         foreach (var decl in item.Syntax.Members)
         {
             var declItem = IrProcessBuilder.Declaration(decl, item.Scope);
-            IrProcessReference.Connect(declItem, declItem);
+            item.AddReference(declItem);
 
             context.Enqueue(declItem);
         }

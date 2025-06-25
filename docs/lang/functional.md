@@ -177,3 +177,17 @@ fn1() <| fn2() <| fn3() <| 42
 - Map, Apply, Bind ?? What are the names to use here? https://fsharpforfunandprofit.com/series/map-and-bind-and-apply-oh-my/
 
 > Monads?
+
+---
+
+> TBD: Function Composition
+
+Make new function definitions by composing existing functions together.
+
+> What is the difference between partial application and function composition?
+
+```csharp
+// composition operator >=> (TBD) - (right) fish operator
+compFn: fn1 >=> fn2
+// compFn = fn1(fn2())()
+```

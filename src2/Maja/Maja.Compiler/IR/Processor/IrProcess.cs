@@ -9,18 +9,15 @@ namespace Maja.Compiler.IR.Processor;
 internal abstract class IrProcess
 {
     // base class for specializations
-    protected IrProcess(IrScope scope)
+    protected IrProcess()
     {
         Id = Guid.NewGuid();
-        Scope = scope;
         References = new();
         Dependencies = new();
         ProcessorProperties = new();
     }
 
     public Guid Id { get; }
-
-    public IrScope Scope { get; }
 
     // out standing work
     public IrProcessDependencies Dependencies { get; }
@@ -30,17 +27,31 @@ internal abstract class IrProcess
 
     // processor states (each processor can store state in item)
     public IrProcessorBag ProcessorProperties { get; }
+
+    public void AddReference(IrProcess child)
+        => Dependencies.UnprocessedReferences.Add(child);
+
+    public IrProcessFunction FindReference(DeclarationFunctionSyntax syntax)
+        => References.OfType<IrProcessFunction>().Single(r => r.Syntax == syntax);
+    public IrProcessType FindReference(DeclarationTypeSyntax syntax)
+        => References.OfType<IrProcessType>().Single(r => r.Syntax == syntax);
+    public IrProcessVariable FindReference(DeclarationVariableSyntax syntax)
+        => References.OfType<IrProcessVariable>().Single(r => r.Syntax == syntax);
+    public IrProcessCodeBlock FindReference(CodeBlockSyntax syntax)
+        => References.OfType<IrProcessCodeBlock>().Single(r => r.Syntax == syntax);
 }
 
 
 internal class IrProcessType : IrProcess
 {
     // processes a type declaration
-    public IrProcessType(DeclarationTypeSyntax syntax, IrScope scope)
-        : base(scope)
+    public IrProcessType(DeclarationTypeSyntax syntax, IrTypeScope scope)
     {
+        Scope = scope;
         Syntax = syntax;
     }
+
+    public IrTypeScope Scope { get; }
 
     public DeclarationTypeSyntax Syntax { get; }
 
@@ -54,11 +65,13 @@ internal class IrProcessFunction : IrProcess
 {
     // processes a function declaration
 
-    public IrProcessFunction(DeclarationFunctionSyntax syntax, IrScope scope)
-        : base(scope)
+    public IrProcessFunction(DeclarationFunctionSyntax syntax, IrFunctionScope scope)
     {
+        Scope = scope;
         Syntax = syntax;
     }
+
+    public IrFunctionScope Scope { get; }
 
     public DeclarationFunctionSyntax Syntax { get; }
 
@@ -72,10 +85,12 @@ internal class IrProcessVariable : IrProcess
     // processes a variable declaration
 
     public IrProcessVariable(DeclarationVariableSyntax syntax, IrScope scope)
-        : base(scope)
     {
+        Scope = scope;
         Syntax = syntax;
     }
+
+    public IrScope Scope { get; }
 
     public DeclarationVariableSyntax Syntax { get; }
 
@@ -90,31 +105,20 @@ internal class IrProcessCodeBlock : IrProcess
 {
     // processes a code block (resolve dependencies)
     public IrProcessCodeBlock(CodeBlockSyntax syntax, IrScope scope)
-        : base(scope)
     {
+        Scope = scope;
         Syntax = syntax;
         Symbols = [];
-        Declarations = [];
-        Statements = [];
     }
+
+    public IrScope Scope { get; }
 
     public CodeBlockSyntax Syntax { get; }
 
+    public IrCodeBlock? Model { get; internal set; }
+
     public IEnumerable<Symbol.Symbol> Symbols { get; internal set; }
-
-    public IEnumerable<IrDeclaration> Declarations { get; internal set; }
-    public IEnumerable<IrStatement> Statements { get; internal set; }
 }
-
-
-internal static class IrProcessReference
-{
-    public static void Connect(IrProcess parent, IrProcess child)
-    {
-        parent.Dependencies.UnprocessedReferences.Add(child);
-    }
-}
-
 
 internal class IrProcessDependencies
 {

@@ -13,6 +13,7 @@ Started. Have ErrorToken with description.
 - [ ] SyntaxWriter: Indents (dedent) are not working correct with multiple indents.
 
 Ir:
+- [ ] Combine CodeBlock Statements/Declarations in the correct order.
 - [ ] Type: Generics (type inference)
 - [ ] Type: Comp-parameter
 - [ ] Function: Generics (type inference)

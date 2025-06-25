@@ -19,16 +19,15 @@ On the providing-side the `SyntaxTree` is walked and declarations and statements
 
 `IrProcessType` is a mutable object that keeps track of processing a Type declaration
 `IrProcessFunction` is a mutable object that keeps track of processing a Function declaration
+`IrProcessVariable` is a mutable object that keeps track of processing a Variable declaration
 `IrProcessCodeBlock` is a mutable object that keeps track of resolving dependencies etc.
 
-These objects all reference the relevant Syntax object.
+These objects all reference their relevant Syntax object.
 
 > How to know what `IrCodeBlock` belongs to what Function (or statement within another CodeBlock)?
 > Also Type and Function declarations can be nested.
 
 Do we need an `IrProcessReference` object to link two `IrProcessXxxx` objects together in a specific way?
-
-
 
 ## Processors
 
@@ -62,13 +61,16 @@ Some additional error conditions need to be handled:
 
 - Walk the Syntax tree and create basic IrProcessXxx items for declarations and statements. Maintain references between items for dependencies (hierarchy).
 - Proc: create the initial Symbol structures for Types, Functions and Expressions. These contain UnresolvedSymbol instances of unresolved references.
+    - After the initial Symbols are created, start linking (unresolved) symbol references to symbol declarations - even if those declarations have unresolved symbols them selves.
+    This brings up the problem of replacing symbol declaration objects in symbol references.
+    Perhaps we register symbol declarations first in the scope and only link them to symbol references when they are completely done?
 - Proc: Register declarations where all dependencies/unresolved Symbols are resolved.
     - What if no declarations can be resolved?
     - How do you know when it is time to resolve dependent symbols?
-      - How to resolve a symbol with the same name in different scopes?
+        - How to resolve a symbol with the same name in different scopes?
 - Proc: When an item has its symbols resolved, its IrModel objects can be created and stored in the item.
 - Proc: Resolve operator functions and rewrite the IrModel to reflect calling those functions.
-- Proc: [other operations]
+- Proc: [other operations] (meta-programming)
 - Collect Diagnostics that each Processor might generate. (post diagnostics in a separate channel that is read by the 'client')
 - Put items where all Processors are done processing the item, in the resolved-list.
 - Each item that is processed is check if it has any dependencies that are currently in the resolved-list. Assume that each item only has one parent/is a dependency for one other (parent) item.

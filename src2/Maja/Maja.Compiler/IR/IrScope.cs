@@ -285,9 +285,11 @@ internal abstract class IrScope
 
 internal abstract class IrLocalScope : IrScope
 {
-    protected IrLocalScope(string originalName, IrScope? parent)
+    protected IrLocalScope(string originalName, IrScope parent)
         : base(originalName, parent)
     { }
+
+    public new IrScope Parent => base.Parent ?? throw new MajaException();
 
     public int TryDeclareTypes(IEnumerable<TypeParameterSymbol> typeParameters)
     {
@@ -310,7 +312,7 @@ internal abstract class IrLocalScope : IrScope
 }
 internal sealed class IrFunctionScope : IrLocalScope
 {
-    public IrFunctionScope(string name, IrScope? parent)
+    public IrFunctionScope(string name, IrScope parent)
         : base(name, parent)
     { }
 
@@ -335,7 +337,7 @@ internal sealed class IrFunctionScope : IrLocalScope
 
 internal sealed class IrTypeScope : IrLocalScope
 {
-    public IrTypeScope(string name, IrScope? parent)
+    public IrTypeScope(string name, IrScope parent)
         : base(name, parent)
     { }
 }
@@ -347,6 +349,8 @@ internal sealed class IrModuleScope : IrScope
     public IrModuleScope(string originalName, IrScope parent)
         : base(originalName, parent)
     { }
+
+    public new IrScope Parent => base.Parent ?? throw new MajaException();
 
     public override string FullName => Name;
 

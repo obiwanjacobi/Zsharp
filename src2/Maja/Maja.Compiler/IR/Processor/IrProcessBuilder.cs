@@ -58,8 +58,6 @@ internal sealed class IrProcessBuilder
         foreach (var decl in syntax.Members)
         {
             var declItem = IrProcessBuilder.Declaration(decl, CurrentScope);
-            IrProcessReference.Connect(declItem, declItem);
-
             _processMgr.Enqueue(declItem);
         }
 
