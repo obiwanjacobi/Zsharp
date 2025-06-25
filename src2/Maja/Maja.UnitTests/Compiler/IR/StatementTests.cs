@@ -20,9 +20,9 @@ public class StatementTests
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
         program.Module.Statements.Should().HaveCount(1);
-        var statIf = program.Module.Statements[0].As<IrStatementIf>();
+        var statIf = program.Module.Statements.ElementAt(0).As<IrStatementIf>();
         statIf.Condition.TypeSymbol.Should().Be(TypeSymbol.Bool);
-        statIf.CodeBlock.Statements.Should().HaveCount(1);
+        statIf.CodeBlock.Nodes.Should().HaveCount(1);
     }
 
     [Fact]
@@ -40,10 +40,10 @@ public class StatementTests
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
         program.Module.Statements.Should().HaveCount(1);
-        var statIf = program.Module.Statements[0].As<IrStatementIf>();
+        var statIf = program.Module.Statements.ElementAt(0).As<IrStatementIf>();
         statIf.Condition.TypeSymbol.Should().Be(TypeSymbol.Bool);
-        statIf.CodeBlock.Statements.Should().HaveCount(1);
-        statIf.ElseClause!.CodeBlock.Statements.Should().HaveCount(1);
+        statIf.CodeBlock.Nodes.Should().HaveCount(1);
+        statIf.ElseClause!.CodeBlock.Nodes.Should().HaveCount(1);
     }
 
     [Fact]
@@ -61,11 +61,11 @@ public class StatementTests
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
         program.Module.Statements.Should().HaveCount(1);
-        var statIf = program.Module.Statements[0].As<IrStatementIf>();
+        var statIf = program.Module.Statements.ElementAt(0).As<IrStatementIf>();
         statIf.Condition.TypeSymbol.Should().Be(TypeSymbol.Bool);
-        statIf.CodeBlock.Statements.Should().HaveCount(1);
+        statIf.CodeBlock.Nodes.Should().HaveCount(1);
         statIf.ElseIfClause!.Condition.TypeSymbol.Should().Be(TypeSymbol.Bool);
-        statIf.ElseIfClause!.CodeBlock.Statements.Should().HaveCount(1);
+        statIf.ElseIfClause!.CodeBlock.Nodes.Should().HaveCount(1);
     }
 
     [Fact]
@@ -85,11 +85,11 @@ public class StatementTests
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
         program.Module.Statements.Should().HaveCount(1);
-        var statIf = program.Module.Statements[0].As<IrStatementIf>();
+        var statIf = program.Module.Statements.ElementAt(0).As<IrStatementIf>();
         statIf.Condition.TypeSymbol.Should().Be(TypeSymbol.Bool);
-        statIf.CodeBlock.Statements.Should().HaveCount(1);
+        statIf.CodeBlock.Nodes.Should().HaveCount(1);
         var statElseIf = statIf.ElseIfClause!;
-        statElseIf.ElseClause!.CodeBlock.Statements.Should().HaveCount(1);
+        statElseIf.ElseClause!.CodeBlock.Nodes.Should().HaveCount(1);
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public class StatementTests
         program.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
         program.Module.Statements.Should().HaveCount(1);
-        var stat = program.Module.Statements[0].As<IrStatementAssignment>();
+        var stat = program.Module.Statements.ElementAt(0).As<IrStatementAssignment>();
         stat.Symbol.Should().BeOfType<DiscardSymbol>();
         stat.Expression.As<IrExpressionInvocation>().Symbol.Name.Value.Should().Be("fn");
     }
@@ -137,7 +137,7 @@ public class StatementTests
         program.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
         program.Module.Statements.Should().HaveCount(1);
-        var stat = program.Module.Statements[0].As<IrStatementLoop>();
+        var stat = program.Module.Statements.ElementAt(0).As<IrStatementLoop>();
         stat.CodeBlock.Should().NotBeNull();
         stat.Expression.Should().BeNull();
     }
@@ -155,7 +155,7 @@ public class StatementTests
         program.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
         program.Module.Statements.Should().HaveCount(1);
-        var stat = program.Module.Statements[0].As<IrStatementLoop>();
+        var stat = program.Module.Statements.ElementAt(0).As<IrStatementLoop>();
         stat.CodeBlock.Should().NotBeNull();
         stat.Expression.Should().NotBeNull();
         stat.Expression.As<IrExpressionLiteral>().Should().NotBeNull();
@@ -174,7 +174,7 @@ public class StatementTests
         program.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
         program.Module.Statements.Should().HaveCount(1);
-        var stat = program.Module.Statements[0].As<IrStatementLoop>();
+        var stat = program.Module.Statements.ElementAt(0).As<IrStatementLoop>();
         stat.CodeBlock.Should().NotBeNull();
         stat.Expression.Should().NotBeNull();
         stat.Expression.As<IrExpressionBinary>().Should().NotBeNull();

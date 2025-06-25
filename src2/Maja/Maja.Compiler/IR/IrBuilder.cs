@@ -82,7 +82,7 @@ internal sealed class IrBuilder
 
         return new IrModule(module.Syntax, module.Symbol, module.Scope,
             module.Imports, module.Exports,
-            module.Statements, module.Declarations.Concat(concreteDecls));
+            module.Nodes.Concat(concreteDecls));
     }
 
     private static ModuleSymbol ModuleSymbol(CompilationUnitSyntax syntax)
@@ -109,14 +109,13 @@ internal sealed class IrBuilder
 
         // by first processing declarations before statements
         // we prevent some complexity of finding forward refs of symbols.
-        var members = Declarations(syntax.Members);
-        var statements = Statements(syntax.Statements);
+        var nodes = Nodes(syntax.ChildNodes);
 
         _locality = IrLocality.None;
         var moduleScope = PopScope<IrModuleScope>();
 
         return new IrModule(syn, symbol, moduleScope,
-            imports, exports, statements, members);
+            imports, exports, nodes);
     }
 
     private void ProcessImports(IEnumerable<IrImport> imports)
@@ -155,19 +154,23 @@ internal sealed class IrBuilder
 
         foreach (var mbr in syntax)
         {
-            IrDeclaration decl = mbr switch
-            {
-                DeclarationFunctionSyntax fds => DeclarationFunction(fds),
-                DeclarationVariableTypedSyntax vdt => DeclarationVariableTyped(vdt),
-                DeclarationVariableInferredSyntax vdi => DeclarationVariableInferred(vdi),
-                DeclarationTypeSyntax tds => DeclarationType(tds),
-                _ => throw new NotSupportedException($"IR: No support for Declaration '{mbr.SyntaxKind}'")
-            };
-
+            var decl = Declaration(mbr);
             declarations.Add(decl);
         }
 
         return declarations;
+    }
+
+    private IrDeclaration Declaration(DeclarationMemberSyntax declaration)
+    {
+        return declaration switch
+        {
+            DeclarationFunctionSyntax fds => DeclarationFunction(fds),
+            DeclarationVariableTypedSyntax vdt => DeclarationVariableTyped(vdt),
+            DeclarationVariableInferredSyntax vdi => DeclarationVariableInferred(vdi),
+            DeclarationTypeSyntax tds => DeclarationType(tds),
+            _ => throw new NotSupportedException($"IR: No support for Declaration '{declaration.SyntaxKind}'")
+        };
     }
 
     private IrDeclarationType DeclarationType(DeclarationTypeSyntax syntax)
@@ -435,7 +438,7 @@ internal sealed class IrBuilder
 
         if (returnType == IrType.Void)
         {
-            var invalidReturns = block.Statements
+            var invalidReturns = block.Nodes
                 .GetDescendantsOfType<IrStatementReturn>()
                 .Where(r => r.Expression is not null);
             foreach (var ret in invalidReturns)
@@ -463,10 +466,34 @@ internal sealed class IrBuilder
 
     private IrCodeBlock CodeBlock(CodeBlockSyntax syntax)
     {
-        var declarations = Declarations(syntax.Members);
-        var statements = Statements(syntax.Statements);
+        var nodes = Nodes(syntax.ChildNodes);
+        return new IrCodeBlock(syntax, nodes);
+    }
+    private List<IrNode> Nodes(SyntaxNodeList syntax)
+    {
+        // exclude module directives etc.
+        return Nodes(syntax.Where(s => (int)s.SyntaxKind >= 1000));
+    }
+    private List<IrNode> Nodes(IEnumerable<SyntaxNode> syntax)
+    {
+        var nodes = new List<IrNode>();
+        foreach (var synNode in syntax)
+        {
+            var node = Node(synNode);
+            nodes.Add(node);
+        }
 
-        return new IrCodeBlock(syntax, statements, declarations);
+        return nodes;
+    }
+
+    private IrNode Node(SyntaxNode synNode)
+    {
+        return synNode switch
+        {
+            StatementSyntax statement => Statement(statement),
+            DeclarationMemberSyntax declaration => Declaration(declaration),
+            _ => throw new MajaException($"IR: Invalid code block root syntax object: {synNode.GetType().FullName}.")
+        };
     }
 
     private List<IrStatement> Statements(IEnumerable<StatementSyntax> statements)
@@ -475,20 +502,24 @@ internal sealed class IrBuilder
 
         foreach (var stat in statements)
         {
-            IrStatement irStat = stat switch
-            {
-                StatementAssignmentSyntax sa => StatementAssignment(sa),
-                StatementIfSyntax ifs => StatementIf(ifs),
-                StatementReturnSyntax ret => StatementReturn(ret),
-                StatementExpressionSyntax ses => StatementExpression(ses),
-                StatementLoopSyntax sls => StatementLoop(sls),
-                _ => throw new NotSupportedException($"IR: No support for Statement '{stat.SyntaxKind}'.")
-            };
-
+            var irStat = Statement(stat);
             irStats.Add(irStat);
         }
 
         return irStats;
+    }
+
+    private IrStatement Statement(StatementSyntax statement)
+    {
+        return statement switch
+        {
+            StatementAssignmentSyntax sa => StatementAssignment(sa),
+            StatementIfSyntax ifs => StatementIf(ifs),
+            StatementReturnSyntax ret => StatementReturn(ret),
+            StatementExpressionSyntax ses => StatementExpression(ses),
+            StatementLoopSyntax sls => StatementLoop(sls),
+            _ => throw new NotSupportedException($"IR: No support for Statement '{statement.SyntaxKind}'.")
+        };
     }
 
     private IrStatementLoop StatementLoop(StatementLoopSyntax syntax)
@@ -550,7 +581,8 @@ internal sealed class IrBuilder
         {
             _diagnostics.InvalidStatementExpression(syntax.Location);
         }
-        else if (expr.TypeSymbol != TypeSymbol.Void)
+        else if (!expr.TypeSymbol.IsUnresolved &&
+            expr.TypeSymbol != TypeSymbol.Void)
         {
             _diagnostics.FunctionReturnValueUnhandled(syntax.Location, expr.Syntax.Text);
         }

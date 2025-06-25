@@ -44,7 +44,7 @@ internal sealed class IrResolveSymbolsRewriter : IrRewriter
 
                 var typeArguments = RewriteTypeArguments(expression.TypeArguments);
                 var arguments = RewriteArguments(expression.Arguments);
-                var typeSymbol = ResolveTypeSymbol(expression.TypeSymbol, expression.Syntax.Location);
+                var typeSymbol = ResolveTypeSymbol(expression.TypeSymbol, functionSymbol.ReturnType, expression.Syntax.Location);
                 return new IrExpressionInvocation(expression.Syntax, functionSymbol, typeArguments, arguments, typeSymbol);
             }
 
@@ -66,7 +66,7 @@ internal sealed class IrResolveSymbolsRewriter : IrRewriter
 
             if (type.Symbol.IsUnresolved)
             {
-                var typeSymbol = ResolveTypeSymbol(type.Symbol, type.Syntax.Location);
+                var typeSymbol = ResolveTypeSymbol(type.Symbol, null, type.Syntax.Location);
                 return [new IrType(type.Syntax, typeSymbol)];
             }
         }
@@ -117,7 +117,7 @@ internal sealed class IrResolveSymbolsRewriter : IrRewriter
         return typeSymbol;
     }
 
-    private TypeSymbol ResolveTypeSymbol(TypeSymbol typeSymbol, SyntaxLocation location)
+    private TypeSymbol ResolveTypeSymbol(TypeSymbol typeSymbol, TypeSymbol? defaultTypeSymbol, SyntaxLocation location)
     {
         if (typeSymbol.TryIsUnresolved(out UnresolvedTypeSymbol? unresolvedSymbol))
         {
@@ -127,6 +127,10 @@ internal sealed class IrResolveSymbolsRewriter : IrRewriter
                 Diagnostics.TypeNotFound(location, unresolvedSymbol.Name.FullOriginalName);
                 typeSymbol = TypeSymbol.Unresolved;
             }
+        }
+        else if (typeSymbol.IsUnresolved && defaultTypeSymbol is not null)
+        {
+            typeSymbol = defaultTypeSymbol;
         }
         return typeSymbol;
     }

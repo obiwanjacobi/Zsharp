@@ -27,7 +27,7 @@ internal sealed class IrDgmlBuilder
         }
     };
 
-    public static void Save(IrNode node, string filePath = "interrep.dgml")
+    public static void Save(Compiler.IR.IrNode node, string filePath = "interrep.dgml")
     {
         ObjectDgmlBuilder.Save(_config, node, filePath);
     }

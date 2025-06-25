@@ -25,8 +25,10 @@ internal abstract class IrWalker<R>
     }
     public virtual R OnCodeBlock(IrCodeBlock codeBlock)
     {
-        var result = OnDeclarations(codeBlock.Declarations);
-        result = AggregateResult(result, OnStatements(codeBlock.Statements));
+        //var result = OnDeclarations(codeBlock.Declarations);
+        //result = AggregateResult(result, OnStatements(codeBlock.Statements));
+        //return result;
+        var result = OnNodes(codeBlock.Nodes);
         return result;
     }
 
@@ -53,18 +55,32 @@ internal abstract class IrWalker<R>
     public virtual R OnImport(IrImport import)
         => Default;
 
-    public virtual R OnDeclarations(IEnumerable<IrDeclaration> declarations)
-        => declarations.Select(declaration =>
+    public virtual R OnNodes(IEnumerable<IrNode> nodes)
+        => nodes.Select(OnNode).Aggregate(Default, AggregateResult);
+
+    public virtual R OnNode(IrNode node)
+    {
+        return node switch
         {
-            return declaration switch
-            {
-                IrDeclarationFunction fd => OnDeclarationFunction(fd),
-                IrDeclarationType td => OnDeclarationType(td),
-                IrDeclarationVariable vd => OnDeclarationVariable(vd),
-                _ => Default
-            };
-        })
-            .Aggregate(Default, AggregateResult);
+            IrStatement statement => OnStatement(statement),
+            IrDeclaration declaration => OnDeclaration(declaration),
+            _ => Default
+        };
+    }
+
+    public virtual R OnDeclarations(IEnumerable<IrDeclaration> declarations)
+        => declarations.Select(OnDeclaration).Aggregate(Default, AggregateResult);
+
+    public virtual R OnDeclaration(IrDeclaration declaration)
+    {
+        return declaration switch
+        {
+            IrDeclarationFunction fd => OnDeclarationFunction(fd),
+            IrDeclarationType td => OnDeclarationType(td),
+            IrDeclarationVariable vd => OnDeclarationVariable(vd),
+            _ => Default
+        };
+    }
 
     public virtual R OnDeclarationFunction(IrDeclarationFunction function)
     {
@@ -183,20 +199,22 @@ internal abstract class IrWalker<R>
         => Default;
     public virtual R OnExpressionMemberAccess(IrExpressionMemberAccess memberAccess)
         => OnExpression(memberAccess.Expression);
+
     public virtual R OnStatements(IEnumerable<IrStatement> statements)
-        => statements.Select(statement =>
+        => statements.Select(OnStatement).Aggregate(Default, AggregateResult);
+
+    private R OnStatement(IrStatement statement)
+    {
+        return statement switch
         {
-            return statement switch
-            {
-                IrStatementAssignment statAss => OnStatementAssignment(statAss),
-                IrStatementExpression statExpr => OnStatementExpression(statExpr),
-                IrStatementIf statIf => OnStatementIf(statIf),
-                IrStatementLoop statLoop => OnStatementLoop(statLoop),
-                IrStatementReturn statRet => OnStatementReturn(statRet),
-                _ => Default
-            };
-        })
-            .Aggregate(Default, AggregateResult);
+            IrStatementAssignment statAss => OnStatementAssignment(statAss),
+            IrStatementExpression statExpr => OnStatementExpression(statExpr),
+            IrStatementIf statIf => OnStatementIf(statIf),
+            IrStatementLoop statLoop => OnStatementLoop(statLoop),
+            IrStatementReturn statRet => OnStatementReturn(statRet),
+            _ => Default
+        };
+    }
 
     public virtual R OnStatementAssignment(IrStatementAssignment statement)
         => OnExpression(statement.Expression);

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Maja.Compiler.Symbol;
 using Maja.Compiler.Syntax;
 
@@ -10,7 +9,7 @@ internal sealed class IrModule : IrNode
 {
     public IrModule(SyntaxNode syntax, ModuleSymbol symbol, IrModuleScope scope,
         IEnumerable<IrImport> imports, IEnumerable<IrExport> exports,
-        IEnumerable<IrStatement> statements, IEnumerable<IrDeclaration> declarations)
+        IEnumerable<IrNode> nodes)
         : base(syntax)
     {
         Symbol = symbol;
@@ -18,8 +17,8 @@ internal sealed class IrModule : IrNode
 
         Imports = imports.ToImmutableArray();
         Exports = exports.ToImmutableArray();
-        Statements = statements.ToImmutableArray();
-        Declarations = declarations.ToImmutableArray();
+
+        Nodes = nodes.ToImmutableArray();
     }
 
     // can be null if no mod keyword was found
@@ -32,9 +31,11 @@ internal sealed class IrModule : IrNode
 
     public ImmutableArray<IrImport> Imports { get; }
     public ImmutableArray<IrExport> Exports { get; }
-    public ImmutableArray<IrStatement> Statements { get; }
-    public ImmutableArray<IrDeclaration> Declarations { get; }
+    public ImmutableArray<IrNode> Nodes { get; }
 
-    public IEnumerable<T> GetDescendentsOfType<T>() where T : IrNode
-        => Statements.GetDescendantsOfType<T>().Concat(Declarations.GetDescendantsOfType<T>());
+    public IEnumerable<IrStatement> Statements => Nodes.OfType<IrStatement>();
+    public IEnumerable<IrDeclaration> Declarations => Nodes.OfType<IrDeclaration>();
+
+    public IEnumerable<T> GetDescendantsOfType<T>() where T : IrNode
+        => Nodes.GetDescendantsOfType<T>();
 }

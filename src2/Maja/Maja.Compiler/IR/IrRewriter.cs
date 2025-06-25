@@ -33,17 +33,15 @@ internal abstract class IrRewriter
     {
         var exports = RewriteExports(module.Exports);
         var imports = RewriteImports(module.Imports);
-        var declarations = RewriteDeclarations(module.Declarations);
-        var statements = RewriteStatements(module.Statements);
+        var nodes = RewriteNodes(module.Nodes);
 
         if (exports == module.Exports &&
             imports == module.Imports &&
-            declarations == module.Declarations &&
-            statements == module.Statements)
+            nodes == module.Nodes)
             return module;
 
         return new IrModule(module.Syntax, module.Symbol, module.Scope,
-            imports, exports, statements, declarations);
+            imports, exports, nodes);
     }
 
     protected virtual ImmutableArray<IrExport> RewriteExports(ImmutableArray<IrExport> exports)
@@ -68,14 +66,28 @@ internal abstract class IrRewriter
 
     protected virtual IrCodeBlock RewriteCodeBlock(IrCodeBlock codeBlock)
     {
-        var declarations = RewriteDeclarations(codeBlock.Declarations);
-        var statement = RewriteStatements(codeBlock.Statements);
+        var nodes = RewriteNodes(codeBlock.Nodes);
 
-        if (declarations == codeBlock.Declarations &&
-            statement == codeBlock.Statements)
+        if (nodes == codeBlock.Nodes)
             return codeBlock;
 
-        return new IrCodeBlock(codeBlock.Syntax, statement, declarations);
+        return new IrCodeBlock(codeBlock.Syntax, nodes);
+    }
+
+    protected virtual ImmutableArray<IrNode> RewriteNodes(ImmutableArray<IrNode> nodes)
+    {
+        return RewriteArray(nodes, RewriteNode);
+    }
+
+    protected virtual IEnumerable<IrNode> RewriteNode(IrNode node)
+    {
+        return node switch
+        {
+            IrStatement statement => RewriteStatement(statement),
+            IrDeclaration declaration => RewriteDeclaration(declaration),
+            _ => throw new MajaException($"IR: Invalid code block root object: {node.GetType().FullName}.")
+        };
+
     }
 
     protected virtual ImmutableArray<IrDeclaration> RewriteDeclarations(ImmutableArray<IrDeclaration> declarations)

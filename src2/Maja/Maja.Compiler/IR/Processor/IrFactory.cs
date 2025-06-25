@@ -20,25 +20,50 @@ internal class IrFactory
         _item = item;
     }
 
+    public List<IrNode> Nodes(IEnumerable<SyntaxNode> syntax, IrScope scope)
+    {
+        var nodes = new List<IrNode>();
+        foreach (var synNode in syntax)
+        {
+            var node = Node(synNode, scope);
+            nodes.Add(node);
+        }
+        return nodes;
+    }
+
+    private IrNode Node(SyntaxNode synNode, IrScope scope)
+    {
+        return synNode switch
+        {
+            StatementSyntax statement => Statement(statement, scope),
+            DeclarationMemberSyntax declaration => Declaration(declaration, scope),
+            _ => throw new MajaException($"IR: Invalid code block root syntax object: {synNode.GetType().FullName}.")
+        };
+    }
+
     public List<IrDeclaration> Declarations(IEnumerable<DeclarationMemberSyntax> syntax, IrScope scope)
     {
         var declarations = new List<IrDeclaration>();
 
-        foreach (var mbr in syntax)
+        foreach (var synDecl in syntax)
         {
-            IrDeclaration decl = mbr switch
-            {
-                DeclarationFunctionSyntax fds => NextDeclarationFunction(fds),
-                DeclarationVariableTypedSyntax vdt => NextDeclarationVariableTyped(vdt),
-                DeclarationVariableInferredSyntax vdi => NextDeclarationVariableInferred(vdi),
-                DeclarationTypeSyntax tds => NextDeclarationType(tds),
-                _ => throw new NotSupportedException($"IR: No support for Declaration '{mbr.SyntaxKind}'")
-            };
-
+            var decl = Declaration(synDecl, scope);
             declarations.Add(decl);
         }
 
         return declarations;
+    }
+
+    public IrDeclaration Declaration(DeclarationMemberSyntax syntax, IrScope scope)
+    {
+        return syntax switch
+        {
+            DeclarationFunctionSyntax fds => NextDeclarationFunction(fds),
+            DeclarationVariableTypedSyntax vdt => NextDeclarationVariableTyped(vdt),
+            DeclarationVariableInferredSyntax vdi => NextDeclarationVariableInferred(vdi),
+            DeclarationTypeSyntax tds => NextDeclarationType(tds),
+            _ => throw new NotSupportedException($"IR: No support for Declaration '{syntax.SyntaxKind}'")
+        };
     }
 
     private IrDeclarationType NextDeclarationType(DeclarationTypeSyntax syntax)
@@ -84,7 +109,7 @@ internal class IrFactory
 
         if (returnType == IrType.Void)
         {
-            var invalidReturns = block.Statements
+            var invalidReturns = block.Nodes
                 .GetDescendantsOfType<IrStatementReturn>()
                 .Where(r => r.Expression is not null);
 
@@ -347,9 +372,20 @@ internal class IrFactory
 
     public IrCodeBlock CodeBlock(CodeBlockSyntax syntax, IrScope scope)
     {
-        var declarations = Declarations(syntax.Members, scope);
-        //var statements = Statements(syntax.Statements, scope);
+        var nodes = Nodes(syntax.ChildNodes, scope);
+        return new IrCodeBlock(syntax, nodes);
+    }
 
-        return new IrCodeBlock(syntax, [], declarations);
+    public IrStatement Statement(StatementSyntax statement, IrScope scope)
+    {
+        return statement switch
+        {
+            //StatementAssignmentSyntax sa => StatementAssignment(sa),
+            //StatementIfSyntax ifs => StatementIf(ifs),
+            //StatementReturnSyntax ret => StatementReturn(ret),
+            //StatementExpressionSyntax ses => StatementExpression(ses),
+            //StatementLoopSyntax sls => StatementLoop(sls),
+            _ => throw new NotSupportedException($"IR: No support for Statement '{statement.SyntaxKind}'.")
+        };
     }
 }

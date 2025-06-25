@@ -44,7 +44,7 @@ public record TypeSymbol : Symbol
     public virtual bool IsExternal => false;
     public bool IsWellknown { get; }
 
-    public virtual bool IsUnresolved => false;
+    public virtual bool IsUnresolved => this == TypeSymbol.Unknown || this == TypeSymbol.Unresolved;
     public virtual bool TryIsUnresolved([NotNullWhen(true)] out UnresolvedTypeSymbol? unresolvedSymbol)
     {
         unresolvedSymbol = null;

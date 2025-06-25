@@ -1,3 +1,4 @@
+using System.Linq;
 using Maja.Compiler.External;
 using Maja.Compiler.IR;
 using Maja.Compiler.Symbol;
@@ -22,7 +23,7 @@ public class ExternalModuleTests
         program.Module.Should().NotBeNull();
         program.Module.Imports.Should().HaveCount(1);
         program.Module.Statements.Should().HaveCount(1);
-        var stat = program.Module.Statements[0].As<IrStatementExpression>();
+        var stat = program.Module.Statements.ElementAt(0).As<IrStatementExpression>();
         var invoke = stat.Expression.As<IrExpressionInvocation>();
         invoke.Symbol.Name.Namespace.OriginalName.Should().Be("System.Console");
         invoke.Arguments.Should().HaveCount(1);
@@ -47,7 +48,7 @@ public class ExternalModuleTests
         program.Module.Should().NotBeNull();
         program.Module.Imports.Should().HaveCount(1);
         program.Module.Declarations.Should().HaveCount(1);
-        var v = program.Module.Declarations[0].As<IrDeclarationVariable>();
+        var v = program.Module.Declarations.ElementAt(0).As<IrDeclarationVariable>();
         v.TypeSymbol.IsExternal.Should().BeTrue();
         var colors = v.TypeSymbol.As<DeclaredTypeSymbol>();
         colors.Enums.Should().HaveCount(16);

@@ -18,7 +18,7 @@ public class TypeTests
         var program = Ir.Build(code);
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
-        var type = program.Module.Declarations[0].As<IrDeclarationType>();
+        var type = program.Module.Declarations.ElementAt(0).As<IrDeclarationType>();
         var symbol = type.Symbol.As<DeclaredTypeSymbol>();
         symbol.Name.Value.Should().Be("Mytype");
         symbol.Enums.Should().HaveCount(2);
@@ -43,7 +43,7 @@ public class TypeTests
         var program = Ir.Build(code);
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
-        var type = program.Module.Declarations[0].As<IrDeclarationType>();
+        var type = program.Module.Declarations.ElementAt(0).As<IrDeclarationType>();
         var symbol = type.Symbol.As<DeclaredTypeSymbol>();
         symbol.Name.Value.Should().Be("Mytype");
         symbol.Fields.Should().HaveCount(2);
@@ -69,7 +69,7 @@ public class TypeTests
         var program = Ir.Build(code);
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(2);
-        var baseType = program.Module.Declarations[0].As<IrDeclarationType>();
+        var baseType = program.Module.Declarations.ElementAt(0).As<IrDeclarationType>();
         var symbol = baseType.Symbol.As<DeclaredTypeSymbol>();
         symbol.Name.Value.Should().Be("Basetype");
         symbol.Fields.Should().HaveCount(1);
@@ -78,7 +78,7 @@ public class TypeTests
         baseType.Fields[0].Symbol.Name.Value.Should().Be("fld1");
         baseType.Fields[0].Type.Symbol.Should().Be(TypeSymbol.U8);
 
-        var type = program.Module.Declarations[1].As<IrDeclarationType>();
+        var type = program.Module.Declarations.ElementAt(1).As<IrDeclarationType>();
         type.BaseType!.Symbol.Name.Value.Should().Be("Basetype");
         symbol = type.Symbol.As<DeclaredTypeSymbol>();
         symbol.Name.Value.Should().Be("Mytype");
@@ -102,7 +102,7 @@ public class TypeTests
         var program = Ir.Build(code);
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(1);
-        var type = program.Module.Declarations[0].As<IrDeclarationType>();
+        var type = program.Module.Declarations.ElementAt(0).As<IrDeclarationType>();
         type.TypeParameters.Should().HaveCount(1);
         var tp = type.TypeParameters[0];
         tp.Symbol.Name.Value.Should().Be("T");
@@ -165,7 +165,7 @@ public class TypeTests
         var program = Ir.Build(code);
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(2);
-        var v = program.Module.Declarations[1].As<IrDeclarationVariable>();
+        var v = program.Module.Declarations.ElementAt(1).As<IrDeclarationVariable>();
         v.TypeSymbol.Name.Value.Should().Be("Mytype");
         var t = v.Initializer.As<IrExpressionTypeInitializer>();
         t.TypeSymbol.Name.Value.Should().Be("Mytype");
@@ -195,7 +195,7 @@ public class TypeTests
         var program = Ir.Build(code);
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(3);
-        var v = program.Module.Declarations[2].As<IrDeclarationVariable>();
+        var v = program.Module.Declarations.ElementAt(2).As<IrDeclarationVariable>();
         v.TypeSymbol.Name.Value.Should().Be("Basetype");
         var t = v.Initializer.As<IrExpressionTypeInitializer>();
         t.TypeSymbol.Name.Value.Should().Be("Mytype");
@@ -225,7 +225,7 @@ public class TypeTests
         var program = Ir.Build(code);
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(3);
-        var v = program.Module.Declarations[2].As<IrDeclarationVariable>();
+        var v = program.Module.Declarations.ElementAt(2).As<IrDeclarationVariable>();
         v.TypeSymbol.Name.Value.Should().Be("Mytype");
         var t = v.Initializer.As<IrExpressionTypeInitializer>();
         t.TypeSymbol.Name.Value.Should().Be("Mytype");
@@ -254,7 +254,7 @@ public class TypeTests
         var program = Ir.Build(code);
         program.Module.Should().NotBeNull();
         program.Module.Declarations.Should().HaveCount(2);
-        var v = program.Module.Declarations[1].As<IrDeclarationVariable>();
+        var v = program.Module.Declarations.ElementAt(1).As<IrDeclarationVariable>();
         v.TypeSymbol.Name.Value.Should().Be("Mytype");
         var t = v.Initializer.As<IrExpressionTypeInitializer>();
         t.TypeSymbol.Name.Value.Should().Be("Mytype");

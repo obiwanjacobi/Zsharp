@@ -18,7 +18,7 @@ public class ConstructorTests
             ;
 
         var program = Ir.Build(code, builder.ToModuleLoader());
-        var varDecl = program.Module.Declarations[0].As<IrDeclarationVariable>();
+        var varDecl = program.Module.Declarations.ElementAt(0).As<IrDeclarationVariable>();
         varDecl.Should().NotBeNull();
         varDecl.Symbol.Name.Namespace.OriginalName.Should().Be(IrBuilder.DefaultModuleName);
         var invok = varDecl.Initializer.As<IrExpressionInvocation>();

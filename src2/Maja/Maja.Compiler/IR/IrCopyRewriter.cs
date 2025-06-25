@@ -17,9 +17,22 @@ internal abstract class IrCopyRewriter : IrRewriter
 
     protected override IrCodeBlock RewriteCodeBlock(IrCodeBlock codeBlock)
     {
-        var statements = RewriteStatements(codeBlock.Statements);
-        var declarations = RewriteDeclarations(codeBlock.Declarations);
-        return new IrCodeBlock(codeBlock.Syntax, statements, declarations);
+        var nodes = new List<IrNode>();
+        foreach (var irNode in codeBlock.Nodes)
+        {
+            IEnumerable<IrNode> newNodes = irNode switch
+            {
+                IrStatement statement => RewriteStatement(statement),
+                IrDeclaration declaration => RewriteDeclaration(declaration),
+                _ => throw new MajaException($"IR: Invalid code block root object: {irNode.GetType().FullName}.")
+            };
+
+            nodes.AddRange(newNodes);
+        }
+        //var statements = RewriteStatements(codeBlock.Statements);
+        //var declarations = RewriteDeclarations(codeBlock.Declarations);
+        //return new IrCodeBlock(codeBlock.Syntax, statements, declarations);
+        return new IrCodeBlock(codeBlock.Syntax, nodes);
     }
 
     protected override IEnumerable<IrDeclarationFunction> RewriteDeclarationFunction(IrDeclarationFunction function)
