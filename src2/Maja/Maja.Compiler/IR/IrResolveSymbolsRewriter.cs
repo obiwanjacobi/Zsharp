@@ -132,6 +132,12 @@ internal sealed class IrResolveSymbolsRewriter : IrRewriter
         {
             typeSymbol = defaultTypeSymbol;
         }
+
+        if (typeSymbol.IsUnresolved)
+        {
+            Diagnostics.TypeNotFound(location, typeSymbol.Name.OriginalName);
+        }
+
         return typeSymbol;
     }
 
