@@ -1528,6 +1528,8 @@ c.add(4)
 // return type of add is void!
 // need a new operator?
 c.add(4)>.sub(2)
+// disregards result (even if void) and returns self-instance (c)
+c..add(4)..sub(2)
 
 // capture?
 |c|

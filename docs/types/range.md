@@ -23,7 +23,8 @@ Reverse|-8|-7|-6|-5|-4|-3|-2|-1
 [..-1]      // till one before end
 
 // TBD
-[3..=9]      // inclusive end?
+[3..=9]     // inclusive end?
+[a..=z]     // allow chars?
 ```
 
 > Note negative values in ranges used for indexing arrays and lists, mean 'count backward from the end of the array'. Negative numbers in range expressions to generate number sequences mean literal negative numbers.
@@ -42,7 +43,7 @@ x := arr[0, 3, 1, 4]
 
 > TBD
 
-A range results in a (virtual) list with numbers. So shouldn't the syntax reflex a list?
+A range results in a (virtual) list with numbers. So shouldn't the syntax reflect a list?
 
 ```csharp
 rng := (0..10)       // range from 0 to 9 -incl.
@@ -192,6 +193,35 @@ Examples
 arr := (1, 2, 3, 4, 5)
 
 loop v in arr[1..-2]    // 2, 3
+    ...
+```
+
+## Range Creation Operator
+
+> `~`
+
+```csharp
+r =: 10 ~ 2
+// r = [8..12]
+```
+
+## Comparison
+
+> TBD
+
+- equals?
+- in-range?
+
+```csharp
+r =: [42..101] 
+x =: 88
+
+// equals between single value and range?
+if (x = r)
+    ...
+
+// in for single value in range?
+if (x in r)
     ...
 ```
 

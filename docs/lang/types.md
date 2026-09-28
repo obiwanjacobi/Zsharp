@@ -36,7 +36,7 @@ Then each type has its own way of specifying its implementation:
 
 ```csharp
 MyType
-    Option1, Option2
+    Option1, Option2: U8
     fld1: U8
     fld2: Str
     #fld1 > 42  // -or-
@@ -47,8 +47,8 @@ How to declare different Enum types?
 
 ```csharp
 MyType
-    Option1: U8, Option2: U8
-    Option10: Str, Option11: Str
+    Option1: U8, Option2: U8    // No, same syntax as field!
+    Option10, Option11: Str     // diff syntax as field
     fld1: U8
     fld2: Str
     #fld1 > 42
@@ -60,6 +60,16 @@ How to apply an enum as data type for a field in the same type?
 MyType
     Option1, Option2
     fld1: ??
+
+// use an alias?
+MyType
+    MyEnum = Option1, Option2
+    fld1: MyEnum
+
+// define enum inline?
+MyType
+    fld1: Option1, Option2
+    fld2: ?? // will not work if references multiple times
 ```
 
 ---
@@ -88,16 +98,17 @@ followed by the width in the number of bits.
 - 16
 - 32
 - 64
+- 128
 
 ```C#
-U8 U16 U32 U64
-I8 I16 I32 I64
+U8 U16 U32 U64 U128
+I8 I16 I32 I64 I128
 ```
 
 These map to respective .NET types:
 
-- Unsigned: `byte`, `ushort`, `uint` and `ulong`.
-- Signed: `sbyte`, `short`, `int` and `long`.
+- Unsigned: `byte`, `ushort`, `uint`, `ulong` and `UInt128`.
+- Signed: `sbyte`, `short`, `int`, `long` and `Int128`.
 
 > TBD: Do we want an autoscaling `Int`eger type? (.NET `System.Numerics.BigInteger`)
 
@@ -121,7 +132,7 @@ F16, F32, F64, F96
 
 These map to respective .NET types: `Half`, `Single`, `Double` and `Decimal`.
 
-> TBD: Rational Numbers
+> TBD: Rational and Fixed-point Numbers
 
 Now that dotnet supports number interfaces we could introduce a rational number type that stores decimals not as a floating point representation but as an integer (numerator) with a scaling factor (denominator).
 
@@ -161,6 +172,8 @@ StrIso8859
 ```
 
 For these specialized string, no character type is available (other than U8/byte), they would basically encapsulate byte buffers and do not derive from `Str`.
+
+> Look into unicode to see what a good character type could be.
 
 The encoding and decoding can be viewed as a conversion between different string types.
 
@@ -229,18 +242,20 @@ The `Bit` type is parameterized to specify the number of bits the value contains
 Here the example declares a `Bit` type that contains 4 bits (nibble):
 
 ```C#
-Bit<4>
+b: Bit(4)
 ```
 
-When `Bit`s are stored, the closest fitting data type is used. So a `Bit<6>` would take up a single byte `U8`, while a `Bit<12>` would take up two bytes `U16`. `Bit`s are always interpreted as unsigned and stored in the lower bits of the storage type. The upper unused bits are reset to zero.
+When `Bit`s are stored, the closest fitting data type is used. So a `Bit(6)` would take up a single byte `U8`, while a `Bit(12)` would take up two bytes `U16`. `Bit`s are always interpreted as unsigned and stored in the lower bits of the storage type. The upper unused bits are reset to zero.
 
 This type maps the .NET `System.Collections.BitArray` or `System.Collections.Specialized.BitVector32`. Possibly some of `System.Numerics.BitOperations` will be used for some of the operations.
+
+> Perhaps rename the type to `Bits` and reserve `Bit` to perform masking operations?
 
 ---
 
 ### Date and Time
 
-DateTime, Date(only) and Time(only).
+DateTimeOffset, DateTime, Date(only) and Time(only).
 
 ---
 
@@ -253,7 +268,7 @@ The function type `Fn<T>` is used when the type of a function is used in code bu
 makeFn(p: U8): Fn
     ...
 
-f = makeFn(42)
+f := makeFn(42)
 f()         // call returned function
 ```
 
@@ -513,6 +528,7 @@ CustomDataType: Str
     #value =+ "Abc"     // ends with with
     #value +=+ "Abc"    // contains
     #value -= "Abc"     // does not start with
+    #value =- "Abc"     // does not end with
     #value -=- "Abc"    // does not contain
     #value <> "Abc"     // not equal to
 ```
@@ -581,6 +597,7 @@ Type | Operator
 `Ptr<T>` | *
 `Ref<T>` | &
 `Mut<T>` | ^
+`Def<T>` | > (TBD: defer)
 
 These operators are always used directly _after_ the type (post-fix)
 
@@ -625,15 +642,34 @@ i: U8^*?    // pointer to an optional immutable U8
 
 `Err<T>` is typically (only) used on function return values.
 
+> TBD: A type operator for defer: `Def<T>`.
+
+```csharp
+// plain
+ptr := Allocate(42)
+defer Free(ptr)
+
+// Caller determines use of Def<T>.
+// Def<T> ctor takes value and function to call on cleanup.
+defScope := Def<u8*>(Allocate(42), Free)
+_ := Def<u8*>(Allocate(42), Free)   // when retval not actively needed
+// ...  out of scope calls IDisposable.Dispose on the Def<T> type
+
+raw := defScope.Detach() // unhook from defer auto run (Dispose)
+// when defScope goes out of scope, nothing happens.
+```
+
+Not all 'deferrable' values will be released inside the scope they were acquired. In that case, don't catch the return value as a `Def<T>` type.
+
 ---
 
 ### Mutable Types
 
 TODO:
-How is `Mut<T>` placed on a struct to make its member mutable?
-Do you have to individually mark them as such?
-How to make an immutable var to a mutable struct?
-How to make a mutable var to an immutable struct?
+- How is `Mut<T>` placed on a struct to make its member mutable?
+- Do you have to individually mark them as such?
+- How to make an immutable var to a mutable struct?
+- How to make a mutable var to an immutable struct?
 
 ```csharp
 // mutable struct members
@@ -649,7 +685,7 @@ MyStruct
 Any type can be made immutable wrapping it in a `Imm<T>` type.
 
 ```csharp
-// any old struct
+// mutable struct
 MyStruct
     fld1: Mut<U8>
     fld2: Mut<Str>
@@ -659,6 +695,19 @@ ImmStruct: Imm<MyStruct>
 // ImmStruct
 //   fld1: U8
 //   fld2: Str
+```
+
+```csharp
+// immutable struct
+MyStruct
+    fld1: U8
+    fld2: Str
+
+// an mutable version of MyStruct
+MutStruct: Mut<MyStruct>
+// MutStruct
+//   fld1: Mut<U8>
+//   fld2: Mut<Str>
 ```
 
 The compiler will generate a new Type (struct) based on `MyStruct` making all fields immutable. All references to immutable types are tracked as immutable.
@@ -734,6 +783,8 @@ MyStruct: (MyStruct self, MyStructOpt change): MyStruct
 ```
 
 If no custom constructor is defined for these immutable object manipulations, the compiler will generate one that performs the merging of `self` and the `change`s into a new instance.
+
+> TBD: is an explicit constructor function actually needed?
 
 ---
 
@@ -859,7 +910,7 @@ MyType: (p: Str): MyType
     ...
 ```
 
-> TBD: do not allow this. There is always but one constructor function that create an instance of a type, even if that type has a base type.
+> TBD: do not allow this? There is always but one constructor function that create an instance of a type, even if that type has a base type.
 
 ---
 
@@ -894,8 +945,10 @@ Also known as Discriminated Unions (sort of).
 OneOrTheOther: Struct1 or Struct2
 OneOfThese: Struct1 or Struct2 or Struct3 or Struct4
 
-s: OneOfThese
-    ...
+s: OneOfThese = 
+    // construct with Struct3
+    Struct3
+        bla = 42
 
 v := match s
     s1: Struct1 -> s1.fld1
@@ -903,6 +956,8 @@ v := match s
     s3: Struct3 -> s3.bla
     s4: Struct4 -> s4.myfld
 ```
+
+> The different types may have different construction requirements.
 
 > The type-id is stored with the instance. Access with `#varId` or something?
 
@@ -995,7 +1050,7 @@ NonOptStruct: Required<MyStruct>
 Make an instance read-only:
 
 ```csharp
-s: MyStruct
+s: MyStruct = ...
 // using a conversion to make immutable
 r := s.Imm()
 r.fld1 = 101        // error! field is read-only

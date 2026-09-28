@@ -9,6 +9,8 @@ x := 42
     ...
 ```
 
+Captures as defined on the declaration side of code not on the calling site (mainly for functions).
+
 ---
 
 ## Function Capture
@@ -54,7 +56,7 @@ fn: (): U8
 
 ## Capture Context
 
-An additional syntax is considered for capturing dependencies of any code block. This may be a valuable feature when refactoring code.
+An additional syntax is considered for capturing dependencies of any code block. This may be a valuable feature when reviewing or refactoring code.
 
 ```csharp
 v := 42
@@ -65,11 +67,17 @@ v := 42
 
 Captures also may be used as a synchronization mechanism for shared data. At the start of a capture a copy is made of the data and the code (function) works with that copy. The actual value may be changed (by another thread) in the meantime.
 
-In case of a mutable capture, it's value is written back to the original storage when the block of code is completed.
+In case of a mutable capture, it's value is written back to the original storage when the block of code is completed (thread-safe?).
 
 > Should mutable captures be renamed/aliased? `[x = y.Ptr()]`   -- old: don't use Ptr()
 
 That would also suggest that capture blocks themselves could be multi-threading / execute separately from other parts of the function if the dependencies would allow it. Not sure if this 'feature' would be desirable for it would make reasoning about the code harder.
+
+```csharp
+v := 42
+async |v|
+    // async code block (async TBD)
+```
 
 > How do we allow to opt-in for all these different capture behaviors?
 
@@ -180,3 +188,41 @@ x = 2112    // trigger fn
 > TBD: debug-only captures?
 
 > TBD: have a capture syntax that forwards the dependency towards any subsequent calls inside the capture block. This would help in identifying pure functions?
+
+---
+
+> TBD
+
+Have a capture syntax that defines a superset where all down stream called functions/code must match the set (as a subset).
+
+```csharp
+x := 42
+y := 101
+// fn capture is a subset of otherFn
+fn: |x|(p: U8): Bool
+// special syntax (TBD) to define master capture
+otherFn: ||x, y||(p: U8): Bool = fn(p+y)
+
+otherFn(2112)
+```
+
+---
+
+> TBD
+
+A syntax that allows capturing current state of an object before assigning new values to it's properties.
+This is returned as an IDisposable object that will reinstate the previous property values on Dispose.
+
+```csharp
+o := {x = 1, y = 2}
+
+|o|
+    o.x = 42
+    o.y = 101
+    // work with those values here
+
+// Dispose/Revert on leaving capture scope
+
+// o.x == 1
+// 0.y == 2
+```

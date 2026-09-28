@@ -157,7 +157,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 |---|---
 | `_` | Unused / Discard / Hidden / symbol separator (ignored) / digit separator (ignored)
 | `.` | Members Access / bound access
-| `..` | Range operator
+| `..` | Range operator / fluent cascade operator (functions)
 | `...` | Spread operator
 | `,` | List Separator (or use expression separator?)
 | `:` | (Sub)Type Specifier
@@ -170,6 +170,7 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | `@` | Disable String formatting features / keyword escape / Compiler extensions?
 | `{ }` | (anonymous) Object construction
 | `[ ]` | Index / Slice / Range
+| `~` | Creates a Range from 2 operands. (r = x ~ y => [x-y, x+y])
 | `\| \|` | Capture
 | `!` | Possible Error (return type) (`Err<T>`)
 | `?` | Optional variable or parameter/return value / boolean operator / fallback
@@ -412,6 +413,9 @@ pi := 3.1415
 // how to specify three operands?
 if f = pi ~ 0.01
     // equals (within margin)
+
+// or use 'in' syntax /bc its basically a range
+if f in pi ~ 0.01
 ```
 
 Also applicable to dates:
