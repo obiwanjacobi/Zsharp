@@ -9,7 +9,7 @@ A function has a name that identifies it uniquely. See [Identifiers](../lexical/
 Here is the full syntax of a function:
 
 ```txt
-functionName: InterfaceName [captures]<template>(parameters): returnType
+functionName: InterfaceName |captures|<template>(parameters): returnType
 ```
 
 `functionName`: (optional) All functions except lambdas (anonymous -inline- functions) have a name. Standard [Identifier](../lexical/identifiers.md) rules apply. Only lambdas do not need a name because they are declared inline at the location they're used.
@@ -75,6 +75,8 @@ fn: () =
 fn := (p) //: Bool -> inferred from return statement
     return (p = 42) // p: U8 -> inferred from '42'
 ```
+
+> TBD: alternate syntax in line with variable declaration: `fn: <#T, G>(p: U8): Bool = |c| ...`
 
 ---
 
@@ -1887,6 +1889,23 @@ syncParallelFn: (p: U8) ->> U8  // some sort of sync/parallel function?
     ...
 asyncParallelFn: (p: U8) =>> U8  // some sort of async/parallel function?
     ...
+```
+
+> TBD: to eleviate function coloring a different syntax may be preferable.
+
+See also F# computation expressions.
+
+```csharp
+// function still looks like a normal function (new syntax)
+// but <keyword> gives its impl. async characteristics
+asyncFn: (param: U8): Str = <keyword>
+    // for async an await syntax has to exist for the caller.
+    // F# uses ! (but that means error in Z#): let! a = ...
+
+// keyword: TBD and can be used for other color-variants too
+//  - task
+//  - async
+//  - co
 ```
 
 ---

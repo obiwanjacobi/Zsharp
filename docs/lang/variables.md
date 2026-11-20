@@ -220,6 +220,9 @@ with (s, v)     // use '()' for lists? Or is (s, v) a tuple now?
 
 Nested `with` contexts are stacked with a reference to its parent. That means that existing types can be overridden with new values and type-lookup is done from most nested (or current) context up to the root context. The value of the first context that has the type registered, will be used.
 
+> Should the setup/structure of context variables be compile-time code?
+That way no funny runtime stuff is going on and it remains deterministic.
+
 ---
 
 ## Scoped Context
@@ -243,6 +246,9 @@ fn(42)
 
 // end of scope pops context (defer)
 ```
+
+> Should the setup/structure of the context be compile-time code?
+That way no funny runtime stuff is going on and it remains deterministic.
 
 ---
 
@@ -273,6 +279,8 @@ if (...)
 
 The compile-time variable `code` is processed as the code is compiled and generates calls to `rtFn` with values `0` and `1`.
 
+> The compiler should detect a constant value like this and generate the same code. But it should be possible to be explicit about it.
+
 ```csharp
 #txt :=^ "Error: "     // compile-time mutable var
 
@@ -283,7 +291,7 @@ if (...)
     txt <+ "Error context "
 
 // not sure if we'll have a static_assert, but...
-#static_assert(..., txt)
+#assert(..., txt)
 ```
 
 Construct an compile-time error message using a mutable compile-time variable.

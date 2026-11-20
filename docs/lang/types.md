@@ -637,7 +637,7 @@ o: U8?      // optional U8
 e: U8!      // U8 or error
 x: U8!?     // optional U8 or Error
 p: U8*?     // optional pointer to an U8
-i: U8^*?    // pointer to an optional immutable U8
+i: U8^?*    // pointer to an optional mutable U8
 ```
 
 `Err<T>` is typically (only) used on function return values.

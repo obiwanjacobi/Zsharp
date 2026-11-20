@@ -242,6 +242,21 @@ catch -> (err)
 
 `throw` and `rethrow` functions are bound to the `Exception` type that will be emitted as a C# `throw` statement.
 
+> TBD: use pattern matching to handle errors at location.
+
+```csharp
+// we don't have syntax yet that explicitly indicates throwing exceptions
+exceptionFn : (): U8! = { ... }
+
+// match expression returns a value
+v := match exceptionFn()
+    U8 value -> value
+    Exception ex -> ... // implicit try-catch
+    Error err -> ...    // implicit error-catch
+```
+
+Do we want to allow exceptions (and errors) to be caught at a higher level? => Yes.
+
 ---
 
 ## Error Handlers

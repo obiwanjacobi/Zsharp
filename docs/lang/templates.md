@@ -85,6 +85,30 @@ In most cases Template Type parameters can be inferred from it's usage. Explicit
 `fn<_, Str>(42, "42")`
 All type parameters can be omitted when they can be inferred from usage.
 
+> TBD. For some templates the parameter is more important in understanding the code than the templated-type. This is especially true for wrapper templated-types.
+
+```csharp
+// this is fine, the template param is the item type.
+list : List<I8> = (1, 2, 3, 4)
+
+// Here the type changes (to Atom) because we want some 'service' (atomicity) for our value.
+// But the U8 value is still the most impportant aspect of the code.
+val : Atom<U8> = 42
+
+// using wrapper-type operators sort of help with restoring the focus to the type of the value.
+// (we currently have no Atom<T> wrappper type operator: @tomic)
+val : U8@
+
+// but combining multiple wrapper types makes it cryptic
+// (optional pointer to mutable U8)
+ptr : U8^*?
+
+// what if we could reverse order for wrapper-types
+// and cascade combine multiple of them?
+// syntax to be determined:
+val : U8.<Atom, Opt, Ptr, Mut>
+```
+
 ---
 
 ### Restricting Template Parameters
