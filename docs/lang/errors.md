@@ -18,7 +18,7 @@ errorFn: (): U8!
 
 The `!` on the return type indicates that you should pay attention, because this function can return an error!
 
-Details on using the `Error` type can be read [here]('../types/error.md')
+Details on [using the `Error` type can be read here]('../types/error.md').
 
 The calling code needs to have a way to deal with either a good return value from a function or handling the error. The primary keyword to use is `catch`, like so:
 
@@ -244,6 +244,8 @@ catch -> (err)
 
 > TBD: use pattern matching to handle errors at location.
 
+I like this option best. No exception try-catch. No error-catch stuff. Just this.
+
 ```csharp
 // we don't have syntax yet that explicitly indicates throwing exceptions
 exceptionFn : (): U8! = { ... }
@@ -251,8 +253,11 @@ exceptionFn : (): U8! = { ... }
 // match expression returns a value
 v := match exceptionFn()
     U8 value -> value
+    // if not matched here, will bubble up, like normal exception
     Exception ex -> ... // implicit try-catch
-    Error err -> ...    // implicit error-catch
+    // if not matched here, will return error
+    // must handle if function does not have an error-return
+    Error err -> ...    // implicit error-hanlder
 ```
 
 Do we want to allow exceptions (and errors) to be caught at a higher level? => Yes.

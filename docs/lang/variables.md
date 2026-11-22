@@ -2,6 +2,11 @@
 
 Variables store values of a specific type by name. The name is the [Identifier](../lexical/identifier.md) of the variable.
 
+- Immutable by default.
+- Never unitialized.
+- Type can be inferred.
+- No shadowing allowed.
+
 Here is an example of a literal value being used to initialize the variable `a`:
 
 ```C#
@@ -188,14 +193,26 @@ Could be useful for passing async cancellation tokens etc.
 x := 42
 y := 101
 
-|with x, with y|    // capture block with marked 'with'
-|use x, use y|      // capture block with marked 'use'
-|dep x, dep y|      // capture block with marked 'dep'endency
-|&x, &y|            // syntax for some sort of operator
-    ...             // x and y are context variables
+// keyword
+with |x, y|     // all or nothing (x and y are context vars)
+|with x, y|     // capture var with marked 'with'
+|use x, y|      // capture var with marked 'use'
+|dep x, y|      // capture var with marked 'dep'endency
+// operator
+|&x, y|         // syntax for some sort of operator?
+    ...         // x is a context variable, y is plain capture
+
+// type
+x : Ctx<U8> = 42
+y := 101
+
+|x, y|      // normal capture syntax
+    ...     // x is ctx var based on type
 ```
 
-> What happens when multiple of the same type are specified? Compile Error? Match Array\<T>?
+> What happens when multiple of the same type are specified? Compile Error? Match Array\<T>? Keyed/Named?
+
+> Can `self` parameters also come from context? Is there a reason to prohibit that?
 
 ```csharp
 fn: (self: MyStruct, p: U8)
@@ -216,12 +233,10 @@ with (s, v)     // use '()' for lists? Or is (s, v) a tuple now?
         fn(101)
 ```
 
-> Can `self` parameters also come from context? Is there a reason to prohibit that?
-
 Nested `with` contexts are stacked with a reference to its parent. That means that existing types can be overridden with new values and type-lookup is done from most nested (or current) context up to the root context. The value of the first context that has the type registered, will be used.
 
 > Should the setup/structure of context variables be compile-time code?
-That way no funny runtime stuff is going on and it remains deterministic.
+That way no funny runtime stuff is going on and it remains deterministic and verifyable.
 
 ---
 
@@ -248,12 +263,30 @@ fn(42)
 ```
 
 > Should the setup/structure of the context be compile-time code?
-That way no funny runtime stuff is going on and it remains deterministic.
+That way no funny runtime stuff is going on and it remains deterministic and verifyable.
+
+```csharp
+log1: Logger = ...
+log2: Logger = ...
+
+#Ctx.Log = log2
+
+// no capture or params needed for context vars
+
+fn1: ()
+    Ctx.LogInfo("Hello from fn1")
+    // but in the end it is a runtime operation...
+    // compiler will manage context-scopes (restore on fn return)
+    #Ctx.Log = log2
+    fn2()
+
+fn2: ()
+    Ctx.LogInfo("Hello from fn2")
+```
 
 ---
 
-> use Lazy\<T> .NET type as is?
-
+> Use Lazy\<T> .NET type as is?
 > Use Nullable\<T> as is?
 
 ## Compile Time Variables

@@ -205,7 +205,11 @@ MyEnum
     opt1, opt2, opt3
 
 // compiler attributes?
-loop o in MyEnum#values
+loop v in MyEnum#values
+    ...
+loop o in MyEnum#options
+    ...
+loop kvp in MyEnum#kvp
     ...
 
 // first and last option value?

@@ -86,7 +86,7 @@ MyDerived: MyStruct
 
 Inheritance makes the structure bigger.
 
-> Multiple inheritance is not supported at this moment.
+> Multiple inheritance will not be supported.
 
 > TBD: default to 'closed' structured and explicitly 'opening' them up for inheritance. Syntax is iffy.
 
@@ -96,6 +96,7 @@ MyStruct: Open<>
 MyStruct: Open<Any>
     ...
 
+OpenDerived: MyStruct+      // open type-operator?
 OpenDerived: Open<MyStruct>
     ...
 
@@ -111,7 +112,7 @@ MyStruct
     field1: U8
 
 MyContainer
-    cnt: MyStruct
+    cnt: MyStruct   // can this be anymous?
     field2: Str
 ```
 
@@ -123,7 +124,9 @@ s : MyContainer =
     field2 = "OK"
 ```
 
-> Unions in structures are not supported at this moment.
+> Unions in structures are not supported at this moment. C#15 does support unions.
+
+The interop .NET keyword (class,record,struct) used for each case is TBD. Once a (.NET) struct, it cannot be derived from.
 
 ---
 
@@ -217,10 +220,8 @@ s = Mut<MyStruct> =      // mutable
     fld2 = "42"
 
 f1 := s.fld1             // dot notation
-f2 := s[MyStruct#fld2]   // indexed by name at compile time (metadata)
+f2 := s[MyStruct#fld2]   // indexed by name(of) at compile time (metadata)
 
-f1 := s["fld1"]          // indexed by name at run time
-// Error or Opt, if field with 'name' does not exist? What if the field type is incompatible with the variable type? Any?
 name = ...
 f2 := s[name]          // indexed by name at runtime time/reflection (variable)
 s[name] = 42
@@ -343,19 +344,20 @@ x := { 42, "42" }
 x.Item1 // Error: Item1 does not exist
 
 // to use, must deconstruct in order
-(n, s) := x      // -or-
-n, s := x
+n, s := ...x
 // n = 42 (U8)
 // s = "42" (Str)
 ```
+
+> See also [Deconstructing Assigment](assignment.md#deconstruction).
 
 This is how you reference anonymous types in code.
 
 ```csharp
 // have to repeat the structure of the type
-anoStructFn: (s: (number: U8, name: Str))
+anoStructFn: (s: {number: U8, name: Str})
 // if the anonymous type also has no field names
-anoStructFn: (s: (U8, Str))
+anoStructFn: (s: {U8, Str})
 ```
 
 > We want to line up the syntax (and semantics) with the parameters of a function call. Adopting a global rule that 'field-lists' (tuples, function params, deconstructs etc) can be build in-order or named or a combination (see function parameters). Array initialization too? `arr = (1, 2, 3, 4)` - has no field names!

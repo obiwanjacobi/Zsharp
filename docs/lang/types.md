@@ -316,6 +316,8 @@ Introducing the `Void` type removes the necessity to distinguish between functio
 
 Literal values are commonly use in programs and by default the compiler will assign the smallest data type to fit the literal numerical value. There are times when you want to override that, however.
 
+See [Literals](../lexical/literals.md) for more info.
+
 ```csharp
 a := 42          // a: U8
 b := U16(42)     // b: U16
@@ -1341,7 +1343,7 @@ funcAny(): Any
 
 a := funcAny()   // a => Any
 v := match a
-    n: U8 => n
+    n: U8 => n  // unboxing!
     _ => Error("Unsupported")
 
 // v => U8!

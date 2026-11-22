@@ -11,6 +11,8 @@ Identifiers name program entities such as variable, functions and types. These n
 - Can contain alpha-numeric characters.
 - Can end with a `'` (parameters/variables only).
 
+Basic syntax for all symbols: `symbolName : <type> = <value>`.
+
 Here are examples of valid identifiers:
 
 ```csharp
@@ -43,7 +45,7 @@ A general kind of identifiers are code labels.
 This syntax is basically consistent of all named code elements.
 
 ```csharp
-symbol: <some other code>
+symbol: <var or function>
 #label: <some other code>
 ```
 

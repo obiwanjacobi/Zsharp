@@ -40,6 +40,7 @@ MyFunc: ()
 Using the dot-notation the items inside the module can be accessed.
 
 ```C#
+// this this alias need #use?
 #use NewName = alias_example.MyFunc
 
 NewName()       // calls MyFunc
@@ -169,7 +170,7 @@ Use some sort of (plugable) loader -or unpacker- during compile-time?
 
 > TBD
 
-Are Internal modules always available to other internal modules?
+Are Internal modules always available to other internal modules? Or even all referenced assemblies? And use `use` only to fix naming collisions/ambiguity?
 This means that an `use` is never needed for an internal module.
 That means that the `use` name always references an external module, which has to be .NET compatible.
 A Z# compiled assembly is -at first glance- indistinguishable from any other .NET assembly.

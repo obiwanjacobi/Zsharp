@@ -55,3 +55,7 @@ MyNamespace.MyFunc()
 ```
 
 > TBD: This can conflict with module names with namespaces. Drop this?
+
+---
+
+> TBD: Use `_` (`_myFunction`) as a way to keep symbols internal. Everything else is public automatically. That would also mean that types get to use the `_` (`_MyStruct`)...

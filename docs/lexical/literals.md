@@ -1,5 +1,32 @@
 # Literals
 
+## Types
+
+The type of a literal is a range of possible candidate types by default.
+Only when it is assigned to a variable or parameter is the type fixed.
+No type conversion or coercial ever takes place.
+
+```csharp
+42              // Types I/U8-128 are possible
+v := 42         // Inferred used compiler default (I64?)
+x : U8 = 42     // fixed to var type
+x : Str = 42    // error: Str is not in candidate list (no conversions!).
+```
+
+> TBD I am thinking of defaulting to I64 for all literal numbers.
+Or should it be a compiler option to have the smallest, biggest or specific default type?
+How would this affect source code compilation when setting is changed?
+
+Literal Type Ranges:
+
+| Literal | Types | Description |
+| -- | -- | -- |
+| Integer (pos) | I8-128/U8-128 | Type-size is matched to literal value |
+| Integer (neg) | I8-128 | A negative literal will always use I8-128 |
+| Float | F16-96 | When a decimal point is used in literal |
+| String | Str | Double quoted values |
+| | | |
+
 ## Numbers
 
 Literal numeric values can be specified in the code using prefixes as follows.
@@ -34,8 +61,6 @@ a : U8 = 42
 b : I32 = 1024
 ```
 
-> TBD I am thinking of defaulting to Int64 for all literal numbers.
-
 ---
 
 ### Floating Point
@@ -69,15 +94,15 @@ s := "Some text `n with newlines `n and `"quotes`"."
 
 ### Escaped Characters
 
-Char | Note
---|--
-`n | NewLine
-`r | Carriage Return
-`t | Tab
-`f | Line Feed
-`b | Bell
-`` | ` (backtick)
-`$ | String format parameter
+| Char | Note |
+| -- | -- |
+| `n | NewLine |
+| `r | Carriage Return |
+| `t | Tab |
+| `f | Line Feed |
+| `b | Bell |
+| `` | ` (backtick) |
+| `$ | String format parameter |
 
 Multiple `"` charactes can be used to define a literal string that escapes the `"` character.
 

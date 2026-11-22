@@ -21,8 +21,10 @@ a := match v
 ```
 
 The syntax continues after the `->` which contains the result of the expression when that specific pattern matched.
-Patterns for values and patterns for types can be used at the same time. Type matching is done base on the underlying `#typeid`.
 
+> TBD: Because we use `->` as an indication of the return of the match-expression, perhaps we should also use `->` as the return in a function type? `(p: U8) -> U8`
+
+Patterns for values and patterns for types can be used at the same time. Type matching is done base on the underlying `#typeid`.
 
 ```csharp
 s := "42"

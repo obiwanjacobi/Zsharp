@@ -574,6 +574,8 @@ MyFunc(p: U8, p2: U16): U8, U16
     return p, p2
 ```
 
+> TBD: If can use `{}` for return value objects, can we also use them for function param objects? `fn: {p: U8, s: Str} -> {flag: Bool, length: U8}` - this would generate a params object and a return object for `fn`.
+
 The caller has to handle the return value (just like with Error). There is syntax to explicitly ignore the return value.
 
 ```C#
@@ -713,6 +715,8 @@ fn: <G>(p: U8, s: G): Bool // FunctionType = '<G1>(U8, G): Bool'
 fn: <G, #T>(p: T, s: G): Bool // FunctionType = '<G1T1>(T, G): Bool'
 ```
 
+> TBD: Because we use `->` as an indication of the return of the match-expression, perhaps we should also use `->` as the return in a function type? `(p: U8) -> U8`
+
 Generic and template types will be encoded into the function type.
 Function types with Template type parameters are open types and cannot be instantiated.
 
@@ -728,7 +732,7 @@ Function Types can be derived from and specialized.
 ```csharp
 // syntax?
 ft := Fn<(U8): U8>
-ftd := Fn<(U8): U8> : ft
+ftd := Fn<(U8): U8> : ft        // no difference? What does this do!?
 ```
 
 ---
@@ -807,6 +811,8 @@ This suggests that a code block (function body) is also an expression...?
 ## Type Bound (Self)
 
 Using the `self` keyword as the (name of the) first parameter, a function can be bound to a type. In this example the function is bound to (a pointer to) the MyStruct type.
+
+> TBD: Do we really need `self`? Why not let just any first param be used as an 'object instance'?
 
 ```C#
 boundFn: (self: MyStruct)
@@ -905,11 +911,10 @@ A function can publish its 'const-ness' by using an immutable self type.
 
 ```csharp
 // this function will not change (the content of) self
-constFn: (self: Imm<MyStruct>, p: U8): Str  // Imm<>
-constFn: (self: MyStruct, p: U8): Str       // Mut<>
+constFn: (self: MyStruct, p: U8): Str       // Imm is default
+constFn: (self: Imm<MyStruct>, p: U8): Str  // explicit (TBD)
 
 // this function will change (the content of) self
-nonConstFn: (self: MyStruct, p: U8): Str        // Imm<>
 nonConstFn: (self: Mut<MyStruct>, p: U8): Str   // Mut<>
 ```
 
