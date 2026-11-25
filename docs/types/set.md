@@ -20,18 +20,34 @@ Set Theory? Set, intersect, union, subset, superset, powerset, (relative) comple
 
 Operations
 
+All set operations are structural: they work on the elements of the set, not on their values. They use the structural `<` operators (see [Structural Operators](../lexical/operators.md#structural-operators)).
+The plain form produces a new set; the mutating form (`<|=`, `<&=`, ...) writes the result back into the (mutable) left set.
+
 | Operator | Fn Name | Description
-|--|--|--
-| `|` | Union | union sets (duplicates overwritten)
-| `&` | Intersection | intersection sets (only shared elements)
-| `&~` | Difference | difference sets (left without right)
-| `~&` | Difference | difference sets (right without left)
-| `~` | Difference | symmetric difference (only unique elements)
+| -- | -- | --
+| `<\|` | Union | union sets (duplicates overwritten)
+| `<&` | Intersection | intersection sets (only shared elements)
+| `<-` | Difference | difference sets (left without right). Also removes single elements.
+| `<^` | SymmetricDifference | symmetric difference (elements in only one of both)
+| `<+` | Add | add element(s) to the set
+
+Right without left is written as `b <- a`.
+
+```csharp
+a := Set(1, 2, 3)
+b := Set(3, 4)
+
+u := a <| b     // (1, 2, 3, 4)
+i := a <& b     // (3)
+d := a <- b     // (1, 2)
+x := a <^ b     // (1, 2, 4)
+s := a <+ 5     // (1, 2, 3, 5)
+```
 
 Comparison
 
 | Operator | Fn Name | Description
-|--|--|--
+| -- | -- | --
 | `=` | Equal | Exact equality
 | `<>` | NotEqual | Exact inequality
 | `=<` | SubSetOrEqual | left is a subset of right or equal
@@ -41,13 +57,9 @@ Comparison
 | `in` | Contains | an element is contained in set
 | `not in` | NotContains | an element is not contained in set
 
-Arithemtic
+Comparisons result in a `Bool` and do not build a new set, so they do not use the structural `<` prefix.
 
-Is this even a thing?
+Arithmetic
 
-| Operator | Fn Name | Description
-|--|--|--
-| `+` | AddSet | Add each element of the sets together to form a new set
-| `-` | AddSet | Subtract each element of the sets from each other to form a new set
-
-etc...
+Not supported. Element-wise arithmetic (as on arrays) pairs elements by position, and a set has no positions.
+The plain operators (`+`, `-`, `|`, `&`, `^`, ...) are a compile error on sets, so they can never be confused with the structural operators.

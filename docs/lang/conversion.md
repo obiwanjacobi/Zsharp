@@ -83,7 +83,6 @@ t1: MyType1 = v
 
 t2 := t1.TryMyType2()    // try-cast converter
 t2 := t1 as MyType2      // keyword
-t2 := t1 <:? MyType2      // operator
 // t2: Opt<MyType2>
 
 if v is MyType1         // keyword
@@ -93,8 +92,10 @@ if v :? MyType1         // operator
 
 // runtime error if fails
 c1 := v.MyType1()        // cast converter
-c2 := t1 <: MyType2      // cast operator
+c2 := MyType2(t1)        // cast (conversion syntax)
 ```
+
+> Current model: `:?` is the type test, `MyType2(t1)` is the down cast (a failure propagates, see [Errors](errors.md)) and an optional cast is a `match` with a type arm. The `is` / `as` keywords are explored alternatives (borrowed from C#), not decided. The `<:?` and `<:` operators have been removed (see [Operators](../lexical/operators.md)).
 
 ---
 
@@ -109,7 +110,7 @@ o: Opt<U8> = v
 o: Opt<U8>
 x := o       // error: o could be nothing
 
-// without checking first (-> syntax?)
+// without checking first (-> syntax?) see also: match
 if o? -> v = o
 ```
 
@@ -149,29 +150,4 @@ ForceTargetType(self: SourceType, ...): TargetType
 DoTargetType(self: SourceType, ...): TargetType
 ```
 
-> TBD
-
-prefixes?
-
-- wrap - reinterprets the value based on the given type. wrapI8(0xFF) = -1
-- check - checks if the value fits in given type and errors-out if not.
-- try - returns an optional result that is Nothing if the value does not fit the given type.
-
-> We now have operators for these. Could we use them for the functions?
-
-```csharp
-// ! checked
-// | wrap around (unchecked)
-// ~ saturate
-check :=! U8(1000 / 200)
-check := U8(1000 / 200)!
-check := !U8(1000 / 200)
-
-wrap :=| U8(1000 / 200)
-wrap := U8(1000 / 200)|
-wrap := |U8(1000 / 200)
-
-sat :=~ U8(1000 / 200)
-sat := U8(1000 / 200)~
-sat := ~U8(1000 / 200)
-```
+---

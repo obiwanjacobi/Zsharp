@@ -1,5 +1,7 @@
 # Operators
 
+> See the [Symbol Charter](symbols.md) for the core concept behind each symbol and the open decisions on symbol usage.
+
 Most operators are syntactic sugar over a set of wellknown functions.
 
 Of these wellknown functions there are two flavors: unchecked and checked implementations. The unchecked flavor performs no validation. The checked version implements extra validation and 'checking' to help make sure the code is correct.
@@ -22,35 +24,6 @@ An example of this would be operators in an arithmetic expression do different t
 | Object Expression | Object creation and mapping |
 | Type Expression | Type info, coercian and declaration |
 | Array Expression | Array manipulation and arithmetic |
-
-> TBD
-
-Add specific operators for arithmetic operations for saturation (ignoring overflow and filling up till full) and wrapping (wrapping around to start over again when full) behavior.
-
-Postfix arithmetic operator with:
-
-| Operator | Description |
-| -- | -- |
-| `\|` | Overflow/underflow will saturate. |
-| `%` | Overflow/underflow will wrap around. (`.NET unchecked`) |
-| `~` | Overflow/Underflow will cause an exception. (`.NET checked`) |
-| `!` | Overflow/Underflow will return an error (`Err<T>`). |
-| `?` | Overflow/underflow will result in `Nothing` (`Opt<T>`). |
-
-```csharp
-a: U8 = 245
-b: U8 = 125
-
-c: U8 = a +| b  // saturate (255)
-c: U8 = a +% b  // wrap around (115)
-c: U8 = a +~ b  // overflow exception (370 > U8)
-c: U8! = a +! b // Error (Err<U8>)
-c: U8? = a +? b // Nothing (Opt<U8>)
-
-// Is checked `~` the default? or use .NET default (unchecked?)
-// Or using '+' refers to a compiler profile setting?
-c: U8 = a + b   // ??
-```
 
 ---
 
@@ -102,8 +75,7 @@ Arithmetic, comparison, bitwise and logical operators.
 | `>=` | IsGreaterEqual | Greater or Equal |
 | `=<` | IsLesserEqual | Smaller or Equal |
 | `?` | AsBoolean | Boolean postfix |
-| `? :` | - | Ternary Conditional (if-else) (don't like the `:` used for types everywhere else) |
-| `? ;` | - | -alt- Ternary Conditional (if-else) |
+| `? ;` | - | Ternary Conditional (if-else) |
 | `and` | LogicAnd | Logical And |
 | `nand` | LogicAnd | Logical Nand? |
 | `or` | LogicOr | Logical Or |
@@ -119,14 +91,15 @@ Arithmetic, comparison, bitwise and logical operators.
 | `<<` | - | Bitwise Shift Left |
 | `>\|` | - | Bitwise Rotate Right |
 | `\|<` | - | Bitwise Rotate Left |
-| `->>` | - | sign extend (arithmetic) bit shift right (also parallel execute) |
-| `>>>` | - | -alt- sign extend (arithmetic) bit shift right |
-| `=` | - | Value Assignment |
+| `>>>` | - | sign extend (arithmetic) bit shift right |
+| `=` | - | Value Assignment, both mutable and immutable |
 | `:=` | - | Value Assignment with inferred Type |
-| `<-` | - | Value Assignment of mutable Type? (TBD) |
 
 > TBD: *) we could reuse the logical operators for use as bitwise operators as well.
 That also means that the bitwise short-hand operators (`&=`, `|=` or `^=`) no longer work.
+>
+> Decided: `&`, `|` and `^` stay as bitwise operators (binary context; attached `^` means mutable).
+> `~` stays as bitwise invert for now, but it does not fit the `~` concept (approximately / cyclic). Alternative: `not` on integers.
 
 Ternary operators can contain other ternary operators. Nested ternaries each have their own indent level.
 
@@ -147,7 +120,9 @@ x := 0
 y := 1
 
 // result is (a ref to) the var not the value of the var.
-(x > y) ? x : y = 42
+(x > y) ? x ; y = 42
+
+// TBD: the ';' makes it read like 2 statements.
 ```
 
 Allow logical `not` to be prefixed to other logical operators? `nand`, `nor`, `xnor` or use dedicated keywords?
@@ -173,38 +148,39 @@ So instead of `if c = 42 or c = 101` you can write something like `if c = 42 || 
 | --- | --- |
 | `_` | Unused / Discard / Hidden / symbol separator (ignored) / digit separator (ignored) |
 | `.` | Members Access / bound access |
-| `..` | Range operator / fluent cascade operator (functions) |
+| `..` | Range operator |
 | `...` | Spread operator |
-| `,` | List Separator (or use expression separator?) |
+| `,` | List Separator |
 | `:` | (Sub)Type Specifier |
-| `;` | Expression separator? (like in F#) |
+| `;` | Ternary else branch |
+| `` ` `` | Character escape |
 | `< >` | Type Parameter |
 | `( )` | Function / Array/List initialization |
 | `" "` | String Literal |
 | `' '` | Character Literal |
-| `'' ''` | Special Name |
-| `@` | Disable String formatting features / keyword escape / Compiler extensions? |
+| `'' ''` | Special Name / keyword escape |
+| `@` | Compiler extensions |
 | `{ }` | (anonymous) Object construction |
 | `[ ]` | Index / Slice / Range |
 | `~` | Creates a Range from 2 operands. (r = x ~ y => [x-y, x+y]) |
 | `\| \|` | Capture |
-| `!` | Possible Error (return type) (`Err<T>`) |
+| `!` | Possible Error (on return type) (`Err<T>`) |
+| `!!` | Possible Exception (on return type) TBD |
 | `?` | Optional variable or parameter/return value / boolean operator / fallback |
 | `?=` | Optional variable conditional assignment |
 | `->` | Match case continuation / Line continuation (instead of indent) / fun decl return type (instead of `:`)? |
-| `#` | Attribute access / Execute at compile-time |
-| `#!` | Compile-time code definition (perhaps only `#`) |
-| `#!` | Compile-time error (alt) |
+| `#` | (Type) Attribute access / Execute at compile-time |
+| `#` | Compile-time code definition |
+| `#!` | Compile-time error |
 | `#?` | Compile-time warning |
-| `##` | Temporary comment (compiler warning) |
+| `#*` | Compile-time info? |
+| `##` | Temporary comment (compiler 'warning') |
 | `#xxx:` | Compile-time label 'xxx' used to identity code blocks / scopes |
 | `#_` | Comment |
 
 In case of a fallback `?` we could use `or` perhaps?
 `opt? or 42` Use the `?` as the boolean operator and `or` for chaining.
 `opt1? or opt2? or 42`
-
-`#!` does make the distinction clear between compile-time functions and for instance inline exported functions: `#pub fun: ()...` vs. `#! fun: () ...`.
 
 > Are there others like conditional assignment `?=`? Can any (applicable) operator be made conditional by prefixing `?` to it?
 
@@ -248,20 +224,6 @@ b := s is tryFn(42) or tryFn(101)    // weird
 
 ---
 
-## Type operators
-
-| Symbol | Type | Description |
-| --- | --- | --- |
-| `!` | `Err<T>` | Error return value or T |
-| `?` | `Opt<T>` | Optional; T or Nothing |
-| `*` | `Ptr<T>` | Pointer to T |
-| `&` | `Ref<T>` | Reference to T |
-| `^` | `Mut<T>` | Mutable T |
-| `%` | `Atom<T>` | Atomic T |
-| ?? | `Async<T>` | Async T ?? |
-
----
-
 ## Reserved Operator Symbols
 
 All non-characters and numbers are reserved at this point.
@@ -277,16 +239,13 @@ To be determined:
 | `=>` | used in mapping / some sort of (forward) assignment? (implies?) |
 | `<=` | map structure / assign struct properties / copy instance |
 | `()` | Function Object operator |
-| `\|>` | Parameter pipe |
-| `<\|` | Reverse parameter pipe (don't like it) |
 | `<=>` | Swap operator? / bi-directional mapping operator |
 | `::` | traits? (type of type) |
-| `<-` | reserved (assign mutable variable?) |
-| `->>` | parallel execution (also sign extended shift) |
+| `->>` | parallel execution |
 | `=>>` | parallel execution and collect results (in tuple or deconstruct) |
-| `[[ ]]` | Decorators syntax (also see `@`) |
-| `[< >]` | Type Decorators (Attributes) syntax (instead of `{}`) |
-| `[( )]` | Function Decorators syntax (instead of `{}`) |
+| `[[ ]]` | Decorators syntax |
+| `[< >]` | .NET code attribute (the decorator is a type) |
+| `[( )]` | Function decorator (the decorator is a function: code injection) |
 
 > Notes on safe navigation `?.`:
 
@@ -351,35 +310,82 @@ b := x?false?.IsTrue    // could work
 
 ---
 
+## Arithmetic Operators
+
+Add specific operators for arithmetic operations for saturation (ignoring overflow and filling up till full) and wrapping (wrapping around to start over again when full) behavior.
+
+Postfix arithmetic operator with:
+
+| Modifier | Description |
+| -- | -- |
+| `\|` | Overflow/underflow will saturate (hits the wall). |
+| `~` | Overflow/underflow will wrap around (cyclic). (`.NET unchecked`) |
+| `!` | Overflow/underflow will return an error (`Err<T>`). |
+| `!!` | Overflow/underflow will throw an exception. (`.NET checked`) |
+| `?` | Overflow/underflow will result in `Nothing` (`Opt<T>`). |
+| _(none)_ | Behavior is determined by the compiler profile (one of the above). |
+
+Modifier symbols are never arithmetic operator symbols, so a modified operator always reads as one operator.
+
+```csharp
+a: U8 = 245
+b: U8 = 125
+
+c: U8 = a +| b      // saturate (255)
+c: U8 = a +~ b      // wrap around (114)
+c: U8! = a +! b     // Error (Err<U8>)
+c: U8 = a +!! b     // overflow exception (370 > U8)
+c: U8? = a +? b     // Nothing (Opt<U8>)
+c: U8 = a + b       // compiler profile default
+```
+
+The modifier applies to the operator it is attached to, in the type the operation is performed in. Narrowing a result to a smaller type is a conversion, not an arithmetic operation (see [Conversion](../lang/conversion.md)).
+
+---
+
 ## Type Operator Symbols
+
+| Symbol | Type | Description |
+| --- | --- | --- |
+| `!` | `Err<T>` | Error return value or T |
+| `?` | `Opt<T>` | Optional; T or Nothing |
+| `^` | `Mut<T>` | Mutable T |
+
+A type gets a postfix symbol only when the symbol's family _is_ that concept (`?` maybe, `!` error, `^` mutable).
+All other wrapper types are written by name: `Ref<T>`, `Atom<T>`, `Ptr<T>`, `Async<T>`, ...
 
 Binary Operators that operate on types.
 
 | Operator | Description |
 | --- | --- |
-| `:=` | equals type (bool/condition) (also assignment with type inference) |
-| `:?` | type is (C# is keyword) |
-| `<:?` | type as (optional cast) |
-| `<:` | down cast type |
-| `:>` | up cast type? (is implicit) |
+| `:?` | type test: has type? (`Bool`). Like `v?` tests for a value, `x :? T` tests for a type. |
 
-Alternatives where the `:` is always last (more consistent?):
+There are no other type operators:
 
-| Operator | Description |
+| Operation | How |
 | --- | --- |
-| `=:` | equals type (no clash with assignment) |
-| `?:` | type is (C# is keyword) |
-| `<?:` | type as (optional cast) |
-| `<:` | down cast type |
-| `>:` | up cast type? (is implicit) |
+| Type test | `x :? T` (an immutable `x` is narrowed to `T` afterwards) |
+| Down cast | `T(x)`: conversion syntax (see [Conversion](../lang/conversion.md)). A failing cast propagates like any other failure. |
+| Optional cast | `match` with a type arm |
+| Up cast | implicit |
+| Type equality | `x#type = T` |
 
 ```csharp
 MyStruct : BaseStruct
     ...
 x := MyStruct
-y := x <? OtherStruct   // y: Opt<OtherStruct>(Nothing)
-z := x <: BaseStruct    // z: BaseStruct
+b := x :? OtherStruct       // false
+z: BaseStruct = x           // up cast (implicit)
+m := MyStruct(z)            // down cast (fails if z is not a MyStruct)
+
+y := match z                // optional cast
+    s: MyStruct -> s
+    _ -> _                  // y: Opt<MyStruct>
 ```
+
+> TBD: rule for the result type of a `match` (to be written in [Match](../expressions/match.md)): when one or more arms result in `_` (Nothing) and the others in `T`, the type of the `match` expression is `Opt<T>`.
+>
+> Former alternatives (`:=` / `=:` equals type, `<:?` / `<?:` optional cast, `<:` down cast, `:>` / `>:` up cast) have been removed. `:=` already means declare with inferred type, and `<` is the structural prefix.
 
 ---
 
@@ -446,6 +452,58 @@ if f = now ~ TimeSpan.FromMinutes(1)
 
 ---
 
+## Structural Operators
+
+Operators starting with `<` work on the _structure_ of the left operand instead of its value.
+They work on arrays and lists (the structure is the items) and on objects, including anonymous objects (the structure is the fields, matched by name).
+The plain form produces a new instance; the left operand is unchanged.
+The mutating form (`<+=`, `<-=`, `<|=`, ...) writes the result back into the (mutable) left operand.
+
+| Operator | Array / List (items) | Object (fields) |
+| --- | --- | --- |
+| `<+` | add item(s) to the end (concat, same as string concat) | add field(s). Error if a field already exists. |
+| `<-` | remove item(s) (first exact match) | remove field(s). Results in a (smaller) anonymous type. |
+| `<\|` | union: add the item(s) that are not already present | _with_: union of the fields, the right side wins. |
+| `<&` | intersection: keep only the items present in both | keep only the fields present in both. |
+| `<^` | symmetric difference: keep the items present in only one of both | keep the fields present in only one of both. |
+| `</` | split into chunks/tuples of n | - |
+| `<=` | copy / map into the left | map fields by name into the shape of the left. |
+
+`<|` and `<=` both copy values from right to left. The difference is the type of the result:
+
+- `<|` results in the union of both shapes. On an anonymous object this can add fields. On a named type the right side must be a subset of its fields, so the result keeps the same type.
+- `<=` always keeps the shape (and type) of the left. Matching fields are mapped (possibly converted), the others are ignored. This makes it the mapping operator between different types.
+
+`<=` only works on structured types (structures, objects, maps, arrays / lists). On primitive types it is a compile error: `a <= b` on two numbers is almost certainly meant as _less or equal_, which is `=<` in Z#.
+
+```csharp
+p := { Name = "John", Age = 42 }
+
+p2 := p <| { Age = 43 }             // { Name = "John", Age = 43 }
+p3 := p <+ { City = "Amsterdam" }   // { Name = "John", Age = 42, City = "Amsterdam" }
+p4 := p <- { Age }                  // { Name = "John" }
+p5 := p <& { Name = "" }            // { Name = "John" }
+
+s: Struct
+    ...
+s2 := s <| { fld1 = 42 }            // copy of s with fld1 changed (s2: Struct)
+```
+
+```csharp
+arr1 := (1, 2, 3)
+arr2 := (3, 4)
+
+arr3 := arr1 <| arr2    // (1, 2, 3, 4)
+arr4 := arr1 <& arr2    // (3)
+arr5 := arr1 <^ arr2    // (1, 2, 4)
+```
+
+Insert at front is a library function.
+
+> TBD: Syntax for naming fields without values in `<-` (`{ Age }`).
+
+---
+
 ## Array and List operators
 
 Operators for working with `Array<T>` and `List<T>` types.
@@ -455,7 +513,7 @@ Operators starting with `<` indicates a structural operation, like adding or rem
 
 > TBD: Do we also support comparison and logical operators that result in an array of booleans?
 > What about set operators (union etc.)?
-> What happens (arithmetic) if arrays are not of the same size?
+> What happens (arithmetic) if arrays are not of the same size? -> Take shortest, ignore long tail.
 
 | Operator | Description |
 | --- | --- |
@@ -466,22 +524,10 @@ Operators starting with `<` indicates a structural operation, like adding or rem
 | `-=` | mutable - subtract a value from all array/list elements |
 | `*=` | mutable - multiply a value with all array/list elements |
 | `x=` | mutable - x = any arithmetic operator acts on all elements of the array/list |
-| `<+` | add item(s) to the end of an array/list (concat) (same as string concat) |
-| `<-` | remove item(s) from anywhere in array/list (first exact match) |
-| `<^` | insert item(s) into array/list (front) |
-| `<&` | add item(s) to array/list/tree as a child (?) |
-| `<\|` | insert item(s) to the front of an array/list/tree as a child (?) |
-| `<+=` | mutable - add item(s) to the end of an array/list (concat) |
-| `<-=` | mutable - remove item(s) from anywhere in array/list (first exact match) |
-| `<^=` | mutable - insert item(s) into array/list (front) |
-| `<&=` | mutable - add item(s) to array/list/tree as a child (?) |
-| `<\|=` | mutable - insert item(s) to the front of an array/list/tree as a child (?) |
+| `<+` `<-` `<^` `<\|` `<&` `</` `<=` | structural operators, see [Structural Operators](#structural-operators) |
 | `in` | test if item(s) is in array/list (contains) |
 | `not in` | test if item(s) is not in array/list (not contains) |
-| `</` | split in array with chunks/tuples of n |
-| `<\|` | zip two arrays |
-| `<~` | unzip (split) |
-| `.>` | Collect the property values on all instances in the array (Select) |
+| `.>` | aggregate over all instances in the array (Select) - property or function |
 | `[..]` | Range operator returns a sub array/list. |
 | `[i]` | Index (i) operator returns a single item. |
 | `[?i]` | Safe index (i) operator returns an optional single item. |
@@ -489,6 +535,8 @@ Operators starting with `<` indicates a structural operation, like adding or rem
 | `[**]` | returns the parallel enumerator of an array/list. |
 | `[**%n]` | returns the parallel enumerator of an array/list for max `n`-threads. |
 | `[**/n]` | returns the parallel enumerator of an array/list with `n`-elements in each thread. |
+
+> Zip and Unzip operators have been removed.
 
 ```csharp
 arr1 := (1, 2, 3, 4, 5)
@@ -499,7 +547,7 @@ arr3 := arr1 + arr2
 
 // mutable
 arr1 <+= 42      // arr1 = (1, 2, 3, 4, 5, 42)
-arr2 <^= 101     // arr2 = (101, 5, 4, 3, 2, 1)
+arr2.InsertAt(0, 101)  // arr2 = (101, 5, 4, 3, 2, 1) - library function
 
 arr4 := arr1 <+ arr2
 // arr4 = (1, 2, 3, 4, 5, 42, 101, 5, 4, 3, 2, 1)
@@ -529,7 +577,6 @@ arr: Array<Person> = (...)
 
 // returns the names of all persons in the array
 names := arr.>Name
-names := ...arr.Name    // alternate?
 // names: Array<Str>
 
 // Collect multiple properties?
@@ -555,8 +602,6 @@ fn: (self: Person, magic: U8): Str
 
 // calls fn with magic=42 for all persons in the array
 names := arr.>fn(42)
-// How to make it clear 42 is duplicated to all calls!? Use of '.>'?
-names := arr.>fn|42|        //??
 ```
 
 > TBD: Allow 'array programming' operator (overloads) that target simd instructions?
@@ -585,15 +630,14 @@ These operators cannot be overloaded, they simply use the standard operators.
 | `<<=` | read - shift left - write |
 | `>\|=` | read - roll right - write |
 | `\|<=` | read - roll left - write |
-| `?=` | read - test - write (locking?) |
+| ?? | read - test - write (locking?) - what operator? |
 | `!=` | read - error?? - write |
 | `&=` | read - bit and - write |
 | `\|=` | read - bit or - write |
 | `^=` | read - bit xor - write |
 | `$=` | read - ?? - write |
 | `^=` | read - 'immutable' ?? - write |
-| `\|>=` | ? |
-| `<\|=` | ? (or `=<\|`) |
+| `<\|=` | read - with (structural union) - write |
 
 > TBD: Some of these could be interlocked. Perhaps the `Atom<T>` type automatically uses an interlocked impl?
 
@@ -627,17 +671,13 @@ Note the type-operator is on the right side of the equals sign.
 | --- | --- |
 | `=!` | `Err<T>` = `T` |
 | `=?` | `Opt<T>` = `T` |
-| `=*` | `Ptr<T>` = `T` (`Ptr()` conversion) |
 | `=^` | `Mut<T>` = `T` |
-| `=%` | `Atom<T>` = `T` |
 
 ```csharp
 a: U8 = 42
 // infer var type ':'
 err :=! a    // err: Err<U8>
 opt :=? a    // opt: Opt<U8>
-ptr :=* a    // ptr: Ptr<U8>
-atom :=% a   // atom: Atom<U8>
 
 // explicit var type
 mut: Mut<U8>    // declare mutable
@@ -646,16 +686,12 @@ mut =^ a
 // as parameters inline
 fnErr(!a)
 fnOpt(?a)
-fnPtr(*a)
 fnImm(^a)
-fnAtom(%a)
 
 // or named parameters
 fnErr(err =! a)
 fnOpt(opt =? a)
-fnPtr(ptr =* a)
 fnImm(imm =^ a)
-fnAtom(imm =% a)
 ```
 
 > Or are these conversions implicit? No.
@@ -666,8 +702,6 @@ Alternate syntax:
 a: U8 = 42
 err := a.!    // err: Err<U8>
 opt := a.?    // opt: Opt<U8>
-ptr := a.*    // ptr: Ptr<U8>
-atom := a.%   // atom: Atom<U8>
 ```
 
 ---

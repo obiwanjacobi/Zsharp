@@ -25,6 +25,16 @@ couldErr: (p: U8): U8!
 
 The `couldErr` function returns a `U8` but could also return an `Error`. In this sense the `Error` type looks to be transparent, but in fact it is implemented as an union between `Error` and the specified type.
 
+```csharp
+// use a match expression to handle errors
+result := match couldErr(42)
+    n: U8 -> n.Str()
+    err: Error -> "Error: " <+ err.Message
+
+// error fallback
+result := couldErr(42) !! 0
+```
+
 The Error type has a creator function that takes a string of text describing the error.
 
 ```C#

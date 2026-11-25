@@ -30,8 +30,6 @@ A special operator is used to access them: `#`
 
 - `#typeid` is a U16 hash value over (part of) the module name and type name (Not really needed for .NET).
 
-- `#type` is only available in a compile-time function that is tagged with a `#!` (restriction not needed for .NET).
-
 Not all types support all attributes. The compiler will give an error when the code accesses an attribute that is not supported by the type in question.
 
 ```C#
@@ -97,21 +95,17 @@ well_behaved_code
 
 ---
 
-> TBD: Hints to the compiler how to compile code...
-
-Syntax?
+Hints to the compiler how to compile code...
 
 ```csharp
-#inline     // pragma (hint)
-@inline()   // compiler function
-[[inline]]  // extension/decorator
+[<inline>]  // extension/decorator
 inlineFn: (p: U8): Bool -> p = 42
 ```
 
 > The expression body function syntax `=` could be used for inline functions...
 
-| Hint | Description
-|--|--
+| Attributes | Description
+| -- | --
 | `inline` | duplicate function body at each call site (before optimization)
 | `align x` | line struct up at a memory address that is a multiple of specified value
 
@@ -152,7 +146,7 @@ well_behaved_code
 The compiler supplies a set of functions that allows interaction with- and modification of the generated code. There is also contextual information available for formatting diagnostic messages.
 
 | Function | Note
-|--|--
+| -- | --
 | line() | the current source code line number
 | col() | the current source code column number
 | file() | the current source code file name
@@ -168,16 +162,14 @@ msg := "Error in '{#file()}' at line {#line()}: {#name()} is invalid."
 
 ## Compile-Time Code
 
-_Any_ Z# code can be executed at compile-time. By placing a `#!` in front of the function, the compiler knows it is not to be included in the binary.
-
-> TBD: `#!` is considered for compiler-error directive. Something else: `#>`?
+_Any_ Z# code can be executed at compile-time. By placing a `#` directly in front of the function name, the compiler knows it is not to be included in the binary.
 
 ```C#
 m = MyStruct
     ...
 
 // this code can only run at compile time and is not included in the binary
-#! compTimeFn: <T>(m: T)
+#compTimeFn: <T>(m: T)
     t = m#type
     t.name                      // 'MyStruct'
     loop f in t.fields
@@ -227,7 +219,7 @@ fn: <T>()
     IsImmutable<T>()
 
 // custom trait
-#! IsTrait: <T>(): Bool
+#IsTrait: <T>(): Bool
     ...
 ```
 

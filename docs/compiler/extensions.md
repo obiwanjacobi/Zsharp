@@ -97,10 +97,10 @@ The decorator function parameters must start with the specific self type in orde
 
 The `self` structures that are defined mainly provide type information of the decorated code construct. The Info types also contain an entry point into the compiler for the decorator function to be able to modify the code compiled for the code construct. They are sourced from the .NET reflection objects.
 
-Decorator functions are run at compile time (_are they?_) and should therefor use the `#!` at the implementation definition to make sure the code is compile-time execution ready and are not compiled into the binary.
+Decorator functions are run at compile time (_are they?_) and should therefor use the `#` at the implementation definition to make sure the code is compile-time execution ready and are not compiled into the binary.
 
 ```C#
-#! MyFnDecorator: (self: FunctionInfo, p: U8)
+#MyFnDecorator: (self: FunctionInfo, p: U8)
     ...
 
 // the self parameter is passed implicitly

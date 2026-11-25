@@ -22,8 +22,8 @@ else
 
 // using a match expression
 v := match valueMaybe()
-    n: U8 => n
-    _ => 0
+    n: U8 -> n      // bind a name to the retval of type U8
+    _ -> 0
 ```
 
 The type of an optional:
@@ -42,7 +42,6 @@ Optional function parameters:
 
 ```C#
 hasParam: (p: U8?): Bool
-    return p ? true : false     // bah!
     return p?       // syntax support
 ```
 
@@ -99,7 +98,7 @@ o := s.f1?.f1?.f2  // first non-value optional will stop navigation of path, res
 
 ```csharp
 errIfNot42: (p: U8): Bool!
-    return p = 42 ? true : Error('Not 42')
+    return p = 42 ? true ; Error('Not 42')
 
 b := errIfNot42(42)      // true
 b := errIfNot42(101)     // Error!
@@ -153,7 +152,7 @@ Select: <T, R>(self: Opt<T>, selector: Fn<T, R>): Opt<R>
 
 // handle 'nothing' case
 Match: <T, R>(self: Opt<T>, none: R, some: Fn<T, R>): R
-    return self.hasItem ? some(self.Item) : none
+    return self.hasItem ? some(self.Item) ; none
 ```
 
 `Opt<T>` does not expose any public properties to access the contained item `T` or an indication if the item is set - except for the boolean `?` convertor syntax. Any work is done inside the Linq `Select` or `SelectMany`...

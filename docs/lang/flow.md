@@ -29,7 +29,7 @@ if true     // conventional if statement
 else
     ...
 
-true ? ... : ...    // ternary operator
+true ? ... ; ...    // ternary operator
 
 true ? ...          // ternary without 'else'
 ```
@@ -87,7 +87,7 @@ Use the `if` keyword inside an expression.
 a := 42
 // newline/indent syntax does not work for expressions
 v := if a > 42 -> 101 else a
-v := a > 42 ? 101 : a            // same
+v := a > 42 ? 101 ; a            // same
 
 // more complex expressions?
 v := if a > 42 -> 101 else if a < 10 -> 0 else a * a

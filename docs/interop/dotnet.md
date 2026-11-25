@@ -80,7 +80,6 @@ fn: ()
     // heap
     b: Mem<U8> = 42     // wrapper type
     c = Mem(42)         // conversion with type infer
-    d: U8@ = 42         // Mem<T> type operator?
 ```
 
 Cannot reuse `Ptr<T>` type operator `*` because a Z# struct is also a `struct` in .NET (what if we used record?). A pointer to a struct would be a `ref struct`. A pointer to a heap-allocated instance would simply be a .NET managed reference.

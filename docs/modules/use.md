@@ -85,7 +85,7 @@ Does loading at runtime (`use`) require the containing function to have an `Err<
 
 ```csharp
 fn: ()
-    use mod1 catch err
+    match use mod1
         // handle loading error
 ```
 

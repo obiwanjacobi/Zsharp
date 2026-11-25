@@ -161,7 +161,7 @@ An Assembly file can also contain compile time code and other `#` directives.
 #assembly Name.OfMy.Assembly
 
 // a compile-time function
-#! calculateVersion(): Str
+#calculateVersion(): Str
     ...
 
 // calling the function to yield the version string

@@ -95,13 +95,13 @@ list : List<I8> = (1, 2, 3, 4)
 // But the U8 value is still the most impportant aspect of the code.
 val : Atom<U8> = 42
 
-// using wrapper-type operators sort of help with restoring the focus to the type of the value.
-// (we currently have no Atom<T> wrappper type operator: @tomic)
-val : U8@
+// wrapper-type operators help restore the focus to the type of the value,
+// but only Opt (?), Err (!) and Mut (^) have one. Atom<T> is written by name.
+val : U8^
 
 // but combining multiple wrapper types makes it cryptic
-// (optional pointer to mutable U8)
-ptr : U8^*?
+// (mutable optional U8 or error)
+val : U8?^!
 
 // what if we could reverse order for wrapper-types
 // and cascade combine multiple of them?
@@ -328,8 +328,8 @@ repeat: (c: U8, #fn: Fn<U8>)
     loop n in [0..c]
         fn(n)   // need '#'? => no
 
-// optionally use #! to not emit the fn in the binary
-#! doThisFn: (p: U8)
+// optionally use # to not emit the fn in the binary
+#doThisFn: (p: U8)
     ...             // <= body is inserted into the template
 
 // compiled as a new function (body)
@@ -392,15 +392,15 @@ Perhaps some rule to govern the relations between these template parameters?
 
 ```csharp
 fnBits: <T>(#size: U8): T
-    #size <= 8 => U8
-    #size <= 16 => U16
-    #size <= 32 => U32
+    #size =< 8 => U8
+    #size =< 16 => U16
+    #size =< 32 => U32
 
 // syntax of rule table?
 fnBits: <T>(#size: U8): T
-    #size <= 8 ? U8 :
-    #size <= 16 ? U16 :
-    #size <= 32 ? U32 : U64
+    #size =< 8 ? U8 ;
+    #size =< 16 ? U16 ;
+    #size =< 32 ? U32 ; U64
 ```
 
 ---

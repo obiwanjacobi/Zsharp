@@ -30,7 +30,7 @@ some variable
 my-type
 ```
 
-> TBD: I don't see any objection to add '`-`' (minus sign) as a valid character for an identifier...? Or start an identifier with a digit? The parser should be able to match that correctly.
+> TBD: I don't see any objection to add '`-`' (minus sign) as a valid character for an identifier...? Or start an identifier with a digit? The parser should be able to match that correctly. How to represent this in .NET is a different matter.
 
 > TBD: Is there a practical reason not to allow special characters or even names that only consist of special characters (as custom operators)? This only works when white-space is significant: `hello-world` would be a name, but `hello - world` would be a subtraction.
 
@@ -219,15 +219,15 @@ p := MyProp      // no () required?
 ```
 
 | Prefix | .NET | Description |
-|--|--|--|
+| -- | -- | -- |
 | `get_` | property get | Implements a property getter. |
 | `set_` | property set | Implements a property setter. |
-| `opchk_` | - | Z# operator checked implementation (exception). |
-| `opuchk_` | - | Z# operator unchecked implementation (wrap). |
+| `opex_` | - | Z# operator checked implementation (exception). |
+| `operr_` | - | Z# operator checked implementation (error). |
+| `opwrap_` | - | Z# operator unchecked implementation (wrap). |
+| `opsat_` | - | Z# operator unchecked implementation (saturate). |
+| `opopt_` | - | Z# operator unchecked implementation (option). |
 | `op_` | - | Z# operator implementation where return type indicates semantics (`Err<T>`/`Opt<T>`) |
-| `opsat_` | - | Z# operator implementation that saturates? |
-
-> Perhaps start the prefix with a `_` to indicate that part is hidden?
 
 ---
 

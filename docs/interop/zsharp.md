@@ -95,7 +95,7 @@ Note: `defer` has not received a whole lot of thought yet, so things may change.
 
 In principle all .NET Exceptions are to be translated to `Error` object representations.
 
-All .NET constructors, methods, properties and events will be marked as `Err<T>` (`Err<Void>`?), identifying that a potential exception could be thrown there. That will make imported .NET code very verbose to work with.
+All .NET constructors, methods, properties and events will be marked as `!!`, identifying that a potential exception could be thrown there. Exception will bubble up and can be handled locally as needed.
 
 Having a less strict error handling policy may help here.
 

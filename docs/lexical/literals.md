@@ -65,10 +65,11 @@ b : I32 = 1024
 
 ### Floating Point
 
-Floating point literals can be specified in different ways. Mainly the use of the decimal separator `.` is an indication that the value is a floating point value. Only a decimal format is supported (no prefix).
+Floating point literals are specified as a `<i>.<d>` value, with explicit integer and decimal parts.
 
 ```C#
-1.0  1.  .42
+1.0  0.42       // ok
+1. .42          // error
 ```
 
 > Use of exponents (like `1.42e-3`) is currently not defined. We probably will use the syntax that works directly in C#.
@@ -277,7 +278,7 @@ https://swiftregex.com/
 
 - Literal embedded Xml, Json, Yaml etc.
 
-> `@` indicates a compiler extension function.
+> `@` indicates a compiler extension function in these examples, but the syntax could change.
 
 ```csharp
 x := @Xml"""

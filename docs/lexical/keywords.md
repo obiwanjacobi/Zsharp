@@ -16,9 +16,7 @@ The number of keywords have been kept to a minimum. Much of the language is expr
 | `yield` | Exits a Coroutine Function
 | `in` | Iterating values / range condition *
 | `self` | A bound Type
-| `try` | Propagate if Error
-| `catch` | Handle Error
-| `match` | Pattern matching
+| `match` | Pattern matching (also handles errors and exceptions, see [Errors](../lang/errors.md))
 
 ## Project and File keywords
 
@@ -106,3 +104,5 @@ Kotlin uses val for constants/immutable and var for mutable vars.
 > Use `is` to do type checking and for use in conditional expressions?
 
 > Use `as` to cast (`Option<T>`) to a type?
+
+> Note: `is` / `as` are explored ideas borrowed from C#. The current model uses the `:?` operator for type tests, conversion syntax `T(x)` for casts and `match` for optional casts (see [Operators](operators.md)).

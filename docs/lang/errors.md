@@ -1,336 +1,206 @@
 # Errors
 
-> In light of .NET support we may have to switch to using Exceptions. We could allow use of the error mechanism for Z# code only as an alternative to exceptions although exceptions will always be part of the possible error conditions. A .NET assembly will see the `Err<T>` type as a 'OneOf<T>' of the Z# Error object and T.
+Z# knows two kinds of failure, and they are kept separate:
 
-The error mechanism in Z# is not based on exceptions.
-On the other hand, naked error value passing is tedious, error prone and does not guarantee handling of the error.
+| Kind | Type | Marker | Nature |
+| -- | -- | -- | -- |
+| Error | `Err<T>`: an `Error` value or `T` | `T!` | A value returned from a function. Cheap. Used for failures the caller is expected to deal with. |
+| Exception | .NET `Exception` | `T!!` | Thrown, as in .NET. Used for exceptional conditions and everything coming out of .NET code. |
 
-To create a robust error handling mechanism, it has been incorporated into the language. There are two keywords that deal with handling errors and syntax to specify errors can be returned from a function.
+Although they are different things, they are _handled_ the same way:
 
-Errors are values returned from a function that cannot be ignored by the caller (When .NET exceptions are used, this becomes a problem).
+- **Unhandled, they propagate automatically to the caller.** There is no `try`, `catch` or propagation operator.
+- **Handling is done with a `match` expression.** Errors and exceptions are matched by their type, next to the normal value.
 
-The story starts when an error condition is detected and a function returns an error:
+Error types and exception types are distinct type hierarchies: an `Error` type is never an `Exception` type and vice versa. That is what keeps the two apart in a `match`.
 
-```C#
+> For expected absence of a value (not found, could not parse) use `Opt<T>` instead. See [Optional](optional.md).
+
+---
+
+## Returning an Error
+
+The `!` on the return type indicates the function can return an error.
+
+```csharp
 errorFn: (): U8!
     return Error("Failed")
 ```
 
-The `!` on the return type indicates that you should pay attention, because this function can return an error!
+Details on [using the `Error` type can be read here](../types/error.md).
 
-Details on [using the `Error` type can be read here]('../types/error.md').
-
-The calling code needs to have a way to deal with either a good return value from a function or handling the error. The primary keyword to use is `catch`, like so:
-
-```C#
-couldWork: (): U8!
-    return Error("Sorry, I can't do that Dave.")
-
-v = couldWork() catch(err)
-    print(err.message())    // access error message
-    return                  // exit control flow
-use(v)
-```
-
-The catch keyword is specified after the function that could return the error, and it introduces a scope. This scope is where the handler code goes in case there is an error. The variable name that is used to hand the code the `Error` is specified inside the parentheses.
-
-> TBD: use a more lambda-like syntax: `v = fn() catch -> (err)`? That would align more with [Error Handlers](#Error-Handlers).
-
-Alternate way of handling more complex error conditions using a `match` expression.
+It is also possible to return an error from a function that has no return value.
 
 ```csharp
-FnErr: (): U8!
-    ...
-
-a := match FnErr()
-    err: Error -> 0
-    custom: MyError -> return custom.fld    // return exits the function
-    n: U8 -> n
-```
-
-A (predicted) common pattern is that a function will call many functions itself and as soon as one errors out, the function itself will simply stop and propagate the error to its caller. The `try` keyword is syntactic sugar for '`catch(err) return err`' and is specified in front of the function call. It can be used as follows:
-
-```C#
-MyFunc: (): Bool!
-    // propagate error from function
-    b := try couldWork() // try -> catch(err) return err
-    // b is the plain type - without the Err<> wrapper type.
-    use(b)
-```
-
-It takes away some of the noise of simple error handling.
-
-The explicit keywords `catch` and `try` -and in a lesser sense `match` are explicitly chosen to make it clear how these errors are handled in the code.
-
-Note that both `catch` and `try` strip of the `Err<T>` part from the return value of the function. So variable has no `Err<T>` component/decorator type, it's just its plain Type (`T`).
-
-> TBD: use the `try` keyword for converting errors to exceptions?
-
-> TBD: Use the `catch` keyword for convering exceptions to errors?
-
-```csharp
-throwsException: ()
-    throw ...
-returnsError: (): Void!
-    return Error(...)
-
-// using errors
-throwsException() catch(err)
-
-// using exceptions
-try returnsError()
-// what type of exception?
-```
-
-This would require the previous examples to use different keywords. Perhaps `tryError` and `catchError`? (then rename try and catch to `tryException` and `catchException`?) (`try-error` and `catch-error` / `try-expection` and `catch-expection`)
-
-Or leave `try` and `catch` for exceptions (like in C#) and use `catchErr` and `tryErr` for errors?
-
-Use `!` to propagate errors instead of `try`? What to use for exceptions?
-
-```csharp
-actionOrError: (): Void!
-    // use ! to propagete errors
-    v := couldWork()!
-    use(v)
-```
-
-> What if multiple transitions between errors and exceptions take place? How do you preserve the original error/exception type? Have an `Exception` field in `Error` and store error instances in context data (under a fixed key) in an exception.
-
-It would be benificial to have the option to handle exceptions on per call basis as this would blend better with the (Z#) error handling mechanism.
-
-The `catch` and `try` keywords can only be used on functions that actually return errors.
-
-```C#
-myFunc: (): Bool
-    ...
-
-b := myFunc() catch(err)  // error! myFunc does not return errors
-    ...
-```
-
-It is also possible to return an Error from a `Void` function - a function that has no return value.
-
-```C#
-voidFn: (): Void!       // Void with Err
+voidFn: ()!
     return Error("Failed")  // ok, exit function
-
-// handle error on Void! fn
-voidFn() catch(err)
-    // handle error
-    ...
 ```
 
-It is also possible to trigger a `FatalError` anywhere.
+A function without `!` cannot return an error.
 
-```C#
-noErrorFn: ()       // no Err return value specified
+```csharp
+noErrorFn: ()
     return Error("Failed")  // error! no error return type
-    FatalError("Abort!")    // ok, exit program
 ```
-
-You can use the `return` keyword in a function to exit its execution of course.
 
 ---
 
-## Error Scopes
+## Throwing an Exception
 
-For .NET Interop, we need a way to use the `try` and `catch` keywords for a block of code. Perhaps we could pin this to [Captures](capture.md)? Although both the capture and the `catch` keyword introduce an indent.
+The `!!` on the return type documents that the function may throw an exception.
 
 ```csharp
-fn: (): U8!     // can return Error
-    a := 42
-    try |a|     // any Error out of this block is forwarded
-        // code here inside capture
-    
-    try |a|
-        // capture code
-    catch(err)
-        // capture error code
+exceptionFn: (): U8!!
+    ArgumentException("Not good", "param1").throw()
 ```
 
-Alternate idea:
+> `.NET`: Any call into .NET code may throw, so `!!` cannot be complete. It is informational. The compiler can check it within Z# code.
 
-The `Err<T>` type is not used at all*. `try` is not used on a per function basis but as a scope (typical try-catch usage) optionally used as a capture block.
-`catch` can be still per function or as a try-handler - implicitly wrapping the function call in a try-block. The 'finally' block is implicit by using the defer keyword.
-
-*) `Error<T>` can instead be (re)defined as `Error<T>: Exception or T` and used as a way to return exceptions or return values from a function invocation.
+`throw` and `rethrow` are functions bound to the `Exception` type that will be emitted as a C# `throw` statement.
 
 ```csharp
-// starts scope (optionally a capture)
-try
-    // catch-lambda (with exception type) for local handling
-    handle := File.Open("file.txt") catch -> (err: FileNotFoundException)
-        // handle FileNotFound
+// use named parameters (param names of imported assemblies are available through reflection)
+ArgumentException(message="Not good", paramName="param1").throw()
+```
+
+---
+
+## Automatic Propagation
+
+When the result of a function call is not matched, its value is used as the plain type `T`. If the call fails, the failure is passed on to the caller.
+
+```csharp
+couldWork: (): U8!
     ...
-catch -> (err)      // err: Exception
-    ...
+
+myFunc: (): Bool!
+    b := couldWork()    // b: U8 (not Err<U8>)
+    use(b)              // only reached when couldWork succeeded
 ```
 
-Use multiple `catch` blocks.
+### Errors need a carrier
+
+An `Err` value can only propagate if the calling function can return it: its return type must also be `!`. Otherwise it is a compile error and the error must be handled with a `match`.
 
 ```csharp
-try
-    ...
-// order of appearance is important
-catch -> (err: FileNotFoundException)
-    ...
-catch -> (err: EndOfFileException)
-    ...
-// Exception is propagated if not caught 
+noErrorFn: (): Bool
+    b := couldWork()    // error! unhandled Err: match it or mark the function '!'
 ```
 
-A 'finally' handler?
+This keeps errors from being ignored, and the function signature shows that it can fail.
+
+### Exceptions always propagate
+
+Exceptions propagate as they always do in .NET, whether the calling function is marked `!!` or not.
+
+---
+
+## Handling with Match
+
+A `match` on a function call handles the value, the errors and the exceptions in one place.
+The value cases must be covered. Error and exception arms are optional: anything not matched propagates (see above).
 
 ```csharp
-try
-    ...
-finally 
-    ...     // always executed even if error
-
-...         // executed but not if error
+v := match readConfig(path)
+    cfg: Config -> cfg                          // the value
+    e: ConfigError -> Config.Default            // an Err value
+    ex: FileNotFoundException -> Config.Empty   // an exception
+    // anything else propagates to the caller
 ```
 
-Not the same as 'defer'
+Match any error or any exception by their base types:
 
 ```csharp
-try
-    defer ...
-    errdefer ...
-
-...     // executed but not if error
-// defer list always executed even if error
-// errdefer list only executed if error
+v := match couldWork()
+    n: U8 -> n
+    err: Error -> 0                 // any error
+    ex: Exception -> 0              // any exception
 ```
 
-Throw a new Exception:
+An arm can exit the function or pass on a different failure:
 
 ```csharp
-err = ArgumentException("Not good", "param1")
-
-// throw exception
-Error(err)
-err.throw()
-exit err    // implies exit-fn at minimum
+a := match couldWork()
+    n: U8 -> n
+    custom: MyError -> return custom.fld        // return exits the function
+    err: Error -> return Error("Failed", err)   // wrap and return a new error
 ```
 
-```csharp
-// params in the same order as ctor of Exception (brittle)
-Error<ArgumentException>("Not good", "param1")
-
-// use named parameters
-Error<ArgumentException>(message="Not good", paramName="param1")
-
-// as tuple
-p = { message="Not good", paramName="param1" }
-Error<ArgumentException>(p)
-```
-
-> Are param names available on imported external assemblies?
-
-Rethrow an existing Exception:
+To rethrow an exception explicitly:
 
 ```csharp
-// catch (Exception e) {
-//     throw;
-// }
-catch -> (err)
-    err.throw()     // can we track usage to generate 'throw'?
-    Error(err)
-    err.rethrow()   // make it explicit?
-```
-
-`throw` and `rethrow` functions are bound to the `Exception` type that will be emitted as a C# `throw` statement.
-
-> TBD: use pattern matching to handle errors at location.
-
-I like this option best. No exception try-catch. No error-catch stuff. Just this.
-
-```csharp
-// we don't have syntax yet that explicitly indicates throwing exceptions
-exceptionFn : (): U8! = { ... }
-
-// match expression returns a value
 v := match exceptionFn()
-    U8 value -> value
-    // if not matched here, will bubble up, like normal exception
-    Exception ex -> ... // implicit try-catch
-    // if not matched here, will return error
-    // must handle if function does not have an error-return
-    Error err -> ...    // implicit error-hanlder
+    n: U8 -> n
+    ex: IOException ->
+        log(ex)
+        ex.rethrow()
 ```
 
-Do we want to allow exceptions (and errors) to be caught at a higher level? => Yes.
+Handling failures of multiple statements together (the former `try` block). That requires `match` to accept a code block, which works with local functions or if code blocks are expressions (see [Functions](functions.md)).
+
+```csharp
+// using local functions as scope
+steps: (): U8!
+    a := step1()
+    b := step2(a)
+    return step3(b)
+
+v := match steps()
+    n: U8 -> n
+    err: Error -> 0
+
+// using capture and code-block as expression (new syntax)
+v := match
+    |a|                 // capture block as the subject
+        b := step2(a)
+        step3(b)
+    n: U8 -> n
+    err: Error -> 0
+```
+
+A shorthand for "on any error use this value". The twin of `??` for optionals. This does not cover exceptions.
+
+```csharp
+parse: (s: Str): U8!
+    ...
+
+// only for Err<T> errors, not exceptions.
+x := parse(s) !! 0
+```
+
+> Using this syntax means ignoring any errors. Not to be used lightly.
 
 ---
 
-## Error Handlers
+## Cleanup
 
-> We'll probably drop this for it does not add any value in a .NET context.
+Cleanup is done with `defer` (always) and `errdefer` (only when leaving with a failure). See [Defer](defer.md).
 
-Use `catch` with a handler function instead of an inline handler? Function Interface needed for the error-handler function.
-
-> How can the handler-function direct control-flow?
-
-```C#
-errorHandler: (err: Error): Bool!
-    return err          // try functionality, same as...
-    return false        // could not handle, propagate err
-    return true         // error is handled, continue
-    return Error("New Error", err)
-
-errorFn: (): U8!
-    return Error("Failed")
-
-v := errorFn() catch(errorHandler)
+```csharp
+fn: ()!
+    f := open(path)
+    defer f.Close()         // always
+    errdefer log("failed")  // only when an error or exception leaves this function
+    ...
 ```
 
-> Test for error type
-
-How to test for the type of error or if a field is available.
-Cannot use compile-time extensions because type of error is determined at runtime.
-
-```C#
-errorFn: (p: U8) U8!
-    if p = 42
-        err42 = MyError     // custom error type
-            ...
-        return Error("Custom Error Type", err42)
-    else
-        return Error("Standard Error")
-
-v := errorFn(42) catch(err)
-    // control flow: using typeid
-    if err#typeId = MyError#typeId
-        ...
-
-v := errorFn(42) catch(err)
-    // value: match
-    a := match err
-        myErr: MyError -> ...
-        _ -> ...
-
-v := match errorFn(42)
-    n: U8 -> // use normal return value
-    myErr: MyError -> ...
-    _ -> ...
-```
-
-> We may need to capture local variables for the error handler to access. How will that work?
+> `errdefer` runs for both a propagating `Err` and a propagating exception.
 
 ---
 
 ## Fatal Errors
 
-What some call 'panic' also known as exit().
+What some call 'panic', also known as exit().
 
-For some type of errors you want to crash and have diagnostics.
+For some types of errors you want to crash and have diagnostics.
 
-```C#
+```csharp
 // exits program
 FatalError("panic!")
 FatalError("panic!", err)
 ```
+
+A `FatalError` can be triggered anywhere, also in functions that do not return errors.
 
 > What errors are fatal? DivideByZero, StackOverflow, OutOfMemory, ... ??
 
@@ -343,5 +213,11 @@ When an error is returned from a function and it naturally bubbles up the call s
 This diagnostic information can be useful for tracking down problems.
 
 ---
+
+## Interop
+
+> `.NET`: A .NET assembly will see the `Err<T>` type as a `OneOf<T>` of the Z# Error object and T.
+
+> What if multiple transitions between errors and exceptions take place? How do you preserve the original error/exception type? Have an `Exception` field in `Error` and store error instances in context data (under a fixed key) in an exception.
 
 > How to access standard errors (make a list of standard errors?)?

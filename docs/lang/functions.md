@@ -146,6 +146,18 @@ add: (p1, p2: U8, p3: Str): U16
     ...
 ```
 
+### First Parameter
+
+All functions with parameters can be called with a 'dot-call' on the first parameter.
+
+```csharp
+fn: (p: U8): U8
+    ...
+
+fn(42)      // normal call
+42.fn()     // dot-call
+```
+
 ---
 
 ### Optional Parameters
@@ -155,7 +167,6 @@ Optional function parameters can be specified using the optional symbol `?` or `
 ```C#
 hasParam: (p: Opt<U8>): Bool
 hasParam: (p: U8?): Bool
-    return p ? true : false
     return p    // error! implicit cast not allowed
     return p?   // but there is a special syntax
 ```
@@ -742,26 +753,22 @@ ftd := Fn<(U8): U8> : ft        // no difference? What does this do!?
 A recursive function is a function that (eventually) calls itself.
 
 > TBD: Allow to specify a maximum depth?
-
+>
 > Can the compiler analyze how deep the recursion will go?
-
+>
 > TBD: add explicit syntax to allow a function to be called recursively. Add syntax for marking `fn` as recursive to guard against accidental type or function name mismatches.
 
-Is it a function Type annotation or a function Name annotation?
+Is it a function Type annotation (no) or a function Name annotation (yes)?
 
 ```csharp
-[[Recursive]]               // decorator => No
-#recursive                  // pragma => No
-recurseFn: @(p: U8): U8     // syntax (on Type) => No
-@recurseFn: (p: U8): U8     // syntax (on Name)
-rec recurseFn: (p: U8): U8     // syntax keyword
-recurseFn: Rec<(p: U8): U8>    // Wrapper on function type => No
-        // exit condition here...
-        return recurseFn(p)     // no extra syntax on call?
+[<Recursive>]               // decorator
+recurseFn: (p: U8): U8      // recursive marked fun
+    // exit condition here...
+    return recurseFn(p)     // no extra syntax on call?
 ```
 
 > What if multiple functions are involved in the recursion? All should be marked?
-
+>
 > What happens to captures in a recursive function? The point of capture should not surprise with 'wrong' values.
 
 ---
@@ -812,7 +819,7 @@ This suggests that a code block (function body) is also an expression...?
 
 Using the `self` keyword as the (name of the) first parameter, a function can be bound to a type. In this example the function is bound to (a pointer to) the MyStruct type.
 
-> TBD: Do we really need `self`? Why not let just any first param be used as an 'object instance'?
+Dot-call syntax is not limited to `self`: any function can be called with dot-syntax on its first parameter (`42.fn()` is `fn(42)`). `self` is about _binding_: implementing (object) interfaces, overload resolution on the type of the instance and how the function is generated for .NET (class method or extension method).
 
 ```C#
 boundFn: (self: MyStruct)
@@ -859,9 +866,7 @@ boundFn: (self: MyStruct): Opt<MyStruct>
 s = MyStruct
     ...
 
-// syntax TBD
 _ = s?.boundFn()?.boundFn()
-_ = s&.boundFn()&.boundFn()
 ```
 
 ---
@@ -872,17 +877,17 @@ When calling a bound function, the 'self' parameter can be used as an 'object' u
 
 > TBD
 
-| Var Type | Self Type | Note
-|---|---|---
-| T | T |
-| T | Ptr\<T> | Function can write to var!
-| T? | T? |
-| T? | Ptr\<T?> | Function can write to var!
-| Ptr\<T> | T |
-| Ptr\<T> | Ptr\<T> |
-| Mut\<T> | Mut\<T> |
-| Mut\<T> | Ptr\<Mut\<T>> |
-| Ptr<Mut\<T>> | Ptr<Mut\<T>> |
+| Var Type | Self Type | Note |
+| --- | --- | --- |
+| T | T | |
+| T | Ptr\<T> | Function can write to var! |
+| T? | T? | |
+| T? | Ptr\<T?> | Function can write to var! |
+| Ptr\<T> | T | |
+| Ptr\<T> | Ptr\<T> | |
+| Mut\<T> | Mut\<T> | |
+| Mut\<T> | Ptr\<Mut\<T>> | |
+| Ptr<Mut\<T>> | Ptr<Mut\<T>> | |
 
 > This means implicit conversions => something we don't want?
 We may want this conversion in order to reduce noise of transforming self parameter types.
@@ -1242,9 +1247,7 @@ fn: ()
     ...
 ```
 
-> TBD: Allow local functions? and types to be made public. See also the discussion about calling public nested functions in [Fluent Functions](#Fulent-Functions) and the `.>` operator.
-
-For public nested types, no special operator would be necessary. There is a question of how public nested (in a function) types would be represented in .NET...
+> TBD: For public nested types, no special operator would be necessary. There is a question of how public nested (in a function) types would be represented in .NET...
 
 ---
 
@@ -1532,12 +1535,6 @@ c.add(4).sub(2)
 c.add(4)
     .sub(2)
 
-// return type of add is void!
-// need a new operator?
-c.add(4)>.sub(2)
-// disregards result (even if void) and returns self-instance (c)
-c..add(4)..sub(2)
-
 // capture?
 |c|
     .add(4)
@@ -1550,23 +1547,6 @@ with c
     .sub(2)
 
 ```
-
-> TBD: Auto-Fluent syntax? `Build(p: MyStruct).>Into(target: Stream)`
-
-```csharp
-baseFn: (p: Str)
-    // export local function makes it available
-    pub nestedFn: (p: U8): Bool
-        ...
-
-s := "42"
-// have to 'instantiate' the parent function...
-b := baseFn(s).>nestedFn(42)
-```
-
-We do need a new operator `.>` because the standard `.` would indicate the (nested) function is called on the return value of the parent function.
-
----
 
 ## Double Dispatch / Visitor Pattern
 
@@ -1684,8 +1664,8 @@ initFn: (p: U8)
 Allows the function call and execution to take place only at compile time. The function will not be part of the binary.
 
 ```csharp
-// #! => compile time function (not in binary)
-#! compileTimeFn: (): U8
+// # => compile time function (not in binary)
+#compileTimeFn: (): U8
     return 42
 
 // use
@@ -1703,7 +1683,7 @@ This would enable to build (at compile time) a list work to do at runtime.
 Not sure how this will work technically.
 
 ```csharp
-#! compileTimeFn: (): Fn<U8>
+#compileTimeFn: (): Fn<U8>
     return () -> 42
 
 fn := compileTimeFn()
@@ -1717,7 +1697,7 @@ a := fn()    // 42
 A function that can be called to generate simple string based code at compile time. Use extensions to generate code using the compiler AST.
 
 ```csharp
-#! genFn: <#T>(c: U8)    // as template
+#genFn: <#T>(c: U8)    // as template
     // use '#' to indicate use of a template param
     // use a special '#<<' syntax?
     #<< Stub#T : #T
@@ -2096,7 +2076,14 @@ b := fn(42)      // calls fn
 
 fn <= myFn      // syntax?  a local alias that overrides existing symbol
 b := fn(42)      // calls myFn
+
+// option: a normal alias with a decorator to opt-in to overriding
+[[Override]]
+fn = myFn       // ok: explicitly replaces fn in this scope
+fn = myFn       // error: 'fn' already exists (use [[Override]])
 ```
+
+> TBD: Overriding an existing name without opting in is an error. Which opt-in syntax? (`<=` collides with mapping)
 
 ---
 

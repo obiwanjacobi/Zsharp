@@ -256,20 +256,20 @@ arr1 := ()
 arr2 := ()
 
 // fits nicely because we don't have these as inc/dec operators.
-arr3 = arr1 ++ arr2
-arr4 = arr2 -- arr1
+arr3 = arr1 + arr2
+arr4 = arr2 - arr1
 ```
 
-| Operator | Description
-|---|---
-| `++` | apply `+` operator between all items of two arrays.
-| `--` | apply `-` operator between all items of two arrays.
-| `//` | apply `/` operator between all items of two arrays.
-| `**` | apply `*` operator between all items of two arrays.
-| `%%` | apply `%` operator between all items of two arrays.
-| `///` | apply `//` operator between all items of two arrays.
-| `***` | apply `**` operator between all items of two arrays.
-| more...?
+| Operator | Description |
+| --- | --- |
+| `+` | apply `+` operator between all items of two arrays. |
+| `-` | apply `-` operator between all items of two arrays. |
+| `/` | apply `/` operator between all items of two arrays. |
+| `*` | apply `*` operator between all items of two arrays. |
+| `%` | apply `%` operator between all items of two arrays. |
+| `//` | apply `//` operator between all items of two arrays. |
+| `**` | apply `**` operator between all items of two arrays. |
+| more...? | |
 
 If arrays are not of equal length:
 
@@ -277,10 +277,10 @@ If arrays are not of equal length:
 arr1 := (1, 2, 3, 4, 5)
 arr2 := (6, 7, 8)
 
-arr3 := arr1 ++ arr2
+arr3 := arr1 + arr2
 // arr3 = (7, 9, 11, 4, 5)
 
-arr4 := arr2 -- arr1
+arr4 := arr2 - arr1
 // arr4 = (5, 5, 5)
 // is the rest of arr1 concatenated, or zero used for missing values in arr2 (producing negative results)?
 ```

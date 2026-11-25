@@ -114,8 +114,6 @@ These map to respective .NET types:
 
 > TODO: Research where signed and unsigned integers should be used.
 
-Unsigned integers can never overflow, they can only wrap around. Do you still want an overflow exception in a checked context?
-
 Are sizes unsigned? Why is an index signed? Are there problems for signed integers?
 
 What is we introduced unsigned integers that are guarenteed to convert to their signed counterpart?
@@ -539,7 +537,7 @@ CustomDataType: Str
 
 ```csharp
 CustomDataType: Str
-    #length <= 100, "Too long"
+    #length =< 100, "Too long"
 ```
 
 ---
@@ -596,10 +594,9 @@ Type | Operator
 --|--
 `Err<T>` | !
 `Opt<T>` | ?
-`Ptr<T>` | *
-`Ref<T>` | &
 `Mut<T>` | ^
-`Def<T>` | > (TBD: defer)
+
+Only types whose operator symbol's family _is_ that concept get an operator (see [Symbol Charter](../lexical/symbols.md)). Other wrapper types are written by name (`Ref<T>`, `Atom<T>`, `Ptr<T>`, ...).
 
 These operators are always used directly _after_ the type (post-fix)
 
@@ -608,11 +605,11 @@ These operators are always used directly _after_ the type (post-fix)
 fn: (p: U8?): U8!?
 ```
 
-The precedence can be set according to the order (left to right) the operators appear in the code. Closest to the type is inner: `U8?*` => `Ptr<Opt<U8>>`.
+The precedence can be set according to the order (left to right) the operators appear in the code. Closest to the type is inner: `U8?^` => `Mut<Opt<U8>>`.
 
 ```csharp
 o: U8?^     // Mut<Opt<U8>>
-p: U8!*     // Ptr<Err<U8>>
+p: U8!^     // Mut<Err<U8>>
 ```
 
 The optional and error types can be thought of as constrained variant types.
@@ -638,8 +635,8 @@ Err<T>: T or Error _
 o: U8?      // optional U8
 e: U8!      // U8 or error
 x: U8!?     // optional U8 or Error
-p: U8*?     // optional pointer to an U8
-i: U8^?*    // pointer to an optional mutable U8
+m: U8^?     // optional mutable U8
+p: Ptr<U8>? // optional pointer to an U8
 ```
 
 `Err<T>` is typically (only) used on function return values.
@@ -748,17 +745,11 @@ s: Struct
     ...         //   init struct
 
 // s2 is copy of s with changed field
-// what syntax?
-s2 := s => { fld1 = 42 }     // object construction
-s2 := s.Mut({ fld1 = 42 })   // explicit function call1
-s2 := s.Clone({ fld1 = 42 }) // explicit function call2
-s2 := s.With({ fld1 = 42 })  // explicit function call3
-s2 := s + { fld1 = 42 }      // special operator1
-s2 := s & { fld1 = 42 }      // special operator2
-s2 := s <= { fld1 = 42 }     // special operator3 (mapping)
-s2 := s <- { fld1 = 42 }     // special operator4
-s2 := s <+ { fld1 = 42 }     // special operator5
+s2 := s <| { fld1 = 42 }     // 'with' operator (structural union)
+s2 := s.With({ fld1 = 42 })  // explicit function call
 ```
+
+See [Structural Operators](../lexical/operators.md#structural-operators).
 
 > TBD: type validation after construction? This is a general issue...
 

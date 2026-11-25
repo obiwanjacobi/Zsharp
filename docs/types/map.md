@@ -56,6 +56,12 @@ x: Struct <=! m     // throw errors
 x: Struct <=? m     // don't throw errors
 ```
 
+> Current model (the examples here explore syntax, they are not decided):
+>
+> - `<=` maps (by name) into the shape of the left. It only works on structured types. See [Structural Operators](../lexical/operators.md#structural-operators).
+> - A modifier after `=` changes the value ([Symbol Charter](../lexical/symbols.md), Composition): `<=!` would result in `Err<Struct>`, `<=?` in `Opt<Struct>`.
+> - Without a modifier, a failing map propagates automatically like any other failure. See [Errors](../lang/errors.md).
+
 Allow maps to be passed as parameters to any function.
 
 ```csharp
@@ -79,6 +85,8 @@ fn2(m)
 
 > Keys MUST match field (struct) or parameter (function) names! (cannot fully check at compile time)
 > Throw errors or not?
+>
+> Current model: object literals initialize fields with `=` (`{ fld1 = 42 }`). `<=` is the mapping operator, not a field initializer. The map literal syntax is open (Symbol Charter, open decision 10).
 
 ---
 

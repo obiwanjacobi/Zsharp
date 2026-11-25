@@ -24,7 +24,7 @@ Here is a conditional comparison example:
 
 ```C#
 a := 42
-b := a <> 42 ? true : false     // :-(
+b := a <> 42 ? true ; false     // :-(
 b := (a <> 42)?                 // :-)
 ```
 

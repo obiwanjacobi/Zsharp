@@ -10,6 +10,8 @@ More on the Design goals of Z# [here](design.md)
 
 Take a look at some samples [here](samples.md)
 
+> Note that the code examples use `//` as comment instead of `#_`. This is done for syntax coloring and readability.
+
 ## Work In Progress
 
 I am still playing with the syntax, concepts and constructs of the language. Things will change!

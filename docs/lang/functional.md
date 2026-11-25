@@ -143,32 +143,22 @@ partialFn("42") // calls fn(42, "42")
 
 ---
 
-## Piping Operator
+## Piping
 
-To make nested function calls more readable. More 'functional'.
-Would make line-breaks in long statements (chains) a lot more readable?
+There is no pipe operator. Any function can be called with dot-syntax on its first parameter (see [Type Bound](functions.md#type-bound-self)), which gives the same left-to-right flow.
 
 ```csharp
 a := fn1(fn2(fn3(42)))
-b := fn3(42) |> fn2() |> fn1()
-// functional syntax
-b := 42 |> fn3 |> fn2 |> fn1
+b := 42.fn3().fn2().fn1()
+
+// line-breaks in long chains
+b := 42
+    .fn3()
+    .fn2()
+    .fn1()
+
+(0..5).fn()     // passed in array
 ```
-
-Subsequent function calls (after `|>`) will have their 1st param missing. That looks a bit strange (but no different than bound functions?). `()` can be omitted when a function has zero or one parameter?
-
-```csharp
-(0..5) |> fn()  // passed in array
-```
-
-Could also have a 'backward' piping operator? `<|` going the other way...
-No - don't like it
-
-```csharp
-fn1() <| fn2() <| fn3() <| 42
-```
-
-> TBD: Could come in usefule for fluent Apis that want to reverse the calls in order to have a more 'English' sentence.
 
 ---
 

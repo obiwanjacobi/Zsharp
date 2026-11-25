@@ -14,8 +14,8 @@ a := match v
     x ->        // by variable value
     n: U8 ->    // by type (with var name)
     Str ->      // by type (without var name)
-    is Str ->   // use is? (alt)
-    s: MyStruct ? s.fld1 = 20 ->  // by type with filter
+    is Str ->   // use is? (alt) - note: `is` is an explored keyword (from C#), not decided
+    s: MyStruct if s.fld1 = 20 ->  // by type with filter
     o: OtherStruct { fld1: 42, fld2: "42" } -> // by (property) prototype
     _ ->        // default (ignore) case
 ```
@@ -62,7 +62,7 @@ s = MyStruct
 
 a := match s
     n: U8 -> make42(n)
-    x: MyStruct ? x.field1 = 12 -> 42
+    x: MyStruct if x.field1 = 12 -> 42
     x: MyStruct -> 0
 
 // a = 42 (U8)
@@ -78,7 +78,7 @@ How to detect an optional value:
 o: Opt<U8>  // nothing
 
 a := match o
-    is U8 -> o.Str()
+    U8 -> o.Str()   // no name binding is required: use 'o' directly.
     _ -> "Nothing"
 ```
 
@@ -143,12 +143,12 @@ match a
 
 > TBD
 
-Replace the `match` keyword with `is` to align other pattern matching constructions like: `c is >= 'a' and <= 'z' or >= 'A' and <= 'Z'`
+Replace the `match` keyword with `is` to align other pattern matching constructions like: `c is >= 'a' and =< 'z' or >= 'A' and =< 'Z'`
 
 ```C#
 a := s is
     n: U8 -> make42(n)
-    x: MyStruct ? x.field1 = 12 -> 42
+    x: MyStruct if x.field1 = 12 -> 42
     x: MyStruct -> 0
 
 a := 42

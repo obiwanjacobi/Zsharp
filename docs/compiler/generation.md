@@ -22,7 +22,7 @@ Embed any language inside the Z# code with some kind of marker that indicates th
 
 ```csharp
 [[CSharpCodeGenerator]]
-#! SomeName     // unique name passed to the generator
+#SomeName     // unique name passed to the generator
 """             // what code block delimiters to use?
     var i = 0;
     for (int i; i < 42; i++)

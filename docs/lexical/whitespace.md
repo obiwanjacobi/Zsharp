@@ -48,6 +48,16 @@ The 'conditional code' is only executed if the `if` branch is taken. The 'implem
 
 ---
 
+## Significant Whitespace (or lack thereof)
+
+Multi-character operators as well as pre- and postfix operators **must** be written as one 'word', no whitespace allowed.
+
+Conversely, binary operators **must** have whitespace arround the operator on both sides.
+
+Also type-brackets `<` **must** be adjecent the type name (`List<U8>`), no whitespace allowed.
+
+---
+
 ## Scope Names
 
 Names for the indentation levels that create scopes:
@@ -130,7 +140,7 @@ fn: ()
     // you cannot write this
     if true doStuff() -> else doNothing()
     // use this instead
-    true ? doStuff() : doNothing()
+    true ? doStuff() ; doNothing()
 
     a := 42
     // useful for match case continuation

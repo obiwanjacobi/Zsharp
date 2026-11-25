@@ -79,6 +79,6 @@ MyFunction: (p: U8): Bool
 #check MyFunction: CheckMyFunction
 
 // is passed the arguments of MyFunctions, can raise an Error if validation fails. May be included conditionally (Debug build).
-#! CheckMyFunction: (p:U8): Error?
+#CheckMyFunction: (p:U8): Error?
     ...
 ```

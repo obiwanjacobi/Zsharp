@@ -86,7 +86,7 @@ These operator overload functions can also be called directly if one prefers the
 
 > TBD
 
-- Pattern Matching Expressions: `c is >= 'a' and <= 'z' or >= 'A' and <= 'Z'` (see also match)
+- Pattern Matching Expressions: `c is >= 'a' and =< 'z' or >= 'A' and =< 'Z'` (see also match)
 - Value block expressions that eliminate the need for `return` for instance.
 
 > TBD: more support for expressions? Like returning an expression from a scope (no return statement needed)?
